@@ -6,5 +6,6 @@
 
 #import "SRGLetterboxView.h"
 
-// Official version number
-FOUNDATION_EXPORT NSString * SRGLetterboxMarketingVersion(void);
+@implementation SRGLetterboxView
+
+@end
