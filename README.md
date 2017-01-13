@@ -1,0 +1,1 @@
+![SRG Letterbox logo](README-images/logo.png)
