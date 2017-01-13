@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		087EB60C1E290A14005DD80B /* SRGMediaService.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60A1E290A14005DD80B /* SRGMediaService.h */; };
+		087EB60C1E290A14005DD80B /* SRGMediaService.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60A1E290A14005DD80B /* SRGMediaService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB60D1E290A14005DD80B /* SRGMediaService.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60B1E290A14005DD80B /* SRGMediaService.m */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
