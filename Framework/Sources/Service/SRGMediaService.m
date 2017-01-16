@@ -39,14 +39,14 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
 
 #pragma mark Class methods
 
-+ (SRGMediaService *)sharedSRGMediaService
++ (SRGMediaService *)sharedMediaService
 {
-    static SRGMediaService *s_SRGMediaService;
+    static SRGMediaService *s_mediaService;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
-        s_SRGMediaService = [SRGMediaService new];
+        s_mediaService = [SRGMediaService new];
     });
-    return s_SRGMediaService;
+    return s_mediaService;
 }
 
 #pragma mark Object lifecycle
@@ -214,7 +214,7 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
     }
 }
 
-- (BOOL)resumeFromSRGLetterboxController:(SRGLetterboxController *)controller
+- (BOOL)resumeFromController:(SRGLetterboxController *)controller
 {
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
     if (mediaComposition) {
