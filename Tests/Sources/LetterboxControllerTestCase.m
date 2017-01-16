@@ -22,13 +22,13 @@ static NSURL *DVRTestURL(void)
     return [NSURL URLWithString:@"https://wowza.jwplayer.com/live/jelly.stream/playlist.m3u8?DVR"];
 }
 
-@interface SRGLetterboxControllerTestCase : XCTestCase
+@interface LetterboxControllerTestCase : XCTestCase
 
 @property (nonatomic) SRGLetterboxController *controller;
 
 @end
 
-@implementation SRGLetterboxControllerTestCase
+@implementation LetterboxControllerTestCase
 
 #pragma mark Setup and teardown
 
