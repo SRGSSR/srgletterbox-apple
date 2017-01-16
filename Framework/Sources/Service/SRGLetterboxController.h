@@ -31,11 +31,17 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 
 /**
  *  Seek backward from a standard amount of seconds
+ *
+ *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with 
+ *              finished set to `NO`
  */
 - (void)seekBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Seek forward from a standard amount of seconds
+ *
+ *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
+ *              finished set to `NO`
  */
 - (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
