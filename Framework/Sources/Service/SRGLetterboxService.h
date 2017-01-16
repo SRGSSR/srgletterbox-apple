@@ -46,6 +46,9 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 
 /**
  *  The controller responsible for playback
+ *
+ *  @discussion To play medias, use `-playMedia:withDataProvider:preferredQuality:` below. Playing medias directly
+ *              on the controller leads to undefined behavior
  */
 @property (nonatomic, readonly) SRGLetterboxController *controller;
 
