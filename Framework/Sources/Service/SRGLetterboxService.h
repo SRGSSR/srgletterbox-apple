@@ -14,24 +14,24 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values)
  */
-OBJC_EXTERN NSString * const SRGMediaServiceMetadataDidChangeNotification;
+OBJC_EXTERN NSString * const SRGLetterboxServiceMetadataDidChangeNotification;
 
 /**
  *  Current metadata
  */
-OBJC_EXTERN NSString * const SRGMediaServiceMediaKey;
-OBJC_EXTERN NSString * const SRGMediaServiceMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxServiceMediaKey;
+OBJC_EXTERN NSString * const SRGLetterboxServiceMediaCompositionKey;
 
 /**
  *  Previous metadata
  */
-OBJC_EXTERN NSString * const SRGMediaServicePreviousMediaKey;
-OBJC_EXTERN NSString * const SRGMediaServicePreviousMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaKey;
+OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaCompositionKey;
 
 /**
  *  Notification sent when an error has been encountered. Use the `error` property to get the error itself
  */
-OBJC_EXTERN NSString * const SRGMediaServicePlaybackDidFailNotification;
+OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 
 /**
  *  Service responsible for media playback. The service itself is a singleton which manages main playback throughout the
@@ -54,7 +54,7 @@ OBJC_EXTERN NSString * const SRGMediaServicePlaybackDidFailNotification;
  *
  *  @discussion Does nothing if the media is the one currently being played
  */
-- (void)playMedia:(SRGMedia *)media preferredQuality:(SRGQuality)quality;
+- (void)playMedia:(SRGMedia *)media withDataProvider:(SRGDataProvider *)dataProvider preferredQuality:(SRGQuality)preferredQuality;
 
 /**
  *  Transfers playback from the specified existing controller to the service. The service media player controller
@@ -72,8 +72,8 @@ OBJC_EXTERN NSString * const SRGMediaServicePlaybackDidFailNotification;
 @end
 
 /**
- *  Playback information. Changes are notified through `SRGMediaServiceMetadataDidChangeNotification` and
- *  `SRGMediaServicePlaybackDidFailNotification`
+ *  Playback information. Changes are notified through `SRGLetterboxServiceMetadataDidChangeNotification` and
+ *  `SRGLetterboxServicePlaybackDidFailNotification`
  */
 @interface SRGLetterboxService (PlaybackInformation)
 

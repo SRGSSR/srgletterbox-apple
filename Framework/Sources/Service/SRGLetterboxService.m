@@ -12,15 +12,15 @@
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <YYWebImage/YYWebImage.h>
 
-NSString * const SRGMediaServiceMetadataDidChangeNotification = @"SRGMediaServiceMetadataDidChangeNotification";
+NSString * const SRGLetterboxServiceMetadataDidChangeNotification = @"SRGLetterboxServiceMetadataDidChangeNotification";
 
-NSString * const SRGMediaServiceMediaKey = @"SRGMediaServiceMediaKey";
-NSString * const SRGMediaServiceMediaCompositionKey = @"SRGMediaServiceMediaCompositionKey";
+NSString * const SRGLetterboxServiceMediaKey = @"SRGLetterboxServiceMediaKey";
+NSString * const SRGLetterboxServiceMediaCompositionKey = @"SRGLetterboxServiceMediaCompositionKey";
 
-NSString * const SRGMediaServicePreviousMediaKey = @"SRGMediaServicePreviousMediaKey";
-NSString * const SRGMediaServicePreviousMediaCompositionKey = @"SRGMediaServicePreviousMediaCompositionKey";
+NSString * const SRGLetterboxServicePreviousMediaKey = @"SRGLetterboxServicePreviousMediaKey";
+NSString * const SRGLetterboxServicePreviousMediaCompositionKey = @"SRGLetterboxServicePreviousMediaCompositionKey";
 
-NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServicePlaybackDidFailNotification";
+NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterboxServicePlaybackDidFailNotification";
 
 @interface SRGLetterboxService ()
 
@@ -146,24 +146,24 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     if (media) {
-        userInfo[SRGMediaServiceMediaKey] = media;
+        userInfo[SRGLetterboxServiceMediaKey] = media;
     }
     if (mediaComposition) {
-        userInfo[SRGMediaServiceMediaCompositionKey] = mediaComposition;
+        userInfo[SRGLetterboxServiceMediaCompositionKey] = mediaComposition;
     }
     if (previousMedia) {
-        userInfo[SRGMediaServicePreviousMediaKey] = previousMedia;
+        userInfo[SRGLetterboxServicePreviousMediaKey] = previousMedia;
     }
     if (previousMediaComposition) {
-        userInfo[SRGMediaServicePreviousMediaCompositionKey] = previousMediaComposition;
+        userInfo[SRGLetterboxServicePreviousMediaCompositionKey] = previousMediaComposition;
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGMediaServiceMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
 #pragma mark Playback
 
-- (void)playMedia:(SRGMedia *)media preferredQuality:(SRGQuality)quality
+- (void)playMedia:(SRGMedia *)media withDataProvider:(SRGDataProvider *)dataProvider preferredQuality:(SRGQuality)preferredQuality
 {
     // If already playing the media, does nothing
     if (self.controller.playbackState != SRGMediaPlayerPlaybackStateIdle
@@ -191,7 +191,7 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
         
         [self updateWithMedia:media mediaComposition:mediaComposition];
         
-        SRGRequest *playRequest = [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:quality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+        SRGRequest *playRequest = [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             [self.requestQueue reportError:error];
         }];
         
@@ -199,17 +199,18 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
             [self.requestQueue addRequest:playRequest resume:YES];
         }
         else {
+            // FIXME: Use proper error domain and codes
             NSError *error = [NSError errorWithDomain:@"ch.srgssr.letterbox" code:42 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil)}];
             [self.requestQueue reportError:error];
         }
     };
     
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForVideoWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForAudioWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -264,7 +265,7 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
     
     self.error = error;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGMediaServicePlaybackDidFailNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServicePlaybackDidFailNotification object:self];
 }
 
 #pragma mark Control center and lock screen integration
