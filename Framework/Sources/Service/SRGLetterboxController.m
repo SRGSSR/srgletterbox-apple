@@ -84,7 +84,7 @@ const NSInteger SRGLetterboxForwardSeekInterval = 30.;
     }
     
     return (self.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSeekInterval < CMTimeGetSeconds(self.player.currentItem.duration))
-    || (self.streamType == SRGMediaPlayerStreamTypeDVR && !self.live);
+        || (self.streamType == SRGMediaPlayerStreamTypeDVR && !self.live);
 }
 
 - (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler

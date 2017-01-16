@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		087EB60C1E290A14005DD80B /* SRGMediaService.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60A1E290A14005DD80B /* SRGMediaService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB60D1E290A14005DD80B /* SRGMediaService.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60B1E290A14005DD80B /* SRGMediaService.m */; };
-		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; };
+		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
 		087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
@@ -54,7 +54,7 @@
 		6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
 		6FAB3B7A1E2905CA00CC2197 /* SRGMediaPlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B841E29060200CC2197 /* SRGLetterbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */; };
-		6FAB3B8F1E29066300CC2197 /* SRGLetterboxServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B8D1E29066300CC2197 /* SRGLetterboxServiceTests.m */; };
+		6FAB3B8F1E29066300CC2197 /* SRGLetterboxControllerTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B8D1E29066300CC2197 /* SRGLetterboxControllerTestCase.m */; };
 		6FAB3B911E29080F00CC2197 /* ComScore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B921E29080F00CC2197 /* libextobjc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B931E29080F00CC2197 /* Mantle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -68,6 +68,17 @@
 		6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; };
+		6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; };
+		6FE655D41E2CA3F9000033D4 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; };
+		6FE655D51E2CA3F9000033D4 /* SRGAnalytics_DataProvider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */; };
+		6FE655D61E2CA3F9000033D4 /* SRGAnalytics_MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */; };
+		6FE655D71E2CA3F9000033D4 /* SRGAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */; };
+		6FE655D81E2CA3F9000033D4 /* SRGDataProvider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */; };
+		6FE655D91E2CA3F9000033D4 /* SRGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */; };
+		6FE655DA1E2CA3F9000033D4 /* SRGMediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
+		6FE655DB1E2CA3F9000033D4 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
+		6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +126,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in CopyFiles */,
 				6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */,
 				6FAB3B911E29080F00CC2197 /* ComScore.framework in CopyFiles */,
 				6FAB3B921E29080F00CC2197 /* libextobjc.framework in CopyFiles */,
@@ -164,7 +176,7 @@
 		6FAB3B621E2900D200CC2197 /* DemosViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DemosViewController.storyboard; sourceTree = "<group>"; };
 		6FAB3B7F1E29060100CC2197 /* SRGLetterbox-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SRGLetterbox-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FAB3B8D1E29066300CC2197 /* SRGLetterboxServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxServiceTests.m; sourceTree = "<group>"; };
+		6FAB3B8D1E29066300CC2197 /* SRGLetterboxControllerTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxControllerTestCase.m; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
 		6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SRGLetterbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -192,6 +204,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */,
+				6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */,
+				6FE655D41E2CA3F9000033D4 /* Mantle.framework in Frameworks */,
+				6FE655D51E2CA3F9000033D4 /* SRGAnalytics_DataProvider.framework in Frameworks */,
+				6FE655D61E2CA3F9000033D4 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
+				6FE655D71E2CA3F9000033D4 /* SRGAnalytics.framework in Frameworks */,
+				6FE655D81E2CA3F9000033D4 /* SRGDataProvider.framework in Frameworks */,
+				6FE655D91E2CA3F9000033D4 /* SRGLogger.framework in Frameworks */,
+				6FE655DA1E2CA3F9000033D4 /* SRGMediaPlayer.framework in Frameworks */,
+				6FE655DB1E2CA3F9000033D4 /* YYWebImage.framework in Frameworks */,
 				6FAB3B841E29060200CC2197 /* SRGLetterbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,7 +366,7 @@
 		6FAB3B8C1E29066300CC2197 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				6FAB3B8D1E29066300CC2197 /* SRGLetterboxServiceTests.m */,
+				6FAB3B8D1E29066300CC2197 /* SRGLetterboxControllerTestCase.m */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -530,7 +552,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FAB3B8F1E29066300CC2197 /* SRGLetterboxServiceTests.m in Sources */,
+				6FAB3B8F1E29066300CC2197 /* SRGLetterboxControllerTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,6 +619,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-tests";
@@ -608,6 +634,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-tests";
