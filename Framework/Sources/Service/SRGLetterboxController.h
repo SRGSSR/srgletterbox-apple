@@ -16,11 +16,16 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 
 /**
  *  Return YES iff the player can seek backward from a standard amount of seconds
+ *
+ *  @discussion Always possible for on-demand and DVR streams
  */
 - (BOOL)canSeekBackward;
 
 /**
  *  Return YES iff the player can seek forward from a standard amount of seconds
+ *
+ *  @discussion For on-demand and streams, only possible if seeking wouldn't jump past the end. For DVR streams,
+ *              possible until the stream is played live
  */
 - (BOOL)canSeekForward;
 

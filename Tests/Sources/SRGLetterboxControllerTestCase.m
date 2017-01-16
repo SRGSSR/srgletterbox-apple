@@ -48,22 +48,120 @@ static NSURL *DVRTestURL(void)
 
 - (void)testOnDemandStreamSeeks
 {
+    // Wait until the stream is playing
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
     [self.controller playURL:OnDemandTestURL() atTime:kCMTimeZero withSegments:nil userInfo:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertTrue([self.controller canSeekForward]);
+
+    // Seek to near the end
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(15., NSEC_PER_SEC)) withCompletionHandler:nil];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertFalse([self.controller canSeekForward]);
+    
+    // Use standard seeks
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+    }];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertTrue([self.controller canSeekForward]);
+    
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+    }];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertFalse([self.controller canSeekForward]);
 }
 
 - (void)testLiveStreamSeeks
 {
-
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURL:LiveTestURL() atTime:kCMTimeZero withSegments:nil userInfo:nil];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertFalse([self.controller canSeekBackward]);
+    XCTAssertFalse([self.controller canSeekForward]);
+    
+    // Cannot seek
+    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+        XCTAssertFalse(finished);
+    }];
+    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+        XCTAssertFalse(finished);
+    }];
 }
 
 - (void)testDVRStreamSeeks
 {
-
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURL:DVRTestURL() atTime:kCMTimeZero withSegments:nil userInfo:nil];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertTrue(self.controller.live);
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertFalse([self.controller canSeekForward]);
+    
+    // Seek in the past
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+    }];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertFalse(self.controller.live);
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertTrue([self.controller canSeekForward]);
+    
+    // Seek forward again
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+    }];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertTrue(self.controller.live);
+    
+    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertFalse([self.controller canSeekForward]);
 }
 
 @end
