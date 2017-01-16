@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGMediaService.h"
+#import "SRGLetterboxService.h"
 
 #import "UIDevice+SRGLetterbox.h"
 
@@ -22,7 +22,7 @@ NSString * const SRGMediaServicePreviousMediaCompositionKey = @"SRGMediaServiceP
 
 NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServicePlaybackDidFailNotification";
 
-@interface SRGMediaService ()
+@interface SRGLetterboxService ()
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -35,18 +35,18 @@ NSString * const SRGMediaServicePlaybackDidFailNotification = @"SRGMediaServiceP
 
 @end
 
-@implementation SRGMediaService
+@implementation SRGLetterboxService
 
 #pragma mark Class methods
 
-+ (SRGMediaService *)sharedMediaService
++ (SRGLetterboxService *)sharedService
 {
-    static SRGMediaService *s_mediaService;
+    static SRGLetterboxService *s_sharedService;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
-        s_mediaService = [SRGMediaService new];
+        s_sharedService = [SRGLetterboxService new];
     });
-    return s_mediaService;
+    return s_sharedService;
 }
 
 #pragma mark Object lifecycle

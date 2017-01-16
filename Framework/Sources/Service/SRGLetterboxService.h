@@ -37,12 +37,12 @@ OBJC_EXTERN NSString * const SRGMediaServicePlaybackDidFailNotification;
  *  Service responsible for media playback. The service itself is a singleton which manages main playback throughout the
  *  application (and associated features like picture in picture, Airplay or control center integration).
  */
-@interface SRGMediaService : NSObject <AVPictureInPictureControllerDelegate>
+@interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 
 /**
  *  The singleton instance
  */
-+ (SRGMediaService *)sharedMediaService;
++ (SRGLetterboxService *)sharedService;
 
 /**
  *  The controller responsible for playback
@@ -75,7 +75,7 @@ OBJC_EXTERN NSString * const SRGMediaServicePlaybackDidFailNotification;
  *  Playback information. Changes are notified through `SRGMediaServiceMetadataDidChangeNotification` and
  *  `SRGMediaServicePlaybackDidFailNotification`
  */
-@interface SRGMediaService (PlaybackInformation)
+@interface SRGLetterboxService (PlaybackInformation)
 
 /**
  *  Media information
@@ -94,7 +94,7 @@ OBJC_EXTERN NSString * const SRGMediaServicePlaybackDidFailNotification;
 
 @end
 
-@interface SRGMediaService (Unavailable)
+@interface SRGLetterboxService (Unavailable)
 
 - (instancetype)init NS_UNAVAILABLE;
 
