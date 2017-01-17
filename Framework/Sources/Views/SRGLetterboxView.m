@@ -52,6 +52,14 @@
     }];
     
     self.playbackButton.mediaPlayerController = letterboxController;
+    self.pictureInPictureButton.mediaPlayerController = letterboxController;
+    
+    self.airplayView.mediaPlayerController = letterboxController;
+    self.airplayView.delegate = self;
+    
+    self.airplayButton.mediaPlayerController = letterboxController;
+    self.tracksButton.mediaPlayerController = letterboxController;
+    
 }
 
 
@@ -80,5 +88,18 @@
     }];
 }
 
+#pragma mark SRGAirplayViewDelegate protocol
+
+- (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
+{
+    self.airplayLabel.text = SRGAirplayRouteDescription();
+}
+
+#pragma mark UIGestureRecognizerDelegate protocol
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
 
 @end

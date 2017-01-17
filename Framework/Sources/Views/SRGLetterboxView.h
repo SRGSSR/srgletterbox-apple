@@ -5,10 +5,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SRGMediaPlayer/SRGMediaPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SRGLetterboxView : UIView
+@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
 
 @end
 
