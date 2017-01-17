@@ -10,6 +10,7 @@
 #import "SRGLetterboxService.h"
 
 #import <Masonry/Masonry.h>
+#import <libextobjc/libextobjc.h>
 
 @class ASValueTrackingSlider;
 
@@ -39,7 +40,11 @@
 
 
 // Internal
+@property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
+
+@property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
+@property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
 @end
 
@@ -70,6 +75,12 @@
     self.airplayButton.mediaPlayerController = letterboxController;
     self.tracksButton.mediaPlayerController = letterboxController;
     
+    // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
+    // to detect other interactions earlier
+    SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
+                                                                                                            action:@selector(resetInactivityTimer:)];
+    activityGestureRecognizer.delegate = self;
+    [self.playerView addGestureRecognizer:activityGestureRecognizer];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -87,8 +98,10 @@
             self.forwardSeekButton.hidden = ![letterboxController canSeekForward];
             self.backwardSeekButton.hidden = ![letterboxController canSeekBackward];
         }];
+        [self updateInterfaceAnimated:NO];
     }
     else {
+        self.inactivityTimer = nil;                 // Invalidate timer
         [[SRGLetterboxService sharedService].controller removePeriodicTimeObserver:self.periodicTimeObserver];
     }
 }
@@ -116,6 +129,121 @@
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+}
+
+#pragma mark Getters and setters
+
+- (void)setInactivityTimer:(NSTimer *)inactivityTimer
+{
+    [_inactivityTimer invalidate];
+    _inactivityTimer = inactivityTimer;
+}
+
+# pragma mark UI
+
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    if (self.userInterfaceHidden == hidden) {
+        return;
+    }
+    
+    // Cannot toggle UI when an error is displayed
+    if (! self.errorView.hidden) {
+        return;
+    }
+    
+    void (^animations)(void) = ^{
+        CGFloat alpha = hidden ? 0.f : 1.f;
+        self.controlsView.alpha = alpha;
+    };
+    void (^completion)(BOOL) = ^(BOOL finished) {
+        if (finished) {
+            self.userInterfaceHidden = hidden;
+        }
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations completion:completion];
+    }
+    else {
+        animations();
+        completion(YES);
+    }
+}
+
+- (void)updateInterfaceAnimated:(BOOL)animated
+{
+    void (^animations)(void) = ^{
+        SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
+        
+        if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+            // Hide if playing a video in Airplay or if true screen mirroring is used
+            SRGMedia *media = [SRGLetterboxService sharedService].media;
+            BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && (! [AVAudioSession srg_isAirplayActive] || ([UIScreen srg_isMirroring] && ! letterboxController.player.usesExternalPlaybackWhileExternalScreenIsActive));
+            self.imageView.alpha = hidden ? 0.f : 1.f;
+            letterboxController.view.alpha = hidden ? 1.f : 0.f;
+            
+            [self resetInactivityTimer];
+            
+            if (!self.showingPopup) {
+                self.showingPopup = YES;
+                [self.timeSlider showPopUpViewAnimated:YES];
+            }
+        }
+        else if (letterboxController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+            self.imageView.alpha = 1.f;
+            letterboxController.view.alpha = 0.f;
+            
+            [self.timeSlider hidePopUpViewAnimated:YES];
+            self.showingPopup = NO;
+            
+            [self setUserInterfaceHidden:NO animated:YES];
+        }
+        
+        self.loadingImageView.alpha = (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                       || letterboxController.playbackState == SRGMediaPlayerPlaybackStatePaused
+                                       || letterboxController.playbackState == SRGMediaPlayerPlaybackStateEnded
+                                       || letterboxController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
+    }
+    else {
+        animations();
+    }
+}
+
+- (void)resetInactivityTimer
+{
+    self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
+}
+
+#pragma mark Gesture recognizers
+
+- (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
+{
+    [self resetInactivityTimer];
+    [self setUserInterfaceHidden:NO animated:YES];
+}
+
+- (IBAction)toggleUserInterfaceVisibility:(UIGestureRecognizer *)gestureRecognizer
+{
+    [self setUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
+}
+
+#pragma mark Timers
+
+- (void)hideInterface:(NSTimer *)timer
+{
+    // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
+    // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
+    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
+    if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+        || letterboxController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+        || letterboxController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+        [self setUserInterfaceHidden:YES animated:YES];
+    }
 }
 
 #pragma mark Actions

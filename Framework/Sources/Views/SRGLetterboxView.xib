@@ -67,6 +67,9 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sfv-u0-V4z" userLabel="Interface Active Toggle View">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="201"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="cSD-No-gUM" appends="YES" id="Ng5-cs-5bd"/>
+                            </connections>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
                             <rect key="frame" x="88" y="89" width="35" height="35"/>
@@ -233,6 +236,11 @@
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
+        <tapGestureRecognizer id="cSD-No-gUM">
+            <connections>
+                <action selector="toggleUserInterfaceVisibility:" destination="-1" id="sfC-jc-RUF"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="airplay-22" width="22" height="22"/>
