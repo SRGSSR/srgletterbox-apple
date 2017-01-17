@@ -5,16 +5,17 @@
 //
 
 #import "SRGLetterboxView.h"
+#import "ASValueTrackingSlider.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "UIFont+SRGLetterbox.h"
 #import "SRGLetterboxService.h"
 
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
 
-@class ASValueTrackingSlider;
+@interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
 
-@interface SRGLetterboxView ()
 
 // UI
 @property (nonatomic, weak) IBOutlet UIView *playerView;
@@ -64,6 +65,17 @@
     
     self.playbackButton.mediaPlayerController = letterboxController;
     
+//    // FIXME: Currently added in code, but we should provide a more customizable activity indicator
+//    //        in the SRG Media Player library soon. Replace when available
+//    UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
+//    loadingImageView.alpha = 0.f;
+//    [self.playerView insertSubview:loadingImageView aboveSubview:self.playbackButton];
+//    [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.equalTo(self.playbackButton.mas_top).with.offset(-20.f);
+//        make.centerX.equalTo(self.playbackButton.mas_centerX);
+//    }];
+//    self.loadingImageView = loadingImageView;
+    
     self.backwardSeekButton.hidden = YES;
     self.forwardSeekButton.hidden = YES;
     
@@ -78,7 +90,7 @@
     self.timeSlider.mediaPlayerController = letterboxController;
     self.timeSlider.resumingAfterSeek = YES;
     
-    self.timeSlider.font = [UIFont systemFontOfSize:14.f];
+    self.timeSlider.font = [UIFont srg_regularFontWithSize:14.f];
     self.timeSlider.popUpViewColor = UIColor.whiteColor;
     self.timeSlider.textColor = UIColor.blackColor;
     self.timeSlider.popUpViewWidthPaddingFactor = 1.5f;
@@ -86,6 +98,9 @@
     self.timeSlider.popUpViewCornerRadius = 3.f;
     self.timeSlider.popUpViewArrowLength = 4.f;
     self.timeSlider.dataSource = self;
+    
+    self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
+    self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
@@ -346,7 +361,6 @@
 {
     if (self.errorView.hidden) {
         self.errorView.hidden = NO;
-//        self.errorLabel.font = [UIFont play_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     }
     
     NSError *error = [SRGLetterboxService sharedService].error;

@@ -8,7 +8,7 @@
 
 #import "SRGLetterboxView.h"
 
-@implementation NSBundle (SRGAnalytics)
+@implementation NSBundle (SRGLetterbox)
 
 + (instancetype)srg_letterboxBundle
 {
