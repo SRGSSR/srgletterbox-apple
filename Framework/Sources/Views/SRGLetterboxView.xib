@@ -69,7 +69,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                            <rect key="frame" x="107" y="95" width="16" height="22"/>
+                            <rect key="frame" x="88" y="89" width="35" height="35"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="backward-35"/>
                         </button>
@@ -82,7 +82,7 @@
                             </userDefinedRuntimeAttributes>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                            <rect key="frame" x="253" y="95" width="16" height="22"/>
+                            <rect key="frame" x="253" y="89" width="35" height="35"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="forward-35"/>
                         </button>
@@ -184,10 +184,10 @@
                     </constraints>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aWQ-IF-YZO" userLabel="Error View">
-                    <rect key="frame" x="0.0" y="174.5" width="375" height="36.5"/>
+                    <rect key="frame" x="0.0" y="174" width="375" height="37"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
-                            <rect key="frame" x="8" y="8" width="367" height="20.5"/>
+                            <rect key="frame" x="8" y="8" width="367" height="21"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -229,16 +229,16 @@
         </view>
     </objects>
     <resources>
-        <image name="airplay-22" width="16" height="16"/>
-        <image name="backward-35" width="16" height="16"/>
-        <image name="cancel_fullscreen-22" width="16" height="16"/>
-        <image name="forward-35" width="16" height="16"/>
-        <image name="fullscreen-22" width="16" height="16"/>
-        <image name="pause-50" width="16" height="16"/>
-        <image name="picture_in_picture_start-22" width="16" height="16"/>
-        <image name="picture_in_picture_stop-22" width="16" height="16"/>
-        <image name="play-50" width="16" height="16"/>
-        <image name="subtitles_off-22" width="16" height="16"/>
-        <image name="subtitles_on-22" width="16" height="16"/>
+        <image name="airplay-22" width="22" height="22"/>
+        <image name="backward-35" width="35" height="35"/>
+        <image name="cancel_fullscreen-22" width="22" height="22"/>
+        <image name="forward-35" width="35" height="35"/>
+        <image name="fullscreen-22" width="22" height="22"/>
+        <image name="pause-50" width="50" height="50"/>
+        <image name="picture_in_picture_start-22" width="22" height="22"/>
+        <image name="picture_in_picture_stop-22" width="22" height="22"/>
+        <image name="play-50" width="50" height="50"/>
+        <image name="subtitles_off-22" width="26" height="22"/>
+        <image name="subtitles_on-22" width="26" height="22"/>
     </resources>
 </document>
