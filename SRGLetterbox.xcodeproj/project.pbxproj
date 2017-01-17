@@ -13,6 +13,16 @@
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
 		087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
+		08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
+		08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
+		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
+		08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08FA0CB11E2E454C000C94EF /* ASValuePopUpView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CAD1E2E454C000C94EF /* ASValuePopUpView.h */; };
+		08FA0CB21E2E454C000C94EF /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CAE1E2E454C000C94EF /* ASValuePopUpView.m */; };
+		08FA0CB31E2E454C000C94EF /* ASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CAF1E2E454C000C94EF /* ASValueTrackingSlider.h */; };
+		08FA0CB41E2E454C000C94EF /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CB01E2E454C000C94EF /* ASValueTrackingSlider.m */; };
+		08FA0CB71E2E45CD000C94EF /* ControlsStackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CB51E2E45CD000C94EF /* ControlsStackView.h */; };
+		08FA0CB81E2E45CD000C94EF /* ControlsStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CB61E2E45CD000C94EF /* ControlsStackView.m */; };
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
@@ -108,6 +118,7 @@
 			files = (
 				6FAB3B721E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Embed Frameworks */,
 				6FAB3B651E2905B400CC2197 /* SRGLetterbox.framework in Embed Frameworks */,
+				08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */,
 				6FAB3B781E2905CA00CC2197 /* SRGLogger.framework in Embed Frameworks */,
 				6FAB3B741E2905CA00CC2197 /* SRGAnalytics.framework in Embed Frameworks */,
 				6FAB3B6E1E2905CA00CC2197 /* Mantle.framework in Embed Frameworks */,
@@ -150,6 +161,14 @@
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
 		087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+SRGLetterbox.m"; sourceTree = "<group>"; };
+		08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxView.xib; sourceTree = "<group>"; };
+		08FA0CA81E2E325F000C94EF /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
+		08FA0CAD1E2E454C000C94EF /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
+		08FA0CAE1E2E454C000C94EF /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
+		08FA0CAF1E2E454C000C94EF /* ASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValueTrackingSlider.h; sourceTree = "<group>"; };
+		08FA0CB01E2E454C000C94EF /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
+		08FA0CB51E2E45CD000C94EF /* ControlsStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsStackView.h; sourceTree = "<group>"; };
+		08FA0CB61E2E45CD000C94EF /* ControlsStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlsStackView.m; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -190,6 +209,7 @@
 			files = (
 				6FAB3B711E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */,
+				08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B771E2905CA00CC2197 /* SRGLogger.framework in Frameworks */,
 				6FAB3B731E2905CA00CC2197 /* SRGAnalytics.framework in Frameworks */,
 				6FAB3B6D1E2905CA00CC2197 /* Mantle.framework in Frameworks */,
@@ -224,6 +244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B9B1E291A8500CC2197 /* YYWebImage.framework in Frameworks */,
 				6FAB3B101E28FB1400CC2197 /* ComScore.framework in Frameworks */,
 				6FAB3B111E28FB1400CC2197 /* libextobjc.framework in Frameworks */,
@@ -249,6 +270,17 @@
 				087EB60B1E290A14005DD80B /* SRGLetterboxService.m */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		08FA0CAC1E2E454C000C94EF /* ASValueTrackingSlider */ = {
+			isa = PBXGroup;
+			children = (
+				08FA0CAD1E2E454C000C94EF /* ASValuePopUpView.h */,
+				08FA0CAE1E2E454C000C94EF /* ASValuePopUpView.m */,
+				08FA0CAF1E2E454C000C94EF /* ASValueTrackingSlider.h */,
+				08FA0CB01E2E454C000C94EF /* ASValueTrackingSlider.m */,
+			);
+			path = ASValueTrackingSlider;
 			sourceTree = "<group>";
 		};
 		6F042D221E28E2D100CFD89B /* Framework */ = {
@@ -286,8 +318,12 @@
 		6FAB3AFF1E28F76800CC2197 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				08FA0CAC1E2E454C000C94EF /* ASValueTrackingSlider */,
+				08FA0CB51E2E45CD000C94EF /* ControlsStackView.h */,
+				08FA0CB61E2E45CD000C94EF /* ControlsStackView.m */,
 				6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */,
 				6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */,
+				08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -295,6 +331,7 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				08FA0CA81E2E325F000C94EF /* Masonry.framework */,
 				6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
@@ -403,9 +440,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
+				08FA0CB11E2E454C000C94EF /* ASValuePopUpView.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				087EB60C1E290A14005DD80B /* SRGLetterboxService.h in Headers */,
+				08FA0CB31E2E454C000C94EF /* ASValueTrackingSlider.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
+				08FA0CB71E2E45CD000C94EF /* ControlsStackView.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 			);
@@ -535,6 +575,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,9 +606,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */,
+				08FA0CB41E2E454C000C94EF /* ASValueTrackingSlider.m in Sources */,
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
+				08FA0CB81E2E45CD000C94EF /* ControlsStackView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				087EB60D1E290A14005DD80B /* SRGLetterboxService.m in Sources */,
+				08FA0CB21E2E454C000C94EF /* ASValuePopUpView.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 			);

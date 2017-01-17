@@ -8,6 +8,8 @@
 
 #import "DemosViewController.h"
 
+#import <SRGDataProvider/SRGDataProvider.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -17,6 +19,10 @@
     [self.window makeKeyAndVisible];
     
     self.window.rootViewController = [[DemosViewController alloc] init];
+    
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    [SRGDataProvider setCurrentDataProvider:dataProvider];
+    
     return YES;
 }
 
