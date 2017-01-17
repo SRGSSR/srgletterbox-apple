@@ -29,7 +29,7 @@
 {
     [super viewDidAppear:animated];
     
-    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"41981254"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         SRGMedia *media = medias.firstObject;
         [[SRGLetterboxService sharedService] playMedia:media preferredQuality:SRGQualityHD];
     }] resume];
