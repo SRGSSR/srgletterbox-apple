@@ -75,6 +75,18 @@
     self.airplayButton.mediaPlayerController = letterboxController;
     self.tracksButton.mediaPlayerController = letterboxController;
     
+    self.timeSlider.mediaPlayerController = letterboxController;
+    self.timeSlider.resumingAfterSeek = YES;
+    
+    self.timeSlider.font = [UIFont systemFontOfSize:14.f];
+    self.timeSlider.popUpViewColor = UIColor.whiteColor;
+    self.timeSlider.textColor = UIColor.blackColor;
+    self.timeSlider.popUpViewWidthPaddingFactor = 1.5f;
+    self.timeSlider.popUpViewHeightPaddingFactor = 1.f;
+    self.timeSlider.popUpViewCornerRadius = 3.f;
+    self.timeSlider.popUpViewArrowLength = 4.f;
+    self.timeSlider.dataSource = self;
+    
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
