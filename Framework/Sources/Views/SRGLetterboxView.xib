@@ -72,6 +72,9 @@
                             <rect key="frame" x="88" y="89" width="35" height="35"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="backward-35"/>
+                            <connections>
+                                <action selector="seekBackward:" destination="-1" eventType="touchUpInside" id="Gse-oB-T2j"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGPlaybackButton">
                             <rect key="frame" x="173" y="89" width="30" height="34"/>
@@ -85,6 +88,9 @@
                             <rect key="frame" x="253" y="89" width="35" height="35"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="forward-35"/>
+                            <connections>
+                                <action selector="seekForward:" destination="-1" eventType="touchUpInside" id="pef-E5-d6n"/>
+                            </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="GkR-Yz-hL2" userLabel="Playback Controls Stack View" customClass="ControlsStackView">
                             <rect key="frame" x="11" y="179" width="356" height="22"/>
