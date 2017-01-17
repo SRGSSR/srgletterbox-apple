@@ -98,7 +98,42 @@
             self.forwardSeekButton.hidden = ![letterboxController canSeekForward];
             self.backwardSeekButton.hidden = ![letterboxController canSeekBackward];
         }];
+        
         [self updateInterfaceAnimated:NO];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(mediaMetadataDidChange:)
+                                                     name:SRGMediaServiceMetadataDidChangeNotification
+                                                   object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(mediaPlaybackDidFail:)
+                                                     name:SRGMediaServicePlaybackDidFailNotification
+                                                   object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackStateDidChange:)
+                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                   object:letterboxController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationWillEnterForeground:)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationDidBecomeActive:)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(wirelessRouteDidChange:)
+                                                     name:SRGMediaPlayerWirelessRouteDidChangeNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(screenDidConnect:)
+                                                     name:UIScreenDidConnectNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(screenDidDisconnect:)
+                                                     name:UIScreenDidDisconnectNotification
+                                                   object:nil];
+
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -283,6 +318,52 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+#pragma mark Notifications
+
+- (void)mediaMetadataDidChange:(NSNotification *)notification
+{
+    if (! self.errorView.hidden) {
+        self.errorView.hidden = YES;
+        [self resetInactivityTimer];
+    }
+}
+
+- (void)mediaPlaybackDidFail:(NSNotification *)notification
+{
+    if (self.errorView.hidden) {
+        self.errorView.hidden = NO;
+//        self.errorLabel.font = [UIFont play_regularFontWithTextStyle:UIFontTextStyleSubheadline];
+    }
+    
+    NSError *error = [SRGLetterboxService sharedService].error;
+    self.errorLabel.text = error.localizedDescription;
+}
+
+- (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self updateInterfaceAnimated:YES];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self setUserInterfaceHidden:NO animated:YES];
+}
+
+- (void)wirelessRouteDidChange:(NSNotification *)notification
+{
+    [self updateInterfaceAnimated:YES];
+}
+
+- (void)screenDidConnect:(NSNotification *)notification
+{
+    [self updateInterfaceAnimated:YES];
+}
+
+- (void)screenDidDisconnect:(NSNotification *)notification
+{
+    [self updateInterfaceAnimated:YES];
 }
 
 @end
