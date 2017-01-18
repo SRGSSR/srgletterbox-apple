@@ -63,6 +63,10 @@ static NSURL *ServiceTestURL(void)
     
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
+    XCTAssertNil(service.media);
+    XCTAssertNil(service.mediaComposition);
+    XCTAssertNil(service.error);
+    
     // Wait until the stream is playing, at which time we expect the media composition to be available. Any update in between
     // must have correct media information
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -312,26 +316,6 @@ static NSURL *ServiceTestURL(void)
     XCTAssertNil(service.media);
     XCTAssertNil(service.mediaComposition);
     XCTAssertNil(service.error);
-}
-
-- (void)testMediaError
-{
-
-}
-
-- (void)testPlaybackError
-{
-
-}
-
-- (void)testRemoteCommandCenter
-{
-
-}
-
-- (void)testNowPlayingInformation
-{
-
 }
 
 @end
