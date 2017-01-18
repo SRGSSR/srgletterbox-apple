@@ -85,6 +85,10 @@ static NSURL *ServiceTestURL(void)
     [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertEqualObjects(service.media, media);
+    XCTAssertNotNil(service.mediaComposition);
+    XCTAssertNil(service.error);
 }
 
 - (void)testSameMediaPlaybackWhileAlreadyPlaying
@@ -181,9 +185,56 @@ static NSURL *ServiceTestURL(void)
     }];
 }
 
+- (void)testMediaChange
+{
+
+}
+
 - (void)testReset
 {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Request succeeded"];
     
+    __block SRGMedia *media = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        media = medias.firstObject;
+        XCTAssertNotNil(media);
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    
+    // Wait until the stream is playing with media composition information available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    }];
+    
+    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media);
+        XCTAssertNil(notification.userInfo[SRGLetterboxServiceMediaKey]);
+        
+        XCTAssertNotNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
+        XCTAssertNil(notification.userInfo[SRGLetterboxServiceMediaCompositionKey]);
+        return YES;
+    }];
+    
+    // Reset
+    [service reset];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNil(service.media);
+    XCTAssertNil(service.mediaComposition);
+    XCTAssertNil(service.error);
 }
 
 - (void)testMediaError
