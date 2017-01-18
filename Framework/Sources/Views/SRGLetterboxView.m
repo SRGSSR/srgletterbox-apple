@@ -5,11 +5,12 @@
 //
 
 #import "SRGLetterboxView.h"
-#import "ASValueTrackingSlider.h"
 
+#import "ASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "SRGLetterboxService.h"
+#import "UIImageView+SRGLetterbox.h"
 
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
@@ -67,14 +68,14 @@
     
 //    // FIXME: Currently added in code, but we should provide a more customizable activity indicator
 //    //        in the SRG Media Player library soon. Replace when available
-//    UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
-//    loadingImageView.alpha = 0.f;
-//    [self.playerView insertSubview:loadingImageView aboveSubview:self.playbackButton];
-//    [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.equalTo(self.playbackButton.mas_top).with.offset(-20.f);
-//        make.centerX.equalTo(self.playbackButton.mas_centerX);
-//    }];
-//    self.loadingImageView = loadingImageView;
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
+    loadingImageView.alpha = 0.f;
+    [self.playerView insertSubview:loadingImageView aboveSubview:self.playbackButton];
+    [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.playbackButton.mas_top).with.offset(-20.f);
+        make.centerX.equalTo(self.playbackButton.mas_centerX);
+    }];
+    self.loadingImageView = loadingImageView;
     
     self.backwardSeekButton.hidden = YES;
     self.forwardSeekButton.hidden = YES;
