@@ -35,6 +35,7 @@
 		08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */; };
 		08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */; };
 		08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */; };
+		08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */; };
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
@@ -200,6 +201,7 @@
 		08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SRGLetterbox.m"; sourceTree = "<group>"; };
+		08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				08FA0CEE1E2E8F62000C94EF /* Fonts */,
+				08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */,
 				08FA0CBA1E2E5874000C94EF /* SRGLetterbox.xcassets */,
 			);
 			path = Resources;
@@ -651,6 +654,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08FA0CEF1E2E8F62000C94EF /* Fonts in Resources */,
+				08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */,
 				08FA0CBB1E2E5874000C94EF /* SRGLetterbox.xcassets in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 			);

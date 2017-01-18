@@ -109,6 +109,8 @@
                                                                                                             action:@selector(resetInactivityTimer:)];
     activityGestureRecognizer.delegate = self;
     [self.playerView addGestureRecognizer:activityGestureRecognizer];
+    
+    [self reloadData];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -318,6 +320,12 @@
     [[SRGLetterboxService sharedService].controller seekForwardWithCompletionHandler:nil];
 }
 
+#pragma mark Data display
+
+- (void)reloadData {
+    [self.imageView srg_requestImageForObject:[SRGLetterboxService sharedService].media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+}
+
 #pragma mark ASValueTrackingSliderDataSource protocol
 
 - (NSString *)slider:(ASValueTrackingSlider *)slider stringForValue:(float)value;
@@ -349,6 +357,8 @@
 
 - (void)mediaMetadataDidChange:(NSNotification *)notification
 {
+    [self reloadData];
+    
     if (! self.errorView.hidden) {
         self.errorView.hidden = YES;
         [self resetInactivityTimer];
