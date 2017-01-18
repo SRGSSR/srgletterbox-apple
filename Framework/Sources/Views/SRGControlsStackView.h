@@ -6,6 +6,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ControlsStackView : UIStackView
+NS_ASSUME_NONNULL_BEGIN
+
+@interface SRGControlsStackView : UIStackView
 
 @end
+
+NS_ASSUME_NONNULL_END

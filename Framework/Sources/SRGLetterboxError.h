@@ -6,6 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  Data provider error constants. More information is available from the `userInfo` associated with these errors
  */
@@ -20,3 +22,5 @@ typedef NS_ENUM(NSInteger, SRGLetterboxErrorCode) {
  *  Common domain for data provider errors
  */
 OBJC_EXPORT NSString * const SRGLetterboxErrorDomain;
+
+NS_ASSUME_NONNULL_END

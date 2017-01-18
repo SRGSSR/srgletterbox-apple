@@ -21,8 +21,8 @@
 		08FA0CB21E2E454C000C94EF /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CAE1E2E454C000C94EF /* ASValuePopUpView.m */; };
 		08FA0CB31E2E454C000C94EF /* ASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CAF1E2E454C000C94EF /* ASValueTrackingSlider.h */; };
 		08FA0CB41E2E454C000C94EF /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CB01E2E454C000C94EF /* ASValueTrackingSlider.m */; };
-		08FA0CB71E2E45CD000C94EF /* ControlsStackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CB51E2E45CD000C94EF /* ControlsStackView.h */; };
-		08FA0CB81E2E45CD000C94EF /* ControlsStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CB61E2E45CD000C94EF /* ControlsStackView.m */; };
+		08FA0CB71E2E45CD000C94EF /* SRGControlsStackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CB51E2E45CD000C94EF /* SRGControlsStackView.h */; };
+		08FA0CB81E2E45CD000C94EF /* SRGControlsStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CB61E2E45CD000C94EF /* SRGControlsStackView.m */; };
 		08FA0CBB1E2E5874000C94EF /* SRGLetterbox.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CBA1E2E5874000C94EF /* SRGLetterbox.xcassets */; };
 		08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */; };
 		08FA0CC31E2E72E7000C94EF /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */; };
@@ -186,8 +186,8 @@
 		08FA0CAE1E2E454C000C94EF /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
 		08FA0CAF1E2E454C000C94EF /* ASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValueTrackingSlider.h; sourceTree = "<group>"; };
 		08FA0CB01E2E454C000C94EF /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
-		08FA0CB51E2E45CD000C94EF /* ControlsStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsStackView.h; sourceTree = "<group>"; };
-		08FA0CB61E2E45CD000C94EF /* ControlsStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlsStackView.m; sourceTree = "<group>"; };
+		08FA0CB51E2E45CD000C94EF /* SRGControlsStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlsStackView.h; sourceTree = "<group>"; };
+		08FA0CB61E2E45CD000C94EF /* SRGControlsStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGControlsStackView.m; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* SRGLetterbox.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SRGLetterbox.xcassets; sourceTree = "<group>"; };
 		08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -377,8 +377,8 @@
 			isa = PBXGroup;
 			children = (
 				08FA0CAC1E2E454C000C94EF /* ASValueTrackingSlider */,
-				08FA0CB51E2E45CD000C94EF /* ControlsStackView.h */,
-				08FA0CB61E2E45CD000C94EF /* ControlsStackView.m */,
+				08FA0CB51E2E45CD000C94EF /* SRGControlsStackView.h */,
+				08FA0CB61E2E45CD000C94EF /* SRGControlsStackView.m */,
 				6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */,
 				6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */,
 				08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */,
@@ -517,7 +517,7 @@
 				08FA0CC61E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h in Headers */,
 				08FA0CB31E2E454C000C94EF /* ASValueTrackingSlider.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
-				08FA0CB71E2E45CD000C94EF /* ControlsStackView.h in Headers */,
+				08FA0CB71E2E45CD000C94EF /* SRGControlsStackView.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
@@ -689,7 +689,7 @@
 				08FA0CB41E2E454C000C94EF /* ASValueTrackingSlider.m in Sources */,
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
-				08FA0CB81E2E45CD000C94EF /* ControlsStackView.m in Sources */,
+				08FA0CB81E2E45CD000C94EF /* SRGControlsStackView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				087EB60D1E290A14005DD80B /* SRGLetterboxService.m in Sources */,
 				08FA0CB21E2E454C000C94EF /* ASValuePopUpView.m in Sources */,

@@ -4,15 +4,15 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "ControlsStackView.h"
+#import "SRGControlsStackView.h"
 
-@interface ControlsStackView ()
+@interface SRGControlsStackView ()
 
 @property (nonatomic, weak) IBOutlet UISlider *timeSlider;
 
 @end
 
-@implementation ControlsStackView
+@implementation SRGControlsStackView
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
 {
