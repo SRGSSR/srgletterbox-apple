@@ -402,9 +402,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     if (self.controller.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateNowPlayingInformation];
     }
-    else if (self.controller.playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        [self reset];
-    }
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -445,6 +442,18 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self updateRemoteCommandCenter];
+}
+
+#pragma mark Description
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@: %p; media: %@; mediaComposition: %@; error: %@>",
+            [self class],
+            self,
+            self.media,
+            self.mediaComposition,
+            self.error];
 }
 
 @end
