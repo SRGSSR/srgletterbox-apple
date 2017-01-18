@@ -5,6 +5,7 @@
 //
 
 #import "SRGLetterboxController.h"
+#import "SRGLetterboxError.h"
 #import "SRGLetterboxService.h"
 #import "SRGLetterboxView.h"
 

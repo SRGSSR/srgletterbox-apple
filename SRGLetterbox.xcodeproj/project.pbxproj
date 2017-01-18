@@ -92,6 +92,8 @@
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FD9BA251E2FB36B0013CC97 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FD9BA261E2FB36B0013CC97 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */; };
 		6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; };
 		6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; };
 		6FE655D41E2CA3F9000033D4 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; };
@@ -225,6 +227,8 @@
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxControllerTestCase.m; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
+		6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
+		6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SRGLetterbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FE655DE1E2CFA46000033D4 /* LetterboxServiceTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxServiceTestCase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -334,11 +338,13 @@
 		6F042D241E28E2D100CFD89B /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6F042D281E28F70500CFD89B /* Helpers */,
 				087EB6091E290A14005DD80B /* Service */,
 				6FAB3AFF1E28F76800CC2197 /* Views */,
-				6F042D281E28F70500CFD89B /* Helpers */,
 				6F042D251E28E2D100CFD89B /* SRGLetterbox.h */,
 				6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */,
+				6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */,
+				6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -502,6 +508,7 @@
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
 				08FA0CF41E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h in Headers */,
+				6FD9BA251E2FB36B0013CC97 /* SRGLetterboxError.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +677,7 @@
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				087EB60D1E290A14005DD80B /* SRGLetterboxService.m in Sources */,
 				08FA0CB21E2E454C000C94EF /* ASValuePopUpView.m in Sources */,
+				6FD9BA261E2FB36B0013CC97 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 				08FA0CC71E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m in Sources */,

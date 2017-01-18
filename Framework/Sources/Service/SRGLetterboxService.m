@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxService.h"
 
+#import "SRGLetterboxError.h"
 #import "UIDevice+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
@@ -216,8 +217,9 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
             [self.requestQueue addRequest:playRequest resume:YES];
         }
         else {
-            // FIXME: Use proper error domain and codes
-            NSError *error = [NSError errorWithDomain:@"ch.srgssr.letterbox" code:42 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil)}];
+            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                 code:SRGLetterboxErrorCodeNotFound
+                                             userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
             [self.requestQueue reportError:error];
         }
     };
