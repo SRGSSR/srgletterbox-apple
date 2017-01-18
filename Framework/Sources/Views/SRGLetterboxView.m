@@ -142,10 +142,6 @@
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                    object:letterboxController];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationWillEnterForeground:)
-                                                     name:UIApplicationWillEnterForegroundNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
                                                      name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
@@ -166,6 +162,7 @@
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
         [[SRGLetterboxService sharedService].controller removePeriodicTimeObserver:self.periodicTimeObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
 }
 
