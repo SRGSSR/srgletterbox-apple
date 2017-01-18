@@ -30,6 +30,14 @@ static NSURL *ServiceTestURL(void)
     return expectation;
 }
 
+#pragma mark Setup and teardown
+
+- (void)tearDown
+{
+    // Return to a known state after playback ended
+    [[SRGLetterboxService sharedService] reset];
+}
+
 #pragma mark Tests
 
 - (void)testObjects
