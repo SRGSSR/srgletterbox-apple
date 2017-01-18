@@ -70,7 +70,16 @@ static NSURL *ServiceTestURL(void)
     }];
     [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaKey], media);
-        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+        XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
+        
+        if (! notification.userInfo[SRGLetterboxServiceMediaCompositionKey]) {
+            XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaKey]);
+            return NO;
+        }
+        else {
+            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media);
+            return YES;
+        }
     }];
     
     [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
