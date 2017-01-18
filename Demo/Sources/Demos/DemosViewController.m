@@ -31,7 +31,9 @@
     
     [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"41981254"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         SRGMedia *media = medias.firstObject;
-        [[SRGLetterboxService sharedService] playMedia:media preferredQuality:SRGQualityHD];
+        [[SRGLetterboxService sharedService] playMedia:media
+                                      withDataProvider:[SRGDataProvider currentDataProvider]
+                                      preferredQuality:SRGQualityHD];
     }] resume];
 }
 

@@ -131,11 +131,11 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaMetadataDidChange:)
-                                                     name:SRGMediaServiceMetadataDidChangeNotification
+                                                     name:SRGLetterboxServiceMetadataDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaPlaybackDidFail:)
-                                                     name:SRGMediaServicePlaybackDidFailNotification
+                                                     name:SRGLetterboxServicePlaybackDidFailNotification
                                                    object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
