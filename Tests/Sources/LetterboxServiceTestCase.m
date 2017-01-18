@@ -352,7 +352,7 @@ static NSURL *ServiceTestURL(void)
     }];
     
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
-    XCTAssertTrue([service resumeFromController:controller]);
+    [service resumeFromController:controller];
     
     XCTAssertNotNil(service.media);
     XCTAssertEqualObjects(service.mediaComposition, mediaComposition);
@@ -423,7 +423,7 @@ static NSURL *ServiceTestURL(void)
         return YES;
     }];
     
-    XCTAssertTrue([service resumeFromController:controller]);
+    [service resumeFromController:controller];
     
     XCTAssertNotNil(service.media);
     XCTAssertEqualObjects(service.mediaComposition, mediaComposition2);
