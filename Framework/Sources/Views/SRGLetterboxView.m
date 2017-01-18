@@ -66,8 +66,8 @@
     
     self.playbackButton.mediaPlayerController = letterboxController;
     
-//    // FIXME: Currently added in code, but we should provide a more customizable activity indicator
-//    //        in the SRG Media Player library soon. Replace when available
+    // FIXME: Currently added in code, but we should provide a more customizable activity indicator
+    //        in the SRG Media Player library soon. Replace when available
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
     [self.playerView insertSubview:loadingImageView aboveSubview:self.playbackButton];
