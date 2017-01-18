@@ -130,7 +130,7 @@ static NSURL *ServiceTestURL(void)
         XCTFail(@"Expect no metadata update when playing the same media");
     }];
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        XCTFail(@"Expect no play state change when playing the same media");
+        XCTFail(@"Expect no playback state change when playing the same media");
     }];
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
@@ -319,7 +319,7 @@ static NSURL *ServiceTestURL(void)
     XCTAssertNil(service.error);
 }
 
-- (void)testResumeFromIdleController
+- (void)testResumeWithIdleService
 {
     XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Request succeeded"];
     
@@ -348,7 +348,6 @@ static NSURL *ServiceTestURL(void)
         
         XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
         XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaCompositionKey], mediaComposition);
-        
         return YES;
     }];
     
@@ -362,14 +361,77 @@ static NSURL *ServiceTestURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
-- (void)testResumeFromOtherPlayingController
+- (void)testResumeWithPlayingService
 {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request succeeded"];
     
-}
-
-- (void)testResumeFromPlayingControllerWithSameMedia
-{
-
+    __block SRGMedia *media1 = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        media1 = medias.firstObject;
+        XCTAssertNotNil(media1);
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    
+    // Wait until the media composition is available
+    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    }];
+    
+    [[SRGLetterboxService sharedService] playMedia:media1 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    SRGMediaComposition *mediaComposition1 = service.mediaComposition;
+    
+    XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Media composition request succeeded"];
+    
+    __block SRGMediaComposition *mediaComposition2 = nil;
+    [[dataProvider mediaCompositionForVideoWithUid:@"42851050" completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        XCTAssertNotNil(mediaComposition);
+        mediaComposition2 = mediaComposition;
+        [mediaCompositionExpectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTestExpectation *playExpectation = [self expectationWithDescription:@"Play succeeded"];
+    
+    SRGLetterboxController *controller = [[SRGLetterboxController alloc] init];
+    [controller playMediaComposition:mediaComposition2 withPreferredProtocol:SRGProtocolNone preferredQuality:SRGQualityNone userInfo:nil resume:YES completionHandler:^(NSError * _Nonnull error) {
+        [playExpectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Expect no player status change
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no playback state change");
+    }];
+    
+    [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media1);
+        XCTAssertNotNil(notification.userInfo[SRGLetterboxServiceMediaKey]);
+        
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey], mediaComposition1);
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaCompositionKey], mediaComposition2);
+        return YES;
+    }];
+    
+    XCTAssertTrue([service resumeFromController:controller]);
+    
+    XCTAssertNotNil(service.media);
+    XCTAssertEqualObjects(service.mediaComposition, mediaComposition2);
+    XCTAssertNil(service.error);
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
 }
 
 - (void)testResumeFailure
