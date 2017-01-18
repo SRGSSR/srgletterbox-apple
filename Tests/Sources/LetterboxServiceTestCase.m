@@ -164,4 +164,29 @@ static NSURL *ServiceTestURL(void)
     }];
 }
 
+- (void)testReset
+{
+    
+}
+
+- (void)testMediaError
+{
+
+}
+
+- (void)testPlaybackError
+{
+
+}
+
+- (void)testRemoteCommandCenter
+{
+
+}
+
+- (void)testNowPlayingInformation
+{
+
+}
+
 @end
