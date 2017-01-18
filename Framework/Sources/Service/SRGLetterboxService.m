@@ -138,11 +138,29 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition
 {
+    if (self.media == media && self.mediaComposition == mediaComposition) {
+        return;
+    }
+    
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
     
     self.media = media;
     self.mediaComposition = mediaComposition;
+    
+    if (! media) {
+        NSAssert(mediaComposition == nil, @"No media composition is expected when updating with no media");
+        
+        self.error = nil;
+        
+        [self.controller reset];
+        [self.requestQueue cancel];
+        [self.imageOperation cancel];
+        
+        [self updateRemoteCommandCenter];
+        [self updateNowPlayingInformation];
+        [self updateNowPlayingPlaybackInformation];
+    }
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     if (media) {
@@ -171,7 +189,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         return;
     }
     
-    [self reset];
     [self updateWithMedia:media mediaComposition:nil];
     
     // Perform media-dependent updates
@@ -244,17 +261,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)reset
 {
-    self.media = nil;
-    self.mediaComposition = nil;
-    self.error = nil;
-    
-    [self.controller reset];
-    [self.requestQueue cancel];
-    [self.imageOperation cancel];
-    
-    [self updateRemoteCommandCenter];
-    [self updateNowPlayingInformation];
-    [self updateNowPlayingPlaybackInformation];
+    [self updateWithMedia:nil mediaComposition:nil];
 }
 
 - (void)reportError:(NSError *)error
