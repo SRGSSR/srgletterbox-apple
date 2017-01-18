@@ -232,12 +232,10 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     }
 }
 
-- (BOOL)resumeFromController:(SRGLetterboxController *)controller
+- (void)resumeFromController:(SRGLetterboxController *)controller
 {
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    if (! mediaComposition) {
-        return NO;
-    }
+    NSAssert(controller.mediaComposition, @"Only playback operations with a media composition are allowed on SRGLetterboxController");
     
     SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     SRGMedia *media = [mediaComposition mediaForSegment:segment];
@@ -247,8 +245,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     
     // Perform media-dependent updates
     [self.controller reloadPlayerConfiguration];
-    
-    return YES;
 }
 
 - (void)reset

@@ -377,7 +377,6 @@
 			children = (
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0CA81E2E325F000C94EF /* Masonry.framework */,
-				6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
@@ -387,6 +386,7 @@
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
+				6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

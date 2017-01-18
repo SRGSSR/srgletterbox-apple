@@ -434,9 +434,4 @@ static NSURL *ServiceTestURL(void)
     }];
 }
 
-- (void)testResumeFailure
-{
-
-}
-
 @end
