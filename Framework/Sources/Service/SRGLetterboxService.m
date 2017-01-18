@@ -55,6 +55,8 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (instancetype)init
 {
     if (self = [super init]) {
+        NSAssert([SRGAnalyticsTracker sharedTracker].started, @"The SRGAnalyticsTracker shared instance must be started before accessing the Letterbox service");
+        
         self.controller = [[SRGLetterboxController alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self

@@ -36,6 +36,10 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 /**
  *  Service responsible for media playback. The service itself is a singleton which manages main playback throughout the
  *  application (and associated features like picture in picture, Airplay or control center integration).
+ *
+ *  @discussion The analytics tracker singleton instance must be started before the singleton instance is accessed for
+ *              the first time, otherwise an exception will be thrown in debug builds. Please refer to `SRGAnalyticsTracker`
+ *              documentation for more information
  */
 @interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 

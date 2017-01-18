@@ -8,6 +8,7 @@
 
 #import "DemosViewController.h"
 
+#import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 
 @implementation AppDelegate
@@ -18,11 +19,15 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
-    self.window.rootViewController = [[DemosViewController alloc] init];
+    [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
+                                                     comScoreVirtualSite:@"app-test-v"
+                                                     netMetrixIdentifier:@"test"];
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL()
+                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
     [SRGDataProvider setCurrentDataProvider:dataProvider];
     
+    self.window.rootViewController = [[DemosViewController alloc] init];
     return YES;
 }
 

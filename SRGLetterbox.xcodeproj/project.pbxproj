@@ -94,6 +94,8 @@
 		6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD9BA251E2FB36B0013CC97 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FD9BA261E2FB36B0013CC97 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */; };
+		6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */; };
+		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
 		6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; };
 		6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; };
 		6FE655D41E2CA3F9000033D4 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; };
@@ -229,6 +231,8 @@
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
 		6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
+		6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerSingletonSetup.m; sourceTree = "<group>"; };
+		6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleFix.m; sourceTree = "<group>"; };
 		6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SRGLetterbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FE655DE1E2CFA46000033D4 /* LetterboxServiceTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxServiceTestCase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -460,10 +464,20 @@
 		6FAB3B8C1E29066300CC2197 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6FD9BA2A1E2FBC770013CC97 /* Helpers */,
 				6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */,
 				6FE655DE1E2CFA46000033D4 /* LetterboxServiceTestCase.m */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		6FD9BA2A1E2FBC770013CC97 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */,
+				6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		6FE321371E28E24E00FD8E42 = {
@@ -661,6 +675,8 @@
 			files = (
 				6FE655E11E2CFA4C000033D4 /* LetterboxServiceTestCase.m in Sources */,
 				6FAB3B8F1E29066300CC2197 /* LetterboxControllerTestCase.m in Sources */,
+				6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */,
+				6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
