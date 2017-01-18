@@ -8,10 +8,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSBundle (SRGAnalytics)
+@interface NSBundle (SRGLetterbox)
 
 /**
- *  The analytics resource bundle
+ *  The SRGLetterbox resource bundle
  */
 + (NSBundle *)srg_letterboxBundle;
 

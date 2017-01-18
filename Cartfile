@@ -4,3 +4,4 @@ github "SRGSSR/srgdataprovider-ios" "develop"
 github "SRGSSR/srglogger-ios" "develop"
 github "SRGSSR/SRGMediaPlayer-iOS" "develop"
 github "ibireme/YYWebImage" ~> 1.0.4
+github "SnapKit/Masonry" ~> 1.0.2

@@ -6,6 +6,15 @@
 
 #import "DemosViewController.h"
 
+#import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
+
+@interface DemosViewController ()
+
+@property (nonatomic) IBOutlet SRGLetterboxView *letterboxView;
+
+@end
+
 @implementation DemosViewController
 
 #pragma mark Object lifecycle
@@ -14,6 +23,16 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     return [storyboard instantiateInitialViewController];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"41981254"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        SRGMedia *media = medias.firstObject;
+        [[SRGLetterboxService sharedService] playMedia:media preferredQuality:SRGQualityHD];
+    }] resume];
 }
 
 @end
