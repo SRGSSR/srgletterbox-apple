@@ -138,11 +138,29 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition
 {
+    if (self.media == media && self.mediaComposition == mediaComposition) {
+        return;
+    }
+    
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
     
     self.media = media;
     self.mediaComposition = mediaComposition;
+    
+    if (! media) {
+        NSAssert(mediaComposition == nil, @"No media composition is expected when updating with no media");
+        
+        self.error = nil;
+        
+        [self.controller reset];
+        [self.requestQueue cancel];
+        [self.imageOperation cancel];
+        
+        [self updateRemoteCommandCenter];
+        [self updateNowPlayingInformation];
+        [self updateNowPlayingPlaybackInformation];
+    }
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     if (media) {
@@ -171,7 +189,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         return;
     }
     
-    [self reset];
     [self updateWithMedia:media mediaComposition:nil];
     
     // Perform media-dependent updates
@@ -215,46 +232,24 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     }
 }
 
-- (BOOL)resumeFromController:(SRGLetterboxController *)controller
+- (void)resumeFromController:(SRGLetterboxController *)controller
 {
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    if (mediaComposition) {
-        SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
-        SRGMedia *media = [mediaComposition mediaForSegment:segment];
-        [self updateWithMedia:media mediaComposition:mediaComposition];
-    }
-    // FIXME: Quick & dirty implementation. See MediaPlayerPreviewViewController.m
-    else {
-        SRGMedia *media = controller.userInfo[@"media"];
-        if (media) {
-            [self updateWithMedia:media mediaComposition:nil];
-        }
-        else {
-            return NO;
-        }
-    }
+    NSAssert(controller.mediaComposition, @"Only playback operations with a media composition are allowed on SRGLetterboxController");
+    
+    SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    SRGMedia *media = [mediaComposition mediaForSegment:segment];
+    [self updateWithMedia:media mediaComposition:mediaComposition];
     
     self.controller = controller;
     
     // Perform media-dependent updates
     [self.controller reloadPlayerConfiguration];
-    
-    return YES;
 }
 
 - (void)reset
 {
-    self.media = nil;
-    self.mediaComposition = nil;
-    self.error = nil;
-    
-    [self.controller reset];
-    [self.requestQueue cancel];
-    [self.imageOperation cancel];
-    
-    [self updateRemoteCommandCenter];
-    [self updateNowPlayingInformation];
-    [self updateNowPlayingPlaybackInformation];
+    [self updateWithMedia:nil mediaComposition:nil];
 }
 
 - (void)reportError:(NSError *)error
@@ -395,9 +390,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     if (self.controller.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateNowPlayingInformation];
     }
-    else if (self.controller.playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        [self reset];
-    }
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -438,6 +430,18 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self updateRemoteCommandCenter];
+}
+
+#pragma mark Description
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@: %p; media: %@; mediaComposition: %@; error: %@>",
+            [self class],
+            self,
+            self.media,
+            self.mediaComposition,
+            self.error];
 }
 
 @end

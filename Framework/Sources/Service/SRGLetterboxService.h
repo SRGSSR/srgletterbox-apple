@@ -62,10 +62,8 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 /**
  *  Transfers playback from the specified existing controller to the service. The service media player controller
  *  is replaced
- *
- *  @return YES iff resuming could be successfully made
  */
-- (BOOL)resumeFromController:(SRGLetterboxController *)controller;
+- (void)resumeFromController:(SRGLetterboxController *)controller;
 
 /**
  *  Reset playback, stopping a playback request if any has been made

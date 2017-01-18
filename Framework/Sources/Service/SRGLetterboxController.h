@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
+#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,6 +46,56 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
  *              finished set to `NO`
  */
 - (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+@end
+
+/**
+ *  Only playback of media compositions is available on the Letterbox controller
+ */
+@interface SRGLetterboxController (Unavailable)
+
+- (void)prepareToPlayURL:(NSURL *)URL
+                  atTime:(CMTime)time
+            withSegments:(nullable NSArray<id<SRGSegment>> *)segments
+                userInfo:(nullable NSDictionary *)userInfo
+       completionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
+
+- (void)prepareToPlayURL:(NSURL *)URL withCompletionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
+
+- (void)playURL:(NSURL *)URL
+         atTime:(CMTime)time
+   withSegments:(nullable NSArray<id<SRGSegment>> *)segments
+       userInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
+
+- (void)prepareToPlayURL:(NSURL *)URL
+                 atIndex:(NSInteger)index
+              inSegments:(NSArray<id<SRGSegment>> *)segments
+            withUserInfo:(nullable NSDictionary *)userInfo
+       completionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
+
+- (void)playURL:(NSURL *)URL
+        atIndex:(NSInteger)index
+     inSegments:(NSArray<id<SRGSegment>> *)segments
+   withUserInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
+
+- (void)playURL:(NSURL *)URL
+         atTime:(CMTime)time
+   withSegments:(nullable NSArray<id<SRGSegment>> *)segments
+analyticsLabels:(nullable NSDictionary *)analyticsLabels
+       userInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
+
+- (void)prepareToPlayURL:(NSURL *)URL
+                 atIndex:(NSInteger)index
+              inSegments:(NSArray<id<SRGSegment>> *)segments
+     withAnalyticsLabels:(nullable NSDictionary *)analyticsLabels
+                userInfo:(nullable NSDictionary *)userInfo
+       completionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
+
+- (void)playURL:(NSURL *)URL
+        atIndex:(NSInteger)index
+     inSegments:(NSArray<id<SRGSegment>> *)segments
+withAnalyticsLabels:(nullable NSDictionary *)analyticsLabels
+       userInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
 
 @end
 
