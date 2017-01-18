@@ -235,21 +235,13 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (BOOL)resumeFromController:(SRGLetterboxController *)controller
 {
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    if (mediaComposition) {
-        SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
-        SRGMedia *media = [mediaComposition mediaForSegment:segment];
-        [self updateWithMedia:media mediaComposition:mediaComposition];
+    if (! mediaComposition) {
+        return NO;
     }
-    // FIXME: Quick & dirty implementation. See MediaPlayerPreviewViewController.m
-    else {
-        SRGMedia *media = controller.userInfo[@"media"];
-        if (media) {
-            [self updateWithMedia:media mediaComposition:nil];
-        }
-        else {
-            return NO;
-        }
-    }
+    
+    SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    SRGMedia *media = [mediaComposition mediaForSegment:segment];
+    [self updateWithMedia:media mediaComposition:mediaComposition];
     
     self.controller = controller;
     
