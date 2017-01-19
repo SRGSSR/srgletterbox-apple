@@ -7,11 +7,38 @@
 #import "AppDelegate.h"
 
 #import "DemosViewController.h"
+#import "ModalPlayerViewController.h"
+#import "SimplePlayerViewController.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 
+@interface AppDelegate ()
+
+@property (nonatomic) Class restorationClass;
+
+@property (nonatomic, readonly) UINavigationController *navigationController;
+@property (nonatomic, readonly) UIViewController *topPresentedViewController;
+
+@end
+
 @implementation AppDelegate
+
+#pragma mark Getters and setters
+
+- (UINavigationController *)navigationController
+{
+    return (UINavigationController *)self.window.rootViewController;
+}
+
+- (UIViewController *)topPresentedViewController
+{
+    UIViewController *topPresentedViewController = self.window.rootViewController;
+    while (topPresentedViewController.presentedViewController) {
+        topPresentedViewController = topPresentedViewController.presentedViewController;
+    }
+    return topPresentedViewController;
+}
 
 #pragma mark Application lifecycle
 
@@ -45,17 +72,34 @@
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-
+    if (self.restorationClass == [ModalPlayerViewController class]) {
+        ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] init];
+        [self.topPresentedViewController presentViewController:playerViewController animated:YES completion:nil];
+    }
+    else if (self.restorationClass == [SimplePlayerViewController class]) {
+        SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] init];
+        [self.navigationController pushViewController:playerViewController animated:YES];
+    }
 }
 
 - (void)letterboxDidStartPictureInPicture
 {
     [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+    
+    if ([self.topPresentedViewController isKindOfClass:[ModalPlayerViewController class]]) {
+        self.restorationClass = [ModalPlayerViewController class];
+        [self.topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+    else if ([self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]]) {
+        self.restorationClass = [SimplePlayerViewController class];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)letterboxDidStopPictureInPicture
 {
     [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_stop"];
+    self.restorationClass = Nil;
 }
 
 @end
