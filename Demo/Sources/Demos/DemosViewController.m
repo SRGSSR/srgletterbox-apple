@@ -32,13 +32,25 @@
 {
     switch (indexPath.row) {
         case 0: {
-            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] init];
+            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithUid:@"41981254"];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
         case 1: {
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] init];
+            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithUid:@"42844052"];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 2: {
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithUid:@"41981254"];
+            [self presentViewController:playerViewController animated:YES completion:nil];
+            break;
+        }
+            
+        case 3: {
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithUid:@"42844052"];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }

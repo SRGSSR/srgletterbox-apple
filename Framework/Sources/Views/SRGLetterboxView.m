@@ -15,8 +15,9 @@
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
 
-@interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
+static void commonInit(SRGLetterboxView *self);
 
+@interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
 
 // UI
 @property (nonatomic, weak) IBOutlet UIView *playerView;
@@ -40,7 +41,6 @@
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
-
 // Internal
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -52,7 +52,25 @@
 
 @implementation SRGLetterboxView
 
-#pragma mark View life cycle
+#pragma mark Object lifecycle
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        commonInit(self);
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super initWithCoder:aDecoder]) {
+        commonInit(self);
+    }
+    return self;
+}
+
+#pragma mark View lifecycle
 
 - (void)awakeFromNib
 {
@@ -117,8 +135,9 @@
 {
     [super willMoveToWindow:newWindow];
     
+    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
+    
     if (newWindow) {
-        SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
         @weakify(self)
         @weakify(letterboxController)
         self.periodicTimeObserver = [letterboxController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
@@ -159,38 +178,17 @@
                                                  selector:@selector(screenDidDisconnect:)
                                                      name:UIScreenDidDisconnectNotification
                                                    object:nil];
-
+        
+        AVPictureInPictureController *pictureInPictureController = letterboxController.pictureInPictureController;
+        if (pictureInPictureController.isPictureInPictureActive) {
+            [pictureInPictureController stopPictureInPicture];
+        }
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
-        [[SRGLetterboxService sharedService].controller removePeriodicTimeObserver:self.periodicTimeObserver];
+        [letterboxController removePeriodicTimeObserver:self.periodicTimeObserver];
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
-}
-
--(id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self xibSetup];
-    }
-    return self;
-}
-
--(id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self xibSetup];
-    }
-    return self;
-}
-
--(void)xibSetup {
-    
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
 }
 
 #pragma mark Getters and setters
@@ -201,7 +199,7 @@
     _inactivityTimer = inactivityTimer;
 }
 
-# pragma mark UI
+#pragma mark UI
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
@@ -401,3 +399,12 @@
 }
 
 @end
+
+static void commonInit(SRGLetterboxView *self)
+{
+    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
+    [self addSubview:view];
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+}

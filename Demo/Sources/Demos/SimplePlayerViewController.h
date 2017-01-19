@@ -10,6 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SimplePlayerViewController : UIViewController
 
+- (instancetype)initWithUid:(nullable NSString *)uid;
+
 @end
 
 NS_ASSUME_NONNULL_END

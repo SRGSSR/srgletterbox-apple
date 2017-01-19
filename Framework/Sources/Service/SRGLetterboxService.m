@@ -139,6 +139,13 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     }
 }
 
+- (BOOL)isPictureInPictureActive
+{
+    return self.controller.pictureInPictureController.pictureInPictureActive;
+}
+
+#pragma mark Data
+
 - (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition
 {
     if (self.media == media && self.mediaComposition == mediaComposition) {
@@ -385,6 +392,53 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)seekBackward:(id)sender
 {
     [self.controller seekBackwardWithCompletionHandler:nil];
+}
+
+#pragma mark AVPictureInPictureControllerDelegate protocol
+
+- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
+        [self.delegate letterboxDidStartPictureInPicture];
+    }
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    // It is very important that the completion handler is called at the very end of the process, otherwise silly
+    // things might happen during the restoration (most notably player rate set to 0)
+    
+    // If stopping picture in picture because of a reset, don't restore anything
+    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateIdle) {
+        completionHandler(YES);
+        return;
+    }
+    
+    if ([self.delegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
+        [self.delegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
+            completionHandler(restored);
+        }];
+    }
+    else {
+        completionHandler(YES);
+    }
+}
+
+- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
+        [self.delegate letterboxDidStopPictureInPicture];
+    }
+    
+    if ([self.delegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
+        // If switching from PiP to Airplay, restore the UI (just call the restoration method directly)
+        if (self.controller.player.externalPlaybackActive) {
+            [self pictureInPictureController:pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
+        }
+        else {
+            [self.controller reset];
+        }
+    }
 }
 
 #pragma mark Notifications
