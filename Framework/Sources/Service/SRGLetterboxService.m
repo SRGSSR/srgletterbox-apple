@@ -59,6 +59,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 {
     if (self = [super init]) {
         NSAssert([SRGAnalyticsTracker sharedTracker].started, @"The SRGAnalyticsTracker shared instance must be started before accessing the Letterbox service");
+        NSAssert([SRGDataProvider currentDataProvider], @"A current SRGDataProvider must have been defined before accessing the Letterbox service");
         
         self.controller = [[SRGLetterboxController alloc] init];
         
@@ -203,7 +204,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 #pragma mark Playback
 
-- (void)playMedia:(SRGMedia *)media preferredQuality:(SRGQuality)preferredQuality
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
 {
     // If already playing the media, does nothing
     if (self.controller.playbackState != SRGMediaPlayerPlaybackStateIdle
@@ -245,7 +246,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         }
     };
     
-    NSAssert([SRGDataProvider currentDataProvider], @"Current SRGDataProvider must be not nil.");
     if (self.media.mediaType == SRGMediaTypeVideo) {
         SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForVideoWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
@@ -507,7 +507,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 {
     if ([FXReachability sharedInstance].reachable) {
         if (self.media) {
-            [self playMedia:self.media preferredQuality:self.preferredQuality];
+            [self playMedia:self.media withPreferredQuality:self.preferredQuality];
         }
     }
 }

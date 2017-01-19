@@ -99,7 +99,7 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  *
  *  @discussion Does nothing if the media is the one currently being played
  */
-- (void)playMedia:(SRGMedia *)media preferredQuality:(SRGQuality)preferredQuality;
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality;
 
 /**
  *  Transfers playback from the specified existing controller to the service. The service media player controller

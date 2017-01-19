@@ -87,7 +87,7 @@ static NSURL *ServiceTestURL(void)
         }
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     XCTAssertEqualObjects(service.media, media);
     XCTAssertNil(service.mediaComposition);
@@ -121,7 +121,7 @@ static NSURL *ServiceTestURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -135,7 +135,7 @@ static NSURL *ServiceTestURL(void)
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -164,7 +164,7 @@ static NSURL *ServiceTestURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -187,7 +187,7 @@ static NSURL *ServiceTestURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -218,7 +218,7 @@ static NSURL *ServiceTestURL(void)
         return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media1 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
     
     XCTAssertEqualObjects(service.media, media1);
     XCTAssertNil(service.mediaComposition);
@@ -259,7 +259,7 @@ static NSURL *ServiceTestURL(void)
         }
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media2 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media2 withPreferredQuality:SRGQualityNone];
     
     XCTAssertEqualObjects(service.media, media2);
     XCTAssertNil(service.mediaComposition);
@@ -296,7 +296,7 @@ static NSURL *ServiceTestURL(void)
         return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -382,7 +382,7 @@ static NSURL *ServiceTestURL(void)
         return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media1 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
