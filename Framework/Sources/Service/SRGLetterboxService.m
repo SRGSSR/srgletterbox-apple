@@ -139,6 +139,13 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     }
 }
 
+- (BOOL)isPictureInPictureActive
+{
+    return self.controller.pictureInPictureController.pictureInPictureActive;
+}
+
+#pragma mark Data
+
 - (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition
 {
     if (self.media == media && self.mediaComposition == mediaComposition) {

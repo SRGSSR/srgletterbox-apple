@@ -134,6 +134,11 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  */
 @property (nonatomic, readonly) NSError *error;
 
+/**
+ *  Return YES iff picture in picture is active
+ */
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
+
 @end
 
 @interface SRGLetterboxService (Unavailable)

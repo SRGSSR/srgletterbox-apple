@@ -6,6 +6,9 @@
 
 #import "ModalPlayerViewController.h"
 
+#import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
+
 @implementation ModalPlayerViewController
 
 #pragma mark Object lifecycle
@@ -14,6 +17,32 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     return [storyboard instantiateInitialViewController];
+}
+
+#pragma mark View lifecycle
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"41981254"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        SRGMedia *media = medias.firstObject;
+        [[SRGLetterboxService sharedService] playMedia:media
+                                      withDataProvider:[SRGDataProvider currentDataProvider]
+                                      preferredQuality:SRGQualityHD];
+    }] resume];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+        SRGLetterboxService *service = [SRGLetterboxService sharedService];
+        if (! service.pictureInPictureActive) {
+            [service reset];
+        }
+    }
 }
 
 #pragma mark Actions

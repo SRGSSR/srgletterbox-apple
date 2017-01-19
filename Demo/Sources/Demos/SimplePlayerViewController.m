@@ -33,4 +33,16 @@
     }] resume];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+        SRGLetterboxService *service = [SRGLetterboxService sharedService];
+        if (! service.pictureInPictureActive) {
+            [service reset];
+        }
+    }
+}
+
 @end
