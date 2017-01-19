@@ -14,11 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGLetterboxServiceDelegate <NSObject>
 
 /**
- *  Called when picture in picture has been started
- */
-- (void)letterboxDidStartPictureInPicture;
-
-/**
  *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
  *  if the player view from which picture in picture was initiated is not visible anymore)
  */
@@ -33,6 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
  *                               iff the restoration was successful
  */
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
+
+@optional
+
+/**
+ *  Called when picture in picture has been started
+ */
+- (void)letterboxDidStartPictureInPicture;
 
 /**
  *  Called when picture in picture stopped

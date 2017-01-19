@@ -391,7 +391,9 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
-    [self.delegate letterboxDidStartPictureInPicture];
+    if ([self.delegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
+        [self.delegate letterboxDidStartPictureInPicture];
+    }
 }
 
 - (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
@@ -417,7 +419,9 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
-    [self.delegate letterboxDidStopPictureInPicture];
+    if ([self.delegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
+        [self.delegate letterboxDidStopPictureInPicture];
+    }
     
     if ([self.delegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
         // If switching from PiP to Airplay, restore the UI (just call the restoration method directly)

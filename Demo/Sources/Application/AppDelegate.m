@@ -13,6 +13,8 @@
 
 @implementation AppDelegate
 
+#pragma mark Application lifecycle
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -27,9 +29,33 @@
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
     [SRGDataProvider setCurrentDataProvider:dataProvider];
     
+    [SRGLetterboxService sharedService].delegate = self;
+    
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
     return YES;
+}
+
+#pragma mark SRGLetterboxServiceDelegate protocol
+
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
+{
+    return NO;
+}
+
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+
+}
+
+- (void)letterboxDidStartPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+}
+
+- (void)letterboxDidStopPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_stop"];
 }
 
 @end
