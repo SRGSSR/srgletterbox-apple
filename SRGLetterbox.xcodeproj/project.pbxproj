@@ -36,6 +36,12 @@
 		08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */; };
 		08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */; };
 		08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */; };
+		08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
+		08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
+		08FA0D221E30F92F000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
+		08FA0D231E30F92F000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
+		08FA0D241E30F954000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
+		08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
@@ -150,6 +156,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FDF1E30A6D1000215F3 /* ComScore.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FE01E30A6D1000215F3 /* libextobjc.framework in Copy Framework Dependencies For Xcode View Rendering */,
@@ -181,6 +188,7 @@
 				6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */,
 				6FAB3B701E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Embed Frameworks */,
 				6FAB3B6C1E2905CA00CC2197 /* libextobjc.framework in Embed Frameworks */,
+				08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */,
 				6FAB3B761E2905CA00CC2197 /* SRGDataProvider.framework in Embed Frameworks */,
 				6FAB3B6A1E2905CA00CC2197 /* ComScore.framework in Embed Frameworks */,
 			);
@@ -238,6 +246,7 @@
 		08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
+		08FA0D1F1E30F820000C94EF /* FXReachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FXReachability.framework; path = Carthage/Build/iOS/FXReachability.framework; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -295,7 +304,9 @@
 				6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */,
 				6FAB3B6F1E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Frameworks */,
+				08FA0D241E30F954000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B6B1E2905CA00CC2197 /* libextobjc.framework in Frameworks */,
+				08FA0D221E30F92F000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B751E2905CA00CC2197 /* SRGDataProvider.framework in Frameworks */,
 				6FAB3B691E2905CA00CC2197 /* ComScore.framework in Frameworks */,
 			);
@@ -315,6 +326,7 @@
 				6FE655D81E2CA3F9000033D4 /* SRGDataProvider.framework in Frameworks */,
 				6FE655D91E2CA3F9000033D4 /* SRGLogger.framework in Frameworks */,
 				6FE655DA1E2CA3F9000033D4 /* SRGMediaPlayer.framework in Frameworks */,
+				08FA0D231E30F92F000C94EF /* FXReachability.framework in Frameworks */,
 				6FE655DB1E2CA3F9000033D4 /* YYWebImage.framework in Frameworks */,
 				6FAB3B841E29060200CC2197 /* SRGLetterbox.framework in Frameworks */,
 			);
@@ -336,6 +348,7 @@
 				6FAB3B161E28FB1400CC2197 /* SRGDataProvider.framework in Frameworks */,
 				6FAB3B171E28FB1400CC2197 /* SRGLogger.framework in Frameworks */,
 				6FAB3B181E28FB1400CC2197 /* SRGMediaPlayer.framework in Frameworks */,
+				08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,11 +447,12 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
-				08FA0CA81E2E325F000C94EF /* Masonry.framework */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
+				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
+				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
+				08FA0CA81E2E325F000C94EF /* Masonry.framework */,
 				6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */,
 				6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */,
 				6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */,

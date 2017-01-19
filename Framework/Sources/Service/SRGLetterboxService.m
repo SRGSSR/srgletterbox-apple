@@ -12,11 +12,13 @@
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <YYWebImage/YYWebImage.h>
+#import <FXReachability/FXReachability.h>
 
 NSString * const SRGLetterboxServiceMetadataDidChangeNotification = @"SRGLetterboxServiceMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxServiceMediaKey = @"SRGLetterboxServiceMediaKey";
 NSString * const SRGLetterboxServiceMediaCompositionKey = @"SRGLetterboxServiceMediaCompositionKey";
+NSString * const SRGLetterboxServicePreviousQualityKey = @"SRGLetterboxServicePreviousQualityKey";
 
 NSString * const SRGLetterboxServicePreviousMediaKey = @"SRGLetterboxServicePreviousMediaKey";
 NSString * const SRGLetterboxServicePreviousMediaCompositionKey = @"SRGLetterboxServicePreviousMediaCompositionKey";
@@ -29,6 +31,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
+@property (assign)    SRGQuality preferredQuality;
 @property (nonatomic) NSError *error;
 
 @property (nonatomic) YYWebImageOperation *imageOperation;
@@ -70,6 +73,10 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
                                                      name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(reachabilityDidChange:)
+                                                     name:FXReachabilityStatusDidChangeNotification
                                                    object:nil];
         
         [self setupRemoteCommandCenter];
@@ -146,7 +153,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 #pragma mark Data
 
-- (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition
+- (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition preferredQuality:(SRGQuality)preferredQuality
 {
     if (self.media == media && self.mediaComposition == mediaComposition) {
         return;
@@ -154,9 +161,11 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
+    SRGQuality previousQuality = self.preferredQuality;
     
     self.media = media;
     self.mediaComposition = mediaComposition;
+    self.preferredQuality = preferredQuality;
     
     if (! media) {
         NSAssert(mediaComposition == nil, @"No media composition is expected when updating with no media");
@@ -185,13 +194,16 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     if (previousMediaComposition) {
         userInfo[SRGLetterboxServicePreviousMediaCompositionKey] = previousMediaComposition;
     }
+    if (previousQuality) {
+        userInfo[SRGLetterboxServicePreviousQualityKey] = @(previousQuality);
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
 #pragma mark Playback
 
-- (void)playMedia:(SRGMedia *)media withDataProvider:(SRGDataProvider *)dataProvider preferredQuality:(SRGQuality)preferredQuality
+- (void)playMedia:(SRGMedia *)media preferredQuality:(SRGQuality)preferredQuality
 {
     // If already playing the media, does nothing
     if (self.controller.playbackState != SRGMediaPlayerPlaybackStateIdle
@@ -199,7 +211,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         return;
     }
     
-    [self updateWithMedia:media mediaComposition:nil];
+    [self updateWithMedia:media mediaComposition:nil preferredQuality:preferredQuality];
     
     // Perform media-dependent updates
     [self.controller reloadPlayerConfiguration];
@@ -216,7 +228,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
             return;
         }
         
-        [self updateWithMedia:media mediaComposition:mediaComposition];
+        [self updateWithMedia:media mediaComposition:mediaComposition preferredQuality:preferredQuality];
         
         SRGRequest *playRequest = [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             [self.requestQueue reportError:error];
@@ -233,12 +245,13 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         }
     };
     
+    NSAssert([SRGDataProvider currentDataProvider], @"Current SRGDataProvider must be not nil.");
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForVideoWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForAudioWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -250,7 +263,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     
     SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     SRGMedia *media = [mediaComposition mediaForSegment:segment];
-    [self updateWithMedia:media mediaComposition:mediaComposition];
+    [self updateWithMedia:media mediaComposition:mediaComposition preferredQuality:self.preferredQuality];
     
     self.controller = controller;
     
@@ -260,7 +273,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)reset
 {
-    [self updateWithMedia:nil mediaComposition:nil];
+    [self updateWithMedia:nil mediaComposition:nil preferredQuality:SRGQualityNone];
 }
 
 - (void)reportError:(NSError *)error
@@ -488,6 +501,15 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self updateRemoteCommandCenter];
+}
+
+- (void)reachabilityDidChange:(NSNotification *)notification
+{
+    if ([FXReachability sharedInstance].reachable) {
+        if (self.media) {
+            [self playMedia:self.media preferredQuality:self.preferredQuality];
+        }
+    }
 }
 
 #pragma mark Description
