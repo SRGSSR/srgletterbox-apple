@@ -8,6 +8,7 @@
 
 #import "SRGLetterboxError.h"
 #import "UIDevice+SRGLetterbox.h"
+#import "SRGDataProvider+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
@@ -16,12 +17,15 @@
 
 NSString * const SRGLetterboxServiceMetadataDidChangeNotification = @"SRGLetterboxServiceMetadataDidChangeNotification";
 
+NSString * const SRGLetterboxServiceURNKey = @"SRGLetterboxServiceURNKey";
 NSString * const SRGLetterboxServiceMediaKey = @"SRGLetterboxServiceMediaKey";
 NSString * const SRGLetterboxServiceMediaCompositionKey = @"SRGLetterboxServiceMediaCompositionKey";
-NSString * const SRGLetterboxServicePreviousQualityKey = @"SRGLetterboxServicePreviousQualityKey";
+NSString * const SRGLetterboxServicePreferredQualityKey = @"SRGLetterboxServicePreferredQualityKey";
 
+NSString * const SRGLetterboxServicePreviousURNKey = @"SRGLetterboxServicePreviousURNKey";
 NSString * const SRGLetterboxServicePreviousMediaKey = @"SRGLetterboxServicePreviousMediaKey";
 NSString * const SRGLetterboxServicePreviousMediaCompositionKey = @"SRGLetterboxServicePreviousMediaCompositionKey";
+NSString * const SRGLetterboxServicePreviousPreferredQualityKey = @"SRGLetterboxServicePreviousPreferredQualityKey";
 
 NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterboxServicePlaybackDidFailNotification";
 
@@ -29,6 +33,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
+@property (nonatomic) NSString *urn;
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
 @property (assign)    SRGQuality preferredQuality;
@@ -154,22 +159,28 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 #pragma mark Data
 
-- (void)updateWithMedia:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition preferredQuality:(SRGQuality)preferredQuality
+- (void)updateWithURN:(NSString *)urn media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition preferredQuality:(SRGQuality)preferredQuality
 {
-    if (self.media == media && self.mediaComposition == mediaComposition) {
+    if (media) {
+        urn = media.URN;
+    }
+    
+    if ([self.urn isEqualToString:urn] && self.media == media && self.mediaComposition == mediaComposition) {
         return;
     }
     
+    NSString *previousURN = self.urn;
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
-    SRGQuality previousQuality = self.preferredQuality;
+    SRGQuality previousPreferredQuality = self.preferredQuality;
     
+    self.urn = media.URN;
     self.media = media;
     self.mediaComposition = mediaComposition;
     self.preferredQuality = preferredQuality;
     
-    if (! media) {
-        NSAssert(mediaComposition == nil, @"No media composition is expected when updating with no media");
+    if (! media || ! urn) {
+        NSAssert(mediaComposition == nil, @"No media composition is expected when updating with no media or media uid");
         
         self.error = nil;
         
@@ -183,11 +194,20 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     }
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
+    if (urn) {
+        userInfo[SRGLetterboxServiceURNKey] = urn;
+    }
     if (media) {
         userInfo[SRGLetterboxServiceMediaKey] = media;
     }
     if (mediaComposition) {
         userInfo[SRGLetterboxServiceMediaCompositionKey] = mediaComposition;
+    }
+    if (preferredQuality) {
+        userInfo[SRGLetterboxServicePreferredQualityKey] = @(preferredQuality);
+    }
+    if (previousURN) {
+        userInfo[SRGLetterboxServicePreviousURNKey] = previousURN;
     }
     if (previousMedia) {
         userInfo[SRGLetterboxServicePreviousMediaKey] = previousMedia;
@@ -195,8 +215,8 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     if (previousMediaComposition) {
         userInfo[SRGLetterboxServicePreviousMediaCompositionKey] = previousMediaComposition;
     }
-    if (previousQuality) {
-        userInfo[SRGLetterboxServicePreviousQualityKey] = @(previousQuality);
+    if (previousPreferredQuality) {
+        userInfo[SRGLetterboxServicePreviousPreferredQualityKey] = @(previousPreferredQuality);
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
@@ -204,15 +224,29 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 #pragma mark Playback
 
+- (void)playURN:(NSString *)mediaURN withPreferredQuality:(SRGQuality)preferredQuality
+{
+    [self playMediaURN:mediaURN media:nil withPreferredQuality:preferredQuality];
+}
+
 - (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
 {
+    [self playMediaURN:media.URN media:media withPreferredQuality:preferredQuality];
+}
+
+- (void)playMediaURN:(NSString *)mediaURN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
+{
+    if (media) {
+        mediaURN = media.URN;
+    }
+    
     // If already playing the media, does nothing
     if (self.controller.playbackState != SRGMediaPlayerPlaybackStateIdle
-            && [self.media.uid isEqualToString:media.uid]) {
+            && [self.media.URN isEqualToString:mediaURN]) {
         return;
     }
     
-    [self updateWithMedia:media mediaComposition:nil preferredQuality:preferredQuality];
+    [self updateWithURN:mediaURN media:media mediaComposition:nil preferredQuality:preferredQuality];
     
     // Perform media-dependent updates
     [self.controller reloadPlayerConfiguration];
@@ -229,7 +263,10 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
             return;
         }
         
-        [self updateWithMedia:media mediaComposition:mediaComposition preferredQuality:preferredQuality];
+        SRGMedia *updatedMedia = media ?: [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
+        NSString *updatedmediaURN = mediaURN ?: updatedMedia.URN;
+        
+        [self updateWithURN:updatedmediaURN media:updatedMedia mediaComposition:mediaComposition preferredQuality:preferredQuality];
         
         SRGRequest *playRequest = [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             [self.requestQueue reportError:error];
@@ -246,12 +283,24 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         }
     };
     
-    if (self.media.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForVideoWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
+    SRGMediaURN *srgMediaURN = [[SRGMediaURN alloc] initWithURN:mediaURN];
+    if (!srgMediaURN) {
+        NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                             code:SRGLetterboxErrorCodeNotFound
+                                         userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
+        [self.requestQueue reportError:error];
+        return;
+    }
+    
+    SRGDataProvider *mediaCompositionDataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider defaultServiceURL]
+                                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(srgMediaURN.vendor)];
+    
+    if (srgMediaURN.mediaType == SRGMediaTypeVideo) {
+        SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForVideoWithUid:srgMediaURN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
-    else if (self.media.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [[SRGDataProvider currentDataProvider] mediaCompositionForAudioWithUid:media.uid completionBlock:mediaCompositionCompletionBlock];
+    else if (srgMediaURN.mediaType == SRGMediaTypeAudio) {
+        SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForAudioWithUid:srgMediaURN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -263,7 +312,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     
     SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     SRGMedia *media = [mediaComposition mediaForSegment:segment];
-    [self updateWithMedia:media mediaComposition:mediaComposition preferredQuality:self.preferredQuality];
+    [self updateWithURN:media.URN media:media mediaComposition:mediaComposition preferredQuality:self.preferredQuality];
     
     self.controller = controller;
     
@@ -273,7 +322,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)reset
 {
-    [self updateWithMedia:nil mediaComposition:nil preferredQuality:SRGQualityNone];
+    [self updateWithURN:nil media:nil mediaComposition:nil preferredQuality:SRGQualityNone];
 }
 
 - (void)reportError:(NSError *)error

@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ModalPlayerViewController : UIViewController
 
-- (instancetype)initWithUid:(nullable NSString *)uid;
+- (instancetype)initWithURN:(nullable NSString *)urn;
 
 @end
 

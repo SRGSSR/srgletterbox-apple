@@ -51,15 +51,18 @@ OBJC_EXTERN NSString * const SRGLetterboxServiceMetadataDidChangeNotification;
 /**
  *  Current metadata
  */
+OBJC_EXTERN NSString * const SRGLetterboxServicePreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxServiceMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxServiceMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousQualityKey;
+OBJC_EXTERN NSString * const SRGLetterboxServicePreferredQualityKey;
 
 /**
  *  Previous metadata
  */
+OBJC_EXTERN NSString * const SRGLetterboxServicePreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxServicePreviousPreferredQualityKey;
 
 /**
  *  Notification sent when an error has been encountered. Use the `error` property to get the error itself
@@ -93,6 +96,13 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  *              on the controller leads to undefined behavior
  */
 @property (nonatomic, readonly) SRGLetterboxController *controller;
+
+/**
+ *  Play the specified urn
+ *
+ *  @discussion Does nothing if the urn is the one currently being played
+ */
+- (void)playURN:(NSString *)urn withPreferredQuality:(SRGQuality)preferredQuality;
 
 /**
  *  Play the specified media

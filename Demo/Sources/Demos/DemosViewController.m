@@ -44,13 +44,18 @@
         }
             
         case 2: {
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithUid:@"41981254"];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:@"urn:swi:video:41981254"];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
         case 3: {
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithUid:@"42844052"];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:@"urn:swi:video:42844052"];
+            [self presentViewController:playerViewController animated:YES completion:nil];
+            break;
+        }
+        case 4: {
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
