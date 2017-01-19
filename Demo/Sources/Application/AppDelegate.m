@@ -27,7 +27,8 @@
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
     [SRGDataProvider setCurrentDataProvider:dataProvider];
     
-    self.window.rootViewController = [[DemosViewController alloc] init];
+    DemosViewController *demosViewController = [[DemosViewController alloc] init];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
     return YES;
 }
 

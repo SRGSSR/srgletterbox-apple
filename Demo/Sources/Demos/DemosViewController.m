@@ -6,14 +6,7 @@
 
 #import "DemosViewController.h"
 
-#import <SRGDataProvider/SRGDataProvider.h>
-#import <SRGLetterbox/SRGLetterbox.h>
-
-@interface DemosViewController ()
-
-@property (nonatomic) IBOutlet SRGLetterboxView *letterboxView;
-
-@end
+#import "SimplePlayerViewController.h"
 
 @implementation DemosViewController
 
@@ -25,16 +18,33 @@
     return [storyboard instantiateInitialViewController];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+#pragma mark Getters and setters
+
+- (NSString *)title
 {
-    [super viewDidAppear:animated];
-    
-    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"41981254"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        SRGMedia *media = medias.firstObject;
-        [[SRGLetterboxService sharedService] playMedia:media
-                                      withDataProvider:[SRGDataProvider currentDataProvider]
-                                      preferredQuality:SRGQualityHD];
-    }] resume];
+    return @"Letterbox demos";
+}
+
+#pragma mark UITableViewDelegate protocol
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.row) {
+        case 0: {
+            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] init];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 1: {
+            
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
 }
 
 @end
