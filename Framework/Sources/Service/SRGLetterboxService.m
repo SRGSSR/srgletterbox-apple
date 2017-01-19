@@ -292,9 +292,11 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         return;
     }
     
-    SRGDataProvider *mediaCompositionDataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider defaultServiceURL]
-                                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(mediaURN.vendor)];
+    SRGDataProvider *mediaCompositionDataProvider = (self.useOnlyCurrentDataProvider) ? [SRGDataProvider currentDataProvider] :
+    [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider defaultServiceURL]
+                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(mediaURN.vendor)];
     
+    NSAssert(mediaCompositionDataProvider, (self.useOnlyCurrentDataProvider) ? @"To play a media, a currentDataProvider must be set" : @"DefaultServiceURL or vendor aren't correct");
     if (mediaURN.mediaType == SRGMediaTypeVideo) {
         SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForVideoWithUid:mediaURN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];

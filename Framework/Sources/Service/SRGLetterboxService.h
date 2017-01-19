@@ -122,6 +122,19 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  */
 - (void)reset;
 
+/**
+ *  Boolean to force the service to only use the currentDataProvider.
+ *
+ *  You're responsbile to set the currentDataProvider to SRGDataProvider if you set this option to YES.
+ *
+ *  If it's set to NO, the service with create a dataprovider on each play request, depending of:
+ *  - The default service URL, provided by SRGDataProvider.
+ *  - the vendor, provied by the urn or the media object.
+ *
+ *  By default: return NO.
+ */
+@property (nonatomic) BOOL useOnlyCurrentDataProvider;
+
 @end
 
 /**
