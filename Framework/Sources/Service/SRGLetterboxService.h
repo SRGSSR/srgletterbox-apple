@@ -21,6 +21,7 @@ OBJC_EXTERN NSString * const SRGLetterboxServiceMetadataDidChangeNotification;
  */
 OBJC_EXTERN NSString * const SRGLetterboxServiceMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxServiceMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxServicePreviousQualityKey;
 
 /**
  *  Previous metadata
@@ -61,7 +62,7 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  *
  *  @discussion Does nothing if the media is the one currently being played
  */
-- (void)playMedia:(SRGMedia *)media withDataProvider:(SRGDataProvider *)dataProvider preferredQuality:(SRGQuality)preferredQuality;
+- (void)playMedia:(SRGMedia *)media preferredQuality:(SRGQuality)preferredQuality;
 
 /**
  *  Transfers playback from the specified existing controller to the service. The service media player controller

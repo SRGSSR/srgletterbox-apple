@@ -7,6 +7,7 @@
 #import "SRGLetterboxView.h"
 
 #import "ASValueTrackingSlider.h"
+
 #import "NSBundle+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "SRGLetterboxService.h"
@@ -159,7 +160,6 @@
                                                  selector:@selector(screenDidDisconnect:)
                                                      name:UIScreenDidDisconnectNotification
                                                    object:nil];
-
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
