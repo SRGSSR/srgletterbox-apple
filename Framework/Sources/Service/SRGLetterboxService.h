@@ -11,6 +11,36 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol SRGLetterboxServiceDelegate <NSObject>
+
+/**
+ *  Called when picture in picture has been started
+ */
+- (void)letterboxDidStartPictureInPicture;
+
+/**
+ *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
+ *  if the player view from which picture in picture was initiated is not visible anymore)
+ */
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture;
+
+/**
+ *  Called when a restoration process takes place
+ *
+ *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
+ *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
+ *                               undefined behavior. The completion block must be called with `restored` set to `YES`
+ *                               iff the restoration was successful
+ */
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
+
+/**
+ *  Called when picture in picture stopped
+ */
+- (void)letterboxDidStopPictureInPicture;
+
+@end
+
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values)
  */
@@ -47,6 +77,11 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  *  The singleton instance
  */
 + (SRGLetterboxService *)sharedService;
+
+/**
+ *  Service delegate
+ */
+@property (nonatomic, weak) id<SRGLetterboxServiceDelegate> delegate;
 
 /**
  *  The controller responsible for playback
