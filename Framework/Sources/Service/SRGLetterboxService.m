@@ -237,7 +237,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)playURN:(NSString *)urn media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
 {
     if (media) {
-        mediaURN = media.URN;
+        urn = media.URN;
     }
     
     // If already playing the media, does nothing
