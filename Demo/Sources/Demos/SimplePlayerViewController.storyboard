@@ -37,9 +37,6 @@
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="qG1-n2-WwX" secondAttribute="bottom" constant="8" symbolic="YES" id="noq-yb-HDt"/>
                         </constraints>
                     </view>
-                    <connections>
-                        <outlet property="letterboxView" destination="LJc-Y6-KTE" id="sb5-8M-ZJp"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9I3-9b-01C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

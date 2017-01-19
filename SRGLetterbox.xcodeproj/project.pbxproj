@@ -39,6 +39,19 @@
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
+		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
+		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
+		6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
+		6F1F5FDF1E30A6D1000215F3 /* ComScore.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; };
+		6F1F5FE01E30A6D1000215F3 /* libextobjc.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; };
+		6F1F5FE11E30A6D1000215F3 /* Mantle.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; };
+		6F1F5FE21E30A6D1000215F3 /* SRGAnalytics_DataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */; };
+		6F1F5FE31E30A6D1000215F3 /* SRGAnalytics_MediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */; };
+		6F1F5FE41E30A6D1000215F3 /* SRGAnalytics.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */; };
+		6F1F5FE51E30A6D1000215F3 /* SRGDataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */; };
+		6F1F5FE61E30A6D1000215F3 /* SRGLogger.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */; };
+		6F1F5FE71E30A6D1000215F3 /* SRGMediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
+		6F1F5FE81E30A6D1000215F3 /* YYWebImage.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */; };
 		6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */; };
@@ -131,6 +144,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6F1F5FC71E30A65A000215F3 /* Copy Framework Dependencies For Xcode View Rendering */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FDF1E30A6D1000215F3 /* ComScore.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE01E30A6D1000215F3 /* libextobjc.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE11E30A6D1000215F3 /* Mantle.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE21E30A6D1000215F3 /* SRGAnalytics_DataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE31E30A6D1000215F3 /* SRGAnalytics_MediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE41E30A6D1000215F3 /* SRGAnalytics.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE51E30A6D1000215F3 /* SRGDataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE61E30A6D1000215F3 /* SRGLogger.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE71E30A6D1000215F3 /* SRGMediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F1F5FE81E30A6D1000215F3 /* YYWebImage.framework in Copy Framework Dependencies For Xcode View Rendering */,
+			);
+			name = "Copy Framework Dependencies For Xcode View Rendering";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6FAB3B681E2905B400CC2197 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -208,6 +242,9 @@
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
+		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalPlayerViewController.m; sourceTree = "<group>"; };
+		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ModalPlayerViewController.storyboard; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
 		6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxView.m; sourceTree = "<group>"; };
 		6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterbox.m; sourceTree = "<group>"; };
@@ -456,6 +493,9 @@
 				6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */,
 				6FD9BA301E3095F00013CC97 /* DemosViewController.m */,
 				6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */,
+				6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */,
+				6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */,
+				6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */,
 				6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */,
 				6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */,
 				6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */,
@@ -586,6 +626,7 @@
 				6FE3213D1E28E24E00FD8E42 /* Frameworks */,
 				6FE3213E1E28E24E00FD8E42 /* Headers */,
 				6FE3213F1E28E24E00FD8E42 /* Resources */,
+				6F1F5FC71E30A65A000215F3 /* Copy Framework Dependencies For Xcode View Rendering */,
 			);
 			buildRules = (
 			);
@@ -645,6 +686,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */,
 				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */,
@@ -680,6 +722,7 @@
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
 				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController.m in Sources */,
 				6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */,
+				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

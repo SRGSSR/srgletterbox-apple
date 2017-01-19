@@ -9,12 +9,6 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-@interface SimplePlayerViewController ()
-
-@property (nonatomic) IBOutlet SRGLetterboxView *letterboxView;
-
-@end
-
 @implementation SimplePlayerViewController
 
 #pragma mark Object lifecycle
