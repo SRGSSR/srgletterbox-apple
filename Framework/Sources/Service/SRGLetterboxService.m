@@ -174,7 +174,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
     SRGQuality previousPreferredQuality = self.preferredQuality;
     
-    self.urn = media.URN;
+    self.urn = urn;
     self.media = media;
     self.mediaComposition = mediaComposition;
     self.preferredQuality = preferredQuality;
@@ -234,7 +234,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     [self playURN:media.URN media:media withPreferredQuality:preferredQuality];
 }
 
-- (void)playURN:(NSString *)mediaURN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
+- (void)playURN:(NSString *)urn media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
 {
     if (media) {
         mediaURN = media.URN;
@@ -242,11 +242,11 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     
     // If already playing the media, does nothing
     if (self.controller.playbackState != SRGMediaPlayerPlaybackStateIdle
-            && [self.media.URN isEqualToString:mediaURN]) {
+            && [self.media.URN isEqualToString:urn]) {
         return;
     }
     
-    [self updateWithURN:mediaURN media:media mediaComposition:nil preferredQuality:preferredQuality];
+    [self updateWithURN:urn media:media mediaComposition:nil preferredQuality:preferredQuality];
     
     // Perform media-dependent updates
     [self.controller reloadPlayerConfiguration];
@@ -264,9 +264,9 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         }
         
         SRGMedia *updatedMedia = media ?: [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
-        NSString *updatedmediaURN = mediaURN ?: updatedMedia.URN;
+        NSString *updatedURN = urn ?: updatedMedia.URN;
         
-        [self updateWithURN:updatedmediaURN media:updatedMedia mediaComposition:mediaComposition preferredQuality:preferredQuality];
+        [self updateWithURN:updatedURN media:updatedMedia mediaComposition:mediaComposition preferredQuality:preferredQuality];
         
         SRGRequest *playRequest = [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             [self.requestQueue reportError:error];
@@ -283,8 +283,8 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         }
     };
     
-    SRGMediaURN *srgMediaURN = [[SRGMediaURN alloc] initWithURN:mediaURN];
-    if (!srgMediaURN) {
+    SRGMediaURN *mediaURN = [[SRGMediaURN alloc] initWithURN:urn];
+    if (!mediaURN) {
         NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                              code:SRGLetterboxErrorCodeNotFound
                                          userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
@@ -293,14 +293,14 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     }
     
     SRGDataProvider *mediaCompositionDataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider defaultServiceURL]
-                                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(srgMediaURN.vendor)];
+                                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(mediaURN.vendor)];
     
-    if (srgMediaURN.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForVideoWithUid:srgMediaURN.uid completionBlock:mediaCompositionCompletionBlock];
+    if (mediaURN.mediaType == SRGMediaTypeVideo) {
+        SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForVideoWithUid:mediaURN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
-    else if (srgMediaURN.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForAudioWithUid:srgMediaURN.uid completionBlock:mediaCompositionCompletionBlock];
+    else if (mediaURN.mediaType == SRGMediaTypeAudio) {
+        SRGRequest *mediaCompositionRequest = [mediaCompositionDataProvider mediaCompositionForAudioWithUid:mediaURN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -557,6 +557,9 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     if ([FXReachability sharedInstance].reachable) {
         if (self.media) {
             [self playMedia:self.media withPreferredQuality:self.preferredQuality];
+        }
+        else {
+            [self playURN:self.urn withPreferredQuality:self.preferredQuality];
         }
     }
 }
