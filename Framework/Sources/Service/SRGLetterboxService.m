@@ -407,7 +407,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         return;
     }
     
-    if ([self.delegate respondsToSelector:@selector(letterboxShouldRestoreUserInterfaceForPictureInPicture)]) {
+    if ([self.delegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
         [self.delegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
             completionHandler(restored);
         }];

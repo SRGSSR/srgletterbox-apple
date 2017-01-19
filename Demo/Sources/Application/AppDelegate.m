@@ -67,7 +67,8 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    return NO;
+    return ! [self.topPresentedViewController isKindOfClass:[ModalPlayerViewController class]]
+        && ! [self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]];
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
