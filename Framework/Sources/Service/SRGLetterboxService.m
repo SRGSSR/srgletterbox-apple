@@ -224,17 +224,17 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 #pragma mark Playback
 
-- (void)playURN:(NSString *)mediaURN withPreferredQuality:(SRGQuality)preferredQuality
+- (void)playURN:(NSString *)urn withPreferredQuality:(SRGQuality)preferredQuality
 {
-    [self playMediaURN:mediaURN media:nil withPreferredQuality:preferredQuality];
+    [self playURN:urn media:nil withPreferredQuality:preferredQuality];
 }
 
 - (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
 {
-    [self playMediaURN:media.URN media:media withPreferredQuality:preferredQuality];
+    [self playURN:media.URN media:media withPreferredQuality:preferredQuality];
 }
 
-- (void)playMediaURN:(NSString *)mediaURN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
+- (void)playURN:(NSString *)mediaURN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
 {
     if (media) {
         mediaURN = media.URN;
