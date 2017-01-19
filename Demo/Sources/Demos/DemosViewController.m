@@ -6,6 +6,7 @@
 
 #import "DemosViewController.h"
 
+#import "ModalPlayerViewController.h"
 #import "SimplePlayerViewController.h"
 
 @implementation DemosViewController
@@ -37,7 +38,8 @@
         }
             
         case 1: {
-            
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] init];
+            [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             

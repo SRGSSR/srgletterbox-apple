@@ -39,6 +39,8 @@
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
+		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
+		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
 		6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */; };
 		6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */; };
@@ -208,6 +210,9 @@
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
+		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalPlayerViewController.m; sourceTree = "<group>"; };
+		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ModalPlayerViewController.storyboard; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
 		6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxView.m; sourceTree = "<group>"; };
 		6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterbox.m; sourceTree = "<group>"; };
@@ -456,6 +461,9 @@
 				6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */,
 				6FD9BA301E3095F00013CC97 /* DemosViewController.m */,
 				6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */,
+				6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */,
+				6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */,
+				6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */,
 				6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */,
 				6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */,
 				6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */,
@@ -645,6 +653,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */,
 				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */,
@@ -680,6 +689,7 @@
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
 				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController.m in Sources */,
 				6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */,
+				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
