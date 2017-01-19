@@ -53,8 +53,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Request succeeded"];
     
     __block SRGMedia *media = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media = medias.firstObject;
         XCTAssertNotNil(media);
         [expectation fulfill];
@@ -87,7 +86,7 @@ static NSURL *ServiceTestURL(void)
         }
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     XCTAssertEqualObjects(service.media, media);
     XCTAssertNil(service.mediaComposition);
@@ -105,8 +104,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Request succeeded"];
     
     __block SRGMedia *media = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media = medias.firstObject;
         XCTAssertNotNil(media);
         [expectation fulfill];
@@ -121,7 +119,7 @@ static NSURL *ServiceTestURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -135,7 +133,7 @@ static NSURL *ServiceTestURL(void)
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -148,8 +146,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Request succeeded"];
     
     __block SRGMedia *media = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media = medias.firstObject;
         XCTAssertNotNil(media);
         [expectation fulfill];
@@ -164,7 +161,7 @@ static NSURL *ServiceTestURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -187,7 +184,7 @@ static NSURL *ServiceTestURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -199,8 +196,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation1 = [self expectationWithDescription:@"Request 1 succeeded"];
     
     __block SRGMedia *media1 = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media1 = medias.firstObject;
         XCTAssertNotNil(media1);
         [expectation1 fulfill];
@@ -218,7 +214,7 @@ static NSURL *ServiceTestURL(void)
         return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media1 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
     
     XCTAssertEqualObjects(service.media, media1);
     XCTAssertNil(service.mediaComposition);
@@ -232,7 +228,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation2 = [self expectationWithDescription:@"Request 2 succeeded"];
     
     __block SRGMedia *media2 = nil;
-    [[dataProvider videosWithUids:@[@"42851050"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42851050"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media2 = medias.firstObject;
         XCTAssertNotNil(media2);
         [expectation2 fulfill];
@@ -259,7 +255,7 @@ static NSURL *ServiceTestURL(void)
         }
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media2 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media2 withPreferredQuality:SRGQualityNone];
     
     XCTAssertEqualObjects(service.media, media2);
     XCTAssertNil(service.mediaComposition);
@@ -277,8 +273,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Request succeeded"];
     
     __block SRGMedia *media = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media = medias.firstObject;
         XCTAssertNotNil(media);
         [expectation fulfill];
@@ -296,7 +291,7 @@ static NSURL *ServiceTestURL(void)
         return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -324,8 +319,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Request succeeded"];
     
     __block SRGMediaComposition *mediaComposition = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider mediaCompositionForVideoWithUid:@"42844052" completionBlock:^(SRGMediaComposition * _Nullable retrievedMediaComposition, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] mediaCompositionForVideoWithUid:@"42844052" completionBlock:^(SRGMediaComposition * _Nullable retrievedMediaComposition, NSError * _Nullable error) {
         XCTAssertNotNil(retrievedMediaComposition);
         mediaComposition = retrievedMediaComposition;
         [mediaCompositionExpectation fulfill];
@@ -366,8 +360,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request succeeded"];
     
     __block SRGMedia *media1 = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media1 = medias.firstObject;
         XCTAssertNotNil(media1);
         [expectation fulfill];
@@ -382,7 +375,7 @@ static NSURL *ServiceTestURL(void)
         return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
     }];
     
-    [[SRGLetterboxService sharedService] playMedia:media1 withDataProvider:dataProvider preferredQuality:SRGQualityHD];
+    [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -391,7 +384,7 @@ static NSURL *ServiceTestURL(void)
     XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Media composition request succeeded"];
     
     __block SRGMediaComposition *mediaComposition2 = nil;
-    [[dataProvider mediaCompositionForVideoWithUid:@"42851050" completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[[SRGDataProvider currentDataProvider] mediaCompositionForVideoWithUid:@"42851050" completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         mediaComposition2 = mediaComposition;
         [mediaCompositionExpectation fulfill];
