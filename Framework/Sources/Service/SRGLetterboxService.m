@@ -6,14 +6,13 @@
 
 #import "SRGLetterboxService.h"
 
-#import "FXReachability.h"
-
 #import "SRGLetterboxError.h"
 #import "UIDevice+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <YYWebImage/YYWebImage.h>
+#import <FXReachability/FXReachability.h>
 
 NSString * const SRGLetterboxServiceMetadataDidChangeNotification = @"SRGLetterboxServiceMetadataDidChangeNotification";
 
@@ -32,7 +31,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
-@property (assign) SRGQuality preferredQuality;
+@property (assign)    SRGQuality preferredQuality;
 @property (nonatomic) NSError *error;
 
 @property (nonatomic) YYWebImageOperation *imageOperation;
@@ -267,7 +266,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 
 - (void)reset
 {
-    [self updateWithMedia:nil mediaComposition:nil preferredQuality:nil];
+    [self updateWithMedia:nil mediaComposition:nil preferredQuality:SRGQualityNone];
 }
 
 - (void)reportError:(NSError *)error

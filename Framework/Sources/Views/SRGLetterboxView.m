@@ -15,6 +15,7 @@
 
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
+#import <FXReachability/FXReachability.h>
 
 @interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
 
@@ -159,6 +160,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(screenDidDisconnect:)
                                                      name:UIScreenDidDisconnectNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(reachabilityDidChange:)
+                                                     name:FXReachabilityStatusDidChangeNotification
                                                    object:nil];
     }
     else {
@@ -398,6 +403,13 @@
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
+}
+
+- (void)reachabilityDidChange:(NSNotification *)notification
+{
+    if ([FXReachability sharedInstance].reachable) {
+        [self reloadData];
+    }
 }
 
 @end

@@ -1,4 +1,5 @@
 github "comScore/ComScore-iOS-SDK" "92f34897cd7659d56bb5a3e9e85b808cf3758bda"
+github "SRGSSR/FXReachability" "3cad7998f717145c90ff97eef552053d66063339"
 github "Mantle/Mantle" "2.1.0"
 github "SnapKit/Masonry" "v1.0.2"
 github "ibireme/YYWebImage" "1.0.5"
