@@ -199,7 +199,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         return;
     }
     
-    [self.controller reset];
     [self updateWithMedia:media mediaComposition:nil];
     
     // Perform media-dependent updates
