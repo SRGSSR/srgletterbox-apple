@@ -70,6 +70,7 @@ static NSURL *ServiceTestURL(void)
     
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
+    XCTAssertNil(service.URN);
     XCTAssertNil(service.media);
     XCTAssertNil(service.mediaComposition);
     XCTAssertNil(service.error);
@@ -95,12 +96,14 @@ static NSURL *ServiceTestURL(void)
     
     [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
+    XCTAssertEqualObjects(service.URN, media.URN);
     XCTAssertEqualObjects(service.media, media);
     XCTAssertNil(service.mediaComposition);
     XCTAssertNil(service.error);
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
+    XCTAssertEqualObjects(service.URN, media.URN);
     XCTAssertEqualObjects(service.media, media);
     XCTAssertNotNil(service.mediaComposition);
     XCTAssertNil(service.error);
@@ -223,6 +226,7 @@ static NSURL *ServiceTestURL(void)
     
     [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
     
+    XCTAssertEqualObjects(service.URN, media1.URN);
     XCTAssertEqualObjects(service.media, media1);
     XCTAssertNil(service.mediaComposition);
     XCTAssertNil(service.error);
@@ -264,15 +268,36 @@ static NSURL *ServiceTestURL(void)
     
     [[SRGLetterboxService sharedService] playMedia:media2 withPreferredQuality:SRGQualityNone];
     
+    XCTAssertEqualObjects(service.URN, media2.URN);
     XCTAssertEqualObjects(service.media, media2);
     XCTAssertNil(service.mediaComposition);
     XCTAssertNil(service.error);
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
+    XCTAssertEqualObjects(service.URN, media2.URN);
     XCTAssertEqualObjects(service.media, media2);
     XCTAssertNotNil(service.mediaComposition);
     XCTAssertNil(service.error);
+}
+
+- (void)testPlayFromURN
+{
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+    XCTAssertNotNil(URN);
+    
+    // Wait until the stream is playing with media composition information available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    }];
+    
+    [service playURN:URN withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
 - (void)testReset
@@ -316,6 +341,7 @@ static NSURL *ServiceTestURL(void)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
+    XCTAssertNil(service.URN);
     XCTAssertNil(service.media);
     XCTAssertNil(service.mediaComposition);
     XCTAssertNil(service.error);
@@ -355,6 +381,7 @@ static NSURL *ServiceTestURL(void)
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     [service resumeFromController:controller];
     
+    XCTAssertEqualObjects(service.URN, service.media.URN);
     XCTAssertNotNil(service.media);
     XCTAssertEqualObjects(service.mediaComposition, mediaComposition);
     XCTAssertNil(service.error);
@@ -425,6 +452,7 @@ static NSURL *ServiceTestURL(void)
     
     [service resumeFromController:controller];
     
+    XCTAssertEqualObjects(service.URN, service.media.URN);
     XCTAssertNotNil(service.media);
     XCTAssertEqualObjects(service.mediaComposition, mediaComposition2);
     XCTAssertNil(service.error);

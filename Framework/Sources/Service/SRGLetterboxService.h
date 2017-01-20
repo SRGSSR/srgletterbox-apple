@@ -131,6 +131,11 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 @interface SRGLetterboxService (PlaybackInformation)
 
 /**
+ *  URN
+ */
+@property (nonatomic, readonly, nullable) SRGMediaURN *URN;
+
+/**
  *  Media information
  */
 @property (nonatomic, readonly, nullable) SRGMedia *media;
