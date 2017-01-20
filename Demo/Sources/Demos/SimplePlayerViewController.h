@@ -4,12 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <SRGLetterbox/SRGLetterbox.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SimplePlayerViewController : UIViewController <SRGLetterboxViewDelegate>
+@interface SimplePlayerViewController : UIViewController
 
 - (instancetype)initWithUid:(nullable NSString *)uid;
 

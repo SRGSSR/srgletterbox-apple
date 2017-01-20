@@ -5,11 +5,12 @@
 //
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ModalPlayerViewController : UIViewController
+@interface ModalPlayerViewController : UIViewController <SRGLetterboxViewDelegate>
 
 - (instancetype)initWithURN:(nullable SRGMediaURN *)URN;
 

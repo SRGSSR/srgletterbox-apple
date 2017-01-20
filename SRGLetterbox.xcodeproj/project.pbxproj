@@ -60,6 +60,7 @@
 		6F1F5FE61E30A6D1000215F3 /* SRGLogger.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */; };
 		6F1F5FE71E30A6D1000215F3 /* SRGMediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
 		6F1F5FE81E30A6D1000215F3 /* YYWebImage.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
+		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
 		6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */; };
 		6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */; };
@@ -258,6 +259,7 @@
 		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
 		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalPlayerViewController.m; sourceTree = "<group>"; };
 		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ModalPlayerViewController.storyboard; sourceTree = "<group>"; };
+		6F28BAD11E323F6A004F43DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
 		6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxView.m; sourceTree = "<group>"; };
 		6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterbox.m; sourceTree = "<group>"; };
@@ -484,6 +486,7 @@
 			isa = PBXGroup;
 			children = (
 				6FAB3B541E28FFEA00CC2197 /* LaunchScreen.storyboard */,
+				6F28BAD11E323F6A004F43DD /* Images.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -715,6 +718,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */,
+				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */,
 				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */,

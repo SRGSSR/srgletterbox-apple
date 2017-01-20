@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Delegate-->
+        <!--Simple Player View Controller-->
         <scene sceneID="sIH-jk-ROp">
             <objects>
                 <viewController id="A6A-Ps-0a8" customClass="SimplePlayerViewController" sceneMemberID="viewController">
@@ -28,9 +28,6 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LJc-Y6-KTE" secondAttribute="height" multiplier="16:9" id="dLS-h7-FwA"/>
                                 </constraints>
-                                <connections>
-                                    <outlet property="delegate" destination="A6A-Ps-0a8" id="edz-Le-iw8"/>
-                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

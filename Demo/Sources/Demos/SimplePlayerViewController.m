@@ -7,6 +7,7 @@
 #import "SimplePlayerViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 @interface SimplePlayerViewController ()
 
@@ -57,17 +58,6 @@
             [service reset];
         }
     }
-}
-
-#pragma mark SRGLetterboxViewDelegate protocol
-
-- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
-{
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
-        NSLog(@"Animation, hidden = %@", @(hidden));
-    } completion:^(BOOL finished) {
-        NSLog(@"Completion: %@", @(finished));
-    }];
 }
 
 @end
