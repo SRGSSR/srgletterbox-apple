@@ -15,6 +15,8 @@
 #import <YYWebImage/YYWebImage.h>
 #import <FXReachability/FXReachability.h>
 
+static void *s_kvoContext = &s_kvoContext;
+
 NSString * const SRGLetterboxServiceMetadataDidChangeNotification = @"SRGLetterboxServiceMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxServiceURNKey = @"SRGLetterboxServiceURNKey";
@@ -100,6 +102,8 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         };
         [_controller reloadPlayerConfiguration];
         
+        [_controller removeObserver:self forKeyPath:@keypath(_controller.pictureInPictureController.pictureInPictureActive) context:s_kvoContext];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:_controller];
@@ -120,6 +124,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
             // Use mirroring when in presentation mode
             player.allowsExternalPlayback = YES;
+            player.usesExternalPlaybackWhileExternalScreenIsActive = YES;
 //            player.usesExternalPlaybackWhileExternalScreenIsActive = ! ApplicationSettingPresenterModeEnabled();
             
             // Only update the audio session if needed to avoid audio hiccups
@@ -128,6 +133,8 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
                 [[AVAudioSession sharedInstance] setMode:mode error:NULL];
             }
         };
+        
+        [_controller addObserver:self forKeyPath:@keypath(_controller.pictureInPictureController.pictureInPictureActive) options:0 context:s_kvoContext];
         
         @weakify(self)
         controller.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
@@ -493,16 +500,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     if ([self.delegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
         [self.delegate letterboxDidStopPictureInPicture];
     }
-    
-    if ([self.delegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
-        // If switching from PiP to Airplay, restore the UI (just call the restoration method directly)
-        if (self.controller.player.externalPlaybackActive) {
-            [self pictureInPictureController:pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-        }
-        else {
-            [self.controller reset];
-        }
-    }
 }
 
 #pragma mark Notifications
@@ -563,6 +560,26 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         else {
             [self playURN:self.urn withPreferredQuality:self.preferredQuality];
         }
+    }
+}
+
+#pragma mark KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if (context == s_kvoContext) {
+        if ([keyPath isEqualToString:@keypath(SRGLetterboxController.new, pictureInPictureController.pictureInPictureActive)]) {
+            // When enabling Airplay from the control center while picture in picture is active, picture in picture will
+            // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
+            // those methods manually
+            if (self.controller.player.externalPlaybackActive) {
+                [self pictureInPictureController:self.controller.pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
+                [self pictureInPictureControllerDidStopPictureInPicture:self.controller.pictureInPictureController];
+            }
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
