@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -25,7 +25,7 @@
                                 <rect key="frame" x="16" y="50" width="343" height="193"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="5VB-3F-wwv" secondAttribute="height" multiplier="16:9" id="ff4-Ik-keP"/>
+                                    <constraint firstAttribute="width" secondItem="5VB-3F-wwv" secondAttribute="height" multiplier="16:9" priority="950" id="ff4-Ik-keP"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="FcC-Qn-oGg" id="XzF-48-ayl"/>
@@ -47,14 +47,21 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="6hy-A6-kfe"/>
-                            <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" constant="16" id="F2Z-fU-P1b"/>
-                            <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" constant="30" id="LDp-cD-NhZ"/>
+                            <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" priority="900" constant="16" id="F2Z-fU-P1b"/>
+                            <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" constant="30" id="LDp-cD-NhZ"/>
+                            <constraint firstItem="txU-Ep-CJb" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" priority="850" id="gAz-aw-sDx"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="top" id="iL4-uS-ed9"/>
-                            <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" constant="16" id="tsO-HP-lR4"/>
+                            <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" priority="900" constant="16" id="tsO-HP-lR4"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
+                        <outlet property="letterbox169Constraint" destination="ff4-Ik-keP" id="0jN-em-Zkv"/>
+                        <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
+                        <outlet property="letterboxLeadingConstraint" destination="tsO-HP-lR4" id="n0S-cU-sRT"/>
+                        <outlet property="letterboxTopConstraint" destination="LDp-cD-NhZ" id="cTx-6s-6SU"/>
+                        <outlet property="letterboxTrailingConstraint" destination="F2Z-fU-P1b" id="2tu-HE-b8l"/>
+                        <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>
