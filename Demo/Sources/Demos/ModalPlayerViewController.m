@@ -65,6 +65,11 @@
     } completion:nil];
 }
 
+-  (void)letterboxView:(SRGLetterboxView *)letterboxView toggledFullScreen:(BOOL)isFullScreen
+{
+    
+}
+
 #pragma mark Actions
 
 - (IBAction)close:(id)sender

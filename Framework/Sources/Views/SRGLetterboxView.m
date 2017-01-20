@@ -47,6 +47,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
+@property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
@@ -136,6 +137,8 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self.playerView addGestureRecognizer:activityGestureRecognizer];
     
+    self.fullScreenButton.hidden = !(self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:)]);
+    
     [self reloadData];
 }
 
@@ -204,6 +207,22 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Getters and setters
+
+- (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
+{
+    _delegate = delegate;
+    self.fullScreenButton.hidden = !(delegate && [delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:)]);
+}
+
+- (void)setFullScreen:(BOOL)fullScreen
+{
+    _fullScreen = fullScreen;
+    self.fullScreenButton.selected = fullScreen;
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:)]) {
+        [self.delegate letterboxView:self toggledFullScreen:fullScreen];
+    }
+}
 
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
 {
@@ -351,6 +370,11 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)seekForward:(id)sender
 {
     [[SRGLetterboxService sharedService].controller seekForwardWithCompletionHandler:nil];
+}
+
+- (IBAction)toggleFullScreen:(id)sender
+{
+    self.fullScreen = !self.isFullScreen;
 }
 
 #pragma mark Data display
