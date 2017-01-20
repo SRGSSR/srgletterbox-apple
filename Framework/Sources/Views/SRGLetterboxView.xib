@@ -193,10 +193,10 @@
                     </constraints>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aWQ-IF-YZO" userLabel="Error View">
-                    <rect key="frame" x="0.0" y="174.5" width="375" height="36.5"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
-                            <rect key="frame" x="8" y="8" width="367" height="20.5"/>
+                            <rect key="frame" x="8" y="8" width="359" height="195"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -204,8 +204,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="top" secondItem="aWQ-IF-YZO" secondAttribute="top" constant="8" id="HEq-Cq-aGc"/>
-                        <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" id="Q9l-Dk-scM"/>
+                        <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" constant="8" id="Q9l-Dk-scM"/>
                         <constraint firstItem="XI7-JZ-ASc" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" constant="8" id="dqq-qF-WEd"/>
                         <constraint firstAttribute="bottom" secondItem="XI7-JZ-ASc" secondAttribute="bottom" constant="8" id="lQ5-tO-lCt"/>
                         <constraint firstItem="XI7-JZ-ASc" firstAttribute="top" secondItem="aWQ-IF-YZO" secondAttribute="top" constant="8" id="lcc-uK-Rf2"/>
@@ -230,6 +229,7 @@
                 <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="nZW-NP-IJg"/>
                 <constraint firstItem="45I-mU-kju" firstAttribute="top" secondItem="yE6-Vv-zcn" secondAttribute="bottom" constant="12" id="nab-eo-SZA"/>
                 <constraint firstItem="WC6-gu-laR" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="o8r-U9-ysV"/>
+                <constraint firstItem="aWQ-IF-YZO" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="yqg-fs-HwK"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
