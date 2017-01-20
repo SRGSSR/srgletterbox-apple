@@ -6,11 +6,11 @@
 
 #import "ModalPlayerViewController.h"
 
-#import <SRGLetterbox/SRGLetterbox.h>
-
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
+
+@property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
 @end
 
@@ -54,6 +54,15 @@
             [service reset];
         }
     }
+}
+
+#pragma mark SRGLetterboxViewDelegate protocol
+
+- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
+{
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+        self.closeButton.alpha = hidden ? 0.f : 1.f;
+    } completion:nil];
 }
 
 #pragma mark Actions

@@ -50,9 +50,15 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
+@property (nonatomic, copy) void (^animations)(BOOL hidden);
+@property (nonatomic, copy) void (^completion)(BOOL finished);
+
 @end
 
-@implementation SRGLetterboxView
+@implementation SRGLetterboxView {
+@private
+    BOOL _inWillAnimateUserInterface;
+}
 
 #pragma mark Object lifecycle
 
@@ -218,14 +224,25 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
+    if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
+        _inWillAnimateUserInterface = YES;
+        [self.delegate letterboxViewWillAnimateUserInterface:self];
+        _inWillAnimateUserInterface = NO;
+    }
+    
     void (^animations)(void) = ^{
         CGFloat alpha = hidden ? 0.f : 1.f;
         self.controlsView.alpha = alpha;
+        self.animations ? self.animations(hidden) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
             self.userInterfaceHidden = hidden;
         }
+        self.completion ? self.completion(finished) : nil;
+        
+        self.animations = nil;
+        self.completion = nil;
     };
     
     if (animated) {
@@ -283,6 +300,18 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer
 {
     self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
+}
+
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL))animations completion:(void (^)(BOOL finished))completion
+{
+    if (! _inWillAnimateUserInterface) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can omnly be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
+                                     userInfo:nil];
+    }
+    
+    self.animations = animations;
+    self.completion = completion;
 }
 
 #pragma mark Gesture recognizers
