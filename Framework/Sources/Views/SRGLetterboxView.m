@@ -304,8 +304,12 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL))animations completion:(void (^)(BOOL finished))completion
 {
-    NSAssert(_inWillAnimateUserInterface, @"-animateAlongsideUserInterfaceWithAnimations:completion: can omnly be called from within "
-             "the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate");
+    if (! _inWillAnimateUserInterface) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can omnly be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
+                                     userInfo:nil];
+    }
+    
     self.animations = animations;
     self.completion = completion;
 }
