@@ -6,12 +6,11 @@
 
 #import "ModalPlayerViewController.h"
 
-#import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 @interface ModalPlayerViewController ()
 
-@property (nonatomic, copy) NSString *urn;
+@property (nonatomic) SRGMediaURN *URN;
 
 @end
 
@@ -19,11 +18,11 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(NSString *)urn
+- (instancetype)initWithURN:(SRGMediaURN *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.urn = urn;
+    viewController.URN = URN;
     return viewController;
 }
 
@@ -39,9 +38,8 @@
     [super viewDidAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (self.urn) {
-            [[SRGLetterboxService sharedService] playURN:self.urn
-                                    withPreferredQuality:SRGQualityHD];
+        if (self.URN) {
+            [[SRGLetterboxService sharedService] playURN:self.URN withPreferredQuality:SRGQualityHD];
         }
     }
 }

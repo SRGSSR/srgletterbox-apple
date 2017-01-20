@@ -98,11 +98,11 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 @property (nonatomic, readonly) SRGLetterboxController *controller;
 
 /**
- *  Play the specified urn
+ *  Play the specified Uniform Resource Name
  *
  *  @discussion Does nothing if the urn is the one currently being played
  */
-- (void)playURN:(NSString *)urn withPreferredQuality:(SRGQuality)preferredQuality;
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality;
 
 /**
  *  Play the specified media
@@ -121,19 +121,6 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  *  Reset playback, stopping a playback request if any has been made
  */
 - (void)reset;
-
-/**
- *  Boolean to force the service to only use the currentDataProvider.
- *
- *  You're responsbile to set the currentDataProvider to SRGDataProvider if you set this option to YES.
- *
- *  If it's set to NO, the service with create a dataprovider on each play request, depending of:
- *  - The default service URL, provided by SRGDataProvider.
- *  - the vendor, provied by the urn or the media object.
- *
- *  By default: return NO.
- */
-@property (nonatomic) BOOL useOnlyCurrentDataProvider;
 
 @end
 

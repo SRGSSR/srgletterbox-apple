@@ -44,18 +44,21 @@
         }
             
         case 2: {
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:@"urn:swi:video:41981254"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
         case 3: {
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:@"urn:swi:video:42844052"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
         case 4: {
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
