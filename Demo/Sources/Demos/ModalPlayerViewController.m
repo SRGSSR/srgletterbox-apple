@@ -6,11 +6,24 @@
 
 #import "ModalPlayerViewController.h"
 
+#import <Masonry/Masonry.h>
+
+static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
+static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
+
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
+
+// Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxLeadingConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTrailingConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterbox169Constraint;
 
 @end
 
@@ -32,6 +45,13 @@
 }
 
 #pragma mark View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self letterboxView:self.letterboxView toggledFullScreen:NO];
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -65,11 +85,49 @@
     } completion:nil];
 }
 
+-  (void)letterboxView:(SRGLetterboxView *)letterboxView toggledFullScreen:(BOOL)isFullScreen
+{
+    [self.view layoutIfNeeded];
+    [UIView animateWithDuration:0.2 animations:^{
+        if (isFullScreen) {
+            self.letterboxLeadingConstraint.constant = 0.f;
+            self.letterboxTrailingConstraint.constant = 0.f;
+            self.letterboxTopConstraint.constant = 0.f;
+            
+            self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
+            self.letterbox169Constraint.priority = LetterboxViewConstraintLessPriority;
+        }
+        else {
+            self.letterboxLeadingConstraint.constant = 16.f;
+            self.letterboxTrailingConstraint.constant = 16.f;
+            self.letterboxTopConstraint.constant = 30.f;
+            
+            self.letterboxBottomConstraint.priority = LetterboxViewConstraintLessPriority;
+            self.letterbox169Constraint.priority = LetterboxViewConstraintMorePriority;
+        }
+        
+        [self setNeedsStatusBarAppearanceUpdate];
+        [self.view layoutIfNeeded];
+    }];
+}
+
 #pragma mark Actions
 
 - (IBAction)close:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark Status bar
+
+- (BOOL)prefersStatusBarHidden
+{
+    return (self.letterboxView) ? self.letterboxView.isFullScreen : NO;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return UIStatusBarAnimationSlide;
 }
 
 @end
