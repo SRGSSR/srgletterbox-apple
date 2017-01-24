@@ -75,7 +75,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden))animations completion:(nullable void (^)(BOOL finished))completion;
 
-@property (nonatomic, readonly, getter=isFullScreen) BOOL fullScreen;
+/**
+ *  Full screen state.
+ *
+ *  Call this setter method will call the delagate method -letterboxView:toggledFullScreen:
+ *
+ *  @discussion If you didn't implement the delegate method -letterboxView:toggledFullScreen:, no full screen button
+ *  will appear, and this method won't have any effect.
+ */
+@property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 
 @end
 

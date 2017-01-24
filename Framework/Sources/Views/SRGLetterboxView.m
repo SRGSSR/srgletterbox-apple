@@ -47,7 +47,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
-@property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceAllowedToBeShownOrHidden) BOOL userInterfaceAllowedToBeShownOrHidden;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;

@@ -139,6 +139,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [self.letterboxView setUserInterfaceHidden:NO animated:YES allowedToBeShownOrHidden:NO];
 }
 
+- (IBAction)fullScreen:(id)sender
+{
+    [self.letterboxView setFullScreen:YES];
+}
+
 #pragma mark Status bar
 
 - (BOOL)prefersStatusBarHidden
