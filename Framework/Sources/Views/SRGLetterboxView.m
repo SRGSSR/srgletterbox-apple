@@ -218,6 +218,10 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setFullScreen:(BOOL)fullScreen
 {
+    if (_fullScreen == fullScreen) {
+        return;
+    }
+    
     _fullScreen = fullScreen;
     self.fullScreenButton.selected = fullScreen;
     
