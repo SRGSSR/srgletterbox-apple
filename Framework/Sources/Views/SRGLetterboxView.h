@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  User interface controls state
  */
-@property (nonatomic, getter=isUserInterfaceHidden, readonly) BOOL userInterfaceHidden;
+@property (nonatomic, readonly, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 
 /**
  *  User interface controls interaction state
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion Could be change with -setUserInterfaceHidden:animated:allowedToBeShownOrHidden: method
  */
-@property (nonatomic, getter=isUserInterfaceAllowedToBeShownOrHidden, readonly) BOOL userInterfaceAllowedToBeShownOrHidden;
+@property (nonatomic, readonly, getter=isUserInterfaceAllowedToBeShownOrHidden) BOOL userInterfaceAllowedToBeShownOrHidden;
 
 /**
  *  Change the user interface controls state.
