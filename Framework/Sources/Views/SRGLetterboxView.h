@@ -39,6 +39,31 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxViewDelegate> delegate;
 
 /**
+ *  User interface controls state
+ */
+@property (nonatomic, getter=isUserInterfaceHidden, readonly) BOOL userInterfaceHidden;
+
+/**
+ *  User interface controls interaction state
+ *
+ *  YES, the user can tap on the screen to toggle controls (shown or hidden), with an inactivity timer to hide it.
+ *  NO, the user can't tap on the screen to toggle controls (shown or hidden).
+ *  By default: YES
+ *
+ *  @discussion Could be change with -setUserInterfaceHidden:animated:allowedToBeShownOrHidden: method
+ */
+@property (nonatomic, getter=isUserInterfaceAllowedToBeShownOrHidden, readonly) BOOL userInterfaceAllowedToBeShownOrHidden;
+
+/**
+ *  Change the user interface controls state.
+ *
+ *  @param hidden Shown or hidden the user interface controls
+ *  @param animated Animate the shown or hidden transition
+ *  @param allowedToBeShownOrHidden Allowed after to hide or show user interface with the inactivity timer or by taping on the frame
+ */
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated allowedToBeShownOrHidden:(BOOL)allowedToBeShownOrHidden;
+
+/**
  *  Call this method from within the delegate `-letterboxViewWillAnimateUserInterface:` method implementation to provide
  *  the animations to be performed alongside the player user interface animations when controls are shown or hidden,
  *  or an optional block to be called on completion

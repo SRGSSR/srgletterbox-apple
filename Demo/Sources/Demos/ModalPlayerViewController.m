@@ -51,6 +51,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidLoad];
     
     [self letterboxView:self.letterboxView toggledFullScreen:NO];
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO allowedToBeShownOrHidden:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -116,6 +117,26 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)close:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)hideControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:YES animated:YES allowedToBeShownOrHidden:YES];
+}
+
+- (IBAction)showControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:NO animated:YES allowedToBeShownOrHidden:YES];
+}
+
+- (IBAction)forceHideControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:YES animated:YES allowedToBeShownOrHidden:NO];
+}
+
+- (IBAction)forceShowControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:NO animated:YES allowedToBeShownOrHidden:NO];
 }
 
 #pragma mark Status bar
