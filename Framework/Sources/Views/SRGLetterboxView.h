@@ -78,9 +78,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Full screen state.
  *
- *  Call this setter method will call the delagate method -letterboxView:toggledFullScreen:
+ *  Call this setter method will call the delagate method `-letterboxView:toggledFullScreen:`
  *
- *  @discussion If you didn't implement the delegate method -letterboxView:toggledFullScreen:, no full screen button
+ *  @discussion If you didn't implement the delegate method `-letterboxView:toggledFullScreen:`, no full screen button
  *  will appear, and this method won't have any effect.
  */
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
