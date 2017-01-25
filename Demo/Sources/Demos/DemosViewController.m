@@ -32,13 +32,15 @@
 {
     switch (indexPath.row) {
         case 0: {
-            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithUid:@"41981254"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
+            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
         case 1: {
-            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithUid:@"42844052"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+            SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }

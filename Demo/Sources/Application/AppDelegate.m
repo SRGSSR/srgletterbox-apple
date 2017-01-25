@@ -54,11 +54,7 @@
     [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
                                                      comScoreVirtualSite:@"app-test-v"
                                                      netMetrixIdentifier:@"test"];
-    
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL()
-                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
-    [SRGDataProvider setCurrentDataProvider:dataProvider];
-    
+        
     [SRGLetterboxService sharedService].delegate = self;
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];

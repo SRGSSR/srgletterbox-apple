@@ -548,7 +548,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         if (self.media) {
             [self playMedia:self.media withPreferredQuality:self.preferredQuality];
         }
-        else {
+        else if (self.URN) {
             [self playURN:self.URN withPreferredQuality:self.preferredQuality];
         }
     }

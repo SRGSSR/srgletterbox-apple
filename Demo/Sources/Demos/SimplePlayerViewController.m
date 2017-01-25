@@ -6,12 +6,11 @@
 
 #import "SimplePlayerViewController.h"
 
-#import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 @interface SimplePlayerViewController ()
 
-@property (nonatomic, copy) NSString *uid;
+@property (nonatomic) SRGMediaURN *URN;
 
 @end
 
@@ -19,17 +18,17 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithUid:(NSString *)uid
+- (instancetype)initWithURN:(SRGMediaURN *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.uid = uid;
+    viewController.URN = URN;
     return viewController;
 }
 
 - (instancetype)init
 {
-    return [self initWithUid:nil];
+    return [self initWithURN:nil];
 }
 
 #pragma mark View lifecycle
@@ -39,11 +38,8 @@
     [super viewDidAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (self.uid) {
-            [[[SRGDataProvider currentDataProvider] videosWithUids:@[self.uid] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-                SRGMedia *media = medias.firstObject;
-                [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityHD];
-            }] resume];
+        if (self.URN) {
+            [[SRGLetterboxService sharedService] playURN:self.URN withPreferredQuality:SRGQualityNone];
         }
     }
 }
