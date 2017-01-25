@@ -9,6 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  Return the data provider business unit identifier matching a specific vendor
+ */
 OBJC_EXPORT NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor);
 
 @interface SRGDataProvider (SRGLetterbox)
