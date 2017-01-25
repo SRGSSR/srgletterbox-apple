@@ -50,7 +50,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
-    [self letterboxView:self.letterboxView toggledFullScreen:NO animated:NO];
+    // Ensure consistent constraint constant values with the associated storyboard
+    [self letterboxView:self.letterboxView didToggleFullScreen:NO animated:NO];
+    
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
 
@@ -86,7 +88,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     } completion:nil];
 }
 
--  (void)letterboxView:(SRGLetterboxView *)letterboxView toggledFullScreen:(BOOL)isFullScreen animated:(BOOL)animated
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didToggleFullScreen:(BOOL)isFullScreen animated:(BOOL)animated
 {
     [self.view layoutIfNeeded];
     

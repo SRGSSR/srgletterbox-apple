@@ -138,7 +138,7 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self.playerView addGestureRecognizer:activityGestureRecognizer];
     
-    self.fullScreenButton.hidden = !(self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:animated:)]);
+    self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
     
     [self reloadData];
 }
@@ -212,7 +212,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
 {
     _delegate = delegate;
-    self.fullScreenButton.hidden = !(delegate && [delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:animated:)]);
+    self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
 }
 
 - (void)setFullScreen:(BOOL)fullScreen
@@ -229,8 +229,8 @@ static void commonInit(SRGLetterboxView *self);
     _fullScreen = fullScreen;
     self.fullScreenButton.selected = fullScreen;
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:animated:)]) {
-        [self.delegate letterboxView:self toggledFullScreen:fullScreen animated:animated];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didToggleFullScreen:animated:)]) {
+        [self.delegate letterboxView:self didToggleFullScreen:fullScreen animated:animated];
     }
 }
 
@@ -359,6 +359,11 @@ static void commonInit(SRGLetterboxView *self);
     
     self.animations = animations;
     self.completion = completion;
+}
+
+- (BOOL)isFullScreenButtonHidden
+{
+    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:didToggleFullScreen:animated:)];
 }
 
 #pragma mark Gesture recognizers

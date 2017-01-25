@@ -16,11 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- *  This method gets called when user toggles the full screen button.
- *  If you implement this delegate method, the full screen button will appear.
- *  Because SRGLetterboxView is
+ *  This method gets called when the user interface enters or exit full screen.
+ *
+ *  @discussion A full-screen button is automatically displayed when (and only when) this method is implemented
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView toggledFullScreen:(BOOL)isFullScreen animated:(BOOL)animated;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didToggleFullScreen:(BOOL)isFullScreen animated:(BOOL)animated;
 
 /**
  *  This method gets called when user interface controls are shown or hidden. You can call the `SRGLetterboxView`
@@ -83,13 +83,13 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Change the full screen state.
  *
- *  Call this setter method will call the delagate method `-letterboxView:toggledFullScreen:animated:`
+ *  Calling this setter method will call the delegate method `-letterboxView:didToggleFullScreen:animated:`
  *
- *  @param fullscreen Enter or exit full screen
- *  @param animated Animate full screen transition
+ *  @param fullscreen YES for full screen
+ *  @param animated Whether the transition must be animated
  *
- *  @discussion If you didn't implement the delegate method `-letterboxView:toggledFullScreen:`, no full screen button
- *  will appear, and this method won't have any effect.
+ *  @discussion If the delegate method `-letterboxView:didToggleFullScreen:animated:` is not implemented, no full screen 
+ *              button is displayed, and this method doesn't do anything
  */
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
