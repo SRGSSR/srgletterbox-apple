@@ -122,11 +122,6 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  */
 - (void)reset;
 
-/**
- *  Force a reload of the player configuration
- */
-- (void)reloadConfiguration;
-
 @end
 
 /**
@@ -181,9 +176,6 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  *  device for presentation
  *
  *  Default is `NO`
- *
- *  @discussion If you change this value when the application is running, you should call `-reloadConfiguration` to
- *              ensure the change is taken into account
  */
 @property (nonatomic, getter=isMirroredWithAirplay) BOOL mirroredWithAirplay;
 

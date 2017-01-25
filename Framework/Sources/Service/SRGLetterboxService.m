@@ -168,6 +168,16 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     return self.controller.pictureInPictureController.pictureInPictureActive;
 }
 
+- (void)setMirroredWithAirplay:(BOOL)mirroredWithAirplay
+{
+    if (_mirroredWithAirplay == mirroredWithAirplay) {
+        return;
+    }
+    
+    _mirroredWithAirplay = mirroredWithAirplay;
+    [self.controller reloadPlayerConfiguration];
+}
+
 #pragma mark Data
 
 - (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition preferredQuality:(SRGQuality)preferredQuality
@@ -324,11 +334,6 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)reset
 {
     [self updateWithURN:nil media:nil mediaComposition:nil preferredQuality:SRGQualityNone];
-}
-
-- (void)reloadConfiguration
-{
-    [self.controller reloadPlayerConfiguration];
 }
 
 - (void)reportError:(NSError *)error
