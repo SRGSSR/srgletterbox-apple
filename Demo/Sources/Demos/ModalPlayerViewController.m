@@ -51,7 +51,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidLoad];
     
     [self letterboxView:self.letterboxView toggledFullScreen:NO animated:NO];
-    [self.letterboxView setUserInterfaceHidden:YES animated:NO allowedToBeShownOrHidden:YES];
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -131,22 +131,22 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (IBAction)hideControls:(id)sender
 {
-    [self.letterboxView setUserInterfaceHidden:YES animated:YES allowedToBeShownOrHidden:YES];
+    [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:YES];
 }
 
 - (IBAction)showControls:(id)sender
 {
-    [self.letterboxView setUserInterfaceHidden:NO animated:YES allowedToBeShownOrHidden:YES];
+    [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:YES];
 }
 
 - (IBAction)forceHideControls:(id)sender
 {
-    [self.letterboxView setUserInterfaceHidden:YES animated:YES allowedToBeShownOrHidden:NO];
+    [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:NO];
 }
 
 - (IBAction)forceShowControls:(id)sender
 {
-    [self.letterboxView setUserInterfaceHidden:NO animated:YES allowedToBeShownOrHidden:NO];
+    [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
 }
 
 - (IBAction)fullScreen:(id)sender

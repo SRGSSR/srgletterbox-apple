@@ -39,29 +39,29 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxViewDelegate> delegate;
 
 /**
- *  User interface controls state
+ *  Return YES iff the the user interface (with the controls on it) is hidden
+ *
+ *  @discussion The view is initially created with a visible user interface. Call `-setUserInterfaceHidden:togglable:`
+ *              to change this behavior
  */
 @property (nonatomic, readonly, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 
 /**
- *  User interface controls interaction state
+ *  Return YES iff the user interface can be toggled by the user (i.e. hidden or shown by interacting with it)
  *
- *  YES, the user can tap on the screen to toggle controls (shown or hidden), with an inactivity timer to hide it.
- *  NO, the user can't tap on the screen to toggle controls (shown or hidden).
- *  By default: YES
- *
- *  @discussion Could be change with -setUserInterfaceHidden:animated:allowedToBeShownOrHidden: method
+ *  @discussion The view is initially created with togglable state. Call `-setUserInterfaceHidden:togglable:`
+ *              to change this behavior
  */
-@property (nonatomic, readonly, getter=isUserInterfaceAllowedToBeShownOrHidden) BOOL userInterfaceAllowedToBeShownOrHidden;
+@property (nonatomic, readonly, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 
 /**
- *  Change the user interface controls state.
+ *  Change the user interface controls behavior
  *
- *  @param hidden Shown or hidden the user interface controls
- *  @param animated Animate the shown or hidden transition
- *  @param allowedToBeShownOrHidden Allowed after to hide or show user interface with the inactivity timer or by taping on the frame
+ *  @param hidden Whether the user interface must be hidden
+ *  @param animated Whether the transition must be animated
+ *  @param togglable Whether the interface can be shown or hidden by the user
  */
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated allowedToBeShownOrHidden:(BOOL)allowedToBeShownOrHidden;
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
 /**
  *  Call this method from within the delegate `-letterboxViewWillAnimateUserInterface:` method implementation to provide

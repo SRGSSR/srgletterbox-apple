@@ -48,7 +48,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) id periodicTimeObserver;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
-@property (nonatomic, getter=isUserInterfaceAllowedToBeShownOrHidden) BOOL userInterfaceAllowedToBeShownOrHidden;
+@property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
@@ -85,8 +85,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    self.userInterfaceAllowedToBeShownOrHidden = YES;
     
     SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
     [self.playerView insertSubview:letterboxController.view aboveSubview:self.imageView];
@@ -244,24 +242,23 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI
 
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated allowedToBeShownOrHidden:(BOOL)allowedToBeShownOrHidden
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     // Allow to change hide or display
-    self.userInterfaceAllowedToBeShownOrHidden = YES;
+    self.userInterfaceTogglable = YES;
     
-    [self setuserInterfaceHidden:hidden animated:animated];
-    if (allowedToBeShownOrHidden) {
+    [self setUserInterfaceHidden:hidden animated:animated];
+    if (togglable) {
         [self resetInactivityTimer];
     }
     
     // Apply the setting
-    self.userInterfaceAllowedToBeShownOrHidden = allowedToBeShownOrHidden;
+    self.userInterfaceTogglable = togglable;
 }
 
-- (void)setuserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceAllowedToBeShownOrHidden)
-    {
+    if (! self.userInterfaceTogglable) {
         return;
     }
     
@@ -330,7 +327,7 @@ static void commonInit(SRGLetterboxView *self);
             [self.timeSlider hidePopUpViewAnimated:YES];
             self.showingPopup = NO;
             
-            [self setuserInterfaceHidden:NO animated:YES];
+            [self setUserInterfaceHidden:NO animated:YES];
         }
         
         self.loadingImageView.alpha = (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
@@ -369,13 +366,13 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self setuserInterfaceHidden:NO animated:YES];
+    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)toggleUserInterfaceVisibility:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.userInterfaceAllowedToBeShownOrHidden) {
-        [self setuserInterfaceHidden:! self.userInterfaceHidden animated:YES];
+    if (self.userInterfaceTogglable) {
+        [self setUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
     }
 }
 
@@ -387,9 +384,9 @@ static void commonInit(SRGLetterboxView *self);
     // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
     SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
     if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-        || letterboxController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-        || letterboxController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self setuserInterfaceHidden:YES animated:YES];
+            || letterboxController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+            || letterboxController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+        [self setUserInterfaceHidden:YES animated:YES];
     }
 }
 
@@ -412,7 +409,8 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Data display
 
-- (void)reloadData {
+- (void)reloadData
+{
     [self.imageView srg_requestImageForObject:[SRGLetterboxService sharedService].media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
 }
 
@@ -472,7 +470,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self setuserInterfaceHidden:NO animated:YES];
+    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (void)wirelessRouteDidChange:(NSNotification *)notification
@@ -506,4 +504,7 @@ static void commonInit(SRGLetterboxView *self)
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+    
+    self.userInterfaceHidden = NO;
+    self.userInterfaceTogglable = YES;
 }
