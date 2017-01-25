@@ -8,7 +8,6 @@
 
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
 {
-    // FIXME: Probably need to round to nearest supported size in the data provider library
     static NSDictionary *s_widths;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
