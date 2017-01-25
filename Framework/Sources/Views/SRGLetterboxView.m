@@ -6,8 +6,6 @@
 
 #import "SRGLetterboxView.h"
 
-#import "ASValueTrackingSlider.h"
-
 #import "NSBundle+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "SRGLetterboxService.h"
@@ -16,6 +14,7 @@
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
 #import <FXReachability/FXReachability.h>
+#import <ASValueTrackingSlider/ASValueTrackingSlider.h>
 
 static void commonInit(SRGLetterboxView *self);
 
