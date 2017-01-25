@@ -122,6 +122,11 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  */
 - (void)reset;
 
+/**
+ *  Force a reload of the player configuration
+ */
+- (void)reloadConfiguration;
+
 @end
 
 /**
@@ -150,10 +155,37 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  */
 @property (nonatomic, readonly) NSError *error;
 
+@end
+
+/**
+ *  Picture in picture support. Implement `SRGLetterboxServiceDelegate` methods to integrate Letterbox picture in picture
+ *  support within your application
+ */
+@interface SRGLetterboxService (PictureInPicture)
+
 /**
  *  Return YES iff picture in picture is active
  */
 @property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
+
+@end
+
+/**
+ *  Airplay support
+ */
+@interface SRGLetterboxService (Airplay)
+
+/**
+ *  If set to `YES`, the Letterbox player is mirrored as is when Airplay mirroring is enabled, without switching to
+ *  full-screen playback on the external display. This is especially handy if you need to be able to mirror your
+ *  device for presentation
+ *
+ *  Default is `NO`
+ *
+ *  @discussion If you change this value when the application is running, you should call `-reloadConfiguration` to
+ *              ensure the change is taken into account
+ */
+@property (nonatomic, getter=isMirroredWithAirplay) BOOL mirroredWithAirplay;
 
 @end
 

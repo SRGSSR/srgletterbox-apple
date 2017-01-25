@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXTERN const NSInteger SRGLetterboxBackwardSeekInterval;
 OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 
+/**
+ *  Lightweight `SRGMediaPlayerController` subclass. This class exposes only standard Letterbox functionalities, and inhibits
+ *  some `SRGMediaPlayerController` behaviors.
+ */
 @interface SRGLetterboxController : SRGMediaPlayerController
 
 /**

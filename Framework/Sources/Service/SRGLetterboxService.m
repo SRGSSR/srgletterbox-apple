@@ -44,6 +44,8 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 @property (nonatomic) YYWebImageOperation *imageOperation;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
+@property (nonatomic, getter=isMirroredWithAirplay) BOOL mirroredWithAirplay;
+
 @end
 
 @implementation SRGLetterboxService
@@ -125,10 +127,9 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            // Use mirroring when in presentation mode
+            // Allow external playback
             player.allowsExternalPlayback = YES;
-            player.usesExternalPlaybackWhileExternalScreenIsActive = YES;
-//            player.usesExternalPlaybackWhileExternalScreenIsActive = ! ApplicationSettingPresenterModeEnabled();
+            player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredWithAirplay;
             
             // Only update the audio session if needed to avoid audio hiccups
             NSString *mode = (self.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
@@ -323,6 +324,11 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 - (void)reset
 {
     [self updateWithURN:nil media:nil mediaComposition:nil preferredQuality:SRGQualityNone];
+}
+
+- (void)reloadConfiguration
+{
+    [self.controller reloadPlayerConfiguration];
 }
 
 - (void)reportError:(NSError *)error
