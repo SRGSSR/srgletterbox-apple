@@ -49,6 +49,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceAllowedToBeShownOrHidden) BOOL userInterfaceAllowedToBeShownOrHidden;
+@property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
@@ -139,7 +140,7 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self.playerView addGestureRecognizer:activityGestureRecognizer];
     
-    self.fullScreenButton.hidden = !(self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:)]);
+    self.fullScreenButton.hidden = !(self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:animated:)]);
     
     [self reloadData];
 }
@@ -213,10 +214,15 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
 {
     _delegate = delegate;
-    self.fullScreenButton.hidden = !(delegate && [delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:)]);
+    self.fullScreenButton.hidden = !(delegate && [delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:animated:)]);
 }
 
 - (void)setFullScreen:(BOOL)fullScreen
+{
+    [self setFullScreen:fullScreen animated:NO];
+}
+
+- (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated
 {
     if (_fullScreen == fullScreen) {
         return;
@@ -225,8 +231,8 @@ static void commonInit(SRGLetterboxView *self);
     _fullScreen = fullScreen;
     self.fullScreenButton.selected = fullScreen;
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:)]) {
-        [self.delegate letterboxView:self toggledFullScreen:fullScreen];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:toggledFullScreen:animated:)]) {
+        [self.delegate letterboxView:self toggledFullScreen:fullScreen animated:animated];
     }
 }
 
@@ -401,7 +407,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)toggleFullScreen:(id)sender
 {
-    self.fullScreen = !self.isFullScreen;
+    [self setFullScreen:!self.isFullScreen animated:YES];
 }
 
 #pragma mark Data display

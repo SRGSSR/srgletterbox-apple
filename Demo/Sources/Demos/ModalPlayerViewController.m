@@ -50,7 +50,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
-    [self letterboxView:self.letterboxView toggledFullScreen:NO];
+    [self letterboxView:self.letterboxView toggledFullScreen:NO animated:NO];
     [self.letterboxView setUserInterfaceHidden:YES animated:NO allowedToBeShownOrHidden:YES];
 }
 
@@ -86,10 +86,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     } completion:nil];
 }
 
--  (void)letterboxView:(SRGLetterboxView *)letterboxView toggledFullScreen:(BOOL)isFullScreen
+-  (void)letterboxView:(SRGLetterboxView *)letterboxView toggledFullScreen:(BOOL)isFullScreen animated:(BOOL)animated
 {
     [self.view layoutIfNeeded];
-    [UIView animateWithDuration:0.2 animations:^{
+    
+    void (^animations)(void) = ^{
         if (isFullScreen) {
             self.letterboxLeadingConstraint.constant = 0.f;
             self.letterboxTrailingConstraint.constant = 0.f;
@@ -109,7 +110,16 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
         
         [self setNeedsStatusBarAppearanceUpdate];
         [self.view layoutIfNeeded];
-    }];
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:^{
+            animations();
+        }];
+    }
+    else {
+        animations();
+    }
 }
 
 #pragma mark Actions
@@ -141,7 +151,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (IBAction)fullScreen:(id)sender
 {
-    [self.letterboxView setFullScreen:YES];
+    [self.letterboxView setFullScreen:YES animated:YES];
 }
 
 #pragma mark Status bar
