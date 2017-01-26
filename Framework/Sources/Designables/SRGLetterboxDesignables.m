@@ -15,41 +15,6 @@
  */
 
 IB_DESIGNABLE
-@interface SRGLetterbox (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGAirplayView (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGPictureInPictureButton (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGPlaybackButton (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGTimeSlider (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGTimelineView (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGTracksButton (Designable)
-
-@end
-
-IB_DESIGNABLE
-@interface SRGVolumeView (Designable)
+@interface SRGLetterboxView (Designable)
 
 @end
