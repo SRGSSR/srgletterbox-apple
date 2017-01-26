@@ -112,6 +112,9 @@
 		6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
+		6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
 		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD9BA251E2FB36B0013CC97 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -193,6 +196,7 @@
 				6FAB3B6C1E2905CA00CC2197 /* libextobjc.framework in Embed Frameworks */,
 				08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */,
 				6FAB3B761E2905CA00CC2197 /* SRGDataProvider.framework in Embed Frameworks */,
+				6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */,
 				6FAB3B6A1E2905CA00CC2197 /* ComScore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -313,6 +317,7 @@
 				08FA0D221E30F92F000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B751E2905CA00CC2197 /* SRGDataProvider.framework in Frameworks */,
 				6FAB3B691E2905CA00CC2197 /* ComScore.framework in Frameworks */,
+				6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +325,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */,
 				6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */,
 				6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */,
 				6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */,
