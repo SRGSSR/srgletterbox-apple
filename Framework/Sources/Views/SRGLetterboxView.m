@@ -423,10 +423,9 @@ static void commonInit(SRGLetterboxView *self);
         self.errorView.hidden = YES;
     }
     else {
-        // TODO: Localization
         NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                              code:SRGLetterboxErrorCodeNotFound
-                                         userInfo:@{ NSLocalizedDescriptionKey : @"No media" }];
+                                         userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
         [self displayError:error];
     }
 }
