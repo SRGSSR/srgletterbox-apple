@@ -6,7 +6,7 @@
 
 #import "SRGDataProvider+SRGLetterbox.h"
 
-static NSURL *s_defaultServiceURL;
+static NSURL *s_serviceURL;
 
 NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -27,14 +27,14 @@ NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 
 @implementation SRGDataProvider (SRGLetterbox)
 
-+ (NSURL *)defaultServiceURL
++ (NSURL *)serviceURL
 {
-    return s_defaultServiceURL ?: SRGIntegrationLayerProductionServiceURL();
+    return s_serviceURL ?: [self currentDataProvider] ? [self currentDataProvider].serviceURL : SRGIntegrationLayerProductionServiceURL();
 }
 
-+ (void)setDefaultServiceURL:(NSURL *)defaultServiceURL
++ (void)setServiceURL:(NSURL *)serviceURL
 {
-    s_defaultServiceURL = defaultServiceURL;
+    s_serviceURL = serviceURL;
 }
 
 @end

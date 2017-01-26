@@ -17,19 +17,23 @@ OBJC_EXPORT NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor v
 @interface SRGDataProvider (SRGLetterbox)
 
 /**
- *  With SRGLetterboxService, if you play a media or an URN, Letterbox use the correct BU DataProvider,
- *  and use this default service URL. By default, it's the IL production service, SRGIntegrationLayerProductionServiceURL()
+ *  With the SRGLetterbox framework, if you play a media or an URN with SRGLetterboxService, Letterbox use the correct
+ *  BU DataProvider and use this service URL property.
  *
- *  @see `-setDefaultServiceURL:`
+ *  By default, or anything is set, tthe IL production service, SRGIntegrationLayerProductionServiceURL() is returned.
+ *  If you set a current SRGDataProvider with `+setCurrentDataProvider:`, it returns its serviceURL.
+ *  If you set a service URL with `+setServiceURL:`, this one will be returned.
+ *
+ *  @see `+setServiceURL:`
  */
-+ (NSURL *)defaultServiceURL;
++ (NSURL *)serviceURL;
 
 /**
- *  Change the default service URL.
+ *  Force the service URL to used with SRGLetterBox framework.
  *
  *  @discussion Do it before calling a play mehtod on SRGLetterboxService
  */
-+ (void)setDefaultServiceURL:(NSURL *)defaultServiceURL;
++ (void)setServiceURL:(nullable NSURL *)serviceURL;
 
 @end
 

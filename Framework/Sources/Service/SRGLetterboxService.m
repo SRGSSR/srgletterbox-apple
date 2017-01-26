@@ -303,7 +303,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
         }
     };
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider defaultServiceURL]
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider serviceURL]
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
     
     if (URN.mediaType == SRGMediaTypeVideo) {
