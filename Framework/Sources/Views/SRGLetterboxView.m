@@ -416,7 +416,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)reloadData
 {
     SRGMedia *media = [SRGLetterboxService sharedService].media;
-    if (media) {
+    NSError *error = [SRGLetterboxService sharedService].error;
+    
+    if (error) {
+        self.errorView.hidden = NO;
+        self.errorLabel.text = error.localizedDescription;
+    }
+    else if (media) {
+        self.errorView.hidden = NO;
         [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     }
     else if ([SRGLetterboxService sharedService].URN) {
@@ -426,14 +433,9 @@ static void commonInit(SRGLetterboxView *self);
         NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                              code:SRGLetterboxErrorCodeNotFound
                                          userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
-        [self displayError:error];
+        self.errorView.hidden = NO;
+        self.errorLabel.text = error.localizedDescription;
     }
-}
-
-- (void)displayError:(NSError *)error
-{
-    self.errorView.hidden = NO;
-    self.errorLabel.text = error.localizedDescription;
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol
@@ -477,7 +479,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
-    [self displayError:[SRGLetterboxService sharedService].error];
+    [self reloadData];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
