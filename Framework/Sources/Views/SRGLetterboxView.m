@@ -375,9 +375,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)toggleUserInterfaceVisibility:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.userInterfaceTogglable) {
-        [self setUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
-    }
+    [self setUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
 }
 
 #pragma mark Timers
@@ -475,6 +473,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self setUserInterfaceHidden:NO animated:YES];
+    [self updateInterfaceAnimated:YES];
 }
 
 - (void)wirelessRouteDidChange:(NSNotification *)notification
