@@ -56,9 +56,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.URN) {

@@ -7,8 +7,9 @@
 #import "SRGLetterboxView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "UIFont+SRGLetterbox.h"
+#import "SRGLetterboxError.h"
 #import "SRGLetterboxService.h"
+#import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <Masonry/Masonry.h>
@@ -160,6 +161,7 @@ static void commonInit(SRGLetterboxView *self);
         }];
         
         [self updateInterfaceAnimated:NO];
+        [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaMetadataDidChange:)
@@ -413,7 +415,25 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadData
 {
-    [self.imageView srg_requestImageForObject:[SRGLetterboxService sharedService].media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    SRGMedia *media = [SRGLetterboxService sharedService].media;
+    if (media) {
+        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    }
+    else if ([SRGLetterboxService sharedService].URN) {
+        self.errorView.hidden = YES;
+    }
+    else {
+        NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                             code:SRGLetterboxErrorCodeNotFound
+                                         userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
+        [self displayError:error];
+    }
+}
+
+- (void)displayError:(NSError *)error
+{
+    self.errorView.hidden = NO;
+    self.errorLabel.text = error.localizedDescription;
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol
@@ -457,12 +477,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
-    if (self.errorView.hidden) {
-        self.errorView.hidden = NO;
-    }
-    
-    NSError *error = [SRGLetterboxService sharedService].error;
-    self.errorLabel.text = error.localizedDescription;
+    [self displayError:[SRGLetterboxService sharedService].error];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
