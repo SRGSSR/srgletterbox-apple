@@ -74,11 +74,14 @@
 {
     if (self.restorationClass == [ModalPlayerViewController class]) {
         ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] init];
-        [self.topPresentedViewController presentViewController:playerViewController animated:YES completion:nil];
+        [self.topPresentedViewController presentViewController:playerViewController animated:YES completion:^{
+            completionHandler(YES);
+        }];
     }
     else if (self.restorationClass == [SimplePlayerViewController class]) {
         SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] init];
         [self.navigationController pushViewController:playerViewController animated:YES];
+        // FIXME: Call completion handler!!
     }
 }
 
