@@ -565,7 +565,7 @@ NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterbox
 {
     if (context == s_kvoContext) {
         if ([keyPath isEqualToString:@keypath(SRGLetterboxController.new, pictureInPictureController.pictureInPictureActive)]) {
-            // When enabling Airplay from the control center while picture in picture is active, picture in picture will
+            // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
             // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
             // those methods manually
             if (self.controller.player.externalPlaybackActive) {
