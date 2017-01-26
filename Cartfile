@@ -5,6 +5,6 @@ github "SRGSSR/srglogger-ios" "develop"
 github "SRGSSR/SRGMediaPlayer-iOS" "develop"
 github "ibireme/YYWebImage" ~> 1.0.4
 github "SnapKit/Masonry" ~> 1.0.2
-github "SRGSSR/ASValueTrackingSlider" "8727a9487e5e0bca061112c03b4523ae22861053"
+github "SRGSSR/ASValueTrackingSlider" "840137273ef2b66abfd3db304e4ac7c93ab31568"
 
 github "SRGSSR/FXReachability" "3cad7998f717145c90ff97eef552053d66063339"
