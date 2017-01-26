@@ -373,9 +373,9 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:NO animated:YES];
 }
 
-- (IBAction)toggleUserInterfaceVisibility:(UIGestureRecognizer *)gestureRecognizer
+- (IBAction)hideUserInterfaceVisibility:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self setUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
+    [self setUserInterfaceHidden:YES animated:YES];
 }
 
 #pragma mark Timers
