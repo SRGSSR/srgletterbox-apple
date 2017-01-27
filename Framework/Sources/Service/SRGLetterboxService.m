@@ -74,6 +74,13 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 - (instancetype)init
 {
     if (self = [super init]) {
+        NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
+        if (! [backgroundModes containsObject:@"audio"]) {
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                           reason:@"You must enable the 'Audio, Airplay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
+                                         userInfo:nil];
+        }
+        
         self.controller = [[SRGLetterboxController alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
