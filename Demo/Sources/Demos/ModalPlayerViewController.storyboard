@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5VB-3F-wwv" customClass="SRGLetterboxView">
-                                <rect key="frame" x="16" y="50" width="343" height="193"/>
+                                <rect key="frame" x="16" y="25" width="343" height="193"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5VB-3F-wwv" secondAttribute="height" multiplier="16:9" priority="950" id="ff4-Ik-keP"/>
@@ -32,7 +32,7 @@
                                 </connections>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePn-4e-JbK" userLabel="Close Button">
-                                <rect key="frame" x="16" y="50" width="40" height="40"/>
+                                <rect key="frame" x="16" y="25" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Obs-Ak-Xh3"/>
                                     <constraint firstAttribute="width" constant="40" id="w9t-5v-a6u"/>
@@ -44,35 +44,35 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md4-t4-5he">
-                                <rect key="frame" x="16" y="253" width="163.5" height="30"/>
+                                <rect key="frame" x="16" y="228" width="163.5" height="30"/>
                                 <state key="normal" title="Hide controls"/>
                                 <connections>
                                     <action selector="hideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="Cx0-DG-7VH"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-r1-Pgs">
-                                <rect key="frame" x="195.5" y="253" width="163.5" height="30"/>
+                                <rect key="frame" x="195.5" y="228" width="163.5" height="30"/>
                                 <state key="normal" title="Show controls"/>
                                 <connections>
                                     <action selector="showControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="DC9-QM-IKK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
-                                <rect key="frame" x="16" y="291" width="163.5" height="30"/>
+                                <rect key="frame" x="16" y="266" width="163.5" height="30"/>
                                 <state key="normal" title="Force Hide controls"/>
                                 <connections>
                                     <action selector="forceHideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="ENm-2M-VN0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
-                                <rect key="frame" x="195" y="291" width="163.5" height="30"/>
+                                <rect key="frame" x="195" y="266" width="163.5" height="30"/>
                                 <state key="normal" title="Force Show controls"/>
                                 <connections>
                                     <action selector="forceShowControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="wb8-e8-gnS"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
-                                <rect key="frame" x="106" y="329" width="163.5" height="30"/>
+                                <rect key="frame" x="106" y="304" width="163.5" height="30"/>
                                 <state key="normal" title="Full Screen"/>
                                 <connections>
                                     <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
@@ -85,11 +85,14 @@
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="Md4-t4-5he" secondAttribute="centerX" id="4UG-yS-wtK"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="leading" secondItem="Md4-t4-5he" secondAttribute="trailing" constant="16" id="5RU-2L-7Sb"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="6hy-A6-kfe"/>
-                            <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" priority="900" constant="16" id="F2Z-fU-P1b"/>
+                            <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" priority="900" constant="16" id="F2Z-fU-P1b">
+                                <variation key="heightClass=compact-widthClass=compact" constant="32"/>
+                                <variation key="heightClass=compact-widthClass=regular" constant="32"/>
+                            </constraint>
                             <constraint firstItem="JvK-aX-fgP" firstAttribute="top" secondItem="gMD-r1-Pgs" secondAttribute="bottom" constant="8" id="F4n-Es-e3G"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="centerX" secondItem="LBa-rV-Hj0" secondAttribute="centerX" id="FvJ-lD-qwg"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="top" secondItem="WSi-1R-LWr" secondAttribute="bottom" constant="8" id="I5G-lB-icc"/>
-                            <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" constant="30" id="LDp-cD-NhZ"/>
+                            <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" constant="5" id="LDp-cD-NhZ"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="width" secondItem="JvK-aX-fgP" secondAttribute="width" id="NQp-fq-Vlf"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="QEM-bZ-dhh"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="Rb6-lz-xGB"/>
@@ -101,7 +104,10 @@
                             <constraint firstItem="Md4-t4-5he" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="ity-mH-uwB"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="centerX" secondItem="JvK-aX-fgP" secondAttribute="centerX" id="jnL-Wz-deK"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="width" secondItem="WSi-1R-LWr" secondAttribute="width" id="qaB-9B-a8O"/>
-                            <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" priority="900" constant="16" id="tsO-HP-lR4"/>
+                            <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" priority="900" constant="16" id="tsO-HP-lR4">
+                                <variation key="heightClass=compact-widthClass=compact" constant="32"/>
+                                <variation key="heightClass=compact-widthClass=regular" constant="32"/>
+                            </constraint>
                         </constraints>
                     </view>
                     <connections>

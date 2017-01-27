@@ -107,9 +107,20 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             self.letterbox169Constraint.priority = LetterboxViewConstraintLessPriority;
         }
         else {
-            self.letterboxLeadingConstraint.constant = 16.f;
-            self.letterboxTrailingConstraint.constant = 16.f;
-            self.letterboxTopConstraint.constant = 30.f;
+            
+            // If iPhones in Landscape, have a better margin
+            if ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact &&
+                self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) ||
+                (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular &&
+                 self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact)) {
+                self.letterboxLeadingConstraint.constant = 32.f;
+                self.letterboxTrailingConstraint.constant = 32.f;
+            }
+            else {
+                self.letterboxLeadingConstraint.constant = 16.f;
+                self.letterboxTrailingConstraint.constant = 16.f;
+            }
+            self.letterboxTopConstraint.constant = 5.f;
             
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLessPriority;
             self.letterbox169Constraint.priority = LetterboxViewConstraintMorePriority;
