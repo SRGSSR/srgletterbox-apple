@@ -51,6 +51,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
+// Backup value for Airplay playback
+@property (nonatomic) BOOL wasUserInterfaceTogglable;
+
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
@@ -514,10 +517,16 @@ static void commonInit(SRGLetterboxView *self);
     [self updateInterfaceAnimated:YES];
     
     if ([AVAudioSession srg_isAirplayActive]) {
-        [self setUserInterfaceHidden:NO animated:YES togglable:NO];
+        // If the user interface was togglable, disable and force display, otherwise keep the state as it was
+        if (self.userInterfaceTogglable) {
+            self.wasUserInterfaceTogglable = YES;
+            [self setUserInterfaceHidden:NO animated:YES togglable:NO];
+        }
     }
     else {
-        [self setUserInterfaceHidden:NO animated:YES togglable:YES];
+        if (self.wasUserInterfaceTogglable) {
+            [self setUserInterfaceHidden:NO animated:YES togglable:YES];
+        }
     }
 }
 
