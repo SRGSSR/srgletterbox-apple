@@ -419,7 +419,7 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:NO animated:YES];
 }
 
-- (IBAction)hideUserInterfaceVisibility:(UIGestureRecognizer *)gestureRecognizer
+- (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
     [self setUserInterfaceHidden:YES animated:YES];
 }
