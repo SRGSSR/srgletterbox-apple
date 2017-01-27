@@ -512,6 +512,13 @@ static void commonInit(SRGLetterboxView *self);
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
+    
+    if ([AVAudioSession srg_isAirplayActive]) {
+        [self setUserInterfaceHidden:NO animated:YES togglable:NO];
+    }
+    else {
+        [self setUserInterfaceHidden:NO animated:YES togglable:YES];
+    }
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
