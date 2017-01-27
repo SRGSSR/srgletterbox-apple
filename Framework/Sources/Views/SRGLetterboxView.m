@@ -199,7 +199,28 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
         [letterboxController removePeriodicTimeObserver:self.periodicTimeObserver];
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxServiceMetadataDidChangeNotification
+                                                      object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxServicePlaybackDidFailNotification
+                                                      object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                      object:letterboxController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIApplicationDidBecomeActiveNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerWirelessRouteDidChangeNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIScreenDidConnectNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIScreenDidDisconnectNotification
+                                                      object:nil];
     }
 }
 
