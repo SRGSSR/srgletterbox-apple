@@ -14,6 +14,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic) SRGMedia *media;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
@@ -31,17 +32,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN
+- (instancetype)initWithURN:(nullable SRGMediaURN *)URN media:(nullable SRGMedia *)media
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.URN = URN;
+    viewController.media = media;
     return viewController;
 }
 
 - (instancetype)init
 {
-    return [self initWithURN:nil];
+    return [self initWithURN:nil media:nil];
 }
 
 #pragma mark View lifecycle
@@ -61,7 +63,10 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (self.URN) {
+        if (self.media) {
+            [[SRGLetterboxService sharedService] playMedia:self.media withPreferredQuality:SRGQualityHD];
+        }
+        else if (self.URN) {
             [[SRGLetterboxService sharedService] playURN:self.URN withPreferredQuality:SRGQualityHD];
         }
     }
