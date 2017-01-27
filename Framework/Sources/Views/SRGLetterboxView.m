@@ -311,11 +311,6 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    // Cannot toggle UI when an error is displayed
-    if (! self.errorView.hidden) {
-        return;
-    }
-    
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
         [self.delegate letterboxViewWillAnimateUserInterface:self];
@@ -433,7 +428,8 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
     if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || letterboxController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-            || letterboxController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+            || letterboxController.playbackState == SRGMediaPlayerPlaybackStateStalled
+            || ! self.errorView.hidden) {
         [self setUserInterfaceHidden:YES animated:YES];
     }
 }
