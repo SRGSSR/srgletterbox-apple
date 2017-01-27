@@ -163,6 +163,14 @@ static void commonInit(SRGLetterboxView *self);
             self.backwardSeekButton.hidden = ![letterboxController canSeekBackward];
         }];
         
+        // Synchronize the user interface behavior with the current Airplay playback state
+        if ([AVAudioSession srg_isAirplayActive]) {
+            if (self.userInterfaceTogglable) {
+                self.wasUserInterfaceTogglable = YES;
+                [self setUserInterfaceHidden:NO animated:NO togglable:NO initiatedByUser:NO];
+            }
+        }
+        
         [self updateInterfaceAnimated:NO];
         [self reloadData];
         
