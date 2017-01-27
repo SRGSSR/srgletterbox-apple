@@ -423,7 +423,7 @@ static void commonInit(SRGLetterboxView *self);
         self.errorLabel.text = error.localizedDescription;
     }
     else if (media) {
-        self.errorView.hidden = NO;
+        self.errorView.hidden = YES;
         [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     }
     else if ([SRGLetterboxService sharedService].URN) {
