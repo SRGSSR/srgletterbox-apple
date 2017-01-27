@@ -31,6 +31,13 @@ NSString * const SRGLetterboxServicePreviousPreferredQualityKey = @"SRGLetterbox
 
 NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterboxServicePlaybackDidFailNotification";
 
+__attribute__((constructor)) static void SRGLetterboxServiceInit(void)
+{
+    // Setup for Airplay, picture in picture and control center integration
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+}
+
 @interface SRGLetterboxService ()
 
 @property (nonatomic, weak) id periodicTimeObserver;
