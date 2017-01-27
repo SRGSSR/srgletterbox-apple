@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxError.h"
+#import "SRGLetterboxLogger.h"
 #import "SRGLetterboxService.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -264,7 +265,23 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    // Allow to change hide or display
+    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByUser:YES];
+}
+
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
+{
+    // If Airplay playback is active, do not let the user change the current state
+    if ([AVAudioSession srg_isAirplayActive] && initiatedByUser) {
+        if (! togglable) {
+            self.wasUserInterfaceTogglable = NO;
+        }
+        else {
+            SRGLetterboxLogWarning(@"view", @"The user interface state cannot be changed while Airplay playback is active");
+            return;
+        }
+    }
+    
+    // Temporarily allow toggling the interface
     self.userInterfaceTogglable = YES;
     
     [self setUserInterfaceHidden:hidden animated:animated];
@@ -520,12 +537,12 @@ static void commonInit(SRGLetterboxView *self);
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
             self.wasUserInterfaceTogglable = YES;
-            [self setUserInterfaceHidden:NO animated:YES togglable:NO];
+            [self setUserInterfaceHidden:NO animated:YES togglable:NO initiatedByUser:NO];
         }
     }
     else {
         if (self.wasUserInterfaceTogglable) {
-            [self setUserInterfaceHidden:NO animated:YES togglable:YES];
+            [self setUserInterfaceHidden:NO animated:YES togglable:YES initiatedByUser:NO];
         }
     }
 }

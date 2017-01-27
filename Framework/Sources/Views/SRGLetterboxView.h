@@ -61,6 +61,12 @@ IB_DESIGNABLE
  *  @param hidden Whether the user interface must be hidden
  *  @param animated Whether the transition must be animated
  *  @param togglable Whether the interface can be shown or hidden by the user
+ *
+ *  @discussion During Airplay playback:
+ *                - if togglable was set to YES, the user interface will be always displayed
+ *                - if togglable was set to NO, the user interface will stay as it was before
+ *              Calling this method during Airplay playback itself only works if togglabe is YES, i.e. to change between
+ *              these two behhaviors
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
