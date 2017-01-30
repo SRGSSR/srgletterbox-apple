@@ -179,11 +179,6 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
  */
 @property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
 
-/**
- *  Return `YES` if the Letterbox player is currently mirrored as is on an external screen
- */
-@property (nonatomic, readonly, getter=isExternalScreenMirroringActive) BOOL externalScreenMirroringActive;
-
 @end
 
 @interface SRGLetterboxService (Unavailable)

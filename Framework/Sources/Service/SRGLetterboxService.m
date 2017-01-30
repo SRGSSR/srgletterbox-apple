@@ -186,11 +186,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     [self.controller reloadPlayerConfiguration];
 }
 
-- (BOOL)isExternalScreenMirroringActive
-{
-    return [UIScreen srg_isMirroring] && ! self.controller.player.usesExternalPlaybackWhileExternalScreenIsActive;
-}
-
 #pragma mark Data
 
 - (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition preferredQuality:(SRGQuality)preferredQuality

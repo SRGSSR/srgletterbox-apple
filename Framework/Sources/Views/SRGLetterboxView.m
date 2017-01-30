@@ -271,7 +271,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isPlayingInAirplayWithoutMirroring
 {
-    return [AVAudioSession srg_isAirplayActive] && ! [SRGLetterboxService sharedService].externalScreenMirroringActive;
+    return [AVAudioSession srg_isAirplayActive] && ! [SRGLetterboxService sharedService].mirroredOnExternalScreen;
 }
 
 #pragma mark UI
