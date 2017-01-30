@@ -163,15 +163,8 @@ static void commonInit(SRGLetterboxView *self);
             self.backwardSeekButton.hidden = ![letterboxController canSeekBackward];
         }];
         
-        // Synchronize the user interface behavior with the current Airplay playback state
-        if ([self isPlayingInAirplayWithoutMirroring]) {
-            if (self.userInterfaceTogglable) {
-                self.wasUserInterfaceTogglable = YES;
-                [self setUserInterfaceHidden:NO animated:NO togglable:NO initiatedByUser:NO];
-            }
-        }
-        
         [self updateInterfaceAnimated:NO];
+        [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
         [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -271,7 +264,21 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isPlayingInAirplayWithoutMirroring
 {
-    return [AVAudioSession srg_isAirplayActive] && ! [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+    if (! [AVAudioSession srg_isAirplayActive]) {
+        return NO;
+    }
+
+    if (! [UIScreen srg_isMirroring]) {
+        return YES;
+    }
+    
+    AVPlayer *player = [SRGLetterboxService sharedService].controller.player;
+    if (! player) {
+        return NO;
+    }
+    
+    // If the player switches to external playback, then it does not mirror the display
+    return player.usesExternalPlaybackWhileExternalScreenIsActive;
 }
 
 #pragma mark UI
@@ -283,7 +290,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
 {
-    // If Airplay playback is active, do not let the user change the current state
+    // If usual non-mirrored Airplay playback is active, do not let the user change the current state
     if ([self isPlayingInAirplayWithoutMirroring] && initiatedByUser) {
         if (! togglable) {
             self.wasUserInterfaceTogglable = NO;
@@ -388,6 +395,22 @@ static void commonInit(SRGLetterboxView *self);
     }
     else {
         animations();
+    }
+}
+
+- (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
+{
+    if ([self isPlayingInAirplayWithoutMirroring]) {
+        // If the user interface was togglable, disable and force display, otherwise keep the state as it was
+        if (self.userInterfaceTogglable) {
+            self.wasUserInterfaceTogglable = YES;
+            [self setUserInterfaceHidden:NO animated:animated togglable:NO initiatedByUser:NO];
+        }
+    }
+    else {
+        if (self.wasUserInterfaceTogglable) {
+            [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByUser:NO];
+        }
     }
 }
 
@@ -532,6 +555,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
+    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -543,19 +567,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
-    
-    if ([self isPlayingInAirplayWithoutMirroring]) {
-        // If the user interface was togglable, disable and force display, otherwise keep the state as it was
-        if (self.userInterfaceTogglable) {
-            self.wasUserInterfaceTogglable = YES;
-            [self setUserInterfaceHidden:NO animated:YES togglable:NO initiatedByUser:NO];
-        }
-    }
-    else {
-        if (self.wasUserInterfaceTogglable) {
-            [self setUserInterfaceHidden:NO animated:YES togglable:YES initiatedByUser:NO];
-        }
-    }
+    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
