@@ -180,6 +180,10 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                    object:letterboxController];
         [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(pictureInPictureStateDidChange:)
+                                                     name:SRGMediaPlayerPictureInPictureStateDidChangeNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
                                                      name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
@@ -214,6 +218,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:letterboxController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerPictureInPictureStateDidChangeNotification
+                                                      object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
                                                       object:nil];
@@ -556,6 +563,11 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateInterfaceAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+}
+
+- (void)pictureInPictureStateDidChange:(NSNotification *)notification
+{
+    self.pictureInPictureButton.hidden = ([SRGLetterboxService sharedService].pictureInPictureDelegate == nil);
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

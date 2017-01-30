@@ -493,8 +493,8 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
-        [self.delegate letterboxDidStartPictureInPicture];
+    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
+        [self.pictureInPictureDelegate letterboxDidStartPictureInPicture];
     }
 }
 
@@ -509,8 +509,8 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         return;
     }
     
-    if ([self.delegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
-        [self.delegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
+    if ([self.pictureInPictureDelegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
+        [self.pictureInPictureDelegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
             completionHandler(restored);
         }];
     }
@@ -521,8 +521,8 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 
 - (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
-        [self.delegate letterboxDidStopPictureInPicture];
+    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
+        [self.pictureInPictureDelegate letterboxDidStopPictureInPicture];
     }
 }
 

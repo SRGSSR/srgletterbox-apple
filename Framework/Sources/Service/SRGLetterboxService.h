@@ -11,7 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SRGLetterboxServiceDelegate <NSObject>
+/**
+ *  Delegate protocol for picture in picture implementation
+ */
+@protocol SRGLetterboxPictureInPictureDelegate <NSObject>
 
 /**
  *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
@@ -85,9 +88,9 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 + (SRGLetterboxService *)sharedService;
 
 /**
- *  Service delegate
+ *  Picture in picture delegate. Picture in picture won't be available if not set
  */
-@property (nonatomic, weak) id<SRGLetterboxServiceDelegate> delegate;
+@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
  *  The controller responsible for playback
@@ -153,7 +156,7 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 @end
 
 /**
- *  Picture in picture support. Implement `SRGLetterboxServiceDelegate` methods to integrate Letterbox picture in picture
+ *  Picture in picture support. Implement `SRGLetterboxPictureInPictureDelegate` methods to integrate Letterbox picture in picture
  *  support within your application
  */
 @interface SRGLetterboxService (PictureInPicture)

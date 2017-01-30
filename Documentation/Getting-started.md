@@ -60,7 +60,7 @@ Within the block, you can use any kind of `UIView` or layout animations, as you 
 
 ## Picture in picture
 
-To respond to picture and picture events, mostly for restoring your interface, you must implement the `SRGLetterboxServiceDelegate` delegate methods. Refer to the demo implementation for a concrete example.
+To respond to picture and picture events, mostly for restoring your interface, you must implement the `SRGLetterboxPictureInPictureDelegate` delegate methods. Refer to the demo implementation for a concrete example. If no delegate is set, picture in picture will not be available, and the corresponding button will not be displayed.
 
 ## Airplay
 

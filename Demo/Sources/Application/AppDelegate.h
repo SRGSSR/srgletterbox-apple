@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AppDelegate : UIResponder <SRGLetterboxServiceDelegate, UIApplicationDelegate>
+@interface AppDelegate : UIResponder <SRGLetterboxPictureInPictureDelegate, UIApplicationDelegate>
 
 @property (nonatomic) UIWindow *window;
 

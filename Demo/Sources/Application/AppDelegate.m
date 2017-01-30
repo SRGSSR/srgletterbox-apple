@@ -52,14 +52,14 @@
                                                      comScoreVirtualSite:@"app-test-v"
                                                      netMetrixIdentifier:@"test"];
         
-    [SRGLetterboxService sharedService].delegate = self;
+    [SRGLetterboxService sharedService].pictureInPictureDelegate = self;
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
     return YES;
 }
 
-#pragma mark SRGLetterboxServiceDelegate protocol
+#pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
@@ -78,7 +78,8 @@
     else if (self.restorationClass == [SimplePlayerViewController class]) {
         SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] init];
         [self.navigationController pushViewController:playerViewController animated:YES];
-        // FIXME: Call completion handler!!
+        completionHandler(YES);
+        // FIXME: Call completion handler at the end of the transition animation!!
     }
 }
 
