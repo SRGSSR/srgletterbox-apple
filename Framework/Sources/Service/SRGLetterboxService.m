@@ -51,7 +51,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 @property (nonatomic) YYWebImageOperation *imageOperation;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
-@property (nonatomic, getter=isMirroredWithAirplay) BOOL mirroredWithAirplay;
+@property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
 
 @end
 
@@ -137,7 +137,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
             // Allow external playback
             player.allowsExternalPlayback = YES;
-            player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredWithAirplay;
+            player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
             
             // Only update the audio session if needed to avoid audio hiccups
             NSString *mode = (self.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
@@ -176,14 +176,19 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     return self.controller.pictureInPictureController.pictureInPictureActive;
 }
 
-- (void)setMirroredWithAirplay:(BOOL)mirroredWithAirplay
+- (void)setMirroredOnExternalScreen:(BOOL)mirroredOnExternalScreen
 {
-    if (_mirroredWithAirplay == mirroredWithAirplay) {
+    if (_mirroredOnExternalScreen == mirroredOnExternalScreen) {
         return;
     }
     
-    _mirroredWithAirplay = mirroredWithAirplay;
+    _mirroredOnExternalScreen = mirroredOnExternalScreen;
     [self.controller reloadPlayerConfiguration];
+}
+
+- (BOOL)isExternalScreenMirroringActive
+{
+    return [UIScreen srg_isMirroring] && ! self.controller.player.usesExternalPlaybackWhileExternalScreenIsActive;
 }
 
 #pragma mark Data

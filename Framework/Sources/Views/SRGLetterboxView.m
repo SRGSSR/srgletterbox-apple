@@ -164,7 +164,7 @@ static void commonInit(SRGLetterboxView *self);
         }];
         
         // Synchronize the user interface behavior with the current Airplay playback state
-        if ([AVAudioSession srg_isAirplayActive]) {
+        if ([self isPlayingInAirplayWithoutMirroring]) {
             if (self.userInterfaceTogglable) {
                 self.wasUserInterfaceTogglable = YES;
                 [self setUserInterfaceHidden:NO animated:NO togglable:NO initiatedByUser:NO];
@@ -269,6 +269,11 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
+- (BOOL)isPlayingInAirplayWithoutMirroring
+{
+    return [AVAudioSession srg_isAirplayActive] && ! [SRGLetterboxService sharedService].externalScreenMirroringActive;
+}
+
 #pragma mark UI
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
@@ -279,7 +284,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
 {
     // If Airplay playback is active, do not let the user change the current state
-    if ([AVAudioSession srg_isAirplayActive] && initiatedByUser) {
+    if ([self isPlayingInAirplayWithoutMirroring] && initiatedByUser) {
         if (! togglable) {
             self.wasUserInterfaceTogglable = NO;
         }
@@ -344,12 +349,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateInterfaceAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
+        SRGLetterboxService *letterboxService = [SRGLetterboxService sharedService];
+        SRGLetterboxController *letterboxController = letterboxService.controller;
         
         if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
-            // Hide if playing a video in Airplay or if true screen mirroring is used
+            // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
+            // playbackl on the external device) is used
             SRGMedia *media = [SRGLetterboxService sharedService].media;
-            BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && (! [AVAudioSession srg_isAirplayActive] || ([UIScreen srg_isMirroring] && ! letterboxController.player.usesExternalPlaybackWhileExternalScreenIsActive));
+            BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! [self isPlayingInAirplayWithoutMirroring];
             self.imageView.alpha = hidden ? 0.f : 1.f;
             letterboxController.view.alpha = hidden ? 1.f : 0.f;
             
@@ -537,7 +544,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateInterfaceAnimated:YES];
     
-    if ([AVAudioSession srg_isAirplayActive]) {
+    if ([self isPlayingInAirplayWithoutMirroring]) {
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
             self.wasUserInterfaceTogglable = YES;

@@ -166,18 +166,23 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 @end
 
 /**
- *  Airplay support
+ *  Mirroring
  */
-@interface SRGLetterboxService (Airplay)
+@interface SRGLetterboxService (Mirroring)
 
 /**
- *  If set to `YES`, the Letterbox player is mirrored as is when Airplay mirroring is enabled, without switching to
- *  full-screen playback on the external display. This is especially handy if you need to be able to mirror your
- *  device for presentation
+ *  If set to `YES`, the Letterbox player is mirrored as is when an external screen is connected, without switching to
+ *  full-screen playback on this external screen. This is especially handy if you need to be able to show the player
+ *  as is on scren, e.g. for presentation purposes
  *
  *  Default is `NO`
  */
-@property (nonatomic, getter=isMirroredWithAirplay) BOOL mirroredWithAirplay;
+@property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
+
+/**
+ *  Return `YES` if the Letterbox player is currently mirrored as is on an external screen
+ */
+@property (nonatomic, readonly, getter=isExternalScreenMirroringActive) BOOL externalScreenMirroringActive;
 
 @end
 
