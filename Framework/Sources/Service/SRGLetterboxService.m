@@ -6,9 +6,10 @@
 
 #import "SRGLetterboxService.h"
 
+#import "NSBundle+SRGLetterbox.h"
+#import "SRGDataProvider+SRGLetterbox.h"
 #import "SRGLetterboxError.h"
 #import "UIDevice+SRGLetterbox.h"
-#import "SRGDataProvider+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
@@ -350,7 +351,20 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         return;
     }
     
-    self.error = error;
+    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
+    if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
+        self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                    code:SRGLetterboxErrorCodeNetwork
+                                userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
+                                            NSUnderlyingErrorKey : error }];
+    }
+    // Use a friendly error message for all other reasons
+    else {
+        self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                    code:SRGLetterboxErrorCodeNotPlayable
+                                userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
+                                            NSUnderlyingErrorKey : error }];
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServicePlaybackDidFailNotification object:self];
 }

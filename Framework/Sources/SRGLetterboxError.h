@@ -15,7 +15,15 @@ typedef NS_ENUM(NSInteger, SRGLetterboxErrorCode) {
     /**
      *  The data was not found
      */
-    SRGLetterboxErrorCodeNotFound
+    SRGLetterboxErrorCodeNotFound,
+    /**
+     *  A network error has been encountered (available as underlying error)
+     */
+    SRGLetterboxErrorCodeNetwork,
+    /**
+     *  The media cannot be played for some reason (available as underlying error)
+     */
+    SRGLetterboxErrorCodeNotPlayable
 };
 
 /**
