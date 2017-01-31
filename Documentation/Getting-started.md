@@ -45,7 +45,7 @@ The service broadcasts metadata updates and errors through `SRGLetterboxServiceM
 
 ## Controls and overlays
 
-The standard player controls (play / pause button, seek bar, etc.) of Letterbox cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. Simply set a delegate for the player view and respond to overlay changes, as follows:
+The standard player controls (play / pause button, seek bar, etc.) of Letterbox cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. Simply set a delegate for the player view and respond to user interface state changes, as follows:
 
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
@@ -56,7 +56,7 @@ The standard player controls (play / pause button, seek bar, etc.) of Letterbox 
 }
 ```
 
-Within the block, you can use any kind of `UIView` or layout animations, as you would in a usual view animation block.
+Within the block, you can apply any `UIView` or layout change, as you would in a usual view animation block. All changes will be animated within the same transaction as the controls animation.
 
 ## Picture in picture
 
