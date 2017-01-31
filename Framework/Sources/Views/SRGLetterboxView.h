@@ -16,11 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- *  This method gets called when the user interface enters or exit full screen.
+ *  This method gets called when the user interface is about to enter or exit full screen. The completion handler must
+ *  be called from within the method implementation when the transition is complete, otherwise the behavior is undefined
  *
- *  @discussion A full-screen button is automatically displayed when (and only when) this method is implemented
+ *  @discussion A full-screen toggle button is automatically displayed when (and only when) this method is implemented
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didToggleFullScreen:(BOOL)isFullScreen animated:(BOOL)animated;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(void (^)(BOOL finished))completionHandler;
 
 /**
  *  This method gets called when user interface controls are shown or hidden. You can call the `SRGLetterboxView`
@@ -83,20 +84,23 @@ IB_DESIGNABLE
 - (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
- *  Full screen state.
+ *  Return YES when the view is full screen
+ *
+ *  @discussion This value will be updated once the completion handler in `-letterboxView:toggleFullScreen:animated:withCompletionHandler:`
+ *              has been called
  */
 @property (nonatomic, readonly, getter=isFullScreen) BOOL fullScreen;
 
 /**
- *  Change the full screen state.
+ *  Enable or disable full screen
  *
- *  Calling this setter method will call the delegate method `-letterboxView:didToggleFullScreen:animated:`
+ *  Calling this method will call the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:`
  *
  *  @param fullscreen YES for full screen
  *  @param animated Whether the transition must be animated
  *
- *  @discussion If the delegate method `-letterboxView:didToggleFullScreen:animated:` is not implemented, no full screen 
- *              button is displayed, and this method doesn't do anything
+ *  @discussion If the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` is not implemented, no full screen
+ *              button is displayed, and this method doesn't do anything. Calling this method when a transition is running does nothing
  */
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 

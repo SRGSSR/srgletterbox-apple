@@ -26,6 +26,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTrailingConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterbox169Constraint;
 
+@property (nonatomic, getter=isTransitioningToFullScreen) BOOL transitioningToFullScreen;
+
 @end
 
 @implementation ModalPlayerViewController
@@ -51,9 +53,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // Ensure consistent constraint constant values with the associated storyboard
-    [self letterboxView:self.letterboxView didToggleFullScreen:NO animated:NO];
     
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
@@ -93,12 +92,12 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     } completion:nil];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didToggleFullScreen:(BOOL)isFullScreen animated:(BOOL)animated
+- (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
     [self.view layoutIfNeeded];
     
     void (^animations)(void) = ^{
-        if (isFullScreen) {
+        if (fullScreen) {
             self.letterboxLeadingConstraint.constant = 0.f;
             self.letterboxTrailingConstraint.constant = 0.f;
             self.letterboxTopConstraint.constant = 0.f;
@@ -107,8 +106,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             self.letterbox169Constraint.priority = LetterboxViewConstraintLessPriority;
         }
         else {
-            
-            // If iPhones in Landscape, have a better margin
+            // Tweak the margins for iPhone landscape layout
             if ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact &&
                 self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) ||
                 (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular &&
@@ -126,6 +124,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             self.letterbox169Constraint.priority = LetterboxViewConstraintMorePriority;
         }
         
+        self.transitioningToFullScreen = fullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
         [self.view layoutIfNeeded];
     };
@@ -133,10 +132,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     if (animated) {
         [UIView animateWithDuration:0.2 animations:^{
             animations();
-        }];
+        } completion:completionHandler];
     }
     else {
         animations();
+        completionHandler(YES);
     }
 }
 
@@ -176,7 +176,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (BOOL)prefersStatusBarHidden
 {
-    return (self.letterboxView) ? self.letterboxView.isFullScreen : NO;
+    return self.transitioningToFullScreen;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation

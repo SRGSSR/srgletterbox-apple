@@ -50,6 +50,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
+@property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
 // Backup value for Airplay playback
@@ -255,11 +256,19 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    _fullScreen = fullScreen;
+    if (self.fullScreenAnimationRunning) {
+        SRGLetterboxLogInfo(@"view", @"A full screen animation is already running");
+        return;
+    }
+    
+    self.fullScreenAnimationRunning = YES;
     self.fullScreenButton.selected = fullScreen;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didToggleFullScreen:animated:)]) {
-        [self.delegate letterboxView:self didToggleFullScreen:fullScreen animated:animated];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
+        [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
+            _fullScreen = fullScreen;
+            self.fullScreenAnimationRunning = NO;
+        }];
     }
 }
 
@@ -440,7 +449,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isFullScreenButtonHidden
 {
-    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:didToggleFullScreen:animated:)];
+    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)];
 }
 
 #pragma mark Gesture recognizers
