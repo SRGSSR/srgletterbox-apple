@@ -262,11 +262,11 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.fullScreenAnimationRunning = YES;
-    self.fullScreenButton.selected = fullScreen;
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
         [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
             if (finished) {
+                self.fullScreenButton.selected = fullScreen;
                 _fullScreen = fullScreen;
             }
             self.fullScreenAnimationRunning = NO;
