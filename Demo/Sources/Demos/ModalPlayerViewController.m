@@ -26,7 +26,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTrailingConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterbox169Constraint;
 
-@property (nonatomic, getter=isTransitioningToFullScreen) BOOL transitioningToFullScreen;
+@property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
 @end
 
@@ -124,10 +124,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             self.letterbox169Constraint.priority = LetterboxViewConstraintMorePriority;
         }
         
-        self.transitioningToFullScreen = fullScreen;
         [self setNeedsStatusBarAppearanceUpdate];
         [self.view layoutIfNeeded];
     };
+    
+    self.wantsFullScreen = fullScreen;
     
     if (animated) {
         [UIView animateWithDuration:0.2 animations:^{
@@ -176,7 +177,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (BOOL)prefersStatusBarHidden
 {
-    return self.transitioningToFullScreen;
+    return self.wantsFullScreen;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
