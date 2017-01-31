@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -59,14 +59,14 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
                                 <rect key="frame" x="16" y="266" width="163.5" height="30"/>
-                                <state key="normal" title="Force Hide controls"/>
+                                <state key="normal" title="Always hide controls"/>
                                 <connections>
                                     <action selector="forceHideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="ENm-2M-VN0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
                                 <rect key="frame" x="195" y="266" width="163.5" height="30"/>
-                                <state key="normal" title="Force Show controls"/>
+                                <state key="normal" title="Always show controls"/>
                                 <connections>
                                     <action selector="forceShowControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="wb8-e8-gnS"/>
                                 </connections>
