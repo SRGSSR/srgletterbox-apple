@@ -26,17 +26,17 @@ github "SRGSSR/srgletterbox-ios"
 
 Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your projet:
 
-  * `ASValueTrackingSlider`: A slider component (custom SRG SSR fork)
-  * `ComScore.framework`: comScore framework
+  * `ASValueTrackingSlider`: A slider component imported as a framework (custom SRG SSR fork)
+  * `ComScore`: comScore framework
   * `FXReachability`: A reachability framework
-  * `libextobjc.framework`: A utility framework
-  * `Mantle.framework`:  The framework used to parse the data
+  * `libextobjc`: A utility framework
+  * `Mantle`:  The framework used to parse the data
   * `Masonry`: An autolayout framework
-  * `SRGAnalytics.framework`: The main analytics framework
-  * `SRGAnalytics_MediaPlayer.framework`: The media player analytics companion framework
-  * `SRGAnalytics_DataProvider.framework`: The data provider analytics companion framework
-  * `SRGLogger.framework`: The framework used for internal logging
-  * `SRGMediaPlayer.framework`: The media player framework (if not already in your project)
+  * `SRGAnalytics`: The main analytics framework
+  * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework
+  * `SRGAnalytics_DataProvider`: The data provider analytics companion framework
+  * `SRGLogger`: The framework used for internal logging
+  * `SRGMediaPlayer`: The media player framework (if not already in your project)
   * `YYWebImage`: A framework for image retrieval
 
 For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
