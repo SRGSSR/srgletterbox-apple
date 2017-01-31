@@ -266,7 +266,9 @@ static void commonInit(SRGLetterboxView *self);
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
         [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
-            _fullScreen = fullScreen;
+            if (finished) {
+                _fullScreen = fullScreen;
+            }
             self.fullScreenAnimationRunning = NO;
         }];
     }
