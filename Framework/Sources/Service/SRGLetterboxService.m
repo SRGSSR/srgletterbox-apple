@@ -192,14 +192,16 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 
 #pragma mark Data
 
+// Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive
+// information available (media composition first, then media, finally URN). Less comprehensive data will be ignored
 - (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition preferredQuality:(SRGQuality)preferredQuality
 {
-    if (media) {
-        URN = media.URN;
+    if (mediaComposition) {
+        media = [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
     }
     
-    if ([self.URN isEqual:URN] && self.media == media && self.mediaComposition == mediaComposition) {
-        return;
+    if (media) {
+        URN = media.URN;
     }
     
     SRGMediaURN *previousURN = self.URN;
@@ -295,10 +297,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
             return;
         }
         
-        SRGMedia *updatedMedia = media ?: [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
-        SRGMediaURN *updatedURN = URN ?: updatedMedia.URN;
-        
-        [self updateWithURN:updatedURN media:updatedMedia mediaComposition:mediaComposition preferredQuality:preferredQuality];
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition preferredQuality:preferredQuality];
         
         SRGRequest *playRequest = [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             [self.requestQueue reportError:error];
@@ -330,12 +329,11 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 
 - (void)resumeFromController:(SRGLetterboxController *)controller
 {
+    // FIXME: We soon will have Letterbox controller retrieve media information. Media and URN will therefore be
+    //        available to provide to the update method. In the meantime, resuming will not work if no media
+    //        composition is available
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    NSAssert(controller.mediaComposition, @"Only playback operations with a media composition are allowed on SRGLetterboxController");
-    
-    SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
-    SRGMedia *media = [mediaComposition mediaForSegment:segment];
-    [self updateWithURN:media.URN media:media mediaComposition:mediaComposition preferredQuality:self.preferredQuality];
+    [self updateWithURN:nil media:nil mediaComposition:mediaComposition preferredQuality:self.preferredQuality];
     
     self.controller = controller;
     
