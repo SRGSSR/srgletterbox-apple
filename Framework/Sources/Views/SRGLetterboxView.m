@@ -170,11 +170,11 @@ static void commonInit(SRGLetterboxView *self);
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaMetadataDidChange:)
-                                                     name:SRGLetterboxServiceMetadataDidChangeNotification
+                                                     name:SRGLetterboxMetadataDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaPlaybackDidFail:)
-                                                     name:SRGLetterboxServicePlaybackDidFailNotification
+                                                     name:SRGLetterboxPlaybackDidFailNotification
                                                    object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -211,10 +211,10 @@ static void commonInit(SRGLetterboxView *self);
         [letterboxController removePeriodicTimeObserver:self.periodicTimeObserver];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxServiceMetadataDidChangeNotification
+                                                        name:SRGLetterboxMetadataDidChangeNotification
                                                       object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxServicePlaybackDidFailNotification
+                                                        name:SRGLetterboxPlaybackDidFailNotification
                                                       object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification

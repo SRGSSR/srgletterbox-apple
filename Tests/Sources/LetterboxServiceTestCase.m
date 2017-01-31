@@ -80,16 +80,16 @@ static NSURL *ServiceTestURL(void)
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaKey], media);
-        XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxMediaKey], media);
+        XCTAssertNil(notification.userInfo[SRGLetterboxPreviousMediaCompositionKey]);
         
-        if (! notification.userInfo[SRGLetterboxServiceMediaCompositionKey]) {
-            XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaKey]);
+        if (! notification.userInfo[SRGLetterboxMediaCompositionKey]) {
+            XCTAssertNil(notification.userInfo[SRGLetterboxPreviousMediaKey]);
             return NO;
         }
         else {
-            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media);
+            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaKey], media);
             return YES;
         }
     }];
@@ -134,7 +134,7 @@ static NSURL *ServiceTestURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     // Expect no change when trying to play the same media
-    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxServiceMetadataDidChangeNotification object:service queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:service queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"Expect no metadata update when playing the same media");
     }];
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
@@ -185,7 +185,7 @@ static NSURL *ServiceTestURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     // Expect only a player state change notification, no metadata change notification
-    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxServiceMetadataDidChangeNotification object:service queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:service queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"Expect no metadata update when playing the same media");
     }];
     
@@ -220,8 +220,8 @@ static NSURL *ServiceTestURL(void)
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
     
     [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
@@ -251,17 +251,17 @@ static NSURL *ServiceTestURL(void)
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaKey], media2);
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxMediaKey], media2);
         
-        if (! notification.userInfo[SRGLetterboxServiceMediaCompositionKey]) {
-            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media1);
-            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey], mediaComposition1);
+        if (! notification.userInfo[SRGLetterboxMediaCompositionKey]) {
+            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaKey], media1);
+            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaCompositionKey], mediaComposition1);
             return NO;
         }
         else {
-            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media2);
-            XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
+            XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaKey], media2);
+            XCTAssertNil(notification.userInfo[SRGLetterboxPreviousMediaCompositionKey]);
             return YES;
         }
     }];
@@ -291,8 +291,8 @@ static NSURL *ServiceTestURL(void)
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
     
     [service playURN:URN withPreferredQuality:SRGQualityNone];
@@ -319,20 +319,20 @@ static NSURL *ServiceTestURL(void)
     [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:service.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
     
     [[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media);
-        XCTAssertNil(notification.userInfo[SRGLetterboxServiceMediaKey]);
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaKey], media);
+        XCTAssertNil(notification.userInfo[SRGLetterboxMediaKey]);
         
-        XCTAssertNotNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
-        XCTAssertNil(notification.userInfo[SRGLetterboxServiceMediaCompositionKey]);
+        XCTAssertNotNil(notification.userInfo[SRGLetterboxPreviousMediaCompositionKey]);
+        XCTAssertNil(notification.userInfo[SRGLetterboxMediaCompositionKey]);
         return YES;
     }];
     
@@ -369,12 +369,12 @@ static NSURL *ServiceTestURL(void)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaKey]);
-        XCTAssertNotNil(notification.userInfo[SRGLetterboxServiceMediaKey]);
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertNil(notification.userInfo[SRGLetterboxPreviousMediaKey]);
+        XCTAssertNotNil(notification.userInfo[SRGLetterboxMediaKey]);
         
-        XCTAssertNil(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey]);
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaCompositionKey], mediaComposition);
+        XCTAssertNil(notification.userInfo[SRGLetterboxPreviousMediaCompositionKey]);
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxMediaCompositionKey], mediaComposition);
         return YES;
     }];
     
@@ -405,8 +405,8 @@ static NSURL *ServiceTestURL(void)
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
     // Wait until the media composition is available
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
-        return notification.userInfo[SRGLetterboxServiceMediaCompositionKey] != nil;
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:service handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
     
     [[SRGLetterboxService sharedService] playMedia:media1 withPreferredQuality:SRGQualityNone];
@@ -441,12 +441,12 @@ static NSURL *ServiceTestURL(void)
     }];
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
-    [self expectationForNotification:SRGLetterboxServiceMetadataDidChangeNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaKey], media1);
-        XCTAssertNotNil(notification.userInfo[SRGLetterboxServiceMediaKey]);
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaKey], media1);
+        XCTAssertNotNil(notification.userInfo[SRGLetterboxMediaKey]);
         
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServicePreviousMediaCompositionKey], mediaComposition1);
-        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxServiceMediaCompositionKey], mediaComposition2);
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxPreviousMediaCompositionKey], mediaComposition1);
+        XCTAssertEqualObjects(notification.userInfo[SRGLetterboxMediaCompositionKey], mediaComposition2);
         return YES;
     }];
     

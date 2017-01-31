@@ -47,38 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values)
- */
-OBJC_EXTERN NSString * const SRGLetterboxServiceMetadataDidChangeNotification;
-
-/**
- *  Current metadata
- */
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxServiceMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxServiceMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreferredQualityKey;
-
-/**
- *  Previous metadata
- */
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousPreferredQualityKey;
-
-/**
- *  Notification sent when an error has been encountered. Use the `error` property to get the error itself
- */
-OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
-
-/**
  *  Service responsible for media playback. The service itself is a singleton which manages main playback throughout the
  *  application (and associated features like picture in picture, Airplay or control center integration).
  *
- *  @discussion The analytics tracker singleton instance must be started before the singleton instance is accessed for
- *              the first time, otherwise an exception will be thrown in debug builds. Please refer to `SRGAnalyticsTracker`
- *              documentation for more information
+ *  @discussion Your target must support the 'Audio, Airplay, and Picture in Picture' capabilities, otherwise an exception
+ *              will be thrown when the service is accessed for the first time
  */
 @interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 
@@ -101,57 +74,10 @@ OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
 @property (nonatomic, readonly) SRGLetterboxController *controller;
 
 /**
- *  Play the specified Uniform Resource Name
- *
- *  @discussion Does nothing if the urn is the one currently being played
- */
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality;
-
-/**
- *  Play the specified media
- *
- *  @discussion Does nothing if the media is the one currently being played
- */
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality;
-
-/**
  *  Transfers playback from the specified existing controller to the service. The service media player controller
  *  is replaced
  */
 - (void)resumeFromController:(SRGLetterboxController *)controller;
-
-/**
- *  Reset playback, stopping a playback request if any has been made
- */
-- (void)reset;
-
-@end
-
-/**
- *  Playback information. Changes are notified through `SRGLetterboxServiceMetadataDidChangeNotification` and
- *  `SRGLetterboxServicePlaybackDidFailNotification`
- */
-@interface SRGLetterboxService (PlaybackInformation)
-
-/**
- *  URN
- */
-@property (nonatomic, readonly, nullable) SRGMediaURN *URN;
-
-/**
- *  Media information
- */
-@property (nonatomic, readonly, nullable) SRGMedia *media;
-
-/**
- *  Media composition
- */
-@property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
-
-/**
- *  Error if any has been encountered
- */
-@property (nonatomic, readonly) NSError *error;
 
 @end
 

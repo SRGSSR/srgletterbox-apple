@@ -18,20 +18,6 @@
 
 static void *s_kvoContext = &s_kvoContext;
 
-NSString * const SRGLetterboxServiceMetadataDidChangeNotification = @"SRGLetterboxServiceMetadataDidChangeNotification";
-
-NSString * const SRGLetterboxServiceURNKey = @"SRGLetterboxServiceURNKey";
-NSString * const SRGLetterboxServiceMediaKey = @"SRGLetterboxServiceMediaKey";
-NSString * const SRGLetterboxServiceMediaCompositionKey = @"SRGLetterboxServiceMediaCompositionKey";
-NSString * const SRGLetterboxServicePreferredQualityKey = @"SRGLetterboxServicePreferredQualityKey";
-
-NSString * const SRGLetterboxServicePreviousURNKey = @"SRGLetterboxServicePreviousURNKey";
-NSString * const SRGLetterboxServicePreviousMediaKey = @"SRGLetterboxServicePreviousMediaKey";
-NSString * const SRGLetterboxServicePreviousMediaCompositionKey = @"SRGLetterboxServicePreviousMediaCompositionKey";
-NSString * const SRGLetterboxServicePreviousPreferredQualityKey = @"SRGLetterboxServicePreviousPreferredQualityKey";
-
-NSString * const SRGLetterboxServicePlaybackDidFailNotification = @"SRGLetterboxServicePlaybackDidFailNotification";
-
 __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 {
     // Setup for Airplay, picture in picture and control center integration
@@ -234,28 +220,28 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         userInfo[SRGLetterboxServiceURNKey] = URN;
     }
     if (media) {
-        userInfo[SRGLetterboxServiceMediaKey] = media;
+        userInfo[SRGLetterboxMediaKey] = media;
     }
     if (mediaComposition) {
-        userInfo[SRGLetterboxServiceMediaCompositionKey] = mediaComposition;
+        userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
     }
     if (preferredQuality) {
-        userInfo[SRGLetterboxServicePreferredQualityKey] = @(preferredQuality);
+        userInfo[SRGLetterboxPreferredQualityKey] = @(preferredQuality);
     }
     if (previousURN) {
-        userInfo[SRGLetterboxServicePreviousURNKey] = previousURN;
+        userInfo[SRGLetterboxPreviousURNKey] = previousURN;
     }
     if (previousMedia) {
-        userInfo[SRGLetterboxServicePreviousMediaKey] = previousMedia;
+        userInfo[SRGLetterboxPreviousMediaKey] = previousMedia;
     }
     if (previousMediaComposition) {
-        userInfo[SRGLetterboxServicePreviousMediaCompositionKey] = previousMediaComposition;
+        userInfo[SRGLetterboxPreviousMediaCompositionKey] = previousMediaComposition;
     }
     if (previousPreferredQuality) {
-        userInfo[SRGLetterboxServicePreviousPreferredQualityKey] = @(previousPreferredQuality);
+        userInfo[SRGLetterboxPreferredQualityKey] = @(previousPreferredQuality);
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
 #pragma mark Playback
@@ -368,7 +354,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
                                             NSUnderlyingErrorKey : error }];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServicePlaybackDidFailNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self];
 }
 
 #pragma mark Control center and lock screen integration

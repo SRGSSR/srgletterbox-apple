@@ -9,6 +9,21 @@
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
+NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
+
+NSString * const SRGLetterboxServiceURNKey = @"SRGLetterboxServiceURNKey";
+NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
+NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
+NSString * const SRGLetterboxPreferredQualityKey = @"SRGLetterboxPreferredQualityKey";
+
+NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURNKey";
+NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMediaKey";
+NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaCompositionKey";
+NSString * const SRGLetterboxPreferredQualityKey = @"SRGLetterboxPreferredQualityKey";
+
+NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
+
+
 @interface SRGLetterboxController ()
 
 // For successive seeks, update the target time (previous seeks are cancelled). This makes it possible to seek faster
