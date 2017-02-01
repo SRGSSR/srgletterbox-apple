@@ -19,6 +19,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxController *letterboxController;
+
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
@@ -63,10 +65,10 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.media) {
-            [[SRGLetterboxService sharedService] playMedia:self.media withPreferredQuality:SRGQualityHD];
+            [self.letterboxController playMedia:self.media withPreferredQuality:SRGQualityNone];
         }
         else if (self.URN) {
-            [[SRGLetterboxService sharedService] playURN:self.URN withPreferredQuality:SRGQualityHD];
+            [self.letterboxController playURN:self.URN withPreferredQuality:SRGQualityNone];
         }
     }
 }
@@ -76,10 +78,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        SRGLetterboxService *service = [SRGLetterboxService sharedService];
-        if (! service.pictureInPictureActive) {
-            [service reset];
-        }
+        [self.letterboxController reset];
     }
 }
 

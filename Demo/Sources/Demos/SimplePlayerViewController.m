@@ -12,6 +12,8 @@
 
 @property (nonatomic) SRGMediaURN *URN;
 
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
+
 @end
 
 @implementation SimplePlayerViewController
@@ -39,7 +41,7 @@
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.URN) {
-            [[SRGLetterboxService sharedService] playURN:self.URN withPreferredQuality:SRGQualityNone];
+            [self.letterboxController playURN:self.URN withPreferredQuality:SRGQualityNone];
         }
     }
 }
@@ -49,10 +51,7 @@
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        SRGLetterboxService *service = [SRGLetterboxService sharedService];
-        if (! service.pictureInPictureActive) {
-            [service reset];
-        }
+        [self.letterboxController reset];
     }
 }
 
