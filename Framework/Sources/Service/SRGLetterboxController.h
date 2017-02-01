@@ -43,10 +43,47 @@ OBJC_EXTERN NSString * const SRGLetterboxPreferredQualityKey;
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 
 /**
- *  Lightweight `SRGMediaPlayerController` subclass. This class exposes only standard Letterbox functionalities, and inhibits
- *  some `SRGMediaPlayerController` behaviors.
+ *  Delegate protocol for picture in picture implementation
  */
-@interface SRGLetterboxController : SRGMediaPlayerController
+@protocol SRGLetterboxPictureInPictureDelegate <NSObject>
+
+/**
+ *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
+ *  if the player view from which picture in picture was initiated is not visible anymore)
+ */
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture;
+
+/**
+ *  Called when a restoration process takes place
+ *
+ *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
+ *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
+ *                               undefined behavior. The completion block must be called with `restored` set to `YES`
+ *                               iff the restoration was successful
+ */
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
+
+@optional
+
+/**
+ *  Called when picture in picture has been started
+ */
+- (void)letterboxDidStartPictureInPicture;
+
+/**
+ *  Called when picture in picture stopped
+ */
+- (void)letterboxDidStopPictureInPicture;
+
+@end
+
+/**
+ *  Letterbox media player controller, managing playback, as well as automatic metadata retrieval. Applications
+ *  can use the metadata available from this controller to display additional playback information (e.g. title
+ *  or description of the content). The controller can be used in isolation for playback without display, but
+ *  is usually best used bound to a Letterbox view
+ */
+@interface SRGLetterboxController : NSObject <AVPictureInPictureControllerDelegate>
 
 /**
  *  Play the specified Uniform Resource Name
@@ -129,52 +166,20 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 @end
 
 /**
- *  Only playback of media compositions is available on the Letterbox controller
+ *  Picture in picture support. Implement `SRGLetterboxPictureInPictureDelegate` methods to integrate Letterbox picture in picture
+ *  support within your application
  */
-@interface SRGLetterboxController (Unavailable)
+@interface SRGLetterboxController (PictureInPicture)
 
-- (void)prepareToPlayURL:(NSURL *)URL
-                  atTime:(CMTime)time
-            withSegments:(nullable NSArray<id<SRGSegment>> *)segments
-                userInfo:(nullable NSDictionary *)userInfo
-       completionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
+/**
+ *  Picture in picture delegate. Picture in picture won't be available if not set
+ */
+@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
-- (void)prepareToPlayURL:(NSURL *)URL withCompletionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
-
-- (void)playURL:(NSURL *)URL
-         atTime:(CMTime)time
-   withSegments:(nullable NSArray<id<SRGSegment>> *)segments
-       userInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
-
-- (void)prepareToPlayURL:(NSURL *)URL
-                 atIndex:(NSInteger)index
-              inSegments:(NSArray<id<SRGSegment>> *)segments
-            withUserInfo:(nullable NSDictionary *)userInfo
-       completionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
-
-- (void)playURL:(NSURL *)URL
-        atIndex:(NSInteger)index
-     inSegments:(NSArray<id<SRGSegment>> *)segments
-   withUserInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
-
-- (void)playURL:(NSURL *)URL
-         atTime:(CMTime)time
-   withSegments:(nullable NSArray<id<SRGSegment>> *)segments
-analyticsLabels:(nullable NSDictionary *)analyticsLabels
-       userInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
-
-- (void)prepareToPlayURL:(NSURL *)URL
-                 atIndex:(NSInteger)index
-              inSegments:(NSArray<id<SRGSegment>> *)segments
-     withAnalyticsLabels:(nullable NSDictionary *)analyticsLabels
-                userInfo:(nullable NSDictionary *)userInfo
-       completionHandler:(nullable void (^)(void))completionHandler NS_UNAVAILABLE;
-
-- (void)playURL:(NSURL *)URL
-        atIndex:(NSInteger)index
-     inSegments:(NSArray<id<SRGSegment>> *)segments
-withAnalyticsLabels:(nullable NSDictionary *)analyticsLabels
-       userInfo:(nullable NSDictionary *)userInfo NS_UNAVAILABLE;
+/**
+ *  Return YES iff picture in picture is active
+ */
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
 
 @end
 

@@ -66,7 +66,7 @@
     return YES;
 }
 
-#pragma mark SRGLetterboxServicePictureInPictureDelegate protocol
+#pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
