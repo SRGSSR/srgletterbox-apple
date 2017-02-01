@@ -36,6 +36,8 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 @property (nonatomic) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) id periodicTimeObserver;
+
+@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 @property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
 
 @property (nonatomic) YYWebImageOperation *imageOperation;
