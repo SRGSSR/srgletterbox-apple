@@ -22,7 +22,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 /**
  *  Current metadata
  */
-OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
+OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
 

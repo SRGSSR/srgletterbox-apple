@@ -20,7 +20,7 @@ const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
-NSString * const SRGLetterboxServiceURNKey = @"SRGLetterboxServiceURNKey";
+NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
 NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
 NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
 
@@ -103,7 +103,7 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     if (URN) {
-        userInfo[SRGLetterboxServiceURNKey] = URN;
+        userInfo[SRGLetterboxURNKey] = URN;
     }
     if (media) {
         userInfo[SRGLetterboxMediaKey] = media;
