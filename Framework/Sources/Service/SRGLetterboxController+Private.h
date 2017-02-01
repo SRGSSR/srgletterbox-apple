@@ -6,7 +6,7 @@
 
 #import "SRGLetterboxCOntroller.h"
 
-@interface LetterboxController (Private)
+@interface SRGLetterboxController (Private)
 
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
