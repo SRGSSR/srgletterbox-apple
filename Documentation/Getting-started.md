@@ -60,7 +60,9 @@ Within the block, you can apply any `UIView` or layout change, as you would in a
 
 ## Picture in picture
 
-To respond to picture and picture events, mostly for restoring your interface, you must implement the `SRGLetterboxPictureInPictureDelegate` delegate methods. Refer to the demo implementation for a concrete example, with the modal view controller. If no delegate is set, picture in picture will not be available, and the corresponding button will not be displayed.
+To respond to picture and picture events, mostly for restoring your interface, you must implement the `SRGLetterboxPictureInPictureDelegate` delegate methods. If no delegate is set, picture in picture will not be available, and the corresponding button will not be displayed.
+
+Refer to the demo for a concrete example, implementing restoration both for a view controller presented modally and for a view controller pushed into a navigation controller.
 
 ## Airplay
 
@@ -68,7 +70,9 @@ Airplay works out of the box and does not require any code.
 
 ## Full screen
 
-The `SRGLetterboxView` view can presents a full screen button on the interface and manage the full screen state, if, and only if the `letterboxView:toggleFullScreen:animated:withCompletionHandler:` delegate method is implemented. If no delegate is set, full screen feature will not be available, and the corresponding button will not be displayed. Because `SRGLetterboxView` can be added anywhere in the view hierarchy, you have the responsibility to layout it to the full screen state in this method. Refer to the demo implementation for a concrete example, with the modal view controller. 
+The `SRGLetterboxView` view presents a full screen button on its overlay interface, allowing to toggle between normal and full screen display. This button is displayed if and only if the `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` delegate method is implemented. Since `SRGLetterboxView` can be added anywhere to the view hierarchy, you are responsible of managing the full screen layout, as well as the transition animation between the normal and full screen states.
+
+Refer to the modal view controller demo implementation for a concrete example. 
 
 ## Statistics
 
