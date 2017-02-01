@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <AVKit/AVKit.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -40,47 +39,12 @@ OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 
 /**
- *  Delegate protocol for picture in picture implementation
- */
-@protocol SRGLetterboxPictureInPictureDelegate <NSObject>
-
-/**
- *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
- *  if the player view from which picture in picture was initiated is not visible anymore)
- */
-- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture;
-
-/**
- *  Called when a restoration process takes place
- *
- *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
- *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
- *                               undefined behavior. The completion block must be called with `restored` set to `YES`
- *                               iff the restoration was successful
- */
-- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
-
-@optional
-
-/**
- *  Called when picture in picture has been started
- */
-- (void)letterboxDidStartPictureInPicture;
-
-/**
- *  Called when picture in picture stopped
- */
-- (void)letterboxDidStopPictureInPicture;
-
-@end
-
-/**
  *  Letterbox media player controller, managing playback, as well as automatic metadata retrieval. Applications
  *  can use the metadata available from this controller to display additional playback information (e.g. title
  *  or description of the content). The controller can be used in isolation for playback without display, but
  *  is usually best used bound to a Letterbox view
  */
-@interface SRGLetterboxController : NSObject <AVPictureInPictureControllerDelegate>
+@interface SRGLetterboxController : NSObject
 
 /**
  *  Play the specified Uniform Resource Name
@@ -159,24 +123,6 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
  *  Error if any has been encountered
  */
 @property (nonatomic, readonly) NSError *error;
-
-@end
-
-/**
- *  Picture in picture support. Implement `SRGLetterboxPictureInPictureDelegate` methods to integrate Letterbox picture in picture
- *  support within your application
- */
-@interface SRGLetterboxController (PictureInPicture)
-
-/**
- *  Picture in picture delegate. Picture in picture won't be available if not set
- */
-@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
-
-/**
- *  Return YES iff picture in picture is active
- */
-@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
 
 @end
 

@@ -79,13 +79,6 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark Getters and setters
-
-- (BOOL)isPictureInPictureActive
-{
-    return self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
-}
-
 #pragma mark Data
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive
@@ -317,43 +310,6 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
         }
         completionHandler ? completionHandler(finished) : nil;
     }];
-}
-
-#pragma mark AVPictureInPictureControllerDelegate protocol
-
-- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
-{
-    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
-        [self.pictureInPictureDelegate letterboxDidStartPictureInPicture];
-    }
-}
-
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
-{
-    // It is very important that the completion handler is called at the very end of the process, otherwise silly
-    // things might happen during the restoration (most notably player rate set to 0)
-    
-    // If stopping picture in picture because of a reset, don't restore anything
-    if (self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        completionHandler(YES);
-        return;
-    }
-    
-    if ([self.pictureInPictureDelegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
-        [self.pictureInPictureDelegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
-            completionHandler(restored);
-        }];
-    }
-    else {
-        completionHandler(YES);
-    }
-}
-
-- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
-{
-    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
-        [self.pictureInPictureDelegate letterboxDidStopPictureInPicture];
-    }
 }
 
 #pragma mark Notifications
