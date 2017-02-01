@@ -315,7 +315,7 @@ static void commonInit(SRGLetterboxView *self);
         return YES;
     }
     
-    AVPlayer *player = [SRGLetterboxService sharedService].controller.player;
+    AVPlayer *player = self.controller.mediaPlayerController.player;
     if (! player) {
         return NO;
     }
@@ -399,16 +399,15 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateInterfaceAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        SRGLetterboxService *letterboxService = [SRGLetterboxService sharedService];
-        SRGLetterboxController *letterboxController = letterboxService.controller;
+        SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
         
-        if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
             // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
             // playbackl on the external device) is used
-            SRGMedia *media = [SRGLetterboxService sharedService].media;
+            SRGMedia *media = self.controller.media;
             BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! [self isPlayingInAirplayWithoutMirroring];
             self.imageView.alpha = hidden ? 0.f : 1.f;
-            letterboxController.view.alpha = hidden ? 1.f : 0.f;
+            mediaPlayerController.view.alpha = hidden ? 1.f : 0.f;
             
             [self resetInactivityTimer];
             
@@ -417,9 +416,9 @@ static void commonInit(SRGLetterboxView *self);
                 [self.timeSlider showPopUpViewAnimated:YES];
             }
         }
-        else if (letterboxController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
             self.imageView.alpha = 1.f;
-            letterboxController.view.alpha = 0.f;
+            mediaPlayerController.view.alpha = 0.f;
             
             [self.timeSlider hidePopUpViewAnimated:YES];
             self.showingPopup = NO;
@@ -427,10 +426,10 @@ static void commonInit(SRGLetterboxView *self);
             [self setUserInterfaceHidden:NO animated:YES];
         }
         
-        self.loadingImageView.alpha = (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || letterboxController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || letterboxController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || letterboxController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+        self.loadingImageView.alpha = (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
     };
     
     if (animated) {
@@ -498,10 +497,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
     // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
-    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
-    if (letterboxController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-            || letterboxController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-            || letterboxController.playbackState == SRGMediaPlayerPlaybackStateStalled
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled
             || ! self.errorView.hidden) {
         [self setUserInterfaceHidden:YES animated:YES];
     }
@@ -511,12 +510,12 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)seekBackward:(id)sender
 {
-    [[SRGLetterboxService sharedService].controller seekBackwardWithCompletionHandler:nil];
+    [self.controller seekBackwardWithCompletionHandler:nil];
 }
 
 - (IBAction)seekForward:(id)sender
 {
-    [[SRGLetterboxService sharedService].controller seekForwardWithCompletionHandler:nil];
+    [self.controller seekForwardWithCompletionHandler:nil];
 }
 
 - (IBAction)toggleFullScreen:(id)sender
@@ -528,18 +527,15 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadData
 {
-    SRGMedia *media = [SRGLetterboxService sharedService].media;
-    NSError *error = [SRGLetterboxService sharedService].error;
-    
-    if (error) {
+    if (self.controller.error) {
         self.errorView.hidden = NO;
-        self.errorLabel.text = error.localizedDescription;
+        self.errorLabel.text = self.controller.error.localizedDescription;
     }
-    else if (media) {
+    else if (self.controller.media) {
         self.errorView.hidden = YES;
-        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+        [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     }
-    else if ([SRGLetterboxService sharedService].URN) {
+    else if (self.controller.URN) {
         self.errorView.hidden = YES;
     }
     else {
@@ -555,8 +551,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (NSString *)slider:(ASValueTrackingSlider *)slider stringForValue:(float)value;
 {
-    SRGMedia *media = [SRGLetterboxService sharedService].media;
-    if (media.contentType == SRGContentTypeLivestream) {
+    if (self.controller.media.contentType == SRGContentTypeLivestream) {
         return (self.timeSlider.isLive) ? NSLocalizedString(@"Live", nil) : self.timeSlider.valueString;
     }
     else {
