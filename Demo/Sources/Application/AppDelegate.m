@@ -13,6 +13,8 @@
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 
+#import <HockeySDK/HockeySDK.h>
+
 @interface AppDelegate ()
 
 @property (nonatomic) Class restorationClass;
@@ -56,6 +58,11 @@
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
+    
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"7bf489539f6e44739133ae456c41dc2c"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+
     return YES;
 }
 
