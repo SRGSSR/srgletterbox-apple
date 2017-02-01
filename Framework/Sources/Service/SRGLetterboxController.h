@@ -4,9 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
-#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
-#import <SRGMediaPlayer/SRGMediaPlayer.h>
+#import <AVKit/AVKit.h>
+#import <SRGDataProvider/SRGDataProvider.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

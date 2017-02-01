@@ -13,10 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Service responsible for main media playback of a Letterbox controller throughout the application. The main controller
- *  is automatically integrated with the control center and enabled for external playback via Airplay
+ *  is automatically integrated with the control center and enabled for external playback
  *
  *  @discussion Your target must support the 'Audio, Airplay, and Picture in Picture' capabilities, otherwise an exception
- *              will be thrown when the service is accessed for the first time
+ *              will be thrown at runtime (this check is not performed for test targets)
  */
 @interface SRGLetterboxService : NSObject
 
