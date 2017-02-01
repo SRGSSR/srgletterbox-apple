@@ -387,9 +387,9 @@
 			children = (
 				087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */,
 				087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */,
+				6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */,
 				087EB60A1E290A14005DD80B /* SRGLetterboxService.h */,
 				087EB60B1E290A14005DD80B /* SRGLetterboxService.m */,
-				6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */,
 			);
 			path = Service;
 			sourceTree = "<group>";
