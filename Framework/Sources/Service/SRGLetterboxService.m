@@ -13,8 +13,6 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
-static void *s_kvoContext = &s_kvoContext;
-
 __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 {
     // Ignore in test bundles or when compiling for Interface Builder rendering (since cannot be set for them)
@@ -34,6 +32,8 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 }
 
 @interface SRGLetterboxService ()
+
+@property (nonatomic) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
@@ -64,10 +64,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         self.controller = [[SRGLetterboxController alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(audioSessionWasInterrupted:)
-                                                     name:AVAudioSessionInterruptionNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
@@ -81,71 +77,12 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     return self;
 }
 
-#pragma mark Getters and setters
-
-- (void)setController:(SRGLetterboxController *)controller
+- (void)dealloc
 {
-    if (_controller) {
-        _controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            player.allowsExternalPlayback = NO;
-        };
-        [_controller reloadPlayerConfiguration];
-        
-        [_controller removeObserver:self forKeyPath:@keypath(_controller.pictureInPictureController.pictureInPictureActive) context:s_kvoContext];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                      object:_controller];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPlaybackDidFailNotification
-                                                      object:_controller];
-        
-        [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
-    }
-    
-    _controller = controller;
-    
-    [self updateRemoteCommandCenter];
-    [self updateNowPlayingInformation];
-    [self updateNowPlayingPlaybackInformation];
-    
-    if (controller) {
-        controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            // Allow external playback
-            player.allowsExternalPlayback = YES;
-            player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
-            
-            // Only update the audio session if needed to avoid audio hiccups
-            NSString *mode = (self.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
-            if (! [[AVAudioSession sharedInstance].mode isEqualToString:mode]) {
-                [[AVAudioSession sharedInstance] setMode:mode error:NULL];
-            }
-        };
-        
-        [_controller addObserver:self forKeyPath:@keypath(_controller.pictureInPictureController.pictureInPictureActive) options:0 context:s_kvoContext];
-        
-        @weakify(self)
-        controller.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
-            @strongify(self)
-            
-            pictureInPictureController.delegate = self;
-        };
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:controller];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackDidFail:)
-                                                     name:SRGMediaPlayerPlaybackDidFailNotification
-                                                   object:controller];
-        
-        self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            [self updateNowPlayingPlaybackInformation];
-            [self updateRemoteCommandCenter];
-        }];
-    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+#pragma mark Getters and setters
 
 - (void)setMirroredOnExternalScreen:(BOOL)mirroredOnExternalScreen
 {
@@ -154,21 +91,12 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     }
     
     _mirroredOnExternalScreen = mirroredOnExternalScreen;
-    [self.controller reloadPlayerConfiguration];
+    [self.controller.mediaPlayerController reloadPlayerConfiguration];
 }
 
 - (void)resumeFromController:(SRGLetterboxController *)controller
 {
-    // FIXME: We soon will have Letterbox controller retrieve media information. Media and URN will therefore be
-    //        available to provide to the update method. In the meantime, resuming will not work if no media
-    //        composition is available
-    SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    [self updateWithURN:nil media:nil mediaComposition:mediaComposition preferredQuality:self.preferredQuality];
     
-    self.controller = controller;
-    
-    // Perform media-dependent updates
-    [self.controller reloadPlayerConfiguration];
 }
 
 #pragma mark Control center and lock screen integration
@@ -298,37 +226,8 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    if (self.controller.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+    if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateNowPlayingInformation];
-    }
-}
-
-- (void)playbackDidFail:(NSNotification *)notification
-{
-    [self reportError:notification.userInfo[SRGMediaPlayerErrorKey]];
-}
-
-- (void)audioSessionWasInterrupted:(NSNotification *)notification
-{
-    AVAudioSessionInterruptionType interruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
-    AVAudioSessionInterruptionOptions interruptionOption = [notification.userInfo[AVAudioSessionInterruptionOptionKey] integerValue];
-    
-    // The system interrupted the audio session
-    if (interruptionType == AVAudioSessionInterruptionTypeBegan) {
-        if (self.controller.streamType == SRGMediaPlayerStreamTypeLive) {
-            [self.controller stop];
-        }
-        else {
-            [self.controller pause];
-        }
-    }
-    // Interruption ended, resume if needed
-    else if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
-        // Restart audio if suggested
-        if (interruptionOption == AVAudioSessionInterruptionOptionShouldResume
-                && self.controller.mediaType == SRGMediaPlayerMediaTypeAudio) {
-            [self.controller play];
-        }
     }
 }
 
@@ -343,36 +242,14 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     [self updateRemoteCommandCenter];
 }
 
-#pragma mark KVO
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    if (context == s_kvoContext) {
-        if ([keyPath isEqualToString:@keypath(SRGLetterboxController.new, pictureInPictureController.pictureInPictureActive)]) {
-            // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
-            // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
-            // those methods manually
-            if (self.controller.player.externalPlaybackActive) {
-                [self pictureInPictureController:self.controller.pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-                [self pictureInPictureControllerDidStopPictureInPicture:self.controller.pictureInPictureController];
-            }
-        }
-    }
-    else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
 #pragma mark Description
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; media: %@; mediaComposition: %@; error: %@>",
+    return [NSString stringWithFormat:@"<%@: %p; controller: %@>",
             [self class],
             self,
-            self.media,
-            self.mediaComposition,
-            self.error];
+            self.controller];
 }
 
 @end

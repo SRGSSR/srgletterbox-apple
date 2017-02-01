@@ -11,7 +11,6 @@
 #import "SRGLetterboxError.h"
 
 #import <FXReachability/FXReachability.h>
-#import <libextobjc/libextobjc.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
@@ -69,6 +68,10 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
                                                  selector:@selector(playbackStateDidChange:)
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                    object:self.mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackDidFail:)
+                                                     name:SRGMediaPlayerPlaybackDidFailNotification
+                                                   object:self.mediaPlayerController];
     }
     return self;
 }
@@ -114,7 +117,6 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
         
         [self.mediaPlayerController reset];
         [self.requestQueue cancel];
-        [self.imageOperation cancel];
     }
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
@@ -271,7 +273,7 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 - (CMTime)seekStartTime
 {
-    return CMTIME_IS_VALID(self.seekTargetTime) ? self.seekTargetTime : self.player.currentTime;
+    return CMTIME_IS_VALID(self.seekTargetTime) ? self.seekTargetTime : self.mediaPlayerController.player.currentTime;
 }
 
 - (BOOL)canSeekBackwardFromTime:(CMTime)time
@@ -280,7 +282,8 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
         return NO;
     }
     
-    return (self.streamType == SRGMediaPlayerStreamTypeOnDemand || self.streamType == SRGMediaPlayerStreamTypeDVR);
+    SRGMediaPlayerStreamType streamType = self.mediaPlayerController.streamType;
+    return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
 }
 
 - (BOOL)canSeekForwardFromTime:(CMTime)time
@@ -289,8 +292,9 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
         return NO;
     }
     
-    return (self.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSeekInterval < CMTimeGetSeconds(self.player.currentItem.duration))
-        || (self.streamType == SRGMediaPlayerStreamTypeDVR && !self.live);
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
+    return (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSeekInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
+        || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && !mediaPlayerController.live);
 }
 
 - (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -301,9 +305,9 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
     }
     
     self.seekTargetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSeekInterval, NSEC_PER_SEC));
-    [self seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
+    [self.mediaPlayerController seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
         if (finished) {
-            [self play];
+            [self.mediaPlayerController play];
         }
         completionHandler ? completionHandler(finished) : nil;
     }];
@@ -317,9 +321,9 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
     }
     
     self.seekTargetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSeekInterval, NSEC_PER_SEC));
-    [self seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
+    [self.mediaPlayerController seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
         if (finished) {
-            [self play];
+            [self.mediaPlayerController play];
         }
         completionHandler ? completionHandler(finished) : nil;
     }];
@@ -382,6 +386,11 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
         self.seekTargetTime = kCMTimeInvalid;
     }
+}
+
+- (void)playbackDidFail:(NSNotification *)notification
+{
+    [self reportError:notification.userInfo[SRGMediaPlayerErrorKey]];
 }
 
 @end
