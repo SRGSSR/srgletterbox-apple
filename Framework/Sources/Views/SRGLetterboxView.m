@@ -7,6 +7,7 @@
 #import "SRGLetterboxView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGLetterboxService.h"
@@ -84,19 +85,16 @@ static void commonInit(SRGLetterboxView *self);
     return self;
 }
 
+- (void)dealloc
+{
+    self.controller = nil;
+}
+
 #pragma mark View lifecycle
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
-    [self.playerView insertSubview:letterboxController.view aboveSubview:self.imageView];
-    [letterboxController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.playerView);
-    }];
-    
-    self.playbackButton.mediaPlayerController = letterboxController;
     
     // FIXME: Currently added in code, but we should provide a more customizable activity indicator
     //        in the SRG Media Player library soon. Replace when available
@@ -112,17 +110,9 @@ static void commonInit(SRGLetterboxView *self);
     self.backwardSeekButton.hidden = YES;
     self.forwardSeekButton.hidden = YES;
     
-    self.pictureInPictureButton.mediaPlayerController = letterboxController;
-    
-    self.airplayView.mediaPlayerController = letterboxController;
     self.airplayView.delegate = self;
     
-    self.airplayButton.mediaPlayerController = letterboxController;
-    self.tracksButton.mediaPlayerController = letterboxController;
-    
-    self.timeSlider.mediaPlayerController = letterboxController;
     self.timeSlider.resumingAfterSeek = YES;
-    
     self.timeSlider.font = [UIFont srg_regularFontWithSize:14.f];
     self.timeSlider.popUpViewColor = UIColor.whiteColor;
     self.timeSlider.textColor = UIColor.blackColor;
@@ -151,35 +141,11 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super willMoveToWindow:newWindow];
     
-    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
-    
     if (newWindow) {
-        @weakify(self)
-        @weakify(letterboxController)
-        self.periodicTimeObserver = [letterboxController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            @strongify(self)
-            @strongify(letterboxController)
-            
-            self.forwardSeekButton.hidden = ![letterboxController canSeekForward];
-            self.backwardSeekButton.hidden = ![letterboxController canSeekBackward];
-        }];
-        
         [self updateInterfaceAnimated:NO];
         [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
         [self reloadData];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(mediaMetadataDidChange:)
-                                                     name:SRGLetterboxMetadataDidChangeNotification
-                                                   object:[SRGLetterboxService sharedService]];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(mediaPlaybackDidFail:)
-                                                     name:SRGLetterboxPlaybackDidFailNotification
-                                                   object:[SRGLetterboxService sharedService]];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:letterboxController];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pictureInPictureStateDidChange:)
                                                      name:SRGMediaPlayerPictureInPictureStateDidChangeNotification
@@ -200,25 +166,10 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(screenDidDisconnect:)
                                                      name:UIScreenDidDisconnectNotification
                                                    object:nil];
-        
-        AVPictureInPictureController *pictureInPictureController = letterboxController.pictureInPictureController;
-        if (pictureInPictureController.isPictureInPictureActive) {
-            [pictureInPictureController stopPictureInPicture];
-        }
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
-        [letterboxController removePeriodicTimeObserver:self.periodicTimeObserver];
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxMetadataDidChangeNotification
-                                                      object:[SRGLetterboxService sharedService]];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxPlaybackDidFailNotification
-                                                      object:[SRGLetterboxService sharedService]];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                      object:letterboxController];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPictureInPictureStateDidChangeNotification
                                                       object:nil];
@@ -238,6 +189,80 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Getters and setters
+
+- (void)setController:(SRGLetterboxController *)controller
+{
+    if (_controller == controller) {
+        return;
+    }
+    
+    if (_controller) {
+        SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
+        [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxMetadataDidChangeNotification
+                                                      object:_controller];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxPlaybackDidFailNotification
+                                                      object:_controller];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                      object:previousMediaPlayerController];
+        
+        [previousMediaPlayerController.view removeFromSuperview];
+    }
+    
+    _controller = controller;
+    
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    self.playbackButton.mediaPlayerController = mediaPlayerController;
+    self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
+    self.airplayView.mediaPlayerController = mediaPlayerController;
+    self.airplayButton.mediaPlayerController = mediaPlayerController;
+    self.tracksButton.mediaPlayerController = mediaPlayerController;
+    self.timeSlider.mediaPlayerController = mediaPlayerController;
+    
+    if (controller) {
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        
+        @weakify(self)
+        @weakify(controller)
+        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            @strongify(controller)
+            
+            self.forwardSeekButton.hidden = ![controller canSeekForward];
+            self.backwardSeekButton.hidden = ![controller canSeekBackward];
+        }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(mediaMetadataDidChange:)
+                                                     name:SRGLetterboxMetadataDidChangeNotification
+                                                   object:controller];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(mediaPlaybackDidFail:)
+                                                     name:SRGLetterboxPlaybackDidFailNotification
+                                                   object:controller];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackStateDidChange:)
+                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                   object:mediaPlayerController];
+        
+        [self.playerView insertSubview:mediaPlayerController.view aboveSubview:self.imageView];
+        [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.playerView);
+        }];
+
+        // FIXME: Decide what to do with the following
+#if 0
+        AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
+        if (pictureInPictureController.isPictureInPictureActive) {
+            [pictureInPictureController stopPictureInPicture];
+        }
+#endif
+    }
+}
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
 {

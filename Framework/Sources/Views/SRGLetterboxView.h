@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxController.h"
+
 #import <UIKit/UIKit.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
@@ -34,6 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 IB_DESIGNABLE
 @interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
+
+/**
+ *  The controller bound to the view
+ */
+@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
 
 /**
  *  View optional delegate
