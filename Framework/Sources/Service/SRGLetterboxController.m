@@ -339,4 +339,18 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
     [self reportError:notification.userInfo[SRGMediaPlayerErrorKey]];
 }
 
+#pragma mark Description
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@: %p; URN: %@; media: %@; mediaComposition: %@; error: %@; mediaPlayerController: %@>",
+            [self class],
+            self,
+            self.URN,
+            self.media,
+            self.mediaComposition,
+            self.error,
+            self.mediaPlayerController];
+}
+
 @end
