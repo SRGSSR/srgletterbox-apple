@@ -28,9 +28,14 @@ OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
 
 /**
- *  Notification sent when an error has been encountered. Use the `error` property to get the error itself
+ *  Notification sent when an error has been encountered
  */
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
+
+/**
+ *  Error information
+ */
+OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
  *  Letterbox media player controller, managing playback, as well as automatic metadata retrieval. Applications

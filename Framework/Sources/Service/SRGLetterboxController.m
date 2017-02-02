@@ -30,6 +30,8 @@ NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviou
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
 
+NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -227,7 +229,7 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
                                                  NSUnderlyingErrorKey : error }];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
 
 #pragma mark Standard seeks
