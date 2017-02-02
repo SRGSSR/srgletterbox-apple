@@ -6,6 +6,8 @@
 
 #import "SRGLetterboxController.h"
 
+#import <SRGMediaPlayer/SRGMediaPlayer.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**

@@ -8,6 +8,8 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <XCTest/XCTest.h>
 
+#if 0
+
 static NSURL *ServiceTestURL(void)
 {
     return SRGIntegrationLayerTestServiceURL();
@@ -463,3 +465,5 @@ static NSURL *ServiceTestURL(void)
 }
 
 @end
+
+#endif

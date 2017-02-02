@@ -17,7 +17,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 {
     // Ignore in test bundles or when compiling for Interface Builder rendering (since cannot be set for them)
     NSString *bundlePath = [NSBundle mainBundle].bundlePath;
-    if (! [bundlePath.pathExtension isEqualToString:@"xctest"] && ! [bundlePath hasSuffix:@"Xcode/Overlays"]) {
+    if (! [bundlePath.pathExtension isEqualToString:@"xctest"] && ! [bundlePath hasSuffix:@"Xcode/Agents"] && ! [bundlePath hasSuffix:@"Xcode/Overlays"]) {
         NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
         if (! [backgroundModes containsObject:@"audio"]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
