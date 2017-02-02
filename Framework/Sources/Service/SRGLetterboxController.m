@@ -151,6 +151,9 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
     
     [self resetWithURN:URN media:media];
     
+    // Save the preferred quality when restarting after connection loss
+    self.preferredQuality = preferredQuality;
+    
     self.requestQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
         if (finished) {
             [self reportError:error];
@@ -201,6 +204,8 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 - (void)resetWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media
 {
     self.error = nil;
+    self.seekTargetTime = kCMTimeInvalid;
+    self.preferredQuality = SRGQualityNone;
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
