@@ -18,7 +18,19 @@
 
 @implementation LetterboxControllerTestCase
 
-#pragma mark Setup and teardown
+#pragma mark Helpers
+
+- (XCTestExpectation *)expectationForElapsedTimeInterval:(NSTimeInterval)timeInterval withHandler:(void (^)(void))handler
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"Wait for %@ seconds", @(timeInterval)]];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+        handler ? handler() : nil;
+    });
+    return expectation;
+}
+
+#pragma mark Setup and tear down
 
 - (void)setUp
 {
@@ -89,6 +101,76 @@
     XCTAssertNil(self.controller.media);
     XCTAssertNil(self.controller.mediaComposition);
     XCTAssertNil(self.controller.error);
+}
+
+- (void)testSameMediaPlaybackWhileAlreadyPlaying
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Expect no change when trying to play the same media
+    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no metadata update when playing the same media");
+    }];
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no playback state change when playing the same media");
+    }];
+    
+    [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+}
+
+- (void)testSameMediaPlaybackWhilePaused
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Pause playback
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    [mediaPlayerController pause];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Expect only a player state change notification, no metadata change notification
+    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no metadata update when playing the same media");
+    }];
+    
+    [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
+    }];
 }
 
 - (void)testOnDemandStreamSeeks
