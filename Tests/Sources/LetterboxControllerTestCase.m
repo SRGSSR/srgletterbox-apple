@@ -34,6 +34,63 @@
 
 #pragma mark Tests
 
+- (void)testPlayURN
+{
+
+}
+
+- (void)testPlayMedia
+{
+
+}
+
+- (void)testReset
+{
+
+}
+
+- (void)testPlaybackMetadata
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    XCTAssertNil(self.controller.URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    
+    // Wait until the stream is playing, at which time we expect the media composition to be available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    [self.controller playURN:URN withPreferredQuality:SRGQualityNone];
+    
+    // Media and composition not immediately available, fetched by the controller
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
+    XCTAssertNil(self.controller.error);
+    
+    [self.controller reset];
+    
+    XCTAssertNil(self.controller.URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+}
+
 - (void)testOnDemandStreamSeeks
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
