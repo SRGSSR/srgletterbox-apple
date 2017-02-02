@@ -103,7 +103,7 @@ IB_DESIGNABLE
  *
  *  Calling this method will call the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:`
  *
- *  @param fullscreen YES for full screen
+ *  @param fullScreen YES for full screen
  *  @param animated Whether the transition must be animated
  *
  *  @discussion If the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` is not implemented, no full screen
