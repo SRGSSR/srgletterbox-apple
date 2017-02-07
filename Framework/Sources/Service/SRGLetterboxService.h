@@ -80,6 +80,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
+ *  Return YES iff picture in picture is possible
+ */
+@property (nonatomic, readonly, getter=isPictureInPicturePossible) BOOL pictureInPicturePossible;
+
+/**
  *  Return YES iff picture in picture is active
  */
 @property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;

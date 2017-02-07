@@ -18,6 +18,8 @@
 #import <libextobjc/libextobjc.h>
 #import <ASValueTrackingSlider/ASValueTrackingSlider.h>
 
+static void *s_kvoContext = &s_kvoContext;
+
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
@@ -166,6 +168,11 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(screenDidDisconnect:)
                                                      name:UIScreenDidDisconnectNotification
                                                    object:nil];
+        
+        [[SRGLetterboxService sharedService] addObserver:self
+                                              forKeyPath:@keypath(SRGLetterboxService.new, controller)
+                                                 options:0
+                                                 context:s_kvoContext];
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -185,6 +192,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIScreenDidDisconnectNotification
                                                       object:nil];
+        
+        [[SRGLetterboxService sharedService] removeObserver:self
+                                                 forKeyPath:@keypath(SRGLetterboxService.new, controller)
+                                                    context:s_kvoContext];
     }
 }
 
@@ -456,6 +467,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)updateUserInterfaceForPictureInPicture
+{
+    self.pictureInPictureButton.hidden = (self.controller != [SRGLetterboxService sharedService].controller) || ! [SRGLetterboxService sharedService].pictureInPicturePossible;
+}
+
 - (void)resetInactivityTimer
 {
     self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
@@ -598,7 +614,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)pictureInPictureStateDidChange:(NSNotification *)notification
 {
-    self.pictureInPictureButton.hidden = ([SRGLetterboxService sharedService].pictureInPictureDelegate == nil);
+    [self updateUserInterfaceForPictureInPicture];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -621,6 +637,20 @@ static void commonInit(SRGLetterboxView *self);
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
+}
+
+#pragma mark KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if (context == s_kvoContext) {
+        if ([keyPath isEqualToString:@keypath(SRGLetterboxService.new, controller)]) {
+            [self updateUserInterfaceForPictureInPicture];
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 @end

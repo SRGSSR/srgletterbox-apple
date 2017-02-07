@@ -108,7 +108,9 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
+    [self willChangeValueForKey:@keypath(self.controller)];
     _controller = controller;
+    [self didChangeValueForKey:@keypath(self.controller)];
     
     [self updateRemoteCommandCenter];
     [self updateNowPlayingInformation];
@@ -160,6 +162,16 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     
     _mirroredOnExternalScreen = mirroredOnExternalScreen;
     [self.controller.mediaPlayerController reloadPlayerConfiguration];
+}
+
+- (BOOL)isPictureInPicturePossible
+{
+    if (self.pictureInPictureDelegate) {
+        return self.controller.mediaPlayerController.pictureInPictureController.pictureInPicturePossible;
+    }
+    else {
+        return NO;
+    }
 }
 
 - (BOOL)isPictureInPictureActive
@@ -348,6 +360,16 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 }
 
 #pragma mark KVO
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
+{
+    if ([key isEqualToString:@keypath(SRGLetterboxService.new, controller)]) {
+        return NO;
+    }
+    else {
+        return [super automaticallyNotifiesObserversForKey:key];
+    }
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
