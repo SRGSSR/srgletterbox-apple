@@ -9,9 +9,12 @@
 #import "SRGLetterboxController+Private.h"
 #import "UIDevice+SRGLetterbox.h"
 
+#import <libextobjc/libextobjc.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
+
+static void *s_kvoContext = &s_kvoContext;
 
 __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 {
@@ -32,8 +35,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 }
 
 @interface SRGLetterboxService ()
-
-@property (nonatomic) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -63,8 +64,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.controller = [[SRGLetterboxController alloc] init];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
                                                      name:UIApplicationDidEnterBackgroundNotification
@@ -81,10 +80,77 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 
 - (void)dealloc
 {
+    self.controller = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Getters and setters
+
+- (void)setController:(SRGLetterboxController *)controller
+{
+    if (_controller) {
+        SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
+        
+        previousMediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
+            player.allowsExternalPlayback = NO;
+        };
+        [previousMediaPlayerController reloadPlayerConfiguration];
+        
+        [previousMediaPlayerController removeObserver:self
+                                           forKeyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)
+                                              context:s_kvoContext];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                      object:previousMediaPlayerController];
+        
+        [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
+    }
+    
+    _controller = controller;
+    
+    [self updateRemoteCommandCenter];
+    [self updateNowPlayingInformation];
+    [self updateNowPlayingPlaybackInformation];
+    
+    if (controller) {
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        
+        mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
+            player.allowsExternalPlayback = YES;
+            player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
+            
+            // Only update the audio session if needed to avoid audio hiccups
+            NSString *mode = (self.controller.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
+            if (! [[AVAudioSession sharedInstance].mode isEqualToString:mode]) {
+                [[AVAudioSession sharedInstance] setMode:mode error:NULL];
+            }
+        };
+        
+        [mediaPlayerController addObserver:self
+                                forKeyPath:@keypath(mediaPlayerController.pictureInPictureController.pictureInPictureActive)
+                                   options:0
+                                   context:s_kvoContext];
+        
+        @weakify(self)
+        mediaPlayerController.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
+            @strongify(self)
+            
+            pictureInPictureController.delegate = self;
+        };
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackStateDidChange:)
+                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                   object:mediaPlayerController];
+        
+        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            [self updateNowPlayingPlaybackInformation];
+            [self updateRemoteCommandCenter];
+        }];
+    }
+}
 
 - (void)setMirroredOnExternalScreen:(BOOL)mirroredOnExternalScreen
 {
@@ -99,13 +165,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 - (BOOL)isPictureInPictureActive
 {
     return self.controller.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
-}
-
-#pragma mark Main playback management
-
-- (void)resumeFromController:(SRGLetterboxController *)controller
-{
-    
 }
 
 #pragma mark Control center and lock screen integration

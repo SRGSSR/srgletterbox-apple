@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		081322F31E42503D00639174 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 081322F21E42503D00639174 /* HockeySDK.framework */; };
 		081322F41E42503D00639174 /* HockeySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 081322F21E42503D00639174 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		087EB60C1E290A14005DD80B /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60A1E290A14005DD80B /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		087EB60D1E290A14005DD80B /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60B1E290A14005DD80B /* SRGLetterboxService.m */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
@@ -117,6 +115,8 @@
 		6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */; };
 		6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
 		6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
@@ -234,8 +234,6 @@
 
 /* Begin PBXFileReference section */
 		081322F21E42503D00639174 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
-		087EB60A1E290A14005DD80B /* SRGLetterboxService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxService.h; sourceTree = "<group>"; };
-		087EB60B1E290A14005DD80B /* SRGLetterboxService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxService.m; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -302,6 +300,8 @@
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxControllerTestCase.m; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
+		6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxService.h; sourceTree = "<group>"; };
+		6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxService.m; sourceTree = "<group>"; };
 		6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerSingletonSetup.m; sourceTree = "<group>"; };
@@ -382,16 +382,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		087EB6091E290A14005DD80B /* Service */ = {
+		087EB6091E290A14005DD80B /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */,
 				087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */,
 				6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */,
-				087EB60A1E290A14005DD80B /* SRGLetterboxService.h */,
-				087EB60B1E290A14005DD80B /* SRGLetterboxService.m */,
 			);
-			path = Service;
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		08FA0CB91E2E585B000C94EF /* Resources */ = {
@@ -418,10 +416,11 @@
 		6F042D241E28E2D100CFD89B /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				087EB6091E290A14005DD80B /* Controller */,
 				6F8C35AE1E3A30920011E81E /* Designables */,
 				6F48559D1E3A311C00B0141C /* Externals */,
 				6F042D281E28F70500CFD89B /* Helpers */,
-				087EB6091E290A14005DD80B /* Service */,
+				6FB97FC91E49D7240014C4C2 /* Service */,
 				6F042D251E28E2D100CFD89B /* SRGLetterbox.h */,
 				6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */,
 				6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */,
@@ -568,6 +567,15 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		6FB97FC91E49D7240014C4C2 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */,
+				6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		6FD9BA2A1E2FBC770013CC97 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -608,8 +616,8 @@
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
-				087EB60C1E290A14005DD80B /* SRGLetterboxService.h in Headers */,
 				08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */,
+				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				08FA0CC61E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				08FA0CB71E2E45CD000C94EF /* SRGControlsStackView.h in Headers */,
@@ -804,10 +812,10 @@
 				08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */,
 				6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */,
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
+				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
 				08FA0CB81E2E45CD000C94EF /* SRGControlsStackView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
-				087EB60D1E290A14005DD80B /* SRGLetterboxService.m in Sources */,
 				6FD9BA261E2FB36B0013CC97 /* SRGLetterboxError.m in Sources */,
 				08FA0D341E31335D000C94EF /* SRGDataProvider+SRGLetterbox.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,

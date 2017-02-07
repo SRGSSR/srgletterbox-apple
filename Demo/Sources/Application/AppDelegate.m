@@ -53,7 +53,7 @@
     [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
                                                      comScoreVirtualSite:@"app-test-v"
                                                      netMetrixIdentifier:@"test"];
-        
+    
     [SRGLetterboxService sharedService].pictureInPictureDelegate = self;
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];

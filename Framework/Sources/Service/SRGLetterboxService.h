@@ -64,13 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The controller responsible for main playback
  */
-@property (nonatomic, readonly) SRGLetterboxController *controller;
-
-/**
- *  Transfers playback from the specified existing controller to the service. The service media player controller
- *  is replaced
- */
-- (void)resumeFromController:(SRGLetterboxController *)controller;
+@property (nonatomic, nullable) SRGLetterboxController *controller;
 
 @end
 
@@ -83,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Picture in picture delegate. Picture in picture won't be available if not set
  */
-@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic, weak, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
  *  Return YES iff picture in picture is active
