@@ -82,6 +82,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
+#pragma mark Status bar
+
+- (BOOL)prefersStatusBarHidden
+{
+    return self.wantsFullScreen;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return UIStatusBarAnimationSlide;
+}
+
 #pragma mark SRGLetterboxViewDelegate protocol
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
@@ -172,16 +184,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [self.letterboxView setFullScreen:YES animated:YES];
 }
 
-#pragma mark Status bar
-
-- (BOOL)prefersStatusBarHidden
+- (IBAction)useAsService:(id)sender
 {
-    return self.wantsFullScreen;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
-    return UIStatusBarAnimationSlide;
+    [SRGLetterboxService sharedService].controller = self.letterboxController;
 }
 
 @end
