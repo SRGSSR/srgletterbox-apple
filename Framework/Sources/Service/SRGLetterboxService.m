@@ -91,6 +91,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 {
     if (_controller) {
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
+        previousMediaPlayerController.pictureInPictureController.delegate = nil;
         
         previousMediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
             player.allowsExternalPlayback = NO;
@@ -135,12 +136,17 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
                                    options:0
                                    context:s_kvoContext];
         
-        @weakify(self)
-        mediaPlayerController.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
-            @strongify(self)
-            
-            pictureInPictureController.delegate = self;
-        };
+        if (mediaPlayerController.pictureInPictureController) {
+            mediaPlayerController.pictureInPictureController.delegate = self;
+        }
+        else {
+            @weakify(self)
+            mediaPlayerController.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
+                @strongify(self)
+                
+                pictureInPictureController.delegate = self;
+            };
+        }
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
