@@ -78,7 +78,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        [self.letterboxController reset];
+        if (! [SRGLetterboxService sharedService].pictureInPictureActive) {
+            [self.letterboxController reset];
+        }
     }
 }
 
