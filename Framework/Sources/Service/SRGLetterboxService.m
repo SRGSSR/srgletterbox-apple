@@ -347,6 +347,27 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     [self updateRemoteCommandCenter];
 }
 
+#pragma mark KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if (context == s_kvoContext) {
+        if ([keyPath isEqualToString:@keypath(SRGMediaPlayerController.new, pictureInPictureController.pictureInPictureActive)]) {
+            // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
+            // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
+            // those methods manually
+            SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+            if (mediaPlayerController.player.externalPlaybackActive) {
+                [self pictureInPictureController:mediaPlayerController.pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
+                [self pictureInPictureControllerDidStopPictureInPicture:mediaPlayerController.pictureInPictureController];
+            }
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
 #pragma mark Description
 
 - (NSString *)description
