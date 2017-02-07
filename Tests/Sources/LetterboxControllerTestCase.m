@@ -46,6 +46,11 @@
 
 #pragma mark Tests
 
+- (void)testShortLifetime
+{
+    __unused SRGLetterboxController *letterboxController = [[SRGLetterboxController alloc] init];
+}
+
 - (void)testPlayURN
 {
 
