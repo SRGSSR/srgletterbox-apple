@@ -19,7 +19,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
-@property (nonatomic, weak) IBOutlet SRGLetterboxController *letterboxController;
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
 
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
