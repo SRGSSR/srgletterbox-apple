@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="5WB-zg-NQB">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Multi Player View Controller-->
+        <scene sceneID="rjx-aZ-llm">
+            <objects>
+                <viewController id="5WB-zg-NQB" customClass="MultiPlayerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nU9-H6-NCe"/>
+                        <viewControllerLayoutGuide type="bottom" id="LRY-wN-1yZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="CVL-Ms-lzF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bb-qO-DK7" customClass="SRGLetterboxView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="1bb-qO-DK7" secondAttribute="height" multiplier="16:9" id="H3H-pd-Ynf"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udg-mi-has" customClass="SRGLetterboxView">
+                                <rect key="frame" x="59" y="231" width="256" height="144"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Udg-mi-has" secondAttribute="height" multiplier="16:9" id="AsT-af-V8e"/>
+                                    <constraint firstAttribute="width" constant="256" id="a34-v1-gax"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1j-HG-eIf" customClass="SRGLetterboxView">
+                                <rect key="frame" x="59" y="395" width="256" height="144"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="256" id="N93-Ov-tRt"/>
+                                    <constraint firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="a2S-P4-1la"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Udg-mi-has" firstAttribute="centerX" secondItem="CVL-Ms-lzF" secondAttribute="centerX" id="3Qj-KR-z4t"/>
+                            <constraint firstItem="Udg-mi-has" firstAttribute="width" secondItem="Udg-mi-has" secondAttribute="height" multiplier="16:9" id="OdK-YN-cbo"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="VO1-Ex-fdw"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="top" secondItem="Udg-mi-has" secondAttribute="bottom" constant="20" id="eAf-tY-4Sj"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="jgA-f8-0kU"/>
+                            <constraint firstAttribute="trailing" secondItem="1bb-qO-DK7" secondAttribute="trailing" id="jyS-a3-NEU"/>
+                            <constraint firstItem="1bb-qO-DK7" firstAttribute="leading" secondItem="CVL-Ms-lzF" secondAttribute="leading" id="kDE-YM-s3S"/>
+                            <constraint firstItem="Udg-mi-has" firstAttribute="top" secondItem="1bb-qO-DK7" secondAttribute="bottom" constant="20" id="suW-fL-3Rn"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="centerX" secondItem="Udg-mi-has" secondAttribute="centerX" id="yMv-XR-Psr"/>
+                            <constraint firstItem="1bb-qO-DK7" firstAttribute="top" secondItem="nU9-H6-NCe" secondAttribute="bottom" constant="-20" id="z88-in-Ldl"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="letterboxView" destination="1bb-qO-DK7" id="DqY-ZJ-gur"/>
+                        <outlet property="smallLetterboxView1" destination="Udg-mi-has" id="jsZ-ep-VxE"/>
+                        <outlet property="smallLetterboxView2" destination="c1j-HG-eIf" id="cae-Xk-QH2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ldR-9K-uXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="48.799999999999997" y="-344.07796101949026"/>
+        </scene>
+    </scenes>
+</document>

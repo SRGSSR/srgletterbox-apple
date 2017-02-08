@@ -7,6 +7,7 @@
 #import "DemosViewController.h"
 
 #import "ModalPlayerViewController.h"
+#import "MultiPlayerViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
@@ -104,6 +105,11 @@
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
+        }
+            
+        case 8: {
+            MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] init];
+            [self.navigationController pushViewController:playerViewController animated:YES];
         }
             
         default: {
