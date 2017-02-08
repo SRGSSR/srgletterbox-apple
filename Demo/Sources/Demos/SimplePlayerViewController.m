@@ -12,7 +12,7 @@
 
 @property (nonatomic) SRGMediaURN *URN;
 
-@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
+@property (nonatomic) IBOutlet SRGLetterboxView *letterboxView;
 
 @end
 
@@ -35,13 +35,20 @@
 
 #pragma mark View lifecycle
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.letterboxView.controller = [SRGLetterboxService sharedService].controller;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.URN) {
-            [self.letterboxController playURN:self.URN withPreferredQuality:SRGQualityNone];
+            [[SRGLetterboxService sharedService].controller playURN:self.URN withPreferredQuality:SRGQualityNone];
         }
     }
 }
@@ -52,7 +59,7 @@
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! [SRGLetterboxService sharedService].pictureInPictureActive) {
-            [self.letterboxController reset];
+            [[SRGLetterboxService sharedService].controller reset];
         }
     }
 }

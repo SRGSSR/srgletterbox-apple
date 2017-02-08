@@ -28,7 +28,6 @@
                                     <constraint firstAttribute="width" secondItem="5VB-3F-wwv" secondAttribute="height" multiplier="16:9" priority="950" id="ff4-Ik-keP"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="controller" destination="JL4-gd-umF" id="EB6-Vf-mWG"/>
                                     <outlet property="delegate" destination="FcC-Qn-oGg" id="XzF-48-ayl"/>
                                 </connections>
                             </view>
@@ -79,13 +78,6 @@
                                     <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j0W-jK-9bx">
-                                <rect key="frame" x="106" y="342" width="163.5" height="30"/>
-                                <state key="normal" title="Use as service"/>
-                                <connections>
-                                    <action selector="useAsService:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="Zrf-Or-BaP"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -93,7 +85,6 @@
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="Md4-t4-5he" secondAttribute="centerX" id="4UG-yS-wtK"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="leading" secondItem="Md4-t4-5he" secondAttribute="trailing" constant="16" id="5RU-2L-7Sb"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="6hy-A6-kfe"/>
-                            <constraint firstItem="j0W-jK-9bx" firstAttribute="top" secondItem="SpT-Mg-MmS" secondAttribute="bottom" constant="8" id="CJK-yR-XTu"/>
                             <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" priority="900" constant="16" id="F2Z-fU-P1b">
                                 <variation key="heightClass=compact-widthClass=compact" constant="32"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="32"/>
@@ -101,14 +92,12 @@
                             <constraint firstItem="JvK-aX-fgP" firstAttribute="top" secondItem="gMD-r1-Pgs" secondAttribute="bottom" constant="8" id="F4n-Es-e3G"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="centerX" secondItem="LBa-rV-Hj0" secondAttribute="centerX" id="FvJ-lD-qwg"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="top" secondItem="WSi-1R-LWr" secondAttribute="bottom" constant="8" id="I5G-lB-icc"/>
-                            <constraint firstItem="j0W-jK-9bx" firstAttribute="width" secondItem="SpT-Mg-MmS" secondAttribute="width" id="Itc-ld-tBX"/>
                             <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" constant="5" id="LDp-cD-NhZ"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="width" secondItem="JvK-aX-fgP" secondAttribute="width" id="NQp-fq-Vlf"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="QEM-bZ-dhh"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="Rb6-lz-xGB"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="centerY" secondItem="gMD-r1-Pgs" secondAttribute="centerY" id="Rdc-7p-qIn"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="top" secondItem="Md4-t4-5he" secondAttribute="bottom" constant="8" id="UGf-RW-rCm"/>
-                            <constraint firstItem="j0W-jK-9bx" firstAttribute="centerX" secondItem="SpT-Mg-MmS" secondAttribute="centerX" id="dSN-qW-Ebz"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="width" secondItem="Md4-t4-5he" secondAttribute="width" id="fND-Gj-3vx"/>
                             <constraint firstItem="txU-Ep-CJb" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" priority="850" id="gAz-aw-sDx"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="top" id="iL4-uS-ed9"/>
@@ -125,7 +114,6 @@
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
                         <outlet property="letterbox169Constraint" destination="ff4-Ik-keP" id="0jN-em-Zkv"/>
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
-                        <outlet property="letterboxController" destination="JL4-gd-umF" id="Je7-0g-am5"/>
                         <outlet property="letterboxLeadingConstraint" destination="tsO-HP-lR4" id="n0S-cU-sRT"/>
                         <outlet property="letterboxTopConstraint" destination="LDp-cD-NhZ" id="cTx-6s-6SU"/>
                         <outlet property="letterboxTrailingConstraint" destination="F2Z-fU-P1b" id="2tu-HE-b8l"/>
@@ -133,7 +121,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="JL4-gd-umF" customClass="SRGLetterboxController"/>
             </objects>
             <point key="canvasLocation" x="189.59999999999999" y="78.710644677661179"/>
         </scene>

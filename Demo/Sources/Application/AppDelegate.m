@@ -56,6 +56,9 @@
     
     [SRGLetterboxService sharedService].pictureInPictureDelegate = self;
     
+    // Use an application-wide controller for main playback
+    [SRGLetterboxService sharedService].controller = [[SRGLetterboxController alloc] init];
+    
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
     

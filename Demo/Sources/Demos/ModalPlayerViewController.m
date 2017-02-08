@@ -19,8 +19,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
-@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
-
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
@@ -56,6 +54,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
+    self.letterboxView.controller = [SRGLetterboxService sharedService].controller;
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
 
@@ -65,10 +64,10 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.media) {
-            [self.letterboxController playMedia:self.media withPreferredQuality:SRGQualityNone];
+            [[SRGLetterboxService sharedService].controller playMedia:self.media withPreferredQuality:SRGQualityNone];
         }
         else if (self.URN) {
-            [self.letterboxController playURN:self.URN withPreferredQuality:SRGQualityNone];
+            [[SRGLetterboxService sharedService].controller playURN:self.URN withPreferredQuality:SRGQualityNone];
         }
     }
 }
@@ -79,7 +78,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! [SRGLetterboxService sharedService].pictureInPictureActive) {
-            [self.letterboxController reset];
+            [[SRGLetterboxService sharedService].controller reset];
         }
     }
 }
@@ -184,11 +183,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)fullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
-}
-
-- (IBAction)useAsService:(id)sender
-{
-    [SRGLetterboxService sharedService].controller = self.letterboxController;
 }
 
 @end
