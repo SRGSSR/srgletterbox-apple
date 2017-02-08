@@ -258,13 +258,11 @@ static void commonInit(SRGLetterboxView *self);
             make.edges.equalTo(self.playerView);
         }];
 
-        // FIXME: Decide what to do with the following
-#if 0
+        // Automatically resumes in the view when displayed while picture in picture was active
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController.isPictureInPictureActive) {
             [pictureInPictureController stopPictureInPicture];
         }
-#endif
     }
 }
 
