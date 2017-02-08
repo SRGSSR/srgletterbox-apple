@@ -10,11 +10,10 @@
 #import "UIDevice+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
-
-static void *s_kvoContext = &s_kvoContext;
 
 __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
 {
@@ -98,9 +97,7 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
         };
         [previousMediaPlayerController reloadPlayerConfiguration];
         
-        [previousMediaPlayerController removeObserver:self
-                                           forKeyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)
-                                              context:s_kvoContext];
+        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
@@ -131,10 +128,20 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
             }
         };
         
-        [mediaPlayerController addObserver:self
-                                forKeyPath:@keypath(mediaPlayerController.pictureInPictureController.pictureInPictureActive)
-                                   options:0
-                                   context:s_kvoContext];
+        @weakify(self)
+        @weakify(mediaPlayerController)
+        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            @strongify(mediaPlayerController)
+            
+            // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
+            // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
+            // those methods manually
+            if (mediaPlayerController.player.externalPlaybackActive) {
+                [self pictureInPictureController:mediaPlayerController.pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
+                [self pictureInPictureControllerDidStopPictureInPicture:mediaPlayerController.pictureInPictureController];
+            }
+        }];
         
         if (mediaPlayerController.pictureInPictureController) {
             mediaPlayerController.pictureInPictureController.delegate = self;
@@ -374,25 +381,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     }
     else {
         return [super automaticallyNotifiesObserversForKey:key];
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    if (context == s_kvoContext) {
-        if ([keyPath isEqualToString:@keypath(SRGMediaPlayerController.new, pictureInPictureController.pictureInPictureActive)]) {
-            // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
-            // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
-            // those methods manually
-            SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-            if (mediaPlayerController.player.externalPlaybackActive) {
-                [self pictureInPictureController:mediaPlayerController.pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-                [self pictureInPictureControllerDidStopPictureInPicture:mediaPlayerController.pictureInPictureController];
-            }
-        }
-    }
-    else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 

@@ -14,11 +14,10 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
 #import <ASValueTrackingSlider/ASValueTrackingSlider.h>
-
-static void *s_kvoContext = &s_kvoContext;
 
 static void commonInit(SRGLetterboxView *self);
 
@@ -169,10 +168,12 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:UIScreenDidDisconnectNotification
                                                    object:nil];
         
-        [[SRGLetterboxService sharedService] addObserver:self
-                                              forKeyPath:@keypath(SRGLetterboxService.new, controller)
-                                                 options:0
-                                                 context:s_kvoContext];
+        @weakify(self)
+        [[SRGLetterboxService sharedService] addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            
+            [self updateUserInterfaceForPictureInPicture];
+        }];
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -193,9 +194,7 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:UIScreenDidDisconnectNotification
                                                       object:nil];
         
-        [[SRGLetterboxService sharedService] removeObserver:self
-                                                 forKeyPath:@keypath(SRGLetterboxService.new, controller)
-                                                    context:s_kvoContext];
+        [[SRGLetterboxService sharedService] removeObserver:self keyPath:@keypath(SRGLetterboxService.new, controller)];
     }
 }
 
@@ -637,20 +636,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
-}
-
-#pragma mark KVO
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    if (context == s_kvoContext) {
-        if ([keyPath isEqualToString:@keypath(SRGLetterboxService.new, controller)]) {
-            [self updateUserInterfaceForPictureInPicture];
-        }
-    }
-    else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
 }
 
 @end
