@@ -11,6 +11,7 @@
 #import "SRGLetterboxError.h"
 
 #import <FXReachability/FXReachability.h>
+#import <libextobjc/libextobjc.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
@@ -154,13 +155,18 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
     // Save the preferred quality when restarting after connection loss
     self.preferredQuality = preferredQuality;
     
+    @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
+        @strongify(self)
+        
         if (finished) {
             [self reportError:error];
         }
     }];
     
     void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        @strongify(self)
+        
         if (error) {
             [self.requestQueue reportError:error];
             return;
@@ -168,7 +174,10 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition];
         
+        @weakify(self)
         SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+            @strongify(self)
+            
             [self.requestQueue reportError:error];
         }];
         
