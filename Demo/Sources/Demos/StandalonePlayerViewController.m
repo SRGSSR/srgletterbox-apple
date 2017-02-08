@@ -12,6 +12,7 @@
 
 @property (nonatomic) SRGMediaURN *URN;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
 
 @end
@@ -42,6 +43,10 @@
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.URN) {
             [self.letterboxController playURN:self.URN withPreferredQuality:SRGQualityNone];
+        }
+        else {
+            self.letterboxController = [SRGLetterboxService sharedService].controller;
+            self.letterboxView.controller = self.letterboxController;
         }
     }
 }

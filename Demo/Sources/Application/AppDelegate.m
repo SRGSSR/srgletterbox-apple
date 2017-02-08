@@ -9,6 +9,7 @@
 #import "DemosViewController.h"
 #import "ModalPlayerViewController.h"
 #import "SimplePlayerViewController.h"
+#import "StandalonePlayerViewController.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGDataProvider/SRGDataProvider.h>
@@ -74,7 +75,8 @@
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
     return ! [self.topPresentedViewController isKindOfClass:[ModalPlayerViewController class]]
-        && ! [self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]];
+        && ! [self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]]
+        && ! [self.navigationController.topViewController isKindOfClass:[StandalonePlayerViewController class]];
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
@@ -85,8 +87,8 @@
             completionHandler(YES);
         }];
     }
-    else if (self.restorationClass == [SimplePlayerViewController class]) {
-        SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] init];
+    else if (self.restorationClass == [SimplePlayerViewController class] || self.restorationClass == [StandalonePlayerViewController class]) {
+        UIViewController *playerViewController = [[self.restorationClass alloc] init];
         [self.navigationController pushViewController:playerViewController animated:YES];
         completionHandler(YES);
         // FIXME: Call completion handler at the end of the transition animation!!
@@ -101,8 +103,9 @@
         self.restorationClass = [ModalPlayerViewController class];
         [self.topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
     }
-    else if ([self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]]) {
-        self.restorationClass = [SimplePlayerViewController class];
+    else if ([self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]]
+                || [self.navigationController.topViewController isKindOfClass:[StandalonePlayerViewController class]]) {
+        self.restorationClass = [self.navigationController.topViewController class];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

@@ -65,6 +65,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="letterboxController" destination="m76-hn-RkO" id="EDf-jv-Qb1"/>
+                        <outlet property="letterboxView" destination="LJc-Y6-KTE" id="9gb-8D-HAg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9I3-9b-01C" userLabel="First Responder" sceneMemberID="firstResponder"/>
