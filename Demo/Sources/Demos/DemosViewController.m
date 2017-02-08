@@ -8,6 +8,7 @@
 
 #import "ModalPlayerViewController.h"
 #import "SimplePlayerViewController.h"
+#import "StandalonePlayerViewController.h"
 
 @implementation DemosViewController
 
@@ -58,12 +59,14 @@
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
+            
         case 4: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN media:nil];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
+            
         case 5: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
             SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider serviceURL]
@@ -86,6 +89,20 @@
                 ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:nil media:medias.firstObject];
                 [self presentViewController:playerViewController animated:YES completion:nil];
             }] resume];
+            break;
+        }
+            
+        case 6: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 7: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             

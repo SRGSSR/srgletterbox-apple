@@ -115,6 +115,8 @@
 		6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */; };
+		6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */; };
 		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */; };
 		6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
@@ -309,6 +311,9 @@
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxControllerTestCase.m; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
+		6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandalonePlayerViewController.h; sourceTree = "<group>"; };
+		6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandalonePlayerViewController.m; sourceTree = "<group>"; };
+		6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StandalonePlayerViewController.storyboard; sourceTree = "<group>"; };
 		6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxService.h; sourceTree = "<group>"; };
 		6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxService.m; sourceTree = "<group>"; };
 		6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MAKVONotificationCenter.framework; path = Carthage/Build/iOS/MAKVONotificationCenter.framework; sourceTree = "<group>"; };
@@ -558,6 +563,9 @@
 				6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */,
 				6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */,
 				6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */,
+				6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */,
+				6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */,
+				6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -765,6 +773,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */,
+				6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */,
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */,
 				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
@@ -799,6 +808,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
 				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController.m in Sources */,
