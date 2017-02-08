@@ -214,7 +214,9 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         
-        [previousMediaPlayerController.view removeFromSuperview];
+        if (previousMediaPlayerController.view.superview == self.playerView) {
+            [previousMediaPlayerController.view removeFromSuperview];
+        }
     }
     
     _controller = controller;
