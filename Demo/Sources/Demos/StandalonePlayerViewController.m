@@ -58,4 +58,16 @@
     }
 }
 
+#pragma mark Actions
+
+- (IBAction)useForService:(id)sender
+{
+    [SRGLetterboxService sharedService].controller = self.letterboxController;
+}
+
+- (IBAction)resetService:(id)sender
+{
+    [SRGLetterboxService sharedService].controller = [[SRGLetterboxController alloc] init];
+}
+
 @end

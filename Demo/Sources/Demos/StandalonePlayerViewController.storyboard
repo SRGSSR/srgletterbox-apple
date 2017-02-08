@@ -32,15 +32,33 @@
                                     <outlet property="controller" destination="m76-hn-RkO" id="Kiz-Wy-pYZ"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yet-cP-iNZ">
+                                <rect key="frame" x="135" y="264" width="104" height="30"/>
+                                <state key="normal" title="Use for service"/>
+                                <connections>
+                                    <action selector="useForService:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="9MX-EC-MH3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dQI-Mf-xN9" userLabel="Reset service">
+                                <rect key="frame" x="140.5" y="302" width="93" height="30"/>
+                                <state key="normal" title="Reset service"/>
+                                <connections>
+                                    <action selector="resetService:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="hJ3-4B-HvE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="dQI-Mf-xN9" firstAttribute="centerX" secondItem="yet-cP-iNZ" secondAttribute="centerX" id="4T7-cj-gPI"/>
+                            <constraint firstItem="yet-cP-iNZ" firstAttribute="centerX" secondItem="LJc-Y6-KTE" secondAttribute="centerX" id="Bir-gl-czD"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="centerX" secondItem="Xul-ZD-b56" secondAttribute="centerX" id="OHc-vu-0eR"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leadingMargin" constant="20" id="cWA-Kp-VpM">
                                 <variation key="heightClass=compact-widthClass=compact" constant="35"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="35"/>
                             </constraint>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="qG1-n2-WwX" secondAttribute="bottom" constant="8" symbolic="YES" id="noq-yb-HDt"/>
+                            <constraint firstItem="yet-cP-iNZ" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="bottom" constant="41.5" id="vqs-Dr-KwK"/>
+                            <constraint firstItem="dQI-Mf-xN9" firstAttribute="top" secondItem="yet-cP-iNZ" secondAttribute="bottom" constant="8" id="xdh-Ia-RKW"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
