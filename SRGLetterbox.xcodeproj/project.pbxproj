@@ -122,6 +122,7 @@
 		6FB97FF51E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
 		6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
@@ -171,6 +172,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08B934C01E390C3200CFE85A /* ASValueTrackingSlider.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */,

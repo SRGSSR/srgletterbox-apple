@@ -144,13 +144,10 @@ static void commonInit(SRGLetterboxView *self);
     
     if (newWindow) {
         [self updateInterfaceAnimated:NO];
+        [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
         [self reloadData];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(pictureInPictureStateDidChange:)
-                                                     name:SRGMediaPlayerPictureInPictureStateDidChangeNotification
-                                                   object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
                                                      name:UIApplicationDidBecomeActiveNotification
@@ -172,15 +169,12 @@ static void commonInit(SRGLetterboxView *self);
         [[SRGLetterboxService sharedService] addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
             
-            [self updateUserInterfaceForPictureInPicture];
+            [self updateUserInterfaceForServicePlayback];
         }];
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPictureInPictureStateDidChangeNotification
-                                                      object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
                                                       object:nil];
@@ -466,9 +460,10 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateUserInterfaceForPictureInPicture
+- (void)updateUserInterfaceForServicePlayback
 {
-    self.pictureInPictureButton.hidden = (self.controller != [SRGLetterboxService sharedService].controller) || ! [SRGLetterboxService sharedService].pictureInPicturePossible;
+    self.airplayButton.alwaysHidden = (self.controller != [SRGLetterboxService sharedService].controller);
+    self.pictureInPictureButton.alwaysHidden = (self.controller != [SRGLetterboxService sharedService].controller);
 }
 
 - (void)resetInactivityTimer
@@ -609,11 +604,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateInterfaceAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
-}
-
-- (void)pictureInPictureStateDidChange:(NSNotification *)notification
-{
-    [self updateUserInterfaceForPictureInPicture];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
