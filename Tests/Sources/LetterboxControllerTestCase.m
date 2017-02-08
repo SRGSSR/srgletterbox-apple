@@ -53,17 +53,89 @@
 
 - (void)testPlayURN
 {
-
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    // Wait until the stream is playing, at which time we expect the media composition to be available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    [self.controller playURN:URN withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
+    XCTAssertNil(self.controller.error);
 }
 
 - (void)testPlayMedia
 {
-
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
+    
+    __block SRGMedia *media = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        media = medias.firstObject;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNotNil(media);
+    
+    // Wait until the stream is playing, at which time we expect the media composition to be available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    [self.controller playMedia:media withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, media.URN);
+    XCTAssertEqualObjects(self.controller.media, media);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, media.URN);
+    XCTAssertNil(self.controller.error);
 }
 
 - (void)testReset
 {
-
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    [self.controller playURN:URN withPreferredQuality:SRGQualityNone];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller reset];
+    
+    XCTAssertNil(self.controller.URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
 - (void)testPlaybackMetadata
