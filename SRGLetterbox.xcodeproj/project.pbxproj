@@ -117,6 +117,11 @@
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */; };
+		6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
+		6FB97FF41E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
+		6FB97FF51E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
+		6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
 		6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
@@ -190,6 +195,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				6FAB3B721E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Embed Frameworks */,
+				6FB97FF51E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */,
 				6FAB3B651E2905B400CC2197 /* SRGLetterbox.framework in Embed Frameworks */,
 				08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */,
 				6FAB3B781E2905CA00CC2197 /* SRGLogger.framework in Embed Frameworks */,
@@ -214,6 +220,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */,
 				08B934C11E390C6100CFE85A /* ASValueTrackingSlider.framework in CopyFiles */,
 				6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */,
 				6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in CopyFiles */,
@@ -302,6 +309,7 @@
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
 		6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxService.h; sourceTree = "<group>"; };
 		6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxService.m; sourceTree = "<group>"; };
+		6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MAKVONotificationCenter.framework; path = Carthage/Build/iOS/MAKVONotificationCenter.framework; sourceTree = "<group>"; };
 		6FD9BA231E2FB36B0013CC97 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FD9BA241E2FB36B0013CC97 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerSingletonSetup.m; sourceTree = "<group>"; };
@@ -328,6 +336,7 @@
 				6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */,
 				6FAB3B6F1E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Frameworks */,
+				6FB97FF41E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08FA0D241E30F954000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B6B1E2905CA00CC2197 /* libextobjc.framework in Frameworks */,
 				08FA0D221E30F92F000C94EF /* FXReachability.framework in Frameworks */,
@@ -341,6 +350,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */,
 				6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */,
 				6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */,
@@ -362,6 +372,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08B934BF1E390C2400CFE85A /* ASValueTrackingSlider.framework in Frameworks */,
 				08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */,
 				08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */,
@@ -481,6 +492,7 @@
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
 				081322F21E42503D00639174 /* HockeySDK.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
+				6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
 				08FA0CA81E2E325F000C94EF /* Masonry.framework */,
 				6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */,

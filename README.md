@@ -30,6 +30,7 @@ Then run `carthage update --platform iOS` to update the dependencies. You will n
   * `ComScore`: comScore framework
   * `FXReachability`: A reachability framework
   * `libextobjc`: A utility framework
+  * `MAKVONotificationCenter`: A safe KVO framework
   * `Mantle`:  The framework used to parse the data
   * `Masonry`: An autolayout framework
   * `SRGAnalytics`: The main analytics framework
