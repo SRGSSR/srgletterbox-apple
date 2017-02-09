@@ -52,9 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGLetterboxService (Airplay)
 
 /**
- *  If set to `YES`, the Letterbox player is mirrored as is when an external screen is connected, without switching to
- *  full-screen playback on this external screen. This is especially handy if you need to be able to show the player
- *  as is on scren, e.g. for presentation purposes
+ *  If set to `YES`, the Letterbox player never switches to full-screen playback on this external screen. This is especially
+ *  handy to mirror your application for presentation purposes
  *
  *  Default is `NO`
  */

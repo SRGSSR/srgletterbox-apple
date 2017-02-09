@@ -85,7 +85,7 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 }
 
-+ (SRGLetterboxController *)backgroundPlaybackController
++ (SRGLetterboxController *)backgroundServicesController
 {
     return [SRGLetterboxService sharedService].controller;
 }
@@ -133,7 +133,7 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 - (BOOL)areBackgroundServicesEnabled
 {
-    return self == [SRGLetterboxService sharedService].controller;
+    return self == [SRGLetterboxController backgroundServicesController];
 }
 
 - (BOOL)isPictureInPictureEnabled
