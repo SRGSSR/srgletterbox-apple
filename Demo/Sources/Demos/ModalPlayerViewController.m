@@ -6,7 +6,10 @@
 
 #import "ModalPlayerViewController.h"
 
+#import "UIWindow+LetterboxDemo.h"
+
 #import <Masonry/Masonry.h>
+#import <SRGAnalytics/SRGAnalytics.h>
 
 static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
 static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
@@ -59,7 +62,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
     [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController
-                                          pictureInPictureDelegate:nil];
+                                          pictureInPictureDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -97,6 +100,35 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
 {
     return UIStatusBarAnimationSlide;
+}
+
+#pragma mark SRGLetterboxPictureInPictureDelegate protocol
+
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    return topPresentedViewController != self;
+}
+
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    [topPresentedViewController presentViewController:self animated:YES completion:^{
+        completionHandler(YES);
+    }];
+}
+
+- (void)letterboxDidStartPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+    
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    [topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)letterboxDidStopPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_stop"];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol

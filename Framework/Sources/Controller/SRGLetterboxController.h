@@ -154,7 +154,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
  *  Enable background services for the specified controller. Airplay is always enabled, but picture in picture will only
- *  be enabled if a corresponding delegate is provided
+ *  be enabled if a corresponding delegate is provided. The delegate is retained
  *
  *  @discussion The 'Audio, Airplay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
  *              this method will throw an exception. Note that enabling picture in picture does not guarantee that the

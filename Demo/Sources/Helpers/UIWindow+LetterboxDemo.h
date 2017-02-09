@@ -8,9 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface UIWindow (LetterboxDemo)
 
-@property (nonatomic) UIWindow *window;
+@property (nonatomic, readonly, nullable) UIViewController *topPresentedViewController;
 
 @end
 

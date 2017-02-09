@@ -7,41 +7,11 @@
 #import "AppDelegate.h"
 
 #import "DemosViewController.h"
-#import "ModalPlayerViewController.h"
-#import "SimplePlayerViewController.h"
-#import "StandalonePlayerViewController.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
-#import <SRGDataProvider/SRGDataProvider.h>
-
 #import <HockeySDK/HockeySDK.h>
 
-@interface AppDelegate ()
-
-@property (nonatomic) Class restorationClass;
-
-@property (nonatomic, readonly) UINavigationController *navigationController;
-@property (nonatomic, readonly) UIViewController *topPresentedViewController;
-
-@end
-
 @implementation AppDelegate
-
-#pragma mark Getters and setters
-
-- (UINavigationController *)navigationController
-{
-    return (UINavigationController *)self.window.rootViewController;
-}
-
-- (UIViewController *)topPresentedViewController
-{
-    UIViewController *topPresentedViewController = self.window.rootViewController;
-    while (topPresentedViewController.presentedViewController) {
-        topPresentedViewController = topPresentedViewController.presentedViewController;
-    }
-    return topPresentedViewController;
-}
 
 #pragma mark Application lifecycle
 
@@ -50,6 +20,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
+
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"7bf489539f6e44739133ae456c41dc2c"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
                                                      comScoreVirtualSite:@"app-test-v"
@@ -57,58 +31,8 @@
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
-    
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"7bf489539f6e44739133ae456c41dc2c"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
     return YES;
-}
-
-#pragma mark SRGLetterboxPictureInPictureDelegate protocol
-
-- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
-{
-    return ! [self.topPresentedViewController isKindOfClass:[ModalPlayerViewController class]]
-        && ! [self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]]
-        && ! [self.navigationController.topViewController isKindOfClass:[StandalonePlayerViewController class]];
-}
-
-- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
-{
-    if (self.restorationClass == [ModalPlayerViewController class]) {
-        ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] init];
-        [self.topPresentedViewController presentViewController:playerViewController animated:YES completion:^{
-            completionHandler(YES);
-        }];
-    }
-    else if (self.restorationClass == [SimplePlayerViewController class] || self.restorationClass == [StandalonePlayerViewController class]) {
-        UIViewController *playerViewController = [[self.restorationClass alloc] init];
-        [self.navigationController pushViewController:playerViewController animated:YES];
-        completionHandler(YES);
-        // FIXME: Call completion handler at the end of the transition animation!!
-    }
-}
-
-- (void)letterboxDidStartPictureInPicture
-{
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
-    
-    if ([self.topPresentedViewController isKindOfClass:[ModalPlayerViewController class]]) {
-        self.restorationClass = [ModalPlayerViewController class];
-        [self.topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
-    }
-    else if ([self.navigationController.topViewController isKindOfClass:[SimplePlayerViewController class]]
-                || [self.navigationController.topViewController isKindOfClass:[StandalonePlayerViewController class]]) {
-        self.restorationClass = [self.navigationController.topViewController class];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-
-- (void)letterboxDidStopPictureInPicture
-{
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_stop"];
-    self.restorationClass = Nil;
 }
 
 @end

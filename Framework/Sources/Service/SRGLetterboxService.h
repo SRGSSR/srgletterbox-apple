@@ -41,8 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Picture in picture delegate. Picture in picture won't be available if not set
+ * 
+ *  @discussion The delegate is retained
  */
-@property (nonatomic, weak, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 @end
 

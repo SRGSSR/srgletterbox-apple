@@ -138,8 +138,7 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 - (BOOL)isPictureInPictureEnabled
 {
-    return self.backgroundServicesEnabled && [SRGLetterboxService sharedService].pictureInPictureDelegate
-        && self.mediaPlayerController.pictureInPictureController.pictureInPicturePossible;
+    return self.backgroundServicesEnabled && [SRGLetterboxService sharedService].pictureInPictureDelegate;
 }
 
 - (BOOL)isPictureInPictureActive
