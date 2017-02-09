@@ -45,8 +45,14 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 /**
  *  Called when picture in picture is started, letting you dismiss the user interface which picture in picture was 
  *  started from
+ *
+ *  Return YES if you dismissed or began dismissing the user interface from this method (in which case restoration 
+ *  methods will be called when picture in picture is exited). The `-letterboxShouldRestoreUserInterfaceForPictureInPicture` 
+ *  still lets you control whether the restoration process actually should occur (e.g. if the user interface was dismissed 
+ *  but still restored somehow afterwards without picture in picture being exited, most notably if playback moved to another
+ *  screen you want to resume to)
  */
-- (void)letterboxDismissUserInterfaceForPictureInPicture;
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture;
 
 /**
  *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably

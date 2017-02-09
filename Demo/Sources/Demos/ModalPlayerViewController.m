@@ -124,10 +124,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }];
 }
 
-- (void)letterboxDismissUserInterfaceForPictureInPicture
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture
 {
     UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
     [topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
+    return YES;
 }
 
 - (void)letterboxDidStartPictureInPicture
