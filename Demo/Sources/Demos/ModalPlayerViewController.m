@@ -17,9 +17,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
-@property (nonatomic) SRGMedia *media;
 
-@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
+@property (nonatomic) SRGLetterboxController *letterboxController;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
@@ -38,18 +37,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN media:(nullable SRGMedia *)media
+- (instancetype)initWithURN:(SRGMediaURN *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.URN = URN;
-    viewController.media = media;
     return viewController;
 }
 
 - (instancetype)init
 {
-    return [self initWithURN:nil media:nil];
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 #pragma mark View lifecycle
@@ -57,6 +56,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.letterboxController = [[SRGLetterboxController alloc] init];
+    self.letterboxView.controller = self.letterboxController;
     
     // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
@@ -70,10 +72,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (self.media) {
-            [self.letterboxController playMedia:self.media];
-        }
-        else if (self.URN) {
+        if (self.URN) {
             [self.letterboxController playURN:self.URN];
         }
     }

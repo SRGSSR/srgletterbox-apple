@@ -49,65 +49,40 @@
             
         case 2: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN media:nil];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
         case 3: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN media:nil];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
         case 4: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN media:nil];
+            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
         case 5: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
-            SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider serviceURL]
-                                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
-            [[dataProvider videosWithUids:@[URN.uid] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-                if (error) {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                                             message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                            style:UIAlertActionStyleDefault
-                                                                          handler:nil];
-                    [alertController addAction:defaultAction];
-                    
-                    [self presentViewController:alertController animated:YES completion:^{
-                        [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:5 inSection:0] animated:NO];
-                    }];
-                    return;
-                }
-                
-                ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:nil media:medias.firstObject];
-                [self presentViewController:playerViewController animated:YES completion:nil];
-            }] resume];
-            break;
-        }
-            
-        case 6: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
-        case 7: {
+        case 6: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
-        case 8: {
+        case 7: {
             MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] init];
             [self.navigationController pushViewController:playerViewController animated:YES];
         }

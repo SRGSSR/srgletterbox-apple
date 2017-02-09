@@ -30,7 +30,8 @@
 
 - (instancetype)init
 {
-    return [self initWithURN:nil];
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 #pragma mark View lifecycle

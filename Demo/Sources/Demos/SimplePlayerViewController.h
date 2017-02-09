@@ -11,7 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SimplePlayerViewController : UIViewController
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN;
+- (instancetype)initWithURN:(SRGMediaURN *)URN;
+
+@end
+
+@interface SimplePlayerViewController (Unavailable)
+
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 
