@@ -77,10 +77,26 @@
 
 - (void)switchToStream1:(UIGestureRecognizer *)gestureRecognizer
 {
+    // Swap controllers
+    SRGLetterboxController *tempLetterboxController = self.letterboxController;
+    
+    self.letterboxController = self.smallLetterboxController1;
+    self.letterboxView.controller = self.smallLetterboxController1;
+    
+    self.smallLetterboxController1 = tempLetterboxController;
+    self.smallLetterboxView1.controller = tempLetterboxController;
 }
 
 - (void)switchToStream2:(UIGestureRecognizer *)gestureRecognizer
 {
+    // Swap controllers
+    SRGLetterboxController *tempLetterboxController = self.letterboxController;
+    
+    self.letterboxController = self.smallLetterboxController2;
+    self.letterboxView.controller = self.smallLetterboxController2;
+    
+    self.smallLetterboxController2 = tempLetterboxController;
+    self.smallLetterboxView2.controller = tempLetterboxController;
 }
 
 @end
