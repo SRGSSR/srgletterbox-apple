@@ -43,6 +43,12 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @protocol SRGLetterboxPictureInPictureDelegate <NSObject>
 
 /**
+ *  Called when picture in picture is started, letting you dismiss the user interface which picture in picture was 
+ *  started from
+ */
+- (void)letterboxDismissUserInterfaceForPictureInPicture;
+
+/**
  *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
  *  if the player view from which picture in picture was initiated is not visible anymore)
  */
@@ -154,7 +160,9 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
  *  Enable background services for the specified controller. Airplay is always enabled, but picture in picture will only
- *  be enabled if a corresponding delegate is provided. The delegate is retained
+ *  be enabled if a corresponding delegate is provided. The delegate is retained. Usually this should be the view controller
+ *  associated with picture in picture, so that you can restore it later in the exact same state as before picture in
+ *  picture was entered
  *
  *  @discussion The 'Audio, Airplay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
  *              this method will throw an exception. Note that enabling picture in picture does not guarantee that the

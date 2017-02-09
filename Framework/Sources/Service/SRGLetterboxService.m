@@ -304,6 +304,8 @@
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
+    [self.pictureInPictureDelegate letterboxDismissUserInterfaceForPictureInPicture];
+    
     if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
         [self.pictureInPictureDelegate letterboxDidStartPictureInPicture];
     }

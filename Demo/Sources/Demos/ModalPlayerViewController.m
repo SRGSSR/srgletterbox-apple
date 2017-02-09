@@ -124,12 +124,15 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }];
 }
 
+- (void)letterboxDismissUserInterfaceForPictureInPicture
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    [topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)letterboxDidStartPictureInPicture
 {
     [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
-    
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    [topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)letterboxDidStopPictureInPicture
