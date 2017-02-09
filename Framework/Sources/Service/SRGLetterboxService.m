@@ -109,11 +109,12 @@
             player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
             
             // Only update the audio session if needed to avoid audio hiccups
-            NSString *mode = (self.controller.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
+            NSString *mode = (controller.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
             if (! [[AVAudioSession sharedInstance].mode isEqualToString:mode]) {
                 [[AVAudioSession sharedInstance] setMode:mode error:NULL];
             }
         };
+        [mediaPlayerController reloadPlayerConfiguration];
         
         @weakify(self)
         @weakify(mediaPlayerController)
