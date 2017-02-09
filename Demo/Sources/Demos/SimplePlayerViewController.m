@@ -35,6 +35,14 @@
 
 #pragma mark View lifecycle
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController
+                                          pictureInPictureDelegate:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

@@ -57,6 +57,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
+    
+    [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController
+                                          pictureInPictureDelegate:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
