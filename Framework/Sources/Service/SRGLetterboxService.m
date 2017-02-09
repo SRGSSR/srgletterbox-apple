@@ -15,7 +15,10 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
-@interface SRGLetterboxService ()
+@interface SRGLetterboxService () {
+@private
+    BOOL _restoreUserInterface;
+}
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -55,6 +58,8 @@
                                                    object:nil];
         
         [self setupRemoteCommandCenter];
+        
+        _restoreUserInterface = YES;
     }
     return self;
 }
@@ -282,6 +287,19 @@
     [self.controller seekBackwardWithCompletionHandler:nil];
 }
 
+#pragma mark Picture in picture
+
+- (void)stopPictureInPictureRestoreUserInterface:(BOOL)restoreUserInterface
+{
+    AVPictureInPictureController *pictureInPictureController = self.controller.mediaPlayerController.pictureInPictureController;
+    if (! pictureInPictureController.pictureInPictureActive) {
+        return;
+    }
+    
+    _restoreUserInterface = restoreUserInterface;
+    [pictureInPictureController stopPictureInPicture];
+}
+
 #pragma mark AVPictureInPictureControllerDelegate protocol
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
@@ -293,6 +311,12 @@
 
 - (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
+    if (! _restoreUserInterface) {
+        _restoreUserInterface = YES;
+        completionHandler(YES);
+        return;
+    }
+    
     // It is very important that the completion handler is called at the very end of the process, otherwise silly
     // things might happen during the restoration (most notably player rate set to 0)
     

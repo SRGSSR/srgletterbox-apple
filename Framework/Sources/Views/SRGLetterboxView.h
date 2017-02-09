@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ *  TODO: Describe auto-stop picture in picture behavior when the view appears
+ */
 IB_DESIGNABLE
 @interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
 

@@ -260,11 +260,8 @@ static void commonInit(SRGLetterboxView *self);
             make.edges.equalTo(self.playerView);
         }];
 
-        // Automatically resumes in the view when displayed while picture in picture was active
-        AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
-        if (pictureInPictureController.isPictureInPictureActive) {
-            [pictureInPictureController stopPictureInPicture];
-        }
+        // Automatically resumes in the view when displayed and if picture in picture was active
+        [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
     }
 }
 
