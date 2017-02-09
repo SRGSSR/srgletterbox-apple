@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Mirroring
  */
-@interface SRGLetterboxService (Mirroring)
+@interface SRGLetterboxService (Airplay)
 
 /**
  *  If set to `YES`, the Letterbox player is mirrored as is when an external screen is connected, without switching to

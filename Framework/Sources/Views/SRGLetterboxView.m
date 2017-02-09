@@ -462,8 +462,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceForServicePlayback
 {
-    self.airplayButton.alwaysHidden = (self.controller != [SRGLetterboxService sharedService].controller);
-    self.pictureInPictureButton.alwaysHidden = (self.controller != [SRGLetterboxService sharedService].controller);
+    self.airplayButton.alwaysHidden = ! self.controller.backgroundServicesEnabled;
+    self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
 }
 
 - (void)resetInactivityTimer

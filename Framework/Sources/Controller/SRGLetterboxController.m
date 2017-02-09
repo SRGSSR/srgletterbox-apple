@@ -131,9 +131,20 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 #pragma mark Getters and setters
 
+- (BOOL)areBackgroundServicesEnabled
+{
+    return self == [SRGLetterboxService sharedService].controller;
+}
+
+- (BOOL)isPictureInPictureEnabled
+{
+    return self.backgroundServicesEnabled && [SRGLetterboxService sharedService].pictureInPictureDelegate
+        && self.mediaPlayerController.pictureInPictureController.pictureInPicturePossible;
+}
+
 - (BOOL)isPictureInPictureActive
 {
-    return self == [SRGLetterboxService sharedService].controller && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
+    return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
 
 #pragma mark Data

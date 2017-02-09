@@ -147,7 +147,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 @end
 
-@interface SRGLetterboxController (BackgroundPlayback)
+@interface SRGLetterboxController (BackgroundServices)
 
 // TODO: Check background modes there only!
 + (void)enableBackgroundServicesWithController:(SRGLetterboxController *)controller
@@ -158,9 +158,9 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 @property (class, nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
 
-@end
+@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled;
 
-@interface SRGLetterboxController (PictureInPicture)
+@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled;
 
 /**
  *  Return YES iff picture in picture is active for the receiver
