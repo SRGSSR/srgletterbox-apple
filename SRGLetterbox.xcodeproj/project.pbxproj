@@ -117,7 +117,7 @@
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */; };
 		6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */; };
-		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; };
 		6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */; };
 		6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FB97FF41E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };

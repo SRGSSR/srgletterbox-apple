@@ -28,6 +28,9 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LJc-Y6-KTE" secondAttribute="height" multiplier="16:9" id="dLS-h7-FwA"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="fsa-hY-eK6" id="9Xq-GL-cfz"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -43,10 +46,11 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="letterboxView" destination="LJc-Y6-KTE" id="xmu-91-7ES"/>
+                        <outlet property="letterboxController" destination="fsa-hY-eK6" id="8XD-Wh-Z1m"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9I3-9b-01C" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="fsa-hY-eK6" customClass="SRGLetterboxController"/>
             </objects>
             <point key="canvasLocation" x="45.600000000000001" y="97.601199400299862"/>
         </scene>

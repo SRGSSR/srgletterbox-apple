@@ -11,12 +11,12 @@
 @interface MultiPlayerViewController ()
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
-
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *smallLetterboxView1;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *smallLetterboxView2;
 
-@property (nonatomic) SRGLetterboxController *smallLetterboxController1;
-@property (nonatomic) SRGLetterboxController *smallLetterboxController2;
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
+@property (nonatomic) IBOutlet SRGLetterboxController *smallLetterboxController1;
+@property (nonatomic) IBOutlet SRGLetterboxController *smallLetterboxController2;
 
 @end
 
@@ -36,14 +36,6 @@
 {
     [super viewDidLoad];
     
-    self.letterboxView.controller = [SRGLetterboxService sharedService].controller;
-    
-    self.smallLetterboxController1 = [[SRGLetterboxController alloc] init];
-    self.smallLetterboxController2 = [[SRGLetterboxController alloc] init];
-    
-    self.smallLetterboxView1.controller = self.smallLetterboxController1;
-    self.smallLetterboxView2.controller = self.smallLetterboxController2;
-    
     [self.smallLetterboxView1 setUserInterfaceHidden:YES animated:NO togglable:NO];
     [self.smallLetterboxView2 setUserInterfaceHidden:YES animated:NO togglable:NO];
     
@@ -60,13 +52,13 @@
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
-        [[SRGLetterboxService sharedService].controller playURN:URN withPreferredQuality:SRGQualityNone];
+        [self.letterboxController playURN:URN];
         
         SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608517"];
-        [self.smallLetterboxController1 playURN:URN1 withPreferredQuality:SRGQualityNone];
+        [self.smallLetterboxController1 playURN:URN1];
         
         SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
-        [self.smallLetterboxController2 playURN:URN2 withPreferredQuality:SRGQualityNone];
+        [self.smallLetterboxController2 playURN:URN2];
     }
 }
 
@@ -75,8 +67,8 @@
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        if (! [SRGLetterboxService sharedService].pictureInPictureActive) {
-            [[SRGLetterboxService sharedService].controller reset];
+        if (! self.letterboxController.pictureInPictureActive) {
+            [self.letterboxController reset];
         }
     }
 }
@@ -85,24 +77,10 @@
 
 - (void)switchToStream1:(UIGestureRecognizer *)gestureRecognizer
 {
-    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
-    
-    self.letterboxView.controller = self.smallLetterboxController1;
-    [SRGLetterboxService sharedService].controller = self.smallLetterboxController1;
-    
-    self.smallLetterboxView1.controller = letterboxController;
-    self.smallLetterboxController1 = letterboxController;
 }
 
 - (void)switchToStream2:(UIGestureRecognizer *)gestureRecognizer
 {
-    SRGLetterboxController *letterboxController = [SRGLetterboxService sharedService].controller;
-    
-    self.letterboxView.controller = self.smallLetterboxController2;
-    [SRGLetterboxService sharedService].controller = self.smallLetterboxController2;
-    
-    self.smallLetterboxView2.controller = letterboxController;
-    self.smallLetterboxController2 = letterboxController;
 }
 
 @end

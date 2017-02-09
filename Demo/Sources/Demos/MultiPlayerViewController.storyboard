@@ -27,6 +27,9 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="1bb-qO-DK7" secondAttribute="height" multiplier="16:9" id="H3H-pd-Ynf"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="Z7p-HD-xJW" id="RUW-Nf-NdN"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udg-mi-has" customClass="SRGLetterboxView">
                                 <rect key="frame" x="59" y="231" width="256" height="144"/>
@@ -35,6 +38,9 @@
                                     <constraint firstAttribute="width" secondItem="Udg-mi-has" secondAttribute="height" multiplier="16:9" id="AsT-af-V8e"/>
                                     <constraint firstAttribute="width" constant="256" id="a34-v1-gax"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="QUZ-dT-8iK" id="rkK-si-9gb"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1j-HG-eIf" customClass="SRGLetterboxView">
                                 <rect key="frame" x="59" y="395" width="256" height="144"/>
@@ -43,6 +49,9 @@
                                     <constraint firstAttribute="width" constant="256" id="N93-Ov-tRt"/>
                                     <constraint firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="a2S-P4-1la"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="xlQ-lD-cZi" id="buO-uo-xhx"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -60,12 +69,18 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="letterboxController" destination="Z7p-HD-xJW" id="M9C-Uq-Fqy"/>
                         <outlet property="letterboxView" destination="1bb-qO-DK7" id="DqY-ZJ-gur"/>
+                        <outlet property="smallLetterboxController1" destination="QUZ-dT-8iK" id="RXP-CJ-Faf"/>
+                        <outlet property="smallLetterboxController2" destination="xlQ-lD-cZi" id="Ahj-VW-mVe"/>
                         <outlet property="smallLetterboxView1" destination="Udg-mi-has" id="jsZ-ep-VxE"/>
                         <outlet property="smallLetterboxView2" destination="c1j-HG-eIf" id="cae-Xk-QH2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ldR-9K-uXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="Z7p-HD-xJW" customClass="SRGLetterboxController"/>
+                <customObject id="QUZ-dT-8iK" customClass="SRGLetterboxController"/>
+                <customObject id="xlQ-lD-cZi" customClass="SRGLetterboxController"/>
             </objects>
             <point key="canvasLocation" x="48.799999999999997" y="-344.07796101949026"/>
         </scene>

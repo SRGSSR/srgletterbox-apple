@@ -38,6 +38,41 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
+ *  Delegate protocol for picture in picture implementation
+ */
+@protocol SRGLetterboxPictureInPictureDelegate <NSObject>
+
+/**
+ *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
+ *  if the player view from which picture in picture was initiated is not visible anymore)
+ */
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture;
+
+/**
+ *  Called when a restoration process takes place
+ *
+ *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
+ *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
+ *                               undefined behavior. The completion block must be called with `restored` set to `YES`
+ *                               iff the restoration was successful
+ */
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
+
+@optional
+
+/**
+ *  Called when picture in picture has been started
+ */
+- (void)letterboxDidStartPictureInPicture;
+
+/**
+ *  Called when picture in picture stopped
+ */
+- (void)letterboxDidStopPictureInPicture;
+
+@end
+
+/**
  *  Letterbox media player controller, managing playback, as well as automatic metadata retrieval. Applications
  *  can use the metadata available from this controller to display additional playback information (e.g. title
  *  or description of the content). The controller can be used in isolation for playback without display, but
@@ -48,14 +83,32 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 /**
  *  Play the specified Uniform Resource Name
  *
- *  @discussion Does nothing if the urn is the one currently being played
+ *  @discussion Does nothing if the urn is the one currently being played. The best available quality is automatically
+ *              played
+ */
+- (void)playURN:(SRGMediaURN *)URN;
+
+/**
+ *  Play the specified media
+ *
+ *  @discussion Does nothing if the urn is the one currently being played. The best available quality is automatically
+ *              played
+ */
+- (void)playMedia:(SRGMedia *)media;
+
+/**
+ *  Play the specified Uniform Resource Name
+ *
+ *  @discussion Does nothing if the urn is the one currently being played. If the preferred quality is set to
+ *              `SRGQualityNone`, the best available quality will be automatically played
  */
 - (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality;
 
 /**
  *  Play the specified media
  *
- *  @discussion Does nothing if the media is the one currently being played
+ *  @discussion Does nothing if the urn is the one currently being played. If the preferred quality is set to
+ *              `SRGQualityNone`, the best available quality will be automatically played
  */
 - (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality;
 
@@ -91,6 +144,28 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Error if any has been encountered
  */
 @property (nonatomic, readonly) NSError *error;
+
+@end
+
+@interface SRGLetterboxController (BackgroundPlayback)
+
+// TODO: Check background modes there only!
++ (void)enableBackgroundServicesWithController:(SRGLetterboxController *)controller
+                      pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
++ (void)disableBackgroundServices;
+
+@property (class, nonatomic, readonly, nullable) SRGLetterboxController *backgroundPlaybackController;
+
+@property (class, nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
+
+@end
+
+@interface SRGLetterboxController (PictureInPicture)
+
+/**
+ *  Return YES iff picture in picture is active for the receiver
+ */
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
 
 @end
 

@@ -9,6 +9,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGDataProvider+SRGLetterbox.h"
 #import "SRGLetterboxError.h"
+#import "SRGLetterboxService.h"
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
@@ -53,6 +54,56 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 @implementation SRGLetterboxController
 
+#pragma mark Class methods
+
++ (void)enableBackgroundServicesWithController:(SRGLetterboxController *)controller pictureInPictureDelegate:(id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
+{
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        // Ignore in test bundles or when compiling for Interface Builder rendering (since cannot be set for them)
+        NSString *bundlePath = [NSBundle mainBundle].bundlePath;
+        if (! [bundlePath.pathExtension isEqualToString:@"xctest"] && ! [bundlePath hasSuffix:@"Xcode/Agents"] && ! [bundlePath hasSuffix:@"Xcode/Overlays"]) {
+            NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
+            if (! [backgroundModes containsObject:@"audio"]) {
+                @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                               reason:@"You must enable the 'Audio, Airplay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
+                                             userInfo:nil];
+            }
+        }
+    });
+    
+    // Required for Airplay, picture in picture and control center integration
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
+    [SRGLetterboxService sharedService].controller = controller;
+    [SRGLetterboxService sharedService].pictureInPictureDelegate = pictureInPictureDelegate;
+}
+
++ (void)disableBackgroundServices
+{
+    [SRGLetterboxService sharedService].controller = nil;
+    [SRGLetterboxService sharedService].pictureInPictureDelegate = nil;
+    
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+}
+
++ (SRGLetterboxController *)backgroundPlaybackController
+{
+    return [SRGLetterboxService sharedService].controller;
+}
+
++ (void)setMirroredOnExternalScreen:(BOOL)mirroredOnExternalScreen
+{
+    [SRGLetterboxService sharedService].mirroredOnExternalScreen = YES;
+}
+
++ (BOOL)isMirroredOnExternalScreen
+{
+    return [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+}
+
 #pragma mark Object lifecycle
 
 - (instancetype)init
@@ -80,6 +131,13 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark Getters and setters
+
+- (BOOL)isPictureInPictureActive
+{
+    return self == [SRGLetterboxService sharedService].controller && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
 
 #pragma mark Data
@@ -128,6 +186,16 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 }
 
 #pragma mark Playback
+
+- (void)playURN:(SRGMediaURN *)URN
+{
+    [self playURN:URN withPreferredQuality:SRGQualityNone];
+}
+
+- (void)playMedia:(SRGMedia *)media
+{
+    [self playMedia:media withPreferredQuality:SRGQualityNone];
+}
 
 - (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality
 {

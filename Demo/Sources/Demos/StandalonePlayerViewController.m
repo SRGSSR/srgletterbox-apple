@@ -12,8 +12,8 @@
 
 @property (nonatomic) SRGMediaURN *URN;
 
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
-@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;
 
 @end
 
@@ -42,11 +42,7 @@
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.URN) {
-            [self.letterboxController playURN:self.URN withPreferredQuality:SRGQualityNone];
-        }
-        else {
-            self.letterboxController = [SRGLetterboxService sharedService].controller;
-            self.letterboxView.controller = self.letterboxController;
+            [self.letterboxController playURN:self.URN];
         }
     }
 }
@@ -56,8 +52,7 @@
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        // FIXME: Won't work, should ask the controller itself
-        if (! [SRGLetterboxService sharedService].pictureInPictureActive) {
+        if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
         }
     }
@@ -67,12 +62,12 @@
 
 - (IBAction)useForService:(id)sender
 {
-    [SRGLetterboxService sharedService].controller = self.letterboxController;
+    [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController pictureInPictureDelegate:nil];
 }
 
 - (IBAction)resetService:(id)sender
 {
-    [SRGLetterboxService sharedService].controller = [[SRGLetterboxController alloc] init];
+    [SRGLetterboxController disableBackgroundServices];
 }
 
 @end

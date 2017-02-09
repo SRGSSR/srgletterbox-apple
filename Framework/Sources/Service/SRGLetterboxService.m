@@ -15,24 +15,6 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
-__attribute__((constructor)) static void SRGLetterboxServiceInit(void)
-{
-    // Ignore in test bundles or when compiling for Interface Builder rendering (since cannot be set for them)
-    NSString *bundlePath = [NSBundle mainBundle].bundlePath;
-    if (! [bundlePath.pathExtension isEqualToString:@"xctest"] && ! [bundlePath hasSuffix:@"Xcode/Agents"] && ! [bundlePath hasSuffix:@"Xcode/Overlays"]) {
-        NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
-        if (! [backgroundModes containsObject:@"audio"]) {
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                           reason:@"You must enable the 'Audio, Airplay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
-                                         userInfo:nil];
-        }
-    }
-    
-    // Setup for Airplay, picture in picture and control center integration
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-}
-
 @interface SRGLetterboxService ()
 
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -175,21 +157,6 @@ __attribute__((constructor)) static void SRGLetterboxServiceInit(void)
     
     _mirroredOnExternalScreen = mirroredOnExternalScreen;
     [self.controller.mediaPlayerController reloadPlayerConfiguration];
-}
-
-- (BOOL)isPictureInPicturePossible
-{
-    if (self.pictureInPictureDelegate) {
-        return self.controller.mediaPlayerController.pictureInPictureController.pictureInPicturePossible;
-    }
-    else {
-        return NO;
-    }
-}
-
-- (BOOL)isPictureInPictureActive
-{
-    return self.controller.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
 
 #pragma mark Control center and lock screen integration

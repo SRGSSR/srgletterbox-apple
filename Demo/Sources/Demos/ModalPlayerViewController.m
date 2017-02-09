@@ -16,6 +16,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic) SRGMediaURN *URN;
 @property (nonatomic) SRGMedia *media;
 
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
@@ -54,7 +55,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
-    self.letterboxView.controller = [SRGLetterboxService sharedService].controller;
+    // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
 
@@ -64,10 +65,10 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (self.media) {
-            [[SRGLetterboxService sharedService].controller playMedia:self.media withPreferredQuality:SRGQualityNone];
+            [self.letterboxController playMedia:self.media];
         }
         else if (self.URN) {
-            [[SRGLetterboxService sharedService].controller playURN:self.URN withPreferredQuality:SRGQualityNone];
+            [self.letterboxController playURN:self.URN];
         }
     }
 }
@@ -77,8 +78,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        if (! [SRGLetterboxService sharedService].pictureInPictureActive) {
-            [[SRGLetterboxService sharedService].controller reset];
+        if (! self.letterboxController.pictureInPictureActive) {
+            [self.letterboxController reset];
         }
     }
 }
