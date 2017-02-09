@@ -42,9 +42,7 @@
     [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (self.URN) {
-            [self.letterboxController playURN:self.URN];
-        }
+        [self.letterboxController playURN:self.URN];
     }
 }
 
