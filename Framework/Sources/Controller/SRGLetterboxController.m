@@ -60,15 +60,11 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 {
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
-        // Ignore in test bundles or when compiling for Interface Builder rendering (since cannot be set for them)
-        NSString *bundlePath = [NSBundle mainBundle].bundlePath;
-        if (! [bundlePath.pathExtension isEqualToString:@"xctest"] && ! [bundlePath hasSuffix:@"Xcode/Agents"] && ! [bundlePath hasSuffix:@"Xcode/Overlays"]) {
-            NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
-            if (! [backgroundModes containsObject:@"audio"]) {
-                @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                               reason:@"You must enable the 'Audio, Airplay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
-                                             userInfo:nil];
-            }
+        NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
+        if (! [backgroundModes containsObject:@"audio"]) {
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                           reason:@"You must enable the 'Audio, Airplay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
+                                         userInfo:nil];
         }
     });
     
