@@ -102,7 +102,7 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 - (BOOL)areBackgroundServicesEnabled
 {
-    return self == [SRGLetterboxService controller];
+    return self == [SRGLetterboxService sharedService].controller;
 }
 
 - (BOOL)isPictureInPictureEnabled

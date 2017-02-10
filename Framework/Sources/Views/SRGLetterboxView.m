@@ -261,7 +261,7 @@ static void commonInit(SRGLetterboxView *self);
         }];
 
         // Automatically resumes in the view when displayed and if picture in picture was active
-        if ([SRGLetterboxService controller] == self.controller) {
+        if ([SRGLetterboxService sharedService].controller == self.controller) {
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
     }

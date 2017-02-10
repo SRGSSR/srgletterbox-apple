@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 
 /**
+ *  The singleton instance
+ */
++ (SRGLetterboxService *)sharedService;
+
+/**
  *  Enable background services for the specified controller. Airplay is always enabled, but picture in picture will only
  *  be enabled if a corresponding delegate is provided. The delegate is retained. Usually this should be the view controller
  *  associated with picture in picture, so that you can restore it later in the exact same state as before picture in
@@ -31,18 +36,25 @@ NS_ASSUME_NONNULL_BEGIN
  *              this method will throw an exception. Note that enabling picture in picture does not guarantee that the
  *              functionality will be available on the device the application is run on
  */
-+ (void)startWithController:(SRGLetterboxController *)controller
+- (void)startWithController:(SRGLetterboxController *)controller
    pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
 
 /**
  *  Disable background services
  */
-+ (void)stop;
+- (void)stop;
 
 /**
  *  The controller responsible for main playback
  */
-@property (class, nonatomic, nullable) SRGLetterboxController *controller;
+@property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
+
+/**
+ *  Picture in picture delegate. Picture in picture won't be available if not set
+ *
+ *  @discussion The delegate is retained
+ */
+@property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
  *  If set to `YES`, the Letterbox player never switches to full-screen playback on this external screen. This is especially
