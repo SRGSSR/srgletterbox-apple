@@ -14,7 +14,7 @@ static BOOL s_disablingAudioServices = NO;
 
 #pragma mark Class methods
 
-+ (void)enableWithController:(SRGLetterboxController *)controller pictureInPictureDelegate:(id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
++ (void)startWithController:(SRGLetterboxController *)controller pictureInPictureDelegate:(id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
 {
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
@@ -36,7 +36,7 @@ static BOOL s_disablingAudioServices = NO;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
 }
 
-+ (void)disable
++ (void)stop
 {
     [SRGLetterboxService sharedService].controller = nil;
     [SRGLetterboxService sharedService].pictureInPictureDelegate = nil;

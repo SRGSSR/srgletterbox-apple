@@ -42,8 +42,7 @@
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         [self.letterboxController playURN:self.URN];
-        [SRGLetterboxBackgroundServices enableWithController:self.letterboxController
-                                    pictureInPictureDelegate:nil];
+        [SRGLetterboxBackgroundServices startWithController:self.letterboxController pictureInPictureDelegate:nil];
     }
 }
 
@@ -54,7 +53,7 @@
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
-            [SRGLetterboxBackgroundServices disable];
+            [SRGLetterboxBackgroundServices stop];
         }
     }
 }

@@ -18,6 +18,7 @@
 @interface SRGLetterboxService () {
 @private
     BOOL _restoreUserInterface;
+    BOOL _playbackStopped;
 }
 
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -60,6 +61,7 @@
         [self setupRemoteCommandCenter];
         
         _restoreUserInterface = YES;
+        _playbackStopped = YES;
     }
     return self;
 }
@@ -314,8 +316,13 @@
 
 - (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
+    // If the restoration method gets called, this means playback was not stopped from the picture in picture stop button
+    _playbackStopped = NO;
+    
     if (! _restoreUserInterface) {
+        // Reset to default value
         _restoreUserInterface = YES;
+        
         completionHandler(YES);
         return;
     }
@@ -341,9 +348,18 @@
 
 - (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
-    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStopPictureInPicture)]) {
-        [self.pictureInPictureDelegate letterboxDidStopPictureInPicture];
+    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidEndPictureInPicture)]) {
+        [self.pictureInPictureDelegate letterboxDidEndPictureInPicture];
     }
+    
+    if (_playbackStopped) {
+        if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStopPlaybackFromPictureInPicture)]) {
+            [self.pictureInPictureDelegate letterboxDidStopPlaybackFromPictureInPicture];
+        }
+    }
+    
+    // Reset to default value
+    _playbackStopped = YES;
 }
 
 #pragma mark Notifications

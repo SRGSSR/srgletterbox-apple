@@ -78,8 +78,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         [self.letterboxController playURN:self.URN];
-        [SRGLetterboxBackgroundServices enableWithController:self.letterboxController
-                                    pictureInPictureDelegate:self];
+        [SRGLetterboxBackgroundServices startWithController:self.letterboxController pictureInPictureDelegate:self];
     }
 }
 
@@ -90,7 +89,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
-            [SRGLetterboxBackgroundServices disable];
+            [SRGLetterboxBackgroundServices stop];
         }
     }
 }
@@ -135,9 +134,15 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
 }
 
-- (void)letterboxDidStopPictureInPicture
+- (void)letterboxDidEndPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_stop"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_end"];
+}
+
+- (void)letterboxDidStopPlaybackFromPictureInPicture
+{
+    [self.letterboxController reset];
+    [SRGLetterboxBackgroundServices stop];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol

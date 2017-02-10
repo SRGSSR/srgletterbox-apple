@@ -80,7 +80,12 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 /**
  *  Called when picture in picture stopped
  */
-- (void)letterboxDidStopPictureInPicture;
+- (void)letterboxDidEndPictureInPicture;
+
+/**
+ *  Called if playback was ended from picture in picture
+ */
+- (void)letterboxDidStopPlaybackFromPictureInPicture;
 
 @end
 

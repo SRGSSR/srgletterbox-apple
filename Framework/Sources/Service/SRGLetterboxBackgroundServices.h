@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
  *              this method will throw an exception. Note that enabling picture in picture does not guarantee that the
  *              functionality will be available on the device the application is run on
  */
-+ (void)enableWithController:(SRGLetterboxController *)controller
-    pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
++ (void)startWithController:(SRGLetterboxController *)controller
+   pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
 
 /**
  *  Disable background services
  */
-+ (void)disable;
++ (void)stop;
 
 /**
  *  The controller currently enabled for background services, if any
