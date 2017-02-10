@@ -23,6 +23,9 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 
 /**
  *  The media player controller managing playback
+ *
+ *  @discussion Do not alter properties of this player controller, this could lead to undefined behavior. Only use
+ *              in a readonly way
  */
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
