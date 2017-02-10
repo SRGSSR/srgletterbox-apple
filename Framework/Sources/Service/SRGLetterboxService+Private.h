@@ -8,6 +8,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+OBJC_EXTERN NSString * const SRGLetterboxServiceSettingsDidChangeNotification;
+
 @interface SRGLetterboxService (Private)
 
 /**

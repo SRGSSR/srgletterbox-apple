@@ -15,6 +15,8 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
+NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterboxServiceSettingsDidChangeNotification";
+
 static BOOL s_disablingAudioServices = NO;
 
 @interface SRGLetterboxService () {
@@ -49,6 +51,11 @@ static BOOL s_disablingAudioServices = NO;
 
 + (void)startWithController:(SRGLetterboxController *)controller pictureInPictureDelegate:(id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
 {
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    if (service.controller == controller && service.pictureInPictureDelegate == pictureInPictureDelegate) {
+        return;
+    }
+    
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
         NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
@@ -59,20 +66,27 @@ static BOOL s_disablingAudioServices = NO;
         }
     });
     
-    [SRGLetterboxService sharedService].controller = controller;
-    [SRGLetterboxService sharedService].pictureInPictureDelegate = pictureInPictureDelegate;
+    service.controller = controller;
+    service.pictureInPictureDelegate = pictureInPictureDelegate;
     
     s_disablingAudioServices = NO;
     
     // Required for Airplay, picture in picture and control center to work correctly
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:service];
 }
 
 + (void)stop
 {
-    [SRGLetterboxService sharedService].controller = nil;
-    [SRGLetterboxService sharedService].pictureInPictureDelegate = nil;
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    if (! service.controller && ! service.pictureInPictureDelegate) {
+        return;
+    }
+    
+    service.controller = nil;
+    service.pictureInPictureDelegate = nil;
     
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     
@@ -88,6 +102,8 @@ static BOOL s_disablingAudioServices = NO;
         
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
     });
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:service];
 }
 
 + (SRGLetterboxController *)controller
@@ -146,9 +162,7 @@ static BOOL s_disablingAudioServices = NO;
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
-    [self willChangeValueForKey:@keypath(self.controller)];
     _controller = controller;
-    [self didChangeValueForKey:@keypath(self.controller)];
     
     [self updateRemoteCommandCenter];
     [self updateNowPlayingInformation];
@@ -433,26 +447,15 @@ static BOOL s_disablingAudioServices = NO;
     [self updateRemoteCommandCenter];
 }
 
-#pragma mark KVO
-
-+ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
-{
-    if ([key isEqualToString:@keypath(SRGLetterboxService.new, controller)]) {
-        return NO;
-    }
-    else {
-        return [super automaticallyNotifiesObserversForKey:key];
-    }
-}
-
 #pragma mark Description
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; controller: %@>",
+    return [NSString stringWithFormat:@"<%@: %p; controller: %@; pictureInPictureDelegate: %@>",
             [self class],
             self,
-            self.controller];
+            self.controller,
+            self.pictureInPictureDelegate];
 }
 
 @end

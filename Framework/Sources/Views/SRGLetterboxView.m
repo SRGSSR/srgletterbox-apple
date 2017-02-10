@@ -164,13 +164,10 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(screenDidDisconnect:)
                                                      name:UIScreenDidDisconnectNotification
                                                    object:nil];
-        
-        @weakify(self)
-        [[SRGLetterboxService sharedService] addObserver:self keyPath:@"controller" options:0 block:^(MAKVONotification *notification) {
-            @strongify(self)
-            
-            [self updateUserInterfaceForServicePlayback];
-        }];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(serviceSettingsDidChange:)
+                                                     name:SRGLetterboxServiceSettingsDidChangeNotification
+                                                   object:[SRGLetterboxService sharedService]];
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -187,6 +184,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIScreenDidDisconnectNotification
                                                       object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxServiceSettingsDidChangeNotification
+                                                      object:[SRGLetterboxService sharedService]];
         
         [[SRGLetterboxService sharedService] removeObserver:self keyPath:@"controller"];
     }
@@ -625,6 +625,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
     [self updateInterfaceAnimated:YES];
+}
+
+- (void)serviceSettingsDidChange:(NSNotification *)notification
+{
+    [self updateUserInterfaceForServicePlayback];
 }
 
 @end
