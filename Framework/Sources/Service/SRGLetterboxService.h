@@ -22,41 +22,27 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 
 /**
- *  The singleton instance
+ *  Enable background services for the specified controller. Airplay is always enabled, but picture in picture will only
+ *  be enabled if a corresponding delegate is provided. The delegate is retained. Usually this should be the view controller
+ *  associated with picture in picture, so that you can restore it later in the exact same state as before picture in
+ *  picture was entered
+ *
+ *  @discussion The 'Audio, Airplay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
+ *              this method will throw an exception. Note that enabling picture in picture does not guarantee that the
+ *              functionality will be available on the device the application is run on
  */
-+ (SRGLetterboxService *)sharedService;
++ (void)startWithController:(SRGLetterboxController *)controller
+   pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
+
+/**
+ *  Disable background services
+ */
++ (void)stop;
 
 /**
  *  The controller responsible for main playback
  */
-@property (nonatomic, nullable) SRGLetterboxController *controller;
-
-@end
-
-/**
- *  Picture in picture support. Implement `SRGLetterboxPictureInPictureDelegate` methods to integrate Letterbox picture in picture
- *  support within your application
- */
-@interface SRGLetterboxService (PictureInPicture)
-
-/**
- *  Picture in picture delegate. Picture in picture won't be available if not set
- * 
- *  @discussion The delegate is retained
- */
-@property (nonatomic, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
-
-/**
- *  Stop picture in picture. If `restoreUserInterface` is set to NO, the restoration delegate methods will not be called
- */
-- (void)stopPictureInPictureRestoreUserInterface:(BOOL)restoreUserInterface;
-
-@end
-
-/**
- *  Mirroring
- */
-@interface SRGLetterboxService (Airplay)
+@property (class, nonatomic, nullable) SRGLetterboxController *controller;
 
 /**
  *  If set to `YES`, the Letterbox player never switches to full-screen playback on this external screen. This is especially

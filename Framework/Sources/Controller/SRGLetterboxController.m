@@ -8,7 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGDataProvider+SRGLetterbox.h"
-#import "SRGLetterboxService.h"
+#import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 
 #import <FXReachability/FXReachability.h>
@@ -102,7 +102,7 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 - (BOOL)areBackgroundServicesEnabled
 {
-    return self == [SRGLetterboxService sharedService].controller;
+    return self == [SRGLetterboxService controller];
 }
 
 - (BOOL)isPictureInPictureEnabled

@@ -10,7 +10,7 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
-#import "SRGLetterboxService.h"
+#import "SRGLetterboxService+Private.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -166,7 +166,7 @@ static void commonInit(SRGLetterboxView *self);
                                                    object:nil];
         
         @weakify(self)
-        [[SRGLetterboxService sharedService] addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
+        [[SRGLetterboxService sharedService] addObserver:self keyPath:@"controller" options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
             
             [self updateUserInterfaceForServicePlayback];
@@ -188,7 +188,7 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:UIScreenDidDisconnectNotification
                                                       object:nil];
         
-        [[SRGLetterboxService sharedService] removeObserver:self keyPath:@keypath(SRGLetterboxService.new, controller)];
+        [[SRGLetterboxService sharedService] removeObserver:self keyPath:@"controller"];
     }
 }
 
@@ -261,7 +261,7 @@ static void commonInit(SRGLetterboxView *self);
         }];
 
         // Automatically resumes in the view when displayed and if picture in picture was active
-        if ([SRGLetterboxService sharedService].controller == self.controller) {
+        if ([SRGLetterboxService controller] == self.controller) {
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
     }
