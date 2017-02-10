@@ -64,8 +64,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
     else {
         self.letterboxController = [[SRGLetterboxController alloc] init];
-        [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController
-                                              pictureInPictureDelegate:self];
     }
     
     self.letterboxView.controller = self.letterboxController;
@@ -80,6 +78,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         [self.letterboxController playURN:self.URN];
+        [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController
+                                              pictureInPictureDelegate:self];
     }
 }
 
@@ -90,6 +90,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
+            [SRGLetterboxController disableBackgroundServices];
         }
     }
 }

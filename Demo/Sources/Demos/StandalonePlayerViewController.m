@@ -53,6 +53,7 @@
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
+            [SRGLetterboxController disableBackgroundServices];
         }
     }
 }
