@@ -58,7 +58,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidLoad];
     
     // If already playing the media from picture in picture, resume from it
-    SRGLetterboxController *backgroundServicesController = [SRGLetterboxController backgroundServicesController];
+    SRGLetterboxController *backgroundServicesController = [SRGLetterboxBackgroundServices controller];
     if (backgroundServicesController.pictureInPictureActive && [backgroundServicesController.URN isEqual:self.URN]) {
         self.letterboxController = backgroundServicesController;
     }
@@ -78,8 +78,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         [self.letterboxController playURN:self.URN];
-        [SRGLetterboxController enableBackgroundServicesWithController:self.letterboxController
-                                              pictureInPictureDelegate:self];
+        [SRGLetterboxBackgroundServices enableWithController:self.letterboxController
+                                    pictureInPictureDelegate:self];
     }
 }
 
@@ -90,7 +90,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
-            [SRGLetterboxController disableBackgroundServices];
+            [SRGLetterboxBackgroundServices disable];
         }
     }
 }
