@@ -38,58 +38,6 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
- *  Delegate protocol for picture in picture implementation
- */
-@protocol SRGLetterboxPictureInPictureDelegate <NSObject>
-
-/**
- *  Called when picture in picture is started, letting you dismiss the user interface which picture in picture was 
- *  started from
- *
- *  Return YES if you dismissed or began dismissing the user interface from this method (in which case restoration 
- *  methods will be called when picture in picture is exited). The `-letterboxShouldRestoreUserInterfaceForPictureInPicture` 
- *  still lets you control whether the restoration process actually should occur (e.g. if the user interface was dismissed 
- *  but still restored somehow afterwards without picture in picture being exited, most notably if playback moved to another
- *  screen you want to resume to)
- */
-- (BOOL)letterboxDismissUserInterfaceForPictureInPicture;
-
-/**
- *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
- *  if the player view from which picture in picture was initiated is not visible anymore)
- */
-- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture;
-
-/**
- *  Called when a restoration process takes place
- *
- *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
- *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
- *                               undefined behavior. The completion block must be called with `restored` set to `YES`
- *                               iff the restoration was successful
- */
-- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
-
-@optional
-
-/**
- *  Called when picture in picture has been started
- */
-- (void)letterboxDidStartPictureInPicture;
-
-/**
- *  Called when picture in picture stopped
- */
-- (void)letterboxDidEndPictureInPicture;
-
-/**
- *  Called if playback was ended from picture in picture
- */
-- (void)letterboxDidStopPlaybackFromPictureInPicture;
-
-@end
-
-/**
  *  Letterbox media player controller, managing playback, as well as automatic metadata retrieval. Applications
  *  can use the metadata available from this controller to display additional playback information (e.g. title
  *  or description of the content). The controller can be used in isolation for playback without display, but

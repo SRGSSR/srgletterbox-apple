@@ -46,26 +46,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     return s_sharedService;
 }
 
-+ (SRGLetterboxController *)controller
-{
-    return [SRGLetterboxService sharedService].controller;
-}
-
-+ (void)setMirroredOnExternalScreen:(BOOL)mirroredOnExternalScreen
-{
-    [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
-}
-
-+ (BOOL)isMirroredOnExternalScreen
-{
-    return [SRGLetterboxService sharedService].mirroredOnExternalScreen;
-}
-
-+ (id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
-{
-    return [SRGLetterboxService sharedService].pictureInPictureDelegate;
-}
-
 #pragma mark Object lifecycle
 
 - (instancetype)init
@@ -187,9 +167,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [self.controller.mediaPlayerController reloadPlayerConfiguration];
 }
 
-#pragma mark Starting and stopping the service
+#pragma mark Enabling and disabling the service
 
-- (void)startWithController:(SRGLetterboxController *)controller pictureInPictureDelegate:(id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
+- (void)enableWithController:(SRGLetterboxController *)controller pictureInPictureDelegate:(id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate
 {
     if (self.controller == controller && self.pictureInPictureDelegate == pictureInPictureDelegate) {
         return;
@@ -217,7 +197,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
-- (void)stop
+- (void)disable
 {
     if (! self.controller && ! self.pictureInPictureDelegate) {
         return;

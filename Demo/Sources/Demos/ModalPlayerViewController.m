@@ -78,7 +78,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         [self.letterboxController playURN:self.URN];
-        [[SRGLetterboxService sharedService] startWithController:self.letterboxController pictureInPictureDelegate:self];
+        [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     }
 }
 
@@ -89,7 +89,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
-            [[SRGLetterboxService sharedService] stop];
+            [[SRGLetterboxService sharedService] disable];
         }
     }
 }
@@ -142,7 +142,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
     [self.letterboxController reset];
-    [[SRGLetterboxService sharedService] stop];
+    [[SRGLetterboxService sharedService] disable];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
