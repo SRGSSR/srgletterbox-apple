@@ -14,6 +14,7 @@
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
+@property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
 
 @end
 
@@ -36,6 +37,13 @@
 }
 
 #pragma mark View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -68,6 +76,11 @@
 - (IBAction)resetService:(id)sender
 {
     [[SRGLetterboxService sharedService] disable];
+}
+
+- (IBAction)toggleMirrored:(id)sender
+{
+    [SRGLetterboxService sharedService].mirroredOnExternalScreen = ! [SRGLetterboxService sharedService].mirroredOnExternalScreen;
 }
 
 @end
