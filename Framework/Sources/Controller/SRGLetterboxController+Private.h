@@ -60,6 +60,18 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
  */
 - (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
+/**
+ *  Optional block which gets called right after player creation, when the player changes, or when the configuration is
+ *  reloaded by calling `-reloadPlayerConfiguration`. Does not get called when the player is set to `nil`
+ */
+@property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
+
+/**
+ *  Ask the player to reload its configuration by calling the associated configuration block, if any. Does nothing if
+ *  the player has not been created yet
+ */
+- (void)reloadPlayerConfiguration;
+
 @end
 
 NS_ASSUME_NONNULL_END

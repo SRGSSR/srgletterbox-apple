@@ -76,13 +76,13 @@
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        previousMediaPlayerController.pictureInPictureController.delegate = nil;
-        
-        previousMediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
+        _controller.playerConfigurationBlock = ^(AVPlayer *player) {
             player.allowsExternalPlayback = NO;
         };
-        [previousMediaPlayerController reloadPlayerConfiguration];
+        [_controller reloadPlayerConfiguration];
+        
+        SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
+        previousMediaPlayerController.pictureInPictureController.delegate = nil;
         
         [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
         
@@ -102,9 +102,7 @@
     [self updateNowPlayingPlaybackInformation];
     
     if (controller) {
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        
-        mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
+        controller.playerConfigurationBlock = ^(AVPlayer *player) {
             player.allowsExternalPlayback = YES;
             player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
             
@@ -114,7 +112,9 @@
                 [[AVAudioSession sharedInstance] setMode:mode error:NULL];
             }
         };
-        [mediaPlayerController reloadPlayerConfiguration];
+        [controller reloadPlayerConfiguration];
+        
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
         @weakify(self)
         @weakify(mediaPlayerController)

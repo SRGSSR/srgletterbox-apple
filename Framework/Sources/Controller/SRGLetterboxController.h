@@ -129,6 +129,11 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  */
 - (void)reset;
 
+/**
+ *  Set to YES to mute the player. Default is NO
+ */
+@property (nonatomic, getter=isMuted) BOOL muted;
+
 @end
 
 /**

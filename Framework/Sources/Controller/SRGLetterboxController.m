@@ -52,6 +52,8 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 // to a desired location
 @property (nonatomic) CMTime seekTargetTime;
 
+@property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
+
 @end
 
 @implementation SRGLetterboxController
@@ -122,6 +124,13 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 {
     if (self = [super init]) {
         self.mediaPlayerController = [[SRGMediaPlayerController alloc] init];
+        
+        @weakify(self)
+        self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
+            @strongify(self)
+            self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
+            player.muted = self.muted;
+        };
         self.seekTargetTime = kCMTimeInvalid;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -146,6 +155,12 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 }
 
 #pragma mark Getters and setters
+
+- (void)setMuted:(BOOL)muted
+{
+    _muted = muted;
+    [self.mediaPlayerController reloadPlayerConfiguration];
+}
 
 - (BOOL)areBackgroundServicesEnabled
 {
@@ -416,6 +431,11 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
         }
         completionHandler ? completionHandler(finished) : nil;
     }];
+}
+
+- (void)reloadPlayerConfiguration
+{
+    [self.mediaPlayerController reloadPlayerConfiguration];
 }
 
 #pragma mark Notifications
