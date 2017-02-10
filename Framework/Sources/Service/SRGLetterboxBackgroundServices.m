@@ -64,7 +64,7 @@ static BOOL s_disablingAudioServices = NO;
 
 + (void)setMirroredOnExternalScreen:(BOOL)mirroredOnExternalScreen
 {
-    [SRGLetterboxService sharedService].mirroredOnExternalScreen = YES;
+    [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
 + (BOOL)isMirroredOnExternalScreen
