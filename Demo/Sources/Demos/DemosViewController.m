@@ -41,7 +41,7 @@
         }
             
         case 1: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
@@ -55,34 +55,27 @@
         }
             
         case 3: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
-            ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-            [self presentViewController:playerViewController animated:YES completion:nil];
-            break;
-        }
-            
-        case 4: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
-        case 5: {
+        case 4: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
-        case 6: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+        case 5: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
-        case 7: {
+        case 6: {
             MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] init];
             [self.navigationController pushViewController:playerViewController animated:YES];
         }
