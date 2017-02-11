@@ -9,19 +9,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Data provider error constants. More information is available from the `userInfo` associated with these errors
+ *  Letterbox error constants. More information is available from the `userInfo` associated with these errors.
  */
 typedef NS_ENUM(NSInteger, SRGLetterboxErrorCode) {
     /**
-     *  The data was not found
+     *  The data or object was not found.
      */
     SRGLetterboxErrorCodeNotFound,
     /**
-     *  A network error has been encountered (available as underlying error)
+     *  A network error has been encountered (available as underlying error).
      */
     SRGLetterboxErrorCodeNetwork,
     /**
-     *  The media cannot be played for some reason (available as underlying error)
+     *  The media cannot be played for some reason (available as underlying error).
      */
     SRGLetterboxErrorCodeNotPlayable
 };
