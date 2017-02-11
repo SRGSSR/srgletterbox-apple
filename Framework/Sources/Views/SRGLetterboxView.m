@@ -228,6 +228,7 @@ static void commonInit(SRGLetterboxView *self);
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
+    [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -265,6 +266,8 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
     }
+    
+    [self reloadData];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -429,10 +432,7 @@ static void commonInit(SRGLetterboxView *self);
             [self setUserInterfaceHidden:NO animated:YES];
         }
         
-        self.loadingImageView.alpha = (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+        [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
     };
     
     if (animated) {
@@ -463,6 +463,14 @@ static void commonInit(SRGLetterboxView *self);
 {
     self.airplayButton.alwaysHidden = ! self.controller.backgroundServicesEnabled;
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
+}
+
+- (void)updateLoadingIndicatorForMediaPlayerController:(SRGMediaPlayerController *)mediaPlayerController
+{
+    self.loadingImageView.alpha = (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                   || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
+                                   || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
+                                   || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
 }
 
 - (void)resetInactivityTimer
