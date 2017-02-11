@@ -7,7 +7,6 @@
 #import "SRGLetterboxController.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGDataProvider+SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 
@@ -34,6 +33,20 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
+static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
+{
+    static NSDictionary *s_businessUnitIdentifiers;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_businessUnitIdentifiers = @{ @(SRGVendorRSI) : SRGDataProviderBusinessUnitIdentifierRSI,
+                                       @(SRGVendorRTR) : SRGDataProviderBusinessUnitIdentifierRTR,
+                                       @(SRGVendorRTS) : SRGDataProviderBusinessUnitIdentifierRTS,
+                                       @(SRGVendorSRF) : SRGDataProviderBusinessUnitIdentifierSRF,
+                                       @(SRGVendorSWI) : SRGDataProviderBusinessUnitIdentifierSWI };
+    });
+    return s_businessUnitIdentifiers[@(vendor)];
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -55,6 +68,8 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 @end
 
 @implementation SRGLetterboxController
+
+@synthesize serviceURL = _serviceURL;
 
 #pragma mark Object lifecycle
 
@@ -113,6 +128,16 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 - (BOOL)isPictureInPictureActive
 {
     return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
+}
+
+- (NSURL *)serviceURL
+{
+    return _serviceURL ?: SRGIntegrationLayerProductionServiceURL();
+}
+
+- (void)setServiceURL:(NSURL *)serviceURL
+{
+    _serviceURL = serviceURL;
 }
 
 #pragma mark Data
@@ -235,7 +260,7 @@ NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
         }
     };
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:[SRGDataProvider serviceURL]
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
     
     if (URN.mediaType == SRGMediaTypeVideo) {

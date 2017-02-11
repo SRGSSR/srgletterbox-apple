@@ -55,6 +55,12 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @interface SRGLetterboxController : NSObject
 
 /**
+ *  The URL of the service data must be returned from. By default or if reset to `nil`, the production server is
+ *  used. Official URL values can be bound in `SRGDataProvider.h`.
+ */
+@property (nonatomic, null_resettable) NSURL *serviceURL;
+
+/**
  *  Play the specified URN (Uniform Resource Name).
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
