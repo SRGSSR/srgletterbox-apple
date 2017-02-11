@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
- *  in picture is namely the responsibility of the application, which is formalized by the following protocol.
+ *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
 @protocol SRGLetterboxPictureInPictureDelegate <NSObject>
 
@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  Return `YES` if you dismissed or began dismissing the user interface from this method. When returning `YES`,
  *  restoration delegate methods will be called if needed when picture in picture ends (see below). In this case,
- *  the `-letterboxShouldRestoreUserInterfaceForPictureInPicture` method still lets you actually decide, at the moment
- *  restoration takes place, whether restoration must happen or not.
+ *  the `-letterboxShouldRestoreUserInterfaceForPictureInPicture` method still lets you decide, at the moment
+ *  restoration takes place, whether restoration must actually happen or not.
  *
  *  If your return `NO`, no restoration will take place when picture in picture is exited.
  */

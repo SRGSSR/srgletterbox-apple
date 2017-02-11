@@ -38,12 +38,19 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
- *  Letterbox media player controller, managing playback, as well as automatic metadata retrieval. Applications
- *  can use the metadata available from this controller to display additional playback information (e.g. title
- *  or description of the content). The controller can be used in isolation for playback without display, but
- *  is usually best used bound to a Letterbox view. A Letterbox controlller is not enabled for common
- *  application-wide features by default (e.g. Airplay or picture in picture). To enable such features, @see
- *  `SRGLetterboxService`.
+ *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
+ *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
+ *  becomes available.
+ *
+ *  Applications can use a Letterbox controller to play some content in the background. If they need to display what
+ *  is being played, a Letterbox controller needs to be bound to a Letterbox view (@see `SRGLetterboxView`). By integrating
+ *  this view into their own hierarchy, and by listening to metadata and error controller notitications, applications can 
+ *  provide rich playback interfaces with contextual information about the content currently being played.
+ *
+ *  Letterbox controllers can also be integrated with application-wide features like Airplay or picture in picture.
+ *  Such features can only be enabled for at most one controller at a time by starting the Letterbox service singleton
+ *  for this controller (@see `SRGLetterboxService`). Your application is free to use as many controllers as needed, 
+ *  though, and you can change at any time which controller is enabled for such services.
  */
 @interface SRGLetterboxController : NSObject
 
@@ -85,7 +92,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 - (void)reset;
 
 /**
- *  Set to YES to mute the player. Default is NO.
+ *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;
 
@@ -98,7 +105,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @interface SRGLetterboxController (PlaybackInformation)
 
 /**
- *  Unified Resource Name being played.
+ *  Unified Resource Name of the media being played.
  */
 @property (nonatomic, readonly, nullable) SRGMediaURN *URN;
 
@@ -108,7 +115,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @property (nonatomic, readonly, nullable) SRGMedia *media;
 
 /**
- *  Media composition.
+ *  Media composition (playback context).
  */
 @property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
 
@@ -119,7 +126,10 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 @end
 
-@interface SRGLetterboxController (BackgroundServices)
+/**
+ *  Services information. Use `SRGLetterboxService` to start application-wide services for a Letterbox controller.
+ */
+@interface SRGLetterboxController (Services)
 
 /**
  *  Return `YES` iff the receiver is enabled for background services.
@@ -132,7 +142,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled;
 
 /**
- *  Return `YES` iff picture in picture is active for the receiver.
+ *  Return `YES` iff picture in picture is currently active for the receiver.
  */
 @property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
 

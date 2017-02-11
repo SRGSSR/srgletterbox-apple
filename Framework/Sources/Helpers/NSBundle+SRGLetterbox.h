@@ -9,14 +9,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Convenience macro for localized strings associated with the framework
+ *  Convenience macro for localized strings associated with the framework.
  */
 #define SRGLetterboxLocalizedString(key, comment) [[NSBundle srg_letterboxBundle] localizedStringForKey:(key) value:@"" table:nil]
 
 @interface NSBundle (SRGLetterbox)
 
 /**
- *  The SRGLetterbox resource bundle
+ *  The SRGLetterbox resource bundle.
  */
 + (NSBundle *)srg_letterboxBundle;
 
