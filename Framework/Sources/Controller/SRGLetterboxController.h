@@ -128,7 +128,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 /**
  *  Error (if any has been encountered).
  */
-@property (nonatomic, readonly) NSError *error;
+@property (nonatomic, readonly, nullable) NSError *error;
 
 @end
 
