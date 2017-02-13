@@ -225,6 +225,8 @@ static void commonInit(SRGLetterboxView *self);
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
+    
+    [self updateInterfaceAnimated:NO];
     [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
     
     if (controller) {
