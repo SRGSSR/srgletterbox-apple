@@ -107,12 +107,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
             player.allowsExternalPlayback = YES;
             player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
-            
-            // Only update the audio session if needed to avoid audio hiccups
-            NSString *mode = (controller.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
-            if (! [[AVAudioSession sharedInstance].mode isEqualToString:mode]) {
-                [[AVAudioSession sharedInstance] setMode:mode error:NULL];
-            }
         };
         [controller reloadPlayerConfiguration];
         

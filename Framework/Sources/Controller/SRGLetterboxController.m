@@ -85,6 +85,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             @strongify(self)
             self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
             player.muted = self.muted;
+            
+            // Only update the audio session if needed to avoid audio hiccups
+            NSString *mode = (self.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
+            if (! [[AVAudioSession sharedInstance].mode isEqualToString:mode]) {
+                [[AVAudioSession sharedInstance] setMode:mode error:NULL];
+            }
         };
         self.seekTargetTime = kCMTimeInvalid;
         
