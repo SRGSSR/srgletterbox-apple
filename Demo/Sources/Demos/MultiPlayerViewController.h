@@ -8,12 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIDevice (SRGLetterbox)
-
-/**
- *  Return YES when the device is locked.
- */
-+ (BOOL)srg_isLocked;
+@interface MultiPlayerViewController : UIViewController
 
 @end
 

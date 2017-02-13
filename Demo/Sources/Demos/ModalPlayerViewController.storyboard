@@ -73,7 +73,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
                                 <rect key="frame" x="106" y="304" width="163.5" height="30"/>
-                                <state key="normal" title="Full Screen"/>
+                                <state key="normal" title="Full screen"/>
                                 <connections>
                                     <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
                                 </connections>

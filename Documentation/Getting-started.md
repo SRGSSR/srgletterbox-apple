@@ -1,51 +1,59 @@
-_Sinec major changes are expected, only basic integration guidelines are provided. Those should be enough to get you started, though_
 
 Getting started
 ===============
 
-The SRG Letterbox library is mostly made of two components:
+The SRG Letterbox library is made of three components:
 
-* A low-level service to play medias
-* A player view reflecting what the service is currently playing and to control its playback
+* `SRGLetterboxController`: A controller to play medias.
+* `SRGLetterboxView`: A player view reflecting what the service is currently playing and to control its playback.
+* `SRGLetterboxService`: A service to enable application-wide features like Airplay and picture in picture.
 
-The following describes how both are used to easily add media playback capabilities to your application.
+The following guide describes how these components can be easily combined to add advanced media playback capabilities to your application.
 
-## Project configuration
+## Playing medias with Letterbox controller
 
-You must enable the _Audio, Airplay, and Picture in Picture_ flag of your target Background modes to ensure Airplay, background audio and picture and picture work as intended. If this flag is not enabled, Letterbox will throw an exception when used.
+To play a media, instantiate and retain a Letterbox controller somewhere:
 
-## Playing medias
+```objective-c
+self.controller = [[SRGLetterboxController alloc] init];
+```
 
-To play a media, simply access the Letterbox service singleton, and call one of the play methods on it:
+and call one of the play methods on it:
 
 ```objective-c
 SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
 if (URN) {
-	[[SRGLetterboxService sharedService] playURN:URN withPreferredQuality:SRGQualityNone];
+	[self.controller playURN:URN];
 }
 ```
 
-The service can play any video from any SRG SSR business unit. If you already have the `SRGMedia` object to be played, you can directly call:
+You can also instantiate controllers directly in your xibs or storyboards if you prefer.
+
+A Letterbox controller can play any media from any SRG SSR business unit, simply starting from its URN. You can play an `SRGMedia` directly if you have one, for example if you already loaded some media list from the `SRGDataProvider` library:
 
 ```objective-c
-[[SRGLetterboxService sharedService] playMedia:media withPreferredQuality:SRGQualityNone];
+[self.controller playMedia:media];
 ```
 
-The service immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must add a player view somewhere in your application. This view works both for audios and videos.
+The controller immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must bind a Letterbox view to your controller. 
 
-To stop playback, simply call the `-reset` method on the service.
+To stop playback for a controller, simply call the `-reset` method on it.
 
-## Displaying the player view
+### Metadata and errors
 
-Simply add a `SRGLetterboxView` instance somewhere in your application, either in code or using Interface Builder. Nothing else is required, as this view automatically displays what is currently being played by the service singleton.
+Each controller broadcasts metadata updates and errors through `SRGLetterboxMetadataDidChangeNotification` and `SRGLetterboxPlaybackDidFailNotification` notifications, respectively. You can use the information provided with these notifications to build a richer view around the player, e.g. by displaying more playback information (title or description of what is currently be played). For most use cases, your application should not need to perform additional requests in its player view: All standard information should readily be available from the controller itself (which provides properties to retrieve the currently available information).
 
-## Metadata and errors
+### Simultaneous playback
 
-The service broadcasts metadata updates and errors through `SRGLetterboxServiceMetadataDidChangeNotification` and `SRGLetterboxServicePlaybackDidFailNotification` notifications, respectively. You can use the information provided with these notifications to enrich your the view around the player with playback information (e.g. title or description of what is currently be played).
+Your application can use as many controllers as needed. Each controller can at most be bound to one view, and you are free to change controller - view relationships as will depending on your needs. When several controllers are playing at the same time, you might want to mute some of them, which can be achieved by setting the `muted` property to `NO`.
 
-## Controls and overlays
+## Letterbox view
 
-The standard player controls (play / pause button, seek bar, etc.) of Letterbox cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. Simply set a delegate for the player view and respond to user interface state changes, as follows:
+To display what is currently played by a controller, add a `SRGLetterboxView` instance somewhere in your application, either in code or using Interface Builder, and bind its `controller` property to a Letterbox controller. Nothing else is required, as this view automatically displays what is currently being played by the controller. If you play another media or change the controller of a view, the view will automatically update to reflect the new content being played.
+
+### Controls and overlays
+
+The standard player controls (play / pause button, seek bar, etc.) of a Letterbox view cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. Simply set a delegate for the player view and respond to user interface state changes, as follows:
 
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
@@ -58,22 +66,59 @@ The standard player controls (play / pause button, seek bar, etc.) of Letterbox 
 
 Within the block, you can apply any `UIView` or layout change, as you would in a usual view animation block. All changes will be animated within the same transaction as the controls animation.
 
-## Picture in picture
+Refer to the modal view controller demo implementation for a concrete example. 
 
-To respond to picture and picture events, mostly for restoring your interface, you must implement the `SRGLetterboxPictureInPictureDelegate` delegate methods. If no delegate is set, picture in picture will not be available, and the corresponding button will not be displayed.
+### Full screen
 
-Refer to the demo for a concrete example, implementing restoration both for a view controller presented modally and for a view controller pushed into a navigation controller.
-
-## Airplay
-
-Airplay works out of the box and does not require any code.
-
-## Full screen
-
-The `SRGLetterboxView` view presents a full screen button on its overlay interface, allowing to toggle between normal and full screen display. This button is displayed if and only if the `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` delegate method is implemented. Since `SRGLetterboxView` can be added anywhere to the view hierarchy, you are responsible of managing the full screen layout, as well as the transition animation between the normal and full screen states.
+The `SRGLetterboxView` view presents a full screen button on its overlay interface, allowing to toggle between normal and full screen displays. This button is shown if and only if the `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` delegate method is implemented. Since a Letterbox views can be added anywhere to the view hierarchy, you are responsible of managing the full screen layout, as well as the transition animation between the normal and full screen states.
 
 Refer to the modal view controller demo implementation for a concrete example. 
 
+## Application-wide services
+
+The `SRGLetterboxService` singleton makes it possible to enable Airplay and picture in picture for at most one Letterbox controller at a time. This automatically adds the following features for this controller:
+
+ * Airplay support.
+ * Picture in picture (for devices supporting it).
+ * Control center and lock screen media information.
+ * Remote playback controls.
+ 
+To enable application-wide services for a Letterbox controller, simply call:
+
+```objective-c
+[[SRGLetterboxService sharedService] enableWithController:controller pictureInPictureDelegate:nil];
+```
+
+If a Letterbox view is bound to the controller, its user interface automatically reflects which services are available for the underlying controller, letting you toggle Airplay or picture in picture directly from it.
+
+#### Remark
+
+In this example, no picture in picture delegate is provided. All services except picture in picture will be available (picture in picture delegates are discussed below).
+
+### Target configuration
+
+To be able to call the _enable_ method above, you must set the _Audio, Airplay, and Picture in Picture_ flag of your target Background modes to ensure Airplay, background audio and picture and picture work as intended. If this flag is not set, Letterbox will throw an exception when the above method is called.
+
+### Disabling services
+
+To disable services for the currently registered controller, call:
+
+```objective-c
+[[SRGLetterboxService sharedService] disable];
+```
+
+This will disable all application-wide features, removing the media from the control center and lock screen as well. Any playback currently made via Airplay and picture in picture will automatically be cancelled.
+
+At any time, you can call the _enable_ method again with a new controller to enable application-wide services for it. This will automatically disable these services for any controllers which might already benefit from them.
+
+### Picture in picture
+
+Picture in picture only makes sense when a controller has been bound to a Letterbox view. To respond to picture and picture events, most notably for dismissing and restoring your user interface, you must implement the mandatory `SRGLetterboxPictureInPictureDelegate` delegate methods. If no delegate has been set, picture in picture will not be available, and the corresponding button will not be displayed on the Letterbox view.
+
+Usually, a Letterbox view is part of a view controller view hiearchy. In such cases, providing the view controller itself as picture in picture delegate is a good idea. Unlike usual delegates, the picture in picture delegate is namely retained, providing you with a good way to restore the user interface as it was before picture in picture started.
+
+Refer to the modal view controller demo for a concrete example.
+
 ## Statistics
 
-If your project has started an [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) tracker, stream playback statistics will automatically be sent.
+If your project has started an [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) tracker, stream playback statistics will automatically be sent when a controller plays a media. This behavior can be disabled by setting the `tracked` property of a controller to `NO`.
