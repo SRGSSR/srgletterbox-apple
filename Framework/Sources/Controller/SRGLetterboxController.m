@@ -65,6 +65,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 @property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
 
+@property (nonatomic, getter=isTracked) BOOL tracked;
+
 @end
 
 @implementation SRGLetterboxController
@@ -130,14 +132,24 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
 
+- (void)setServiceURL:(NSURL *)serviceURL
+{
+    _serviceURL = serviceURL;
+}
+
 - (NSURL *)serviceURL
 {
     return _serviceURL ?: SRGIntegrationLayerProductionServiceURL();
 }
 
-- (void)setServiceURL:(NSURL *)serviceURL
+- (void)setTracked:(BOOL)tracked
 {
-    _serviceURL = serviceURL;
+    self.mediaPlayerController.tracked;
+}
+
+- (BOOL)isTracked
+{
+    return self.mediaPlayerController.tracked;
 }
 
 #pragma mark Data

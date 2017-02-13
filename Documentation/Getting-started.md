@@ -121,4 +121,4 @@ Refer to the modal view controller demo for a concrete example.
 
 ## Statistics
 
-If your project has started an [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) tracker, stream playback statistics will automatically be sent.
+If your project has started an [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) tracker, stream playback statistics will automatically be sent when a controller plays a media. This behavior can be disabled by setting the `tracked` property of a controller to `NO`.

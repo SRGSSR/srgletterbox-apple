@@ -37,7 +37,10 @@
     [super viewDidLoad];
     
     self.smallLetterboxController1.muted = YES;
+    self.smallLetterboxController1.tracked = NO;
+    
     self.smallLetterboxController2.muted = YES;
+    self.smallLetterboxController2.tracked = NO;
     
     [self.smallLetterboxView1 setUserInterfaceHidden:YES animated:NO togglable:NO];
     [self.smallLetterboxView2 setUserInterfaceHidden:YES animated:NO togglable:NO];
@@ -90,7 +93,10 @@
     self.smallLetterboxView1.controller = tempLetterboxController;
     
     self.letterboxController.muted = NO;
+    self.letterboxController.tracked = YES;
+    
     self.smallLetterboxController1.muted = YES;
+    self.smallLetterboxController1.tracked = NO;
 }
 
 - (void)switchToStream2:(UIGestureRecognizer *)gestureRecognizer
@@ -105,7 +111,10 @@
     self.smallLetterboxView2.controller = tempLetterboxController;
     
     self.letterboxController.muted = NO;
+    self.letterboxController.tracked = YES;
+    
     self.smallLetterboxController2.muted = YES;
+    self.smallLetterboxController2.tracked = NO;
 }
 
 @end

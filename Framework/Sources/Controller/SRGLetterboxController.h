@@ -158,4 +158,16 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 @end
 
+/**
+ *  Settings for SRGAnalytics integration.
+ */
+@interface SRGLetterboxController (Analytics)
+
+/**
+ *  Streaming analytics are automatically gathered when this property is set to `YES` (default).
+ */
+@property (nonatomic, getter=isTracked) BOOL tracked;
+
+@end
+
 NS_ASSUME_NONNULL_END
