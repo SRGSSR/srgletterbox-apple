@@ -51,6 +51,10 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Such features can only be enabled for at most one controller at a time by starting the Letterbox service singleton
  *  for this controller (@see `SRGLetterboxService`). Your application is free to use as many controllers as needed, 
  *  though, and you can change at any time which controller is enabled for such services.
+ *
+ *  When the `SRGAnalytics` tracker singleton has been properly started, controllers are automatically tracked. This
+ *  behavior can be disabled by setting the `tracked` property to `NO`. If the tracker singleton has not been started,
+ *  analytics won't be collected.
  */
 @interface SRGLetterboxController : NSObject
 
