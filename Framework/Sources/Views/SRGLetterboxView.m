@@ -226,7 +226,15 @@ static void commonInit(SRGLetterboxView *self);
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
-    [self updateInterfaceAnimated:NO];
+    // Synchronize the slider popup and the loading indicator with the new controller state
+    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        [self.timeSlider hidePopUpViewAnimated:NO];
+    }
+    else {
+        [self.timeSlider showPopUpViewAnimated:NO];
+    }
     [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
     
     if (controller) {
