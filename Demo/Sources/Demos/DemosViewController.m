@@ -81,14 +81,14 @@
         }
             
         case 7: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
         }
             
         case 8: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
