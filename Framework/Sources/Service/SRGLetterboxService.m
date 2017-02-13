@@ -81,7 +81,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     if (_controller) {
         // Revert back to default behavior
-        controller.playerConfigurationBlock = nil;
+        _controller.playerConfigurationBlock = nil;
         [_controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
