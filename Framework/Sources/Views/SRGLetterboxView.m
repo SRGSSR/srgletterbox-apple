@@ -311,25 +311,6 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
-- (BOOL)isPlayingInAirplayWithoutMirroring
-{
-    if (! [AVAudioSession srg_isAirplayActive]) {
-        return NO;
-    }
-
-    if (! [UIScreen srg_isMirroring]) {
-        return YES;
-    }
-    
-    AVPlayer *player = self.controller.mediaPlayerController.player;
-    if (! player) {
-        return NO;
-    }
-    
-    // If the player switches to external playback, then it does not mirror the display
-    return player.usesExternalPlaybackWhileExternalScreenIsActive;
-}
-
 #pragma mark UI
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
@@ -340,7 +321,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
 {
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
-    if ([self isPlayingInAirplayWithoutMirroring] && initiatedByUser) {
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive && initiatedByUser) {
         if (! togglable) {
             self.wasUserInterfaceTogglable = NO;
         }
@@ -411,7 +392,7 @@ static void commonInit(SRGLetterboxView *self);
             // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
             // playbackl on the external device) is used
             SRGMedia *media = self.controller.media;
-            BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! [self isPlayingInAirplayWithoutMirroring];
+            BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive;
             self.imageView.alpha = hidden ? 0.f : 1.f;
             mediaPlayerController.view.alpha = hidden ? 1.f : 0.f;
             
@@ -445,7 +426,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
 {
-    if ([self isPlayingInAirplayWithoutMirroring]) {
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
             self.wasUserInterfaceTogglable = YES;
