@@ -522,16 +522,15 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadData
 {
+    [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    
     if (self.controller.error) {
         self.errorView.hidden = NO;
         self.errorLabel.text = self.controller.error.localizedDescription;
     }
-    else if (self.controller.media) {
+    else if (self.controller.media || self.controller.URN) {
         self.errorView.hidden = YES;
-        [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
-    }
-    else if (self.controller.URN) {
-        self.errorView.hidden = YES;
+        
     }
     else {
         NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
