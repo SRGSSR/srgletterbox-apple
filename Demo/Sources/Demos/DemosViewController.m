@@ -80,6 +80,27 @@
             [self.navigationController pushViewController:playerViewController animated:YES];
         }
             
+        case 7: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 8: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 9: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
         default: {
             break;
         }
