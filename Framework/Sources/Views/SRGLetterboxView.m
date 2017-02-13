@@ -428,6 +428,24 @@ static void commonInit(SRGLetterboxView *self);
         }
         
         [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
+        
+        if (self.controller.media.contentType == SRGContentTypeLivestream) {
+            if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
+                self.timeSlider.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+            }
+            else {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+            }
+        }
+        else {
+            self.timeSlider.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
+        }
     };
     
     if (animated) {
