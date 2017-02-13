@@ -144,7 +144,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)setTracked:(BOOL)tracked
 {
-    self.mediaPlayerController.tracked;
+    self.mediaPlayerController.tracked = tracked;
 }
 
 - (BOOL)isTracked
