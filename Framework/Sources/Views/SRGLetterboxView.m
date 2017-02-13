@@ -14,7 +14,6 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
-#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 #import <libextobjc/libextobjc.h>
 #import <ASValueTrackingSlider/ASValueTrackingSlider.h>
