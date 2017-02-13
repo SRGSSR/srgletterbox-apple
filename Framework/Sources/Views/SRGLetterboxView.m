@@ -187,8 +187,6 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGLetterboxServiceSettingsDidChangeNotification
                                                       object:[SRGLetterboxService sharedService]];
-        
-        [[SRGLetterboxService sharedService] removeObserver:self keyPath:@"controller"];
     }
 }
 
