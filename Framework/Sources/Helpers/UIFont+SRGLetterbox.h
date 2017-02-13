@@ -41,6 +41,8 @@ OBJC_EXPORT NSComparisonResult SRGCompareContentSizeCategories(NSString *content
 + (UIFont *)srg_boldItalicFontWithSize:(CGFloat)size;
 + (UIFont *)srg_regularSerifFontWithSize:(CGFloat)size;
 
++ (UIFont *)srg_awesomeFontWithSize:(CGFloat)size;
+
 @end
 
 NS_ASSUME_NONNULL_END

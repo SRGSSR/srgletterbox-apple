@@ -80,6 +80,27 @@
             [self.navigationController pushViewController:playerViewController animated:YES];
         }
             
+        case 7: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 8: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
+        case 9: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
+            StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:playerViewController animated:YES];
+            break;
+        }
+            
         default: {
             break;
         }

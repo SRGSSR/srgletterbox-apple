@@ -428,6 +428,24 @@ static void commonInit(SRGLetterboxView *self);
         }
         
         [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
+        
+        if (self.controller.media.contentType == SRGContentTypeLivestream) {
+            if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
+                self.timeSlider.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+            }
+            else {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+            }
+        }
+        else {
+            self.timeSlider.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
+        }
     };
     
     if (animated) {
@@ -560,13 +578,27 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark ASValueTrackingSliderDataSource protocol
 
-- (NSString *)slider:(ASValueTrackingSlider *)slider stringForValue:(float)value;
+- (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 {
     if (self.controller.media.contentType == SRGContentTypeLivestream) {
-        return (self.timeSlider.isLive) ? NSLocalizedString(@"Live", nil) : self.timeSlider.valueString;
+        
+        static dispatch_once_t onceToken;
+        static NSDateFormatter *dateFormatter;
+        dispatch_once(&onceToken, ^{
+            dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.dateStyle = kCFDateFormatterNoStyle;
+            dateFormatter.timeStyle = kCFDateFormatterShortStyle;
+        });
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"  " attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:13.f] }];
+        
+        NSString *string = (self.timeSlider.isLive) ? NSLocalizedString(@"Live", nil) : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
+        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_regularFontWithSize:13.f] }]];
+                
+        return [attributedString copy];
     }
     else {
-        return self.timeSlider.valueString ?: @"--:--";
+        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: @"--:--"];
     }
 }
 
