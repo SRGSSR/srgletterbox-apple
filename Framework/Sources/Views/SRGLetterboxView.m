@@ -614,6 +614,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
+    [self reloadData];
+    [self updateInterfaceAnimated:YES];
+    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
 }
 
