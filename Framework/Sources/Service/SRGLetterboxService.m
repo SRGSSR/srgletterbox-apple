@@ -158,6 +158,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     _mirroredOnExternalScreen = mirroredOnExternalScreen;
     [self.controller.mediaPlayerController reloadPlayerConfiguration];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
 #pragma mark Enabling and disabling the service
