@@ -63,6 +63,9 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 /**
  *  Optional block which gets called right after player creation, when the player changes, or when the configuration is
  *  reloaded by calling `-reloadPlayerConfiguration`. Does not get called when the player is set to `nil`.
+ *
+ *  @discussion The player starts with external playback disabled and default audio session settings for the media
+ *              being played. The configuration block might be used to override these default values.
  */
 @property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
 

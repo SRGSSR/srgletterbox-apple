@@ -80,9 +80,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        _controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            player.allowsExternalPlayback = NO;
-        };
+        // Revert back to default behavior
+        controller.playerConfigurationBlock = nil;
         [_controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
