@@ -239,6 +239,8 @@ static void commonInit(SRGLetterboxView *self);
             self.forwardSeekButton.hidden = ![controller canSeekForward];
             self.backwardSeekButton.hidden = ![controller canSeekBackward];
         }];
+        self.forwardSeekButton.hidden = ![controller canSeekForward];
+        self.backwardSeekButton.hidden = ![controller canSeekBackward];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaMetadataDidChange:)
