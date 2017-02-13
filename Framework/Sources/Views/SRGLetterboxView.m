@@ -134,7 +134,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
     
-    [self reloadData];
+    [self reloadDataAnimated:NO];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -145,7 +145,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateInterfaceAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
-        [self reloadData];
+        [self reloadDataAnimated:NO];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -266,7 +266,7 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
-    [self reloadData];
+    [self reloadDataAnimated:NO];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -349,6 +349,11 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     if (self.userInterfaceHidden == hidden) {
+        return;
+    }
+    
+    // Do not let the user interface be displayed when an error has been encountered
+    if (! hidden && self.controller.error) {
         return;
     }
     
@@ -522,17 +527,17 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Data display
 
-- (void)reloadData
+- (void)reloadDataAnimated:(BOOL)animated
 {
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     
     if (self.controller.error) {
         self.errorView.hidden = NO;
         self.errorLabel.text = self.controller.error.localizedDescription;
+        [self setUserInterfaceHidden:YES animated:animated togglable:self.userInterfaceTogglable initiatedByUser:NO];
     }
     else if (self.controller.media || self.controller.URN) {
         self.errorView.hidden = YES;
-        
     }
     else {
         NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
@@ -573,7 +578,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaMetadataDidChange:(NSNotification *)notification
 {
-    [self reloadData];
+    [self reloadDataAnimated:YES];
     
     if (! self.errorView.hidden) {
         self.errorView.hidden = YES;
@@ -583,7 +588,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
-    [self reloadData];
+    [self reloadDataAnimated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
@@ -616,7 +621,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self reloadData];
+    [self reloadDataAnimated:YES];
     [self updateInterfaceAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];

@@ -135,7 +135,7 @@ IB_DESIGNABLE
  *                - If togglable was set to `YES`, the user interface will be always displayed
  *                - If togglable was set to `NO`, the user interface will stay as it was before
  *              Calling this method during Airplay playback to show or hide controls only works if togglabe is set to
- *              `YES`.
+ *              `YES`. Moreover, the interface cannot be shown when an error has been encountered.
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
