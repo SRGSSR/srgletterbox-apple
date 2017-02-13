@@ -36,6 +36,8 @@
 {
     [super viewDidLoad];
     
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
     
@@ -75,6 +77,7 @@
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
+            [[SRGLetterboxService sharedService] disable];
         }
     }
 }
@@ -94,6 +97,7 @@
     
     self.letterboxController.muted = NO;
     self.letterboxController.tracked = YES;
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
@@ -112,6 +116,7 @@
     
     self.letterboxController.muted = NO;
     self.letterboxController.tracked = YES;
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;
