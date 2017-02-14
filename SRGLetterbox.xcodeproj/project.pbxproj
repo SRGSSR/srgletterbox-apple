@@ -245,7 +245,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		081322F21E42503D00639174 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -509,7 +508,7 @@
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
-				081322F21E42503D00639174 /* HockeySDK.framework */,
+				6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
 				6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
@@ -626,7 +625,6 @@
 		6FE321371E28E24E00FD8E42 = {
 			isa = PBXGroup;
 			children = (
-				6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */,
 				6F042D221E28E2D100CFD89B /* Framework */,
 				6FAB3B8A1E29066300CC2197 /* Tests */,
 				6FAB3B511E28FFEA00CC2197 /* Demo */,
