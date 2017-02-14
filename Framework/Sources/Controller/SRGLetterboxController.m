@@ -424,6 +424,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
+- (void)seekToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    CMTimeRange timeRange = self.mediaPlayerController.timeRange;
+    
+    [self.mediaPlayerController seekToTime:CMTimeRangeGetEnd(timeRange)
+                       withToleranceBefore:kCMTimePositiveInfinity
+                            toleranceAfter:kCMTimePositiveInfinity
+                         completionHandler:^(BOOL finished) {
+                             completionHandler ? completionHandler(finished) : nil;
+                         }];
+}
+
 - (void)reloadPlayerConfiguration
 {
     [self.mediaPlayerController reloadPlayerConfiguration];
@@ -446,6 +458,19 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+    SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
+    
+    // Stop live stream only when pause it.
+    if (self.media.contentType == SRGContentTypeLivestream) {
+        if (self.mediaPlayerController.streamType != SRGMediaPlayerStreamTypeDVR &&
+            ![self canSeekBackward] &&
+            ![self canSeekForward] &&
+            playbackState == SRGMediaPlayerPlaybackStatePlaying &&
+            previousPlaybackState == SRGMediaPlayerPlaybackStatePaused) {
+            [self seekToLiveWithCompletionHandler:nil];
+        }
+    }
+    
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
         self.seekTargetTime = kCMTimeInvalid;
     }
