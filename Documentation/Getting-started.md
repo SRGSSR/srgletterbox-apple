@@ -5,7 +5,7 @@ Getting started
 The SRG Letterbox library is made of three components:
 
 * `SRGLetterboxController`: A controller to play medias.
-* `SRGLetterboxView`: A player view reflecting what the service is currently playing and to control its playback.
+* `SRGLetterboxView`: A player view reflecting what an associated controller is currently playing, and providing controls to manage playback.
 * `SRGLetterboxService`: A service to enable application-wide features like Airplay and picture in picture.
 
 The following guide describes how these components can be easily combined to add advanced media playback capabilities to your application.
