@@ -359,7 +359,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
-    _restoreUserInterface && [self.pictureInPictureDelegate letterboxDismissUserInterfaceForPictureInPicture];
+    _restoreUserInterface = _restoreUserInterface && [self.pictureInPictureDelegate letterboxDismissUserInterfaceForPictureInPicture];
     
     if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
         [self.pictureInPictureDelegate letterboxDidStartPictureInPicture];
