@@ -271,9 +271,12 @@ static void commonInit(SRGLetterboxView *self);
                                                    object:mediaPlayerController];
         
         [self.playerView insertSubview:mediaPlayerController.view aboveSubview:self.imageView];
+        
+        // Force autolayout to ensure the layout is immediately correct 
         [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.playerView);
         }];
+        [self.playerView layoutIfNeeded];
     }
     
     [self reloadDataAnimated:NO];
