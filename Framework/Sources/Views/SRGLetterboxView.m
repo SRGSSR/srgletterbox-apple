@@ -233,8 +233,8 @@ static void commonInit(SRGLetterboxView *self);
     
     // Synchronize the slider popup and the loading indicator with the new controller state
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         [self.timeSlider hidePopUpViewAnimated:NO];
     }
     else {
@@ -273,6 +273,7 @@ static void commonInit(SRGLetterboxView *self);
         [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.playerView);
         }];
+        
         [self.playerView layoutIfNeeded];
     }
     
@@ -451,17 +452,20 @@ static void commonInit(SRGLetterboxView *self);
             self.timeSlider.alpha = 1.f;
             self.timeSlider.timeLeftValueLabel.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
+            self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
         }
         else {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.alpha = 1.f;
             self.timeSlider.timeLeftValueLabel.hidden = NO;
+            self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
         }
     }
     else {
         self.timeSlider.alpha = 1.f;
         self.timeSlider.timeLeftValueLabel.alpha = 1.f;
         self.timeSlider.timeLeftValueLabel.hidden = NO;
+        self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     }
 }
 
@@ -538,9 +542,9 @@ static void commonInit(SRGLetterboxView *self);
     // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled
-            || ! self.errorView.hidden) {
+        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled
+        || ! self.errorView.hidden) {
         [self setUserInterfaceHidden:YES animated:YES];
     }
 }
@@ -603,7 +607,7 @@ static void commonInit(SRGLetterboxView *self);
         
         NSString *string = (self.timeSlider.isLive) ? NSLocalizedString(@"Live", nil) : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
         [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_regularFontWithSize:13.f] }]];
-                
+        
         return [attributedString copy];
     }
     else {
