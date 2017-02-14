@@ -60,7 +60,6 @@
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
-            [self.letterboxController reset];
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }

@@ -87,7 +87,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
-            [self.letterboxController reset];
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
@@ -139,7 +138,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
-    [self.letterboxController reset];
     [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
 }
 
