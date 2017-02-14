@@ -167,6 +167,11 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(serviceSettingsDidChange:)
                                                      name:SRGLetterboxServiceSettingsDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
+        
+        // Automatically resumes in the view when displayed and if picture in picture was active
+        if ([SRGLetterboxService sharedService].controller == self.controller) {
+            [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
+        }
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -269,11 +274,6 @@ static void commonInit(SRGLetterboxView *self);
         [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.playerView);
         }];
-
-        // Automatically resumes in the view when displayed and if picture in picture was active
-        if ([SRGLetterboxService sharedService].controller == self.controller) {
-            [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
-        }
     }
     
     [self reloadDataAnimated:NO];
