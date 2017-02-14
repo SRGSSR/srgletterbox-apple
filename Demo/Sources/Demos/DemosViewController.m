@@ -41,7 +41,7 @@
         }
             
         case 1: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
@@ -55,7 +55,7 @@
         }
             
         case 3: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
@@ -69,7 +69,7 @@
         }
             
         case 5: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
@@ -88,7 +88,7 @@
         }
             
         case 8: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
