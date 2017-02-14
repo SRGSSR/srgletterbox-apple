@@ -57,6 +57,13 @@
         case 3: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+            
+            // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+            // (might happen if presenting and dismissing fast)
+            if (playerViewController.presentingViewController) {
+                return;
+            }
+            
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
@@ -77,6 +84,12 @@
             
         case 6: {
             MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] init];
+            
+            // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+            // (might happen if presenting and dismissing fast)
+            if (playerViewController.presentingViewController) {
+                return;
+            }
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
