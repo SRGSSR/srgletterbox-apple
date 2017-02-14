@@ -9,6 +9,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Types
+ */
+typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
+
+/**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values)
  */
 OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
@@ -172,6 +177,23 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Streaming analytics are automatically gathered when this property is set to `YES` (default).
  */
 @property (nonatomic, getter=isTracked) BOOL tracked;
+
+@end
+
+/**
+ *  Overriding abilities. Player functionalities might be limited when overriding has been made.
+ */
+@interface SRGLetterboxController (Overriding)
+
+/**
+ *  Provides a way to override the content URL which has been retrieved for a media. This is for example useful
+ *  to replace the original URL with a local file URL.
+ *
+ *  @discussion When a URL has been overridden, the player will only work with the media, not the full playback
+ *              context (since the context is tightly related to the original content URL, this would open the
+ *              door to several inconsistencies, most notably with segments)
+ */
+@property (nonatomic, copy, nullable) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @end
 

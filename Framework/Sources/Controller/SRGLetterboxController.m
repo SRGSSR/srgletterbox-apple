@@ -63,7 +63,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 // to a desired location
 @property (nonatomic) CMTime seekTargetTime;
 
-@property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
+@property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
+@property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
 
@@ -255,6 +256,42 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
     }];
     
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
+    
+    // Apply overriding if available. Overriding requires at a media to be available. No media composition is retrieved
+    if (self.contentURLOverridingBlock) {
+        NSURL *contentURL = self.contentURLOverridingBlock(URN);
+        if (contentURL) {
+            // Media readily available. Done
+            if (media) {
+                [self.mediaPlayerController playURL:contentURL];
+            }
+            // Retrieve the media
+            else {
+                void (^mediasCompletionBlock)(NSArray<SRGMedia *> * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+                    if (error) {
+                        [self.requestQueue reportError:error];
+                        return;
+                    }
+                    
+                    [self updateWithURN:nil media:medias.firstObject mediaComposition:nil];
+                    [self.mediaPlayerController playURL:contentURL];
+                };
+                
+                if (URN.mediaType == SRGMediaTypeVideo) {
+                    SRGRequest *mediaRequest = [dataProvider videosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    [self.requestQueue addRequest:mediaRequest resume:YES];
+                }
+                else {
+                    SRGRequest *mediaRequest = [dataProvider audiosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    [self.requestQueue addRequest:mediaRequest resume:YES];
+                }
+            }
+            return;
+        }
+    }
+    
     void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         @strongify(self)
         
@@ -282,9 +319,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             [self.requestQueue reportError:error];
         }
     };
-    
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
     
     if (URN.mediaType == SRGMediaTypeVideo) {
         SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
