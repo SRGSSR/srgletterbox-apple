@@ -296,6 +296,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
 }
 
+- (void)togglePlayPause
+{
+    [self.mediaPlayerController togglePlayPause];
+}
+
 - (void)reset
 {
     [self resetWithURN:nil media:nil];

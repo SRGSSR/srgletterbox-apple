@@ -97,6 +97,11 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 - (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality;
 
 /**
+ *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
+ */
+- (void)togglePlayPause;
+
+/**
  *  Reset playback, stopping a playback request if any has been made.
  */
 - (void)reset;
