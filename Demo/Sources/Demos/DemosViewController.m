@@ -77,7 +77,8 @@
             
         case 6: {
             MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] init];
-            [self.navigationController pushViewController:playerViewController animated:YES];
+            [self presentViewController:playerViewController animated:YES completion:nil];
+            break;
         }
             
         case 7: {

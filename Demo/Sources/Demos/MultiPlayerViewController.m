@@ -6,7 +6,9 @@
 
 #import "MultiPlayerViewController.h"
 
-#import <SRGLetterbox/SRGLetterbox.h>
+#import "UIWindow+LetterboxDemo.h"
+
+#import <SRGAnalytics/SRGAnalytics.h>
 
 @interface MultiPlayerViewController ()
 
@@ -18,6 +20,8 @@
 @property (nonatomic) IBOutlet SRGLetterboxController *smallLetterboxController1;
 @property (nonatomic) IBOutlet SRGLetterboxController *smallLetterboxController2;
 
+@property (nonatomic, weak) IBOutlet UIButton *closeButton;
+
 @end
 
 @implementation MultiPlayerViewController
@@ -26,8 +30,16 @@
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    return [storyboard instantiateInitialViewController];
+    id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = [SRGLetterboxService sharedService].pictureInPictureDelegate;
+    
+    // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
+    if ([pictureInPictureDelegate isKindOfClass:[self class]]) {
+        return (MultiPlayerViewController *)pictureInPictureDelegate;
+    }
+    else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+        return [storyboard instantiateInitialViewController];
+    }
 }
 
 #pragma mark View lifecycle
@@ -36,7 +48,7 @@
 {
     [super viewDidLoad];
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
@@ -59,14 +71,16 @@
     [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
-        [self.letterboxController playURN:URN];
-        
-        SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608517"];
-        [self.smallLetterboxController1 playURN:URN1];
-        
-        SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
-        [self.smallLetterboxController2 playURN:URN2];
+        if (! self.letterboxController.pictureInPictureActive) {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
+            [self.letterboxController playURN:URN];
+            
+            SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608517"];
+            [self.smallLetterboxController1 playURN:URN1];
+            
+            SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
+            [self.smallLetterboxController2 playURN:URN2];
+        }
     }
 }
 
@@ -80,6 +94,61 @@
             [[SRGLetterboxService sharedService] disable];
         }
     }
+}
+
+#pragma mark SRGLetterboxPictureInPictureDelegate protocol
+
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    return topPresentedViewController != self;
+}
+
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    [topPresentedViewController presentViewController:self animated:YES completion:^{
+        completionHandler(YES);
+    }];
+}
+
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    [topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
+- (void)letterboxDidStartPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+}
+
+- (void)letterboxDidEndPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_end"];
+}
+
+- (void)letterboxDidStopPlaybackFromPictureInPicture
+{
+    [self.letterboxController reset];
+    [[SRGLetterboxService sharedService] disable];
+}
+
+#pragma mark SRGLetterboxViewDelegate protocol
+
+- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
+{
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+        self.closeButton.alpha = hidden ? 0.f : 1.f;
+    } completion:nil];
+}
+
+#pragma mark Actions
+
+- (IBAction)close:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark Gesture recognizers
@@ -97,7 +166,7 @@
     
     self.letterboxController.muted = NO;
     self.letterboxController.tracked = YES;
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
@@ -116,7 +185,7 @@
     
     self.letterboxController.muted = NO;
     self.letterboxController.tracked = YES;
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;
