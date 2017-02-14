@@ -102,7 +102,7 @@
         }
             
         case 8: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:ais:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
             SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
             [self.navigationController pushViewController:playerViewController animated:YES];
             break;
