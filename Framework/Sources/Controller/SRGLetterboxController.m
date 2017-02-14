@@ -388,6 +388,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return [self canSeekForwardFromTime:[self seekStartTime]];
 }
 
+- (BOOL)canSeekToLive
+{
+    return (self.media.contentType == SRGContentTypeLivestream && [self canSeekForward]);
+}
+
 - (void)seekBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
     [self seekBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
@@ -426,7 +431,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && !mediaPlayerController.live);
 }
 
-- (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
     if (![self canSeekBackwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
@@ -442,7 +447,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
-- (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
     if (![self canSeekForwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
@@ -458,16 +463,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
-- (void)seekToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (void)seekToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
-    CMTimeRange timeRange = self.mediaPlayerController.timeRange;
-    
-    [self.mediaPlayerController seekToTime:CMTimeRangeGetEnd(timeRange)
-                       withToleranceBefore:kCMTimePositiveInfinity
-                            toleranceAfter:kCMTimePositiveInfinity
-                         completionHandler:^(BOOL finished) {
-                             completionHandler ? completionHandler(finished) : nil;
-                         }];
+    if (self.media.contentType == SRGContentTypeLivestream) {
+        CMTimeRange timeRange = self.mediaPlayerController.timeRange;
+        
+        [self.mediaPlayerController seekEfficientlyToTime:CMTimeRangeGetEnd(timeRange) withCompletionHandler:^(BOOL finished) {
+                                 completionHandler ? completionHandler(finished) : nil;
+                             }];
+    }
+    else {
+        completionHandler ? completionHandler(NO) : nil;
+    }
 }
 
 - (void)reloadPlayerConfiguration
@@ -494,15 +501,15 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     
-    // Stop live stream only when pause it.
-    if (self.media.contentType == SRGContentTypeLivestream) {
-        if (self.mediaPlayerController.streamType != SRGMediaPlayerStreamTypeDVR &&
-            ![self canSeekBackward] &&
-            ![self canSeekForward] &&
-            playbackState == SRGMediaPlayerPlaybackStatePlaying &&
-            previousPlaybackState == SRGMediaPlayerPlaybackStatePaused) {
-            [self seekToLiveWithCompletionHandler:nil];
-        }
+    // Seek to live for Live only stream, when it was paused.
+    if (self.media.contentType == SRGContentTypeLivestream &&
+        self.mediaPlayerController.streamType != SRGMediaPlayerStreamTypeDVR &&
+        ![self canSeekBackward] &&
+        ![self canSeekForward] &&
+        playbackState == SRGMediaPlayerPlaybackStatePlaying &&
+        previousPlaybackState == SRGMediaPlayerPlaybackStatePaused) {
+        [self seekToLiveWithCompletionHandler:nil];
+        
     }
     
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {

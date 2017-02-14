@@ -30,6 +30,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet ASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
+@property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
@@ -444,6 +445,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller {
     self.forwardSeekButton.hidden = ![controller canSeekForward];
     self.backwardSeekButton.hidden = ![controller canSeekBackward];
+    self.seekToLiveButton.hidden = ![controller canSeekToLive];
     
     if (controller.media.contentType == SRGContentTypeLivestream) {
         if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR ||
@@ -564,6 +566,11 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)toggleFullScreen:(id)sender
 {
     [self setFullScreen:!self.isFullScreen animated:YES];
+}
+
+- (IBAction)seekToLive:(id)sender
+{
+    [self.controller seekToLiveWithCompletionHandler:nil];
 }
 
 #pragma mark Data display

@@ -45,6 +45,14 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 - (BOOL)canSeekForward;
 
 /**
+ *  Return YES iff the player can seek to play live
+ *
+ *  @discussion For live stream only, and only possible if seeking wouldn't jump past the end. For DVR streams,
+ *              possible until the stream is played live.
+ */
+- (BOOL)canSeekToLive;
+
+/**
  *  Seek backward from a standard amount of seconds.
  *
  *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
@@ -59,6 +67,14 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
  *              finished set to `NO`.
  */
 - (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Seek forward to the stream live, only for 
+ *
+ *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
+ *              finished set to `NO`.
+ */
+- (void)seekToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Optional block which gets called right after player creation, when the player changes, or when the configuration is
