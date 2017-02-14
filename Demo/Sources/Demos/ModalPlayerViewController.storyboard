@@ -28,6 +28,7 @@
                                     <constraint firstAttribute="width" secondItem="5VB-3F-wwv" secondAttribute="height" multiplier="16:9" priority="950" id="ff4-Ik-keP"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="controller" destination="V5l-nr-tDL" id="6mJ-p1-ZCM"/>
                                     <outlet property="delegate" destination="FcC-Qn-oGg" id="XzF-48-ayl"/>
                                 </connections>
                             </view>
@@ -114,6 +115,7 @@
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
                         <outlet property="letterbox169Constraint" destination="ff4-Ik-keP" id="0jN-em-Zkv"/>
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
+                        <outlet property="letterboxController" destination="V5l-nr-tDL" id="po7-Q3-coI"/>
                         <outlet property="letterboxLeadingConstraint" destination="tsO-HP-lR4" id="n0S-cU-sRT"/>
                         <outlet property="letterboxTopConstraint" destination="LDp-cD-NhZ" id="cTx-6s-6SU"/>
                         <outlet property="letterboxTrailingConstraint" destination="F2Z-fU-P1b" id="2tu-HE-b8l"/>
@@ -121,6 +123,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="V5l-nr-tDL" customClass="SRGLetterboxController"/>
             </objects>
             <point key="canvasLocation" x="189.59999999999999" y="78.710644677661179"/>
         </scene>

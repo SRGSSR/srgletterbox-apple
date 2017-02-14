@@ -18,7 +18,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 @property (nonatomic) SRGMediaURN *URN;
 
-@property (nonatomic) SRGLetterboxController *letterboxController;
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
@@ -39,10 +39,19 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (instancetype)initWithURN:(SRGMediaURN *)URN
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.URN = URN;
-    return viewController;
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    
+    // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
+    if ([service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
+        return (ModalPlayerViewController *)service.pictureInPictureDelegate;
+    }
+    // Otherwise instantiate a fresh new one
+    else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+        ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        viewController.URN = URN;
+        return viewController;
+    }
 }
 
 - (instancetype)init
@@ -57,16 +66,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
-    // If already playing the media from picture in picture, resume from it
-    SRGLetterboxController *backgroundServicesController = [SRGLetterboxService sharedService].controller;
-    if (backgroundServicesController.pictureInPictureActive && [backgroundServicesController.URN isEqual:self.URN]) {
-        self.letterboxController = backgroundServicesController;
-    }
-    else {
-        self.letterboxController = [[SRGLetterboxController alloc] init];
-    }
-    
-    self.letterboxView.controller = self.letterboxController;
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
@@ -78,7 +78,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         [self.letterboxController playURN:self.URN];
-        [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     }
 }
 
