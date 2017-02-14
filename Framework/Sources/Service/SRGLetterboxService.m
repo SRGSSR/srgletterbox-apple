@@ -85,8 +85,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [_controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        previousMediaPlayerController.pictureInPictureController.delegate = nil;
-        
         [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
