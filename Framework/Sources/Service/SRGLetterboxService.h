@@ -118,6 +118,11 @@ NS_ASSUME_NONNULL_BEGIN
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
 
 /**
+ *  Disable services iff the controller is the one currently attached to the service. Does nothing otherwise.
+ */
+- (void)disableForController:(SRGLetterboxController *)controller;
+
+/**
  *  Disable application-wide services (any playback using one of those services will be stopped).
  */
 - (void)disable;

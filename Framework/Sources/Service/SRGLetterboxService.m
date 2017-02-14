@@ -192,6 +192,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
+- (void)disableForController:(SRGLetterboxController *)controller
+{
+    if (self.controller != controller) {
+        return;
+    }
+    
+    [self disable];
+}
+
 - (void)disable
 {
     if (! self.controller && ! self.pictureInPictureDelegate) {

@@ -61,7 +61,7 @@
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         if (! self.letterboxController.pictureInPictureActive) {
             [self.letterboxController reset];
-            [[SRGLetterboxService sharedService] disable];
+            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
 }
@@ -75,7 +75,7 @@
 
 - (IBAction)resetService:(id)sender
 {
-    [[SRGLetterboxService sharedService] disable];
+    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
 }
 
 - (IBAction)toggleMirrored:(id)sender
