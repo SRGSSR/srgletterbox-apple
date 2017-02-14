@@ -372,9 +372,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     _playbackStopped = NO;
     
     if (! _restoreUserInterface) {
-        // Reset to default value
-        _restoreUserInterface = YES;
-        
         completionHandler(YES);
         return;
     }
@@ -410,8 +407,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    // Reset to default value
+    // Reset to default values
     _playbackStopped = YES;
+    _restoreUserInterface = YES;
 }
 
 #pragma mark Notifications
