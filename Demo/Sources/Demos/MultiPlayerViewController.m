@@ -98,6 +98,12 @@
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
     UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
@@ -110,13 +116,6 @@
     [topPresentedViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];
-}
-
-- (BOOL)letterboxDismissUserInterfaceForPictureInPicture
-{
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    [topPresentedViewController dismissViewControllerAnimated:YES completion:nil];
-    return YES;
 }
 
 - (void)letterboxDidStartPictureInPicture
