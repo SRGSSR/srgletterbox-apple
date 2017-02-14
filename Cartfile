@@ -8,6 +8,3 @@ github "SRGSSR/srganalytics-ios" "develop"
 github "SRGSSR/srgdataprovider-ios" "develop"
 github "SRGSSR/srglogger-ios" "develop"
 github "SRGSSR/SRGMediaPlayer-iOS" "develop"
-
-# For the demo app
-github "bitstadium/HockeySDK-iOS"
