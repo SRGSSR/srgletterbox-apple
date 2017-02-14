@@ -250,12 +250,9 @@ static void commonInit(SRGLetterboxView *self);
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             @strongify(controller)
-            
-            self.forwardSeekButton.hidden = ![controller canSeekForward];
-            self.backwardSeekButton.hidden = ![controller canSeekBackward];
+            [self updateStreamTypeControlsForController:controller];
         }];
-        self.forwardSeekButton.hidden = ![controller canSeekForward];
-        self.backwardSeekButton.hidden = ![controller canSeekBackward];
+        [self updateStreamTypeControlsForController:controller];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaMetadataDidChange:)
@@ -432,23 +429,7 @@ static void commonInit(SRGLetterboxView *self);
         
         [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
         
-        if (self.controller.media.contentType == SRGContentTypeLivestream) {
-            if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
-                self.timeSlider.alpha = 1.f;
-                self.timeSlider.timeLeftValueLabel.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = YES;
-            }
-            else {
-                self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.alpha = 1.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-            }
-        }
-        else {
-            self.timeSlider.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
-        }
+        [self updateStreamTypeControlsForController:self.controller];
     };
     
     if (animated) {
@@ -456,6 +437,31 @@ static void commonInit(SRGLetterboxView *self);
     }
     else {
         animations();
+    }
+}
+
+- (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller {
+    self.forwardSeekButton.hidden = ![controller canSeekForward];
+    self.backwardSeekButton.hidden = ![controller canSeekBackward];
+    
+    if (controller.media.contentType == SRGContentTypeLivestream) {
+        if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR ||
+            [controller canSeekBackward] ||
+            [controller canSeekForward]) {
+            self.timeSlider.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.hidden = YES;
+        }
+        else {
+            self.timeSlider.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
+        }
+    }
+    else {
+        self.timeSlider.alpha = 1.f;
+        self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+        self.timeSlider.timeLeftValueLabel.hidden = NO;
     }
 }
 
