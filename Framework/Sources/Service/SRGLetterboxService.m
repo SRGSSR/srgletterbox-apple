@@ -96,9 +96,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     _controller = controller;
     
-    [self updateRemoteCommandCenter];
-    [self updateNowPlayingInformation];
-    [self updateNowPlayingPlaybackInformation];
+    [self updateRemoteCommandCenterWithController:controller];
+    [self updateNowPlayingInformationWithController:controller];
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
@@ -142,8 +141,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                    object:mediaPlayerController];
         
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            [self updateNowPlayingPlaybackInformation];
-            [self updateRemoteCommandCenter];
+            [self updateRemoteCommandCenterWithController:controller];
         }];
     }
 }
@@ -250,10 +248,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [skipBackwardIntervalCommand addTarget:self action:@selector(seekBackward:)];
 }
 
-- (void)updateRemoteCommandCenter
+- (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
 {
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     // Videos can only be controlled when the device has been locked (mostly for Airplay playback). We don't allow
     // video playback while the app is fully in background for the moment (except if Airplay is enabled)
@@ -265,8 +263,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = [self.controller canSeekForward];
-        commandCenter.skipBackwardCommand.enabled = [self.controller canSeekBackward];
+        commandCenter.skipForwardCommand.enabled = [controller canSeekForward];
+        commandCenter.skipBackwardCommand.enabled = [controller canSeekBackward];
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -277,11 +275,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
 }
 
-- (void)updateNowPlayingInformation
+- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
     NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
     
-    SRGMedia *media = self.controller.media;
+    SRGMedia *media = controller.media;
     switch (media.mediaType) {
         case SRGMediaTypeAudio: {
             nowPlayingInfo[MPMediaItemPropertyMediaType] = @(MPMediaTypeAnyAudio);
@@ -302,6 +300,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
     
+    // TODO: Should be retrieved automatically by the controller
     NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:256.f * [UIScreen mainScreen].scale];
     self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:imageURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
         if (image) {
@@ -311,16 +310,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
     }];
     
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-}
-
-// Playback information which requires more frequent updates
-- (void)updateNowPlayingPlaybackInformation
-{
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    NSMutableDictionary *nowPlayingInfo = [[MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo mutableCopy];
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration));
+    
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
 }
 
@@ -425,19 +418,19 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self updateNowPlayingInformation];
+        [self updateNowPlayingInformationWithController:self.controller];
     }
 }
 
 // Update commands while transitioning from / to the background (since control availability might be affected)
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    [self updateRemoteCommandCenter];
+    [self updateRemoteCommandCenterWithController:self.controller];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self updateRemoteCommandCenter];
+    [self updateRemoteCommandCenterWithController:self.controller];
 }
 
 #pragma mark Description

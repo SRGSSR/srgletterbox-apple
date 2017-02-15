@@ -445,7 +445,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
     return (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSeekInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
-        || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && !mediaPlayerController.live);
+    || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && !mediaPlayerController.live);
 }
 
 - (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
@@ -486,8 +486,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         CMTimeRange timeRange = self.mediaPlayerController.timeRange;
         
         [self.mediaPlayerController seekEfficientlyToTime:CMTimeRangeGetEnd(timeRange) withCompletionHandler:^(BOOL finished) {
-                                 completionHandler ? completionHandler(finished) : nil;
-                             }];
+            completionHandler ? completionHandler(finished) : nil;
+        }];
     }
     else {
         completionHandler ? completionHandler(NO) : nil;

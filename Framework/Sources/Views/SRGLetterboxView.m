@@ -22,7 +22,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
 
-// UI
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *controlsView;
@@ -45,7 +44,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
-// Internal
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -55,8 +53,11 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-// Backup value for Airplay playback
-@property (nonatomic) BOOL wasUserInterfaceTogglable;
+@property (nonatomic) NSNumber *airplayRestorationHidden;               // Backup value when the UI behavior is temporarily changed during Airplay playback
+@property (nonatomic) NSNumber *airplayRestorationTogglable;            // Backup value when the UI behavior is temporarily changed during Airplay playback
+
+@property (nonatomic) NSNumber *errorRestorationHidden;                 // Backup value when the UI behavior is temporarily changed because an error is displayed
+@property (nonatomic) NSNumber *errorRestorationTogglable;              // Backup value when the UI behavior is temporarily changed because an error is displayed
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -126,6 +127,8 @@ static void commonInit(SRGLetterboxView *self);
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
+    self.errorView.alpha = 0.f;
+    
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
@@ -135,7 +138,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
     
-    [self reloadDataAnimated:NO];
+    [self reloadData];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -143,10 +146,11 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateInterfaceAnimated:NO];
+        [self updateVisibleSubviewsAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
-        [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
-        [self reloadDataAnimated:NO];
+        [self updateUserInterfaceForAirplayAnimated:NO];
+        [self updateUserInterfaceForErrorAnimated:NO];
+        [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -278,7 +282,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.playerView layoutIfNeeded];
     }
     
-    [self reloadDataAnimated:NO];
+    [self reloadData];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -322,41 +326,51 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
+- (NSError *)error
+{
+    if (self.controller.error) {
+        return self.controller.error;
+    }
+    else if (! self.controller.media && ! self.controller.URN) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotFound
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
+    }
+    else {
+        return nil;
+    }
+}
+
+#pragma mark Data display
+
+// Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
+- (void)reloadData
+{
+    [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    self.errorLabel.text = [self error].localizedDescription;
+}
+
 #pragma mark UI
 
+// Public method for changing user interface behavior. Always update interface settings, except when using non-mirrored
+// Airplay
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByUser:YES];
-}
-
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
-{
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive && initiatedByUser) {
-        if (! togglable) {
-            self.wasUserInterfaceTogglable = NO;
-        }
-        else {
-            SRGLetterboxLogWarning(@"view", @"The user interface state cannot be changed while Airplay playback is active");
-            return;
-        }
+    if (togglable && self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+        SRGLetterboxLogWarning(@"view", @"Cannot set the UI to togglable while playing in non-mirrored Airplay");
+        return;
     }
     
-    // Temporarily allow toggling the interface
-    self.userInterfaceTogglable = YES;
-    
-    [self setUserInterfaceHidden:hidden animated:animated];
-    if (togglable) {
-        [self resetInactivityTimer];
-    }
-    
-    // Apply the setting
     self.userInterfaceTogglable = togglable;
+    
+    [self common_setUserInterfaceHidden:hidden animated:animated];
 }
 
+// Show or hide the user interface, doing nothing if the interface is not togglable
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable) {
+    if (! self.userInterfaceTogglable || self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         return;
     }
     
@@ -364,11 +378,13 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    // Do not let the user interface be displayed when an error has been encountered
-    if (! hidden && self.controller.error) {
-        return;
-    }
-    
+    [self common_setUserInterfaceHidden:hidden animated:animated];
+}
+
+// Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
+// factorisation method which is not intended for direct use. This method always show or hide the user interface
+- (void)common_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+{
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
         [self.delegate letterboxViewWillAnimateUserInterface:self];
@@ -376,8 +392,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     void (^animations)(void) = ^{
-        CGFloat alpha = hidden ? 0.f : 1.f;
-        self.controlsView.alpha = alpha;
+        self.controlsView.alpha = hidden ? 0.f : 1.f;
         self.animations ? self.animations(hidden) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
@@ -399,14 +414,16 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateInterfaceAnimated:(BOOL)animated
+// Called to update the main player subviews (player view, background image, error overlay). Independent of the status
+// of the controls
+- (void)updateVisibleSubviewsAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
         
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
             // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
-            // playbackl on the external device) is used
+            // playbackl on the initiatedByCaller device) is used
             SRGMedia *media = self.controller.media;
             BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive;
             self.imageView.alpha = hidden ? 0.f : 1.f;
@@ -416,21 +433,22 @@ static void commonInit(SRGLetterboxView *self);
             
             if (!self.showingPopup) {
                 self.showingPopup = YES;
-                [self.timeSlider showPopUpViewAnimated:YES];
+                [self.timeSlider showPopUpViewAnimated:NO /* already in animation block */];
             }
         }
-        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
             self.imageView.alpha = 1.f;
             mediaPlayerController.view.alpha = 0.f;
             
-            [self.timeSlider hidePopUpViewAnimated:YES];
+            [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
             self.showingPopup = NO;
             
-            [self setUserInterfaceHidden:NO animated:YES];
+            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
         }
         
+        // TODO: Animated versions, here called with NO
+        // TODO: Should be called here or elsewhere?
         [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
-        
         [self updateStreamTypeControlsForController:self.controller];
     };
     
@@ -442,7 +460,8 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller {
+- (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller
+{
     self.forwardSeekButton.hidden = ![controller canSeekForward];
     self.backwardSeekButton.hidden = ![controller canSeekBackward];
     self.seekToLiveButton.hidden = ![controller canSeekToLive];
@@ -471,18 +490,56 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
+// FIXME: Improve fragile state-based implementation
+- (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        // If the user interface was togglable, disable and force display, otherwise keep the state as it was
-        if (self.userInterfaceTogglable) {
-            self.wasUserInterfaceTogglable = YES;
-            [self setUserInterfaceHidden:NO animated:animated togglable:NO initiatedByUser:NO];
+        if (! self.airplayRestorationTogglable) {
+            self.airplayRestorationHidden = @(self.userInterfaceHidden);
+            self.airplayRestorationTogglable = @(self.userInterfaceTogglable);
+            
+            [self setUserInterfaceHidden:NO animated:animated togglable:NO];
+        }
+    }
+    else if (self.airplayRestorationTogglable) {
+        if (self.airplayRestorationTogglable.boolValue) {
+            [self setUserInterfaceHidden:YES animated:animated togglable:YES];
+        }
+        else {
+            [self setUserInterfaceHidden:self.airplayRestorationHidden.boolValue animated:animated togglable:NO];
+        }
+        
+        self.airplayRestorationHidden = nil;
+        self.airplayRestorationTogglable = nil;
+    }
+}
+
+// FIXME: Improve fragile state-based implementation
+- (void)updateUserInterfaceForErrorAnimated:(BOOL)animated
+{
+    if ([self error]) {
+        self.errorView.alpha = 1.f;
+        
+        if (! self.errorRestorationTogglable) {
+            self.errorRestorationHidden = @(self.userInterfaceHidden);
+            self.errorRestorationTogglable = @(self.userInterfaceTogglable);
+            
+            [self setUserInterfaceHidden:YES animated:animated togglable:NO];        
         }
     }
     else {
-        if (self.wasUserInterfaceTogglable) {
-            [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByUser:NO];
+        self.errorView.alpha = 0.f;
+        
+        if (self.errorRestorationTogglable) {
+            if (self.errorRestorationTogglable.boolValue) {
+                [self setUserInterfaceHidden:YES animated:animated togglable:YES];
+            }
+            else {
+                [self setUserInterfaceHidden:self.errorRestorationHidden.boolValue animated:animated togglable:NO];
+            }
+            
+            self.errorRestorationHidden = nil;
+            self.errorRestorationTogglable = nil;
         }
     }
 }
@@ -544,9 +601,8 @@ static void commonInit(SRGLetterboxView *self);
     // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled
-        || ! self.errorView.hidden) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
         [self setUserInterfaceHidden:YES animated:YES];
     }
 }
@@ -571,29 +627,6 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)seekToLive:(id)sender
 {
     [self.controller seekToLiveWithCompletionHandler:nil];
-}
-
-#pragma mark Data display
-
-- (void)reloadDataAnimated:(BOOL)animated
-{
-    [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
-    
-    if (self.controller.error) {
-        self.errorView.hidden = NO;
-        self.errorLabel.text = self.controller.error.localizedDescription;
-        [self setUserInterfaceHidden:YES animated:animated togglable:self.userInterfaceTogglable initiatedByUser:NO];
-    }
-    else if (self.controller.media || self.controller.URN) {
-        self.errorView.hidden = YES;
-    }
-    else {
-        NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                             code:SRGLetterboxErrorCodeNotFound
-                                         userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
-        self.errorView.hidden = NO;
-        self.errorLabel.text = error.localizedDescription;
-    }
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol
@@ -646,52 +679,50 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaMetadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
-    
-    if (! self.errorView.hidden) {
-        self.errorView.hidden = YES;
-        [self resetInactivityTimer];
-    }
+    [self updateVisibleSubviewsAnimated:YES];
+    [self reloadData];
 }
 
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForErrorAnimated:YES];
+    [self reloadData];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForErrorAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self setUserInterfaceHidden:NO animated:YES];
-    [self updateInterfaceAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
 }
 
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
 }
 
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
-    [self updateInterfaceAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+    [self reloadData];
+    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
 }
 
