@@ -145,7 +145,7 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateControlsVisibilityAnimated:NO];
+        [self updateVisibleSubviewsAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
         [self reloadData];
@@ -350,11 +350,14 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI
 
+// Called by external callers to toggle UI controls
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByUser:YES];
 }
 
+// Called internally to toggle UI controls. Might be the result of an internal call (initiatedByUser == NO) or of an external
+// call (initiatedByUser == YES)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
 {
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
@@ -380,18 +383,14 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
 }
 
+// TODO: Should be merged with above method? Cannot tell what this method actually does differently...
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
     if (! self.userInterfaceTogglable) {
         return;
     }
     
-    // No error, no visibility change. Nothing to do
-    if (! self.controller.error && self.userInterfaceHidden == hidden) {
-        return;
-    }
-    // Error. Do not let the UI be hidden in such cases
-    else if (self.controller.error && hidden) {
+    if (self.userInterfaceHidden == hidden) {
         return;
     }
     
@@ -403,7 +402,6 @@ static void commonInit(SRGLetterboxView *self);
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = (hidden || self.controller.error) ? 0.f : 1.f;
-        self.errorView.alpha = ([self error] != nil) ? 1.f : 0.f;
         self.animations ? self.animations(hidden) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
@@ -425,7 +423,8 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateControlsVisibilityAnimated:(BOOL)animated
+// Called to update the main player subviews (player view, background image, error overlay)
+- (void)updateVisibleSubviewsAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -438,7 +437,6 @@ static void commonInit(SRGLetterboxView *self);
             self.imageView.alpha = hidden ? 0.f : 1.f;
             mediaPlayerController.view.alpha = hidden ? 1.f : 0.f;
             
-            [self setUserInterfaceHidden:YES animated:NO /* already in animation block */];
             [self resetInactivityTimer];
             
             if (!self.showingPopup) {
@@ -455,10 +453,11 @@ static void commonInit(SRGLetterboxView *self);
             
             [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
         }
-        else {
-            [self setUserInterfaceHidden:self.userInterfaceHidden animated:NO /* already in animation block */];
-        }
         
+        self.errorView.alpha = ([self error] != nil) ? 1.f : 0.f;
+        
+        // TODO: Animated versions, here called with NO
+        // TODO: Should be called here or elsewhere?
         [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
         [self updateStreamTypeControlsForController:self.controller];
     };
@@ -652,7 +651,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaMetadataDidChange:(NSNotification *)notification
 {
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
     [self reloadData];
 }
 
@@ -664,36 +663,36 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self setUserInterfaceHidden:NO animated:YES];
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
 }
 
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
 {
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
 }
 
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
     [self reloadData];
-    [self updateControlsVisibilityAnimated:YES];
+    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
 }
