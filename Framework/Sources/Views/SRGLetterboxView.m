@@ -54,6 +54,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
 @property (nonatomic) BOOL restoreTogglableInterfaceAfterAirplay;           // Backup value when the UI behavior is temporarily changed during Airplay playback
+@property (nonatomic) BOOL restoreTogglableInterfaceAfterError;             // Backup value when the UI behavior is temporarily changed because an error is displayed
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -144,7 +145,8 @@ static void commonInit(SRGLetterboxView *self);
     if (newWindow) {
         [self updateVisibleSubviewsAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
-        [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
+        [self updateUserInterfaceForAirplayAnimated:NO];
+        [self updateUserInterfaceForErrorAnimated:NO];
         [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -385,8 +387,7 @@ static void commonInit(SRGLetterboxView *self);
         }
         
         void (^animations)(void) = ^{
-            // Controls are hidden if an error has been encountered
-            self.controlsView.alpha = (hidden || self.controller.error) ? 0.f : 1.f;
+            self.controlsView.alpha = hidden ? 0.f : 1.f;
             self.animations ? self.animations(hidden) : nil;
         };
         void (^completion)(BOOL) = ^(BOOL finished) {
@@ -485,7 +486,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
+- (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         // If controls are togglable, disable during Airplay (restore afterwards). Do not deal with the corner case where the togglability
@@ -499,6 +500,24 @@ static void commonInit(SRGLetterboxView *self);
     else if (self.restoreTogglableInterfaceAfterAirplay) {
         [self setUserInterfaceHidden:NO animated:animated togglable:YES];
         self.restoreTogglableInterfaceAfterAirplay = NO;
+    }
+}
+
+- (void)updateUserInterfaceForErrorAnimated:(BOOL)animated
+{
+    if ([self error]) {
+        self.errorView.alpha = 1.f;
+        
+        if (self.userInterfaceTogglable) {
+            self.restoreTogglableInterfaceAfterError = YES;
+        }
+        [self setUserInterfaceHidden:YES animated:animated togglable:NO];
+    }
+    else {
+        self.errorView.alpha = 0.f;
+        
+        [self setUserInterfaceHidden:NO animated:animated togglable:self.restoreTogglableInterfaceAfterError];
+        self.restoreTogglableInterfaceAfterError = NO;
     }
 }
 
@@ -644,13 +663,15 @@ static void commonInit(SRGLetterboxView *self);
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForErrorAnimated:YES];
     [self reloadData];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+    [self updateUserInterfaceForErrorAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -661,7 +682,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
@@ -678,7 +699,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self reloadData];
     [self updateVisibleSubviewsAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
 }
 
