@@ -145,7 +145,7 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateInterfaceAnimated:NO];
+        [self updateControlsVisibilityAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
         [self reloadData];
@@ -425,7 +425,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateInterfaceAnimated:(BOOL)animated
+- (void)updateControlsVisibilityAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -438,25 +438,28 @@ static void commonInit(SRGLetterboxView *self);
             self.imageView.alpha = hidden ? 0.f : 1.f;
             mediaPlayerController.view.alpha = hidden ? 1.f : 0.f;
             
+            [self setUserInterfaceHidden:YES animated:NO /* already in animation block */];
             [self resetInactivityTimer];
             
             if (!self.showingPopup) {
                 self.showingPopup = YES;
-                [self.timeSlider showPopUpViewAnimated:YES];
+                [self.timeSlider showPopUpViewAnimated:NO /* already in animation block */];
             }
         }
         else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
             self.imageView.alpha = 1.f;
             mediaPlayerController.view.alpha = 0.f;
             
-            [self.timeSlider hidePopUpViewAnimated:YES];
+            [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
             self.showingPopup = NO;
             
-            [self setUserInterfaceHidden:NO animated:YES];
+            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+        }
+        else {
+            [self setUserInterfaceHidden:self.userInterfaceHidden animated:NO /* already in animation block */];
         }
         
         [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
-        
         [self updateStreamTypeControlsForController:self.controller];
     };
     
@@ -649,6 +652,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaMetadataDidChange:(NSNotification *)notification
 {
+    [self updateControlsVisibilityAnimated:YES];
     [self reloadData];
 }
 
@@ -660,36 +664,36 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
+    [self updateControlsVisibilityAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self setUserInterfaceHidden:NO animated:YES];
-    [self updateInterfaceAnimated:YES];
+    [self updateControlsVisibilityAnimated:YES];
 }
 
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
+    [self updateControlsVisibilityAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
+    [self updateControlsVisibilityAnimated:YES];
 }
 
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
-    [self updateInterfaceAnimated:YES];
+    [self updateControlsVisibilityAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
     [self reloadData];
-    [self updateInterfaceAnimated:YES];
+    [self updateControlsVisibilityAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
 }
