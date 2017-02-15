@@ -356,6 +356,12 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByUser:YES];
 }
 
+// Helper method to internally change the user interface visibility without changing its togglability
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByUser:NO];
+}
+
 // Called internally to toggle UI controls. Might be the result of an internal call (initiatedByUser == NO) or of an external
 // call (initiatedByUser == YES)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
@@ -371,55 +377,38 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
-    // Temporarily allow toggling the interface
-    self.userInterfaceTogglable = YES;
-    
-    [self setUserInterfaceHidden:hidden animated:animated];
-    if (togglable) {
-        [self resetInactivityTimer];
-    }
-    
-    // Apply the setting
     self.userInterfaceTogglable = togglable;
-}
-
-// TODO: Should be merged with above method? Cannot tell what this method actually does differently...
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    if (! self.userInterfaceTogglable) {
-        return;
-    }
     
-    if (self.userInterfaceHidden == hidden) {
-        return;
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
-        _inWillAnimateUserInterface = YES;
-        [self.delegate letterboxViewWillAnimateUserInterface:self];
-        _inWillAnimateUserInterface = NO;
-    }
-    
-    void (^animations)(void) = ^{
-        self.controlsView.alpha = (hidden || self.controller.error) ? 0.f : 1.f;
-        self.animations ? self.animations(hidden) : nil;
-    };
-    void (^completion)(BOOL) = ^(BOOL finished) {
-        if (finished) {
-            self.userInterfaceHidden = hidden;
+    // Only animate if a change occurred
+    if (self.userInterfaceHidden != hidden) {
+        if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
+            _inWillAnimateUserInterface = YES;
+            [self.delegate letterboxViewWillAnimateUserInterface:self];
+            _inWillAnimateUserInterface = NO;
         }
-        self.completion ? self.completion(finished) : nil;
         
-        self.animations = nil;
-        self.completion = nil;
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations completion:completion];
-    }
-    else {
-        animations();
-        completion(YES);
+        void (^animations)(void) = ^{
+            // Controls are hidden if an error has been encountered
+            self.controlsView.alpha = (hidden || self.controller.error) ? 0.f : 1.f;
+            self.animations ? self.animations(hidden) : nil;
+        };
+        void (^completion)(BOOL) = ^(BOOL finished) {
+            if (finished) {
+                self.userInterfaceHidden = hidden;
+            }
+            self.completion ? self.completion(finished) : nil;
+            
+            self.animations = nil;
+            self.completion = nil;
+        };
+        
+        if (animated) {
+            [UIView animateWithDuration:0.2 animations:animations completion:completion];
+        }
+        else {
+            animations();
+            completion(YES);
+        }
     }
 }
 
