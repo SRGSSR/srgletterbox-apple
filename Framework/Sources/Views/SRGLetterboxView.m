@@ -135,7 +135,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
     
-    [self reloadDataAnimated:NO];
+    [self reloadData];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -146,7 +146,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateInterfaceAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceTogglabilityForAirplayAnimated:NO];
-        [self reloadDataAnimated:NO];
+        [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -278,7 +278,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.playerView layoutIfNeeded];
     }
     
-    [self reloadDataAnimated:NO];
+    [self reloadData];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -322,6 +322,30 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
+- (NSError *)error
+{
+    if (self.controller.error) {
+        return self.controller.error;
+    }
+    else if (! self.controller.media && ! self.controller.URN) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotFound
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
+    }
+    else {
+        return nil;
+    }
+}
+
+#pragma mark Data display
+
+// Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
+- (void)reloadData
+{
+    [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    self.errorLabel.text = [self error].localizedDescription;
+}
+
 #pragma mark UI
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
@@ -360,12 +384,12 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    if (self.userInterfaceHidden == hidden) {
+    // No error, no visibility change. Nothing to do
+    if (! self.controller.error && self.userInterfaceHidden == hidden) {
         return;
     }
-    
-    // Do not let the user interface be displayed when an error has been encountered
-    if (! hidden && self.controller.error) {
+    // Error. Do not let the UI be hidden in such cases
+    else if (self.controller.error && hidden) {
         return;
     }
     
@@ -376,8 +400,8 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     void (^animations)(void) = ^{
-        CGFloat alpha = hidden ? 0.f : 1.f;
-        self.controlsView.alpha = alpha;
+        self.controlsView.alpha = (hidden || self.controller.error) ? 0.f : 1.f;
+        self.errorView.alpha = ([self error] != nil) ? 1.f : 0.f;
         self.animations ? self.animations(hidden) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
@@ -442,7 +466,8 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller {
+- (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller
+{
     self.forwardSeekButton.hidden = ![controller canSeekForward];
     self.backwardSeekButton.hidden = ![controller canSeekBackward];
     self.seekToLiveButton.hidden = ![controller canSeekToLive];
@@ -544,9 +569,8 @@ static void commonInit(SRGLetterboxView *self);
     // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled
-        || ! self.errorView.hidden) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
         [self setUserInterfaceHidden:YES animated:YES];
     }
 }
@@ -571,29 +595,6 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)seekToLive:(id)sender
 {
     [self.controller seekToLiveWithCompletionHandler:nil];
-}
-
-#pragma mark Data display
-
-- (void)reloadDataAnimated:(BOOL)animated
-{
-    [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
-    
-    if (self.controller.error) {
-        self.errorView.hidden = NO;
-        self.errorLabel.text = self.controller.error.localizedDescription;
-        [self setUserInterfaceHidden:YES animated:animated togglable:self.userInterfaceTogglable initiatedByUser:NO];
-    }
-    else if (self.controller.media || self.controller.URN) {
-        self.errorView.hidden = YES;
-    }
-    else {
-        NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                             code:SRGLetterboxErrorCodeNotFound
-                                         userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
-        self.errorView.hidden = NO;
-        self.errorLabel.text = error.localizedDescription;
-    }
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol
@@ -646,17 +647,13 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaMetadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
-    
-    if (! self.errorView.hidden) {
-        self.errorView.hidden = YES;
-        [self resetInactivityTimer];
-    }
+    [self reloadData];
 }
 
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
+    [self reloadData];
+    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
@@ -689,7 +686,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
+    [self reloadData];
     [self updateInterfaceAnimated:YES];
     [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
