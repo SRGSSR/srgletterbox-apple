@@ -347,22 +347,21 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI
 
-// Method exposed in the public interface. Always save the new user choice as restoration value
+// Method exposed in the public interface. Always force the changes to be accepted
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable updateRestorationValues:YES];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable forced:YES];
 }
 
-// Helper method to internally change the user interface visibility without changing the togglability and without
-// updating restoration values
+// Helper method to internally change the user interface visibility without forcing changes
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable updateRestorationValues:NO];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable forced:NO];
 }
 
-// Main method for changing user interface behavior. If updateRestorationValues is set to YES, values used for restoration will
-// be updated so that restoration (if any takes place) uses these values
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable updateRestorationValues:(BOOL)updateRestorationValues
+// Main method for changing user interface behavior. If forced is set to YES, values used for restoration will
+// be updated
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable forced:(BOOL)forced
 {
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
     if (togglable && self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
@@ -370,13 +369,13 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    if (updateRestorationValues) {
+    self.userInterfaceTogglable = togglable;
+    
+    if (forced) {
         self.wasUserInterfaceTogglable = togglable;
     }
     
-    self.userInterfaceTogglable = togglable;
-    
-    // Only animate if a change occurred
+    // Only animate if the UI state is changed
     if (self.userInterfaceHidden != hidden) {
         if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
             _inWillAnimateUserInterface = YES;
@@ -490,11 +489,11 @@ static void commonInit(SRGLetterboxView *self);
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         // If controls were togglable, disable during Airplay (restore afterwards)
         if (self.wasUserInterfaceTogglable) {
-            [self setUserInterfaceHidden:NO animated:animated togglable:NO updateRestorationValues:YES];
+            [self setUserInterfaceHidden:NO animated:animated togglable:NO forced:YES];
         }
     }
     else if (self.wasUserInterfaceTogglable) {
-        [self setUserInterfaceHidden:NO animated:animated togglable:YES updateRestorationValues:NO];
+        [self setUserInterfaceHidden:NO animated:animated togglable:YES forced:NO];
     }
 }
 
