@@ -53,8 +53,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-@property (nonatomic) BOOL restoreTogglableInterfaceAfterAirplay;           // Backup value when the UI behavior is temporarily changed during Airplay playback
-@property (nonatomic) BOOL restoreTogglableInterfaceAfterError;             // Backup value when the UI behavior is temporarily changed because an error is displayed
+@property (nonatomic) NSNumber *airplayRestorationTogglable;            // Backup value when the UI behavior is temporarily changed during Airplay playback
+@property (nonatomic) NSNumber *errorRestorationTogglable;              // Backup value when the UI behavior is temporarily changed because an error is displayed
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -489,17 +489,12 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        // If controls are togglable, disable during Airplay (restore afterwards). Do not deal with the corner case where the togglability
-        // of the UI is altered during Airplay playback (the value before Airplay was enabled will be restored). This would lead to
-        // unnecessary spaghetti code
-        if (self.userInterfaceTogglable) {
-            self.restoreTogglableInterfaceAfterAirplay = YES;
-            [self setUserInterfaceHidden:NO animated:animated togglable:NO];
-        }
+        self.airplayRestorationTogglable = @(self.userInterfaceTogglable);
+        [self setUserInterfaceHidden:NO animated:animated togglable:NO];
     }
-    else if (self.restoreTogglableInterfaceAfterAirplay) {
-        [self setUserInterfaceHidden:NO animated:animated togglable:YES];
-        self.restoreTogglableInterfaceAfterAirplay = NO;
+    else if (self.airplayRestorationTogglable) {
+        [self setUserInterfaceHidden:NO animated:animated togglable:self.airplayRestorationTogglable.boolValue];
+        self.airplayRestorationTogglable = nil;
     }
 }
 
@@ -508,16 +503,16 @@ static void commonInit(SRGLetterboxView *self);
     if ([self error]) {
         self.errorView.alpha = 1.f;
         
-        if (self.userInterfaceTogglable) {
-            self.restoreTogglableInterfaceAfterError = YES;
-        }
+        self.errorRestorationTogglable = @(self.userInterfaceTogglable);
         [self setUserInterfaceHidden:YES animated:animated togglable:NO];
     }
     else {
         self.errorView.alpha = 0.f;
         
-        [self setUserInterfaceHidden:NO animated:animated togglable:self.restoreTogglableInterfaceAfterError];
-        self.restoreTogglableInterfaceAfterError = NO;
+        if (self.errorRestorationTogglable) {
+            [self setUserInterfaceHidden:NO animated:animated togglable:self.errorRestorationTogglable.boolValue];
+            self.errorRestorationTogglable = nil;
+        }
     }
 }
 
