@@ -490,6 +490,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+// FIXME: Improve fragile state-based implementation
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
@@ -513,6 +514,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+// FIXME: Improve fragile state-based implementation
 - (void)updateUserInterfaceForErrorAnimated:(BOOL)animated
 {
     if ([self error]) {
