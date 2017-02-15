@@ -53,7 +53,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-@property (nonatomic) BOOL wasUserInterfaceTogglable;           // Backup value when the UI behavior is temporarily changed during Airplay playback
+@property (nonatomic) BOOL restoreTogglableInterfaceAfterAirplay;           // Backup value when the UI behavior is temporarily changed during Airplay playback
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -358,7 +358,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.userInterfaceTogglable = togglable;
-    self.wasUserInterfaceTogglable = togglable;
     
     [self common_setUserInterfaceHidden:hidden animated:animated];
 }
@@ -489,16 +488,17 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        // If controls were togglable, disable during Airplay (restore afterwards)
-        if (self.wasUserInterfaceTogglable) {
+        // If controls are togglable, disable during Airplay (restore afterwards). Do not deal with the corner case where the togglability
+        // of the UI is altered during Airplay playback (the value before Airplay was enabled will be restored). This would lead to
+        // unnecessary spaghetti code
+        if (self.userInterfaceTogglable) {
+            self.restoreTogglableInterfaceAfterAirplay = YES;
             [self setUserInterfaceHidden:NO animated:animated togglable:NO];
-            
-            // Override the value stored by -setUserInterfaceHidden:animated:togglable:
-            self.wasUserInterfaceTogglable = YES;
         }
     }
-    else if (self.wasUserInterfaceTogglable) {
+    else if (self.restoreTogglableInterfaceAfterAirplay) {
         [self setUserInterfaceHidden:NO animated:animated togglable:YES];
+        self.restoreTogglableInterfaceAfterAirplay = NO;
     }
 }
 
