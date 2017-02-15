@@ -53,7 +53,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-@property (nonatomic) BOOL wasUserInterfaceTogglable;           // Backup value for Airplay playback
+//@property (nonatomic) BOOL wasUserInterfaceTogglable;           // Backup value for Airplay playback
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -354,13 +354,13 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Helper method to internally change the user interface visibility without changing its togglability (but observing it)
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated initiatedByCaller:(BOOL)initiatedByCaller
 {
     if (! self.userInterfaceTogglable) {
         return;
     }
     
-    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByCaller:NO];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByCaller:initiatedByCaller];
 }
 
 // Called to toggle UI controls
@@ -368,13 +368,8 @@ static void commonInit(SRGLetterboxView *self);
 {
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive && initiatedByCaller) {
-        if (! togglable) {
-            self.wasUserInterfaceTogglable = NO;
-        }
-        else {
-            SRGLetterboxLogWarning(@"view", @"The user interface state cannot be changed while Airplay playback is active");
-            return;
-        }
+        SRGLetterboxLogWarning(@"view", @"The user interface state cannot be changed while Airplay playback is active");
+        return;
     }
     
     self.userInterfaceTogglable = togglable;
@@ -441,7 +436,7 @@ static void commonInit(SRGLetterboxView *self);
             [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
             self.showingPopup = NO;
             
-            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */ initiatedByCaller:NO];
         }
         
         // TODO: Animated versions, here called with NO
@@ -490,6 +485,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
 {
+#if 0
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
@@ -502,6 +498,7 @@ static void commonInit(SRGLetterboxView *self);
             [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByCaller:NO];
         }
     }
+#endif
 }
 
 - (void)updateUserInterfaceForServicePlayback
@@ -545,12 +542,12 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self setUserInterfaceHidden:NO animated:YES];
+    [self setUserInterfaceHidden:NO animated:YES initiatedByCaller:NO];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self setUserInterfaceHidden:YES animated:YES];
+    [self setUserInterfaceHidden:YES animated:YES initiatedByCaller:YES];
 }
 
 #pragma mark Timers
@@ -563,7 +560,7 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self setUserInterfaceHidden:YES animated:YES];
+        [self setUserInterfaceHidden:YES animated:YES initiatedByCaller:NO];
     }
 }
 
