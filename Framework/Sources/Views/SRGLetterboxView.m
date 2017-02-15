@@ -22,7 +22,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
 
-// UI
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *controlsView;
@@ -45,7 +44,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
-// Internal
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -55,8 +53,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-// Backup value for Airplay playback
-@property (nonatomic) BOOL wasUserInterfaceTogglable;
+@property (nonatomic) BOOL wasUserInterfaceTogglable;           // Backup value for Airplay playback
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -353,21 +350,20 @@ static void commonInit(SRGLetterboxView *self);
 // Called by external callers to toggle UI controls
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByUser:YES];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByCaller:YES];
 }
 
 // Helper method to internally change the user interface visibility without changing its togglability
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByUser:NO];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByCaller:NO];
 }
 
-// Called internally to toggle UI controls. Might be the result of an internal call (initiatedByUser == NO) or of an external
-// call (initiatedByUser == YES)
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByUser:(BOOL)initiatedByUser
+// Called to toggle UI controls
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByCaller:(BOOL)initiatedByCaller
 {
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive && initiatedByUser) {
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive && initiatedByCaller) {
         if (! togglable) {
             self.wasUserInterfaceTogglable = NO;
         }
@@ -380,7 +376,7 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     // Only animate if a change occurred
-    if (self.userInterfaceHidden != hidden) {
+    if (self.userInterfaceHidden != hidden && togglable) {
         if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
             _inWillAnimateUserInterface = YES;
             [self.delegate letterboxViewWillAnimateUserInterface:self];
@@ -420,7 +416,7 @@ static void commonInit(SRGLetterboxView *self);
         
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
             // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
-            // playbackl on the external device) is used
+            // playbackl on the initiatedByCaller device) is used
             SRGMedia *media = self.controller.media;
             BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive;
             self.imageView.alpha = hidden ? 0.f : 1.f;
@@ -495,12 +491,12 @@ static void commonInit(SRGLetterboxView *self);
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
             self.wasUserInterfaceTogglable = YES;
-            [self setUserInterfaceHidden:NO animated:animated togglable:NO initiatedByUser:NO];
+            [self setUserInterfaceHidden:NO animated:animated togglable:NO initiatedByCaller:NO];
         }
     }
     else {
         if (self.wasUserInterfaceTogglable) {
-            [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByUser:NO];
+            [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByCaller:NO];
         }
     }
 }
@@ -646,8 +642,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)mediaPlaybackDidFail:(NSNotification *)notification
 {
+    [self updateVisibleSubviewsAnimated:YES];
     [self reloadData];
-    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
@@ -658,7 +654,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self setUserInterfaceHidden:NO animated:YES];
     [self updateVisibleSubviewsAnimated:YES];
 }
 
