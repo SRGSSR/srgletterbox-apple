@@ -98,7 +98,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     [self updateRemoteCommandCenterWithController:controller];
     [self updateNowPlayingInformationWithController:controller];
-    [self updateNowPlayingPlaybackInformationWithController:controller];
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
@@ -142,7 +141,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                    object:mediaPlayerController];
         
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            [self updateNowPlayingPlaybackInformationWithController:controller];
             [self updateRemoteCommandCenterWithController:controller];
         }];
     }
@@ -302,6 +300,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
     
+    // TODO: Should be retrieved automatically by the controller
     NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:256.f * [UIScreen mainScreen].scale];
     self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:imageURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
         if (image) {
@@ -311,16 +310,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
     }];
     
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-}
-
-// Playback information which requires more frequent updates
-- (void)updateNowPlayingPlaybackInformationWithController:(SRGLetterboxController *)controller
-{
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    NSMutableDictionary *nowPlayingInfo = [[MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo mutableCopy];
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration));
+    
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
 }
 
