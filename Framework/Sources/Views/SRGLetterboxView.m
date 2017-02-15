@@ -371,6 +371,10 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
+    if (self.userInterfaceHidden == hidden) {
+        return;
+    }
+    
     [self common_setUserInterfaceHidden:hidden animated:animated];
 }
 
@@ -378,35 +382,32 @@ static void commonInit(SRGLetterboxView *self);
 // factorisation method which is not intended for direct use
 - (void)common_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    // Only animate if the UI state is changed
-    if (self.userInterfaceHidden != hidden) {
-        if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
-            _inWillAnimateUserInterface = YES;
-            [self.delegate letterboxViewWillAnimateUserInterface:self];
-            _inWillAnimateUserInterface = NO;
+    if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
+        _inWillAnimateUserInterface = YES;
+        [self.delegate letterboxViewWillAnimateUserInterface:self];
+        _inWillAnimateUserInterface = NO;
+    }
+    
+    void (^animations)(void) = ^{
+        self.controlsView.alpha = hidden ? 0.f : 1.f;
+        self.animations ? self.animations(hidden) : nil;
+    };
+    void (^completion)(BOOL) = ^(BOOL finished) {
+        if (finished) {
+            self.userInterfaceHidden = hidden;
         }
+        self.completion ? self.completion(finished) : nil;
         
-        void (^animations)(void) = ^{
-            self.controlsView.alpha = hidden ? 0.f : 1.f;
-            self.animations ? self.animations(hidden) : nil;
-        };
-        void (^completion)(BOOL) = ^(BOOL finished) {
-            if (finished) {
-                self.userInterfaceHidden = hidden;
-            }
-            self.completion ? self.completion(finished) : nil;
-            
-            self.animations = nil;
-            self.completion = nil;
-        };
-        
-        if (animated) {
-            [UIView animateWithDuration:0.2 animations:animations completion:completion];
-        }
-        else {
-            animations();
-            completion(YES);
-        }
+        self.animations = nil;
+        self.completion = nil;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations completion:completion];
+    }
+    else {
+        animations();
+        completion(YES);
     }
 }
 
@@ -489,8 +490,10 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        self.airplayRestorationTogglable = @(self.userInterfaceTogglable);
-        [self setUserInterfaceHidden:NO animated:animated togglable:NO];
+        if (! self.airplayRestorationTogglable) {
+            self.airplayRestorationTogglable = @(self.userInterfaceTogglable);
+            [self setUserInterfaceHidden:NO animated:animated togglable:NO];
+        }
     }
     else if (self.airplayRestorationTogglable) {
         [self setUserInterfaceHidden:NO animated:animated togglable:self.airplayRestorationTogglable.boolValue];
@@ -503,8 +506,10 @@ static void commonInit(SRGLetterboxView *self);
     if ([self error]) {
         self.errorView.alpha = 1.f;
         
-        self.errorRestorationTogglable = @(self.userInterfaceTogglable);
-        [self setUserInterfaceHidden:YES animated:animated togglable:NO];
+        if (! self.errorRestorationTogglable) {
+            self.errorRestorationTogglable = @(self.userInterfaceTogglable);
+            [self setUserInterfaceHidden:YES animated:animated togglable:NO];        
+        }
     }
     else {
         self.errorView.alpha = 0.f;
