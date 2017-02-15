@@ -109,8 +109,9 @@ static void commonInit(SRGLetterboxView *self);
     }];
     self.loadingImageView = loadingImageView;
     
-    self.backwardSeekButton.hidden = YES;
-    self.forwardSeekButton.hidden = YES;
+    self.backwardSeekButton.alpha = 0.f;
+    self.forwardSeekButton.alpha = 0.f;
+    self.seekToLiveButton.alpha = 0.f;
     
     self.airplayView.delegate = self;
     
@@ -245,7 +246,8 @@ static void commonInit(SRGLetterboxView *self);
     else {
         [self.timeSlider showPopUpViewAnimated:NO];
     }
-    [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
+    
+    [self updateLoadingIndicatorForController:controller animated:NO];
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -255,9 +257,9 @@ static void commonInit(SRGLetterboxView *self);
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             @strongify(controller)
-            [self updateStreamTypeControlsForController:controller];
+            [self updateControlsForController:controller animated:YES];
         }];
-        [self updateStreamTypeControlsForController:controller];
+        [self updateControlsForController:controller animated:NO];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(mediaMetadataDidChange:)
@@ -444,12 +446,7 @@ static void commonInit(SRGLetterboxView *self);
             self.showingPopup = NO;
             
             [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
-        }
-        
-        // TODO: Animated versions, here called with NO
-        // TODO: Should be called here or elsewhere?
-        [self updateLoadingIndicatorForMediaPlayerController:mediaPlayerController];
-        [self updateStreamTypeControlsForController:self.controller];
+        }        
     };
     
     if (animated) {
@@ -460,33 +457,37 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateStreamTypeControlsForController:(SRGLetterboxController *)controller
+- (void)updateControlsForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
-    self.forwardSeekButton.hidden = ![controller canSeekForward];
-    self.backwardSeekButton.hidden = ![controller canSeekBackward];
-    self.seekToLiveButton.hidden = ![controller canSeekToLive];
-    
-    if (controller.media.contentType == SRGContentTypeLivestream) {
-        if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR ||
-            [controller canSeekBackward] ||
-            [controller canSeekForward]) {
-            self.timeSlider.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.alpha = 0.f;
-            self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+    void (^animations)(void) = ^{
+        self.forwardSeekButton.alpha = [controller canSeekForward] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [controller canSeekBackward] ? 1.f : 0.f;
+        self.seekToLiveButton.alpha = [controller canSeekToLive] ? 1.f : 0.f;
+        
+        if (controller.media.contentType == SRGContentTypeLivestream) {
+            if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || [controller canSeekBackward] || [controller canSeekForward]) {
+                self.timeSlider.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.alpha = 0.f;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+            }
+            else {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+            }
         }
         else {
-            self.timeSlider.alpha = 0.f;
+            self.timeSlider.alpha = 1.f;
             self.timeSlider.timeLeftValueLabel.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
-            self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+            self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
         }
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
     }
     else {
-        self.timeSlider.alpha = 1.f;
-        self.timeSlider.timeLeftValueLabel.alpha = 1.f;
-        self.timeSlider.timeLeftValueLabel.hidden = NO;
-        self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+        animations();
     }
 }
 
@@ -544,18 +545,29 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
+{
+    void (^animations)(void) = ^{
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        self.loadingImageView.alpha = (! mediaPlayerController
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
+    }
+    else {
+        animations();
+    }
+}
+
 - (void)updateUserInterfaceForServicePlayback
 {
     self.airplayButton.alwaysHidden = ! self.controller.backgroundServicesEnabled;
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
-}
-
-- (void)updateLoadingIndicatorForMediaPlayerController:(SRGMediaPlayerController *)mediaPlayerController
-{
-    self.loadingImageView.alpha = (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                   || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                   || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                   || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
 }
 
 - (void)resetInactivityTimer
@@ -695,6 +707,7 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
+    [self updateLoadingIndicatorForController:self.controller animated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
