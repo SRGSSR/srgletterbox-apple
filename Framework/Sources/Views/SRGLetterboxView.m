@@ -353,9 +353,13 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByCaller:YES];
 }
 
-// Helper method to internally change the user interface visibility without changing its togglability
+// Helper method to internally change the user interface visibility without changing its togglability (but observing it)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
+    if (! self.userInterfaceTogglable) {
+        return;
+    }
+    
     [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByCaller:NO];
 }
 
@@ -376,7 +380,7 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     // Only animate if a change occurred
-    if (self.userInterfaceHidden != hidden && togglable) {
+    if (self.userInterfaceHidden != hidden) {
         if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
             _inWillAnimateUserInterface = YES;
             [self.delegate letterboxViewWillAnimateUserInterface:self];
@@ -408,7 +412,8 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Called to update the main player subviews (player view, background image, error overlay)
+// Called to update the main player subviews (player view, background image, error overlay). Independent of the status
+// of the controls
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
@@ -438,8 +443,6 @@ static void commonInit(SRGLetterboxView *self);
             
             [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
         }
-        
-        self.errorView.alpha = ([self error] != nil) ? 1.f : 0.f;
         
         // TODO: Animated versions, here called with NO
         // TODO: Should be called here or elsewhere?
