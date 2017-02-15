@@ -365,7 +365,7 @@ static void commonInit(SRGLetterboxView *self);
 // Show or hide the user interface, doing nothing if the interface is not togglable
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable) {
+    if (! self.userInterfaceTogglable || self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         return;
     }
     
@@ -650,6 +650,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
