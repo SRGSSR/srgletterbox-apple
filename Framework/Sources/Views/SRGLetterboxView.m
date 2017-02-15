@@ -53,7 +53,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-//@property (nonatomic) BOOL wasUserInterfaceTogglable;           // Backup value for Airplay playback
+@property (nonatomic) BOOL wasUserInterfaceTogglable;           // Backup value when the UI behavior is temporarily changed during Airplay playback
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -373,6 +373,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.userInterfaceTogglable = togglable;
+    self.wasUserInterfaceTogglable = togglable;
     
     // Only animate if a change occurred
     if (self.userInterfaceHidden != hidden) {
@@ -485,7 +486,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceTogglabilityForAirplayAnimated:(BOOL)animated
 {
-#if 0
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
@@ -493,12 +493,9 @@ static void commonInit(SRGLetterboxView *self);
             [self setUserInterfaceHidden:NO animated:animated togglable:NO initiatedByCaller:NO];
         }
     }
-    else {
-        if (self.wasUserInterfaceTogglable) {
-            [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByCaller:NO];
-        }
+    else if (self.wasUserInterfaceTogglable) {
+        [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByCaller:NO];
     }
-#endif
 }
 
 - (void)updateUserInterfaceForServicePlayback
@@ -649,7 +646,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
-    [self updateUserInterfaceTogglabilityForAirplayAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
