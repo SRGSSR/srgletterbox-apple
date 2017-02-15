@@ -302,21 +302,34 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition];
         
-        @weakify(self)
-        SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
-            @strongify(self)
-            
-            [self.requestQueue reportError:error];
-        }];
-        
-        if (playRequest) {
-            [self.requestQueue addRequest:playRequest resume:YES];
-        }
-        else {
-            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                 code:SRGLetterboxErrorCodeNotFound
-                                             userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
-            [self.requestQueue reportError:error];
+        // Deal with blocking reason
+        switch (mediaComposition.mainChapter.blockingReason) {
+            case SRGBlockingReasonGeoblocking:
+            {
+                [self.requestQueue reportError:SRGBlockingReasonErrorForBlockingReason(mediaComposition.mainChapter.blockingReason)];
+            }
+                break;
+                
+            default:
+            {
+                @weakify(self)
+                SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+                    @strongify(self)
+                    
+                    [self.requestQueue reportError:error];
+                }];
+                
+                if (playRequest) {
+                    [self.requestQueue addRequest:playRequest resume:YES];
+                }
+                else {
+                    NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                         code:SRGLetterboxErrorCodeNotFound
+                                                     userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
+                    [self.requestQueue reportError:error];
+                }
+            }
+                break;
         }
     };
     
@@ -364,6 +377,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                                          code:SRGLetterboxErrorCodeNetwork
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
                                                  NSUnderlyingErrorKey : error }];
+    }
+    // Use a friendly error message for blocking reasons
+    else if ([error.domain isEqualToString:SRGDataProviderErrorDomain] && error.code == SRGDataProviderErrorBlockingReason) {
+        self.error = error;
     }
     // Use a friendly error message for all other reasons
     else {
