@@ -350,25 +350,25 @@ static void commonInit(SRGLetterboxView *self);
 // Called by external callers to toggle UI controls
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable initiatedByCaller:YES];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:togglable togglableChangeAllowed:YES];
 }
 
 // Helper method to internally change the user interface visibility without changing its togglability (but observing it)
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated initiatedByCaller:(BOOL)initiatedByCaller
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable) {
-        return;
-    }
-    
-    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable initiatedByCaller:initiatedByCaller];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable togglableChangeAllowed:NO];
 }
 
 // Called to toggle UI controls
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable initiatedByCaller:(BOOL)initiatedByCaller
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable togglableChangeAllowed:(BOOL)togglableChangeAllowed
 {
     // If usual non-mirrored Airplay playback is active, do not let the user change the current state
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive && initiatedByCaller) {
-        SRGLetterboxLogWarning(@"view", @"The user interface state cannot be changed while Airplay playback is active");
+    if (! togglableChangeAllowed && self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+        SRGLetterboxLogWarning(@"view", @"Changes to the hidden property only are not allowed while using non-mirrored Airplay");
+        return;
+    }
+    
+    if (! togglableChangeAllowed && self.userInterfaceTogglable != togglable) {
         return;
     }
     
@@ -437,7 +437,7 @@ static void commonInit(SRGLetterboxView *self);
             [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
             self.showingPopup = NO;
             
-            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */ initiatedByCaller:NO];
+            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
         }
         
         // TODO: Animated versions, here called with NO
@@ -490,11 +490,11 @@ static void commonInit(SRGLetterboxView *self);
         // If the user interface was togglable, disable and force display, otherwise keep the state as it was
         if (self.userInterfaceTogglable) {
             self.wasUserInterfaceTogglable = YES;
-            [self setUserInterfaceHidden:NO animated:animated togglable:NO initiatedByCaller:NO];
+            [self setUserInterfaceHidden:NO animated:animated togglable:NO];
         }
     }
     else if (self.wasUserInterfaceTogglable) {
-        [self setUserInterfaceHidden:NO animated:animated togglable:YES initiatedByCaller:NO];
+        [self setUserInterfaceHidden:NO animated:animated togglable:YES];
     }
 }
 
@@ -539,12 +539,12 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self setUserInterfaceHidden:NO animated:YES initiatedByCaller:NO];
+    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self setUserInterfaceHidden:YES animated:YES initiatedByCaller:YES];
+    [self setUserInterfaceHidden:YES animated:YES];
 }
 
 #pragma mark Timers
@@ -557,7 +557,7 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self setUserInterfaceHidden:YES animated:YES initiatedByCaller:NO];
+        [self setUserInterfaceHidden:YES animated:YES];
     }
 }
 
