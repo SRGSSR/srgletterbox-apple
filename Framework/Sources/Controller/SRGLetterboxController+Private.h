@@ -69,7 +69,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 - (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Seek forward to the stream live, only for 
+ *  Seek forward to live conditions.
  *
  *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
  *              finished set to `NO`.
