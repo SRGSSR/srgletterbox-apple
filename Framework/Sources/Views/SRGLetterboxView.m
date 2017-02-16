@@ -11,6 +11,7 @@
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGLetterboxService+Private.h"
+#import "SRGLetterboxViewRestorationContext.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -53,11 +54,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-@property (nonatomic) NSNumber *airplayRestorationHidden;               // Backup value when the UI behavior is temporarily changed during Airplay playback
-@property (nonatomic) NSNumber *airplayRestorationTogglable;            // Backup value when the UI behavior is temporarily changed during Airplay playback
-
-@property (nonatomic) NSNumber *errorRestorationHidden;                 // Backup value when the UI behavior is temporarily changed because an error is displayed
-@property (nonatomic) NSNumber *errorRestorationTogglable;              // Backup value when the UI behavior is temporarily changed because an error is displayed
+@property (nonatomic) NSMutableArray *restorationContexts;
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -491,57 +488,49 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// FIXME: Improve fragile state-based implementation
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
+    static NSString * const kIdentifier = @"airplay";
+    
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        if (! self.airplayRestorationTogglable) {
-            self.airplayRestorationHidden = @(self.userInterfaceHidden);
-            self.airplayRestorationTogglable = @(self.userInterfaceTogglable);
-            
+        [self applyUserInterfaceChanges:^{
             [self setUserInterfaceHidden:NO animated:animated togglable:NO];
-        }
+        } withRestorationIdentifier:kIdentifier];
     }
-    else if (self.airplayRestorationTogglable) {
-        if (self.airplayRestorationTogglable.boolValue) {
-            [self setUserInterfaceHidden:YES animated:animated togglable:YES];
-        }
-        else {
-            [self setUserInterfaceHidden:self.airplayRestorationHidden.boolValue animated:animated togglable:NO];
-        }
-        
-        self.airplayRestorationHidden = nil;
-        self.airplayRestorationTogglable = nil;
+    else {
+        [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
+            if (togglable) {
+                [self setUserInterfaceHidden:YES animated:animated togglable:YES];
+            }
+            else {
+                [self setUserInterfaceHidden:hidden animated:animated togglable:NO];
+            }
+        }];
     }
 }
 
-// FIXME: Improve fragile state-based implementation
 - (void)updateUserInterfaceForErrorAnimated:(BOOL)animated
 {
+    static NSString * const kIdentifier = @"error";
+    
     if ([self error]) {
         self.errorView.alpha = 1.f;
         
-        if (! self.errorRestorationTogglable) {
-            self.errorRestorationHidden = @(self.userInterfaceHidden);
-            self.errorRestorationTogglable = @(self.userInterfaceTogglable);
-            
-            [self setUserInterfaceHidden:YES animated:animated togglable:NO];        
-        }
+        [self applyUserInterfaceChanges:^{
+            [self setUserInterfaceHidden:YES animated:animated togglable:NO];
+        } withRestorationIdentifier:kIdentifier];
     }
     else {
         self.errorView.alpha = 0.f;
         
-        if (self.errorRestorationTogglable) {
-            if (self.errorRestorationTogglable.boolValue) {
+        [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
+            if (togglable) {
                 [self setUserInterfaceHidden:YES animated:animated togglable:YES];
             }
             else {
-                [self setUserInterfaceHidden:self.errorRestorationHidden.boolValue animated:animated togglable:NO];
+                [self setUserInterfaceHidden:hidden animated:animated togglable:NO];
             }
-            
-            self.errorRestorationHidden = nil;
-            self.errorRestorationTogglable = nil;
-        }
+        }];
     }
 }
 
@@ -590,6 +579,49 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isFullScreenButtonHidden
 {
     return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)];
+}
+
+#pragma mark UI changes and restoration
+
+// Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
+// identifier are applied at most once.
+- (void)applyUserInterfaceChanges:(void (^)(void))changes withRestorationIdentifier:(NSString *)restorationIdentifier
+{
+    NSParameterAssert(changes);
+    
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithLetterboxView:self name:restorationIdentifier];
+    if (! [self.restorationContexts containsObject:restorationContext]) {
+        [self.restorationContexts addObject:restorationContext];
+        changes();
+    }
+}
+
+// Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
+// is provided in the `changes` block.
+- (void)restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier withChanges:(void (^)(BOOL hidden, BOOL togglable))changes
+{
+    NSParameterAssert(changes);
+    
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithLetterboxView:self name:restorationIdentifier];
+    if ([self.restorationContexts containsObject:restorationContext]) {
+        [self.restorationContexts removeObject:restorationContext];
+        
+        // If one of the contexts decides that the UI must be hidden or not togglable, then this value dominates
+        // the others
+        BOOL hidden = NO;
+        BOOL togglable = YES;
+        
+        for (SRGLetterboxViewRestorationContext *restorationContext in self.restorationContexts) {
+            if (restorationContext.hidden) {
+                hidden = YES;
+            }
+            if (! restorationContext.togglable) {
+                togglable = NO;
+            }
+        }
+        
+        changes(hidden, togglable);
+    }
 }
 
 #pragma mark Gesture recognizers
@@ -751,4 +783,6 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
+    
+    self.restorationContexts = [NSMutableArray array];
 }
