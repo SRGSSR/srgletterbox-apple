@@ -582,17 +582,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
-    SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     
-    // Seek to live for Live only stream, when it was paused.
-    if (self.media.contentType == SRGContentTypeLivestream &&
-        self.mediaPlayerController.streamType != SRGMediaPlayerStreamTypeDVR &&
-        ![self canSeekBackward] &&
-        ![self canSeekForward] &&
-        playbackState == SRGMediaPlayerPlaybackStatePlaying &&
-        previousPlaybackState == SRGMediaPlayerPlaybackStatePaused) {
-        [self seekToLiveWithCompletionHandler:nil];
-        
+    // Do not let pause live streams, stop playback
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
+        [self.mediaPlayerController stop];
     }
     
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
