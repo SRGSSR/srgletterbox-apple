@@ -122,18 +122,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                     return;
                 }
                 
-                // Prevent playback if the chapter is blocked
-                SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-                if (blockingReason == SRGBlockingReasonGeoblocking) {
-                    [self.mediaPlayerController stop];
-                    
-                    NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                         code:SRGLetterboxErrorCodeBlocked
-                                                     userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
-                    [self reportError:error];
-                    return;
-                }
-                
                 // Update the URL if needed
                 if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
                     SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
