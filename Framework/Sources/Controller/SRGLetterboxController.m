@@ -9,6 +9,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
+#import "SRGLetterboxLogger.h"
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
@@ -59,7 +60,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
-@property (nonatomic, weak) id DVRPeriodicTimeObserver;
+@property (nonatomic, weak) id streamAvailabilityPeriodicTimeObserver;
 
 // For successive seeks, update the target time (previous seeks are cancelled). This makes it possible to seek faster
 // to a desired location
@@ -67,6 +68,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
+
+@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
 
@@ -102,43 +105,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         };
         self.seekTargetTime = kCMTimeInvalid;
         
-#if DEBUG
-        static Float64 const kVDRStreamAvailabilityCheckInterval = 10.;
-#else
-        static Float64 const kVDRStreamAvailabilityCheckInterval = 5 * 60.;
-#endif
-        
-        // Periodically check stream changes
-        self.DVRPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(kVDRStreamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            @strongify(self)
-            
-            // Only for live streams
-            if (self.media.contentType != SRGContentTypeLivestream && self.media.contentType != SRGContentTypeScheduledLivestream) {
-                return;
-            }
-            
-            void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-                if (error) {
-                    return;
-                }
-                
-                // Update the URL if needed
-                if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
-                    SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
-                    [self playMedia:media withPreferredQuality:self.preferredQuality];
-                }
-            };
-            
-            SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
-            
-            if (self.URN.mediaType == SRGMediaTypeVideo) {
-                [[dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
-            }
-            else if (self.URN.mediaType == SRGMediaTypeAudio) {
-                [[dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
-            }
-        }];
+        // Also register the associated periodic time observer
+        self.streamAvailabilityCheckInterval = 5. * 60.;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -158,7 +126,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)dealloc
 {
-    [self.mediaPlayerController removePeriodicTimeObserver:self.DVRPeriodicTimeObserver];
+    [self.mediaPlayerController removePeriodicTimeObserver:self.streamAvailabilityPeriodicTimeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -203,6 +171,56 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (BOOL)isTracked
 {
     return self.mediaPlayerController.tracked;
+}
+
+- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+{
+    if (streamAvailabilityCheckInterval < 10.) {
+        SRGLetterboxLogWarning(@"controller", @"The mimimum stream availability check is 10 seconds. Set to 10 seconds.");
+        streamAvailabilityCheckInterval = 10.;
+    }
+    
+    _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
+    
+    // Periodically check stream changes
+    @weakify(self)
+    self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        @strongify(self)
+        
+        void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+            if (error) {
+                return;
+            }
+            
+            // If the user location has changed, she might be in a location where the content is now blocked
+            SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
+            if (blockingReason == SRGBlockingReasonGeoblocking) {
+                [self.mediaPlayerController stop];
+                
+                NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                     code:SRGLetterboxErrorCodeBlocked
+                                                 userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
+                [self reportError:error];
+                return;
+            }
+            
+            // Update the URL if needed
+            if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
+                SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
+                [self playMedia:media withPreferredQuality:self.preferredQuality];
+            }
+        };
+        
+        SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
+        
+        if (self.URN.mediaType == SRGMediaTypeVideo) {
+            [[dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
+        }
+        else if (self.URN.mediaType == SRGMediaTypeAudio) {
+            [[dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
+        }
+    }];
 }
 
 #pragma mark Data

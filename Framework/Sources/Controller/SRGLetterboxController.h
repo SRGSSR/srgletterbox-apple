@@ -181,6 +181,23 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @end
 
 /**
+ *  Settings for periodic updates
+ */
+@interface SRGLetterboxController (PeriodicUpdates)
+
+/**
+ *  Time interval between stream availability checks. Live streams might change (e.g. if a stream is toggled between DVR 
+ *  and live-only versions) or not be available anymore (e.g. if the location of the user changes and the stream is not
+ *  available for the new location). If a stream is changed, the new one is automatically played, otherwise playback
+ *  stops with an error.
+ *
+ *  Default is 5 minutes, and minimum is 10 second.
+ */
+@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+
+@end
+
+/**
  *  Overriding abilities. Player functionalities might be limited when overriding has been made.
  */
 @interface SRGLetterboxController (Overriding)
