@@ -7,10 +7,8 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <XCTest/XCTest.h>
 
-static NSURL *ServiceTestURL(void)
-{
-    return SRGIntegrationLayerTestServiceURL();
-}
+// Test internals
+#import "SRGLetterboxController+Private.h"
 
 @interface LetterboxControllerTestCase : XCTestCase
 
@@ -20,7 +18,19 @@ static NSURL *ServiceTestURL(void)
 
 @implementation LetterboxControllerTestCase
 
-#pragma mark Setup and teardown
+#pragma mark Helpers
+
+- (XCTestExpectation *)expectationForElapsedTimeInterval:(NSTimeInterval)timeInterval withHandler:(void (^)(void))handler
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"Wait for %@ seconds", @(timeInterval)]];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+        handler ? handler() : nil;
+    });
+    return expectation;
+}
+
+#pragma mark Setup and tear down
 
 - (void)setUp
 {
@@ -36,45 +46,240 @@ static NSURL *ServiceTestURL(void)
 
 #pragma mark Tests
 
-- (void)testOnDemandStreamSeeks
+- (void)testShortLifetime
 {
-    XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Request succeeded"];
+    __unused SRGLetterboxController *letterboxController = [[SRGLetterboxController alloc] init];
+}
+
+- (void)testPlayURN
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
-    // TTC
-    __block SRGMediaComposition *mediaComposition = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
-    [[dataProvider mediaCompositionForVideoWithUid:@"8297891" completionBlock:^(SRGMediaComposition * _Nullable retrievedMediaComposition, NSError * _Nullable error) {
-        XCTAssertNotNil(retrievedMediaComposition);
-        mediaComposition = retrievedMediaComposition;
-        [mediaCompositionExpectation fulfill];
+    // Wait until the stream is playing, at which time we expect the media composition to be available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    [self.controller playURN:URN];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
+    XCTAssertNil(self.controller.error);
+}
+
+- (void)testPlayMedia
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
+    
+    __block SRGMedia *media = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        media = medias.firstObject;
+        [expectation fulfill];
     }] resume];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    // Wait until the stream is playing
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    XCTAssertNotNil(media);
+    
+    // Wait until the stream is playing, at which time we expect the media composition to be available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    [self.controller playMedia:media];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, media.URN);
+    XCTAssertEqualObjects(self.controller.media, media);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, media.URN);
+    XCTAssertNil(self.controller.error);
+}
+
+- (void)testReset
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:SRGQualityNone userInfo:nil resume:YES completionHandler:nil];
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    [self.controller playURN:URN];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller reset];
+    
+    XCTAssertNil(self.controller.URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
+- (void)testPlaybackMetadata
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    XCTAssertNil(self.controller.URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    
+    // Wait until the stream is playing, at which time we expect the media composition to be available
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    [self.controller playURN:URN];
+    
+    // Media and composition not immediately available, fetched by the controller
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
+    XCTAssertNil(self.controller.error);
+    
+    [self.controller reset];
+    
+    XCTAssertNil(self.controller.URN);
+    XCTAssertNil(self.controller.media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+}
+
+- (void)testSameMediaPlaybackWhileAlreadyPlaying
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Expect no change when trying to play the same media
+    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no metadata update when playing the same media");
+    }];
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no playback state change when playing the same media");
+    }];
+    
+    [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+}
+
+- (void)testSameMediaPlaybackWhilePaused
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Pause playback
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    [mediaPlayerController pause];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Expect only a player state change notification, no metadata change notification
+    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no metadata update when playing the same media");
+    }];
+    
+    [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
+    }];
+}
+
+- (void)testOnDemandStreamSeeks
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    // TTC
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSeekBackward]);
     XCTAssertTrue([self.controller canSeekForward]);
 
     // Seek to near the end
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(15., NSEC_PER_SEC)) withCompletionHandler:nil];
+    [mediaPlayerController seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(mediaPlayerController.timeRange), CMTimeMakeWithSeconds(15., NSEC_PER_SEC)) withCompletionHandler:nil];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSeekBackward]);
     XCTAssertFalse([self.controller canSeekForward]);
     
     // Use standard seeks
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
@@ -86,7 +291,7 @@ static NSURL *ServiceTestURL(void)
     XCTAssertTrue([self.controller canSeekBackward]);
     XCTAssertTrue([self.controller canSeekForward]);
     
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
@@ -101,25 +306,14 @@ static NSURL *ServiceTestURL(void)
 
 - (void)testLiveStreamSeeks
 {
-    XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Request succeeded"];
-    
-    // RSI 1
-    __block SRGMediaComposition *mediaComposition = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRSI];
-    [[dataProvider mediaCompositionForVideoWithUid:@"livestream_La1" completionBlock:^(SRGMediaComposition * _Nullable retrievedMediaComposition, NSError * _Nullable error) {
-        XCTAssertNotNil(retrievedMediaComposition);
-        mediaComposition = retrievedMediaComposition;
-        [mediaCompositionExpectation fulfill];
-    }] resume];
-    
-    [self waitForExpectationsWithTimeout:20. handler:nil];
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
     // Wait until the stream is playing
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:SRGQualityNone userInfo:nil resume:YES completionHandler:nil];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertFalse([self.controller canSeekBackward]);
@@ -136,34 +330,23 @@ static NSURL *ServiceTestURL(void)
 
 - (void)testDVRStreamSeeks
 {
-    XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Request succeeded"];
-    
-    // RTS 1
-    __block SRGMediaComposition *mediaComposition = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
-    [[dataProvider mediaCompositionForVideoWithUid:@"1967124" completionBlock:^(SRGMediaComposition * _Nullable retrievedMediaComposition, NSError * _Nullable error) {
-        XCTAssertNotNil(retrievedMediaComposition);
-        mediaComposition = retrievedMediaComposition;
-        [mediaCompositionExpectation fulfill];
-    }] resume];
-    
-    [self waitForExpectationsWithTimeout:20. handler:nil];
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
     // Wait until the stream is playing
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:SRGQualityNone userInfo:nil resume:YES completionHandler:nil];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue(self.controller.live);
+    XCTAssertTrue(mediaPlayerController.live);
     
     XCTAssertTrue([self.controller canSeekBackward]);
     XCTAssertFalse([self.controller canSeekForward]);
     
     // Seek in the past
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
@@ -172,13 +355,13 @@ static NSURL *ServiceTestURL(void)
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertFalse(self.controller.live);
+    XCTAssertFalse(mediaPlayerController.live);
     
     XCTAssertTrue([self.controller canSeekBackward]);
     XCTAssertTrue([self.controller canSeekForward]);
     
     // Seek forward again
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
@@ -187,7 +370,7 @@ static NSURL *ServiceTestURL(void)
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue(self.controller.live);
+    XCTAssertTrue(mediaPlayerController.live);
     
     XCTAssertTrue([self.controller canSeekBackward]);
     XCTAssertFalse([self.controller canSeekForward]);
@@ -195,28 +378,18 @@ static NSURL *ServiceTestURL(void)
 
 - (void)testMultipleSeeks
 {
-    XCTestExpectation *mediaCompositionExpectation = [self expectationWithDescription:@"Request succeeded"];
-    
-    __block SRGMediaComposition *mediaComposition = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ServiceTestURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
-    [[dataProvider mediaCompositionForVideoWithUid:@"8297891" completionBlock:^(SRGMediaComposition * _Nullable retrievedMediaComposition, NSError * _Nullable error) {
-        XCTAssertNotNil(retrievedMediaComposition);
-        mediaComposition = retrievedMediaComposition;
-        [mediaCompositionExpectation fulfill];
-    }] resume];
-    
-    [self waitForExpectationsWithTimeout:20. handler:nil];
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
     // Wait until the stream is playing
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:SRGQualityNone userInfo:nil resume:YES completionHandler:nil];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Pile up seeks forwards
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
@@ -232,7 +405,7 @@ static NSURL *ServiceTestURL(void)
     XCTAssertTrue([self.controller canSeekBackward]);
     
     // Pile up seeks backwards
-    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGMediaPlayerPlaybackStateDidChangeNotification object:mediaPlayerController handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     

@@ -4,26 +4,28 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SimplePlayerViewController.h"
+#import "StandalonePlayerViewController.h"
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
-@interface SimplePlayerViewController ()
+@interface StandalonePlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
+@property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
 
 @end
 
-@implementation SimplePlayerViewController
+@implementation StandalonePlayerViewController
 
 #pragma mark Object lifecycle
 
 - (instancetype)initWithURN:(SRGMediaURN *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+    StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.URN = URN;
     return viewController;
 }
@@ -40,7 +42,7 @@
 {
     [super viewDidLoad];
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -61,6 +63,23 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
+}
+
+#pragma mark Actions
+
+- (IBAction)useForService:(id)sender
+{
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+}
+
+- (IBAction)resetService:(id)sender
+{
+    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+}
+
+- (IBAction)toggleMirrored:(id)sender
+{
+    [SRGLetterboxService sharedService].mirroredOnExternalScreen = ! [SRGLetterboxService sharedService].mirroredOnExternalScreen;
 }
 
 @end

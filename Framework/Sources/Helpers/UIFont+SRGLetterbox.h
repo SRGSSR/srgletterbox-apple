@@ -6,14 +6,19 @@
 
 #import <UIKit/UIKit.h>
 
+// TODO: Create an SRGFonts framework
+
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  Compare font size categories (@see `UIContentSizeCategory.h`).
+ */
 OBJC_EXPORT NSComparisonResult SRGCompareContentSizeCategories(NSString *contentSizeCategory1, NSString *contentSizeCategory2);
 
 @interface UIFont (SRGLetterbox)
 
 /**
- *  Fonts with size set in the system
+ *  SRG SSR official fonts with size set in the system settings.
  */
 + (UIFont *)srg_regularFontWithTextStyle:(NSString *)textStyle;
 + (UIFont *)srg_boldFontWithTextStyle:(NSString *)textStyle;
@@ -25,7 +30,7 @@ OBJC_EXPORT NSComparisonResult SRGCompareContentSizeCategories(NSString *content
 + (UIFont *)srg_regularSerifFontWithTextStyle:(NSString *)textStyle;
 
 /**
- *  Fonts with fixed sizes
+ *  SRG SSR official fonts with fixed sizes.
  */
 + (UIFont *)srg_regularFontWithSize:(CGFloat)size;
 + (UIFont *)srg_boldFontWithSize:(CGFloat)size;
@@ -35,6 +40,8 @@ OBJC_EXPORT NSComparisonResult SRGCompareContentSizeCategories(NSString *content
 + (UIFont *)srg_italicFontWithSize:(CGFloat)size;
 + (UIFont *)srg_boldItalicFontWithSize:(CGFloat)size;
 + (UIFont *)srg_regularSerifFontWithSize:(CGFloat)size;
+
++ (UIFont *)srg_awesomeFontWithSize:(CGFloat)size;
 
 @end
 

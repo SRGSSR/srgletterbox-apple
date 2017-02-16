@@ -20,7 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)srg_startAnimatingLoading35WithTintColor:(nullable UIColor *)tintColor;
 - (void)srg_stopAnimating;
 
-- (void)srg_requestImageForObject:(id<SRGImageMetadata>)object
+/**
+ * Remark: If object is nil, the placeholder will also be used
+ */
+- (void)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale
              placeholderImageName:(nullable NSString *)placeholderImageName;
 - (void)srg_cancelCurrentImageRequest;

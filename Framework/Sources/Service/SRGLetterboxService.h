@@ -6,179 +6,142 @@
 
 #import "SRGLetterboxController.h"
 
+#import <AVKit/AVKit.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Delegate protocol for picture in picture implementation
+ *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
+ *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
-@protocol SRGLetterboxServicePictureInPictureDelegate <NSObject>
+@protocol SRGLetterboxPictureInPictureDelegate <NSObject>
 
 /**
- *  Called when picture in picture might need user interface restoration. Return YES if this is the case (most notably
- *  if the player view from which picture in picture was initiated is not visible anymore)
+ *  Called when picture in picture is started, providing you a chance to dismiss the user interface from which picture 
+ *  in picture was started.
+ *
+ *  Return `YES` if you dismissed or began dismissing the user interface from this method. When returning `YES`,
+ *  restoration delegate methods will be called if needed when picture in picture ends (see below). In this case,
+ *  the `-letterboxShouldRestoreUserInterfaceForPictureInPicture` method still lets you decide, at the moment
+ *  restoration takes place, whether restoration must actually happen or not.
+ *
+ *  If your return `NO`, no restoration will take place when picture in picture is exited.
+ */
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture;
+
+/**
+ *  Called when picture in picture might need user interface restoration. Return `YES` if this is the case (most probably
+ *  when the player view from which picture in picture was initiated is not visible anymore).
  */
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture;
 
 /**
- *  Called when a restoration process takes place
+ *  Called when a restoration process takes place.
  *
  *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
  *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
  *                               undefined behavior. The completion block must be called with `restored` set to `YES`
- *                               iff the restoration was successful
+ *                               iff the restoration was successful.
  */
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
 
 @optional
 
 /**
- *  Called when picture in picture has been started
+ *  Called when picture in picture has been started.
  */
 - (void)letterboxDidStartPictureInPicture;
 
 /**
- *  Called when picture in picture stopped
+ *  Called when picture in picture ended.
  */
-- (void)letterboxDidStopPictureInPicture;
+- (void)letterboxDidEndPictureInPicture;
+
+/**
+ *  Called if playback was ended from picture in picture.
+ *
+ *  @discussion The `-letterboxDidEndPictureInPicture` method is called in this case as well.
+ */
+- (void)letterboxDidStopPlaybackFromPictureInPicture;
 
 @end
 
 /**
- *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values)
- */
-OBJC_EXTERN NSString * const SRGLetterboxServiceMetadataDidChangeNotification;
-
-/**
- *  Current metadata
- */
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxServiceMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxServiceMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreferredQualityKey;
-
-/**
- *  Previous metadata
- */
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxServicePreviousPreferredQualityKey;
-
-/**
- *  Notification sent when an error has been encountered. Use the `error` property to get the error itself
- */
-OBJC_EXTERN NSString * const SRGLetterboxServicePlaybackDidFailNotification;
-
-/**
- *  Service responsible for media playback. The service itself is a singleton which manages main playback throughout the
- *  application (and associated features like picture in picture, Airplay or control center integration).
+ *  The Letterbox service is a singleton, which can provide the following application-wide features for one Letterbox 
+ *  controller at a time:
+ *    - Airplay
+ *    - Picture in picture (for devices supporting it)
+ *    - Control center and lock screen media information
+ *    - Remote playback controls
  *
- *  @discussion The analytics tracker singleton instance must be started before the singleton instance is accessed for
- *              the first time, otherwise an exception will be thrown in debug builds. Please refer to `SRGAnalyticsTracker`
- *              documentation for more information
+ *  These features namely only make sense for one controller at a time, which explains why a Letterbox controller
+ *  does not offert them by default. At any time, calling the `-enableWithController:pictureInPictureDelegate:`
+ *  method enables service features for a specific controller. If services were already enabled for another controller,
+ *  those will be transferred to the new controller.
+ *
+ *  If you want to disable background services, you can call `-disable` at any time. This will remove the ability to
+ *  use Airplay or picture in picture, and clear control center and lock screen information. Any Airplay or picture
+ *  in picture playback will be immediately stopped.
  */
 @interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 
 /**
- *  The singleton instance
+ *  The service singleton instance
  */
 + (SRGLetterboxService *)sharedService;
 
 /**
- *  Picture in picture delegate. Picture in picture won't be available if not set
- */
-@property (nonatomic, weak) id<SRGLetterboxServicePictureInPictureDelegate> pictureInPictureDelegate;
-
-/**
- *  The controller responsible for playback
+ *  Enable service application-wide features for the specified controller. All services are enabled, except picture
+ *  in picture which requires a proper delegate to be defined (and, of course, a compatible device).
  *
- *  @discussion To play medias, use `-playMedia:withDataProvider:preferredQuality:` below. Playing medias directly
- *              on the controller leads to undefined behavior
- */
-@property (nonatomic, readonly) SRGLetterboxController *controller;
-
-/**
- *  Play the specified Uniform Resource Name
+ *  @param controller               The Letterbox controller to enable application-wide services for. The controller 
+ *                                  is retained.
+ *  @param pictureInPictureDelegate The picture in picture delegate. Unlike most delegates, this delegate is RETAINED.
+ *                                  If none is provided, picture in picture will not be available for the controller.
+ *                                  Note that you can provide a delegate in all cases, even if some devices you target 
+ *                                  do not actually support picture in picture. The delegate will be released when a
+ *                                  new deléegate is set, or when `-disable` is called.
  *
- *  @discussion Does nothing if the urn is the one currently being played
- */
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality;
-
-/**
- *  Play the specified media
+ *  @discussion The 'Audio, Airplay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
+ *              this method will throw an exception when called.
  *
- *  @discussion Does nothing if the media is the one currently being played
+ *              The picture in picture delegate is provided alongside the controller when calling this method, so that 
+ *              the exact picture in picture starting context is set with the controller. Usually, since picture in picture 
+ *              is started from a view controller, a good delegate candidate is the view controller itself, which knows how
+ *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
+ *              easy way to restore the view controller in the exact same state as it was before picture in picture
+ *              started.
  */
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality;
+- (void)enableWithController:(SRGLetterboxController *)controller
+    pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
 
 /**
- *  Transfers playback from the specified existing controller to the service. The service media player controller
- *  is replaced
+ *  Disable services iff the controller is the one currently attached to the service. Does nothing otherwise.
  */
-- (void)resumeFromController:(SRGLetterboxController *)controller;
+- (void)disableForController:(SRGLetterboxController *)controller;
 
 /**
- *  Reset playback, stopping a playback request if any has been made
+ *  Disable application-wide services (any playback using one of those services will be stopped).
  */
-- (void)reset;
-
-@end
+- (void)disable;
 
 /**
- *  Playback information. Changes are notified through `SRGLetterboxServiceMetadataDidChangeNotification` and
- *  `SRGLetterboxServicePlaybackDidFailNotification`
+ *  The controller for which application-wide services are enabled, if any.
  */
-@interface SRGLetterboxService (PlaybackInformation)
+@property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
 
 /**
- *  URN
+ *  The picture in picture delegate, if any has been set.
  */
-@property (nonatomic, readonly, nullable) SRGMediaURN *URN;
+@property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
- *  Media information
- */
-@property (nonatomic, readonly, nullable) SRGMedia *media;
-
-/**
- *  Media composition
- */
-@property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
-
-/**
- *  Error if any has been encountered
- */
-@property (nonatomic, readonly) NSError *error;
-
-@end
-
-/**
- *  Picture in picture support. Implement `SRGLetterboxServicePictureInPictureDelegate` methods to integrate Letterbox picture in picture
- *  support within your application
- */
-@interface SRGLetterboxService (PictureInPicture)
-
-/**
- *  Return YES iff picture in picture is active
- */
-@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
-
-@end
-
-/**
- *  Mirroring
- */
-@interface SRGLetterboxService (Mirroring)
-
-/**
- *  If set to `YES`, the Letterbox player is mirrored as is when an external screen is connected, without switching to
- *  full-screen playback on this external screen. This is especially handy if you need to be able to show the player
- *  as is on scren, e.g. for presentation purposes
+ *  If set to `YES`, playback never switches to full-screen playback on an external screen. This is especially handy 
+ *  when you need to mirror your application for presentation purposes.
  *
- *  Default is `NO`
+ *  Default is `NO`.
  */
 @property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
 

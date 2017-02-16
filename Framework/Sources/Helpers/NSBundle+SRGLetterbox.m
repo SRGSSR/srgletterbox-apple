@@ -6,16 +6,18 @@
 
 #import "NSBundle+SRGLetterbox.h"
 
-#import "SRGLetterboxView.h"
+#import "SRGLetterboxController.h"
 
 @implementation NSBundle (SRGLetterbox)
+
+#pragma mark Class methods
 
 + (instancetype)srg_letterboxBundle
 {
     static NSBundle *bundle;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        bundle = [NSBundle bundleForClass:[SRGLetterboxView class]];
+        bundle = [NSBundle bundleForClass:[SRGLetterboxController class]];
     });
     return bundle;
 }

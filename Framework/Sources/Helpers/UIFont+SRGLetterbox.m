@@ -48,17 +48,14 @@ NSComparisonResult SRGCompareContentSizeCategories(NSString *contentSizeCategory
     }
 }
 
-@implementation UIFont (SRGLetterbox)
-
-__attribute__((constructor)) static void initializeRegisterSRGFonts(void)
+__attribute__((constructor)) static void RegisterFonts(void)
 {
-    NSError *error = nil;
     NSArray<NSString *> *fontFileNames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSBundle srg_letterboxBundle] pathForResource:@"Fonts" ofType:nil]
-                                                        error:&error];
+                                                                                             error:NULL];
     for (NSString *fontFileName in fontFileNames) {
         NSString *fontFilePath = [[[NSBundle srg_letterboxBundle] pathForResource:@"Fonts" ofType:nil] stringByAppendingPathComponent:fontFileName];
         NSData *inData = [NSData dataWithContentsOfFile:fontFilePath];
-        if ([[fontFileName pathExtension] isEqualToString:@"ttf"] && inData) {
+        if (([[fontFileName pathExtension] isEqualToString:@"ttf"] || [[fontFileName pathExtension] isEqualToString:@"otf"]) && inData) {
             CFErrorRef error;
             CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)inData);
             CGFontRef font = CGFontCreateWithDataProvider(provider);
@@ -72,6 +69,8 @@ __attribute__((constructor)) static void initializeRegisterSRGFonts(void)
         }
     }
 }
+
+@implementation UIFont (SRGLetterbox)
 
 + (UIFont *)srg_regularFontWithTextStyle:(NSString *)textStyle
 {
@@ -159,6 +158,11 @@ __attribute__((constructor)) static void initializeRegisterSRGFonts(void)
 + (UIFont *)srg_regularSerifFontWithSize:(CGFloat)size
 {
     return [UIFont fontWithName:@"SRGSSRTypeSerif-Regular" size:size];
+}
+
++ (UIFont *)srg_awesomeFontWithSize:(CGFloat)size;
+{
+    return [UIFont fontWithName:@"FontAwesome" size:size];
 }
 
 @end

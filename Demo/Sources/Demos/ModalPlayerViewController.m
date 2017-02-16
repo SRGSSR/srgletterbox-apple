@@ -6,7 +6,10 @@
 
 #import "ModalPlayerViewController.h"
 
+#import "UIWindow+LetterboxDemo.h"
+
 #import <Masonry/Masonry.h>
+#import <SRGAnalytics/SRGAnalytics.h>
 
 static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
 static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
@@ -14,8 +17,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
-@property (nonatomic) SRGMedia *media;
 
+@property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
@@ -34,18 +37,27 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN media:(nullable SRGMedia *)media
+- (instancetype)initWithURN:(SRGMediaURN *)URN
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.URN = URN;
-    viewController.media = media;
-    return viewController;
+    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    
+    // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
+    if ([service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
+        return (ModalPlayerViewController *)service.pictureInPictureDelegate;
+    }
+    // Otherwise instantiate a fresh new one
+    else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+        ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        viewController.URN = URN;
+        return viewController;
+    }
 }
 
 - (instancetype)init
 {
-    return [self initWithURN:nil media:nil];
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 #pragma mark View lifecycle
@@ -54,6 +66,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    
+    // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
 }
 
@@ -62,12 +77,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewWillAppear:animated];
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (self.media) {
-            [[SRGLetterboxService sharedService] playMedia:self.media withPreferredQuality:SRGQualityHD];
-        }
-        else if (self.URN) {
-            [[SRGLetterboxService sharedService] playURN:self.URN withPreferredQuality:SRGQualityHD];
-        }
+        [self.letterboxController playURN:self.URN];
     }
 }
 
@@ -76,11 +86,59 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        SRGLetterboxService *service = [SRGLetterboxService sharedService];
-        if (! service.pictureInPictureActive) {
-            [service reset];
+        if (! self.letterboxController.pictureInPictureActive) {
+            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
+}
+
+#pragma mark Status bar
+
+- (BOOL)prefersStatusBarHidden
+{
+    return self.wantsFullScreen;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return UIStatusBarAnimationSlide;
+}
+
+#pragma mark SRGLetterboxPictureInPictureDelegate protocol
+
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    return topPresentedViewController != self;
+}
+
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
+    [topPresentedViewController presentViewController:self animated:YES completion:^{
+        completionHandler(YES);
+    }];
+}
+
+- (void)letterboxDidStartPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+}
+
+- (void)letterboxDidEndPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_end"];
+}
+
+- (void)letterboxDidStopPlaybackFromPictureInPicture
+{
+    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
@@ -88,7 +146,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
-        self.closeButton.alpha = hidden ? 0.f : 1.f;
+        self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
     } completion:nil];
 }
 
@@ -171,18 +229,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)fullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
-}
-
-#pragma mark Status bar
-
-- (BOOL)prefersStatusBarHidden
-{
-    return self.wantsFullScreen;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
-    return UIStatusBarAnimationSlide;
 }
 
 @end

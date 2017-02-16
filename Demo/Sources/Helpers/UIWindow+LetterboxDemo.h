@@ -8,12 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIDevice (SRGLetterbox)
+@interface UIWindow (LetterboxDemo)
 
-/**
- *  Return YES when the device is locked.
- */
-+ (BOOL)srg_isLocked;
+@property (nonatomic, readonly, nullable) UIViewController *topPresentedViewController;
 
 @end
 
