@@ -19,12 +19,6 @@
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
-#if DEBUG
-static Float64 const SRGDVRStreamAvailabilityCheckInterval = 10;
-#else
-static Float64 const SRGDVRStreamAvailabilityCheckInterval = 5 * 60;
-#endif
-
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -108,6 +102,56 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         };
         self.seekTargetTime = kCMTimeInvalid;
         
+#if DEBUG
+        static Float64 const kVDRStreamAvailabilityCheckInterval = 10.;
+#else
+        static Float64 const kVDRStreamAvailabilityCheckInterval = 5 * 60.;
+#endif
+        
+        // Periodically check stream changes
+        self.DVRPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(kVDRStreamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            
+            // Only for live streams
+            if (self.media.contentType != SRGContentTypeLivestream && self.media.contentType != SRGContentTypeScheduledLivestream) {
+                return;
+            }
+            
+            void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+                if (error) {
+                    return;
+                }
+                
+                // Prevent playback if the chapter is blocked
+                SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
+                if (blockingReason == SRGBlockingReasonGeoblocking) {
+                    [self.mediaPlayerController stop];
+                    
+                    NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                         code:SRGLetterboxErrorCodeBlocked
+                                                     userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
+                    [self reportError:error];
+                    return;
+                }
+                
+                // Update the URL if needed
+                if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
+                    SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
+                    [self playMedia:media];
+                }
+            };
+            
+            SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
+            
+            if (self.URN.mediaType == SRGMediaTypeVideo) {
+                [[dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
+            }
+            else if (self.URN.mediaType == SRGMediaTypeAudio) {
+                [[dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
+            }
+        }];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
                                                      name:FXReachabilityStatusDidChangeNotification
@@ -126,6 +170,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)dealloc
 {
+    [self.mediaPlayerController removePeriodicTimeObserver:self.DVRPeriodicTimeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -215,52 +260,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
-}
-
-- (void)checkDVRAvailabilityChanged
-{
-    if (!self.DVRPeriodicTimeObserver) {
-        @weakify(self)
-        self.DVRPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGDVRStreamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            @strongify(self)
-            
-            void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-                if (error) {
-                    return;
-                }
-                
-                // Prevent playback if the chapter is blocked
-                SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-                if (blockingReason == SRGBlockingReasonGeoblocking) {
-                    [self.mediaPlayerController stop];
-                    
-                    NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                         code:SRGLetterboxErrorCodeBlocked
-                                                     userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
-                    [self reportError:error];
-                    return;
-                }
-                
-                // Update the URL if needed
-                if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
-                    SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
-                    [self playMedia:media];
-                }
-            };
-            
-            SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
-            
-            if (self.URN.mediaType == SRGMediaTypeVideo) {
-                SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
-                [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
-            }
-            else if (self.URN.mediaType == SRGMediaTypeAudio) {
-                SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
-                [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
-            }
-        }];
-    }
 }
 
 #pragma mark Playback
@@ -409,11 +408,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     self.preferredQuality = SRGQualityNone;
-    
-    if (self.DVRPeriodicTimeObserver) {
-        [self.mediaPlayerController removePeriodicTimeObserver:self.DVRPeriodicTimeObserver];
-        self.DVRPeriodicTimeObserver = nil;
-    }
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
@@ -580,10 +574,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
         self.seekTargetTime = kCMTimeInvalid;
-    }
-    
-    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-        [self checkDVRAvailabilityChanged];
     }
 }
 
