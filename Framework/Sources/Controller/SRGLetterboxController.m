@@ -20,9 +20,9 @@ const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
 #if DEBUG
-Float64 const SRGMediaTimeToCheckDVROnLive = 10;
+static Float64 const SRGDVRStreamAvailabilityCheckInterval = 10;
 #else
-Float64 const SRGMediaTimeToCheckDVROnLive = 5 * 60;
+static Float64 const SRGDVRStreamAvailabilityCheckInterval = 5 * 60;
 #endif
 
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
@@ -220,15 +220,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)checkDVRAvailabilityChanged
 {
     if (!self.dvrPeriodicTimeObserver) {
-        
-        // Will be automatically removed when dealloced
         @weakify(self)
-        self.dvrPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGMediaTimeToCheckDVROnLive, SRGMediaTimeToCheckDVROnLive) queue:NULL usingBlock:^(CMTime time) {
+        self.dvrPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGDVRStreamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             
             void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-                @strongify(self)
-                
                 if (!error) {
                     
                     // Deal with blocking reason
