@@ -19,6 +19,12 @@
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
+#if DEBUG
+Float64 const SRGMediaTimeToCheckDVROnLive = 10;
+#else
+Float64 const SRGMediaTimeToCheckDVROnLive = 5 * 60;
+#endif
+
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -58,6 +64,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) NSError *error;
 
 @property (nonatomic) SRGRequestQueue *requestQueue;
+
+@property (nonatomic, weak) id dvrPeriodicTimeObserver;
 
 // For successive seeks, update the target time (previous seeks are cancelled). This makes it possible to seek faster
 // to a desired location
@@ -209,6 +217,59 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
+- (void)checkDVRAvailabilityChanged
+{
+    if (!self.dvrPeriodicTimeObserver) {
+        
+        // Will be automatically removed when dealloced
+        @weakify(self)
+        self.dvrPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGMediaTimeToCheckDVROnLive, SRGMediaTimeToCheckDVROnLive)
+                                                                                                queue:NULL
+                                                                                           usingBlock:^(CMTime time) {
+                                                                                               @strongify(self)
+                                                                                               
+                                                                                               void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+                                                                                                   @strongify(self)
+                                                                                                   
+                                                                                                   if (!error) {
+                                                                                                       
+                                                                                                       // Deal with blocking reason
+                                                                                                       switch (mediaComposition.mainChapter.blockingReason) {
+                                                                                                           case SRGBlockingReasonGeoblocking:
+                                                                                                           {
+                                                                                                               [self.mediaPlayerController stop];
+                                                                                                               [self reportError:SRGBlockingReasonErrorForBlockingReason(mediaComposition.mainChapter.blockingReason)];
+                                                                                                           }
+                                                                                                               break;
+                                                                                                               
+                                                                                                           default:
+                                                                                                           {
+                                                                                                               
+                                                                                                               if (![[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
+                                                                                                                   [self.mediaPlayerController reset];
+                                                                                                                   [self playMedia:[mediaComposition mediaForChapter:mediaComposition.mainChapter]];
+                                                                                                               }
+                                                                                                           }
+                                                                                                               break;
+                                                                                                       }
+                                                                                                   };
+                                                                                               };
+                                                                                               
+                                                                                               SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                                                                                                                    businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
+                                                                                               
+                                                                                               if (self.URN.mediaType == SRGMediaTypeVideo) {
+                                                                                                   SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
+                                                                                                   [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+                                                                                               }
+                                                                                               else if (self.URN.mediaType == SRGMediaTypeAudio) {
+                                                                                                   SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
+                                                                                                   [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+                                                                                               }
+                                                                                           }];
+    }
+}
+
 #pragma mark Playback
 
 - (void)playURN:(SRGMediaURN *)URN
@@ -358,6 +419,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     self.preferredQuality = SRGQualityNone;
+    
+    if (self.dvrPeriodicTimeObserver) {
+        [self.mediaPlayerController removePeriodicTimeObserver:self.dvrPeriodicTimeObserver];
+        self.dvrPeriodicTimeObserver = nil;
+    }
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
@@ -531,6 +597,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
         self.seekTargetTime = kCMTimeInvalid;
+    }
+    
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive)
+    {
+        [self checkDVRAvailabilityChanged];
     }
 }
 
