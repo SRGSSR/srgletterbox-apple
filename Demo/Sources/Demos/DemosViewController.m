@@ -99,14 +99,26 @@
         case 6: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-            [self.navigationController pushViewController:playerViewController animated:YES];
+            
+            // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+            // (might happen if presenting and dismissing fast)
+            if (playerViewController.presentingViewController) {
+                return;
+            }
+            [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
         case 7: {
             SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
             StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-            [self.navigationController pushViewController:playerViewController animated:YES];
+            
+            // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+            // (might happen if presenting and dismissing fast)
+            if (playerViewController.presentingViewController) {
+                return;
+            }
+            [self presentViewController:playerViewController animated:YES completion:nil];
             break;
         }
             
