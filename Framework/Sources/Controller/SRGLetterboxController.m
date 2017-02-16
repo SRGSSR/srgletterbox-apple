@@ -55,12 +55,14 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGMediaURN *URN;
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
+@property (nonatomic) SRGChannel *channel;
 @property (nonatomic) SRGQuality preferredQuality;
 @property (nonatomic) NSError *error;
 
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 @property (nonatomic, weak) id streamAvailabilityPeriodicTimeObserver;
+@property (nonatomic, weak) id channelUpdatePeriodicTimeObserver;
 
 // For successive seeks, update the target time (previous seeks are cancelled). This makes it possible to seek faster
 // to a desired location
@@ -70,6 +72,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
 
@@ -105,8 +108,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         };
         self.seekTargetTime = kCMTimeInvalid;
         
-        // Also register the associated periodic time observer
+        // Also register the associated periodic time observers
         self.streamAvailabilityCheckInterval = 5. * 60.;
+        self.channelUpdateInterval = 30.;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -176,18 +180,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
 {
     if (streamAvailabilityCheckInterval < 10.) {
-        SRGLetterboxLogWarning(@"controller", @"The mimimum stream availability check is 10 seconds. Set to 10 seconds.");
+        SRGLetterboxLogWarning(@"controller", @"The mimimum stream availability check interval is 10 seconds. Fixed to 10 seconds.");
         streamAvailabilityCheckInterval = 10.;
     }
     
     _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
     
-    // Periodically check stream changes
     @weakify(self)
     self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
         
-        void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        void (^completionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
             if (error) {
                 return;
             }
@@ -212,13 +215,49 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         };
         
         SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
+                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
         
-        if (self.URN.mediaType == SRGMediaTypeVideo) {
-            [[dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
+        if (self.media.mediaType == SRGMediaTypeVideo) {
+            [[dataProvider mediaCompositionForVideoWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
-        else if (self.URN.mediaType == SRGMediaTypeAudio) {
-            [[dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock] resume];
+        else if (self.media.mediaType == SRGMediaTypeAudio) {
+            [[dataProvider mediaCompositionForAudioWithUid:self.media.uid completionBlock:completionBlock] resume];
+        }
+    }];
+}
+
+- (void)setChannelUpdateInterval:(NSTimeInterval)channelUpdateInterval
+{
+    if (channelUpdateInterval < 10.) {
+        SRGLetterboxLogWarning(@"controller", @"The mimimum now and next update interval is 10 seconds. Fixed to 10 seconds.");
+        channelUpdateInterval = 10.;
+    }
+    
+    @weakify(self)
+    self.channelUpdatePeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(channelUpdateInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        @strongify(self)
+        
+        // Only for livestreams
+        if (self.media.contentType != SRGContentTypeLivestream) {
+            return;
+        }
+        
+        void (^completionBlock)(SRGChannel * _Nullable, NSError * _Nullable) = ^(SRGChannel * _Nullable channel, NSError * _Nullable error) {
+            if (error) {
+                return;
+            }
+            
+            self.channel = channel;
+        };
+        
+        SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
+        if (self.media.mediaType == SRGMediaTypeVideo) {
+            [[dataProvider nowAndNextForVideoChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
+        }
+        else if (self.media.mediaType == SRGMediaTypeAudio) {
+            // TODO: Regional radio support
+            [[dataProvider nowAndNextForAudioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
         }
     }];
 }

@@ -140,6 +140,11 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 @property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
 
 /**
+ *  Channel information (contains information about current and next programs).
+ */
+@property (nonatomic, readonly, nullable) SRGChannel *channel;
+
+/**
  *  Error (if any has been encountered).
  */
 @property (nonatomic, readonly, nullable) NSError *error;
@@ -191,9 +196,17 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  available for the new location). If a stream is changed, the new one is automatically played, otherwise playback
  *  stops with an error.
  *
- *  Default is 5 minutes, and minimum is 10 second.
+ *  Default is 5 minutes, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+
+/**
+ *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
+ *  notification.
+ *
+ *  Default is 30 seconds, and minimum is 10 seconds.
+ */
+@property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @end
 
