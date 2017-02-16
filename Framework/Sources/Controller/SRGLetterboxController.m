@@ -223,50 +223,48 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         
         // Will be automatically removed when dealloced
         @weakify(self)
-        self.dvrPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGMediaTimeToCheckDVROnLive, SRGMediaTimeToCheckDVROnLive)
-                                                                                                queue:NULL
-                                                                                           usingBlock:^(CMTime time) {
-                                                                                               @strongify(self)
-                                                                                               
-                                                                                               void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-                                                                                                   @strongify(self)
-                                                                                                   
-                                                                                                   if (!error) {
-                                                                                                       
-                                                                                                       // Deal with blocking reason
-                                                                                                       switch (mediaComposition.mainChapter.blockingReason) {
-                                                                                                           case SRGBlockingReasonGeoblocking:
-                                                                                                           {
-                                                                                                               [self.mediaPlayerController stop];
-                                                                                                               [self reportError:SRGBlockingReasonErrorForBlockingReason(mediaComposition.mainChapter.blockingReason)];
-                                                                                                           }
-                                                                                                               break;
-                                                                                                               
-                                                                                                           default:
-                                                                                                           {
-                                                                                                               
-                                                                                                               if (![[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
-                                                                                                                   [self.mediaPlayerController reset];
-                                                                                                                   [self playMedia:[mediaComposition mediaForChapter:mediaComposition.mainChapter]];
-                                                                                                               }
-                                                                                                           }
-                                                                                                               break;
-                                                                                                       }
-                                                                                                   };
-                                                                                               };
-                                                                                               
-                                                                                               SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                                                                                                                    businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
-                                                                                               
-                                                                                               if (self.URN.mediaType == SRGMediaTypeVideo) {
-                                                                                                   SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
-                                                                                                   [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
-                                                                                               }
-                                                                                               else if (self.URN.mediaType == SRGMediaTypeAudio) {
-                                                                                                   SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
-                                                                                                   [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
-                                                                                               }
-                                                                                           }];
+        self.dvrPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGMediaTimeToCheckDVROnLive, SRGMediaTimeToCheckDVROnLive) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            
+            void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+                @strongify(self)
+                
+                if (!error) {
+                    
+                    // Deal with blocking reason
+                    switch (mediaComposition.mainChapter.blockingReason) {
+                        case SRGBlockingReasonGeoblocking:
+                        {
+                            [self.mediaPlayerController stop];
+                            [self reportError:SRGBlockingReasonErrorForBlockingReason(mediaComposition.mainChapter.blockingReason)];
+                        }
+                            break;
+                            
+                        default:
+                        {
+                            
+                            if (![[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
+                                [self.mediaPlayerController reset];
+                                [self playMedia:[mediaComposition mediaForChapter:mediaComposition.mainChapter]];
+                            }
+                        }
+                            break;
+                    }
+                };
+            };
+            
+            SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.URN.vendor)];
+            
+            if (self.URN.mediaType == SRGMediaTypeVideo) {
+                SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
+                [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+            }
+            else if (self.URN.mediaType == SRGMediaTypeAudio) {
+                SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:self.URN.uid completionBlock:mediaCompositionCompletionBlock];
+                [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+            }
+        }];
     }
 }
 
