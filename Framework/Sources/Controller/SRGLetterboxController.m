@@ -133,6 +133,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)dealloc
 {
     [self.mediaPlayerController removePeriodicTimeObserver:self.streamAvailabilityPeriodicTimeObserver];
+    [self.mediaPlayerController removePeriodicTimeObserver:self.channelUpdatePeriodicTimeObserver];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -239,28 +241,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.channelUpdatePeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(channelUpdateInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
         
-        // Only for livestreams with a channel uid
-        if (self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
-            return;
-        }
-        
-        void (^completionBlock)(SRGChannel * _Nullable, NSError * _Nullable) = ^(SRGChannel * _Nullable channel, NSError * _Nullable error) {
-            if (error) {
-                return;
-            }
-            
-            [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition channel:channel];
-        };
-        
-        SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
-        if (self.media.mediaType == SRGMediaTypeVideo) {
-            [[dataProvider nowAndNextForVideoChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
-        }
-        else if (self.media.mediaType == SRGMediaTypeAudio) {
-            // TODO: Regional radio support
-            [[dataProvider nowAndNextForAudioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
-        }
+        [self updateChannel];
     }];
 }
 
@@ -317,6 +298,32 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
+- (void)updateChannel
+{
+    // Only for livestreams with a channel uid
+    if (self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
+        return;
+    }
+    
+    void (^completionBlock)(SRGChannel * _Nullable, NSError * _Nullable) = ^(SRGChannel * _Nullable channel, NSError * _Nullable error) {
+        if (error) {
+            return;
+        }
+        
+        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition channel:channel];
+    };
+    
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
+    if (self.media.mediaType == SRGMediaTypeVideo) {
+        [[dataProvider nowAndNextForVideoChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
+    }
+    else if (self.media.mediaType == SRGMediaTypeAudio) {
+        // TODO: Regional radio support
+        [[dataProvider nowAndNextForAudioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+    }
+}
+
 #pragma mark Playback
 
 - (void)playURN:(SRGMediaURN *)URN
@@ -367,7 +374,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
     
-    // Apply overriding if available. Overriding requires at a media to be available. No media composition is retrieved
+    // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
         NSURL *contentURL = self.contentURLOverridingBlock(URN);
         if (contentURL) {
@@ -409,6 +416,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition channel:nil];
+        [self updateChannel];
         
         // Do not go further if the content is blocked
         SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
