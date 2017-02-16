@@ -66,8 +66,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
-    self.letterboxController.streamAvailabilityCheckInterval = 10.;
-    
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     // Start with a hidden interface

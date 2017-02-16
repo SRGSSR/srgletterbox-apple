@@ -24,6 +24,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 
 /**
  *  Previous metadata
@@ -31,6 +32,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
 
 /**
  *  Notification sent when an error has been encountered

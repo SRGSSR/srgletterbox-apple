@@ -25,10 +25,12 @@ NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetad
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
 NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
 NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
+NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannelKey";
 
 NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURNKey";
 NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMediaKey";
 NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaCompositionKey";
+NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannelKey";
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
 
@@ -237,8 +239,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.channelUpdatePeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(channelUpdateInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
         
-        // Only for livestreams
-        if (self.media.contentType != SRGContentTypeLivestream) {
+        // Only for livestreams with a channel uid
+        if (self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
             return;
         }
         
@@ -247,7 +249,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 return;
             }
             
-            self.channel = channel;
+            [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition channel:channel];
         };
         
         SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
@@ -266,7 +268,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive
 // information available (media composition first, then media, finally URN). Less comprehensive data will be ignored
-- (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition
+- (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition channel:(SRGChannel *)channel
 {
     if (mediaComposition) {
         media = [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
@@ -279,10 +281,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     SRGMediaURN *previousURN = self.URN;
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
+    SRGChannel *previousChannel = self.channel;
     
     self.URN = URN;
     self.media = media;
     self.mediaComposition = mediaComposition;
+    self.channel = channel;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     if (URN) {
@@ -294,6 +298,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     if (mediaComposition) {
         userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
     }
+    if (channel) {
+        userInfo[SRGLetterboxChannelKey] = channel;
+    }
     if (previousURN) {
         userInfo[SRGLetterboxPreviousURNKey] = previousURN;
     }
@@ -302,6 +309,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     if (previousMediaComposition) {
         userInfo[SRGLetterboxPreviousMediaCompositionKey] = previousMediaComposition;
+    }
+    if (previousChannel) {
+        userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
@@ -373,7 +383,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                         return;
                     }
                     
-                    [self updateWithURN:nil media:medias.firstObject mediaComposition:nil];
+                    [self updateWithURN:nil media:medias.firstObject mediaComposition:nil channel:nil];
                     [self.mediaPlayerController playURL:contentURL];
                 };
                 
@@ -398,7 +408,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             return;
         }
         
-        [self updateWithURN:nil media:nil mediaComposition:mediaComposition];
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition channel:nil];
         
         // Do not go further if the content is blocked
         SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
@@ -457,7 +467,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
     
-    [self updateWithURN:URN media:media mediaComposition:nil];
+    [self updateWithURN:URN media:media mediaComposition:nil channel:nil];
 }
 
 - (void)reportError:(NSError *)error
@@ -631,12 +641,13 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; URN: %@; media: %@; mediaComposition: %@; error: %@; mediaPlayerController: %@>",
+    return [NSString stringWithFormat:@"<%@: %p; URN: %@; media: %@; mediaComposition: %@; channel: %@; error: %@; mediaPlayerController: %@>",
             [self class],
             self,
             self.URN,
             self.media,
             self.mediaComposition,
+            self.channel,
             self.error,
             self.mediaPlayerController];
 }
