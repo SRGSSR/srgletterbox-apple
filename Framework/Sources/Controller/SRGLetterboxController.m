@@ -65,7 +65,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
-@property (nonatomic, weak) id dvrPeriodicTimeObserver;
+@property (nonatomic, weak) id DVRPeriodicTimeObserver;
 
 // For successive seeks, update the target time (previous seeks are cancelled). This makes it possible to seek faster
 // to a desired location
@@ -219,34 +219,33 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)checkDVRAvailabilityChanged
 {
-    if (!self.dvrPeriodicTimeObserver) {
+    if (!self.DVRPeriodicTimeObserver) {
         @weakify(self)
-        self.dvrPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGDVRStreamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        self.DVRPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(SRGDVRStreamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             
             void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-                if (!error) {
+                if (error) {
+                    return;
+                }
+                
+                // Prevent playback if the chapter is blocked
+                SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
+                if (blockingReason == SRGBlockingReasonGeoblocking) {
+                    [self.mediaPlayerController stop];
                     
-                    // Deal with blocking reason
-                    switch (mediaComposition.mainChapter.blockingReason) {
-                        case SRGBlockingReasonGeoblocking:
-                        {
-                            [self.mediaPlayerController stop];
-                            [self reportError:SRGBlockingReasonErrorForBlockingReason(mediaComposition.mainChapter.blockingReason)];
-                        }
-                            break;
-                            
-                        default:
-                        {
-                            
-                            if (![[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
-                                [self.mediaPlayerController reset];
-                                [self playMedia:[mediaComposition mediaForChapter:mediaComposition.mainChapter]];
-                            }
-                        }
-                            break;
-                    }
-                };
+                    NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                         code:SRGLetterboxErrorCodeBlocked
+                                                     userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
+                    [self reportError:error];
+                    return;
+                }
+                
+                // Update the URL if needed
+                if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
+                    SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
+                    [self playMedia:media];
+                }
             };
             
             SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
@@ -357,34 +356,31 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition];
         
-        // Deal with blocking reason
-        switch (mediaComposition.mainChapter.blockingReason) {
-            case SRGBlockingReasonGeoblocking:
-            {
-                [self.requestQueue reportError:SRGBlockingReasonErrorForBlockingReason(mediaComposition.mainChapter.blockingReason)];
-            }
-                break;
-                
-            default:
-            {
-                @weakify(self)
-                SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
-                    @strongify(self)
-                    
-                    [self.requestQueue reportError:error];
-                }];
-                
-                if (playRequest) {
-                    [self.requestQueue addRequest:playRequest resume:YES];
-                }
-                else {
-                    NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                         code:SRGLetterboxErrorCodeNotFound
-                                                     userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
-                    [self.requestQueue reportError:error];
-                }
-            }
-                break;
+        // Do not go further if the content is blocked
+        SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
+        if (blockingReason == SRGBlockingReasonGeoblocking) {
+            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                 code:SRGLetterboxErrorCodeBlocked
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(mediaComposition.mainChapter.blockingReason) }];
+            [self.requestQueue reportError:error];
+            return;
+        }
+        
+        @weakify(self)
+        SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+            @strongify(self)
+            
+            [self.requestQueue reportError:error];
+        }];
+        
+        if (playRequest) {
+            [self.requestQueue addRequest:playRequest resume:YES];
+        }
+        else {
+            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                 code:SRGLetterboxErrorCodeNotFound
+                                             userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
+            [self.requestQueue reportError:error];
         }
     };
     
@@ -414,9 +410,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.seekTargetTime = kCMTimeInvalid;
     self.preferredQuality = SRGQualityNone;
     
-    if (self.dvrPeriodicTimeObserver) {
-        [self.mediaPlayerController removePeriodicTimeObserver:self.dvrPeriodicTimeObserver];
-        self.dvrPeriodicTimeObserver = nil;
+    if (self.DVRPeriodicTimeObserver) {
+        [self.mediaPlayerController removePeriodicTimeObserver:self.DVRPeriodicTimeObserver];
+        self.DVRPeriodicTimeObserver = nil;
     }
     
     [self.mediaPlayerController reset];
@@ -431,16 +427,16 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         return;
     }
     
+    // Forward Letterbox friendly errors
+    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        self.error = error;
+    }
     // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
-    if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
+    else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                          code:SRGLetterboxErrorCodeNetwork
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
                                                  NSUnderlyingErrorKey : error }];
-    }
-    // Use a friendly error message for blocking reasons
-    else if ([error.domain isEqualToString:SRGDataProviderErrorDomain] && error.code == SRGDataProviderErrorBlockingReason) {
-        self.error = error;
     }
     // Use a friendly error message for all other reasons
     else {
@@ -586,8 +582,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.seekTargetTime = kCMTimeInvalid;
     }
     
-    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive)
-    {
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
         [self checkDVRAvailabilityChanged];
     }
 }
