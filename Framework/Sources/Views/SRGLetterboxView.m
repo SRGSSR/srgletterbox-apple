@@ -469,23 +469,27 @@ static void commonInit(SRGLetterboxView *self);
         self.backwardSeekButton.alpha = [controller canSeekBackward] ? 1.f : 0.f;
         self.seekToLiveButton.alpha = [controller canSeekToLive] ? 1.f : 0.f;
         
-        if (controller.media.contentType == SRGContentTypeLivestream) {
-            if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || [controller canSeekBackward] || [controller canSeekForward]) {
-                self.timeSlider.alpha = 1.f;
-                // Hide timeLeftValueLabel to give the width space to the timeSlider
-                self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-            }
-            else {
-                self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-            }
-        }
-        else {
+        // Seekable stream. Display pause button
+        if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR
+                || controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand) {
             self.timeSlider.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
+            // Hide timeLeftValueLabel to give the width space to the timeSlider
+            self.timeSlider.timeLeftValueLabel.hidden = YES;
             self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+            self.playbackButton.alpha = 1.f;
+        }
+        // Live only. Display stop button
+        else if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+            self.timeSlider.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
+            self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+            self.playbackButton.alpha = 1.f;
+        }
+        // Unknown type. Display no playback button
+        else {
+            self.timeSlider.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.hidden = YES;
+            self.playbackButton.alpha = 0.f;
         }
     };
     
