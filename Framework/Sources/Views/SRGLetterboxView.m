@@ -468,18 +468,19 @@ static void commonInit(SRGLetterboxView *self);
         if (controller.media.contentType == SRGContentTypeLivestream) {
             if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || [controller canSeekBackward] || [controller canSeekForward]) {
                 self.timeSlider.alpha = 1.f;
-                self.timeSlider.timeLeftValueLabel.alpha = 0.f;
+                // Hide timeLeftValueLabel to set allow the width space to the timeSlider
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
             }
             else {
                 self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
             }
         }
         else {
             self.timeSlider.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
             self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
         }
     };
