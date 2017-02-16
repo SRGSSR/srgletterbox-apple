@@ -125,7 +125,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 // Update the URL if needed
                 if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
                     SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
-                    [self playMedia:media];
+                    [self playMedia:media withPreferredQuality:self.preferredQuality];
                 }
             };
             
