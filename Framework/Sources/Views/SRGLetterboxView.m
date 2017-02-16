@@ -439,7 +439,7 @@ static void commonInit(SRGLetterboxView *self);
                 [self.timeSlider showPopUpViewAnimated:NO /* already in animation block */];
             }
         }
-        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
+        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
             self.imageView.alpha = 1.f;
             mediaPlayerController.view.alpha = 0.f;
             
