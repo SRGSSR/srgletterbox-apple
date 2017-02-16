@@ -681,11 +681,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 {
-    if (self.controller.media.contentType == SRGContentTypeLivestream) {
-        
-        slider.popUpViewColor = (self.timeSlider.isLive) ? UIColor.redColor : UIColor.whiteColor;
-        slider.textColor = (self.timeSlider.isLive) ? UIColor.whiteColor : UIColor.blackColor;
-        
+    if (self.controller.media.contentType == SRGContentTypeLivestream) {        
         static dispatch_once_t onceToken;
         static NSDateFormatter *dateFormatter;
         dispatch_once(&onceToken, ^{
@@ -702,9 +698,6 @@ static void commonInit(SRGLetterboxView *self);
         return [attributedString copy];
     }
     else {
-        slider.popUpViewColor = UIColor.whiteColor;
-        slider.textColor = UIColor.blackColor;
-        
         return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: @"--:--"];
     }
 }
