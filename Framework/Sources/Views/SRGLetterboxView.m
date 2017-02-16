@@ -355,15 +355,12 @@ static void commonInit(SRGLetterboxView *self);
 // Airplay
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    // If usual non-mirrored Airplay playback is active, do not let the user change the current state
-    if (togglable && self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        SRGLetterboxLogWarning(@"view", @"Cannot set the UI to togglable while playing in non-mirrored Airplay");
+    if (self.restorationContexts.count != 0) {
+        SRGLetterboxLogWarning(@"view", @"Cannot change UI properties when Airplay is active or an error has been encountered");
         return;
     }
     
-    self.userInterfaceTogglable = togglable;
-    
-    [self common_setUserInterfaceHidden:hidden animated:animated];
+    [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
 }
 
 // Show or hide the user interface, doing nothing if the interface is not togglable
@@ -377,12 +374,19 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [self common_setUserInterfaceHidden:hidden animated:animated];
+    [self internal_setUserInterfaceHidden:hidden animated:animated];
+}
+
+- (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
+{
+    self.userInterfaceTogglable = togglable;
+    
+    [self internal_setUserInterfaceHidden:hidden animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
 // factorisation method which is not intended for direct use. This method always show or hide the user interface
-- (void)common_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+- (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -494,16 +498,16 @@ static void commonInit(SRGLetterboxView *self);
     
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         [self applyUserInterfaceChanges:^{
-            [self setUserInterfaceHidden:NO animated:animated togglable:NO];
+            [self internal_setUserInterfaceHidden:NO animated:animated togglable:NO];
         } withRestorationIdentifier:kIdentifier];
     }
     else {
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
             if (togglable) {
-                [self setUserInterfaceHidden:YES animated:animated togglable:YES];
+                [self internal_setUserInterfaceHidden:YES animated:animated togglable:YES];
             }
             else {
-                [self setUserInterfaceHidden:hidden animated:animated togglable:NO];
+                [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
             }
         }];
     }
@@ -517,7 +521,7 @@ static void commonInit(SRGLetterboxView *self);
         self.errorView.alpha = 1.f;
         
         [self applyUserInterfaceChanges:^{
-            [self setUserInterfaceHidden:YES animated:animated togglable:NO];
+            [self internal_setUserInterfaceHidden:YES animated:animated togglable:NO];
         } withRestorationIdentifier:kIdentifier];
     }
     else {
@@ -525,10 +529,10 @@ static void commonInit(SRGLetterboxView *self);
         
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
             if (togglable) {
-                [self setUserInterfaceHidden:YES animated:animated togglable:YES];
+                [self internal_setUserInterfaceHidden:YES animated:animated togglable:YES];
             }
             else {
-                [self setUserInterfaceHidden:hidden animated:animated togglable:NO];
+                [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
             }
         }];
     }

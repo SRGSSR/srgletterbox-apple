@@ -131,11 +131,8 @@ IB_DESIGNABLE
  *  @param animated Whether the transition must be animated.
  *  @param togglable Whether the interface can be shown or hidden by the user.
  *
- *  @discussion During Airplay playback:
- *                - If togglable was set to `YES`, the user interface will be always displayed
- *                - If togglable was set to `NO`, the user interface will stay as it was before
- *              Calling this method during Airplay playback to show or hide controls only works if togglabe is set to
- *              `YES`. Moreover, the interface cannot be shown when an error has been encountered.
+ *  @discussion When Airplay is enabled or an error has been encountered, the UI behavior is overridden. This method
+ *              will not apply any change when called in such situations.
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
