@@ -16,6 +16,7 @@
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
+@property (nonatomic, weak) IBOutlet UIButton *closeButton;
 @property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
 
 @end
@@ -113,7 +114,21 @@
     [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
 }
 
+#pragma mark SRGLetterboxViewDelegate protocol
+
+- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
+{
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+        self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
+    } completion:nil];
+}
+
 #pragma mark Actions
+
+- (IBAction)close:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (IBAction)useForService:(id)sender
 {
