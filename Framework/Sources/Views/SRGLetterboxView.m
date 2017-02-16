@@ -468,7 +468,7 @@ static void commonInit(SRGLetterboxView *self);
         if (controller.media.contentType == SRGContentTypeLivestream) {
             if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || [controller canSeekBackward] || [controller canSeekForward]) {
                 self.timeSlider.alpha = 1.f;
-                // Hide timeLeftValueLabel to set allow the width space to the timeSlider
+                // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
             }
@@ -682,7 +682,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 {
-    if (self.controller.media.contentType == SRGContentTypeLivestream) {        
+    if (self.controller.media.contentType == SRGContentTypeLivestream) {
         static dispatch_once_t onceToken;
         static NSDateFormatter *dateFormatter;
         dispatch_once(&onceToken, ^{
