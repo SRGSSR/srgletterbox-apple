@@ -8,8 +8,6 @@
 
 @interface SRGLetterboxViewRestorationContext ()
 
-@property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic, getter=isTogglable) BOOL togglable;
 @property (nonatomic, copy) NSString *name;
 
 @end
@@ -18,11 +16,9 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithLetterboxView:(SRGLetterboxView *)letterboxView name:(NSString *)name
+- (instancetype)initWithName:(NSString *)name
 {
     if (self = [super init]) {
-        self.hidden = letterboxView.userInterfaceHidden;
-        self.togglable = letterboxView.userInterfaceTogglable;
         self.name = name;
     }
     return self;

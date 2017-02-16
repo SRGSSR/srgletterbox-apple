@@ -132,7 +132,7 @@ IB_DESIGNABLE
  *  @param togglable Whether the interface can be shown or hidden by the user.
  *
  *  @discussion When Airplay is enabled or an error has been encountered, the UI behavior is overridden. This method
- *              will not apply any change when called in such situations.
+ *              will only apply changes once overrides are lifted.
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 

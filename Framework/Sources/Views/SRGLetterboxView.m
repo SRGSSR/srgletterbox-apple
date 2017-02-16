@@ -54,7 +54,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 
-@property (nonatomic) NSMutableArray *restorationContexts;
+@property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
+@property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on to of the main user context
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -355,8 +356,11 @@ static void commonInit(SRGLetterboxView *self);
 // Airplay
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
+    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
+    self.mainRestorationContext.hidden = hidden;
+    self.mainRestorationContext.togglable = togglable;
+    
     if (self.restorationContexts.count != 0) {
-        SRGLetterboxLogWarning(@"view", @"Cannot change UI properties when Airplay is active or an error has been encountered");
         return;
     }
     
@@ -594,7 +598,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSParameterAssert(changes);
     
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithLetterboxView:self name:restorationIdentifier];
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
+    restorationContext.hidden = self.userInterfaceHidden;
+    restorationContext.togglable = self.userInterfaceTogglable;
+    
     if (! [self.restorationContexts containsObject:restorationContext]) {
         [self.restorationContexts addObject:restorationContext];
         changes();
@@ -607,14 +614,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSParameterAssert(changes);
     
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithLetterboxView:self name:restorationIdentifier];
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
     if ([self.restorationContexts containsObject:restorationContext]) {
         [self.restorationContexts removeObject:restorationContext];
         
-        // If one of the contexts decides that the UI must be hidden or not togglable, then this value dominates
-        // the others
-        BOOL hidden = NO;
-        BOOL togglable = YES;
+        BOOL hidden = self.mainRestorationContext.hidden;
+        BOOL togglable = self.mainRestorationContext.togglable;
         
         for (SRGLetterboxViewRestorationContext *restorationContext in self.restorationContexts) {
             if (restorationContext.hidden) {

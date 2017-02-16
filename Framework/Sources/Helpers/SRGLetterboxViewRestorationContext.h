@@ -17,13 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Create a restoration context based on the properties of the specified view, and identified by the provided name.
  */
-- (instancetype)initWithLetterboxView:(SRGLetterboxView *)letterboxView name:(NSString *)name;
+- (instancetype)initWithName:(NSString *)name;
 
 /**
  *  Context properties.
  */
-@property (nonatomic, readonly, getter=isHidden) BOOL hidden;
-@property (nonatomic, readonly, getter=isTogglable) BOOL togglable;
+@property (nonatomic, getter=isHidden) BOOL hidden;
+@property (nonatomic, getter=isTogglable) BOOL togglable;
 
 @end
 
