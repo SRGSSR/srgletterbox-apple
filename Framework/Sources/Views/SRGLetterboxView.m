@@ -477,11 +477,11 @@ static void commonInit(SRGLetterboxView *self);
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
-        // Idle. Display playback button, hide the rest
-        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
+        // Special cases when the player is idle or preparing
+        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.alpha = 1.f;
             return;
         }
         
