@@ -109,7 +109,17 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 - (void)togglePlayPause;
 
 /**
- *  Reset playback, stopping a playback request if any has been made.
+ *  Stop playback, keeping playback information. Playback can be restarted with a call to `-togglePlayPause`.
+ */
+- (void)stop;
+
+/**
+ *  Restart playback completely for the same URN. Does nothing if no URN has currently been set.
+ */
+- (void)restart;
+
+/**
+ *  Reset playback and reset all playback information.
  */
 - (void)reset;
 

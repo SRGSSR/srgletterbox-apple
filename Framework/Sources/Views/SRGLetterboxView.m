@@ -717,6 +717,12 @@ static void commonInit(SRGLetterboxView *self);
     [self.controller seekToLiveWithCompletionHandler:nil];
 }
 
+- (IBAction)retry:(id)sender
+{
+    [self.controller restart];
+    [self updateUserInterfaceForErrorAnimated:YES];
+}
+
 #pragma mark ASValueTrackingSliderDataSource protocol
 
 - (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
