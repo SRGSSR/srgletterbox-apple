@@ -719,7 +719,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)retry:(id)sender
 {
-    [self.controller togglePlayPause];
+    [self.controller restart];
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol
