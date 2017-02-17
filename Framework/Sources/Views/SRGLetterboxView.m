@@ -756,7 +756,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
 {
-    self.airplayLabel.text = SRGAirplayRouteDescription();
+    self.airplayLabel.text = NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay device");
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
