@@ -57,46 +57,51 @@
                 }
                     
                 case 3: {
+                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:nil];
+                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    break;
+                }
+                    
+                case 4: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 4: {
+                case 5: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 5: {
+                case 6: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 6: {
-                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                   message:@"Will be played with the basic player."
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                case 7: {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
+                                                                                             message:@"Will be played with the basic player."
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
                     
-                    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = @"urn:swi:video:1234567";
+                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.placeholder = @"urn:swi:video:41981254";
                     }];
                     
-                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Open"
+                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Open"
                                                                             style:UIAlertActionStyleDefault
-                                                                          handler:^(UIAlertAction * action) {
-                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alert.textFields.firstObject.text];
+                                                                          handler:^(UIAlertAction *action) {
+                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alertController.textFields.firstObject.text];
                                                                               SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                                                                               [self.navigationController pushViewController:playerViewController animated:YES];
                                                                           }];
                     
-                    [alert addAction:defaultAction];
-                    [self presentViewController:alert animated:YES completion:nil];
-                    
+                    [alertController addAction:defaultAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
                     break;
                 }
                     
@@ -152,18 +157,31 @@
                 }
                     
                 case 3: {
-                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                   message:@"Will be played with the advanced player."
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:nil];
                     
-                    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = @"urn:swi:video:1234567";
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
+                    
+                case 4: {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
+                                                                                             message:@"Will be played with the advanced player."
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.placeholder = @"urn:swi:video:41981254";
                     }];
                     
-                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Open"
+                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Open"
                                                                             style:UIAlertActionStyleDefault
-                                                                          handler:^(UIAlertAction * action) {
-                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alert.textFields.firstObject.text];
+                                                                          handler:^(UIAlertAction *action) {
+                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alertController.textFields.firstObject.text];
                                                                               ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
                                                                               
                                                                               // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -175,9 +193,8 @@
                                                                               [self presentViewController:playerViewController animated:YES completion:nil];
                                                                           }];
                     
-                    [alert addAction:defaultAction];
-                    [self presentViewController:alert animated:YES completion:nil];
-                    
+                    [alertController addAction:defaultAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
                     break;
                 }
                     
@@ -217,18 +234,43 @@
                 }
                     
                 case 2: {
-                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                   message:@"Will be played with the standalone player."
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
                     
-                    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = @"urn:swi:video:1234567";
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
+                    
+                case 3: {
+                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:nil];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
+                    
+                case 4: {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
+                                                                                             message:@"Will be played with the standalone player."
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.placeholder = @"urn:swi:video:41981254";
                     }];
                     
-                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Open"
+                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Open"
                                                                             style:UIAlertActionStyleDefault
-                                                                          handler:^(UIAlertAction * action) {
-                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alert.textFields.firstObject.text];
+                                                                          handler:^(UIAlertAction *action) {
+                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alertController.textFields.firstObject.text];
                                                                               StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
                                                                               
                                                                               // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -239,9 +281,8 @@
                                                                               [self presentViewController:playerViewController animated:YES completion:nil];
                                                                           }];
                     
-                    [alert addAction:defaultAction];
-                    [self presentViewController:alert animated:YES completion:nil];
-                    
+                    [alertController addAction:defaultAction];
+                    [self presentViewController:alertController animated:YES completion:nil];
                     break;
                 }
                     
