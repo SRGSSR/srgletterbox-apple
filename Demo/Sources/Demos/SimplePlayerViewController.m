@@ -14,6 +14,10 @@
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *nowLabel;
+@property (nonatomic, weak) IBOutlet UILabel *nextLabel;
+
 @end
 
 @implementation SimplePlayerViewController
@@ -34,6 +38,11 @@
     return nil;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
@@ -41,6 +50,12 @@
     [super viewDidLoad];
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    
+    [self reloadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(metadataDidChange:)
+                                                 name:SRGLetterboxMetadataDidChangeNotification
+                                               object:self.letterboxController];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -61,6 +76,24 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
+}
+
+#pragma mark Data
+
+- (void)reloadData
+{
+    self.titleLabel.text = self.letterboxController.media.title;
+    
+    SRGChannel *channel = self.letterboxController.channel;
+    self.nowLabel.text = [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title ?: @"-"];
+    self.nextLabel.text = [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title ?: @"-"];
+}
+
+#pragma mark Notifications
+
+- (void)metadataDidChange:(NSNotification *)notification
+{
+    [self reloadData];
 }
 
 @end
