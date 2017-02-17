@@ -85,8 +85,8 @@
     self.titleLabel.text = self.letterboxController.media.title;
     
     SRGChannel *channel = self.letterboxController.channel;
-    self.nowLabel.text = [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title ?: @"-"];
-    self.nextLabel.text = [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title ?: @"-"];
+    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
+    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title] : nil;
 }
 
 #pragma mark Notifications
