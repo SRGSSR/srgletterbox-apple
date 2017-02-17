@@ -24,6 +24,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 
 /**
  *  Previous metadata
@@ -31,6 +32,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
 
 /**
  *  Notification sent when an error has been encountered
@@ -107,7 +109,17 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 - (void)togglePlayPause;
 
 /**
- *  Reset playback, stopping a playback request if any has been made.
+ *  Stop playback, keeping playback information. Playback can be restarted with a call to `-togglePlayPause`.
+ */
+- (void)stop;
+
+/**
+ *  Restart playback completely for the same URN. Does nothing if no URN has currently been set.
+ */
+- (void)restart;
+
+/**
+ *  Reset playback and reset all playback information.
  */
 - (void)reset;
 
@@ -138,6 +150,11 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Media composition (playback context).
  */
 @property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
+
+/**
+ *  Channel information (contains information about current and next programs).
+ */
+@property (nonatomic, readonly, nullable) SRGChannel *channel;
 
 /**
  *  Error (if any has been encountered).
@@ -177,6 +194,31 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Streaming analytics are automatically gathered when this property is set to `YES` (default).
  */
 @property (nonatomic, getter=isTracked) BOOL tracked;
+
+@end
+
+/**
+ *  Settings for periodic updates
+ */
+@interface SRGLetterboxController (PeriodicUpdates)
+
+/**
+ *  Time interval between stream availability checks. Live streams might change (e.g. if a stream is toggled between DVR 
+ *  and live-only versions) or not be available anymore (e.g. if the location of the user changes and the stream is not
+ *  available for the new location). If a stream is changed, the new one is automatically played, otherwise playback
+ *  stops with an error.
+ *
+ *  Default is 5 minutes, and minimum is 10 seconds.
+ */
+@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+
+/**
+ *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
+ *  notification.
+ *
+ *  Default is 30 seconds, and minimum is 10 seconds.
+ */
+@property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @end
 

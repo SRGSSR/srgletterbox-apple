@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Standalone Player View Controller-->
+        <!--Delegate-->
         <scene sceneID="sIH-jk-ROp">
             <objects>
                 <viewController id="A6A-Ps-0a8" customClass="StandalonePlayerViewController" sceneMemberID="viewController">
@@ -30,8 +30,21 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="controller" destination="m76-hn-RkO" id="Kiz-Wy-pYZ"/>
+                                    <outlet property="delegate" destination="A6A-Ps-0a8" id="2pA-fb-rMm"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z05-5d-RZc" userLabel="Close Button">
+                                <rect key="frame" x="36" y="52" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="2TZ-TP-EI8"/>
+                                    <constraint firstAttribute="height" constant="40" id="hOK-Wc-WPs"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="close_22"/>
+                                <connections>
+                                    <action selector="close:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="C9C-a7-pJC"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yet-cP-iNZ">
                                 <rect key="frame" x="135" y="264" width="104" height="30"/>
                                 <state key="normal" title="Use for service"/>
@@ -61,10 +74,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="z05-5d-RZc" firstAttribute="leading" secondItem="LJc-Y6-KTE" secondAttribute="leading" id="45V-sy-zvJ"/>
                             <constraint firstItem="dQI-Mf-xN9" firstAttribute="centerX" secondItem="yet-cP-iNZ" secondAttribute="centerX" id="4T7-cj-gPI"/>
                             <constraint firstItem="E7m-CS-gyh" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" constant="16" id="A2K-sl-Dof"/>
                             <constraint firstItem="g2T-7b-725" firstAttribute="centerY" secondItem="E7m-CS-gyh" secondAttribute="centerY" id="B0K-sH-Ysn"/>
                             <constraint firstItem="yet-cP-iNZ" firstAttribute="centerX" secondItem="LJc-Y6-KTE" secondAttribute="centerX" id="Bir-gl-czD"/>
+                            <constraint firstItem="z05-5d-RZc" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="top" id="Gi8-j3-PRm"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="centerX" secondItem="Xul-ZD-b56" secondAttribute="centerX" id="OHc-vu-0eR"/>
                             <constraint firstItem="tQY-ak-0yd" firstAttribute="top" secondItem="E7m-CS-gyh" secondAttribute="bottom" constant="20" id="YTX-Tp-axW"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leadingMargin" constant="20" id="cWA-Kp-VpM">
@@ -80,6 +95,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="closeButton" destination="z05-5d-RZc" id="bJF-Qz-es8"/>
                         <outlet property="letterboxController" destination="m76-hn-RkO" id="EDf-jv-Qb1"/>
                         <outlet property="letterboxView" destination="LJc-Y6-KTE" id="9gb-8D-HAg"/>
                         <outlet property="mirroredSwitch" destination="g2T-7b-725" id="mqg-dW-Mq8"/>
@@ -91,4 +107,7 @@
             <point key="canvasLocation" x="45.600000000000001" y="97.601199400299862"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="close_22" width="22" height="22"/>
+    </resources>
 </document>

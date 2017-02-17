@@ -111,6 +111,7 @@ static void commonInit(SRGLetterboxView *self);
     self.forwardSeekButton.alpha = 0.f;
     self.seekToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
+    self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
     self.airplayView.delegate = self;
@@ -237,8 +238,8 @@ static void commonInit(SRGLetterboxView *self);
     
     // Synchronize the slider popup and the loading indicator with the new controller state
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         [self.timeSlider hidePopUpViewAnimated:NO];
     }
     else {
@@ -421,14 +422,15 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Called to update the main player subviews (player view, background image, error overlay). Independent of the status
-// of the controls
+// Called to update the main player subviews (player view, background image, error overlay). Independent of the global
+// status of the control overlay
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         
-        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+        if (playbackState == SRGMediaPlayerPlaybackStatePlaying) {
             // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
             // playbackl on the initiatedByCaller device) is used
             SRGMedia *media = self.controller.media;
@@ -443,15 +445,19 @@ static void commonInit(SRGLetterboxView *self);
                 [self.timeSlider showPopUpViewAnimated:NO /* already in animation block */];
             }
         }
-        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        else if (playbackState == SRGMediaPlayerPlaybackStateEnded
+                    || playbackState == SRGMediaPlayerPlaybackStateIdle) {
             self.imageView.alpha = 1.f;
             mediaPlayerController.view.alpha = 0.f;
             
             [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
             self.showingPopup = NO;
             
-            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
-        }        
+            // Force display of the controls at the end of the playback
+            if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
+                [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+            }
+        }
     };
     
     if (animated) {
@@ -469,23 +475,49 @@ static void commonInit(SRGLetterboxView *self);
         self.backwardSeekButton.alpha = [controller canSeekBackward] ? 1.f : 0.f;
         self.seekToLiveButton.alpha = [controller canSeekToLive] ? 1.f : 0.f;
         
-        if (controller.media.contentType == SRGContentTypeLivestream) {
-            if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR || [controller canSeekBackward] || [controller canSeekForward]) {
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        
+        // Special cases when the player is idle or preparing
+        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+            self.timeSlider.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.hidden = YES;
+            return;
+        }
+        
+        // Adjust the UI to best match type of the stream being played
+        switch (mediaPlayerController.streamType) {
+            case SRGMediaPlayerStreamTypeOnDemand: {
+                self.timeSlider.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.alpha = 1.f;
+                break;
+            }
+                
+            case SRGMediaPlayerStreamTypeLive: {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.alpha = 1.f;
+                break;
+            }
+                
+            case SRGMediaPlayerStreamTypeDVR: {
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.alpha = 1.f;
+                break;
             }
-            else {
+                
+            default: {
                 self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+                self.playbackButton.alpha = 0.f;
+                break;
             }
-        }
-        else {
-            self.timeSlider.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
-            self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
         }
     };
     
@@ -547,11 +579,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         self.loadingImageView.alpha = (! mediaPlayerController
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+                                       || playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                       || playbackState == SRGMediaPlayerPlaybackStatePaused
+                                       || playbackState == SRGMediaPlayerPlaybackStateEnded
+                                       || playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
     };
     
     if (animated) {
@@ -587,7 +620,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isFullScreenButtonHidden
 {
-    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)];
+    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)] ||
+    ([self.delegate respondsToSelector:@selector(letterboxViewShoulDisplayFullScreenToggleButton:)] && ![self.delegate letterboxViewShoulDisplayFullScreenToggleButton:self]);
 }
 
 #pragma mark UI changes and restoration
@@ -683,6 +717,12 @@ static void commonInit(SRGLetterboxView *self);
     [self.controller seekToLiveWithCompletionHandler:nil];
 }
 
+- (IBAction)retry:(id)sender
+{
+    [self.controller restart];
+    [self updateUserInterfaceForErrorAnimated:YES];
+}
+
 #pragma mark ASValueTrackingSliderDataSource protocol
 
 - (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
@@ -742,6 +782,7 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
+    [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
 }
 
