@@ -597,7 +597,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isFullScreenButtonHidden
 {
-    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)];
+    return ! self.delegate || ! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)] ||
+    ([self.delegate respondsToSelector:@selector(letterboxViewShoulDisplayFullScreenToggleButton:)] && ![self.delegate letterboxViewShoulDisplayFullScreenToggleButton:self]);
 }
 
 #pragma mark UI changes and restoration
