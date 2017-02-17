@@ -111,6 +111,7 @@ static void commonInit(SRGLetterboxView *self);
     self.forwardSeekButton.alpha = 0.f;
     self.seekToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
+    self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
     self.airplayView.delegate = self;
@@ -474,27 +475,49 @@ static void commonInit(SRGLetterboxView *self);
         self.backwardSeekButton.alpha = [controller canSeekBackward] ? 1.f : 0.f;
         self.seekToLiveButton.alpha = [controller canSeekToLive] ? 1.f : 0.f;
         
-        // Seekable stream. Display pause button
-        if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR
-                || controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand) {
-            self.timeSlider.alpha = 1.f;
-            // Hide timeLeftValueLabel to give the width space to the timeSlider
-            self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-            self.playbackButton.alpha = 1.f;
-        }
-        // Live only. Display stop button
-        else if (controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-            self.timeSlider.alpha = 0.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
-            self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-            self.playbackButton.alpha = 1.f;
-        }
-        // Unknown type. Display no playback button
-        else {
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        
+        // Idle. Display playback button, hide the rest
+        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.alpha = 0.f;
+            self.playbackButton.alpha = 1.f;
+            return;
+        }
+        
+        // Adjust the UI to best match type of the stream being played
+        switch (mediaPlayerController.streamType) {
+            case SRGMediaPlayerStreamTypeOnDemand: {
+                self.timeSlider.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.alpha = 1.f;
+                break;
+            }
+                
+            case SRGMediaPlayerStreamTypeLive: {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.alpha = 1.f;
+                break;
+            }
+                
+            case SRGMediaPlayerStreamTypeDVR: {
+                self.timeSlider.alpha = 1.f;
+                // Hide timeLeftValueLabel to give the width space to the timeSlider
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.alpha = 1.f;
+                break;
+            }
+                
+            default: {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+                self.playbackButton.alpha = 0.f;
+                break;
+            }
         }
     };
     
@@ -753,6 +776,7 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
+    [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
 }
 
