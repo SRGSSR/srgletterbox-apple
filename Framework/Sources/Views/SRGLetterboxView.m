@@ -720,6 +720,7 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)retry:(id)sender
 {
     [self.controller restart];
+    [self updateUserInterfaceForErrorAnimated:YES];
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol

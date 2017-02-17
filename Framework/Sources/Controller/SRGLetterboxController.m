@@ -468,11 +468,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)restart
 {
-    if (! self.URN) {
-        return;
+    if (self.URN) {
+        [self playURN:self.URN];
     }
-    
-    [self playURN:self.URN];
 }
 
 - (void)reset
