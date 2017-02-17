@@ -316,11 +316,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        [[dataProvider nowAndNextForVideoChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
+        [[dataProvider videoChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
         // TODO: Regional radio support
-        [[dataProvider nowAndNextForAudioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+        [[dataProvider audioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
     }
 }
 

@@ -421,8 +421,8 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Called to update the main player subviews (player view, background image, error overlay). Independent of the status
-// of the controls
+// Called to update the main player subviews (player view, background image, error overlay). Independent of the global
+// status of the control overlay
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
