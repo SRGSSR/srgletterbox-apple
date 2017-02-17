@@ -1,5 +1,7 @@
 <p align="center"><img src="README-images/logo.png"/></p>
 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 ## About
 
 The SRG Letterbox library defines the official SRG SSR media player experience, packed into a single library, providing:
