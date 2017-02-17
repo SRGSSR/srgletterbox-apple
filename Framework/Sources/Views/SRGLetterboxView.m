@@ -237,8 +237,8 @@ static void commonInit(SRGLetterboxView *self);
     
     // Synchronize the slider popup and the loading indicator with the new controller state
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         [self.timeSlider hidePopUpViewAnimated:NO];
     }
     else {
@@ -427,8 +427,9 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         
-        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+        if (playbackState == SRGMediaPlayerPlaybackStatePlaying) {
             // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
             // playbackl on the initiatedByCaller device) is used
             SRGMedia *media = self.controller.media;
@@ -443,15 +444,19 @@ static void commonInit(SRGLetterboxView *self);
                 [self.timeSlider showPopUpViewAnimated:NO /* already in animation block */];
             }
         }
-        else if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        else if (playbackState == SRGMediaPlayerPlaybackStateEnded
+                    || playbackState == SRGMediaPlayerPlaybackStateIdle) {
             self.imageView.alpha = 1.f;
             mediaPlayerController.view.alpha = 0.f;
             
             [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
             self.showingPopup = NO;
             
-            [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
-        }        
+            // Force display of the controls at the end of the playback
+            if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
+                [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+            }
+        }
     };
     
     if (animated) {
@@ -551,11 +556,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         self.loadingImageView.alpha = (! mediaPlayerController
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+                                       || playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                       || playbackState == SRGMediaPlayerPlaybackStatePaused
+                                       || playbackState == SRGMediaPlayerPlaybackStateEnded
+                                       || playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
     };
     
     if (animated) {
