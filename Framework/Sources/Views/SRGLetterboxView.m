@@ -36,6 +36,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
+@property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 
@@ -556,6 +557,9 @@ static void commonInit(SRGLetterboxView *self);
     
     if ([self error]) {
         self.errorView.alpha = 1.f;
+        
+        // Only display retry instructions if there is a media to retry with
+        self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
         
         [self applyUserInterfaceChanges:^{
             [self internal_setUserInterfaceHidden:YES animated:animated togglable:NO];

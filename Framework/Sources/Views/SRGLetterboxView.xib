@@ -21,6 +21,7 @@
                 <outlet property="airplayView" destination="WC6-gu-laR" id="E3S-Du-nlZ"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
+                <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
                 <outlet property="errorLabel" destination="XI7-JZ-ASc" id="Sga-SH-mVB"/>
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="tY8-JW-edg"/>
                 <outlet property="forwardSeekButton" destination="Suw-jc-FuV" id="FJB-Vi-Dbp"/>
@@ -105,7 +106,7 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                            <rect key="frame" x="8" y="179" width="7569" height="22"/>
+                            <rect key="frame" x="8" y="179" width="7543" height="22"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGAirplayButton">
                                     <rect key="frame" x="0.0" y="0.0" width="28" height="22"/>
@@ -131,7 +132,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="ASValueTrackingSlider">
-                                    <rect key="frame" x="4378" y="0.0" width="213" height="23"/>
+                                    <rect key="frame" x="4378" y="0.0" width="187.5" height="23"/>
                                     <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <userDefinedRuntimeAttributes>
@@ -144,13 +145,13 @@
                                     </connections>
                                 </slider>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                    <rect key="frame" x="4597" y="0.0" width="27.5" height="22"/>
+                                    <rect key="frame" x="4571.5" y="0.0" width="27.5" height="22"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                    <rect key="frame" x="6068.5" y="0.0" width="28" height="22"/>
+                                    <rect key="frame" x="6043" y="0.0" width="28" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
@@ -162,7 +163,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button">
-                                    <rect key="frame" x="7540.5" y="0.0" width="28" height="22"/>
+                                    <rect key="frame" x="7515" y="0.0" width="28" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="width" priority="999" constant="28" id="wp2-4M-YHh"/>
