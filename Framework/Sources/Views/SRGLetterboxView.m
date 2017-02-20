@@ -832,5 +832,10 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     
+    // Create an initial matching restoration context
+    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
+    self.mainRestorationContext.hidden = self.userInterfaceHidden;
+    self.mainRestorationContext.togglable = self.userInterfaceTogglable;
+    
     self.restorationContexts = [NSMutableArray array];
 }
