@@ -255,7 +255,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // Videos can only be controlled when the device has been locked (mostly for Airplay playback). We don't allow
     // video playback while the app is fully in background for the moment (except if Airplay is enabled)
-    if (mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
+    if (mediaPlayerController
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
             && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                     || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                     || [AVAudioSession srg_isAirplayActive]
