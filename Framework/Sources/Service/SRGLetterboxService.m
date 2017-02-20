@@ -277,6 +277,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
+    if (! controller) {
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+        return;
+    }
+    
     NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
     
     SRGMedia *media = controller.media;
