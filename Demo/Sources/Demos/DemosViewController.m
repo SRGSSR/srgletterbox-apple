@@ -25,7 +25,17 @@
 
 - (NSString *)title
 {
-    return @"Letterbox demos";
+    NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    NSString *bundleVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
+    
+    return [NSString stringWithFormat:@"Letterbox demos %@ (%@)", versionString, bundleVersion];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.navigationItem.prompt = nil;
 }
 
 #pragma mark UITableViewDelegate protocol
