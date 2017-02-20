@@ -535,12 +535,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return (self.media.contentType == SRGContentTypeLivestream && [self canSeekForward]);
 }
 
-- (void)seekBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
+- (void)seekBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     [self seekBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
 
-- (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
+- (void)seekForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     [self seekForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
