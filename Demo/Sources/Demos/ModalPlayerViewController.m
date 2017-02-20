@@ -146,7 +146,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
-        self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
+        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
     } completion:nil];
 }
 

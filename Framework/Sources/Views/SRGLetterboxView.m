@@ -36,6 +36,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
+@property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 
@@ -557,6 +558,9 @@ static void commonInit(SRGLetterboxView *self);
     if ([self error]) {
         self.errorView.alpha = 1.f;
         
+        // Only display retry instructions if there is a media to retry with
+        self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
+        
         [self applyUserInterfaceChanges:^{
             [self internal_setUserInterfaceHidden:YES animated:animated togglable:NO];
         } withRestorationIdentifier:kIdentifier];
@@ -752,7 +756,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
 {
-    self.airplayLabel.text = SRGAirplayRouteDescription();
+    self.airplayLabel.text = NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay device");
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
@@ -827,6 +831,11 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
+    
+    // Create an initial matching restoration context
+    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
+    self.mainRestorationContext.hidden = self.userInterfaceHidden;
+    self.mainRestorationContext.togglable = self.userInterfaceTogglable;
     
     self.restorationContexts = [NSMutableArray array];
 }

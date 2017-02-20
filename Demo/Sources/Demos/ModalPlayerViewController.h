@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ModalPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN;
+- (instancetype)initWithURN:(nullable SRGMediaURN *)URN;
 
 @end
 

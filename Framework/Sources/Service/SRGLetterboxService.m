@@ -255,7 +255,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // Videos can only be controlled when the device has been locked (mostly for Airplay playback). We don't allow
     // video playback while the app is fully in background for the moment (except if Airplay is enabled)
-    if (mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
+    if (mediaPlayerController
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
             && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                     || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                     || [AVAudioSession srg_isAirplayActive]
@@ -277,6 +278,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
+    if (! controller) {
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+        return;
+    }
+    
     NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
     
     SRGMedia *media = controller.media;
@@ -300,7 +306,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
     
-    // TODO: Should be retrieved automatically by the controller
     NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:256.f * [UIScreen mainScreen].scale];
     self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:imageURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
         if (image) {
