@@ -468,7 +468,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)restart
 {
-    if (self.URN) {
+    // Reuse the media if available (so that the information already available to clients is not reduced)
+    if (self.media) {
+        [self playMedia:self.media];
+    }
+    else if (self.URN) {
         [self playURN:self.URN];
     }
 }
