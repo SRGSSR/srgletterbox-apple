@@ -278,14 +278,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
-    if (! controller) {
+    SRGMedia *media = controller.media;
+    if (! media) {
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
         return;
     }
     
     NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
     
-    SRGMedia *media = controller.media;
     switch (media.mediaType) {
         case SRGMediaTypeAudio: {
             nowPlayingInfo[MPMediaItemPropertyMediaType] = @(MPMediaTypeAnyAudio);
@@ -306,11 +306,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
     
-    // FIXME: Temporary image resizing using Cloudinary demo account. Should use a proper production account and be moved
-    //        to the data provider library
+    // FIXME: Arbitrary resizing should probably be moved to the data provider library
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
     NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:dimension];
-    NSString *URLString = [NSString stringWithFormat:@"https://res.cloudinary.com/demo/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
+    NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
     NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
     self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
         if (image) {
