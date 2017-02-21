@@ -3,3 +3,4 @@ xcuserdata
 .DS_Store
 *.xcscmblueprint
 report.xml
+last-nightlies-success-git-commit-hash.txt

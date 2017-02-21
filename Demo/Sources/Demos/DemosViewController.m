@@ -28,6 +28,14 @@
     NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
     NSString *bundleVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
     
+#ifdef DEBUG
+    versionString = [@"🛠 " stringByAppendingString:versionString];
+#endif
+    
+#ifdef NIGHTLY
+    versionString = [@"🌙 " stringByAppendingString:versionString];
+#endif
+    
     return [NSString stringWithFormat:@"Letterbox demos %@ (%@)", versionString, bundleVersion];
 }
 
@@ -88,7 +96,7 @@
                     
                 case 7: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                             message:@"Will be played with the basic player."
+                                                                                             message:@"Will be played with the basic player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
                     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -174,7 +182,7 @@
                     
                 case 4: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                             message:@"Will be played with the advanced player."
+                                                                                             message:@"Will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
                     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -263,7 +271,7 @@
                     
                 case 4: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                             message:@"Will be played with the standalone player."
+                                                                                             message:@"Will be played with the standalone player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
                     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {

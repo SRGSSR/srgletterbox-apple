@@ -13,10 +13,10 @@ default_platform :ios
 
 platform :ios do
   before_all do
-    carthage(
-      command: "bootstrap",
-      platform: "iOS"
-      )
+    # carthage(
+    #   command: "bootstrap",
+    #   platform: "iOS"
+    #   )
     
   end
 
@@ -27,6 +27,111 @@ platform :ios do
       clean: true
     ) 
   end
+
+  desc "Build a new nightly demo on HockeyApp"
+  lane :nightly do
+
+    hockeyAppBuildNumber = getHockeyAppBuildNumber
+    increment_build_number(
+      build_number: hockeyAppBuildNumber + 1
+    )
+
+    changelog = default_changelog_for_nightlies
+
+    build_lane(
+      configuration: "Nightly",
+      scheme: "SRGLetterbox-demo"
+    )
+
+    hockey_lane(
+      api_token: "54ee058e9e6248b1b3f7b61cc8d598ff",
+      public_identifier: "fed0d464bba34c35bbb051f9f517a9d6",
+      notes: changelog
+    )
+
+    clean_build_artifacts
+  end
+
+  desc "Build for a scheme and a configuration"
+  private_lane :build_lane do |options|
+    scheme = options[:scheme]
+    configuration = options[:configuration]
+    gym(
+      configuration: configuration,
+      scheme: scheme,
+      silent: true,
+      clean: true,
+      export_method: "enterprise"
+    )
+  end
+
+  desc "Upload a build on HockeyApp"
+  private_lane :hockey_lane do |options|
+    public_identifier = options[:public_identifier]
+    api_token = options[:api_token]
+    notes = options[:notes]
+
+    repository_url = sh "git config --get remote.origin.url"
+    if repository_url.include? "git@"
+      repository_url.slice! "git@"
+      repository_url = repository_url.tr(":", "/")
+      repository_url = "https://" + repository_url
+    end
+
+    hockey(
+      api_token: api_token,
+      public_identifier: public_identifier,
+      notify: '0',
+      notes: notes,
+      commit_sha: last_git_commit[:commit_hash],
+      repository_url: repository_url
+    )
+  end
+
+  desc "Returns a default changelog for nightlies"
+  private_lane :default_changelog_for_nightlies do
+
+    lastNightliesGitCommitHash = getLastNightliesSuccessGitCommitHash
+    if lastNightliesGitCommitHash.length < 12
+      lastNightliesGitCommitHash = "HEAD^^^^^"
+    end
+
+    changelog = changelog_from_git_commits(
+        between: [lastNightliesGitCommitHash, "HEAD"],
+        pretty: "- %s"
+    )
+    # HAX: strip emoji from changelog
+    changelog = changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '')
+    Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
+    puts changelog
+    changelog
+  end
+
+  desc "Return current build number on Hockey App"
+  private_lane :getHockeyAppBuildNumber do
+    hockeyAppBuildNumber = (sh "scripts/hockeyapp-build-number.sh fed0d464bba34c35bbb051f9f517a9d6")
+    hockeyAppBuildNumber = Integer(hockeyAppBuildNumber.lines.map(&:chomp).last)
+    puts hockeyAppBuildNumber
+    hockeyAppBuildNumber
+  end
+
+  desc "Save the git commit hash in a local text file for nightlies"
+  private_lane :saveLastNightliesSuccessGitCommitHash do
+    last = last_git_commit
+    puts last[:commit_hash]
+    File.open("last-nightlies-success-git-commit-hash.txt", 'w') {|f| f.write(last[:commit_hash]) }
+    last[:commit_hash]
+  end
+
+  desc "Read the git commit hash in a local text file for nightlies"
+  private_lane :getLastNightliesSuccessGitCommitHash do
+    file = File.open("last-nightlies-success-git-commit-hash.txt", "a+")
+    lastNightliesSuccessGitCommitHash = file.read
+    file.close
+    puts lastNightliesSuccessGitCommitHash
+    lastNightliesSuccessGitCommitHash
+  end
+
 end
 
 
