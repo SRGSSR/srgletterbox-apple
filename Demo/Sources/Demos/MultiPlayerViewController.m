@@ -42,6 +42,11 @@
     }
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
@@ -64,6 +69,11 @@
     
     UIGestureRecognizer *tapGestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchToStream2:)];
     [self.smallLetterboxView2 addGestureRecognizer:tapGestureRecognizer2];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -186,6 +196,15 @@
     
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;
+}
+
+#pragma mark Notifications
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self.letterboxController togglePlayPause];
+    [self.smallLetterboxController1 togglePlayPause];
+    [self.smallLetterboxController2 togglePlayPause];
 }
 
 @end
