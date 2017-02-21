@@ -25,7 +25,10 @@
 
 - (NSString *)title
 {
-    return @"Letterbox demos";
+    NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    NSString *bundleVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
+    
+    return [NSString stringWithFormat:@"Letterbox demos %@ (%@)", versionString, bundleVersion];
 }
 
 #pragma mark UITableViewDelegate protocol
