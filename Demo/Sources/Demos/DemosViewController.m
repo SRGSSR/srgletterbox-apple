@@ -31,13 +31,6 @@
     return [NSString stringWithFormat:@"Letterbox demos %@ (%@)", versionString, bundleVersion];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    self.navigationItem.prompt = nil;
-}
-
 #pragma mark UITableViewDelegate protocol
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
