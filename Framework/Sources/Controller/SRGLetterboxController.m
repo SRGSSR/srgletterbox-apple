@@ -556,14 +556,20 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
 {
+    @weakify(self)
     [self prepareToPlayURN:URN withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate completionHandler:^{
+        @strongify(self)
+        
         [self play];
     }];
 }
 
 - (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
 {
+    @weakify(self)
     [self prepareToPlayMedia:media withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate completionHandler:^{
+        @strongify(self)
+        
         [self play];
     }];
 }
