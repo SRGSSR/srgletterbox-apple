@@ -77,6 +77,118 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
 /**
+ *  Prepare to play the specified URN (Uniform Resource Name), but with the player paused (if playback is not started
+ *  in the completion handler). If you want playback to start right after preparation, call `-play` from the completion 
+ *  handler.
+ *
+ *  @param URN                   The URN to prepare.
+ *  @param preferredStartBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
+ *                               with no result guarantee, though it should in general be applied. The nearest available
+ *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
+ *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream. Use the
+ *                               special `SRGLetterboxAutomaticStartBitRate` value to let the controller select the best
+ *                               bit rate automatically for the media.
+ *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
+ *                           block will only be called if the media could be successfully prepared.
+ *
+ *  @discussion Does nothing if the URN is the one currently being played. If the preferred quality is set to
+ *              `SRGQualityNone`, the best available quality will be automatically played.
+ */
+- (void)prepareToPlayURN:(SRGMediaURN *)URN
+    withPreferredQuality:(SRGQuality)preferredQuality
+   preferredStartBitRate:(NSInteger)preferredStartBitRate
+       completionHandler:(nullable void (^)(void))completionHandler;
+
+/**
+ *  Same as `-prepareToPlayURN:withPreferredQuality:preferredStartBitRate:completionHandler`, but for a media. 
+ *
+ *  @discussion Media metadata is immediately available from the controller and through update notifications.
+ */
+- (void)prepareToPlayMedia:(SRGMedia *)media
+      withPreferredQuality:(SRGQuality)preferredQuality
+     preferredStartBitRate:(NSInteger)preferredStartBitRate
+         completionHandler:(nullable void (^)(void))completionHandler;
+/**
+ *  Ask the player to play. If the player has not been prepared, this method does nothing.
+ */
+- (void)play;
+
+/**
+ *  Ask the player to pause playback. Does nothing if the controller is not playing.
+ */
+- (void)pause;
+
+/**
+ *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
+ */
+- (void)togglePlayPause;
+
+/**
+ *  Stop playback, keeping playback information.
+ */
+- (void)stop;
+
+/**
+ *  Restart playback completely for the same URN or media. Does nothing if no URN or media has currently been set.
+ */
+- (void)restart;
+
+/**
+ *  Reset playback and reset all playback information.
+ */
+- (void)reset;
+
+/**
+ *  Set to `YES` to mute the player. Default is `NO`.
+ */
+@property (nonatomic, getter=isMuted) BOOL muted;
+
+@end
+
+/**
+ *  Convenience methods
+ */
+@interface SRGLetterboxController (Convenience)
+
+/**
+ *  Prepare to play the specified URN (Uniform Resource Name).
+ *
+ *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
+ *              played. The start bit rate is set to automatic.
+ */
+- (void)prepareToPlayURN:(SRGMediaURN *)URN
+   withCompletionHandler:(nullable void (^)(void))completionHandler;
+
+/**
+ *  Prepare to play the specified media (Uniform Resource Name).
+ *
+ *  @discussion Does nothing if the media is the one currently being played. The best available quality is automatically
+ *              played. The start bit rate is set to automatic.
+ */
+- (void)prepareToPlayMedia:(SRGMedia *)media
+     withCompletionHandler:(nullable void (^)(void))completionHandler;
+
+/**
+ *  Play the specified URN (Uniform Resource Name).
+ *
+ *  For more information, @see `-prepareToPlayURN:withPreferredQuality:preferredStartBitRate:completionHandler:.
+ *
+ *  @discussion Does nothing if the media is the one currently being played. If the preferred quality is set to
+ *              `SRGQualityNone`, the best available quality will be automatically played.
+ */
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate;
+
+/**
+ *  Play the specified media.
+ *
+ *  For more information, @see `-prepareToPlayMedia:withPreferredQuality:preferredStartBitRate:completionHandler:.
+ *
+ *  @discussion Does nothing if the media is the one currently being played. If the preferred quality is set to
+ *              `SRGQualityNone`, the best available quality will be automatically played.
+ */
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate;
+
+/**
  *  Play the specified URN (Uniform Resource Name).
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
@@ -91,61 +203,6 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *              played. The start bit rate is set to automatic.
  */
 - (void)playMedia:(SRGMedia *)media;
-
-/**
- *  Play the specified URN (Uniform Resource Name).
- *
- *  @param preferredStartBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
- *                               with no result guarantee, though it should in general be applied. The nearest available 
- *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit 
- *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream. Use the
- *                               special `SRGLetterboxAutomaticStartBitRate` value to let the controller select the best
- *                               bit rate automatically for the media.
- *
- *  @discussion Does nothing if the URN is the one currently being played. If the preferred quality is set to
- *              `SRGQualityNone`, the best available quality will be automatically played.
- */
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate;
-
-/**
- *  Play the specified media.
- *
- *  @param preferredStartBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
- *                               with no result guarantee, though it should in general be applied. The nearest available
- *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
- *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream. Use the
- *                               special `SRGLetterboxAutomaticStartBitRate` value to let the controller select the best
- *                               bit rate automatically for the media.
- *
- *  @discussion Does nothing if the media is the one currently being played. If the preferred quality is set to
- *              `SRGQualityNone`, the best available quality will be automatically played.
- */
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate;
-
-/**
- *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
- */
-- (void)togglePlayPause;
-
-/**
- *  Stop playback, keeping playback information. Playback can be restarted with a call to `-togglePlayPause`.
- */
-- (void)stop;
-
-/**
- *  Restart playback completely for the same URN. Does nothing if no URN has currently been set.
- */
-- (void)restart;
-
-/**
- *  Reset playback and reset all playback information.
- */
-- (void)reset;
-
-/**
- *  Set to `YES` to mute the player. Default is `NO`.
- */
-@property (nonatomic, getter=isMuted) BOOL muted;
 
 @end
 

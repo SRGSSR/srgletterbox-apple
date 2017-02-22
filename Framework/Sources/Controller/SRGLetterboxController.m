@@ -329,27 +329,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 #pragma mark Playback
 
-- (void)playURN:(SRGMediaURN *)URN
+- (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate completionHandler:(void (^)(void))completionHandler
 {
-    [self playURN:URN withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate];
+    [self prepareToPlayURN:URN media:nil withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate completionHandler:completionHandler];
 }
 
-- (void)playMedia:(SRGMedia *)media
+- (void)prepareToPlayMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate completionHandler:(void (^)(void))completionHandler
 {
-    [self playMedia:media withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate];
+    [self prepareToPlayURN:nil media:media withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate completionHandler:completionHandler];
 }
 
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
-{
-    [self playURN:URN media:nil withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate];
-}
-
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
-{
-    [self playURN:nil media:media withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate];
-}
-
-- (void)playURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
+- (void)prepareToPlayURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -440,10 +430,15 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         NSInteger startBitRate = (preferredStartBitRate == SRGLetterboxAutomaticStartBitRate) ? 800 : preferredStartBitRate;
         
         @weakify(self)
-        SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality preferredStartBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+        SRGRequest *playRequest = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality preferredStartBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             @strongify(self)
             
-            [self.requestQueue reportError:error];
+            if (error) {
+                [self.requestQueue reportError:error];
+                return;
+            }
+            
+            completionHandler ? completionHandler() : nil;
         }];
         
         if (playRequest) {
@@ -465,6 +460,16 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
+}
+
+- (void)play
+{
+    [self.mediaPlayerController play];
+}
+
+- (void)pause
+{
+    [self.mediaPlayerController togglePlayPause];
 }
 
 - (void)togglePlayPause
@@ -535,6 +540,44 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
 
+#pragma mark Playback (convenience)
+
+- (void)prepareToPlayURN:(SRGMediaURN *)URN
+   withCompletionHandler:(void (^)(void))completionHandler
+{
+    [self prepareToPlayURN:URN withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate completionHandler:completionHandler];
+}
+
+- (void)prepareToPlayMedia:(SRGMedia *)media
+     withCompletionHandler:(void (^)(void))completionHandler
+{
+    [self prepareToPlayMedia:media withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate completionHandler:completionHandler];
+}
+
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
+{
+    [self prepareToPlayURN:URN withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate completionHandler:^{
+        [self play];
+    }];
+}
+
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
+{
+    [self prepareToPlayMedia:media withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate completionHandler:^{
+        [self play];
+    }];
+}
+
+- (void)playURN:(SRGMediaURN *)URN
+{
+    [self playURN:URN withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate];
+}
+
+- (void)playMedia:(SRGMedia *)media
+{
+    [self playMedia:media withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate];
+}
+
 #pragma mark Standard seeks
 
 - (BOOL)canSeekBackward
@@ -590,7 +633,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
 }
 
-- (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
+- (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (![self canSeekBackwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
@@ -606,7 +649,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
-- (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
+- (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (![self canSeekForwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
@@ -622,7 +665,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
-- (void)seekToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler
+- (void)seekToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (self.media.contentType == SRGContentTypeLivestream) {
         CMTimeRange timeRange = self.mediaPlayerController.timeRange;
