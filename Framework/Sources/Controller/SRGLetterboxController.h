@@ -45,6 +45,11 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
+ *  Use as preferred bit rate value to enable automatic optimized bit rate.
+ */
+OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
+
+/**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
@@ -75,7 +80,7 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Play the specified URN (Uniform Resource Name).
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played.
+ *              played. The start bit rate is optimized for short videos.
  */
 - (void)playURN:(SRGMediaURN *)URN;
 
@@ -83,25 +88,39 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
  *  Play the specified media.
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played.
+ *              played. The start bit rate is optimized for short videos.
  */
 - (void)playMedia:(SRGMedia *)media;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
+ *  @param preferredStartBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
+ *                               with no result guarantee, though it should in general be applied. The nearest available 
+ *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit 
+ *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream. Use the
+ *                               special `SRGLetterboxAutomaticStartBitRate` value to let the controller select the best
+ *                               bit rate automatically for the media.
+ *
  *  @discussion Does nothing if the URN is the one currently being played. If the preferred quality is set to
  *              `SRGQualityNone`, the best available quality will be automatically played.
  */
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality;
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate;
 
 /**
  *  Play the specified media.
  *
+ *  @param preferredStartBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
+ *                               with no result guarantee, though it should in general be applied. The nearest available
+ *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
+ *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream. Use the
+ *                               special `SRGLetterboxAutomaticStartBitRate` value to let the controller select the best
+ *                               bit rate automatically for the media.
+ *
  *  @discussion Does nothing if the media is the one currently being played. If the preferred quality is set to
  *              `SRGQualityNone`, the best available quality will be automatically played.
  */
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality;
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate;
 
 /**
  *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.

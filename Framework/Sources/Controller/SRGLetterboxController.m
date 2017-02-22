@@ -17,6 +17,8 @@
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
+const NSInteger SRGLetterboxAutomaticStartBitRate = -1;      // Reserved value for automatic start bit rate selection
+
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
@@ -59,6 +61,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGMediaComposition *mediaComposition;
 @property (nonatomic) SRGChannel *channel;
 @property (nonatomic) SRGQuality preferredQuality;
+@property (nonatomic) NSInteger preferredStartBitRate;
 @property (nonatomic) NSError *error;
 
 @property (nonatomic) SRGRequestQueue *requestQueue;
@@ -214,7 +217,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             // Update the URL if needed
             if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
                 SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
-                [self playMedia:media withPreferredQuality:self.preferredQuality];
+                [self playMedia:media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
             }
         };
         
@@ -328,28 +331,32 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)playURN:(SRGMediaURN *)URN
 {
-    [self playURN:URN withPreferredQuality:SRGQualityNone];
+    [self playURN:URN withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate];
 }
 
 - (void)playMedia:(SRGMedia *)media
 {
-    [self playMedia:media withPreferredQuality:SRGQualityNone];
+    [self playMedia:media withPreferredQuality:SRGQualityNone preferredStartBitRate:SRGLetterboxAutomaticStartBitRate];
 }
 
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
 {
-    [self playURN:URN media:nil withPreferredQuality:preferredQuality];
+    [self playURN:URN media:nil withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate];
 }
 
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
 {
-    [self playURN:nil media:media withPreferredQuality:preferredQuality];
+    [self playURN:nil media:media withPreferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate];
 }
 
-- (void)playURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality
+- (void)playURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)preferredQuality preferredStartBitRate:(NSInteger)preferredStartBitRate
 {
     if (media) {
         URN = media.URN;
+    }
+    
+    if (preferredStartBitRate < 0 && preferredStartBitRate != SRGLetterboxAutomaticStartBitRate) {
+        preferredStartBitRate = 0;
     }
     
     // If already playing the media, does nothing
@@ -359,8 +366,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     [self resetWithURN:URN media:media];
     
-    // Save the preferred quality when restarting after connection loss
+    // Save the quality settings for restarting after connection loss
     self.preferredQuality = preferredQuality;
+    self.preferredStartBitRate = preferredStartBitRate;
     
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
@@ -428,8 +436,23 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             return;
         }
         
+        // When the start bit rate is set to automatic, we optimize it for short videos (since the chunk size is usually 6 seconds,
+        // 30 seconds seems to be a good maximum length for short videos)
+        NSInteger startBitRate = 0;
+        if (preferredStartBitRate == SRGLetterboxAutomaticStartBitRate) {
+            SRGChapter *mainChapter = mediaComposition.mainChapter;
+            if (mainChapter.mediaType == SRGMediaTypeVideo
+                    && mainChapter.contentType != SRGContentTypeLivestream && mainChapter.contentType != SRGContentTypeScheduledLivestream
+                    && mainChapter.duration <= 30. * 1000.) {
+                startBitRate = 600;
+            }
+        }
+        else {
+            startBitRate = preferredStartBitRate;
+        }
+        
         @weakify(self)
-        SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality preferredStartBitRate:0 userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+        SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality preferredStartBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             @strongify(self)
             
             [self.requestQueue reportError:error];
@@ -486,7 +509,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 {
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
+    
     self.preferredQuality = SRGQualityNone;
+    self.preferredStartBitRate = 0;
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
@@ -637,10 +662,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 {
     if ([FXReachability sharedInstance].reachable) {
         if (self.media) {
-            [self playMedia:self.media withPreferredQuality:self.preferredQuality];
+            [self playMedia:self.media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
         }
         else if (self.URN) {
-            [self playURN:self.URN withPreferredQuality:self.preferredQuality];
+            [self playURN:self.URN withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
         }
     }
 }
