@@ -486,10 +486,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 {
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self playMedia:self.media];
+        [self playMedia:self.media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
     }
     else if (self.URN) {
-        [self playURN:self.URN];
+        [self playURN:self.URN withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
     }
 }
 
@@ -698,12 +698,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
     if ([FXReachability sharedInstance].reachable) {
-        if (self.media) {
-            [self playMedia:self.media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
-        }
-        else if (self.URN) {
-            [self playURN:self.URN withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
-        }
+        [self restart];
     }
 }
 
