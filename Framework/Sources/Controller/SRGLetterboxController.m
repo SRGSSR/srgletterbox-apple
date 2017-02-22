@@ -469,7 +469,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)pause
 {
-    [self.mediaPlayerController togglePlayPause];
+    [self.mediaPlayerController pause];
 }
 
 - (void)togglePlayPause
