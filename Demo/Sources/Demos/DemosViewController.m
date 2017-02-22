@@ -30,9 +30,7 @@
     
 #ifdef DEBUG
     versionString = [@"🛠 " stringByAppendingString:versionString];
-#endif
-    
-#ifdef NIGHTLY
+#elif NIGHTLY
     versionString = [@"🌙 " stringByAppendingString:versionString];
 #endif
     
