@@ -202,9 +202,9 @@
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self.letterboxController togglePlayPause];
-    [self.smallLetterboxController1 togglePlayPause];
-    [self.smallLetterboxController2 togglePlayPause];
+    [self.letterboxController play];
+    [self.smallLetterboxController1 play];
+    [self.smallLetterboxController2 play];
 }
 
 @end
