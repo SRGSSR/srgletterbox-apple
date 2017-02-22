@@ -61,40 +61,47 @@
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8368368"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
                 case 3: {
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:nil];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
                 case 4: {
+                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:nil];
+                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    break;
+                }
+                    
+                case 5: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 5: {
+                case 6: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 6: {
+                case 7: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 7: {
+                case 8: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
                                                                                              message:@"Will be played with the basic player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -154,7 +161,7 @@
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8368368"];
                     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
                     
                     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -168,7 +175,8 @@
                 }
                     
                 case 3: {
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:nil];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
                     
                     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
                     // (might happen if presenting and dismissing fast)
@@ -181,6 +189,19 @@
                 }
                     
                 case 4: {
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:nil];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
+                    
+                case 5: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
                                                                                              message:@"Will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -245,7 +266,7 @@
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8368368"];
                     StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
                     
                     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -258,7 +279,8 @@
                 }
                     
                 case 3: {
-                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:nil];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
                     
                     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
                     // (might happen if presenting and dismissing fast)
@@ -270,6 +292,18 @@
                 }
                     
                 case 4: {
+                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:nil];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
+                    
+                case 5: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
                                                                                              message:@"Will be played with the standalone player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
