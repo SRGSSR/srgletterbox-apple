@@ -80,7 +80,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Play the specified URN (Uniform Resource Name).
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is optimized for short videos.
+ *              played. The start bit rate is set to automatic.
  */
 - (void)playURN:(SRGMediaURN *)URN;
 
@@ -88,7 +88,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Play the specified media.
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is optimized for short videos.
+ *              played. The start bit rate is set to automatic.
  */
 - (void)playMedia:(SRGMedia *)media;
 

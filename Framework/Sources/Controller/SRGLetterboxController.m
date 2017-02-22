@@ -436,20 +436,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             return;
         }
         
-        // When the start bit rate is set to automatic, we optimize it for short videos (since the chunk size is usually 6 seconds,
-        // 30 seconds seems to be a good maximum length for short videos)
-        NSInteger startBitRate = 0;
-        if (preferredStartBitRate == SRGLetterboxAutomaticStartBitRate) {
-            SRGChapter *mainChapter = mediaComposition.mainChapter;
-            if (mainChapter.mediaType == SRGMediaTypeVideo
-                    && mainChapter.contentType != SRGContentTypeLivestream && mainChapter.contentType != SRGContentTypeScheduledLivestream
-                    && mainChapter.duration <= 30. * 1000.) {
-                startBitRate = 600;
-            }
-        }
-        else {
-            startBitRate = preferredStartBitRate;
-        }
+        // Start bit rate for automatic mode is 800 kbps
+        NSInteger startBitRate = (preferredStartBitRate == SRGLetterboxAutomaticStartBitRate) ? 800 : preferredStartBitRate;
         
         @weakify(self)
         SRGRequest *playRequest = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality preferredStartBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
