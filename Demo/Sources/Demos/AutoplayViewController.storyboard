@@ -36,6 +36,9 @@
                                         <constraint firstItem="2F0-qR-bO6" firstAttribute="leading" secondItem="biV-rX-1zW" secondAttribute="leading" id="kib-3G-gdZ"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="letterboxView" destination="2F0-qR-bO6" id="Zrg-9O-Zir"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
