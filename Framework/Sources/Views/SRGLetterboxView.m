@@ -588,6 +588,7 @@ static void commonInit(SRGLetterboxView *self);
                                        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
                                        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
                                        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+        [self.loadingImageView startAnimating];
     };
     
     if (animated) {
