@@ -6,6 +6,7 @@
 
 #import "DemosViewController.h"
 
+#import "AutoplayViewController.h"
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "SimplePlayerViewController.h"
@@ -346,6 +347,11 @@
             }
             [self presentViewController:playerViewController animated:YES completion:nil];
             break;
+        }
+            
+        case 4: {
+            AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
+            [self.navigationController pushViewController:autoplayViewController animated:YES];
         }
             
         default: {
