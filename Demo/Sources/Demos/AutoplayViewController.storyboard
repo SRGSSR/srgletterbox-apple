@@ -5,7 +5,6 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -26,11 +25,8 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2F0-qR-bO6" customClass="SRGLetterboxView">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="210.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="212"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="2F0-qR-bO6" secondAttribute="height" multiplier="16:9" id="4HD-s8-R1l"/>
-                                            </constraints>
                                         </view>
                                     </subviews>
                                     <constraints>
@@ -38,7 +34,6 @@
                                         <constraint firstItem="2F0-qR-bO6" firstAttribute="top" secondItem="biV-rX-1zW" secondAttribute="top" id="ciP-ym-8u5"/>
                                         <constraint firstAttribute="trailing" secondItem="2F0-qR-bO6" secondAttribute="trailing" id="j0t-h0-gTQ"/>
                                         <constraint firstItem="2F0-qR-bO6" firstAttribute="leading" secondItem="biV-rX-1zW" secondAttribute="leading" id="kib-3G-gdZ"/>
-                                        <constraint firstItem="2F0-qR-bO6" firstAttribute="width" secondItem="biV-rX-1zW" secondAttribute="width" id="ltI-aw-lMA"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
