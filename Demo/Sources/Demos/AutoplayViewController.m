@@ -16,4 +16,13 @@
     return [storyboard instantiateInitialViewController];
 }
 
+#pragma mark View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+}
+
 @end

@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -12,17 +13,33 @@
         <scene sceneID="sak-kS-eIB">
             <objects>
                 <tableViewController id="jxl-Jc-tdC" customClass="AutoplayViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="a3B-hA-p0L">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="185" sectionHeaderHeight="28" sectionFooterHeight="28" id="a3B-hA-p0L">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="838-HX-Muy">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AutoplayTableViewCell" rowHeight="212" id="838-HX-Muy" customClass="AutoplayTableViewCell">
+                                <rect key="frame" x="0.0" y="28" width="375" height="212"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="838-HX-Muy" id="biV-rX-1zW">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2F0-qR-bO6" customClass="SRGLetterboxView">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="210.5"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="2F0-qR-bO6" secondAttribute="height" multiplier="16:9" id="4HD-s8-R1l"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="2F0-qR-bO6" secondAttribute="bottom" id="Zcm-tH-8tD"/>
+                                        <constraint firstItem="2F0-qR-bO6" firstAttribute="top" secondItem="biV-rX-1zW" secondAttribute="top" id="ciP-ym-8u5"/>
+                                        <constraint firstAttribute="trailing" secondItem="2F0-qR-bO6" secondAttribute="trailing" id="j0t-h0-gTQ"/>
+                                        <constraint firstItem="2F0-qR-bO6" firstAttribute="leading" secondItem="biV-rX-1zW" secondAttribute="leading" id="kib-3G-gdZ"/>
+                                        <constraint firstItem="2F0-qR-bO6" firstAttribute="width" secondItem="biV-rX-1zW" secondAttribute="width" id="ltI-aw-lMA"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -34,7 +51,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3ki-tE-rZ3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-332" y="40"/>
+            <point key="canvasLocation" x="-332" y="39.130434782608695"/>
         </scene>
     </scenes>
 </document>
