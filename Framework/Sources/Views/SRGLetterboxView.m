@@ -583,12 +583,11 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         self.loadingImageView.alpha = (! mediaPlayerController
-                                       || playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
+                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
     };
     
     if (animated) {
