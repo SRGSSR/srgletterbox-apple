@@ -76,9 +76,9 @@
     cell.media = self.medias[indexPath.row];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGRectGetWidth(self.view.frame) * 9.f / 16.f;
+    return CGRectGetWidth(tableView.frame) * 9.f / 16.f;
 }
 
 @end
