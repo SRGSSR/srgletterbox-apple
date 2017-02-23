@@ -117,6 +117,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.streamAvailabilityCheckInterval = 5. * 60.;
         self.channelUpdateInterval = 30.;
         
+        self.resumesAfterRestart = YES;
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
                                                      name:FXReachabilityStatusDidChangeNotification
@@ -484,12 +486,21 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)restart
 {
+    @weakify(self)
+    void (^completionHandler)(void) = ^{
+        @strongify(self)
+        
+        if (self.resumesAfterRestart) {
+            [self play];
+        }
+    };
+    
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self playMedia:self.media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
+        [self prepareToPlayMedia:self.media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate completionHandler:completionHandler];
     }
     else if (self.URN) {
-        [self playURN:self.URN withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
+        [self prepareToPlayURN:self.URN withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate completionHandler:completionHandler];
     }
 }
 

@@ -92,7 +92,8 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *                           block will only be called if the media could be successfully prepared.
  *
  *  @discussion Does nothing if the URN is the one currently being played. If the preferred quality is set to
- *              `SRGQualityNone`, the best available quality will be automatically played.
+ *              `SRGQualityNone`, the best available quality will be automatically played. You might want to set
+ *              the `resumesAfterRestart` property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
     withPreferredQuality:(SRGQuality)preferredQuality
@@ -130,6 +131,10 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
 
 /**
  *  Restart playback completely for the same URN or media. Does nothing if no URN or media has currently been set.
+ *
+ *  @discussion Whether playback should automatically starts when the player is restarted can be controlled using the
+ *              `resumesAfterRestart` property. The `-restart` method is also called when a dropped network connection
+ *              is established again.
  */
 - (void)restart;
 
@@ -142,6 +147,11 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;
+
+/**
+ *  Set to `YES` so that a restart automatically resumes playback. Default is `YES`.
+ */
+@property (nonatomic) BOOL resumesAfterRestart;
 
 @end
 
