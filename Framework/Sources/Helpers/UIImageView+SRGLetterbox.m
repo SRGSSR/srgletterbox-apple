@@ -25,7 +25,6 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:images.firstObject];
     imageView.animationImages = [images copy];
     imageView.animationDuration = duration;
-    [imageView startAnimating];
     return imageView;
 }
 
