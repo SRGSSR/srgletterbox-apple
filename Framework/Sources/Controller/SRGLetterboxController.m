@@ -36,6 +36,8 @@ NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannelK
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
 
+NSString * const SRGLetterboxPlaybackDidRestartNotification = @"SRGLetterboxPlaybackDidRestartNotification";
+
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
@@ -502,6 +504,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     else if (self.URN) {
         [self prepareToPlayURN:self.URN withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate completionHandler:completionHandler];
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRestartNotification object:self];
 }
 
 - (void)reset

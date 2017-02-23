@@ -219,6 +219,9 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxPlaybackDidFailNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxPlaybackDidRestartNotification
+                                                      object:_controller];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         
@@ -262,12 +265,16 @@ static void commonInit(SRGLetterboxView *self);
         [self updateControlsForController:controller animated:NO];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(mediaMetadataDidChange:)
+                                                 selector:@selector(metadataDidChange:)
                                                      name:SRGLetterboxMetadataDidChangeNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(mediaPlaybackDidFail:)
+                                                 selector:@selector(playbackDidFail:)
                                                      name:SRGLetterboxPlaybackDidFailNotification
+                                                   object:controller];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackDidRestart:)
+                                                     name:SRGLetterboxPlaybackDidRestartNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -724,7 +731,6 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)retry:(id)sender
 {
     [self.controller restart];
-    [self updateUserInterfaceForErrorAnimated:YES];
 }
 
 #pragma mark ASValueTrackingSliderDataSource protocol
@@ -768,17 +774,22 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Notifications
 
-- (void)mediaMetadataDidChange:(NSNotification *)notification
+- (void)metadataDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
     [self reloadData];
 }
 
-- (void)mediaPlaybackDidFail:(NSNotification *)notification
+- (void)playbackDidFail:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self reloadData];
+}
+
+- (void)playbackDidRestart:(NSNotification *)notification
+{
+    [self updateUserInterfaceForErrorAnimated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification

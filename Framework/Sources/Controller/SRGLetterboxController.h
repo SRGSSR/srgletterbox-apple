@@ -9,17 +9,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Types
+ *  Types.
  */
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
 
 /**
- *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values)
+ *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
  */
 OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 
 /**
- *  Current metadata
+ *  Current metadata.
  */
 OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
@@ -27,7 +27,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
 OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 
 /**
- *  Previous metadata
+ *  Previous metadata.
  */
 OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
@@ -35,14 +35,20 @@ OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
 
 /**
- *  Notification sent when an error has been encountered
+ *  Notification sent when an error has been encountered.
  */
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 
 /**
- *  Error information
+ *  Error information.
  */
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
+
+/**
+ *  Notification sent when playback has been restarted (might be automatic when network is reachable again). Errors
+ *  are still reported through `SRGLetterboxPlaybackDidFailNotification` notifications.
+ */
+OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRestartNotification;
 
 /**
  *  Use as preferred bit rate value to enable automatic optimized bit rate.
