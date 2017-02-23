@@ -34,6 +34,13 @@
 
 #pragma mark Overrides
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     [super willMoveToWindow:newWindow];
