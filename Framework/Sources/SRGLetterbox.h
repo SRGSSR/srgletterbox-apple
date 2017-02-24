@@ -7,7 +7,6 @@
 #import "SRGLetterboxController.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxService.h"
-#import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxView.h"
 
 // Official version number
