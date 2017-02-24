@@ -11,10 +11,20 @@
 @interface SRGLetterboxSegmentCell ()
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 
 @end
 
 @implementation SRGLetterboxSegmentCell
+
+#pragma mark Overrides
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.backgroundColor = [UIColor clearColor];
+}
 
 #pragma mark Getters and setters
 
@@ -22,6 +32,7 @@
 {
     _segment = segment;
     
+    self.titleLabel.text = segment.title;
     [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium placeholderImageName:@"placeholder_media-180"];
 }
 

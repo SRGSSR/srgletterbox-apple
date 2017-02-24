@@ -78,6 +78,10 @@ static void commonInit(SRGLetterboxTimelineView *self);
     
     self.collectionView.alwaysBounceHorizontal = YES;
     
+    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    collectionViewLayout.minimumLineSpacing = 1.f;
+    collectionViewLayout.itemSize = CGSizeMake(160.f, 130.f);
+    
     NSString *identifier = NSStringFromClass([SRGLetterboxSegmentCell class]);
     UINib *nib = [UINib nibWithNibName:identifier bundle:[NSBundle srg_letterboxBundle]];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
@@ -90,16 +94,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     if (newWindow) {
         [self reloadData];
     }
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    CGFloat height = CGRectGetHeight(self.collectionView.frame);
-    collectionViewLayout.itemSize = CGSizeMake(16.f / 9.f * height, height);
-    [collectionViewLayout invalidateLayout];
 }
 
 #pragma mark Data
