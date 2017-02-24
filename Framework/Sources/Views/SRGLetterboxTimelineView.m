@@ -105,6 +105,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     // Show logical segments for the current chapter (if any), and display other chapters but not expanded
     SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
     for (SRGChapter *chapter in mediaComposition.chapters) {
+        // TODO: Visible segments only
         if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
             [segments addObjectsFromArray:chapter.segments];
         }
