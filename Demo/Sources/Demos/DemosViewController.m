@@ -10,6 +10,7 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "SimplePlayerViewController.h"
+#import "SegmentsPlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
 @implementation DemosViewController
@@ -359,6 +360,13 @@
         }
             
         case 3: {
+            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412757"];
+            SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
+            [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+            break;
+        }
+            
+        case 4: {
             MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] init];
             
             // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -370,7 +378,7 @@
             break;
         }
             
-        case 4: {
+        case 5: {
             AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
             [self.navigationController pushViewController:autoplayViewController animated:YES];
         }
