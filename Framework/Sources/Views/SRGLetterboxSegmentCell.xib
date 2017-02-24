@@ -16,10 +16,24 @@
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="189" height="123"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fjo-Dj-oWj">
+                        <rect key="frame" x="0.0" y="0.0" width="189" height="123"/>
+                    </imageView>
+                </subviews>
             </view>
-            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="H7W-bg-tlC"/>
+                <constraint firstItem="Fjo-Dj-oWj" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" id="Q24-IG-JI6"/>
+                <constraint firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" id="kYp-Sb-Yv6"/>
+                <constraint firstItem="Fjo-Dj-oWj" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="sYb-Om-2SE"/>
+            </constraints>
             <size key="customSize" width="189" height="123"/>
-            <point key="canvasLocation" x="55" y="5"/>
+            <connections>
+                <outlet property="imageView" destination="Fjo-Dj-oWj" id="Gsp-lI-bg3"/>
+            </connections>
+            <point key="canvasLocation" x="54.5" y="4.5"/>
         </collectionViewCell>
     </objects>
 </document>

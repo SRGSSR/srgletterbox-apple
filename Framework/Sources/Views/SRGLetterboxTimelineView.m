@@ -116,7 +116,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
+    SRGLetterboxSegmentCell *segmentCell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
+    segmentCell.segment = self.controller.mediaComposition.chapters[indexPath.row];
+    return segmentCell;
 }
 
 #pragma mark Notifications
