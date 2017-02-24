@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  as is via Airplay, which is especially convenient for presentation purposes.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
+@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, SRGTimeSliderDelegate, UIGestureRecognizerDelegate>
 
 /**
  *  The controller bound to the view. Can be changed at any time.

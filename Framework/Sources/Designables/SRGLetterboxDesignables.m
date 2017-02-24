@@ -18,8 +18,3 @@ IB_DESIGNABLE
 @interface SRGLetterboxView (Designable)
 
 @end
-
-IB_DESIGNABLE
-@interface SRGLetterboxTimelineView (Designable)
-
-@end

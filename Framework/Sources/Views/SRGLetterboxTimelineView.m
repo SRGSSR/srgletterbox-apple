@@ -84,6 +84,15 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView reloadData];
 }
 
+#pragma mark UI
+
+- (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(SRGSegment *)selectedSegment
+{
+    for (SRGLetterboxSegmentCell *cell in self.collectionView.visibleCells) {
+        [cell updateAppearanceWithTime:time selectedSegment:selectedSegment];
+    }
+}
+
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -96,6 +105,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
     SRGLetterboxSegmentCell *segmentCell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
     segmentCell.segment = self.segments[indexPath.row];
     return segmentCell;
+}
+
+#pragma mark UICollectionViewDelegate protocol
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.delegate timelineView:self didSelectSegment:self.segments[indexPath.row]];
 }
 
 @end

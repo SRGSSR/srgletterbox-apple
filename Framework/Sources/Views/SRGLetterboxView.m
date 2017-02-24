@@ -22,7 +22,7 @@
 
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <ASValueTrackingSliderDataSource>
+@interface SRGLetterboxView () <ASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
@@ -129,6 +129,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.popUpViewCornerRadius = 3.f;
     self.timeSlider.popUpViewArrowLength = 4.f;
     self.timeSlider.dataSource = self;
+    self.timeSlider.delegate = self;
     
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
@@ -767,6 +768,21 @@ static void commonInit(SRGLetterboxView *self);
 - (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
 {
     self.airplayLabel.text = NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay device");
+}
+
+#pragma mark SRGLetterboxTimelineViewDelegate protocol
+
+- (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
+{
+    
+}
+
+#pragma mark SRGTimeSliderDelegate protocol
+
+- (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
+{
+    // TODO: Pass selected segment information
+    [self.timelineView updateAppearanceWithTime:time selectedSegment:nil];
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
