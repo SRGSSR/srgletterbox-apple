@@ -38,7 +38,7 @@
                                     <constraint firstAttribute="height" constant="120" id="lUM-K8-4Qw"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="controller" destination="RtV-K8-ucK" id="SG7-t3-b0f"/>
+                                    <outlet property="letterboxView" destination="4Hm-dx-yKg" id="7VB-eS-vKb"/>
                                 </connections>
                             </view>
                         </subviews>

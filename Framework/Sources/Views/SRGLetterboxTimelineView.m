@@ -9,11 +9,15 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxSegmentCell.h"
 
+#import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 
 static void commonInit(SRGLetterboxTimelineView *self);
 
 @interface SRGLetterboxTimelineView ()
+
+@property (nonatomic, weak) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 
@@ -43,10 +47,33 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)dealloc
 {
-    self.controller = nil;          // Unregister everything
+    // Unregister everything
+    self.letterboxView = nil;
+    self.controller = nil;
 }
 
 #pragma mark Getters and setters
+
+- (void)setLetterboxView:(SRGLetterboxView *)letterboxView
+{
+    if (_letterboxView) {
+        [_letterboxView removeObserver:self keyPath:@keypath(_letterboxView.controller)];
+    }
+    
+    _letterboxView = letterboxView;
+    self.controller = letterboxView.controller;
+    
+    if (letterboxView) {
+        @weakify(self)
+        @weakify(letterboxView)
+        [letterboxView addObserver:self keyPath:@keypath(letterboxView.controller) options:NSKeyValueObservingOptionOld block:^(MAKVONotification *notification) {
+            @strongify(self)
+            @strongify(letterboxView)
+            
+            self.controller = letterboxView.controller;
+        }];
+    }
+}
 
 - (void)setController:(SRGLetterboxController *)controller
 {

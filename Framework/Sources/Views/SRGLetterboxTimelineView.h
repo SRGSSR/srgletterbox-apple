@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
+#import "SRGLetterboxView.h"
 
 #import <UIKit/UIKit.h>
 
@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 IB_DESIGNABLE
 @interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
+@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxView *letterboxView;
 
 @end
 
