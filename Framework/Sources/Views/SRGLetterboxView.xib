@@ -107,7 +107,7 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                            <rect key="frame" x="8" y="179" width="7741" height="22"/>
+                            <rect key="frame" x="8" y="179" width="7769" height="22"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGAirplayButton">
                                     <rect key="frame" x="0.0" y="0.0" width="28" height="22"/>
@@ -133,7 +133,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="ASValueTrackingSlider">
-                                    <rect key="frame" x="4378" y="0.0" width="385" height="23"/>
+                                    <rect key="frame" x="4378" y="0.0" width="413" height="23"/>
                                     <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <userDefinedRuntimeAttributes>
@@ -147,13 +147,13 @@
                                     </connections>
                                 </slider>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                    <rect key="frame" x="4769" y="0.0" width="27.5" height="22"/>
+                                    <rect key="frame" x="4797" y="0.0" width="27.5" height="22"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                    <rect key="frame" x="6240.5" y="0.0" width="28" height="22"/>
+                                    <rect key="frame" x="6268.5" y="0.0" width="28" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
@@ -165,7 +165,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button">
-                                    <rect key="frame" x="7712.5" y="0.0" width="28" height="22"/>
+                                    <rect key="frame" x="7740.5" y="0.0" width="28" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="width" priority="999" constant="28" id="wp2-4M-YHh"/>
@@ -182,6 +182,13 @@
                                 <constraint firstAttribute="height" constant="22" id="0jf-HD-Oah"/>
                             </constraints>
                         </stackView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Gf-ka-9TH" userLabel="Timeline View" customClass="SRGLetterboxTimelineView">
+                            <rect key="frame" x="0.0" y="45" width="375" height="120"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="120" id="u0h-wq-WTr"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
@@ -189,8 +196,11 @@
                         <constraint firstItem="yE6-Vv-zcn" firstAttribute="leading" secondItem="cih-8k-dqC" secondAttribute="trailing" constant="20" id="1MA-ls-Rsr"/>
                         <constraint firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" constant="10" id="1df-li-DMF"/>
                         <constraint firstAttribute="trailing" secondItem="d5q-RH-Wvg" secondAttribute="trailing" id="40U-6f-Z7v"/>
+                        <constraint firstAttribute="trailing" secondItem="8Gf-ka-9TH" secondAttribute="trailing" id="988-oC-Kd7"/>
                         <constraint firstItem="d5q-RH-Wvg" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="CNS-6S-nVb"/>
+                        <constraint firstAttribute="bottom" secondItem="8Gf-ka-9TH" secondAttribute="bottom" constant="46" id="CpB-ZJ-5mJ"/>
                         <constraint firstItem="Suw-jc-FuV" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="DdS-Ik-n8V"/>
+                        <constraint firstItem="8Gf-ka-9TH" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="GQG-oT-6Y6"/>
                         <constraint firstItem="d5q-RH-Wvg" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="top" id="HUN-3q-tHs"/>
                         <constraint firstItem="Suw-jc-FuV" firstAttribute="leading" secondItem="yE6-Vv-zcn" secondAttribute="trailing" constant="20" id="X6k-u9-6wa"/>
                         <constraint firstItem="tuV-Cd-a2U" firstAttribute="top" secondItem="d5q-RH-Wvg" secondAttribute="bottom" id="Xmy-uP-q7K"/>
@@ -201,13 +211,6 @@
                         <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="mKD-PG-ES5"/>
                         <constraint firstItem="KlV-OH-iUB" firstAttribute="centerY" secondItem="Suw-jc-FuV" secondAttribute="centerY" id="s3p-71-303"/>
                         <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" constant="8" id="z6A-op-3gV"/>
-                    </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Gf-ka-9TH" userLabel="Timeline View" customClass="SRGLetterboxTimelineView">
-                    <rect key="frame" x="0.0" y="31" width="375" height="120"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="120" id="u0h-wq-WTr"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aWQ-IF-YZO" userLabel="Error View">
@@ -244,14 +247,11 @@
             <gestureRecognizers/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="aWQ-IF-YZO" secondAttribute="bottom" id="8f8-H8-Pda"/>
-                <constraint firstAttribute="bottom" secondItem="8Gf-ka-9TH" secondAttribute="bottom" constant="60" id="8sr-qq-W8l"/>
-                <constraint firstItem="8Gf-ka-9TH" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="Bec-mc-khQ"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="centerY" secondItem="ZVz-wN-LVi" secondAttribute="centerY" id="LLk-zp-ABR"/>
                 <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Loj-I7-dR2"/>
                 <constraint firstAttribute="trailing" secondItem="WC6-gu-laR" secondAttribute="trailing" id="Rg4-rD-Pcd"/>
                 <constraint firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="RuP-MH-Txp"/>
                 <constraint firstItem="WC6-gu-laR" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="S1T-4H-aep"/>
-                <constraint firstAttribute="trailing" secondItem="8Gf-ka-9TH" secondAttribute="trailing" id="Xoa-xp-KoE"/>
                 <constraint firstAttribute="trailing" secondItem="aWQ-IF-YZO" secondAttribute="trailing" id="ZeG-gx-2Ja"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="width" secondItem="ZVz-wN-LVi" secondAttribute="width" id="bpu-04-rq3"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="dHf-qs-qB0"/>
