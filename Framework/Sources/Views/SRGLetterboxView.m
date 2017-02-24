@@ -834,6 +834,8 @@ static void commonInit(SRGLetterboxView *self);
 
 static void commonInit(SRGLetterboxView *self)
 {
+    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
+    // an SRGLetterboxView to avoid infinite recursion
     UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
     [self addSubview:view];
     [view mas_makeConstraints:^(MASConstraintMaker *make) {

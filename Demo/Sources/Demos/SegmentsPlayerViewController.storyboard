@@ -31,11 +31,24 @@
                                     <outlet property="controller" destination="RtV-K8-ucK" id="z2g-dg-VAt"/>
                                 </connections>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OES-oH-iDO" customClass="SRGLetterboxTimelineView">
+                                <rect key="frame" x="0.0" y="211" width="375" height="120"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="lUM-K8-4Qw"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="RtV-K8-ucK" id="SG7-t3-b0f"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="4Hm-dx-yKg" secondAttribute="trailing" id="4kt-gJ-hlB"/>
+                            <constraint firstItem="OES-oH-iDO" firstAttribute="leading" secondItem="kw2-9k-LjS" secondAttribute="leading" id="Dbo-Kl-Yhp"/>
                             <constraint firstItem="4Hm-dx-yKg" firstAttribute="top" secondItem="YWy-fg-Gm9" secondAttribute="bottom" constant="-20" id="Jo5-cv-gLi"/>
+                            <constraint firstAttribute="trailing" secondItem="OES-oH-iDO" secondAttribute="trailing" id="XNc-JI-fXM"/>
+                            <constraint firstItem="OES-oH-iDO" firstAttribute="top" secondItem="4Hm-dx-yKg" secondAttribute="bottom" id="lAW-x2-jpT"/>
                             <constraint firstItem="4Hm-dx-yKg" firstAttribute="leading" secondItem="kw2-9k-LjS" secondAttribute="leading" id="uXk-Nn-P0a"/>
                         </constraints>
                     </view>

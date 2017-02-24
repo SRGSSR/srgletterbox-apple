@@ -10,6 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+IB_DESIGNABLE
 @interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
