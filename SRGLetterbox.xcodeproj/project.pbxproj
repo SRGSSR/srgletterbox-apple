@@ -147,7 +147,7 @@
 		6FE655DA1E2CA3F9000033D4 /* SRGMediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
 		6FE655DB1E2CA3F9000033D4 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */; };
+		6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FE844EB1E60349900F90F67 /* SRGLetterboxTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */; };
 		6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */; };
 		6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */; };
