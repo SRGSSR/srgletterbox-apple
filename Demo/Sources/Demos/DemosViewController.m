@@ -101,6 +101,13 @@
                 }
                     
                 case 8: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8385103"];
+                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
+                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    break;
+                }
+                    
+                case 9: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
                                                                                              message:@"Will be played with the basic player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -201,6 +208,20 @@
                 }
                     
                 case 5: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8385103"];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
+                    
+                case 6: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
                                                                                              message:@"Will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
