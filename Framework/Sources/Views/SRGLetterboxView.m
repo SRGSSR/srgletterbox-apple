@@ -88,7 +88,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dealloc
 {
-    self.controller = nil;
+    self.controller = nil;          // Unregister everything
 }
 
 #pragma mark View lifecycle

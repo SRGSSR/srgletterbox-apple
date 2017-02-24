@@ -10,15 +10,16 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SRGLetterboxSegmentCell" id="a51-TE-tx3" customClass="SRGLetterboxSegmentCell">
-            <rect key="frame" x="0.0" y="0.0" width="190" height="126"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SRGLetterboxSegmentCell" id="H11-DD-Stp" customClass="SRGLetterboxSegmentCell">
+            <rect key="frame" x="0.0" y="0.0" width="189" height="123"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="190" height="126"/>
+                <rect key="frame" x="0.0" y="0.0" width="189" height="123"/>
                 <autoresizingMask key="autoresizingMask"/>
             </view>
-            <size key="customSize" width="190" height="126"/>
-            <point key="canvasLocation" x="68" y="44"/>
+            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+            <size key="customSize" width="189" height="123"/>
+            <point key="canvasLocation" x="55" y="5"/>
         </collectionViewCell>
     </objects>
 </document>

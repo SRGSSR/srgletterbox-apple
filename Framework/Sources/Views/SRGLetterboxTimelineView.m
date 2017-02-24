@@ -7,7 +7,6 @@
 #import "SRGLetterboxTimelineView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxSegmentCell.h"
 
 #import <Masonry/Masonry.h>
@@ -40,12 +39,30 @@ static void commonInit(SRGLetterboxTimelineView *self);
     return self;
 }
 
+- (void)dealloc
+{
+    self.controller = nil;          // Unregister everything
+}
+
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
 {
+    if (_controller) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxMetadataDidChangeNotification
+                                                      object:_controller];
+    }
+    
     _controller = controller;
     [self reloadData];
+    
+    if (controller) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(metadataDidChange:)
+                                                     name:SRGLetterboxMetadataDidChangeNotification
+                                                   object:controller];
+    }
 }
 
 #pragma mark Overrides
@@ -60,7 +77,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     self.collectionView.alwaysBounceHorizontal = YES;
     
     NSString *identifier = NSStringFromClass([SRGLetterboxSegmentCell class]);
-    UINib *nib = [UINib nibWithNibName:identifier bundle:nil];
+    UINib *nib = [UINib nibWithNibName:identifier bundle:[NSBundle srg_letterboxBundle]];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
 }
 
@@ -94,12 +111,19 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.controller.mediaPlayerController.visibleSegments.count;
+    return self.controller.mediaComposition.chapters.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
+}
+
+#pragma mark Notifications
+
+- (void)metadataDidChange:(NSNotification *)notification
+{
+    [self reloadData];
 }
 
 @end
