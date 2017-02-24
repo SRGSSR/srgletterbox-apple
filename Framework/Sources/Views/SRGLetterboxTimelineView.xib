@@ -23,10 +23,6 @@
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
-                    <connections>
-                        <outlet property="dataSource" destination="z1x-ZQ-vCE" id="zcc-tL-m8n"/>
-                        <outlet property="delegate" destination="z1x-ZQ-vCE" id="dDv-DZ-09j"/>
-                    </connections>
                 </collectionView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

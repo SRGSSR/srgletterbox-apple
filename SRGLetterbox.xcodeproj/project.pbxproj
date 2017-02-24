@@ -18,8 +18,6 @@
 		08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		08FA0CB71E2E45CD000C94EF /* SRGControlsStackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CB51E2E45CD000C94EF /* SRGControlsStackView.h */; };
-		08FA0CB81E2E45CD000C94EF /* SRGControlsStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CB61E2E45CD000C94EF /* SRGControlsStackView.m */; };
 		08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CBA1E2E5874000C94EF /* Images.xcassets */; };
 		08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */; };
 		08FA0CC31E2E72E7000C94EF /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */; };
@@ -152,6 +150,9 @@
 		6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */; };
 		6FE844EB1E60349900F90F67 /* SRGLetterboxTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */; };
 		6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */; };
+		6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */; };
+		6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */; };
+		6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */; };
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
@@ -260,8 +261,6 @@
 		08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ASValueTrackingSlider.framework; path = Carthage/Build/iOS/ASValueTrackingSlider.framework; sourceTree = "<group>"; };
 		08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxView.xib; sourceTree = "<group>"; };
 		08FA0CA81E2E325F000C94EF /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
-		08FA0CB51E2E45CD000C94EF /* SRGControlsStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlsStackView.h; sourceTree = "<group>"; };
-		08FA0CB61E2E45CD000C94EF /* SRGControlsStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGControlsStackView.m; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -344,6 +343,9 @@
 		6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimelineView.h; sourceTree = "<group>"; };
 		6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxTimelineView.m; sourceTree = "<group>"; };
 		6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxTimelineView.xib; sourceTree = "<group>"; };
+		6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxSegmentCell.h; sourceTree = "<group>"; };
+		6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxSegmentCell.m; sourceTree = "<group>"; };
+		6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxSegmentCell.xib; sourceTree = "<group>"; };
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
@@ -512,8 +514,9 @@
 		6FAB3AFF1E28F76800CC2197 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				08FA0CB51E2E45CD000C94EF /* SRGControlsStackView.h */,
-				08FA0CB61E2E45CD000C94EF /* SRGControlsStackView.m */,
+				6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */,
+				6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */,
+				6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */,
 				6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */,
 				6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */,
 				6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */,
@@ -687,8 +690,8 @@
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
-				08FA0CB71E2E45CD000C94EF /* SRGControlsStackView.h in Headers */,
 				6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */,
+				6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				6F324A0D1E557239007523AA /* SRGLetterboxViewRestorationContext.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
@@ -843,6 +846,7 @@
 				6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */,
 				6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */,
 				08FA0CEF1E2E8F62000C94EF /* Fonts in Resources */,
+				6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */,
 				08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
@@ -890,7 +894,7 @@
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
-				08FA0CB81E2E45CD000C94EF /* SRGControlsStackView.m in Sources */,
+				6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
