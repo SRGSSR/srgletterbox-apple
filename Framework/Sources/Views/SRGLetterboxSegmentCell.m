@@ -28,6 +28,13 @@
     self.backgroundColor = [UIColor clearColor];
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.progressView.progress = 0.f;
+}
+
 #pragma mark Getters and setters
 
 - (void)setSegment:(SRGSegment *)segment
@@ -54,6 +61,24 @@
     }
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
+}
+
+#pragma mark UI
+
+- (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(SRGSegment *)selectedSegment
+{
+    float progress = (CMTimeGetSeconds(time) - self.segment.markIn) / self.segment.duration;
+    progress = fminf(1.f, fmaxf(0.f, progress));
+    
+    self.progressView.progress = progress;
+    
+    UIColor *selectionColor = [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f];
+    if (selectedSegment) {
+        self.backgroundColor = (self.segment == selectedSegment) ? selectionColor : [UIColor blackColor];
+    }
+    else {
+        self.backgroundColor = (progress != 0.f && progress != 1.f) ? selectionColor : [UIColor blackColor];
+    }
 }
 
 @end
