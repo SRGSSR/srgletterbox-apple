@@ -21,13 +21,6 @@
 
 #pragma mark Overrides
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    self.backgroundColor = [UIColor clearColor];
-}
-
 - (void)prepareForReuse
 {
     [super prepareForReuse];

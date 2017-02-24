@@ -109,4 +109,6 @@ static void commonInit(SRGLetterboxTimelineView *self)
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+    
+    self.backgroundColor = [UIColor clearColor];
 }

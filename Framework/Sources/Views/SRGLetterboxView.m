@@ -11,6 +11,7 @@
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGLetterboxService+Private.h"
+#import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -45,6 +46,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
+
+@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -355,6 +358,7 @@ static void commonInit(SRGLetterboxView *self);
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadData
 {
+    [self.timelineView reloadWithMediaComposition:self.controller.mediaComposition];
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
 }
