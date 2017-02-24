@@ -72,9 +72,7 @@
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        if (! self.letterboxController.pictureInPictureActive) {
-            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
-        }
+        [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
     }
 }
 

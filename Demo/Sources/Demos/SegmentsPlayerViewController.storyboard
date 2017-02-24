@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,12 +20,33 @@
                     <view key="view" contentMode="scaleToFill" id="kw2-9k-LjS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Hm-dx-yKg" customClass="SRGLetterboxView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="4Hm-dx-yKg" secondAttribute="height" multiplier="16:9" id="0M1-3Z-Ldv"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="RtV-K8-ucK" id="z2g-dg-VAt"/>
+                                </connections>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="4Hm-dx-yKg" secondAttribute="trailing" id="4kt-gJ-hlB"/>
+                            <constraint firstItem="4Hm-dx-yKg" firstAttribute="top" secondItem="YWy-fg-Gm9" secondAttribute="bottom" constant="-20" id="Jo5-cv-gLi"/>
+                            <constraint firstItem="4Hm-dx-yKg" firstAttribute="leading" secondItem="kw2-9k-LjS" secondAttribute="leading" id="uXk-Nn-P0a"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="letterboxController" destination="RtV-K8-ucK" id="fEc-c3-pUg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TCF-Nj-sOH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="RtV-K8-ucK" customClass="SRGLetterboxController"/>
             </objects>
-            <point key="canvasLocation" x="100" y="-33"/>
+            <point key="canvasLocation" x="100" y="-33.733133433283363"/>
         </scene>
     </scenes>
 </document>
