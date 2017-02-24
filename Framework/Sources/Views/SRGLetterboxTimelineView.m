@@ -17,8 +17,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 @interface SRGLetterboxTimelineView ()
 
-@property (nonatomic, weak) SRGLetterboxController *controller;
-
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 
 @property (nonatomic) NSArray<SRGSegment *> *segments;
@@ -45,55 +43,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     return self;
 }
 
-- (void)dealloc
-{
-    // Unregister everything
-    self.letterboxView = nil;
-    self.controller = nil;
-}
-
-#pragma mark Getters and setters
-
-- (void)setLetterboxView:(SRGLetterboxView *)letterboxView
-{
-    if (_letterboxView) {
-        [_letterboxView removeObserver:self keyPath:@keypath(_letterboxView.controller)];
-    }
-    
-    _letterboxView = letterboxView;
-    self.controller = letterboxView.controller;
-    
-    if (letterboxView) {
-        @weakify(self)
-        @weakify(letterboxView)
-        [letterboxView addObserver:self keyPath:@keypath(letterboxView.controller) options:NSKeyValueObservingOptionOld block:^(MAKVONotification *notification) {
-            @strongify(self)
-            @strongify(letterboxView)
-            
-            self.controller = letterboxView.controller;
-        }];
-    }
-}
-
-- (void)setController:(SRGLetterboxController *)controller
-{
-    if (_controller) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxMetadataDidChangeNotification
-                                                      object:_controller];
-    }
-    
-    _controller = controller;
-    [self reloadData];
-    
-    if (controller) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(metadataDidChange:)
-                                                     name:SRGLetterboxMetadataDidChangeNotification
-                                                   object:controller];
-    }
-}
-
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -114,23 +63,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    
-    if (newWindow) {
-        [self reloadData];
-    }
-}
-
 #pragma mark Data
 
-- (void)reloadData
+- (void)reloadWithMediaComposition:(SRGMediaComposition *)mediaComposition
 {
     NSMutableArray<SRGSegment *> *segments = [NSMutableArray array];
     
     // Show logical segments for the current chapter (if any), and display other chapters but not expanded
-    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
     for (SRGChapter *chapter in mediaComposition.chapters) {
         // TODO: Visible segments only
         if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
@@ -157,13 +96,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     SRGLetterboxSegmentCell *segmentCell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
     segmentCell.segment = self.segments[indexPath.row];
     return segmentCell;
-}
-
-#pragma mark Notifications
-
-- (void)metadataDidChange:(NSNotification *)notification
-{
-    [self reloadData];
 }
 
 @end

@@ -4,8 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxView.h"
-
+#import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -13,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 IB_DESIGNABLE
 @interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxView *letterboxView;
+- (void)reloadWithMediaComposition:(nullable SRGMediaComposition *)mediaComposition;
 
 @end
 
