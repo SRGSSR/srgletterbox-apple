@@ -51,9 +51,9 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRestartNotification;
 
 /**
- *  Use as preferred bit rate value to enable automatic optimized bit rate.
+ *  The default start bit rate to start (800 kbps).
  */
-OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
+OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -91,9 +91,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  @param preferredStartBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
  *                               with no result guarantee, though it should in general be applied. The nearest available
  *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
- *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream. Use the
- *                               special `SRGLetterboxAutomaticStartBitRate` value to let the controller select the best
- *                               bit rate automatically for the media.
+ *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
@@ -115,6 +113,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
       withPreferredQuality:(SRGQuality)preferredQuality
      preferredStartBitRate:(NSInteger)preferredStartBitRate
          completionHandler:(nullable void (^)(void))completionHandler;
+
 /**
  *  Ask the player to play. If the player has not been prepared, this method does nothing.
  */
@@ -170,7 +169,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Prepare to play the specified URN (Uniform Resource Name).
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to automatic.
+ *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
    withCompletionHandler:(nullable void (^)(void))completionHandler;
@@ -179,7 +178,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Prepare to play the specified media (Uniform Resource Name).
  *
  *  @discussion Does nothing if the media is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to automatic.
+ *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
      withCompletionHandler:(nullable void (^)(void))completionHandler;
@@ -208,7 +207,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Play the specified URN (Uniform Resource Name).
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to automatic.
+ *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playURN:(SRGMediaURN *)URN;
 
@@ -216,7 +215,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxAutomaticStartBitRate;
  *  Play the specified media.
  *
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to automatic.
+ *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playMedia:(SRGMedia *)media;
 
