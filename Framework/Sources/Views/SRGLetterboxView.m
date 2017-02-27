@@ -781,8 +781,11 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
-    // TODO: Pass selected segment information
     [self.timelineView updateAppearanceWithTime:time selectedSegment:nil];
+    
+    if (interactive) {
+        [self.timelineView scrollToTime:time animated:YES];
+    }
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol

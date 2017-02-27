@@ -27,6 +27,8 @@ IB_DESIGNABLE
 
 - (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(nullable SRGSegment *)selectedSegment;
 
+- (void)scrollToTime:(CMTime)time animated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

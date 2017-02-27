@@ -93,6 +93,39 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
 }
 
+- (void)scrollToTime:(CMTime)time animated:(BOOL)animated
+{
+    if (CMTIME_IS_INVALID(time)) {
+        return;
+    }
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment * _Nonnull segment, NSDictionary<NSString *, id> *_Nullable bindings) {
+        Float64 timeInSeconds = CMTimeGetSeconds(time);
+        return segment.markIn / 1000. <= timeInSeconds && timeInSeconds <= segment.markOut / 1000.;
+    }];
+    
+    SRGSegment *segment = [self.segments filteredArrayUsingPredicate:predicate].firstObject;
+    if (! segment) {
+        return;
+    }
+    
+    NSInteger segmentIndex = [self.segments indexOfObject:segment];
+    
+    void (^animations)(void) = ^{
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:segmentIndex inSection:0]
+                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                            animated:NO];
+    };
+    
+    if (animated) {
+        // Override the standard scroll to item animation duration for faster snapping
+        [UIView animateWithDuration:0.1 animations:animations];
+    }
+    else {
+        animations();
+    }
+}
+
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
