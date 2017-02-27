@@ -269,7 +269,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
-    [self updateUserInterfaceForSegments:segments hidden:self.userInterfaceHidden animated:NO];
+    [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     
     // Reset status
@@ -464,6 +464,7 @@ static void commonInit(SRGLetterboxView *self);
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
+        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:NO];
         self.animations ? self.animations(hidden) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
@@ -641,12 +642,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
-{
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self updateUserInterfaceForSegments:segments hidden:self.userInterfaceHidden animated:animated];
-}
-
+// Most generic method for segments user interface updates
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments hidden:(BOOL)hidden animated:(BOOL)animated
 {
     void (^animations)(void) = ^{
@@ -663,6 +659,26 @@ static void commonInit(SRGLetterboxView *self);
     else {
         animations();
     }
+}
+
+// Update the segments user interface for the current segment list
+- (void)updateUserInterfaceForCurrentSegmentsHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self updateUserInterfaceForSegments:segments hidden:hidden animated:animated];
+    
+}
+
+// Update the segments user interface for the current controls visibility
+- (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+{
+    [self updateUserInterfaceForSegments:segments hidden:self.userInterfaceHidden animated:animated];
+}
+
+// Update the segments user interface for the current segment list and controls visibility
+- (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
+{
+    [self updateUserInterfaceForCurrentSegmentsHidden:self.userInterfaceHidden animated:animated];
 }
 
 - (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
