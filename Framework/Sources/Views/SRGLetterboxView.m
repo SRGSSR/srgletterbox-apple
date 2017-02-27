@@ -442,19 +442,22 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [self internal_setUserInterfaceHidden:hidden animated:animated];
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
 }
 
 - (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     self.userInterfaceTogglable = togglable;
     
-    [self internal_setUserInterfaceHidden:hidden animated:animated];
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
-// factorisation method which is not intended for direct use. This method always show or hide the user interface
-- (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+// factorisation method which is not intended for direct use. This method always shows or hides the user interface. Segments
+// are taken into account for proper UI adjustments depending on their presence
+- (void)internal_setUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -464,8 +467,11 @@ static void commonInit(SRGLetterboxView *self);
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
-        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:NO];
-        self.animations ? self.animations(hidden, self.timelineHeightConstraint.constant) : nil;
+        
+        CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
+        self.timelineHeightConstraint.constant = timelineHeight;
+        
+        self.animations ? self.animations(hidden, timelineHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
@@ -646,36 +652,17 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Most generic method for segments user interface updates
-- (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments hidden:(BOOL)hidden animated:(BOOL)animated
-{
-    void (^animations)(void) = ^{
-        self.timelineHeightConstraint.constant = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
-    };
-    
-    if (animated) {
-        [self layoutIfNeeded];
-        [UIView animateWithDuration:0.2 animations:^{
-            animations();
-            [self layoutIfNeeded];
-        }];
-    }
-    else {
-        animations();
-    }
-}
-
 // Update the segments user interface for the current segment list
 - (void)updateUserInterfaceForCurrentSegmentsHidden:(BOOL)hidden animated:(BOOL)animated
 {
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self updateUserInterfaceForSegments:segments hidden:hidden animated:animated];
+    [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
 }
 
 // Update the segments user interface for the current controls visibility
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
-    [self updateUserInterfaceForSegments:segments hidden:self.userInterfaceHidden animated:animated];
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden withSegments:segments animated:animated];
 }
 
 // Update the segments user interface for the current segment list and controls visibility
