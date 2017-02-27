@@ -13,6 +13,8 @@
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
+
 @end
 
 @implementation SegmentsPlayerViewController
@@ -66,7 +68,7 @@
 {
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
-        self.aspectRatioConstraint.constant = -timelineHeight;
+        self.aspectRatioConstraint.constant = timelineHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

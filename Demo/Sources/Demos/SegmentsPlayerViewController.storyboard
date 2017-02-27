@@ -25,7 +25,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="4Hm-dx-yKg" secondAttribute="height" multiplier="16:9" id="0M1-3Z-Ldv"/>
+                                    <constraint firstAttribute="height" secondItem="4Hm-dx-yKg" secondAttribute="width" multiplier="9:16" id="0M1-3Z-Ldv"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="controller" destination="RtV-K8-ucK" id="z2g-dg-VAt"/>
@@ -43,6 +43,7 @@
                     <connections>
                         <outlet property="aspectRatioConstraint" destination="0M1-3Z-Ldv" id="Rv1-88-jQx"/>
                         <outlet property="letterboxController" destination="RtV-K8-ucK" id="fEc-c3-pUg"/>
+                        <outlet property="letterboxView" destination="4Hm-dx-yKg" id="SYg-KT-VkA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TCF-Nj-sOH" userLabel="First Responder" sceneMemberID="firstResponder"/>
