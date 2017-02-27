@@ -51,6 +51,8 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
+
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -137,6 +139,8 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.dataSource = self;
     self.timeSlider.delegate = self;
     
+    self.timelineHeightConstraint.constant = 0.f;
+    
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
@@ -159,6 +163,7 @@ static void commonInit(SRGLetterboxView *self);
     if (newWindow) {
         [self updateVisibleSubviewsAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
+        [self updateUserInterfaceForCurrentSegmentsAnimated:NO];
         [self updateUserInterfaceForAirplayAnimated:NO];
         [self updateUserInterfaceForErrorAnimated:NO];
         [self reloadData];
@@ -263,6 +268,8 @@ static void commonInit(SRGLetterboxView *self);
         [self.timeSlider showPopUpViewAnimated:NO];
     }
     
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
+    [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     
     // Reset status
@@ -370,20 +377,18 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark Data display
-
-// Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
-- (void)reloadData
+- (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
 {
-    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
-    
-    NSMutableArray<SRGSegment *> *segments = [NSMutableArray array];
+    if (! mediaComposition) {
+        return nil;
+    }
     
     // Show visible logical segments for the current chapter (if any), and display other chapters but not expanded. If
     // there is only a chapter, do not display it
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSegment.new, hidden)];
     NSArray<SRGChapter *> *visibleChapters = [mediaComposition.chapters filteredArrayUsingPredicate:predicate];
-    
+ 
+    NSMutableArray<SRGSegment *> *segments = [NSMutableArray array];
     for (SRGChapter *chapter in visibleChapters) {
         if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
             
@@ -394,7 +399,16 @@ static void commonInit(SRGLetterboxView *self);
             [segments addObject:chapter];
         }
     }
-    [self.timelineView reloadWithSegments:[segments copy]];
+    return [segments copy];
+}
+
+#pragma mark Data display
+
+// Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
+- (void)reloadData
+{
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self.timelineView reloadWithSegments:segments];
     
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
@@ -624,6 +638,26 @@ static void commonInit(SRGLetterboxView *self);
                 [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
             }
         }];
+    }
+}
+
+- (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
+{
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self updateUserInterfaceForSegments:segments animated:animated];
+}
+
+- (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+{
+    void (^animations)(void) = ^{
+        self.timelineHeightConstraint.constant = (segments.count != 0) ? 120.f : 0.f;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
+    }
+    else {
+        animations();
     }
 }
 
@@ -861,6 +895,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)metadataDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForCurrentSegmentsAnimated:YES];
     [self reloadData];
 }
 
