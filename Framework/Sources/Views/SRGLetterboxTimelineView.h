@@ -25,9 +25,9 @@ IB_DESIGNABLE
 
 - (void)reloadWithMediaComposition:(nullable SRGMediaComposition *)mediaComposition;
 
-- (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(nullable SRGSegment *)selectedSegment;
+- (void)updateAppearanceWithTime:(NSTimeInterval)time selectedSegment:(nullable SRGSegment *)selectedSegment;
 
-- (void)scrollToTime:(CMTime)time animated:(BOOL)animated;
+- (void)scrollToTime:(NSTimeInterval)time animated:(BOOL)animated;
 
 @end
 

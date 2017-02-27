@@ -86,21 +86,16 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark UI
 
-- (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(SRGSegment *)selectedSegment
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds selectedSegment:(SRGSegment *)selectedSegment
 {
     for (SRGLetterboxSegmentCell *cell in self.collectionView.visibleCells) {
-        [cell updateAppearanceWithTime:time selectedSegment:selectedSegment];
+        [cell updateAppearanceWithTime:timeInSeconds selectedSegment:selectedSegment];
     }
 }
 
-- (void)scrollToTime:(CMTime)time animated:(BOOL)animated
+- (void)scrollToTime:(NSTimeInterval)timeInSeconds animated:(BOOL)animated
 {
-    if (CMTIME_IS_INVALID(time)) {
-        return;
-    }
-    
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment * _Nonnull segment, NSDictionary<NSString *, id> *_Nullable bindings) {
-        Float64 timeInSeconds = CMTimeGetSeconds(time);
         return segment.markIn / 1000. <= timeInSeconds && timeInSeconds <= segment.markOut / 1000.;
     }];
     

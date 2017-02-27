@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable) SRGSegment *segment;
 
-- (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(SRGSegment *)selectedSegment;
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds selectedSegment:(SRGSegment *)selectedSegment;
 
 @end
 

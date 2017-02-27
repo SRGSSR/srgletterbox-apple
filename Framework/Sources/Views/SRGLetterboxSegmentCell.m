@@ -58,9 +58,9 @@
 
 #pragma mark UI
 
-- (void)updateAppearanceWithTime:(CMTime)time selectedSegment:(SRGSegment *)selectedSegment
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds selectedSegment:(SRGSegment *)selectedSegment
 {
-    float progress = (CMTimeGetSeconds(time) - self.segment.markIn / 1000.) / (self.segment.duration / 1000.);
+    float progress = (timeInSeconds - self.segment.markIn / 1000.) / (self.segment.duration / 1000.);
     progress = fminf(1.f, fmaxf(0.f, progress));
     
     self.progressView.progress = progress;

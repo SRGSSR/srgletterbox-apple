@@ -781,10 +781,11 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
-    [self.timelineView updateAppearanceWithTime:time selectedSegment:nil];
+    NSTimeInterval timeInSeconds = CMTimeGetSeconds(time);
+    [self.timelineView updateAppearanceWithTime:timeInSeconds selectedSegment:nil];
     
     if (interactive) {
-        [self.timelineView scrollToTime:time animated:YES];
+        [self.timelineView scrollToTime:timeInSeconds animated:YES];
     }
 }
 
