@@ -139,7 +139,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate timelineView:self didSelectSegment:self.segments[indexPath.row]];
+    SRGSegment *segment = self.segments[indexPath.row];
+    [self.delegate timelineView:self didSelectSegment:segment];
+    [self scrollToTime:segment.markIn / 1000. animated:YES];
 }
 
 @end

@@ -16,9 +16,10 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
-#import <Masonry/Masonry.h>
-#import <libextobjc/libextobjc.h>
 #import <ASValueTrackingSlider/ASValueTrackingSlider.h>
+#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
+#import <libextobjc/libextobjc.h>
+#import <Masonry/Masonry.h>
 
 static void commonInit(SRGLetterboxView *self);
 
@@ -119,6 +120,7 @@ static void commonInit(SRGLetterboxView *self);
     self.errorView.alpha = 0.f;
     
     self.airplayView.delegate = self;
+    self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = YES;
     self.timeSlider.font = [UIFont srg_regularFontWithSize:14.f];
@@ -774,7 +776,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
-    
+    [self.controller.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
 }
 
 #pragma mark SRGTimeSliderDelegate protocol
