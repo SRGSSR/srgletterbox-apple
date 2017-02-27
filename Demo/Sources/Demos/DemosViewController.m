@@ -375,6 +375,20 @@
                     break;
                 }
                     
+                case 2: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8399352"];
+                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
+                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    break;
+                }
+                    
+                case 3: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8399354"];
+                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
+                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    break;
+                }
+                    
                 default: {                    
                     break;
                 }
