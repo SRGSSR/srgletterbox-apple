@@ -149,7 +149,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
                                                                                                             action:@selector(resetInactivityTimer:)];
     activityGestureRecognizer.delegate = self;
-    [self.playerView addGestureRecognizer:activityGestureRecognizer];
+    [self.mainView addGestureRecognizer:activityGestureRecognizer];
     
     self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
     
