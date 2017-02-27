@@ -73,10 +73,10 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark UI
 
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds selectedSegment:(SRGSegment *)selectedSegment
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment
 {
     for (SRGLetterboxSegmentCell *cell in self.collectionView.visibleCells) {
-        [cell updateAppearanceWithTime:timeInSeconds selectedSegment:selectedSegment];
+        [cell updateAppearanceWithTime:timeInSeconds currentSegment:currentSegment];
     }
 }
 

@@ -68,8 +68,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat timelineHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
-// Track segment selection for better UI behavior (stable selection, most notably)
-@property (nonatomic, weak) SRGSegment *selectedSegment;
+// Track target segment right after selection for better UI behavior (stable selection and highlighting, most notably).
+// Will be nilled once the target has been reached or lost.
+@property (nonatomic, weak) SRGSegment *targetSegment;
 
 @end
 
@@ -272,8 +273,8 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     
-    // Reset status
-    self.selectedSegment = nil;
+    // Reset tracking properties
+    self.targetSegment = nil;
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -377,6 +378,13 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (SRGSegment *)currentSegment
+{
+    return self.targetSegment ?: self.controller.mediaComposition.mainSegment ?: self.controller.mediaComposition.mainChapter;
+}
+
+#pragma mark Data display
+
 - (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
 {
     if (! mediaComposition) {
@@ -401,8 +409,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     return [segments copy];
 }
-
-#pragma mark Data display
 
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadData
@@ -703,11 +709,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds
 {
-    if (self.selectedSegment) {
-        timeInSeconds = self.selectedSegment.markIn / 1000.;
-    }
-    
-    [self.timelineView updateAppearanceWithTime:timeInSeconds selectedSegment:self.selectedSegment];
+    [self.timelineView updateAppearanceWithTime:timeInSeconds currentSegment:self.currentSegment];
 }
 
 - (void)resetInactivityTimer
@@ -874,8 +876,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
-    // To improve the UI behavior, logical segments only need to be tracked
-    self.selectedSegment = [segment isKindOfClass:[SRGChapter class]] ? segment : nil;
+    // Do not wait for the segment start notification so that we can immediately reflect the user choice on the UI
+    self.targetSegment = segment;
     [self.controller switchToSegment:segment];
 }
 
@@ -893,7 +895,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (interactive) {
         [self.timelineView scrollToTime:timeInSeconds animated:YES];
-        self.selectedSegment = nil;
+        self.targetSegment = nil;
     }
 }
 
@@ -942,8 +944,9 @@ static void commonInit(SRGLetterboxView *self);
         [self.timelineView scrollToTime:segment.markIn / 1000. animated:YES];
     }
     
-    if (segment == self.selectedSegment) {
-        self.selectedSegment = nil;
+    // The logical segment has been reached. Stop tracking
+    if (segment == self.targetSegment) {
+        self.targetSegment = nil;
     }
 }
 

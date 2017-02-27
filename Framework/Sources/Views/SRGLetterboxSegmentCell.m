@@ -58,19 +58,34 @@
 
 #pragma mark UI
 
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds selectedSegment:(SRGSegment *)selectedSegment
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment
 {
+    // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
     float progress = (timeInSeconds - self.segment.markIn / 1000.) / (self.segment.duration / 1000.);
     progress = fminf(1.f, fmaxf(0.f, progress));
     
-    self.progressView.progress = progress;
-    
     UIColor *selectionColor = [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f];
-    if (selectedSegment) {
-        self.backgroundColor = (self.segment == selectedSegment) ? selectionColor : [UIColor blackColor];
+    
+    // Current chapter / segment: Highlight and display progress
+    if (self.segment == currentSegment) {
+        self.backgroundColor = selectionColor;
+        self.progressView.progress = progress;
     }
+    // Different chapters or segments. Compare chapter URNs.
     else {
-        self.backgroundColor = (progress != 0.f && progress != 1.f) ? selectionColor : [UIColor blackColor];
+        SRGMediaURN *currentChapterURN = [currentSegment isKindOfClass:[SRGChapter class]] ? currentSegment.URN : currentSegment.fullLengthURN;
+        SRGMediaURN *chapterURN = [self.segment isKindOfClass:[SRGChapter class]] ? self.segment.URN : self.segment.fullLengthURN;
+        
+        // Same parent media. Display progress
+        if ([chapterURN isEqual:currentChapterURN]) {
+            self.backgroundColor = [UIColor blackColor];
+            self.progressView.progress = progress;
+        }
+        // Different media. Display nothing
+        else {
+            self.backgroundColor = [UIColor blackColor];
+            self.progressView.progress = 0.f;
+        }
     }
 }
 

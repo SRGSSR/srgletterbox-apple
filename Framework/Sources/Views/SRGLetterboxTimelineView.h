@@ -47,10 +47,10 @@ IB_DESIGNABLE
 - (void)reloadWithSegments:(nullable NSArray<SRGSegment *> *)segments;
 
 /**
- *  Update the timeline appearance for a given playback time (in seconds) and an optional segment actively selected
- *  by the user.
+ *  Update the segment appearance for a given playback time (in seconds) and the segment currently being played (might
+ *  be a chapter).
  */
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds selectedSegment:(nullable SRGSegment *)selectedSegment;
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment;
 
 /**
  *  Scroll the timeline to a given playback time (in seconds).
