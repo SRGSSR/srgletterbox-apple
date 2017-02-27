@@ -25,6 +25,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <ASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
 
+@property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *controlsView;
@@ -108,7 +109,7 @@ static void commonInit(SRGLetterboxView *self);
     //        in the SRG Media Player library soon. Replace when available
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
-    [self.playerView insertSubview:loadingImageView aboveSubview:self.playbackButton];
+    [self.mainView insertSubview:loadingImageView aboveSubview:self.playbackButton];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.playbackButton.mas_top).with.offset(-20.f);
         make.centerX.equalTo(self.playbackButton.mas_centerX);
@@ -300,7 +301,7 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:SRGMediaPlayerSegmentDidStartNotification
                                                    object:mediaPlayerController];
         
-        [self.playerView insertSubview:mediaPlayerController.view aboveSubview:self.imageView];
+        [self.playerView addSubview:mediaPlayerController.view];
         
         // Force autolayout to ensure the layout is immediately correct 
         [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
