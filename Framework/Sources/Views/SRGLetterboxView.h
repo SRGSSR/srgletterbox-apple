@@ -25,20 +25,20 @@ NS_ASSUME_NONNULL_BEGIN
  *  be called from within the method implementation when the transition is complete, otherwise the behavior is undefined.
  *
  *  @discussion A full-screen toggle button is automatically displayed when (and only when) this method is implemented.
- *  An optional method `letterboxViewShoulDisplayFullScreenToggleButton:` could control the displayable state for each
- *  SRGLetterboxViews.
+ *              The optional `-letterboxViewShouldDisplayFullScreenToggleButton:` method provides a way to override this
+ *              behavior.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(void (^)(BOOL finished))completionHandler;
 
 /**
- *  This method gets called when the user interface is about to display the full screen toggle button.
+ *  Implement this method and return `NO` to disable full-screen toggle button display.
  *
- *  By defaut, it returns `YES`
+ *  If not implemented, the behavior is equivalent to returning `YES`.
  *
- *  @discussion `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` must be implemented. Otherwise, this
- *  method is never called.
+ *  @discussion This method is only called if `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` has been
+ *              implemented.
  */
-- (BOOL)letterboxViewShoulDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
+- (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
 
 /**
  *  This method gets called when user interface controls are shown or hidden. You can call the `SRGLetterboxView`
