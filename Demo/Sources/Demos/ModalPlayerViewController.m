@@ -152,8 +152,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
-    [self.view layoutIfNeeded];
-    
     void (^animations)(void) = ^{
         if (fullScreen) {
             self.letterboxLeadingConstraint.constant = 0.f;
@@ -188,6 +186,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     self.wantsFullScreen = fullScreen;
     
+    [self.view layoutIfNeeded];
     if (animated) {
         [UIView animateWithDuration:0.2 animations:^{
             animations();

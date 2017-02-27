@@ -269,7 +269,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
-    [self updateUserInterfaceForSegments:segments animated:NO];
+    [self updateUserInterfaceForSegments:segments hidden:self.userInterfaceHidden animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     
     // Reset status
@@ -644,17 +644,21 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
 {
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self updateUserInterfaceForSegments:segments animated:animated];
+    [self updateUserInterfaceForSegments:segments hidden:self.userInterfaceHidden animated:animated];
 }
 
-- (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+- (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments hidden:(BOOL)hidden animated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        self.timelineHeightConstraint.constant = (segments.count != 0) ? 120.f : 0.f;
+        self.timelineHeightConstraint.constant = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
+        [self layoutIfNeeded];
     };
     
+    [self layoutIfNeeded];
     if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations];
+        [UIView animateWithDuration:0.2 animations:^{
+            animations();
+        }];
     }
     else {
         animations();
