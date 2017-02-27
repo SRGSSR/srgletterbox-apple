@@ -24,7 +24,7 @@ IB_DESIGNABLE
 
 @property (nonatomic, weak, nullable) id<SRGLetterboxTimelineViewDelegate> delegate;
 
-- (void)reloadWithMediaComposition:(nullable SRGMediaComposition *)mediaComposition;
+- (void)reloadWithSegments:(nullable NSArray<SRGSegment *> *)segments;
 
 - (void)updateAppearanceWithTime:(NSTimeInterval)time selectedSegment:(nullable SRGSegment *)selectedSegment;
 

@@ -375,7 +375,27 @@ static void commonInit(SRGLetterboxView *self);
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadData
 {
-    [self.timelineView reloadWithMediaComposition:self.controller.mediaComposition];
+    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
+    
+    NSMutableArray<SRGSegment *> *segments = [NSMutableArray array];
+    
+    // Show visible logical segments for the current chapter (if any), and display other chapters but not expanded. If
+    // there is only a chapter, do not display it
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSegment.new, hidden)];
+    NSArray<SRGChapter *> *visibleChapters = [mediaComposition.chapters filteredArrayUsingPredicate:predicate];
+    
+    for (SRGChapter *chapter in visibleChapters) {
+        if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
+            
+            NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
+            [segments addObjectsFromArray:visibleSegments];
+        }
+        else if (visibleChapters.count > 1) {
+            [segments addObject:chapter];
+        }
+    }
+    [self.timelineView reloadWithSegments:[segments copy]];
+    
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
 }

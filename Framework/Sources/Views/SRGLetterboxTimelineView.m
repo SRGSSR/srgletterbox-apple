@@ -65,27 +65,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark Data
 
-- (void)reloadWithMediaComposition:(SRGMediaComposition *)mediaComposition
+- (void)reloadWithSegments:(NSArray<SRGSegment *> *)segments
 {
-    NSMutableArray<SRGSegment *> *segments = [NSMutableArray array];
-    
-    // Show visible logical segments for the current chapter (if any), and display other chapters but not expanded. If
-    // there is only a chapter, do not display it
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSegment.new, hidden)];
-    NSArray<SRGChapter *> *visibleChapters = [mediaComposition.chapters filteredArrayUsingPredicate:predicate];
-    
-    for (SRGChapter *chapter in visibleChapters) {
-        if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
-            
-            NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
-            [segments addObjectsFromArray:visibleSegments];
-        }
-        else if (visibleChapters.count > 1) {
-            [segments addObject:chapter];
-        }
-    }
-    self.segments = [segments copy];
-    
+    self.segments = segments;
     [self.collectionView reloadData];
 }
 
