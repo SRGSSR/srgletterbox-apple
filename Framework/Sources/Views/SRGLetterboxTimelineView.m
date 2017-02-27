@@ -144,6 +144,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self scrollToTime:segment.markIn / 1000. animated:YES];
 }
 
+#pragma mark UIScrollViewDelegate protocol
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.delegate timelineViewDidScroll:self];
+}
+
 @end
 
 static void commonInit(SRGLetterboxTimelineView *self)

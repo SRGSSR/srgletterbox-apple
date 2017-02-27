@@ -779,6 +779,11 @@ static void commonInit(SRGLetterboxView *self);
     [self.controller.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
 }
 
+- (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView
+{
+    [timelineView updateAppearanceWithTime:CMTimeGetSeconds(self.timeSlider.time) selectedSegment:nil];
+}
+
 #pragma mark SRGTimeSliderDelegate protocol
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive

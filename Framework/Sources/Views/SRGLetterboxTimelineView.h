@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGLetterboxTimelineViewDelegate <NSObject>
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
+- (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView;
 
 @end
 
