@@ -65,6 +65,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
+// Track segment selection for better UI behavior
+@property (nonatomic, weak) SRGSegment *selectedSegment;
+
 @end
 
 @implementation SRGLetterboxView {
@@ -230,6 +233,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerSegmentDidStartNotification
+                                                      object:previousMediaPlayerController];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -258,6 +264,9 @@ static void commonInit(SRGLetterboxView *self);
     
     [self updateLoadingIndicatorForController:controller animated:NO];
     
+    // Reset status
+    self.selectedSegment = nil;
+    
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
@@ -285,6 +294,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                   object:mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(segmentDidStart:)
+                                                     name:SRGMediaPlayerSegmentDidStartNotification
                                                    object:mediaPlayerController];
         
         [self.playerView insertSubview:mediaPlayerController.view aboveSubview:self.imageView];
@@ -619,6 +632,15 @@ static void commonInit(SRGLetterboxView *self);
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
 }
 
+- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds
+{
+    if (self.selectedSegment) {
+        timeInSeconds = self.selectedSegment.markIn / 1000.;
+    }
+    
+    [self.timelineView updateAppearanceWithTime:timeInSeconds selectedSegment:self.selectedSegment];
+}
+
 - (void)resetInactivityTimer
 {
     self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
@@ -783,12 +805,13 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
+    self.selectedSegment = segment;
     [self.controller.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
 }
 
 - (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView
 {
-    [timelineView updateAppearanceWithTime:CMTimeGetSeconds(self.timeSlider.time) selectedSegment:nil];
+    [self updateAppearanceWithTime:CMTimeGetSeconds(self.timeSlider.time)];
 }
 
 #pragma mark SRGTimeSliderDelegate protocol
@@ -796,10 +819,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
     NSTimeInterval timeInSeconds = CMTimeGetSeconds(time);
-    [self.timelineView updateAppearanceWithTime:timeInSeconds selectedSegment:nil];
+    [self updateAppearanceWithTime:timeInSeconds];
     
     if (interactive) {
         [self.timelineView scrollToTime:timeInSeconds animated:YES];
+        self.selectedSegment = nil;
     }
 }
 
@@ -837,6 +861,14 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
+}
+
+- (void)segmentDidStart:(NSNotification *)notification
+{
+    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
+    if (segment == self.selectedSegment) {
+        self.selectedSegment = nil;
+    }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
