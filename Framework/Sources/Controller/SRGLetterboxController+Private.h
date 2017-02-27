@@ -30,6 +30,12 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
 /**
+ *  Switch to the specified segment (or chapter) of the current media. Does nothing if no media composition is available
+ *  yet, or if the segment is not related to the media composition.
+ */
+- (void)switchToSegment:(SRGSegment *)segment;
+
+/**
  *  Return YES iff the player can seek backward from a standard amount of seconds.
  *
  *  @discussion Always possible for on-demand and DVR streams.

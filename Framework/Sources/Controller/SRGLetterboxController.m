@@ -463,6 +463,31 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
 }
 
+- (void)switchToSegment:(SRGSegment *)segment
+{
+    if (! self.mediaComposition) {
+        SRGLetterboxLogInfo(@"controller", @"No media composition information is availble. Cannot switch to another segment");
+        return;
+    }
+    
+    // Build the media composition for the
+    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSegment:segment];
+    if (! mediaComposition) {
+        SRGLetterboxLogInfo(@"controller", @"No media composition information is availble. Cannot switch to another segment");
+        return;    
+    }
+    
+    [self updateWithURN:nil media:nil mediaComposition:mediaComposition channel:nil];
+    
+    if ([segment isKindOfClass:[SRGChapter class]]) {
+        SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate userInfo:nil resume:NO completionHandler:nil];
+        [self.requestQueue addRequest:request resume:YES];
+    }
+    else {
+        [self.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
+    }
+}
+
 - (void)play
 {
     [self.mediaPlayerController play];

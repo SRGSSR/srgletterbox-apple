@@ -68,7 +68,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat timelineHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
-// Track segment selection for better UI behavior
+// Track segment selection for better UI behavior (stable selection, most notably)
 @property (nonatomic, weak) SRGSegment *selectedSegment;
 
 @end
@@ -874,19 +874,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
-    if ([segment isKindOfClass:[SRGChapter class]]) {
-        // A chapter was selected, no need to track the selected segment anymore
-        self.selectedSegment = nil;
-        
-        // Avoid unnecessary service requests, the media composition can be immediately rebuilt
-        SRGChapter *chapter = (SRGChapter *)segment;
-        SRGMediaComposition *mediaComposition = [self.controller.mediaComposition mediaCompositionForChapter:chapter];
-        [self.controller.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:SRGQualityNone preferredStartBitRate:0 userInfo:nil resume:YES completionHandler:nil];
-    }
-    else {
-        self.selectedSegment = segment;
-        [self.controller.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
-    }
+    // To improve the UI behavior, logical segments only need to be tracked
+    self.selectedSegment = [segment isKindOfClass:[SRGChapter class]] ? segment : nil;
+    [self.controller switchToSegment:segment];
 }
 
 - (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView
