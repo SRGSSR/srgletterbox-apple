@@ -867,6 +867,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)segmentDidStart:(NSNotification *)notification
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
+    
+    if ([notification.userInfo[SRGMediaPlayerSelectedKey] boolValue]) {
+        [self.timelineView scrollToTime:segment.markIn / 1000. animated:YES];
+    }
+    
     if (segment == self.selectedSegment) {
         self.selectedSegment = nil;
     }
