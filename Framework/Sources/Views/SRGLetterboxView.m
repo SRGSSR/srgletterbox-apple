@@ -65,7 +65,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
 @property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on to of the main user context
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat timelineHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 // Track segment selection for better UI behavior
@@ -465,7 +465,7 @@ static void commonInit(SRGLetterboxView *self);
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
         [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:NO];
-        self.animations ? self.animations(hidden) : nil;
+        self.animations ? self.animations(hidden, self.timelineHeightConstraint.constant) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
@@ -666,7 +666,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
     [self updateUserInterfaceForSegments:segments hidden:hidden animated:animated];
-    
 }
 
 // Update the segments user interface for the current controls visibility
@@ -721,7 +720,7 @@ static void commonInit(SRGLetterboxView *self);
     self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
 }
 
-- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL))animations completion:(void (^)(BOOL finished))completion
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
 {
     if (! _inWillAnimateUserInterface) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException

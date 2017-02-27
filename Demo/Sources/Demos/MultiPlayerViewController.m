@@ -146,7 +146,7 @@
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
     } completion:nil];
 }

@@ -153,12 +153,13 @@ IB_DESIGNABLE
  *  the animations to be performed alongside the player user interface animations when controls are shown or hidden,
  *  and an optional block to be called on completion.
  *
- *  @param animations The animations to be performed when controls are shown or hidden.
+ *  @param animations The animations to be performed when controls are shown or hidden. The timeline height is provided
+ *                    as information if you need to adjust your layout to provide it with enough space.
  *  @param completion The block to be called on completion.
  *
  *  @discussion Attempting to call this method outside the correct delegate method will throw an exception.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat timelineHeight))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.
