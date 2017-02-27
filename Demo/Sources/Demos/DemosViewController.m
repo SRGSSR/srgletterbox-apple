@@ -360,9 +360,25 @@
         }
             
         case 3: {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412757"];
-            SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
-            [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+            switch (indexPath.row) {
+                case 0: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412757"];
+                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
+                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    break;
+                }
+                    
+                case 1: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412759"];
+                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
+                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    break;
+                }
+                    
+                default: {                    
+                    break;
+                }
+            }
             break;
         }
             
