@@ -13,8 +13,6 @@
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 
-@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
-
 @end
 
 @implementation SegmentsPlayerViewController
