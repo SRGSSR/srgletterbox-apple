@@ -478,7 +478,11 @@ static void commonInit(SRGLetterboxView *self);
     };
     
     if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations completion:completion];
+        [self layoutIfNeeded];
+        [UIView animateWithDuration:0.2 animations:^{
+            animations();
+            [self layoutIfNeeded];
+        } completion:completion];
     }
     else {
         animations();
@@ -647,13 +651,13 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         self.timelineHeightConstraint.constant = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
-        [self layoutIfNeeded];
     };
     
-    [self layoutIfNeeded];
     if (animated) {
+        [self layoutIfNeeded];
         [UIView animateWithDuration:0.2 animations:^{
             animations();
+            [self layoutIfNeeded];
         }];
     }
     else {

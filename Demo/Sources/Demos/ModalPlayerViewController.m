@@ -181,15 +181,15 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
         }
         
         [self setNeedsStatusBarAppearanceUpdate];
-        [self.view layoutIfNeeded];
     };
     
     self.wantsFullScreen = fullScreen;
     
-    [self.view layoutIfNeeded];
     if (animated) {
+        [self.view layoutIfNeeded];
         [UIView animateWithDuration:0.2 animations:^{
             animations();
+            [self.view layoutIfNeeded];
         } completion:completionHandler];
     }
     else {

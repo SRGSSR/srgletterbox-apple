@@ -6,13 +6,12 @@
 
 #import "SegmentsPlayerViewController.h"
 
-#import <SRGLetterbox/SRGLetterbox.h>
-
 @interface SegmentsPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 
 @end
 
@@ -59,6 +58,17 @@
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
         [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
     }
+}
+
+#pragma mark SRGLetterboxViewDelegate protocol
+
+- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
+{
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+        self.aspectRatioConstraint.constant = -timelineHeight;
+        [self.view layoutIfNeeded];
+    } completion:nil];
 }
 
 @end
