@@ -111,13 +111,20 @@ static void commonInit(SRGLetterboxTimelineView *self);
                                     atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                             animated:NO];
     };
+    void (^completion)(BOOL) = ^(BOOL finished) {
+        if (finished) {
+            // -scrollViewDidScroll is not called when scrolling programatically. Call it manually for consistent behavior
+            [self scrollViewDidScroll:self.collectionView];
+        }
+    };
     
     if (animated) {
         // Override the standard scroll to item animation duration for faster snapping
-        [UIView animateWithDuration:0.1 animations:animations];
+        [UIView animateWithDuration:0.1 animations:animations completion:completion];
     }
     else {
         animations();
+        completion(YES);
     }
 }
 

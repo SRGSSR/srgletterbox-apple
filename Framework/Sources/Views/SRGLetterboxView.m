@@ -806,6 +806,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
     self.selectedSegment = segment;
+    
     [self.controller.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
 }
 
