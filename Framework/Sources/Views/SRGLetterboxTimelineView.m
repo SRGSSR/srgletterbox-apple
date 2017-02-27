@@ -80,18 +80,19 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
 }
 
-- (void)scrollToTime:(NSTimeInterval)timeInSeconds animated:(BOOL)animated
+- (void)scrollToTime:(NSTimeInterval)timeInSeconds withCurrentSegment:(SRGSegment *)currentSegment animated:(BOOL)animated
 {
+    // Try to locate a segment whose parent is the current segment (if any) and matching the specified time
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment * _Nonnull segment, NSDictionary<NSString *, id> *_Nullable bindings) {
-        return segment.markIn / 1000. <= timeInSeconds && timeInSeconds <= segment.markOut / 1000.;
+        return [segment.fullLengthURN isEqual:currentSegment.URN] && segment.markIn / 1000. <= timeInSeconds && timeInSeconds <= segment.markOut / 1000.;
     }];
     
-    SRGSegment *segment = [self.segments filteredArrayUsingPredicate:predicate].firstObject;
-    if (! segment) {
+    // Use the current segment as fallback
+    SRGSegment *segment = [self.segments filteredArrayUsingPredicate:predicate].firstObject ?: currentSegment;
+    NSInteger segmentIndex = [self.segments indexOfObject:segment];
+    if (segmentIndex == NSNotFound) {
         return;
     }
-    
-    NSInteger segmentIndex = [self.segments indexOfObject:segment];
     
     void (^animations)(void) = ^{
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:segmentIndex inSection:0]
@@ -135,7 +136,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
 {
     SRGSegment *segment = self.segments[indexPath.row];
     [self.delegate timelineView:self didSelectSegment:segment];
-    [self scrollToTime:segment.markIn / 1000. animated:YES];
+    [self scrollToTime:segment.markIn / 1000. withCurrentSegment:segment animated:YES];
 }
 
 #pragma mark UIScrollViewDelegate protocol

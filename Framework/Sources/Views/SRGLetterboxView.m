@@ -56,6 +56,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
+@property (nonatomic, readonly) SRGSegment *currentSegment;
+
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
@@ -894,7 +896,7 @@ static void commonInit(SRGLetterboxView *self);
     [self updateAppearanceWithTime:timeInSeconds];
     
     if (interactive) {
-        [self.timelineView scrollToTime:timeInSeconds animated:YES];
+        [self.timelineView scrollToTime:timeInSeconds withCurrentSegment:self.currentSegment animated:YES];
         self.targetSegment = nil;
     }
 }
@@ -941,7 +943,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     
     if ([notification.userInfo[SRGMediaPlayerSelectedKey] boolValue]) {
-        [self.timelineView scrollToTime:segment.markIn / 1000. animated:YES];
+        [self.timelineView scrollToTime:segment.markIn / 1000. withCurrentSegment:segment animated:YES];
     }
     
     // The logical segment has been reached. Stop tracking

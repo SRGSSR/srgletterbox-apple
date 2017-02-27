@@ -53,9 +53,10 @@ IB_DESIGNABLE
 - (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment;
 
 /**
- *  Scroll the timeline to a given playback time (in seconds).
+ *  Scroll the timeline to a given playback time (in seconds). Context information about the segment being played (might
+ *  be a chapter) must be supplied.
  */
-- (void)scrollToTime:(NSTimeInterval)timeInSeconds animated:(BOOL)animated;
+- (void)scrollToTime:(NSTimeInterval)timeInSeconds withCurrentSegment:(SRGSegment *)currentSegment animated:(BOOL)animated;
 
 @end
 
