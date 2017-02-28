@@ -80,6 +80,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  Controls are shown and hidden with a fade in / fade out animation. You can animate additional view overlays alongside
  *  them by setting a view delegate and implementing the corresponding delegate protocol method.
+ *
+ *  ## Segments
+ *
+ *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
+ *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
+ *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly.
  *  
  *  ## Full-screen
  *
