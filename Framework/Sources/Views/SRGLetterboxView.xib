@@ -221,9 +221,8 @@
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstItem="WC6-gu-laR" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="l1D-3h-7Ww"/>
                         <constraint firstItem="45I-mU-kju" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="bottom" constant="-68" id="nwL-di-rtl"/>
-                        <constraint firstItem="4hl-p0-Y81" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="q2l-xS-1bt"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="sZo-VD-nMG"/>
-                        <constraint firstItem="4hl-p0-Y81" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="999" id="zgZ-Da-ze7"/>
+                        <constraint firstItem="4hl-p0-Y81" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" id="zgZ-Da-ze7"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-Uc-uEb" customClass="SRGLetterboxTimelineView">
