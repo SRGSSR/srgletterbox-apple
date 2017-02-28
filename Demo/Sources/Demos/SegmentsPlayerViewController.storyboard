@@ -43,6 +43,7 @@
                     <connections>
                         <outlet property="aspectRatioConstraint" destination="0M1-3Z-Ldv" id="Rv1-88-jQx"/>
                         <outlet property="letterboxController" destination="RtV-K8-ucK" id="fEc-c3-pUg"/>
+                        <outlet property="letterboxView" destination="4Hm-dx-yKg" id="jzo-sV-sx0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TCF-Nj-sOH" userLabel="First Responder" sceneMemberID="firstResponder"/>

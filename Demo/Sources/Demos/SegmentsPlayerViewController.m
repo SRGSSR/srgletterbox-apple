@@ -13,6 +13,8 @@
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
+
 @end
 
 @implementation SegmentsPlayerViewController
@@ -38,6 +40,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
 }
