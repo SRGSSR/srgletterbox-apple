@@ -6,8 +6,6 @@
 
 #import "SimplePlayerViewController.h"
 
-#import <SRGLetterbox/SRGLetterbox.h>
-
 @interface SimplePlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
@@ -17,6 +15,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nowLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nextLabel;
+
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 
 @end
 
@@ -85,6 +85,17 @@
     SRGChannel *channel = self.letterboxController.channel;
     self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
     self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title] : nil;
+}
+
+#pragma mark SRGLetterboxViewDelegate protocol
+
+- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
+{
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+        self.aspectRatioConstraint.constant = timelineHeight;
+        [self.view layoutIfNeeded];
+    } completion:nil];
 }
 
 #pragma mark Notifications
