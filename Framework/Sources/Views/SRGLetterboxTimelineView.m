@@ -63,6 +63,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
 #pragma mark Data
 
 - (void)reloadWithSegments:(NSArray<SRGSegment *> *)segments
