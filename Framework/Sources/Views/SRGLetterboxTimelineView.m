@@ -89,6 +89,8 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)scrollToTime:(NSTimeInterval)timeInSeconds withCurrentSegment:(SRGSegment *)currentSegment animated:(BOOL)animated
 {
+    return;
+    
     // Try to locate a segment whose parent is the current segment (if any) and matching the specified time
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment * _Nonnull segment, NSDictionary<NSString *, id> *_Nullable bindings) {
         return ! [segment isKindOfClass:[SRGChapter class]]
