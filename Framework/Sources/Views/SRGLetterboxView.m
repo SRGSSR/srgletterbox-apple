@@ -936,6 +936,12 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
+    
+    // Each time we play again (first start, after a pause or a seek), focus on the current segment again
+    SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+        [self.timelineView scrollToTime:self.currentSegment.markIn / 1000. withCurrentSegment:self.currentSegment animated:YES];
+    }
 }
 
 - (void)segmentDidStart:(NSNotification *)notification
