@@ -13,15 +13,11 @@
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 
-const NSInteger SRGLetterboxTimelineViewIndexNone = -1;
-
 static void commonInit(SRGLetterboxTimelineView *self);
 
 @interface SRGLetterboxTimelineView ()
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
-
-@property (nonatomic) NSArray<SRGSegment *> *segments;
 
 @end
 
@@ -47,7 +43,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark Getters and setters
 
-- (void)setSelectedIndex:(NSInteger)selectedIndex
+- (void)setSegments:(NSArray<SRGSegment *> *)segments
+{
+    _segments = segments;
+    [self.collectionView reloadData];
+}
+
+- (void)setSelectedIndex:(NSUInteger)selectedIndex
 {    
     _selectedIndex = selectedIndex;
     [self.collectionView reloadData];
@@ -78,14 +80,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [super layoutSubviews];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
-}
-
-#pragma mark Data
-
-- (void)reloadWithSegments:(NSArray<SRGSegment *> *)segments
-{
-    self.segments = segments;
-    [self.collectionView reloadData];
 }
 
 #pragma mark UICollectionViewDataSource protocol
@@ -133,6 +127,6 @@ static void commonInit(SRGLetterboxTimelineView *self)
         make.edges.equalTo(self);
     }];
     
-    self.selectedIndex = SRGLetterboxTimelineViewIndexNone;
+    self.selectedIndex = NSNotFound;
     self.backgroundColor = [UIColor clearColor];
 }

@@ -70,10 +70,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat timelineHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
-// Track target segment right after selection for better UI behavior (stable selection and highlighting, most notably).
-// Will be nilled once the target has been reached or lost.
-@property (nonatomic, weak) SRGSegment *targetSegment;
-
 @end
 
 @implementation SRGLetterboxView {
@@ -272,9 +268,6 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     
-    // Reset tracking properties
-    self.targetSegment = nil;
-    
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
@@ -403,8 +396,7 @@ static void commonInit(SRGLetterboxView *self);
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadData
 {
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self.timelineView reloadWithSegments:segments];
+    self.timelineView.segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
     
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
@@ -861,6 +853,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
+    NSInteger selectedIndex = [timelineView.segments indexOfObject:segment];
+    self.timelineView.selectedIndex = selectedIndex;
+    
     [self.controller switchToSegment:segment];
 }
 
