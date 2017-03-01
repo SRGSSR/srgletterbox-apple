@@ -410,7 +410,11 @@ static void commonInit(SRGLetterboxView *self);
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadData
 {
-    self.timelineView.segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
+    SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    
+    self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
+    self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
     
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
