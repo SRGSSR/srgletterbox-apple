@@ -12,6 +12,7 @@
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
+#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 
 static void commonInit(SRGLetterboxTimelineView *self);
 
@@ -52,6 +53,12 @@ static void commonInit(SRGLetterboxTimelineView *self);
 - (void)setSelectedIndex:(NSUInteger)selectedIndex
 {    
     _selectedIndex = selectedIndex;
+    [self.collectionView reloadData];
+}
+
+- (void)setTime:(CMTime)time
+{
+    _time = time;
     [self.collectionView reloadData];
 }
 
@@ -104,8 +111,14 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSegmentCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.segment = self.segments[indexPath.row];
+    SRGSegment *segment = self.segments[indexPath.row];
+    
+    cell.segment = segment;
     cell.selected = (indexPath.row == self.selectedIndex);
+    
+    // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
+    float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);
+    cell.progress = fminf(1.f, fmaxf(0.f, progress));
 }
 
 #pragma mark UIScrollViewDelegate protocol

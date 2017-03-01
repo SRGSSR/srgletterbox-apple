@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable) SRGSegment *segment;
 
+/**
+ *  The progress value to display.
+ */
+@property (nonatomic) float progress;
+
 @end
 
 NS_ASSUME_NONNULL_END

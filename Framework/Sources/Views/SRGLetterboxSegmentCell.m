@@ -47,6 +47,11 @@
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
 }
 
+- (void)setProgress:(float)progress
+{
+    self.progressView.progress = progress;
+}
+
 #pragma mark Overrides
 
 - (void)setSelected:(BOOL)selected

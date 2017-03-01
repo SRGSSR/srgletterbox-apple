@@ -879,6 +879,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSInteger selectedIndex = [timelineView.segments indexOfObject:segment];
     self.timelineView.selectedIndex = selectedIndex;
+    self.timelineView.time = segment.srg_timeRange.start;
     
     [self.controller switchToSegment:segment];
 }
@@ -897,6 +898,7 @@ static void commonInit(SRGLetterboxView *self);
         NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
         self.timelineView.selectedIndex = selectedIndex;
     }
+    self.timelineView.time = time;
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol

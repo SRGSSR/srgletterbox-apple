@@ -47,6 +47,11 @@ IB_DESIGNABLE
 @property (nonatomic, nullable) NSArray<SRGSegment *> *segments;
 
 /**
+ *  The time to display the timeline for.
+ */
+@property (nonatomic) CMTime time;
+
+/**
  *  The index of the cell to be highlighted, if any. Set to `NSNotFound` for none.
  */
 @property (nonatomic) NSUInteger selectedIndex;
