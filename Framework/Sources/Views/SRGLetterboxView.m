@@ -777,6 +777,16 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+#pragma mark Segments
+
+- (SRGSegment *)segmentAtTime:(CMTime)time
+{
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return CMTimeRangeContainsTime(segment.srg_timeRange, time);
+    }];
+    return [self.timelineView.segments filteredArrayUsingPredicate:predicate].firstObject;
+}
+
 #pragma mark Gesture recognizers
 
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
@@ -882,7 +892,11 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
-
+    if (interactive) {
+        SRGSegment *segment = [self segmentAtTime:time];
+        NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
+        self.timelineView.selectedIndex = selectedIndex;
+    }
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
