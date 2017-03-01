@@ -153,8 +153,6 @@
 		6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */; };
 		6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */; };
 		6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */; };
-		6FE844F61E60633300F90F67 /* SegmentsPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844F51E60633300F90F67 /* SegmentsPlayerViewController.m */; };
-		6FE844F81E60636800F90F67 /* SegmentsPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F71E60636800F90F67 /* SegmentsPlayerViewController.storyboard */; };
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
@@ -348,9 +346,6 @@
 		6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxSegmentCell.h; sourceTree = "<group>"; };
 		6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxSegmentCell.m; sourceTree = "<group>"; };
 		6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxSegmentCell.xib; sourceTree = "<group>"; };
-		6FE844F41E60633300F90F67 /* SegmentsPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentsPlayerViewController.h; sourceTree = "<group>"; };
-		6FE844F51E60633300F90F67 /* SegmentsPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentsPlayerViewController.m; sourceTree = "<group>"; };
-		6FE844F71E60636800F90F67 /* SegmentsPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SegmentsPlayerViewController.storyboard; sourceTree = "<group>"; };
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
@@ -611,9 +606,6 @@
 				6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */,
 				6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */,
 				6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */,
-				6FE844F41E60633300F90F67 /* SegmentsPlayerViewController.h */,
-				6FE844F51E60633300F90F67 /* SegmentsPlayerViewController.m */,
-				6FE844F71E60636800F90F67 /* SegmentsPlayerViewController.storyboard */,
 				6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */,
 				6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */,
 				6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */,
@@ -835,7 +827,6 @@
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */,
 				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
-				6FE844F81E60636800F90F67 /* SegmentsPlayerViewController.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -869,7 +860,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FE844F61E60633300F90F67 /* SegmentsPlayerViewController.m in Sources */,
 				6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell.m in Sources */,
 				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,

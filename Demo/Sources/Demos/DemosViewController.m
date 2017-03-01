@@ -10,7 +10,6 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "SimplePlayerViewController.h"
-#import "SegmentsPlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
 @implementation DemosViewController
@@ -363,29 +362,57 @@
             switch (indexPath.row) {
                 case 0: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412757"];
-                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
                     break;
                 }
                     
                 case 1: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412759"];
-                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
                     break;
                 }
                     
                 case 2: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8399352"];
-                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
                     break;
                 }
                     
                 case 3: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8399354"];
-                    SegmentsPlayerViewController *segmentsPlayerViewController = [[SegmentsPlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:segmentsPlayerViewController animated:YES];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
                     break;
                 }
                     
