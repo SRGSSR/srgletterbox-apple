@@ -903,15 +903,15 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSegment *segment = [self segmentAtTime:time];
     
-    if (interactive) {
-        NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
-        self.timelineView.selectedIndex = selectedIndex;
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
-    }
-    
     // Only display time progress for segments, not chapters
     if (! [segment isKindOfClass:[SRGChapter class]]) {
         self.timelineView.time = time;
+        
+        if (interactive) {
+            NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
+            self.timelineView.selectedIndex = selectedIndex;
+            [self.timelineView scrollToSelectedIndexAnimated:YES];
+        }
     }
     else {
         self.timelineView.time = kCMTimeZero;
