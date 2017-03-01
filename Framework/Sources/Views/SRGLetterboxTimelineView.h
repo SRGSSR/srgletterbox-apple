@@ -46,18 +46,6 @@ IB_DESIGNABLE
  */
 - (void)reloadWithSegments:(nullable NSArray<SRGSegment *> *)segments;
 
-/**
- *  Update the segment appearance for a given playback time (in seconds) and the segment currently being played (might
- *  be a chapter).
- */
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment;
-
-/**
- *  Scroll the timeline to a given playback time (in seconds). Context information about the segment being played (might
- *  be a chapter) must be supplied.
- */
-- (void)scrollToTime:(NSTimeInterval)timeInSeconds withCurrentSegment:(SRGSegment *)currentSegment animated:(BOOL)animated;
-
 @end
 
 NS_ASSUME_NONNULL_END

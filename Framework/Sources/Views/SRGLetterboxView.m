@@ -242,9 +242,6 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerSegmentDidStartNotification
-                                                      object:previousMediaPlayerController];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -305,10 +302,6 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(segmentDidStart:)
-                                                     name:SRGMediaPlayerSegmentDidStartNotification
                                                    object:mediaPlayerController];
         
         [self.playerView addSubview:mediaPlayerController.view];
@@ -378,11 +371,6 @@ static void commonInit(SRGLetterboxView *self);
     else {
         return nil;
     }
-}
-
-- (SRGSegment *)currentSegment
-{
-    return self.targetSegment ?: self.controller.mediaComposition.mainSegment ?: self.controller.mediaComposition.mainChapter;
 }
 
 #pragma mark Data display
@@ -709,11 +697,6 @@ static void commonInit(SRGLetterboxView *self);
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
 }
 
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds
-{
-    [self.timelineView updateAppearanceWithTime:timeInSeconds currentSegment:self.currentSegment];
-}
-
 - (void)resetInactivityTimer
 {
     self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
@@ -878,27 +861,19 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
-    // Do not wait for the segment start notification so that we can immediately reflect the user choice on the UI
-    self.targetSegment = segment;
     [self.controller switchToSegment:segment];
 }
 
 - (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView
 {
-    [self updateAppearanceWithTime:CMTimeGetSeconds(self.timeSlider.time)];
+    
 }
 
 #pragma mark SRGTimeSliderDelegate protocol
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
-    NSTimeInterval timeInSeconds = CMTimeGetSeconds(time);
-    [self updateAppearanceWithTime:timeInSeconds];
-    
-    if (interactive) {
-        [self.timelineView scrollToTime:timeInSeconds withCurrentSegment:self.currentSegment animated:YES];
-        self.targetSegment = nil;
-    }
+
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
@@ -936,26 +911,6 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
-    
-    // Each time we play again (first start, after a pause or a seek), focus on the current segment again
-    SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying) {
-        [self.timelineView scrollToTime:self.currentSegment.markIn / 1000. withCurrentSegment:self.currentSegment animated:YES];
-    }
-}
-
-- (void)segmentDidStart:(NSNotification *)notification
-{
-    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
-    
-    if ([notification.userInfo[SRGMediaPlayerSelectedKey] boolValue]) {
-        [self.timelineView scrollToTime:segment.markIn / 1000. withCurrentSegment:segment animated:YES];
-    }
-    
-    // The logical segment has been reached. Stop tracking
-    if (segment == self.targetSegment) {
-        self.targetSegment = nil;
-    }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

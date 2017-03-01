@@ -78,55 +78,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView reloadData];
 }
 
-#pragma mark UI
-
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment
-{
-    for (SRGLetterboxSegmentCell *cell in self.collectionView.visibleCells) {
-        [cell updateAppearanceWithTime:timeInSeconds currentSegment:currentSegment];
-    }
-}
-
-- (void)scrollToTime:(NSTimeInterval)timeInSeconds withCurrentSegment:(SRGSegment *)currentSegment animated:(BOOL)animated
-{
-    return;
-    
-    // Try to locate a segment whose parent is the current segment (if any) and matching the specified time
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment * _Nonnull segment, NSDictionary<NSString *, id> *_Nullable bindings) {
-        return ! [segment isKindOfClass:[SRGChapter class]]
-                  && [segment.fullLengthURN isEqual:currentSegment.URN]
-                  && segment.markIn / 1000. <= timeInSeconds && timeInSeconds <= segment.markOut / 1000.;
-    }];
-    
-    // Use the current segment as fallback
-    SRGSegment *segment = [self.segments filteredArrayUsingPredicate:predicate].firstObject ?: currentSegment;
-    NSInteger segmentIndex = [self.segments indexOfObject:segment];
-    if (segmentIndex == NSNotFound) {
-        return;
-    }
-    
-    void (^animations)(void) = ^{
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:segmentIndex inSection:0]
-                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                            animated:NO];
-    };
-    void (^completion)(BOOL) = ^(BOOL finished) {
-        if (finished) {
-            // -scrollViewDidScroll is not called when scrolling programatically. Call it manually for consistent behavior
-            [self scrollViewDidScroll:self.collectionView];
-        }
-    };
-    
-    if (animated) {
-        // Override the standard scroll to item animation duration for faster snapping
-        [UIView animateWithDuration:0.1 animations:animations completion:completion];
-    }
-    else {
-        animations();
-        completion(YES);
-    }
-}
-
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -136,9 +87,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGLetterboxSegmentCell *segmentCell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
-    segmentCell.segment = self.segments[indexPath.row];
-    return segmentCell;
+    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
 }
 
 #pragma mark UICollectionViewDelegate protocol
@@ -147,7 +96,11 @@ static void commonInit(SRGLetterboxTimelineView *self);
 {
     SRGSegment *segment = self.segments[indexPath.row];
     [self.delegate timelineView:self didSelectSegment:segment];
-    [self scrollToTime:segment.markIn / 1000. withCurrentSegment:segment animated:YES];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSegmentCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.segment = self.segments[indexPath.row];
 }
 
 #pragma mark UIScrollViewDelegate protocol

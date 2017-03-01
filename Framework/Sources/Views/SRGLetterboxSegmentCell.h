@@ -20,12 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable) SRGSegment *segment;
 
-/**
- *  Update the segment appearance for a given playback time (in seconds) and the segment currently being played (might
- *  be a chapter).
- */
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment;
-
 @end
 
 NS_ASSUME_NONNULL_END

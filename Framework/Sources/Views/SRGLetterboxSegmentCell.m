@@ -19,15 +19,6 @@
 
 @implementation SRGLetterboxSegmentCell
 
-#pragma mark Overrides
-
-- (void)prepareForReuse
-{
-    [super prepareForReuse];
-    
-    self.progressView.progress = 0.f;
-}
-
 #pragma mark Getters and setters
 
 - (void)setSegment:(SRGSegment *)segment
@@ -54,39 +45,6 @@
     }
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
-}
-
-#pragma mark UI
-
-- (void)updateAppearanceWithTime:(NSTimeInterval)timeInSeconds currentSegment:(SRGSegment *)currentSegment
-{
-    // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
-    float progress = (timeInSeconds - self.segment.markIn / 1000.) / (self.segment.duration / 1000.);
-    progress = fminf(1.f, fmaxf(0.f, progress));
-    
-    UIColor *selectionColor = [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f];
-    
-    // Current chapter / segment: Highlight and display progress
-    if (self.segment == currentSegment) {
-        self.backgroundColor = selectionColor;
-        self.progressView.progress = progress;
-    }
-    // Different chapters or segments. Compare chapter URNs.
-    else {
-        SRGMediaURN *currentChapterURN = [currentSegment isKindOfClass:[SRGChapter class]] ? currentSegment.URN : currentSegment.fullLengthURN;
-        SRGMediaURN *chapterURN = [self.segment isKindOfClass:[SRGChapter class]] ? self.segment.URN : self.segment.fullLengthURN;
-        
-        // Same parent media. Display progress
-        if ([chapterURN isEqual:currentChapterURN]) {
-            self.backgroundColor = [UIColor blackColor];
-            self.progressView.progress = progress;
-        }
-        // Different media. Display nothing
-        else {
-            self.backgroundColor = [UIColor blackColor];
-            self.progressView.progress = 0.f;
-        }
-    }
 }
 
 @end
