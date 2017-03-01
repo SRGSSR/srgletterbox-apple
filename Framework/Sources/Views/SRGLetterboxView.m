@@ -471,10 +471,10 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
+    CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
+    
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
-        
-        CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
         self.animations ? self.animations(hidden, timelineHeight) : nil;
@@ -482,7 +482,13 @@ static void commonInit(SRGLetterboxView *self);
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
             self.userInterfaceHidden = hidden;
+            
+            // Focus on the current segment when opening the timeline again
+            if (timelineHeight != 0.f) {
+                [self.timelineView scrollToSelectedIndexAnimated:animated];
+            }
         }
+        
         self.completion ? self.completion(finished) : nil;
         
         self.animations = nil;
