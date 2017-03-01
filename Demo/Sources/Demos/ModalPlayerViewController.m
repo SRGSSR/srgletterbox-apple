@@ -22,6 +22,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
+@property (nonatomic, weak) IBOutlet UIPickerView *preferredTimelineHeight;
+
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
@@ -231,6 +233,62 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)fullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
+}
+
+#pragma mark UIPickerViewDataSource protocol
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 3;
+}
+
+#pragma mark UIPickerViewDelegate protocol
+
+- (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSString *title = nil;
+    switch (row) {
+        case 0:
+            title = @(120).stringValue;
+            break;
+        case 1:
+            title = @(80).stringValue;
+            break;
+        case 2:
+            title = @(0).stringValue;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return [NSString stringWithFormat:@"Timeline height %@", title];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    CGFloat preferredTimelineHeight = 120.f;
+    switch (row) {
+        case 0:
+            preferredTimelineHeight = 120.f;
+            break;
+        case 1:
+            preferredTimelineHeight = 80.f;
+            break;
+        case 2:
+            preferredTimelineHeight = 0.f;
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.letterboxView setPreferredTimelineHeight:preferredTimelineHeight animated:YES];
 }
 
 @end
