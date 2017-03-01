@@ -190,6 +190,14 @@ IB_DESIGNABLE
  */
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
+/**
+ *  The current segment timeline height.
+ *
+ *  @discussion Value should be the preferredTimelineHeight if the media has segments, 0.f otherwise. During an animation,
+ *  this value could be different.
+ */
+@property (nonatomic, readonly) CGFloat timelineHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

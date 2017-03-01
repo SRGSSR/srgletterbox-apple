@@ -380,6 +380,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (CGFloat)timelineHeight
+{
+    return self.timelineHeightConstraint.constant;
+}
+
 #pragma mark Data display
 
 - (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
