@@ -238,6 +238,12 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerSegmentDidStartNotification
+                                                      object:previousMediaPlayerController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerSegmentDidEndNotification
+                                                      object:previousMediaPlayerController];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -295,6 +301,14 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                   object:mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(segmentDidStart:)
+                                                     name:SRGMediaPlayerSegmentDidStartNotification
+                                                   object:mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(segmentDidEnd:)
+                                                     name:SRGMediaPlayerSegmentDidEndNotification
                                                    object:mediaPlayerController];
         
         [self.playerView addSubview:mediaPlayerController.view];
@@ -906,6 +920,17 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
+}
+
+- (void)segmentDidStart:(NSNotification *)notification
+{
+    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
+    self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+}
+
+- (void)segmentDidEnd:(NSNotification *)notification
+{
+    self.timelineView.selectedIndex = NSNotFound;
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
