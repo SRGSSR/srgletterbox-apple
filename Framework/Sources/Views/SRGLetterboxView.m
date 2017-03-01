@@ -893,12 +893,20 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
+    SRGSegment *segment = [self segmentAtTime:time];
+    
     if (interactive) {
-        SRGSegment *segment = [self segmentAtTime:time];
         NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
         self.timelineView.selectedIndex = selectedIndex;
     }
-    self.timelineView.time = time;
+    
+    // Only display time progress for segments, not chapters
+    if (! [segment isKindOfClass:[SRGChapter class]]) {
+        self.timelineView.time = time;
+    }
+    else {
+        self.timelineView.time = kCMTimeZero;
+    }
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
