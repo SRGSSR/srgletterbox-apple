@@ -51,6 +51,11 @@ IB_DESIGNABLE
  */
 @property (nonatomic) NSUInteger selectedIndex;
 
+/**
+ *  Scroll the timeline to the selected index, if any. Does nothing if the user is actively dragging the timeline.
+ */
+- (void)scrollToSelectedIndexAnimated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

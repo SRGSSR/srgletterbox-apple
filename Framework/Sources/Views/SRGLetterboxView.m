@@ -899,6 +899,7 @@ static void commonInit(SRGLetterboxView *self);
     if (interactive) {
         NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
         self.timelineView.selectedIndex = selectedIndex;
+        [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
     
     // Only display time progress for segments, not chapters
@@ -951,6 +952,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+    [self.timelineView scrollToSelectedIndexAnimated:YES];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification

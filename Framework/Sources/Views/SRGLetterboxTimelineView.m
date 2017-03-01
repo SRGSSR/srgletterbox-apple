@@ -89,6 +89,33 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
+#pragma mark Scrolling
+
+- (void)scrollToSelectedIndexAnimated:(BOOL)animated
+{
+    if (self.selectedIndex == NSNotFound) {
+        return;
+    }
+    
+    if (self.collectionView.dragging) {
+        return;
+    }
+    
+    void (^animations)(void) = ^{
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                            animated:NO];
+    };
+    
+    if (animated) {
+        // Override the standard scroll to item animation duration for faster snapping
+        [UIView animateWithDuration:0.1 animations:animations completion:nil];
+    }
+    else {
+        animations();
+    }
+}
+
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
