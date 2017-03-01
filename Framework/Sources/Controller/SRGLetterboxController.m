@@ -463,29 +463,35 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
 }
 
-- (void)switchToSegment:(SRGSegment *)segment
+- (BOOL)switchToSegment:(SRGSegment *)segment
 {
     if (! self.mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No media composition information is availble. Cannot switch to another segment");
-        return;
+        SRGLetterboxLogInfo(@"controller", @"No media composition information is available. Cannot switch to another segment");
+        return NO;
     }
     
-    // Build the media composition for the
+    // Build the media composition for the provided segment (can be a chapter)
     SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSegment:segment];
     if (! mediaComposition) {
         SRGLetterboxLogInfo(@"controller", @"No media composition information is availble. Cannot switch to another segment");
-        return;    
+        return NO;
     }
     
     [self updateWithURN:nil media:nil mediaComposition:mediaComposition channel:nil];
     
-    if ([segment isKindOfClass:[SRGChapter class]]) {
+    // If playing another media or if the player is not playing, restart
+    if ([segment isKindOfClass:[SRGChapter class]]
+            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate userInfo:nil resume:NO completionHandler:nil];
         [self.requestQueue addRequest:request resume:YES];
     }
+    // Playing another segment from the same media. Seek
     else {
         [self.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
     }
+    
+    return YES;
 }
 
 - (void)play

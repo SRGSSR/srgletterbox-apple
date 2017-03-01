@@ -32,8 +32,10 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 /**
  *  Switch to the specified segment (or chapter) of the current media. Does nothing if no media composition is available
  *  yet, or if the segment is not related to the media composition.
+ *
+ *  Return `YES` iff switching is possible.
  */
-- (void)switchToSegment:(SRGSegment *)segment;
+- (BOOL)switchToSegment:(SRGSegment *)segment;
 
 /**
  *  Return YES iff the player can seek backward from a standard amount of seconds.

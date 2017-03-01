@@ -881,11 +881,13 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
+    if (! [self.controller switchToSegment:segment]) {
+        return;
+    }
+    
     NSInteger selectedIndex = [timelineView.segments indexOfObject:segment];
     self.timelineView.selectedIndex = selectedIndex;
     self.timelineView.time = segment.srg_timeRange.start;
-    
-    [self.controller switchToSegment:segment];
 }
 
 - (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView
