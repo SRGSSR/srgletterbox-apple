@@ -63,6 +63,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
+@property (nonatomic) CGFloat preferredTimelineHeight;
 
 @property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
 @property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on to of the main user context
@@ -139,6 +140,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.delegate = self;
     
     self.timelineHeightConstraint.constant = 0.f;
+    self.preferredTimelineHeight = 120.f;
     
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
@@ -476,7 +478,7 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
-    CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? 120.f : 0.f;
+    CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
@@ -510,6 +512,18 @@ static void commonInit(SRGLetterboxView *self);
     else {
         animations();
         completion(YES);
+    }
+}
+
+- (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
+{
+    CGFloat validPreferredTimelineHeight = (preferredTimelineHeight >= 0.f) ? preferredTimelineHeight : 0.f;
+    
+    if (self.preferredTimelineHeight != validPreferredTimelineHeight) {
+        self.preferredTimelineHeight = preferredTimelineHeight;
+        if (!self.isUserInterfaceHidden) {
+            [self internal_setUserInterfaceHidden:NO animated:animated togglable:self.userInterfaceTogglable];
+        }
     }
 }
 
