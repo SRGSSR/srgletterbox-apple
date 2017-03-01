@@ -41,6 +41,8 @@
 {
     [super viewDidLoad];
     
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
+    
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
 }
 
