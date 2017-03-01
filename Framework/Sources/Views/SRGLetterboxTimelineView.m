@@ -13,6 +13,8 @@
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 
+const NSInteger SRGLetterboxTimelineViewIndexNone = -1;
+
 static void commonInit(SRGLetterboxTimelineView *self);
 
 @interface SRGLetterboxTimelineView ()
@@ -41,6 +43,14 @@ static void commonInit(SRGLetterboxTimelineView *self);
         commonInit(self);
     }
     return self;
+}
+
+#pragma mark Getters and setters
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex
+{    
+    _selectedIndex = selectedIndex;
+    [self.collectionView reloadData];
 }
 
 #pragma mark Overrides
@@ -101,6 +111,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSegmentCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     cell.segment = self.segments[indexPath.row];
+    cell.selected = (indexPath.row == self.selectedIndex);
 }
 
 #pragma mark UIScrollViewDelegate protocol
@@ -122,5 +133,6 @@ static void commonInit(SRGLetterboxTimelineView *self)
         make.edges.equalTo(self);
     }];
     
+    self.selectedIndex = SRGLetterboxTimelineViewIndexNone;
     self.backgroundColor = [UIColor clearColor];
 }

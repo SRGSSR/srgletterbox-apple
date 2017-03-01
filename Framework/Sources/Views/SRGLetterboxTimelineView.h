@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+OBJC_EXTERN const NSInteger SRGLetterboxTimelineViewIndexNone;
+
 // Forward declarations
 @class SRGLetterboxTimelineView;
 
@@ -45,6 +47,11 @@ IB_DESIGNABLE
  *  Reload the timeline with a new segment list.
  */
 - (void)reloadWithSegments:(nullable NSArray<SRGSegment *> *)segments;
+
+/**
+ *  The index of the cell to be highlighted, if any.
+ */
+@property (nonatomic) NSInteger selectedIndex;
 
 @end
 
