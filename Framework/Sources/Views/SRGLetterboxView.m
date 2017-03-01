@@ -890,11 +890,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.time = segment.srg_timeRange.start;
 }
 
-- (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView
-{
-    
-}
-
 #pragma mark SRGTimeSliderDelegate protocol
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive

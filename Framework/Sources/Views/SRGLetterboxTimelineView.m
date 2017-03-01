@@ -121,13 +121,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     cell.progress = fminf(1.f, fmaxf(0.f, progress));
 }
 
-#pragma mark UIScrollViewDelegate protocol
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    [self.delegate timelineViewDidScroll:self];
-}
-
 @end
 
 static void commonInit(SRGLetterboxTimelineView *self)

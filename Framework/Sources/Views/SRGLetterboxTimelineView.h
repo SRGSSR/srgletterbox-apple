@@ -23,11 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
 
-/**
- *  Called when the timeline did scroll, either interactively or programmatically.
- */
-- (void)timelineViewDidScroll:(SRGLetterboxTimelineView *)timelineView;
-
 @end
 
 /**
@@ -52,7 +47,7 @@ IB_DESIGNABLE
 @property (nonatomic) CMTime time;
 
 /**
- *  The index of the cell to be highlighted, if any. Set to `NSNotFound` for none.
+ *  The index of the cell to be selected, if any. Set to `NSNotFound` for none.
  */
 @property (nonatomic) NSUInteger selectedIndex;
 
