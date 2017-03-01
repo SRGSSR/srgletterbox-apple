@@ -4,30 +4,27 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SimplePlayerViewController.h"
+#import "SegmentsPlayerViewController.h"
 
-@interface SimplePlayerViewController ()
+@interface SegmentsPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
-
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *nowLabel;
-@property (nonatomic, weak) IBOutlet UILabel *nextLabel;
-
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
+
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 
 @end
 
-@implementation SimplePlayerViewController
+@implementation SegmentsPlayerViewController
 
 #pragma mark Object lifecycle
 
 - (instancetype)initWithURN:(SRGMediaURN *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+    SegmentsPlayerViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.URN = URN;
     return viewController;
 }
@@ -38,24 +35,15 @@
     return nil;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
-    [self reloadData];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(metadataDidChange:)
-                                                 name:SRGLetterboxMetadataDidChangeNotification
-                                               object:self.letterboxController];
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -76,17 +64,6 @@
     }
 }
 
-#pragma mark Data
-
-- (void)reloadData
-{
-    self.titleLabel.text = self.letterboxController.media.title;
-    
-    SRGChannel *channel = self.letterboxController.channel;
-    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
-    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title] : nil;
-}
-
 #pragma mark SRGLetterboxViewDelegate protocol
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
@@ -96,13 +73,6 @@
         self.aspectRatioConstraint.constant = timelineHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
-}
-
-#pragma mark Notifications
-
-- (void)metadataDidChange:(NSNotification *)notification
-{
-    [self reloadData];
 }
 
 @end

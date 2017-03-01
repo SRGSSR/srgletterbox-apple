@@ -53,13 +53,13 @@ To display what is currently played by a controller, add a `SRGLetterboxView` in
 
 ### Controls and overlays
 
-The standard player controls (play / pause button, seek bar, etc.) of a Letterbox view cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. Simply set a delegate for the player view and respond to user interface state changes, as follows:
+The standard player controls (play / pause button, seek bar, etc.) and the segment timeline of a Letterbox view cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. You can also respond to timeline height changes in the same way. Simply set a delegate for the player view and respond to user interface state changes, as follows:
 
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
-        // Show or hide your own overlays here
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+        // Show or hide your own overlays here, or adjust your layout to respond to the segments timeline being visible or hidden
     } completion:nil];
 }
 ```

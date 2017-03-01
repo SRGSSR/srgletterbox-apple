@@ -25,25 +25,25 @@ NS_ASSUME_NONNULL_BEGIN
  *  be called from within the method implementation when the transition is complete, otherwise the behavior is undefined.
  *
  *  @discussion A full-screen toggle button is automatically displayed when (and only when) this method is implemented.
- *  An optional method `letterboxViewShoulDisplayFullScreenToggleButton:` could control the displayable state for each
- *  SRGLetterboxViews.
+ *              The optional `-letterboxViewShouldDisplayFullScreenToggleButton:` method provides a way to override this
+ *              behavior.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(void (^)(BOOL finished))completionHandler;
 
 /**
- *  This method gets called when the user interface is about to display the full screen toggle button.
+ *  Implement this method and return `NO` to disable full-screen toggle button display.
  *
- *  By defaut, it returns `YES`
+ *  If not implemented, the behavior is equivalent to returning `YES`.
  *
- *  @discussion `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` must be implemented. Otherwise, this
- *  method is never called.
+ *  @discussion This method is only called if `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` has been
+ *              implemented.
  */
-- (BOOL)letterboxViewShoulDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
+- (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
 
 /**
- *  This method gets called when user interface controls are shown or hidden. You can call the `SRGLetterboxView`
- *  `-animateAlongsideUserInterfaceWithAnimations:completion` method from within this method implementation to
- *  perform animations alongside the built-in control animations.
+ *  This method gets called when user interface controls or segments are shown or hidden. You can call the `SRGLetterboxView`
+ *  `-animateAlongsideUserInterfaceWithAnimations:completion` method from within this method implementation to perform 
+ *  animations alongside the built-in control animations.
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
@@ -80,6 +80,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  Controls are shown and hidden with a fade in / fade out animation. You can animate additional view overlays alongside
  *  them by setting a view delegate and implementing the corresponding delegate protocol method.
+ *
+ *  ## Segments
+ *
+ *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
+ *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
+ *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly.
  *  
  *  ## Full-screen
  *
@@ -108,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  as is via Airplay, which is especially convenient for presentation purposes.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
+@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, SRGTimeSliderDelegate, UIGestureRecognizerDelegate>
 
 /**
  *  The controller bound to the view. Can be changed at any time.
@@ -150,15 +156,18 @@ IB_DESIGNABLE
 
 /**
  *  Call this method from within the delegate `-letterboxViewWillAnimateUserInterface:` method implementation to provide
- *  the animations to be performed alongside the player user interface animations when controls are shown or hidden,
- *  and an optional block to be called on completion.
+ *  the animations to be performed alongside the player user interface animations when controls or segments are shown or 
+ *  hidden. An optional block to be called on completion can be provided as well.
  *
- *  @param animations The animations to be performed when controls are shown or hidden.
+ *  @param animations The animations to be performed when controls are shown or hidden. The timeline height is provided
+ *                    as information if you need to adjust your layout to provide it with enough space. You can e.g.
+ *                    simply use this value as constant of an aspect ratio layout constraint to make the player view
+ *                    slightly taller.
  *  @param completion The block to be called on completion.
  *
  *  @discussion Attempting to call this method outside the correct delegate method will throw an exception.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat timelineHeight))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.

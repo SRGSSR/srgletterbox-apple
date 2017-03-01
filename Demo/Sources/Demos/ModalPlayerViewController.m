@@ -27,7 +27,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxLeadingConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTrailingConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterbox169Constraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
@@ -145,15 +145,16 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+        self.letterboxAspectRatioConstraint.constant = timelineHeight;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
+        [self.view layoutIfNeeded];
     } completion:nil];
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
-    [self.view layoutIfNeeded];
-    
     void (^animations)(void) = ^{
         if (fullScreen) {
             self.letterboxLeadingConstraint.constant = 0.f;
@@ -161,7 +162,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             self.letterboxTopConstraint.constant = 0.f;
             
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
-            self.letterbox169Constraint.priority = LetterboxViewConstraintLessPriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLessPriority;
         }
         else {
             // Tweak the margins for iPhone landscape layout
@@ -179,18 +180,19 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             self.letterboxTopConstraint.constant = 5.f;
             
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLessPriority;
-            self.letterbox169Constraint.priority = LetterboxViewConstraintMorePriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintMorePriority;
         }
         
         [self setNeedsStatusBarAppearanceUpdate];
-        [self.view layoutIfNeeded];
     };
     
     self.wantsFullScreen = fullScreen;
     
     if (animated) {
+        [self.view layoutIfNeeded];
         [UIView animateWithDuration:0.2 animations:^{
             animations();
+            [self.view layoutIfNeeded];
         } completion:completionHandler];
     }
     else {
