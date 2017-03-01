@@ -885,8 +885,9 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    NSInteger selectedIndex = [timelineView.segments indexOfObject:segment];
-    self.timelineView.selectedIndex = selectedIndex;
+    self.timelineView.selectedIndex = [timelineView.segments indexOfObject:segment];
+    [self.timelineView scrollToSelectedIndexAnimated:YES];
+    
     self.timelineView.time = segment.srg_timeRange.start;
 }
 
@@ -946,6 +947,14 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
+    
+    // Initially scroll to the selected segment or chapter, if any
+    SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+    SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying
+            && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+        [self.timelineView scrollToSelectedIndexAnimated:YES];
+    }
 }
 
 - (void)segmentDidStart:(NSNotification *)notification
