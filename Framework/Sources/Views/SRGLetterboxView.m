@@ -973,11 +973,18 @@ static void commonInit(SRGLetterboxView *self);
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
     
-    // Scroll to the selected segment or chapter initially (if any), or after a seek
+    // Initially scroll to the selected segment or chapter initially (if any)
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying
-            && (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing || previousPlaybackState == SRGMediaPlayerPlaybackStateSeeking)) {
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+        [self.timelineView scrollToSelectedIndexAnimated:YES];
+    }
+    // Update the current segment when starting seeking
+    else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
+        CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
+        SRGSegment *segment = [self segmentAtTime:seekTargetTime];
+        self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+        self.timelineView.time = seekTargetTime;
         [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
 }
