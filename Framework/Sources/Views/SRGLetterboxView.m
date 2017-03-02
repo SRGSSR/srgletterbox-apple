@@ -690,18 +690,18 @@ static void commonInit(SRGLetterboxView *self);
     [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
 }
 
-// Update the segments user interface for the current controls visibility
+// Update the segments user interface with the last user-defined visibility settings
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
-    // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. currently set with
+    // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. when currently set with
     // an animation)
     [self internal_setUserInterfaceHidden:self.mainRestorationContext.hidden withSegments:segments animated:animated];
 }
 
-// Update the segments user interface for the current segment list and controls visibility
+// Update the segments user interface with the last user-defined visibility settings for controls and segments
 - (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
 {
-    // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. currently set with
+    // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. when currently set with
     // an animation)
     [self updateUserInterfaceForCurrentSegmentsHidden:self.mainRestorationContext.hidden animated:animated];
 }
