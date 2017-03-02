@@ -973,11 +973,11 @@ static void commonInit(SRGLetterboxView *self);
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
     
-    // Initially scroll to the selected segment or chapter, if any
+    // Scroll to the selected segment or chapter initially (if any), or after a seek
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying
-            && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+            && (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing || previousPlaybackState == SRGMediaPlayerPlaybackStateSeeking)) {
         [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
 }
