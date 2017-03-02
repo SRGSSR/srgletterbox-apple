@@ -75,7 +75,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     collectionViewLayout.minimumLineSpacing = 1.f;
-    collectionViewLayout.itemSize = CGSizeMake(160.f, 130.f);
     
     NSString *identifier = NSStringFromClass([SRGLetterboxSegmentCell class]);
     UINib *nib = [UINib nibWithNibName:identifier bundle:[NSBundle srg_letterboxBundle]];
@@ -85,6 +84,10 @@ static void commonInit(SRGLetterboxTimelineView *self);
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    CGFloat height = CGRectGetHeight(self.frame);
+    collectionViewLayout.itemSize = CGSizeMake(16.f / 13.f * height, height);
     
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
