@@ -28,6 +28,8 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
+
 @end
 
 @implementation MultiPlayerViewController
@@ -154,8 +156,11 @@
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
+    [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
+        self.aspectRatioConstraint.constant = timelineHeight;
+        [self.view layoutIfNeeded];
     } completion:nil];
 }
 
