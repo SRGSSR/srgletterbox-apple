@@ -144,7 +144,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     SRGSegment *segment = self.segments[indexPath.row];
     
     cell.segment = segment;
-    cell.selected = (indexPath.row == self.selectedIndex);
+    cell.current = (indexPath.row == self.selectedIndex);
     
     // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
     float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);

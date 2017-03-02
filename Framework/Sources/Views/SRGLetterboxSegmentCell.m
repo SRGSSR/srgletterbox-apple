@@ -52,13 +52,9 @@
     self.progressView.progress = progress;
 }
 
-#pragma mark Overrides
-
-- (void)setSelected:(BOOL)selected
+- (void)setCurrent:(BOOL)current
 {
-    super.selected = selected;
-    
-    self.backgroundColor = selected ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
+    self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
 }
 
 @end

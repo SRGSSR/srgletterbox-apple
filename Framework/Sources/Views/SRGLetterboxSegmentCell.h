@@ -25,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) float progress;
 
+/**
+ *  Set to YES iff the segment is the current one.
+ */
+@property (nonatomic, getter=isCurrent) BOOL current;
+
 @end
 
 NS_ASSUME_NONNULL_END
