@@ -108,9 +108,11 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
     
     void (^animations)(void) = ^{
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                            animated:NO];
+        if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                animated:NO];
+        }
     };
     
     if (animated) {
