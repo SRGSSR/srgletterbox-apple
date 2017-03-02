@@ -488,6 +488,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     // Playing another segment from the same media. Seek
     else {
+        self.seekTargetTime = segment.srg_timeRange.start;
         [self.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
     }
     
