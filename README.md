@@ -102,6 +102,10 @@ carthage bootstrap --platform iOS
 
 This will update all framework dependencies required to run the demo project.
 
+## Known issues
+
+Control center and lock screen integrations are not working reliably in the iOS simulator. This is a known simulator-only limitation, everything works fine on a device. 
+
 ## License
 
 See the [LICENSE](LICENSE) file for more information.
