@@ -275,6 +275,7 @@ static void commonInit(SRGLetterboxView *self);
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
     [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
+    [self reloadDataForController:controller];
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -322,8 +323,6 @@ static void commonInit(SRGLetterboxView *self);
         
         [self.playerView layoutIfNeeded];
     }
-    
-    [self reloadData];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -415,16 +414,21 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
-- (void)reloadData
+- (void)reloadDataForController:(SRGLetterboxController *)controller
 {
-    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
-    SRGSegment *segment = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    SRGMediaComposition *mediaComposition = controller.mediaComposition;
+    SRGSegment *segment = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
     
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
+}
+
+- (void)reloadData
+{
+    return [self reloadDataForController:self.controller];
 }
 
 #pragma mark UI
