@@ -23,7 +23,7 @@ and call one of the play methods on it:
 ```objective-c
 SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
 if (URN) {
-	[self.controller playURN:URN];
+    [self.controller playURN:URN];
 }
 ```
 
@@ -59,12 +59,23 @@ The standard player controls (play / pause button, seek bar, etc.) and the segme
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
-        // Show or hide your own overlays here, or adjust your layout to respond to the segments timeline being visible or hidden
+        // Show or hide your own overlays here, or adjust your layout to respond to the segments timeline height
     } completion:nil];
 }
 ```
 
-Within the block, you can apply any `UIView` or layout change, as you would in a usual view animation block. All changes will be animated within the same transaction as the controls animation.
+Within the block, you can apply any `UIView` or layout change, as you would in a usual view animation block. All changes will be animated within the same transaction as the controls animation. If layout constraints must be animated, you will need to add calls to `-layoutIfNeeded` to ensure correct behavior. For example, if the delegate is a view controller, a typical implementation would look like:
+
+```objective-c
+- (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
+{
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+        // Show or hide your own overlays here, or adjust your layout to respond to the segments timeline height
+        [self.view layoutIfNeeded];
+    } completion:nil];
+}
+```
 
 Refer to the modal view controller demo implementation for a concrete example. 
 
