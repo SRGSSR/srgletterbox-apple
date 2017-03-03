@@ -151,9 +151,15 @@ static void commonInit(SRGLetterboxTimelineView *self);
     cell.segment = segment;
     cell.current = (indexPath.row == self.selectedIndex);
     
-    // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
-    float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);
-    cell.progress = fminf(1.f, fmaxf(0.f, progress));
+    // Only display time progress for segments, not chapters
+    if (! [segment isKindOfClass:[SRGChapter class]]) {
+        // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
+        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);
+        cell.progress = fminf(1.f, fmaxf(0.f, progress));
+    }
+    else {
+        cell.progress = 0.f;
+    }
 }
 
 @end
