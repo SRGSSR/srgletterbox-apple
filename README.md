@@ -8,7 +8,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 
 * A controller to play audios and videos, which supports on-demand, live and DVR streams.
 * A service to manage application-wide playback. 
-* A player view with the official SRG SSR look and feel. The design is standard and cannot be altered. You can bind your own custom overlays to the default player controls, though.
+* A player view with the official SRG SSR look and feel, and supporting segment browsing and selection. The design is standard and cannot be altered. You can bind your own custom overlays to the default player controls, though.
 * Access to all SRG SSR business unit medias.
 * Native Airplay and picture in picture support.
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
@@ -94,7 +94,17 @@ If rendering does not work properly:
 
 ## Demo project
 
-To test what the library is capable of, try running the associated demo by opening the workspace and building the associated scheme.
+To test what the library is capable of, try running the associated demo by opening the workspace and building the associated scheme. You must perform both following commands from the root directory, as well as from the `Demo` folder:
+
+```
+carthage bootstrap --platform iOS
+```
+
+This will update all framework dependencies required to run the demo project.
+
+## Known issues
+
+Control center and lock screen integrations are not working reliably in the iOS simulator. This is a known simulator-only limitation, everything works fine on a device. 
 
 ## License
 

@@ -22,12 +22,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
+@property (nonatomic, weak) IBOutlet UIPickerView *preferredTimelineHeight;
+
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxLeadingConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTrailingConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterbox169Constraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
@@ -70,6 +69,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
+    
+    // Always display the full-screen interface in landscape orientation
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+    [self.letterboxView setFullScreen:isLandscape animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -92,16 +96,16 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
-#pragma mark Status bar
+#pragma mark Rotation
 
-- (BOOL)prefersStatusBarHidden
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-    return self.wantsFullScreen;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
-    return UIStatusBarAnimationSlide;
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        BOOL isLandscape = (size.width > size.height);
+        [self.letterboxView setFullScreen:isLandscape animated:NO];
+    } completion:nil];
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
@@ -145,58 +149,101 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+        self.letterboxAspectRatioConstraint.constant = timelineHeight;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
+        [self.view layoutIfNeeded];
     } completion:nil];
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
-    [self.view layoutIfNeeded];
-    
     void (^animations)(void) = ^{
         if (fullScreen) {
-            self.letterboxLeadingConstraint.constant = 0.f;
-            self.letterboxTrailingConstraint.constant = 0.f;
-            self.letterboxTopConstraint.constant = 0.f;
-            
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
-            self.letterbox169Constraint.priority = LetterboxViewConstraintLessPriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLessPriority;
         }
         else {
-            // Tweak the margins for iPhone landscape layout
-            if ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact &&
-                self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) ||
-                (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular &&
-                 self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact)) {
-                self.letterboxLeadingConstraint.constant = 32.f;
-                self.letterboxTrailingConstraint.constant = 32.f;
-            }
-            else {
-                self.letterboxLeadingConstraint.constant = 16.f;
-                self.letterboxTrailingConstraint.constant = 16.f;
-            }
-            self.letterboxTopConstraint.constant = 5.f;
-            
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLessPriority;
-            self.letterbox169Constraint.priority = LetterboxViewConstraintMorePriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintMorePriority;
         }
-        
-        [self setNeedsStatusBarAppearanceUpdate];
-        [self.view layoutIfNeeded];
     };
     
     self.wantsFullScreen = fullScreen;
     
     if (animated) {
+        [self.view layoutIfNeeded];
         [UIView animateWithDuration:0.2 animations:^{
             animations();
+            [self.view layoutIfNeeded];
         } completion:completionHandler];
     }
     else {
         animations();
         completionHandler(YES);
     }
+}
+
+- (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView
+{
+    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
+}
+
+#pragma mark UIPickerViewDataSource protocol
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 3;
+}
+
+#pragma mark UIPickerViewDelegate protocol
+
+- (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSString *title = nil;
+    switch (row) {
+        case 0:
+            title = @(120).stringValue;
+            break;
+        case 1:
+            title = @(80).stringValue;
+            break;
+        case 2:
+            title = @(0).stringValue;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return [NSString stringWithFormat:@"Timeline height %@", title];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    CGFloat preferredTimelineHeight = 120.f;
+    switch (row) {
+        case 0:
+            preferredTimelineHeight = 120.f;
+            break;
+        case 1:
+            preferredTimelineHeight = 80.f;
+            break;
+        case 2:
+            preferredTimelineHeight = 0.f;
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.letterboxView setPreferredTimelineHeight:preferredTimelineHeight animated:YES];
 }
 
 #pragma mark Actions

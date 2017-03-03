@@ -1,5 +1,5 @@
 //
-//  Copyright (c) SRG. All rights reserved.
+//  Copyright (c) SRG SSR. All rights reserved.
 //
 //  License information is available from the LICENSE file.
 //
@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SRGControlsStackView : UIStackView
+@interface AutoplayViewController : UITableViewController
 
 @end
 

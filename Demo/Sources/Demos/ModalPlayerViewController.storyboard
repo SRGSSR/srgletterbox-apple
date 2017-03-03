@@ -22,10 +22,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5VB-3F-wwv" customClass="SRGLetterboxView">
-                                <rect key="frame" x="16" y="25" width="343" height="193"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="211"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="5VB-3F-wwv" secondAttribute="height" multiplier="16:9" priority="950" id="ff4-Ik-keP"/>
+                                    <constraint firstAttribute="height" secondItem="5VB-3F-wwv" secondAttribute="width" multiplier="9:16" priority="950" id="ff4-Ik-keP"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="controller" destination="V5l-nr-tDL" id="6mJ-p1-ZCM"/>
@@ -33,7 +33,7 @@
                                 </connections>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePn-4e-JbK" userLabel="Close Button">
-                                <rect key="frame" x="16" y="25" width="40" height="40"/>
+                                <rect key="frame" x="0.0" y="20" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Obs-Ak-Xh3"/>
                                     <constraint firstAttribute="width" constant="40" id="w9t-5v-a6u"/>
@@ -45,81 +45,86 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md4-t4-5he">
-                                <rect key="frame" x="16" y="228" width="163.5" height="30"/>
+                                <rect key="frame" x="0.0" y="241" width="179.5" height="30"/>
                                 <state key="normal" title="Hide controls"/>
                                 <connections>
                                     <action selector="hideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="Cx0-DG-7VH"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-r1-Pgs">
-                                <rect key="frame" x="195.5" y="228" width="163.5" height="30"/>
+                                <rect key="frame" x="195.5" y="241" width="179.5" height="30"/>
                                 <state key="normal" title="Show controls"/>
                                 <connections>
                                     <action selector="showControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="DC9-QM-IKK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
-                                <rect key="frame" x="16" y="266" width="163.5" height="30"/>
+                                <rect key="frame" x="0.0" y="279" width="179.5" height="30"/>
                                 <state key="normal" title="Always hide controls"/>
                                 <connections>
                                     <action selector="forceHideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="ENm-2M-VN0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
-                                <rect key="frame" x="195" y="266" width="163.5" height="30"/>
+                                <rect key="frame" x="195" y="279" width="179.5" height="30"/>
                                 <state key="normal" title="Always show controls"/>
                                 <connections>
                                     <action selector="forceShowControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="wb8-e8-gnS"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
-                                <rect key="frame" x="106" y="304" width="163.5" height="30"/>
+                                <rect key="frame" x="98" y="317" width="179.5" height="30"/>
                                 <state key="normal" title="Full screen"/>
                                 <connections>
                                     <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
                                 </connections>
                             </button>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTc-Lp-HkH">
+                                <rect key="frame" x="0.0" y="355" width="374.5" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="P8q-Ss-LI2"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="FcC-Qn-oGg" id="UtR-RA-syC"/>
+                                    <outlet property="delegate" destination="FcC-Qn-oGg" id="O7b-3l-NFn"/>
+                                </connections>
+                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="width" secondItem="gMD-r1-Pgs" secondAttribute="width" id="2w0-CJ-uZv"/>
+                            <constraint firstItem="FTc-Lp-HkH" firstAttribute="top" secondItem="SpT-Mg-MmS" secondAttribute="bottom" constant="8" id="39R-O1-90b"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="Md4-t4-5he" secondAttribute="centerX" id="4UG-yS-wtK"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="leading" secondItem="Md4-t4-5he" secondAttribute="trailing" constant="16" id="5RU-2L-7Sb"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="6hy-A6-kfe"/>
-                            <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" priority="900" constant="16" id="F2Z-fU-P1b">
-                                <variation key="heightClass=compact-widthClass=compact" constant="32"/>
-                                <variation key="heightClass=compact-widthClass=regular" constant="32"/>
-                            </constraint>
+                            <constraint firstItem="FTc-Lp-HkH" firstAttribute="trailing" secondItem="JvK-aX-fgP" secondAttribute="trailing" id="776-2g-yL3"/>
+                            <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="F2Z-fU-P1b"/>
                             <constraint firstItem="JvK-aX-fgP" firstAttribute="top" secondItem="gMD-r1-Pgs" secondAttribute="bottom" constant="8" id="F4n-Es-e3G"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="centerX" secondItem="LBa-rV-Hj0" secondAttribute="centerX" id="FvJ-lD-qwg"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="top" secondItem="WSi-1R-LWr" secondAttribute="bottom" constant="8" id="I5G-lB-icc"/>
-                            <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" constant="5" id="LDp-cD-NhZ"/>
+                            <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" id="LDp-cD-NhZ"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="width" secondItem="JvK-aX-fgP" secondAttribute="width" id="NQp-fq-Vlf"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="QEM-bZ-dhh"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="Rb6-lz-xGB"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="centerY" secondItem="gMD-r1-Pgs" secondAttribute="centerY" id="Rdc-7p-qIn"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="top" secondItem="Md4-t4-5he" secondAttribute="bottom" constant="8" id="UGf-RW-rCm"/>
+                            <constraint firstItem="FTc-Lp-HkH" firstAttribute="leading" secondItem="WSi-1R-LWr" secondAttribute="leading" id="VHH-sZ-HSw"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="width" secondItem="Md4-t4-5he" secondAttribute="width" id="fND-Gj-3vx"/>
                             <constraint firstItem="txU-Ep-CJb" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" priority="850" id="gAz-aw-sDx"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="top" id="iL4-uS-ed9"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="ity-mH-uwB"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="centerX" secondItem="JvK-aX-fgP" secondAttribute="centerX" id="jnL-Wz-deK"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="width" secondItem="WSi-1R-LWr" secondAttribute="width" id="qaB-9B-a8O"/>
-                            <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" priority="900" constant="16" id="tsO-HP-lR4">
-                                <variation key="heightClass=compact-widthClass=compact" constant="32"/>
-                                <variation key="heightClass=compact-widthClass=regular" constant="32"/>
-                            </constraint>
+                            <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" id="tsO-HP-lR4"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
-                        <outlet property="letterbox169Constraint" destination="ff4-Ik-keP" id="0jN-em-Zkv"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="ff4-Ik-keP" id="XIP-pS-dzp"/>
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
                         <outlet property="letterboxController" destination="V5l-nr-tDL" id="po7-Q3-coI"/>
-                        <outlet property="letterboxLeadingConstraint" destination="tsO-HP-lR4" id="n0S-cU-sRT"/>
-                        <outlet property="letterboxTopConstraint" destination="LDp-cD-NhZ" id="cTx-6s-6SU"/>
-                        <outlet property="letterboxTrailingConstraint" destination="F2Z-fU-P1b" id="2tu-HE-b8l"/>
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
+                        <outlet property="preferredTimelineHeight" destination="FTc-Lp-HkH" id="14d-Gq-TI0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>

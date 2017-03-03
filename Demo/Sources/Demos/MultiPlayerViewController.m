@@ -12,6 +12,12 @@
 
 @interface MultiPlayerViewController ()
 
+@property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic) SRGMediaURN *URN1;
+@property (nonatomic) SRGMediaURN *URN2;
+
+@property (nonatomic, getter=isUserInterfaceAlwaysHidden) BOOL userInterfaceAlwaysHidden;
+
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *smallLetterboxView1;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *smallLetterboxView2;
@@ -22,13 +28,15 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
+
 @end
 
 @implementation MultiPlayerViewController
 
 #pragma mark Object lifecycle
 
-- (instancetype)init
+- (instancetype)initWithURN:(SRGMediaURN *)URN URN1:(SRGMediaURN *)URN1 URN2:(SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
 {
     id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = [SRGLetterboxService sharedService].pictureInPictureDelegate;
     
@@ -38,7 +46,14 @@
     }
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-        return [storyboard instantiateInitialViewController];
+        MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
+        
+        multiPlayerViewController.URN = URN;
+        multiPlayerViewController.URN1 = URN1;
+        multiPlayerViewController.URN2 = URN2;
+        multiPlayerViewController.userInterfaceAlwaysHidden = userInterfaceAlwaysHidden;
+        
+        return multiPlayerViewController;
     }
 }
 
@@ -61,8 +76,8 @@
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;
     
-    [self.smallLetterboxView1 setUserInterfaceHidden:YES animated:NO togglable:NO];
-    [self.smallLetterboxView2 setUserInterfaceHidden:YES animated:NO togglable:NO];
+    [self.smallLetterboxView1 setUserInterfaceHidden:self.userInterfaceAlwaysHidden animated:NO togglable:! self.userInterfaceAlwaysHidden];
+    [self.smallLetterboxView2 setUserInterfaceHidden:self.userInterfaceAlwaysHidden animated:NO togglable:! self.userInterfaceAlwaysHidden];
     
     UIGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchToStream1:)];
     [self.smallLetterboxView1 addGestureRecognizer:tapGestureRecognizer1];
@@ -82,14 +97,9 @@
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         if (! self.letterboxController.pictureInPictureActive) {
-            SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
-            [self.letterboxController playURN:URN];
-            
-            SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608517"];
-            [self.smallLetterboxController1 playURN:URN1];
-            
-            SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
-            [self.smallLetterboxController2 playURN:URN2];
+            [self.letterboxController playURN:self.URN];
+            [self.smallLetterboxController1 playURN:self.URN1];
+            [self.smallLetterboxController2 playURN:self.URN2];
         }
     }
 }
@@ -146,8 +156,11 @@
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden) {
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
+        self.aspectRatioConstraint.constant = timelineHeight;
+        [self.view layoutIfNeeded];
     } completion:nil];
 }
 
@@ -202,9 +215,9 @@
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self.letterboxController togglePlayPause];
-    [self.smallLetterboxController1 togglePlayPause];
-    [self.smallLetterboxController2 togglePlayPause];
+    [self.letterboxController play];
+    [self.smallLetterboxController1 play];
+    [self.smallLetterboxController2 play];
 }
 
 @end
