@@ -825,7 +825,7 @@ static void commonInit(SRGLetterboxView *self);
 - (SRGSegment *)segmentAtTime:(CMTime)time
 {
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return CMTimeRangeContainsTime(segment.srg_timeRange, time);
+        return ![segment isKindOfClass:[SRGChapter class]] && CMTimeRangeContainsTime(segment.srg_timeRange, time);
     }];
     return [self.timelineView.segments filteredArrayUsingPredicate:predicate].firstObject;
 }
