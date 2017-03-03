@@ -91,6 +91,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
+#pragma mark Rotation
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        BOOL isLandscape = (size.width > size.height);
+        [self.letterboxView setFullScreen:isLandscape animated:NO];
+    } completion:nil];
+}
+
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture
