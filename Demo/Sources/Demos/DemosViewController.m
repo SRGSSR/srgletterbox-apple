@@ -419,6 +419,20 @@
                     [self presentViewController:playerViewController animated:YES completion:nil];
                     break;
                 }
+                
+                case 4: {
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8414189,8419195"];
+                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+                    
+                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+                    // (might happen if presenting and dismissing fast)
+                    if (playerViewController.presentingViewController) {
+                        return;
+                    }
+                    
+                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    break;
+                }
                     
                 default: {                    
                     break;
