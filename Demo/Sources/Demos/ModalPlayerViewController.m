@@ -174,38 +174,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
         || [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
 }
 
-#pragma mark Actions
-
-- (IBAction)close:(id)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)hideControls:(id)sender
-{
-    [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:YES];
-}
-
-- (IBAction)showControls:(id)sender
-{
-    [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:YES];
-}
-
-- (IBAction)forceHideControls:(id)sender
-{
-    [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:NO];
-}
-
-- (IBAction)forceShowControls:(id)sender
-{
-    [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
-}
-
-- (IBAction)fullScreen:(id)sender
-{
-    [self.letterboxView setFullScreen:YES animated:YES];
-}
-
 #pragma mark UIPickerViewDataSource protocol
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -260,6 +228,38 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
     
     [self.letterboxView setPreferredTimelineHeight:preferredTimelineHeight animated:YES];
+}
+
+#pragma mark Actions
+
+- (IBAction)close:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)hideControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:YES];
+}
+
+- (IBAction)showControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:YES];
+}
+
+- (IBAction)forceHideControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:NO];
+}
+
+- (IBAction)forceShowControls:(id)sender
+{
+    [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
+}
+
+- (IBAction)fullScreen:(id)sender
+{
+    [self.letterboxView setFullScreen:YES animated:YES];
 }
 
 @end
