@@ -216,9 +216,9 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+- (void)layoutSubviews
 {
-    [super traitCollectionDidChange:previousTraitCollection];
+    [super layoutSubviews];
     
     self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
 }
