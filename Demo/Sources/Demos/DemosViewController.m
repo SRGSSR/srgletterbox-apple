@@ -43,6 +43,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (indexPath.section) {
+        // Basic player
         case 0: {
             switch (indexPath.row) {
                 case 0: {
@@ -135,7 +136,8 @@
             }
             break;
         }
-            
+        
+        //Advanced player
         case 1: {
             switch (indexPath.row) {
                 case 0: {
@@ -256,7 +258,8 @@
             }
             break;
         }
-            
+        
+        // Standalone player
         case 2: {
             switch (indexPath.row) {
                 case 0: {
@@ -357,7 +360,8 @@
             }
             break;
         }
-            
+        
+        // Segments player
         case 3: {
             switch (indexPath.row) {
                 case 0: {
@@ -422,7 +426,8 @@
             }
             break;
         }
-            
+        
+        // Multiple player
         case 4: {
             switch (indexPath.row) {
                 case 0: {
@@ -463,7 +468,8 @@
             }
             break;
         }
-            
+        
+        // Autoplay
         case 5: {
             AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
             [self.navigationController pushViewController:autoplayViewController animated:YES];
