@@ -152,7 +152,7 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self.mainView addGestureRecognizer:activityGestureRecognizer];
     
-    self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
+    self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
     
     [self reloadData];
 }
@@ -214,6 +214,13 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxServiceSettingsDidChangeNotification
                                                       object:[SRGLetterboxService sharedService]];
     }
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+    
+    self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
 }
 
 #pragma mark Getters and setters
@@ -328,7 +335,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
 {
     _delegate = delegate;
-    self.fullScreenButton.hidden = [self isFullScreenButtonHidden];
+    self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
 }
 
 - (void)setFullScreen:(BOOL)fullScreen
@@ -338,6 +345,10 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated
 {
+    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
+        return;
+    }
+    
     if (_fullScreen == fullScreen) {
         return;
     }
@@ -349,15 +360,14 @@ static void commonInit(SRGLetterboxView *self);
     
     self.fullScreenAnimationRunning = YES;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
-        [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
-            if (finished) {
-                self.fullScreenButton.selected = fullScreen;
-                _fullScreen = fullScreen;
-            }
-            self.fullScreenAnimationRunning = NO;
-        }];
-    }
+    [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
+        if (finished) {
+            self.fullScreenButton.selected = fullScreen;
+            self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
+            _fullScreen = fullScreen;
+        }
+        self.fullScreenAnimationRunning = NO;
+    }];
 }
 
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
@@ -753,7 +763,7 @@ static void commonInit(SRGLetterboxView *self);
     self.completion = completion;
 }
 
-- (BOOL)isFullScreenButtonHidden
+- (BOOL)shouldHideFullScreenButton
 {
     if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
         return YES;

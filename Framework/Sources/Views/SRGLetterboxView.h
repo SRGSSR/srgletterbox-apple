@@ -36,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  If not implemented, the behavior is equivalent to returning `YES`.
  *
  *  @discussion This method is only called if `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` has been
- *              implemented.
+ *              implemented. It will also be called when full-screen state or trait collections change, so that the user 
+ *              interface can be appropriately updated if needed (e.g. to hide the full-screen button for some orientation).
  */
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
 
