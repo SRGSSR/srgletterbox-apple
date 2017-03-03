@@ -69,6 +69,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     // Start with a hidden interface
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
+    
+    // Always display the full-screen interface in landscape orientation
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+    [self.letterboxView setFullScreen:isLandscape animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -182,8 +187,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView
 {
-    return (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
-        || [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
+    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
 }
 
 #pragma mark UIPickerViewDataSource protocol
