@@ -937,7 +937,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGSegment *segment = [self segmentAtTime:time];
     
     // Only display time progress for segments, not chapters
-    if (! [segment isKindOfClass:[SRGChapter class]]) {
+    if (segment) {
         self.timelineView.time = time;
         
         if (interactive) {
@@ -996,8 +996,13 @@ static void commonInit(SRGLetterboxView *self);
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
-        SRGSegment *segment = [self segmentAtTime:seekTargetTime];
-        self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+        
+        if (self.timelineView.selectedIndex != NSNotFound &&
+            ![[self.timelineView.segments objectAtIndex:self.timelineView.selectedIndex] isKindOfClass:[SRGChapter class]]) {
+            SRGSegment *segment = [self segmentAtTime:seekTargetTime];
+            self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+        }
+        
         self.timelineView.time = seekTargetTime;
         [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
