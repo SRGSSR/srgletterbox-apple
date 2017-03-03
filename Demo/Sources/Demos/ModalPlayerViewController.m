@@ -25,10 +25,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet UIPickerView *preferredTimelineHeight;
 
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxLeadingConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxTrailingConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
@@ -94,18 +91,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
-#pragma mark Status bar
-
-- (BOOL)prefersStatusBarHidden
-{
-    return self.wantsFullScreen;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
-    return UIStatusBarAnimationSlide;
-}
-
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture
@@ -159,33 +144,13 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     void (^animations)(void) = ^{
         if (fullScreen) {
-            self.letterboxLeadingConstraint.constant = 0.f;
-            self.letterboxTrailingConstraint.constant = 0.f;
-            self.letterboxTopConstraint.constant = 0.f;
-            
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLessPriority;
         }
         else {
-            // Tweak the margins for iPhone landscape layout
-            if ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact &&
-                self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact) ||
-                (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular &&
-                 self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact)) {
-                self.letterboxLeadingConstraint.constant = 32.f;
-                self.letterboxTrailingConstraint.constant = 32.f;
-            }
-            else {
-                self.letterboxLeadingConstraint.constant = 16.f;
-                self.letterboxTrailingConstraint.constant = 16.f;
-            }
-            self.letterboxTopConstraint.constant = 5.f;
-            
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLessPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintMorePriority;
         }
-        
-        [self setNeedsStatusBarAppearanceUpdate];
     };
     
     self.wantsFullScreen = fullScreen;
@@ -201,6 +166,12 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
         animations();
         completionHandler(YES);
     }
+}
+
+- (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView
+{
+    return (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
+        || [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
 }
 
 #pragma mark Actions
