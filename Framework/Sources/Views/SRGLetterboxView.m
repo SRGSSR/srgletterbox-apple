@@ -37,6 +37,8 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
+@property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
+
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
@@ -717,6 +719,8 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.notificationMessage = notificationMessage;
+    self.notificationLabel.text = notificationMessage;
+    
     [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3. * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
