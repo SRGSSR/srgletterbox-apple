@@ -85,8 +85,10 @@
 
  -(void)setHiddenCustomStatus:(BOOL)hiddenCustomStatus
 {
-    _hiddenCustomStatus = hiddenCustomStatus;
-    self.customStatusImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
+    if (_hiddenCustomStatus != hiddenCustomStatus) {
+        _hiddenCustomStatus = hiddenCustomStatus;
+        self.customStatusImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
+    }
 }
 
 #pragma mark Gesture recognizers
