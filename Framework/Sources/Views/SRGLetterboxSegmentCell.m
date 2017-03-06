@@ -29,11 +29,11 @@
     [super awakeFromNib];
     self.hiddenCustomStatus = YES;
     
-    UILongPressGestureRecognizer *longPressGestureRegognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+    UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(longPress:)];
-    longPressGestureRegognizer.minimumPressDuration = 1.f;
-    [self addGestureRecognizer:longPressGestureRegognizer];
-    self.longPressGestureRecognizer = longPressGestureRegognizer;
+    longPressGestureRecognizer.minimumPressDuration = 1.f;
+    [self addGestureRecognizer:longPressGestureRecognizer];
+    self.longPressGestureRecognizer = longPressGestureRecognizer;
     
 }
 
@@ -67,8 +67,8 @@
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     
     BOOL hiddenCustomStatus = YES;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldHideCustomStatus:)]) {
-        hiddenCustomStatus = [self.delegate letterboxSegmentCellShouldHideCustomStatus:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldHideCustomStatusImage:)]) {
+        hiddenCustomStatus = [self.delegate letterboxSegmentCellShouldHideCustomStatusImage:self];
     }
     self.hiddenCustomStatus = hiddenCustomStatus;
 }
@@ -94,8 +94,18 @@
 
 - (void)longPress:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldRegonizeLongPress:)]) {
-        self.hiddenCustomStatus = ! self.hiddenCustomStatus;
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan &&
+        self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldRecognizeLongPress:)]) {
+        if ([self.delegate letterboxSegmentCellShouldRecognizeLongPress:self] &&
+            [self.delegate respondsToSelector:@selector(letterboxSegmentCellLongPressRecognized:)]) {
+            [self.delegate letterboxSegmentCellLongPressRecognized:self];
+            
+            BOOL hiddenCustomStatus = self.hiddenCustomStatus;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldHideCustomStatusImage:)]) {
+                hiddenCustomStatus = [self.delegate letterboxSegmentCellShouldHideCustomStatusImage:self];
+            }
+            self.hiddenCustomStatus = hiddenCustomStatus;
+        }
     }
 }
 

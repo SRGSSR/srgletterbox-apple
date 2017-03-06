@@ -171,13 +171,43 @@ static void commonInit(SRGLetterboxTimelineView *self);
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SRGSegment *segment = self.segments[indexPath.row];
-    [self.delegate timelineView:self didSelectSegment:segment];
+    [self.delegate letterboxTimelineView:self didSelectSegment:segment];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSegmentCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    cell.delegate = self;
     cell.segment = self.segments[indexPath.row];
     [self updateAppearanceForCell:cell];
+}
+
+#pragma mark SRGLetterboxSegmentCellDelegate protocol
+
+- (BOOL)letterboxSegmentCellShouldRecognizeLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:)]) {
+        return [self.delegate letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:self];
+    }
+    else {
+        return NO;
+    }
+}
+
+- (void)letterboxSegmentCellLongPressRecognized:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:longPressRecognizedOnSegment:)]) {
+        [self.delegate letterboxTimelineView:self longPressRecognizedOnSegment:letterboxSegmentCell.segment];
+    }
+}
+
+- (BOOL)letterboxSegmentCellShouldHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:shouldHideCustomStatusImageForSegment:)]) {
+        return [self.delegate letterboxTimelineView:self shouldHideCustomStatusImageForSegment:letterboxSegmentCell.segment];
+    }
+    else {
+        return YES;
+    }
 }
 
 @end

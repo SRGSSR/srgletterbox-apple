@@ -8,6 +8,8 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
+#import "SRGLetterboxSegmentCell.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 // Forward declarations
@@ -21,7 +23,29 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Called when a segment has been actively selected by the user.
  */
-- (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
+
+@optional
+
+/**
+ *  This method gets called when the user makes a long press on a segment cell
+ *  By defaut, if non implemented, return NO.
+ */
+- (BOOL)letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:(SRGLetterboxTimelineView *)timelineView;
+
+/**
+ *  This method gets called when the user interface made a long press on segment cell
+ *
+ *  @discussion Method to be inform about the user interaction. Could save a state.
+ *  Just after this call, the method `letterboxTimelineView:shouldHideCustomStatusImageForSegment:` will be called.
+ */
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView longPressRecognizedOnSegment:(SRGSegment *)segment;
+
+/**
+ *  This method gets called when the user interface is about to display a segment cell.
+ *  By defaut, if non implemented, return YES.
+ */
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldHideCustomStatusImageForSegment:(SRGSegment *)segment;
 
 @end
 
@@ -29,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Timeline displaying segments associated with a media.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSegmentCellDelegate>
 
 /**
  *  The timeline delegate.

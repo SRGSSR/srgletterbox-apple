@@ -48,6 +48,26 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
+/**
+ *  This method gets called when the user makes a long press on a segment cell
+ *  By defaut, if non implemented, return NO.
+ */
+- (BOOL)letterboxViewShouldRecognizeLongPressOnSegmentViews:(SRGLetterboxView *)letterboxView;
+
+/**
+ *  This method gets called when the user interface made a long press on segment cell
+ *
+ *  @discussion Method to be inform about the user interaction. Could save a state.
+ *  Just after this call, the method `letterboxView:shouldHideCustomStatusImageForSegment:` will be called.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView longPressRecognizedOnSegment:(SRGSegment *)segment;
+
+/**
+ *  This method gets called when the user interface is about to display a segment cell.
+ *  By defaut, if non implemented, return YES.
+ */
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldHideCustomStatusImageForSegment:(SRGSegment *)segment;
+
 @end
 
 /**

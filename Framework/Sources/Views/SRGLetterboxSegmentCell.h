@@ -23,13 +23,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user makes a long press on a segment cell
  *  By defaut, if non implemented, return NO.
  */
-- (BOOL)letterboxSegmentCellShouldRegonizeLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (BOOL)letterboxSegmentCellShouldRecognizeLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+
+/**
+ *  This method gets called when the user interface made a long press on segment cell
+ */
+- (void)letterboxSegmentCellLongPressRecognized:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 /**
  *  This method gets called when the user interface is about to being displayed.
  *  By defaut, if non implemented, return YES.
  */
-- (BOOL)letterboxSegmentCellShouldHideCustomStatus:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (BOOL)letterboxSegmentCellShouldHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 @end
 

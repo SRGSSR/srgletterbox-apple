@@ -963,7 +963,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
 
-- (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
 {
     if (! [self.controller switchToSegment:segment]) {
         return;
@@ -973,6 +973,32 @@ static void commonInit(SRGLetterboxView *self);
     [self.timelineView scrollToSelectedIndexAnimated:YES];
     
     self.timelineView.time = segment.srg_timeRange.start;
+}
+
+- (BOOL)letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:(SRGLetterboxTimelineView *)timelineView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxViewShouldRecognizeLongPressOnSegmentViews:)]) {
+        return [self.delegate letterboxViewShouldRecognizeLongPressOnSegmentViews:self];
+    }
+    else {
+        return NO;
+    }
+}
+
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView longPressRecognizedOnSegment:(SRGSegment *)segment
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:longPressRecognizedOnSegment:)]) {
+        [self.delegate letterboxView:self longPressRecognizedOnSegment:segment];
+    }
+}
+
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldHideCustomStatusImageForSegment:(SRGSegment *)segment
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:shouldHideCustomStatusImageForSegment:)]) {
+        return [self.delegate letterboxView:self shouldHideCustomStatusImageForSegment:segment];
+    }
+    else {
+        return YES;
+    }
 }
 
 #pragma mark SRGTimeSliderDelegate protocol
