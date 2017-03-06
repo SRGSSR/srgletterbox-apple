@@ -52,9 +52,10 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex
 {
-    if (! (selectedIndex < self.segments.count)) {
+    if (selectedIndex >= self.segments.count) {
         selectedIndex = NSNotFound;
     }
+    
     _selectedIndex = selectedIndex;
     [self updateCellAppearance];
 }
