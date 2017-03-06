@@ -30,6 +30,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
+@property (nonatomic) NSMutableArray *favoriteSegments;
+
 @end
 
 @implementation ModalPlayerViewController
@@ -48,6 +50,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        viewController.favoriteSegments = @[].mutableCopy;
         viewController.URN = URN;
         return viewController;
     }
@@ -196,6 +199,26 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView
 {
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
+}
+
+- (BOOL)letterboxViewShouldRecognizeLongPressOnSegmentViews:(SRGLetterboxView *)letterboxView
+{
+    return YES;
+}
+
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldHideCustomStatusImageForSegment:(SRGSegment *)segment
+{
+    return ! [self.favoriteSegments containsObject:segment];
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView longPressRecognizedOnSegment:(SRGSegment *)segment
+{
+    if ([self.favoriteSegments containsObject:segment]) {
+        [self.favoriteSegments removeObject:segment];
+    }
+    else {
+        [self.favoriteSegments addObject:segment];
+    }
 }
 
 #pragma mark UIPickerViewDataSource protocol
