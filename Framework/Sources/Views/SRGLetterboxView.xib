@@ -43,7 +43,7 @@
             <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diO-OC-keM">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diO-OC-keM" userLabel="Playback View">
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
@@ -116,7 +116,7 @@
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                                    <rect key="frame" x="8" y="223" width="7637" height="22"/>
+                                    <rect key="frame" x="8" y="223" width="7683" height="22"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGAirplayButton">
                                             <rect key="frame" x="0.0" y="0.0" width="28" height="22"/>
@@ -142,7 +142,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="ASValueTrackingSlider">
-                                            <rect key="frame" x="4378" y="0.0" width="281.5" height="23"/>
+                                            <rect key="frame" x="4378" y="0.0" width="327" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <userDefinedRuntimeAttributes>
@@ -156,13 +156,13 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="4665.5" y="0.0" width="27.5" height="22"/>
+                                            <rect key="frame" x="4711" y="0.0" width="27.5" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="6137" y="0.0" width="28" height="22"/>
+                                            <rect key="frame" x="6182.5" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -174,7 +174,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button">
-                                            <rect key="frame" x="7609" y="0.0" width="28" height="22"/>
+                                            <rect key="frame" x="7654.5" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="28" id="wp2-4M-YHh"/>
@@ -236,6 +236,13 @@
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="sZo-VD-nMG"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View">
+                    <rect key="frame" x="0.0" y="255" width="474" height="0.0"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" id="Fzs-BG-87N"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-Uc-uEb" customClass="SRGLetterboxTimelineView">
                     <rect key="frame" x="0.0" y="255" width="474" height="0.0"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -277,12 +284,15 @@
             <gestureRecognizers/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="bottom" id="09f-4l-H9m"/>
+                <constraint firstAttribute="trailing" secondItem="aun-4y-dBi" secondAttribute="trailing" id="5Cg-FC-gXE"/>
                 <constraint firstItem="diO-OC-keM" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="66N-1p-69l"/>
+                <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstAttribute="bottom" secondItem="aWQ-IF-YZO" secondAttribute="bottom" id="8f8-H8-Pda"/>
                 <constraint firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="D0i-tF-POP"/>
                 <constraint firstAttribute="trailing" secondItem="ysx-Uc-uEb" secondAttribute="trailing" id="D8a-X2-bbV"/>
-                <constraint firstItem="ysx-Uc-uEb" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="JFV-bq-94z"/>
+                <constraint firstItem="aun-4y-dBi" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="top" id="IMZ-f5-OZQ"/>
                 <constraint firstAttribute="trailing" secondItem="aWQ-IF-YZO" secondAttribute="trailing" id="ZeG-gx-2Ja"/>
+                <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="dHf-qs-qB0"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="eWA-9L-Fie"/>
                 <constraint firstItem="diO-OC-keM" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="h9R-St-YFc"/>
