@@ -10,6 +10,29 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class SRGLetterboxSegmentCell;
+
+/**
+ *  Letterbox segment cell delegate protocol for options custom status
+ */
+@protocol SRGLetterboxSegmentCellDelegate <NSObject>
+
+@optional
+
+/**
+ *  This method gets called when the user makes a long press on a segment cell
+ *  By defaut, if non implemented, return NO.
+ */
+- (BOOL)letterboxSegmentCellShouldRegonizeLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+
+/**
+ *  This method gets called when the user interface is about to being displayed.
+ *  By defaut, if non implemented, return YES.
+ */
+- (BOOL)letterboxSegmentCellShouldHideCustomStatus:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+
+@end
+
 /**
  *  Cell for displaying a segment.
  */
@@ -34,6 +57,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  Set to NO to display a favorite icon
  */
 @property (nonatomic, getter=isHiddenCustomStatus) BOOL hiddenCustomStatus;
+
+/**
+ *  View optional delegate.
+ */
+@property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxSegmentCellDelegate> delegate;
+
 
 @end
 

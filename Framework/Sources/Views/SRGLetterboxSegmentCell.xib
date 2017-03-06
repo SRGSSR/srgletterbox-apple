@@ -54,8 +54,9 @@
                         <nil key="highlightedColor"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
-                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favoritefull_22" translatesAutoresizingMaskIntoConstraints="NO" id="8GI-9a-x72" userLabel="Custom status Image View">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favoritefull_22" translatesAutoresizingMaskIntoConstraints="NO" id="8GI-9a-x72" userLabel="Custom status Image View">
                         <rect key="frame" x="102" y="67" width="18" height="18"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="8GI-9a-x72" secondAttribute="height" multiplier="1:1" id="Tmo-Lb-mkd"/>
                         </constraints>

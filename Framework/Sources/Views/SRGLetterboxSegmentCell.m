@@ -16,9 +16,28 @@
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *customStatusImageView;
 
+@property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
+
 @end
 
 @implementation SRGLetterboxSegmentCell
+
+#pragma mark View life cycle
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.hiddenCustomStatus = YES;
+    
+    UILongPressGestureRecognizer *longPressGestureRegognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(longPress:)];
+    longPressGestureRegognizer.minimumPressDuration = 1.f;
+    [self addGestureRecognizer:longPressGestureRegognizer];
+    self.longPressGestureRecognizer = longPressGestureRegognizer;
+    
+}
+
+
 
 #pragma mark Getters and setters
 
@@ -46,6 +65,12 @@
     }
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
+    
+    BOOL hiddenCustomStatus = YES;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldHideCustomStatus:)]) {
+        hiddenCustomStatus = [self.delegate letterboxSegmentCellShouldHideCustomStatus:self];
+    }
+    self.hiddenCustomStatus = hiddenCustomStatus;
 }
 
 - (void)setProgress:(float)progress
@@ -61,7 +86,17 @@
  -(void)setHiddenCustomStatus:(BOOL)hiddenCustomStatus
 {
     _hiddenCustomStatus = hiddenCustomStatus;
-    self.customStatusImageView.hidden = hiddenCustomStatus;
+    self.customStatusImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
+    self.customStatusImageView.backgroundColor = hiddenCustomStatus ? UIColor.clearColor : self.durationLabel.backgroundColor;
+}
+
+#pragma mark Gesture recognizers
+
+- (void)longPress:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldRegonizeLongPress:)]) {
+        self.hiddenCustomStatus = ! self.hiddenCustomStatus;
+    }
 }
 
 @end
