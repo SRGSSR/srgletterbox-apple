@@ -158,8 +158,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
-        self.letterboxAspectRatioConstraint.constant = timelineHeight;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
+        self.letterboxAspectRatioConstraint.constant = expansionHeight;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:nil];
