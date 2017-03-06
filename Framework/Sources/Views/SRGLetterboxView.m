@@ -66,7 +66,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
 @property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
-@property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on to of the main user context
+@property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on top of the main user context
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat timelineHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -443,8 +443,8 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI
 
-// Public method for changing user interface behavior. Always update interface settings, except when using non-mirrored
-// Airplay
+// Public method for changing user interface behavior. Always update interface settings, except when a UI state has been
+// forced
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
