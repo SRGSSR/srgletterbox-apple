@@ -56,13 +56,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
         selectedIndex = NSNotFound;
     }
     _selectedIndex = selectedIndex;
-    [self.collectionView reloadData];
+    [self updateCellAppearance];
 }
 
 - (void)setTime:(CMTime)time
 {
     _time = time;
-    [self.collectionView reloadData];
+    [self updateCellAppearance];
 }
 
 #pragma mark Overrides
@@ -93,6 +93,35 @@ static void commonInit(SRGLetterboxTimelineView *self);
     collectionViewLayout.itemSize = CGSizeMake(16.f / 13.f * height, height);
     
     [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark Cell appearance
+
+// We must not call -reloadData to update cells when not necessary (this invalidates taps)
+// Also see http://stackoverflow.com/questions/23940419/uicollectionview-cell-cant-be-selected-after-reload-in-case-if-cell-was-touched
+- (void)updateCellAppearance
+{
+    for (SRGLetterboxSegmentCell *cell in self.collectionView.visibleCells) {
+        [self updateAppearanceForCell:cell];
+    }
+}
+
+- (void)updateAppearanceForCell:(SRGLetterboxSegmentCell *)cell
+{
+    SRGSegment *segment = cell.segment;
+    
+    NSUInteger index = [self.segments indexOfObject:segment];
+    cell.current = (index == self.selectedIndex);
+    
+    // Only display time progress for segments, not chapters
+    if (! [segment isKindOfClass:[SRGChapter class]]) {
+        // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
+        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);
+        cell.progress = fminf(1.f, fmaxf(0.f, progress));
+    }
+    else {
+        cell.progress = 0.f;
+    }
 }
 
 #pragma mark Scrolling
@@ -146,20 +175,8 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSegmentCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGSegment *segment = self.segments[indexPath.row];
-    
-    cell.segment = segment;
-    cell.current = (indexPath.row == self.selectedIndex);
-    
-    // Only display time progress for segments, not chapters
-    if (! [segment isKindOfClass:[SRGChapter class]]) {
-        // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
-        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);
-        cell.progress = fminf(1.f, fmaxf(0.f, progress));
-    }
-    else {
-        cell.progress = 0.f;
-    }
+    cell.segment = self.segments[indexPath.row];
+    [self updateAppearanceForCell:cell];
 }
 
 @end
