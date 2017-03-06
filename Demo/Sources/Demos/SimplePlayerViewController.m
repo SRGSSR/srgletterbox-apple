@@ -92,8 +92,8 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
-        self.aspectRatioConstraint.constant = timelineHeight;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
+        self.aspectRatioConstraint.constant = expansionHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

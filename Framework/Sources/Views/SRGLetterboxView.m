@@ -37,6 +37,8 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
+@property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
+
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
@@ -49,14 +51,17 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
-@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
+@property (nonatomic, weak) IBOutlet UIView *notificationView;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationHeightConstraint;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
 @property (nonatomic, readonly) SRGSegment *currentSegment;
+@property (nonatomic, copy) NSString *notificationMessage;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
@@ -68,7 +73,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
 @property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on top of the main user context
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat timelineHeight);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat expansionHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @end
@@ -140,7 +145,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.delegate = self;
     
     self.timelineHeightConstraint.constant = 0.f;
-    self.preferredTimelineHeight = 120.f;
+    self.notificationHeightConstraint.constant = 0.f;
     
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
@@ -253,6 +258,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerSegmentDidEndNotification
                                                       object:previousMediaPlayerController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                                      object:previousMediaPlayerController];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -319,6 +327,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(segmentDidEnd:)
                                                      name:SRGMediaPlayerSegmentDidEndNotification
+                                                   object:mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(willSkipBlockedSegment:)
+                                                     name:SRGMediaPlayerWillSkipBlockedSegmentNotification
                                                    object:mediaPlayerController];
         
         [self.playerView addSubview:mediaPlayerController.view];
@@ -470,7 +482,13 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
+    [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+}
+
+// Simply refresh the user interface state using current values
+- (void)refreshUserInterfaceAnimated:(BOOL)animated
+{
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
 - (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
@@ -478,13 +496,13 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
+    [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
 // factorisation method which is not intended for direct use. This method always shows or hides the user interface. Segments
-// are taken into account for proper UI adjustments depending on their presence
-- (void)internal_setUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+// and notification messages are taken into account for proper UI adjustments depending on their presence
+- (void)internal_setUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments notificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -498,7 +516,10 @@ static void commonInit(SRGLetterboxView *self);
         self.controlsView.alpha = hidden ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
-        self.animations ? self.animations(hidden, timelineHeight) : nil;
+        CGFloat notificationHeight = (notificationMessage != nil) ? 30.f : 0.f;
+        self.notificationHeightConstraint.constant = notificationHeight;
+        
+        self.animations ? self.animations(hidden, timelineHeight + notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
@@ -701,7 +722,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceForCurrentSegmentsHidden:(BOOL)hidden animated:(BOOL)animated
 {
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self internal_setUserInterfaceHidden:hidden withSegments:segments animated:animated];
+    [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
 // Update the segments user interface with the last user-defined visibility settings
@@ -709,7 +730,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. when currently set with
     // an animation)
-    [self internal_setUserInterfaceHidden:self.userInterfaceHidden withSegments:segments animated:animated];
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
 // Update the segments user interface with the last user-defined visibility settings for controls and segments
@@ -774,6 +795,30 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+}
+
+#pragma mark Letterbox notification banners
+
+- (void)showNotificationMessage:(NSString *)notificationMessage
+{
+    if (notificationMessage.length == 0) {
+        return;
+    }
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
+    
+    self.notificationMessage = notificationMessage;
+    self.notificationLabel.text = notificationMessage;
+    
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
+    
+    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
+}
+
+- (void)dismissNotificationView
+{
+    self.notificationMessage = nil;
+    [self refreshUserInterfaceAnimated:YES];
 }
 
 #pragma mark UI changes and restoration
@@ -1020,6 +1065,13 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = NSNotFound;
 }
 
+- (void)willSkipBlockedSegment:(NSNotification *)notification
+{
+    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
+    NSString *notificationMessage = SRGMessageForBlockingReason(segment.blockingReason);
+    [self showNotificationMessage:notificationMessage];
+}
+
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
@@ -1063,6 +1115,8 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
+    
+    self.preferredTimelineHeight = 120.f;
     
     // Create an initial matching restoration context
     self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];

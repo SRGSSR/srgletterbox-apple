@@ -159,9 +159,9 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
-        self.aspectRatioConstraint.constant = timelineHeight;
+        self.aspectRatioConstraint.constant = expansionHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
 }
