@@ -87,7 +87,6 @@
 {
     _hiddenCustomStatus = hiddenCustomStatus;
     self.customStatusImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
-    self.customStatusImageView.backgroundColor = hiddenCustomStatus ? UIColor.clearColor : self.durationLabel.backgroundColor;
 }
 
 #pragma mark Gesture recognizers
