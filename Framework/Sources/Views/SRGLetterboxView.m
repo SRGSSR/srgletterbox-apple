@@ -485,6 +485,12 @@ static void commonInit(SRGLetterboxView *self);
     [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
+// Simply refresh the user interface state using current values
+- (void)refreshUserInterfaceAnimated:(BOOL)animated
+{
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
+}
+
 - (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     self.userInterfaceTogglable = togglable;
@@ -495,7 +501,7 @@ static void commonInit(SRGLetterboxView *self);
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
 // factorisation method which is not intended for direct use. This method always shows or hides the user interface. Segments
-// are taken into account for proper UI adjustments depending on their presence
+// and notification messages are taken into account for proper UI adjustments depending on their presence
 - (void)internal_setUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments notificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
@@ -712,23 +718,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateUserInterfaceForNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
-{
-    if (notificationMessage.length == 0) {
-        return;
-    }
-    
-    self.notificationMessage = notificationMessage;
-    self.notificationLabel.text = notificationMessage;
-    
-    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3. * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.notificationMessage = nil;
-        [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
-    });
-}
-
 // Update the segments user interface for the current segment list
 - (void)updateUserInterfaceForCurrentSegmentsHidden:(BOOL)hidden animated:(BOOL)animated
 {
@@ -806,6 +795,30 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+}
+
+#pragma mark Letterbox notification banners
+
+- (void)showNotificationMessage:(NSString *)notificationMessage
+{
+    if (notificationMessage.length == 0) {
+        return;
+    }
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
+    
+    self.notificationMessage = notificationMessage;
+    self.notificationLabel.text = notificationMessage;
+    
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
+    
+    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
+}
+
+- (void)dismissNotificationView
+{
+    self.notificationMessage = nil;
+    [self refreshUserInterfaceAnimated:YES];
 }
 
 #pragma mark UI changes and restoration
@@ -1056,7 +1069,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     NSString *notificationMessage = SRGMessageForBlockingReason(segment.blockingReason);
-    [self updateUserInterfaceForNotificationMessage:notificationMessage animated:YES];
+    [self showNotificationMessage:notificationMessage];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
