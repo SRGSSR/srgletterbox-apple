@@ -14,6 +14,7 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *customStatusImageView;
 
 @end
 
@@ -55,6 +56,12 @@
 - (void)setCurrent:(BOOL)current
 {
     self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
+}
+
+ -(void)setHiddenCustomStatus:(BOOL)hiddenCustomStatus
+{
+    _hiddenCustomStatus = hiddenCustomStatus;
+    self.customStatusImageView.hidden = hiddenCustomStatus;
 }
 
 @end

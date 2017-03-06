@@ -30,6 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, getter=isCurrent) BOOL current;
 
+/**
+ *  Set to NO to display a favorite icon
+ */
+@property (nonatomic, getter=isHiddenCustomStatus) BOOL hiddenCustomStatus;
+
 @end
 
 NS_ASSUME_NONNULL_END

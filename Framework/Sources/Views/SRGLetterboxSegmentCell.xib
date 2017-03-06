@@ -54,10 +54,17 @@
                         <nil key="highlightedColor"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favoritefull_22" translatesAutoresizingMaskIntoConstraints="NO" id="8GI-9a-x72" userLabel="Custom status Image View">
+                        <rect key="frame" x="102" y="67" width="18" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="8GI-9a-x72" secondAttribute="height" multiplier="1:1" id="Tmo-Lb-mkd"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
             </view>
             <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
             <constraints>
+                <constraint firstItem="8GI-9a-x72" firstAttribute="centerY" secondItem="xPG-fm-CkX" secondAttribute="centerY" id="5AP-UD-Ifs"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="top" secondItem="xPG-fm-CkX" secondAttribute="bottom" constant="3" id="LG0-iI-zSJ"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="bottom" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="MvM-qU-lYE"/>
                 <constraint firstAttribute="bottom" secondItem="XEC-ZT-Ya9" secondAttribute="bottom" constant="6" id="Ncu-eS-rX3"/>
@@ -67,12 +74,15 @@
                 <constraint firstItem="XEC-ZT-Ya9" firstAttribute="top" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="a17-0y-Bs7"/>
                 <constraint firstAttribute="trailing" secondItem="cFP-OY-NIp" secondAttribute="trailing" id="bLU-U1-WnL"/>
                 <constraint firstAttribute="trailing" secondItem="XEC-ZT-Ya9" secondAttribute="trailing" constant="5" id="bls-dj-1T0"/>
+                <constraint firstItem="xPG-fm-CkX" firstAttribute="leading" secondItem="8GI-9a-x72" secondAttribute="trailing" id="iP6-L1-3DM"/>
                 <constraint firstItem="xPG-fm-CkX" firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" id="iwD-qB-I9o"/>
                 <constraint firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" id="kYp-Sb-Yv6"/>
                 <constraint firstItem="Fjo-Dj-oWj" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="sYb-Om-2SE"/>
+                <constraint firstItem="8GI-9a-x72" firstAttribute="height" secondItem="xPG-fm-CkX" secondAttribute="height" id="yRn-96-k6M"/>
             </constraints>
             <size key="customSize" width="189" height="123"/>
             <connections>
+                <outlet property="customStatusImageView" destination="8GI-9a-x72" id="3a0-WU-wvb"/>
                 <outlet property="durationLabel" destination="xPG-fm-CkX" id="gVN-ef-Ab2"/>
                 <outlet property="imageView" destination="Fjo-Dj-oWj" id="Gsp-lI-bg3"/>
                 <outlet property="progressView" destination="cFP-OY-NIp" id="9Ef-Ur-EEb"/>
@@ -81,4 +91,7 @@
             <point key="canvasLocation" x="54.5" y="4.5"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="favoritefull_22" width="22" height="22"/>
+    </resources>
 </document>
