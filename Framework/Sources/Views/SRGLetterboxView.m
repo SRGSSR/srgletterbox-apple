@@ -255,6 +255,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerSegmentDidEndNotification
                                                       object:previousMediaPlayerController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                                      object:previousMediaPlayerController];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -321,6 +324,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(segmentDidEnd:)
                                                      name:SRGMediaPlayerSegmentDidEndNotification
+                                                   object:mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(willSkipBlockedSegment:)
+                                                     name:SRGMediaPlayerWillSkipBlockedSegmentNotification
                                                    object:mediaPlayerController];
         
         [self.playerView addSubview:mediaPlayerController.view];
@@ -1023,6 +1030,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)segmentDidEnd:(NSNotification *)notification
 {
     self.timelineView.selectedIndex = NSNotFound;
+}
+
+- (void)willSkipBlockedSegment:(NSNotification *)notification
+{
+    NSLog(@"--> Skipped segment");
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

@@ -68,47 +68,54 @@
                 }
                     
                 case 3: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
                 case 4: {
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:nil];
+                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
+                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
                 case 5: {
+                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:nil];
+                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    break;
+                }
+                    
+                case 6: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 6: {
+                case 7: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 7: {
+                case 8: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 8: {
+                case 9: {
                     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8385103"];
                     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
                     [self.navigationController pushViewController:playerViewController animated:YES];
                     break;
                 }
                     
-                case 9: {
+                case 10: {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
                                                                                              message:@"Will be played with the basic player.\nFormat: urn:[BU]:[video|audio]:[uid]"
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
