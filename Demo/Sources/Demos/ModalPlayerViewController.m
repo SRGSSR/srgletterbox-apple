@@ -82,7 +82,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     if ([self isMovingToParentViewController] || [self isBeingPresented]) {
         // Special case to test multi chapters and segments. Should be removed when an example is available in production
-        if ([self.URN.URNString isEqualToString:@"urn:rts:video:8414189,8419195"]) {
+        if ([self.URN.uid containsString:@","]) {
             self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
         }
         else {
