@@ -292,6 +292,10 @@ static void commonInit(SRGLetterboxView *self);
     [self updateLoadingIndicatorForController:controller animated:NO];
     [self reloadDataForController:controller];
     
+    // Simply dismiss any notification. Notifications are transient and do not need to be kept any longer or restored
+    // when switching the controller
+    [self dismissNotificationViewAnimated:NO];
+    
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
@@ -805,20 +809,22 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
     self.notificationMessage = notificationMessage;
     self.notificationLabel.text = notificationMessage;
     
     [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
     
-    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
+    [self performSelector:@selector(dismissNotificationViewAnimated:) withObject:@(YES) afterDelay:4.];
 }
 
-- (void)dismissNotificationView
+- (void)dismissNotificationViewAnimated:(BOOL)animated
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    
     self.notificationMessage = nil;
-    [self refreshUserInterfaceAnimated:YES];
+    [self refreshUserInterfaceAnimated:animated];
 }
 
 #pragma mark UI changes and restoration
