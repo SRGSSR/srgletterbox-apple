@@ -183,27 +183,17 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark SRGLetterboxSegmentCellDelegate protocol
 
-- (BOOL)letterboxSegmentCellShouldRecognizeLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:)]) {
-        return [self.delegate letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:self];
-    }
-    else {
-        return NO;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressOnSegmentdidLongPressOnSegment:)]) {
+        [self.delegate letterboxTimelineView:self didLongPressOnSegmentdidLongPressOnSegment:letterboxSegmentCell.segment];
     }
 }
 
-- (void)letterboxSegmentCellLongPressRecognized:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (BOOL)letterboxSegmentCellHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:longPressRecognizedOnSegment:)]) {
-        [self.delegate letterboxTimelineView:self longPressRecognizedOnSegment:letterboxSegmentCell.segment];
-    }
-}
-
-- (BOOL)letterboxSegmentCellShouldHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
-{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:shouldHideCustomStatusImageForSegment:)]) {
-        return [self.delegate letterboxTimelineView:self shouldHideCustomStatusImageForSegment:letterboxSegmentCell.segment];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideCustomStatusImageOnSegment:)]) {
+        return [self.delegate letterboxTimelineView:self hideCustomStatusImageOnSegment:letterboxSegmentCell.segment];
     }
     else {
         return YES;

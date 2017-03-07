@@ -25,27 +25,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
 
-@optional
-
-/**
- *  This method gets called when the user makes a long press on a segment cell
- *  By defaut, if non implemented, return NO.
- */
-- (BOOL)letterboxTimelineViewShouldRecognizeLongPressOnSegmentViews:(SRGLetterboxTimelineView *)timelineView;
-
 /**
  *  This method gets called when the user interface made a long press on segment cell
  *
  *  @discussion Method to be inform about the user interaction. Could save a state.
- *  Just after this call, the method `letterboxTimelineView:shouldHideCustomStatusImageForSegment:` will be called.
+ *  Just after this call, the method `letterboxTimelineView:hideCustomStatusImageOnSegment:` will be called.
  */
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView longPressRecognizedOnSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressOnSegmentdidLongPressOnSegment:(SRGSegment *)segment;
 
 /**
  *  This method gets called when the user interface is about to display a segment cell.
  *  By defaut, if non implemented, return YES.
  */
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldHideCustomStatusImageForSegment:(SRGSegment *)segment;
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideCustomStatusImageOnSegment:(SRGSegment *)segment;
 
 @end
 

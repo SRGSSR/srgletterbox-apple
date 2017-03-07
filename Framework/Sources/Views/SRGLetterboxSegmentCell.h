@@ -17,24 +17,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol SRGLetterboxSegmentCellDelegate <NSObject>
 
-@optional
-
-/**
- *  This method gets called when the user makes a long press on a segment cell
- *  By defaut, if non implemented, return NO.
- */
-- (BOOL)letterboxSegmentCellShouldRecognizeLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
-
 /**
  *  This method gets called when the user interface made a long press on segment cell
+ *
+ *  @discussion Method to be inform about the user interaction. Could save a state.
+ *  Just after this call, the method `letterboxSegmentCellHideCustomStatusImage:` will be called.
  */
-- (void)letterboxSegmentCellLongPressRecognized:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 /**
  *  This method gets called when the user interface is about to being displayed.
  *  By defaut, if non implemented, return YES.
  */
-- (BOOL)letterboxSegmentCellShouldHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (BOOL)letterboxSegmentCellHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 @end
 
