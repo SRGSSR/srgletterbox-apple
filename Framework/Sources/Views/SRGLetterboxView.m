@@ -287,14 +287,14 @@ static void commonInit(SRGLetterboxView *self);
         [self.timeSlider showPopUpViewAnimated:NO];
     }
     
+    // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
+    // cleaned up when the controller changes.
+    self.notificationMessage = nil;
+    
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
     [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     [self reloadDataForController:controller];
-    
-    // Simply dismiss any notification. Notifications are transient and do not need to be kept any longer or restored
-    // when switching the controller
-    [self dismissNotificationViewAnimated:NO];
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -809,22 +809,22 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
     
     self.notificationMessage = notificationMessage;
     self.notificationLabel.text = notificationMessage;
     
     [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
     
-    [self performSelector:@selector(dismissNotificationViewAnimated:) withObject:@(YES) afterDelay:4.];
+    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
 }
 
-- (void)dismissNotificationViewAnimated:(BOOL)animated
+- (void)dismissNotificationView
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self refreshUserInterfaceAnimated:animated];
+    [self refreshUserInterfaceAnimated:YES];
 }
 
 #pragma mark UI changes and restoration
