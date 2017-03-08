@@ -30,7 +30,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
-@property (nonatomic) NSMutableArray *favoriteSegments;
+@property (nonatomic) NSMutableArray<SRGSegment *> *favoriteSegments;
 
 @end
 
