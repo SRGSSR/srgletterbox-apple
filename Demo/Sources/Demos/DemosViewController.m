@@ -38,6 +38,76 @@
     return [NSString stringWithFormat:@"Letterbox demos %@ (%@)", versionString, bundleVersion];
 }
 
+#pragma mark Players
+
+- (void)openSimplePlayerWithURNString:(NSString *)URNString
+{
+    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
+    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
+    [self.navigationController pushViewController:playerViewController animated:YES];
+}
+
+- (void)openModalPlayerWithURNString:(NSString *)URNString
+{
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playerViewController.presentingViewController) {
+        return;
+    }
+    
+    [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
+- (void)openStandalonePlayerWithURNString:(NSString *)URNString
+{
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
+    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playerViewController.presentingViewController) {
+        return;
+    }
+    [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
+- (void)openMultiPlayerWithURNString:(NSString *)URNString URNString1:(NSString *)URNString1 URNString2:(NSString *)URNString2
+{
+    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
+    SRGMediaURN *URN1 = URNString1 ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
+    SRGMediaURN *URN2 = URNString2 ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
+    
+    MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playerViewController.presentingViewController) {
+        return;
+    }
+    [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
+- (void)openCustomURNEntryAlertWithCompletionBlock:(void (^)(NSString * _Nullable URNString))completionBlock
+{
+    NSParameterAssert(completionBlock);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter a media URN", nil)
+                                                                             message:NSLocalizedString(@"The media will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]", nil)
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"urn:swi:video:41981254";
+    }];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Play", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        completionBlock(alertController.textFields.firstObject.text);
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
 #pragma mark UITableViewDelegate protocol
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -47,93 +117,60 @@
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:swi:video:41981254"];
                     break;
                 }
                     
                 case 1: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
                     break;
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8368368"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:rts:video:8368368"];
                     break;
                 }
                     
                 case 3: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e"];
                     break;
                 }
                     
                 case 4: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:swi:video:1234567"];
                     break;
                 }
                     
                 case 5: {
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:nil];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:nil];
                     break;
                 }
                     
                 case 6: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:rts:video:1967124"];
                     break;
                 }
                     
                 case 7: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
                     break;
                 }
                     
                 case 8: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
                     break;
                 }
                     
                 case 9: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8385103"];
-                    SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                    [self.navigationController pushViewController:playerViewController animated:YES];
+                    [self openSimplePlayerWithURNString:@"urn:rts:audio:8385103"];
                     break;
                 }
                     
                 case 10: {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                             message:@"Will be played with the basic player.\nFormat: urn:[BU]:[video|audio]:[uid]"
-                                                                                      preferredStyle:UIAlertControllerStyleAlert];
-                    
-                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = @"urn:swi:video:41981254";
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
+                        [self openSimplePlayerWithURNString:URNString];
                     }];
-                    
-                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Open"
-                                                                            style:UIAlertActionStyleDefault
-                                                                          handler:^(UIAlertAction *action) {
-                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alertController.textFields.firstObject.text];
-                                                                              SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
-                                                                              [self.navigationController pushViewController:playerViewController animated:YES];
-                                                                          }];
-                    
-                    [alertController addAction:defaultAction];
-                    [self presentViewController:alertController animated:YES completion:nil];
                     break;
                 }
                     
@@ -148,114 +185,40 @@
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:swi:video:41981254"];
                     break;
                 }
                     
                 case 1: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
                     break;
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8368368"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:video:8368368"];
                     break;
                 }
                     
                 case 3: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:swi:video:1234567"];
                     break;
                 }
                     
                 case 4: {
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:nil];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:nil];
                     break;
                 }
                     
                 case 5: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8385103"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:audio:8385103"];
                     break;
                 }
                     
                 case 6: {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                             message:@"Will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]"
-                                                                                      preferredStyle:UIAlertControllerStyleAlert];
-                    
-                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = @"urn:swi:video:41981254";
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
+                        [self openModalPlayerWithURNString:URNString];
                     }];
-                    
-                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Open"
-                                                                            style:UIAlertActionStyleDefault
-                                                                          handler:^(UIAlertAction *action) {
-                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alertController.textFields.firstObject.text];
-                                                                              ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                                                                              
-                                                                              // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                                                                              // (might happen if presenting and dismissing fast)
-                                                                              if (playerViewController.presentingViewController) {
-                                                                                  return;
-                                                                              }
-                                                                              
-                                                                              [self presentViewController:playerViewController animated:YES completion:nil];
-                                                                          }];
-                    
-                    [alertController addAction:defaultAction];
-                    [self presentViewController:alertController animated:YES completion:nil];
                     break;
                 }
                     
@@ -270,94 +233,35 @@
         case 2: {
             switch (indexPath.row) {
                 case 0: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
-                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openStandalonePlayerWithURNString:@"urn:swi:video:41981254"];
                     break;
                 }
                     
                 case 1: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
-                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openStandalonePlayerWithURNString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
                     break;
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8368368"];
-                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openStandalonePlayerWithURNString:@"urn:rts:video:8368368"];
                     break;
                 }
                     
                 case 3: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:1234567"];
-                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openStandalonePlayerWithURNString:@"urn:swi:video:1234567"];
                     break;
                 }
                     
                 case 4: {
-                    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:nil];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openStandalonePlayerWithURNString:nil];
                     break;
                 }
                     
                 case 5: {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter the URN"
-                                                                                             message:@"Will be played with the standalone player.\nFormat: urn:[BU]:[video|audio]:[uid]"
-                                                                                      preferredStyle:UIAlertControllerStyleAlert];
-                    
-                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = @"urn:swi:video:41981254";
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
+                        [self openStandalonePlayerWithURNString:URNString];
                     }];
-                    
-                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Open"
-                                                                            style:UIAlertActionStyleDefault
-                                                                          handler:^(UIAlertAction *action) {
-                                                                              SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:alertController.textFields.firstObject.text];
-                                                                              StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-                                                                              
-                                                                              // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                                                                              // (might happen if presenting and dismissing fast)
-                                                                              if (playerViewController.presentingViewController) {
-                                                                                  return;
-                                                                              }
-                                                                              [self presentViewController:playerViewController animated:YES completion:nil];
-                                                                          }];
-                    
-                    [alertController addAction:defaultAction];
-                    [self presentViewController:alertController animated:YES completion:nil];
                     break;
                 }
                     
@@ -372,72 +276,27 @@
         case 3: {
             switch (indexPath.row) {
                 case 0: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412757"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:video:8412757"];
                     break;
                 }
                     
                 case 1: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412759"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:video:8412759"];
                     break;
                 }
                     
                 case 2: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8399352"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:audio:8399352"];
                     break;
                 }
                     
                 case 3: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:audio:8399354"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:audio:8399354"];
                     break;
                 }
                 
                 case 4: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8414189,8419195"];
-                    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openModalPlayerWithURNString:@"urn:rts:video:8414189,8419195"];
                     break;
                 }
                     
@@ -452,34 +311,12 @@
         case 4: {
             switch (indexPath.row) {
                 case 0: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608506"];
-                    SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:3608517"];
-                    SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
-                    
-                    MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:@"urn:rts:video:1967124"];
                     break;
                 }
                     
                 case 1: {
-                    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:41981254"];
-                    SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:8412757"];
-                    SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
-                    
-                    MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
-                    
-                    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-                    // (might happen if presenting and dismissing fast)
-                    if (playerViewController.presentingViewController) {
-                        return;
-                    }
-                    [self presentViewController:playerViewController animated:YES completion:nil];
+                    [self openMultiPlayerWithURNString:@"urn:swi:video:41981254" URNString1:@"urn:rts:video:8412757" URNString2:@"urn:rts:video:1967124"];
                     break;
                 }
                     
