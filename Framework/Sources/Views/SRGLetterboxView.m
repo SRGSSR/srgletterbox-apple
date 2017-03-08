@@ -873,6 +873,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Segments
 
+// Return the segment (not chapter) at the specified time
 - (SRGSegment *)segmentAtTime:(CMTime)time
 {
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
@@ -1004,19 +1005,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSegment *segment = [self segmentAtTime:time];
     
-    // Only display time progress for segments, not chapters
-    if (segment) {
-        self.timelineView.time = time;
-        
-        if (interactive) {
-            NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
-            self.timelineView.selectedIndex = selectedIndex;
-            [self.timelineView scrollToSelectedIndexAnimated:YES];
-        }
+    if (interactive) {
+        NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
+        self.timelineView.selectedIndex = selectedIndex;
+        [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
-    else {
-        self.timelineView.time = kCMTimeZero;
-    }
+    self.timelineView.time = time;
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:)]) {
         [self.delegate letterboxView:self didScrollWithSegment:segment];
