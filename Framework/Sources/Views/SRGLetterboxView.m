@@ -459,8 +459,23 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI
 
+// Public method for changing user interface visibility only. Always update visibility, except when a UI state has been
+// forced (in which case changes will be applied after restoration)
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
+    self.mainRestorationContext.hidden = hidden;
+    self.mainRestorationContext.togglable = self.userInterfaceTogglable;
+    
+    if (self.restorationContexts.count != 0) {
+        return;
+    }
+    
+    [self internal_setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
+}
+
 // Public method for changing user interface behavior. Always update interface settings, except when a UI state has been
-// forced
+// forced (in which case changes will be applied after restoration)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
@@ -474,8 +489,14 @@ static void commonInit(SRGLetterboxView *self);
     [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
 }
 
+// Simply refresh the user interface state using current values
+- (void)refreshUserInterfaceAnimated:(BOOL)animated
+{
+    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
+}
+
 // Show or hide the user interface, doing nothing if the interface is not togglable
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+- (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
     if (! self.userInterfaceTogglable || self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         return;
@@ -487,12 +508,6 @@ static void commonInit(SRGLetterboxView *self);
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
     [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-}
-
-// Simply refresh the user interface state using current values
-- (void)refreshUserInterfaceAnimated:(BOOL)animated
-{
-    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
 - (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
@@ -599,7 +614,7 @@ static void commonInit(SRGLetterboxView *self);
             
             // Force display of the controls at the end of the playback
             if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
-                [self setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+                [self internal_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
             }
         }
     };
@@ -887,12 +902,12 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self setUserInterfaceHidden:NO animated:YES];
+    [self internal_setUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self setUserInterfaceHidden:YES animated:YES];
+    [self internal_setUserInterfaceHidden:YES animated:YES];
 }
 
 #pragma mark Timers
@@ -905,7 +920,7 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self setUserInterfaceHidden:YES animated:YES];
+        [self internal_setUserInterfaceHidden:YES animated:YES];
     }
 }
 
