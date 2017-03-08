@@ -754,16 +754,20 @@ static void commonInit(SRGLetterboxView *self);
 // Update the segments user interface with the last user-defined visibility settings
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
+    // Use restoration values as well as the current state to determine the status to apply
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+        BOOL userInterfaceHidden = togglable ? self.userInterfaceHidden : hidden;
+        [self internal_setUserInterfaceHidden:userInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
     }];
 }
 
 // Update the segments user interface with the last user-defined visibility settings for controls and segments
 - (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
 {
+    // Use restoration values as well as the current state to determine the status to apply
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:animated];
+        BOOL userInterfaceHidden = togglable ? self.userInterfaceHidden : hidden;
+        [self updateUserInterfaceForCurrentSegmentsHidden:userInterfaceHidden animated:animated];
     }];
 }
 
