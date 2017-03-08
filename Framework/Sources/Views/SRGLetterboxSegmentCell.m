@@ -14,7 +14,7 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *customStatusImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *FavoriteImageView;
 
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -67,8 +67,8 @@
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     
     BOOL hiddenCustomStatus = YES;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideCustomStatusImage:)]) {
-        hiddenCustomStatus = [self.delegate letterboxSegmentCellHideCustomStatusImage:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
+        hiddenCustomStatus = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
     }
     self.hiddenCustomStatus = hiddenCustomStatus;
 }
@@ -87,7 +87,7 @@
 {
     if (_hiddenCustomStatus != hiddenCustomStatus) {
         _hiddenCustomStatus = hiddenCustomStatus;
-        self.customStatusImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
+        self.FavoriteImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
     }
 }
 
@@ -100,8 +100,8 @@
         [self.delegate letterboxSegmentCellDidLongPress:self];
         
         BOOL hiddenCustomStatus = self.hiddenCustomStatus;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideCustomStatusImage:)]) {
-            hiddenCustomStatus = [self.delegate letterboxSegmentCellHideCustomStatusImage:self];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
+            hiddenCustomStatus = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
         }
         self.hiddenCustomStatus = hiddenCustomStatus;
     }

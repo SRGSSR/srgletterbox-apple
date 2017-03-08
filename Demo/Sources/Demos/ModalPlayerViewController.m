@@ -201,7 +201,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
 }
 
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideCustomStatusImageOnSegment:(SRGSegment *)segment
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteImageOnSegment:(SRGSegment *)segment
 {
     return ! [self.favoriteSegments containsObject:segment];
 }

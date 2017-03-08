@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface made a long press on segment cell
  *
  *  @discussion Method to be inform about the user interaction. Could save a state.
- *  Just after this call, the method `letterboxTimelineView:hideCustomStatusImageOnSegment:` will be called.
+ *  Just after this call, the method `letterboxTimelineView:hideFavoriteImageOnSegment:` will be called.
  */
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressOnSegmentdidLongPressOnSegment:(SRGSegment *)segment;
 
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface is about to display a segment cell.
  *  By defaut, if non implemented, return YES.
  */
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideCustomStatusImageOnSegment:(SRGSegment *)segment;
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideFavoriteImageOnSegment:(SRGSegment *)segment;
 
 @end
 

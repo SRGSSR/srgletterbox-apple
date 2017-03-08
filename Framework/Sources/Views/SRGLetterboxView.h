@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Implement this method to have a callback when the user did a long press on a segment cell.
  *
  *  @discussion This method gets called when the user interface made a long press on segment cell.
- *              Just after this call, the method `letterboxView:hideCustomStatusImageOnSegment:` will be called.
+ *              Just after this call, the method `letterboxView:hideFavoriteImageOnSegment:` will be called.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressOnSegment:(SRGSegment *)segment;
 
@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface is about to display a segment cell or when a long press fired.
  *  By defaut, if non implemented, return YES.
  */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideCustomStatusImageOnSegment:(SRGSegment *)segment;
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteImageOnSegment:(SRGSegment *)segment;
 
 /**
  *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider

@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface made a long press on segment cell
  *
  *  @discussion Method to be inform about the user interaction. Could save a state.
- *  Just after this call, the method `letterboxSegmentCellHideCustomStatusImage:` will be called.
+ *  Just after this call, the method `letterboxSegmentCellHideFavoriteImage:` will be called.
  */
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface is about to being displayed.
  *  By defaut, if non implemented, return YES.
  */
-- (BOOL)letterboxSegmentCellHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (BOOL)letterboxSegmentCellHideFavoriteImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 @end
 

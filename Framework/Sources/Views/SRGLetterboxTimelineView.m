@@ -190,10 +190,10 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
 }
 
-- (BOOL)letterboxSegmentCellHideCustomStatusImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (BOOL)letterboxSegmentCellHideFavoriteImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideCustomStatusImageOnSegment:)]) {
-        return [self.delegate letterboxTimelineView:self hideCustomStatusImageOnSegment:letterboxSegmentCell.segment];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideFavoriteImageOnSegment:)]) {
+        return [self.delegate letterboxTimelineView:self hideFavoriteImageOnSegment:letterboxSegmentCell.segment];
     }
     else {
         return YES;
