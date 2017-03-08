@@ -35,9 +35,12 @@
     [self addGestureRecognizer:longPressGestureRecognizer];
     self.longPressGestureRecognizer = longPressGestureRecognizer;
     
+    // Workaround UIImage view tint color bug
+    // See http://stackoverflow.com/a/26042893/760435
+    UIImage *favoriteImage = self.favoriteImageView.image;
+    self.favoriteImageView.image = nil;
+    self.favoriteImageView.image = favoriteImage;
 }
-
-
 
 #pragma mark Getters and setters
 
