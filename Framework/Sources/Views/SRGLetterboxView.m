@@ -407,6 +407,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (CGFloat)expansionHeight
+{
+    return self.timelineHeightConstraint.constant + self.notificationHeightConstraint.constant;
+}
+
 - (CGFloat)timelineHeight
 {
     return self.timelineHeightConstraint.constant;
@@ -797,7 +802,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (! _inWillAnimateUserInterface) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can omnly be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
+                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can only be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
                                      userInfo:nil];
     }
     

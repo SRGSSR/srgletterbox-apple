@@ -220,6 +220,14 @@ IB_DESIGNABLE
 - (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat expansionHeight))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
+ *  The current expansion height.
+ *
+ *  @discussion Value should be the timelineHeight or more if a notification message displayed, 0.f otherwise. During an animation,
+ *  this value could be different.
+ */
+@property (nonatomic, readonly) CGFloat expansionHeight;
+
+/**
  *  Return `YES` when the view is full screen.
  *
  *  @discussion This value will be updated once the completion handler in `-letterboxView:toggleFullScreen:animated:withCompletionHandler:`
@@ -244,7 +252,7 @@ IB_DESIGNABLE
  *  The current segment timeline height.
  *
  *  @discussion Value should be the preferredTimelineHeight if the media has segments, 0.f otherwise. During an animation,
- *  this value could be different.
+ *  this value could be different. If using for your layout, please consider `-expansionHeight` too.
  */
 @property (nonatomic, readonly) CGFloat timelineHeight;
 
