@@ -49,6 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
 /**
+ *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
+ *  position is provided, if any.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment;
+
+/**
  *  Implement this method to have a callback when the user did a long press on a segment cell.
  *
  *  @discussion This method gets called when the user interface made a long press on segment cell.
@@ -63,12 +69,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  By defaut, if non implemented, return YES.
  */
 - (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteImageOnSegment:(SRGSegment *)segment;
-
-/**
- *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
- *  position is provided, if any.
- */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment;
 
 @end
 
@@ -113,7 +113,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
  *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
  *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly.
+ *  When the user scrolls in the media, you can implement the delegate method `letterboxView:didScrollWithSegment:` to be
+ *  notify on which segment the slider is.
  *  
+ *  ## Long press on segment and favorite image icon
+ *
+ *  The Letterbox view delegate has two optional methods:
+ *  Implementing the `-letterboxView:didLongPressOnSegment:` will catch a long press on a segment cell in the timeline view.
+ *  Implementing the `-letterboxView:hideFavoriteImageOnSegment:` calls to display or hide an SRG favorite icon on the
+ *  segment cell.
+ *
  *  ## Full-screen
  *
  *  Full-screen is a usual feature of media players. Since the view and view controller hierarchy is not known to the
