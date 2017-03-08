@@ -15,6 +15,10 @@ typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
+ *
+ *  @discussion The data itself should in general change, but the notification might be posted even if no real change
+ *              actually occurred. Nevertheless, your implementation should not be concerned about such details and
+ *              still respond to change notifications accordingly (e.g. by updating user interface elements).
  */
 OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 
@@ -24,6 +28,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxSegmentKey;
 OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 
 /**
@@ -32,6 +37,7 @@ OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
+OBJC_EXTERN NSString * const SRGLetterboxPreviousSegmentKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
 
 /**
@@ -246,6 +252,11 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Channel information (contains information about current and next programs).
  */
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
+
+/**
+ *  The current segment being played (if any)
+ */
+@property (nonatomic, readonly, nullable) SRGSegment *segment;
 
 /**
  *  Error (if any has been encountered).
