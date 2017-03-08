@@ -47,6 +47,19 @@
     [self.navigationController pushViewController:playerViewController animated:YES];
 }
 
+- (void)openStandalonePlayerWithURNString:(NSString *)URNString
+{
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
+    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playerViewController.presentingViewController) {
+        return;
+    }
+    [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
 - (void)openModalPlayerWithURNString:(NSString *)URNString
 {
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
@@ -58,19 +71,6 @@
         return;
     }
     
-    [self presentViewController:playerViewController animated:YES completion:nil];
-}
-
-- (void)openStandalonePlayerWithURNString:(NSString *)URNString
-{
-    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
-    StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
-    
-    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-    // (might happen if presenting and dismissing fast)
-    if (playerViewController.presentingViewController) {
-        return;
-    }
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
@@ -112,61 +112,37 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    static NSString * const kVideoOnDemandURNString = @"urn:swi:video:41981254";
+    static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8368368";
+    static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8412757";
+    static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8412759";
+    static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
+    static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:video:8414189,8419195";
+    static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
+    
+    static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
+    static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
+    
+    static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
+    static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:8399354";
+    static NSString * const kAudioDVRURNString = @"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31";
+    
+    static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
+    
     switch (indexPath.section) {
-        // Basic player
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openSimplePlayerWithURNString:@"urn:swi:video:41981254"];
+                    [self openSimplePlayerWithURNString:kVideoOnDemandURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openSimplePlayerWithURNString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+                    [self openSimplePlayerWithURNString:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 2: {
-                    [self openSimplePlayerWithURNString:@"urn:rts:video:8368368"];
-                    break;
-                }
-                    
-                case 3: {
-                    [self openSimplePlayerWithURNString:@"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e"];
-                    break;
-                }
-                    
-                case 4: {
-                    [self openSimplePlayerWithURNString:@"urn:swi:video:1234567"];
-                    break;
-                }
-                    
-                case 5: {
-                    [self openSimplePlayerWithURNString:nil];
-                    break;
-                }
-                    
-                case 6: {
-                    [self openSimplePlayerWithURNString:@"urn:rts:video:1967124"];
-                    break;
-                }
-                    
-                case 7: {
-                    [self openSimplePlayerWithURNString:@"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0"];
-                    break;
-                }
-                    
-                case 8: {
-                    [self openSimplePlayerWithURNString:@"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31"];
-                    break;
-                }
-                    
-                case 9: {
-                    [self openSimplePlayerWithURNString:@"urn:rts:audio:8385103"];
-                    break;
-                }
-                    
-                case 10: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openSimplePlayerWithURNString:URNString];
@@ -180,41 +156,107 @@
             }
             break;
         }
-        
-        //Advanced player
+            
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURNString:@"urn:swi:video:41981254"];
+                    [self openStandalonePlayerWithURNString:kVideoOnDemandURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openModalPlayerWithURNString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
+                    [self openStandalonePlayerWithURNString:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:@"urn:rts:video:8368368"];
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
+                        [self openStandalonePlayerWithURNString:URNString];
+                    }];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
+            
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openModalPlayerWithURNString:kVideoOnDemandURNString];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openModalPlayerWithURNString:kVideoOnDemandShortClipURNString];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:@"urn:swi:video:1234567"];
+                    [self openModalPlayerWithURNString:kVideoOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString];
                     break;
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:@"urn:rts:audio:8385103"];
+                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
                     break;
                 }
                     
                 case 6: {
+                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
+                    break;
+                }
+                    
+                case 7: {
+                    [self openModalPlayerWithURNString:kVideoDVRURNString];
+                    break;
+                }
+                    
+                case 8: {
+                    [self openModalPlayerWithURNString:kVideoLiveURNString];
+                    break;
+                }
+                    
+                case 9: {
+                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
+                    break;
+                }
+                    
+                case 10: {
+                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
+                    break;
+                }
+                    
+                case 11: {
+                    [self openModalPlayerWithURNString:kAudioDVRURNString];
+                    break;
+                }
+                    
+                case 12: {
+                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    break;
+                }
+                    
+                case 13: {
+                    [self openModalPlayerWithURNString:nil];
+                    break;
+                }
+                    
+                case 14: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];
@@ -229,86 +271,7 @@
             break;
         }
         
-        // Standalone player
-        case 2: {
-            switch (indexPath.row) {
-                case 0: {
-                    [self openStandalonePlayerWithURNString:@"urn:swi:video:41981254"];
-                    break;
-                }
-                    
-                case 1: {
-                    [self openStandalonePlayerWithURNString:@"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25"];
-                    break;
-                }
-                    
-                case 2: {
-                    [self openStandalonePlayerWithURNString:@"urn:rts:video:8368368"];
-                    break;
-                }
-                    
-                case 3: {
-                    [self openStandalonePlayerWithURNString:@"urn:swi:video:1234567"];
-                    break;
-                }
-                    
-                case 4: {
-                    [self openStandalonePlayerWithURNString:nil];
-                    break;
-                }
-                    
-                case 5: {
-                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openStandalonePlayerWithURNString:URNString];
-                    }];
-                    break;
-                }
-                    
-                default: {
-                    break;
-                }
-            }
-            break;
-        }
-        
-        // Segments player
         case 3: {
-            switch (indexPath.row) {
-                case 0: {
-                    [self openModalPlayerWithURNString:@"urn:rts:video:8412757"];
-                    break;
-                }
-                    
-                case 1: {
-                    [self openModalPlayerWithURNString:@"urn:rts:video:8412759"];
-                    break;
-                }
-                    
-                case 2: {
-                    [self openModalPlayerWithURNString:@"urn:rts:audio:8399352"];
-                    break;
-                }
-                    
-                case 3: {
-                    [self openModalPlayerWithURNString:@"urn:rts:audio:8399354"];
-                    break;
-                }
-                
-                case 4: {
-                    [self openModalPlayerWithURNString:@"urn:rts:video:8414189,8419195"];
-                    break;
-                }
-                    
-                default: {                    
-                    break;
-                }
-            }
-            break;
-        }
-        
-        // Multiple player
-        case 4: {
             switch (indexPath.row) {
                 case 0: {
                     [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:@"urn:rts:video:1967124"];
@@ -316,7 +279,7 @@
                 }
                     
                 case 1: {
-                    [self openMultiPlayerWithURNString:@"urn:swi:video:41981254" URNString1:@"urn:rts:video:8412757" URNString2:@"urn:rts:video:1967124"];
+                    [self openMultiPlayerWithURNString:kVideoOnDemandURNString URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
                     break;
                 }
                     
@@ -327,8 +290,7 @@
             break;
         }
         
-        // Autoplay
-        case 5: {
+        case 4: {
             AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
             [self.navigationController pushViewController:autoplayViewController animated:YES];
         }
