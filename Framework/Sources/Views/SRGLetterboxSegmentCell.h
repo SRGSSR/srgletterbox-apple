@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class SRGLetterboxSegmentCell;
 
 /**
- *  Letterbox segment cell delegate protocol for options custom status
+ *  Letterbox segment cell delegate protocol for long press or favorite image
  */
 @protocol SRGLetterboxSegmentCellDelegate <NSObject>
 
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Set to NO to display a favorite icon
  */
-@property (nonatomic, getter=isHiddenCustomStatus) BOOL hiddenCustomStatus;
+@property (nonatomic, getter=isHiddenFavoriteImage) BOOL hiddenFavoriteImage;
 
 /**
  *  View optional delegate.

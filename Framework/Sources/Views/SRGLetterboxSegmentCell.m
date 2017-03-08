@@ -14,7 +14,7 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *FavoriteImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
 
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -27,7 +27,7 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    self.hiddenCustomStatus = YES;
+    self.hiddenFavoriteImage = YES;
     
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(longPress:)];
@@ -66,11 +66,11 @@
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     
-    BOOL hiddenCustomStatus = YES;
+    BOOL hiddenFavoriteImage = YES;
     if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
-        hiddenCustomStatus = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
+        hiddenFavoriteImage = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
     }
-    self.hiddenCustomStatus = hiddenCustomStatus;
+    self.hiddenFavoriteImage = hiddenFavoriteImage;
 }
 
 - (void)setProgress:(float)progress
@@ -83,11 +83,11 @@
     self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
 }
 
- -(void)setHiddenCustomStatus:(BOOL)hiddenCustomStatus
+ -(void)setHiddenFavoriteImage:(BOOL)hiddenFavoriteImage
 {
-    if (_hiddenCustomStatus != hiddenCustomStatus) {
-        _hiddenCustomStatus = hiddenCustomStatus;
-        self.FavoriteImageView.alpha = hiddenCustomStatus ? 0.f : 1.f;
+    if (_hiddenFavoriteImage != hiddenFavoriteImage) {
+        _hiddenFavoriteImage = hiddenFavoriteImage;
+        self.favoriteImageView.alpha = hiddenFavoriteImage ? 0.f : 1.f;
     }
 }
 
@@ -99,11 +99,11 @@
         self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellDidLongPress:)]) {
         [self.delegate letterboxSegmentCellDidLongPress:self];
         
-        BOOL hiddenCustomStatus = self.hiddenCustomStatus;
+        BOOL hiddenFavoriteImage = self.hiddenFavoriteImage;
         if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
-            hiddenCustomStatus = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
+            hiddenFavoriteImage = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
         }
-        self.hiddenCustomStatus = hiddenCustomStatus;
+        self.hiddenFavoriteImage = hiddenFavoriteImage;
     }
 }
 
