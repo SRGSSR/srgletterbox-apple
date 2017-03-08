@@ -80,7 +80,14 @@
 
 - (void)reloadData
 {
-    self.titleLabel.text = self.letterboxController.media.title;
+    [self reloadDataWithScrolledSegment:nil];
+}
+
+// Reload the data on screen, optionally overriding with a segment reached interactively by scrolling (otherwised
+// use controller information only)
+- (void)reloadDataWithScrolledSegment:(SRGSegment *)segment
+{
+    self.titleLabel.text = segment.title ?: self.letterboxController.segment.title ?: self.letterboxController.media.title;
     
     SRGChannel *channel = self.letterboxController.channel;
     self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
@@ -96,6 +103,11 @@
         self.aspectRatioConstraint.constant = expansionHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment
+{
+    [self reloadDataWithScrolledSegment:segment];
 }
 
 #pragma mark Notifications

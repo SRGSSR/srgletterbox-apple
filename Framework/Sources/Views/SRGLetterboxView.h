@@ -64,6 +64,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideCustomStatusImageOnSegment:(SRGSegment *)segment;
 
+/**
+ *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
+ *  position is provided, if any.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment;
+
 @end
 
 /**
