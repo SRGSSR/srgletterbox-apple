@@ -74,6 +74,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  A view can be bound to at most one controller at a time, and displays what is currently being played by the controller. 
  *  It is immediately updated when the content played by the controller changes, or when the controller itself is changed.
  *
+ *  Conversely, you can bind a controller to several Letterbox views, but only the last one to be bound will display the
+ *  video content of what is being played. Other Letterbox views will only provide a way to control playback. This is
+ *  a known an assumed limitation, as having several views display the same media at the same time makes little sense.
+ *
  *  To instantiate a Letterbox view, simply drop an instance onto a xib or a storyboard, set constraints appropriately, 
  *  and bind it to a controller. If the controller itself has been added as an object to the storyboard, this setup can 
  *  entirely be done in Interface builder. Then start playing a media with the controller.

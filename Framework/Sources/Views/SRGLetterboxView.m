@@ -294,6 +294,7 @@ static void commonInit(SRGLetterboxView *self);
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
     [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
+    [self updateUserInterfaceForErrorAnimated:NO];
     [self reloadDataForController:controller];
     
     if (controller) {
