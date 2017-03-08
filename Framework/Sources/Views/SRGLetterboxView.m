@@ -1017,6 +1017,10 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.timelineView.time = kCMTimeZero;
     }
+    
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:)]) {
+        [self.delegate letterboxView:self didScrollWithSegment:segment];
+    }
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
