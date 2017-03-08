@@ -60,7 +60,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic, weak) id periodicTimeObserver;
 
-@property (nonatomic, readonly) SRGSegment *currentSegment;
 @property (nonatomic, copy) NSString *notificationMessage;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
