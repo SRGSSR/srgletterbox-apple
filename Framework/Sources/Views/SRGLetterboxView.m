@@ -463,9 +463,11 @@ static void commonInit(SRGLetterboxView *self);
 // forced (in which case changes will be applied after restoration)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
+    SRGLetterboxViewRestorationContext *previousContext = self.mainRestorationContext;
+    
     self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
     self.mainRestorationContext.hidden = hidden;
-    self.mainRestorationContext.togglable = self.mainRestorationContext.togglable;
+    self.mainRestorationContext.togglable = previousContext.togglable;
     
     if (self.restorationContexts.count != 0) {
         return;
