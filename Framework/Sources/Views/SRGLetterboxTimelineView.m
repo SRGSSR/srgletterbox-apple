@@ -66,6 +66,11 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self updateCellAppearance];
 }
 
+- (void)setNeedsFavoriteOnSegmentsUpdate
+{
+    [self.collectionView reloadData];
+}
+
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -192,8 +197,8 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (BOOL)letterboxSegmentCellHideFavoriteImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideFavoriteImageOnSegment:)]) {
-        return [self.delegate letterboxTimelineView:self hideFavoriteImageOnSegment:letterboxSegmentCell.segment];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideFavoriteOnSegment:)]) {
+        return [self.delegate letterboxTimelineView:self hideFavoriteOnSegment:letterboxSegmentCell.segment];
     }
     else {
         return YES;

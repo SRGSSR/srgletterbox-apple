@@ -978,6 +978,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)setNeedsFavoriteOnSegmentsUpdate
+{
+    [self.timelineView setNeedsFavoriteOnSegmentsUpdate];
+}
+
 #pragma mark SRGAirplayViewDelegate protocol
 
 - (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
@@ -1006,10 +1011,10 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideFavoriteImageOnSegment:(SRGSegment *)segment
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideFavoriteOnSegment:(SRGSegment *)segment
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:hideFavoriteImageOnSegment:)]) {
-        return [self.delegate letterboxView:self hideFavoriteImageOnSegment:segment];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxView:hideFavoriteOnSegment:)]) {
+        return [self.delegate letterboxView:self hideFavoriteOnSegment:segment];
     }
     else {
         return YES;

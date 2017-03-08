@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Implement this method to have a callback when the user did a long press on a segment cell.
  *
  *  @discussion This method gets called when the user interface made a long press on segment cell.
- *              Just after this call, the method `letterboxView:hideFavoriteImageOnSegment:` will be called.
+ *              Just after this call, the method `letterboxView:isFavoriteSegment:` will be called on this segment.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressOnSegment:(SRGSegment *)segment;
 
@@ -67,8 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  This method gets called when the user interface is about to display a segment cell or when a long press fired.
  *  By defaut, if non implemented, return YES.
+ *
+ *  @discussion: see `-setNeedsFavoriteOnSegmentsUpdate`
  */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteImageOnSegment:(SRGSegment *)segment;
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteOnSegment:(SRGSegment *)segment;
 
 @end
 
@@ -116,12 +118,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  When the user scrolls in the media, you can implement the delegate method `letterboxView:didScrollWithSegment:` to be
  *  notify on which segment the slider is.
  *  
- *  ## Long press on segment and favorite image icon
+ *  ## Long press and favorite status on segments
  *
  *  The Letterbox view delegate has two optional methods:
  *  Implementing the `-letterboxView:didLongPressOnSegment:` will catch a long press on a segment cell in the timeline view.
- *  Implementing the `-letterboxView:hideFavoriteImageOnSegment:` calls to display or hide an SRG favorite icon on the
+ *  Implementing the `-letterboxView:hideFavoriteOnSegment:` calls to display or hide an SRG favorite icon on the
  *  segment cell.
+ *  To force a refresh, call the `setNeedsFavoriteSegmentsUpdate` on Letterbox view.
  *
  *  ## Full-screen
  *
@@ -264,6 +267,12 @@ IB_DESIGNABLE
  *  @discussion By default, the height is 120.f. To always hide the segment timeline, set it to 0.f.
  */
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated;
+
+/**
+ *  Need to update favorite status on segment cells.
+ *  It will call Letterbox view delegate method `-letterboxView:hideFavoriteOnSegment` on each segment cells
+ */
+- (void)setNeedsFavoriteOnSegmentsUpdate;
 
 @end
 
