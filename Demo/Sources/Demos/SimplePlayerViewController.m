@@ -80,7 +80,7 @@
 
 - (void)reloadData
 {
-    self.titleLabel.text = self.letterboxController.media.title;
+    self.titleLabel.text = self.letterboxController.segment.title ?: self.letterboxController.media.title;
     
     SRGChannel *channel = self.letterboxController.channel;
     self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
