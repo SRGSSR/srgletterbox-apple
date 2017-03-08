@@ -421,4 +421,11 @@
     XCTAssertTrue([self.controller canSeekBackward]);
 }
 
+// TODO: Properly test and describe guarantees about media, mediaComposition and segment information provided by the
+//       controller, in particular:
+//         - Initially
+//         - When selecting a segment actively
+//         - When reaching a segment during normal playback
+//       The data must be clearly defined so that users can easily find which information they need to display.
+
 @end
