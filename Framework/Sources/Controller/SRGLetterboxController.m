@@ -263,6 +263,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
+- (SRGMedia *)fullLengthMedia
+{
+    return self.mediaComposition.fullLengthMedia;
+}
+
 #pragma mark Data
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive

@@ -259,6 +259,11 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, nullable) SRGSegment *segment;
 
 /**
+ *  The current full-length information (if available)
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
+
+/**
  *  Error (if any has been encountered).
  */
 @property (nonatomic, readonly, nullable) NSError *error;
