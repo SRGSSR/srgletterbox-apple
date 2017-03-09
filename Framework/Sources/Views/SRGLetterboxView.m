@@ -942,12 +942,16 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)seekBackward:(id)sender
 {
-    [self.controller seekBackwardWithCompletionHandler:nil];
+    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+    }];
 }
 
 - (IBAction)seekForward:(id)sender
 {
-    [self.controller seekForwardWithCompletionHandler:nil];
+    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+    }];
 }
 
 - (IBAction)toggleFullScreen:(id)sender
