@@ -627,6 +627,9 @@ static void commonInit(SRGLetterboxView *self);
                 [self internal_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
             }
         }
+        else if (playbackState == SRGMediaPlayerPlaybackStatePaused) {
+            [self internal_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+        }
     };
     
     if (animated) {
