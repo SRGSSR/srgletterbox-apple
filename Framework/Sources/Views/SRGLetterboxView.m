@@ -746,10 +746,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        // FIXME: self.userInterface hidden is unreliable, especially during animations. We should have a more robust
-        //        way of getting the final expected UI state
-        BOOL userInterfaceHidden = togglable ? self.userInterfaceHidden : hidden;
-        [self internal_setUserInterfaceHidden:userInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
     }];
 }
 
@@ -758,10 +755,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        // FIXME: self.userInterface hidden is unreliable, especially during animations. We should have a more robust
-        //        way of getting the final expected UI state
-        BOOL userInterfaceHidden = togglable ? self.userInterfaceHidden : hidden;
-        [self updateUserInterfaceForCurrentSegmentsHidden:userInterfaceHidden animated:animated];
+        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:animated];
     }];
 }
 
