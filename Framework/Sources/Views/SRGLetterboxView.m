@@ -1095,13 +1095,15 @@ static void commonInit(SRGLetterboxView *self);
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
-        CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
-        
-        SRGSegment *segment = [self segmentOnTimelineAtTime:seekTargetTime];
-        self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
-        
-        self.timelineView.time = seekTargetTime;
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
+        if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
+            CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
+            
+            SRGSegment *segment = [self segmentOnTimelineAtTime:seekTargetTime];
+            self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+            
+            self.timelineView.time = seekTargetTime;
+            [self.timelineView scrollToSelectedIndexAnimated:YES];
+        }
     }
 }
 
