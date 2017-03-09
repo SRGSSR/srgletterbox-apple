@@ -706,12 +706,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     else {
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            if (togglable) {
-                [self internal_setUserInterfaceHidden:YES animated:animated togglable:YES];
-            }
-            else {
-                [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
-            }
+            [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
 }
@@ -734,12 +729,7 @@ static void commonInit(SRGLetterboxView *self);
         self.errorView.alpha = 0.f;
         
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            if (togglable) {
-                [self internal_setUserInterfaceHidden:YES animated:animated togglable:YES];
-            }
-            else {
-                [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
-            }
+            [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
 }
@@ -754,20 +744,18 @@ static void commonInit(SRGLetterboxView *self);
 // Update the segments user interface with the last user-defined visibility settings
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
-    // Use restoration values as well as the current state to determine the status to apply
+    // Use restoration values to determine the status to apply
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        BOOL userInterfaceHidden = togglable ? self.userInterfaceHidden : hidden;
-        [self internal_setUserInterfaceHidden:userInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
     }];
 }
 
 // Update the segments user interface with the last user-defined visibility settings for controls and segments
 - (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
 {
-    // Use restoration values as well as the current state to determine the status to apply
+    // Use restoration values to determine the status to apply
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        BOOL userInterfaceHidden = togglable ? self.userInterfaceHidden : hidden;
-        [self updateUserInterfaceForCurrentSegmentsHidden:userInterfaceHidden animated:animated];
+        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:animated];
     }];
 }
 
