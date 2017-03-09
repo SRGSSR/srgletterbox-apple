@@ -283,6 +283,10 @@
                     break;
                 }
                     
+                case 2: {
+                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608517" URNString1:nil URNString2:@"urn:rts:video:1234567"];
+                }
+                    
                 default: {
                     break;
                 }

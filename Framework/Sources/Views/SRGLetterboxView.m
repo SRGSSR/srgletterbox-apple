@@ -706,12 +706,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     else {
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            if (togglable) {
-                [self internal_setUserInterfaceHidden:YES animated:animated togglable:YES];
-            }
-            else {
-                [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
-            }
+            [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
 }
@@ -734,12 +729,7 @@ static void commonInit(SRGLetterboxView *self);
         self.errorView.alpha = 0.f;
         
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            if (togglable) {
-                [self internal_setUserInterfaceHidden:YES animated:animated togglable:YES];
-            }
-            else {
-                [self internal_setUserInterfaceHidden:hidden animated:animated togglable:NO];
-            }
+            [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
 }
@@ -754,17 +744,19 @@ static void commonInit(SRGLetterboxView *self);
 // Update the segments user interface with the last user-defined visibility settings
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
-    // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. when currently set with
-    // an animation)
-    [self internal_setUserInterfaceHidden:self.userInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    // Use restoration values to determine the status to apply
+    [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
+        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    }];
 }
 
 // Update the segments user interface with the last user-defined visibility settings for controls and segments
 - (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
 {
-    // Use user-defined hidden value, not self.userInterfaceHidden which might be unreliable (e.g. when currently set with
-    // an animation)
-    [self updateUserInterfaceForCurrentSegmentsHidden:self.userInterfaceHidden animated:animated];
+    // Use restoration values to determine the status to apply
+    [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
+        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:animated];
+    }];
 }
 
 - (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
@@ -852,7 +844,7 @@ static void commonInit(SRGLetterboxView *self);
 #pragma mark UI changes and restoration
 
 // Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
-// identifier are applied at most once.
+// identifier are applied at most once. Synchronous.
 - (void)applyUserInterfaceChanges:(void (^)(void))changes withRestorationIdentifier:(NSString *)restorationIdentifier
 {
     NSParameterAssert(changes);
@@ -868,7 +860,7 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
-// is provided in the `changes` block.
+// is provided in the `changes` block. Synchronous.
 - (void)restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier withChanges:(void (^)(BOOL hidden, BOOL togglable))changes
 {
     NSParameterAssert(changes);
@@ -876,21 +868,28 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
     if ([self.restorationContexts containsObject:restorationContext]) {
         [self.restorationContexts removeObject:restorationContext];
-        
-        BOOL hidden = self.mainRestorationContext.hidden;
-        BOOL togglable = self.mainRestorationContext.togglable;
-        
-        for (SRGLetterboxViewRestorationContext *restorationContext in self.restorationContexts) {
-            if (restorationContext.hidden) {
-                hidden = YES;
-            }
-            if (! restorationContext.togglable) {
-                togglable = NO;
-            }
-        }
-        
-        changes(hidden, togglable);
+        [self calculateRestorationValuesWithBlock:changes];
     }
+}
+
+// Synchronous.
+- (void)calculateRestorationValuesWithBlock:(void (^)(BOOL hidden, BOOL togglable))block
+{
+    NSParameterAssert(block);
+    
+    BOOL hidden = self.mainRestorationContext.hidden;
+    BOOL togglable = self.mainRestorationContext.togglable;
+    
+    for (SRGLetterboxViewRestorationContext *restorationContext in self.restorationContexts) {
+        if (restorationContext.hidden) {
+            hidden = YES;
+        }
+        if (! restorationContext.togglable) {
+            togglable = NO;
+        }
+    }
+    
+    block(hidden, togglable);
 }
 
 #pragma mark Segments

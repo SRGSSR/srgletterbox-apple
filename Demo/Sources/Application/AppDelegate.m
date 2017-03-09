@@ -20,11 +20,13 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
+    
 #ifndef DEBUG
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"7bf489539f6e44739133ae456c41dc2c"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
+    
     [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
                                                      comScoreVirtualSite:@"app-test-v"
                                                      netMetrixIdentifier:@"test"];
