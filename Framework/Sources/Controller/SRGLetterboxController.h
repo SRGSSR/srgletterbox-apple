@@ -259,6 +259,11 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, nullable) SRGSegment *segment;
 
 /**
+ *  The current segment being played (if any), as an `SRGMedia` object
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *segmentMedia;
+
+/**
  *  The current full-length information (if available)
  */
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
