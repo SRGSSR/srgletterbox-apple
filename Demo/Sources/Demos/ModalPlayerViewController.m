@@ -140,7 +140,12 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)reloadDataOverriddenWithMedia:(SRGMedia *)media
 {
     if (! media) {
-        media = (self.URN.mediaType == SRGMediaTypeVideo) ? self.letterboxController.fullLengthMedia : self.letterboxController.media;
+        if (self.URN.mediaType == SRGMediaTypeVideo && self.letterboxController.fullLengthMedia) {
+            media = self.letterboxController.fullLengthMedia;
+        }
+        else {
+            media = self.letterboxController.media;
+        }
     }
     
     self.titleLabel.text = media.title;
