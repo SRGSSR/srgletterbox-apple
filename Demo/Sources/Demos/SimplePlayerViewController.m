@@ -117,7 +117,7 @@
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataOverriddenWithMedia:nil];
+    [self reloadDataOverriddenWithMedia:self.letterboxController.segmentMedia];
 }
 
 @end
