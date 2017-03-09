@@ -6,7 +6,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -23,10 +22,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJc-Y6-KTE" customClass="SRGLetterboxView">
-                                <rect key="frame" x="36" y="52" width="303" height="170.5"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="211"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="LJc-Y6-KTE" secondAttribute="height" multiplier="16:9" id="dLS-h7-FwA"/>
+                                    <constraint firstAttribute="height" secondItem="LJc-Y6-KTE" secondAttribute="width" multiplier="9:16" id="dLS-h7-FwA"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="controller" destination="m76-hn-RkO" id="Kiz-Wy-pYZ"/>
@@ -34,7 +33,7 @@
                                 </connections>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z05-5d-RZc" userLabel="Close Button">
-                                <rect key="frame" x="36" y="52" width="40" height="40"/>
+                                <rect key="frame" x="0.0" y="20" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="2TZ-TP-EI8"/>
                                     <constraint firstAttribute="height" constant="40" id="hOK-Wc-WPs"/>
@@ -46,14 +45,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yet-cP-iNZ">
-                                <rect key="frame" x="135" y="264" width="104" height="30"/>
+                                <rect key="frame" x="135" y="272.5" width="104" height="30"/>
                                 <state key="normal" title="Use for service"/>
                                 <connections>
                                     <action selector="useForService:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="9MX-EC-MH3"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dQI-Mf-xN9" userLabel="Reset service">
-                                <rect key="frame" x="140.5" y="302" width="93" height="30"/>
+                                <rect key="frame" x="140.5" y="310.5" width="93" height="30"/>
                                 <state key="normal" title="Reset service"/>
                                 <connections>
                                     <action selector="resetService:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="hJ3-4B-HvE"/>
@@ -76,26 +75,22 @@
                         <constraints>
                             <constraint firstItem="z05-5d-RZc" firstAttribute="leading" secondItem="LJc-Y6-KTE" secondAttribute="leading" id="45V-sy-zvJ"/>
                             <constraint firstItem="dQI-Mf-xN9" firstAttribute="centerX" secondItem="yet-cP-iNZ" secondAttribute="centerX" id="4T7-cj-gPI"/>
+                            <constraint firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="4dc-bt-t41"/>
                             <constraint firstItem="E7m-CS-gyh" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" constant="16" id="A2K-sl-Dof"/>
                             <constraint firstItem="g2T-7b-725" firstAttribute="centerY" secondItem="E7m-CS-gyh" secondAttribute="centerY" id="B0K-sH-Ysn"/>
                             <constraint firstItem="yet-cP-iNZ" firstAttribute="centerX" secondItem="LJc-Y6-KTE" secondAttribute="centerX" id="Bir-gl-czD"/>
                             <constraint firstItem="z05-5d-RZc" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="top" id="Gi8-j3-PRm"/>
-                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="centerX" secondItem="Xul-ZD-b56" secondAttribute="centerX" id="OHc-vu-0eR"/>
+                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" id="TcN-pN-toD"/>
                             <constraint firstItem="tQY-ak-0yd" firstAttribute="top" secondItem="E7m-CS-gyh" secondAttribute="bottom" constant="20" id="YTX-Tp-axW"/>
-                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leadingMargin" constant="20" id="cWA-Kp-VpM">
-                                <variation key="heightClass=compact-widthClass=compact" constant="35"/>
-                                <variation key="heightClass=compact-widthClass=regular" constant="35"/>
-                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="g2T-7b-725" secondAttribute="trailing" constant="16" id="cxb-37-zeH"/>
-                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="qG1-n2-WwX" secondAttribute="bottom" constant="8" symbolic="YES" id="noq-yb-HDt"/>
+                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="qG1-n2-WwX" secondAttribute="bottom" id="noq-yb-HDt"/>
                             <constraint firstItem="yet-cP-iNZ" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="bottom" constant="41.5" id="vqs-Dr-KwK"/>
                             <constraint firstItem="dQI-Mf-xN9" firstAttribute="top" secondItem="yet-cP-iNZ" secondAttribute="bottom" constant="8" id="xdh-Ia-RKW"/>
                         </constraints>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="closeButton" destination="z05-5d-RZc" id="bJF-Qz-es8"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="dLS-h7-FwA" id="rVU-uy-YxZ"/>
                         <outlet property="letterboxController" destination="m76-hn-RkO" id="EDf-jv-Qb1"/>
                         <outlet property="letterboxView" destination="LJc-Y6-KTE" id="9gb-8D-HAg"/>
                         <outlet property="mirroredSwitch" destination="g2T-7b-725" id="mqg-dW-Mq8"/>

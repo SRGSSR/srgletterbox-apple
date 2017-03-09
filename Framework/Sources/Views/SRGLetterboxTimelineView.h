@@ -8,6 +8,8 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
+#import "SRGLetterboxSegmentCell.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 // Forward declarations
@@ -21,7 +23,21 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Called when a segment has been actively selected by the user.
  */
-- (void)timelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
+
+/**
+ *  This method gets called when the user interface made a long press on segment cell
+ *
+ *  @discussion Method to be inform about the user interaction. Could save a state.
+ *  Just after this call, the method `letterboxTimelineView:hideFavoriteOnSegment:` will be called.
+ */
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressOnSegmentdidLongPressOnSegment:(SRGSegment *)segment;
+
+/**
+ *  This method gets called when the user interface is about to display a segment cell.
+ *  By defaut, if non implemented, return YES.
+ */
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideFavoriteOnSegment:(SRGSegment *)segment;
 
 @end
 
@@ -29,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Timeline displaying segments associated with a media.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSegmentCellDelegate>
 
 /**
  *  The timeline delegate.
@@ -55,6 +71,12 @@ IB_DESIGNABLE
  *  Scroll the timeline to the selected index, if any. Does nothing if the user is actively dragging the timeline.
  */
 - (void)scrollToSelectedIndexAnimated:(BOOL)animated;
+
+/**
+ *  Need to update favorite status on segment cells.
+ *  It will call the delegate method `-letterboxView:hideFavoriteOnSegment` on each segment cells
+ */
+- (void)setNeedsFavoriteOnSegmentsUpdate;
 
 @end
 

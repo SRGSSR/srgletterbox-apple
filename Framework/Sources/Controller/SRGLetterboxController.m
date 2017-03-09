@@ -27,11 +27,13 @@ NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetad
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
 NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
 NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
+NSString * const SRGLetterboxSegmentKey = @"SRGLetterboxSegmentKey";
 NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannelKey";
 
 NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURNKey";
 NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMediaKey";
 NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaCompositionKey";
+NSString * const SRGLetterboxPreviousSegmentKey = @"SRGLetterboxPreviousSegmentKey";
 NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannelKey";
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
@@ -62,6 +64,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
 @property (nonatomic) SRGChannel *channel;
+@property (nonatomic) SRGSegment *segment;
 @property (nonatomic) SRGQuality preferredQuality;
 @property (nonatomic) NSInteger preferredStartBitRate;
 @property (nonatomic) NSError *error;
@@ -128,6 +131,14 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                   object:self.mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(segmentDidStart:)
+                                                     name:SRGMediaPlayerSegmentDidStartNotification
+                                                   object:self.mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(segmentDidEnd:)
+                                                     name:SRGMediaPlayerSegmentDidEndNotification
                                                    object:self.mediaPlayerController];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackDidFail:)
@@ -252,11 +263,21 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
+- (SRGMedia *)fullLengthMedia
+{
+    return self.mediaComposition.fullLengthMedia;
+}
+
+- (SRGMedia *)segmentMedia
+{
+    return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
+}
+
 #pragma mark Data
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive
 // information available (media composition first, then media, finally URN). Less comprehensive data will be ignored
-- (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition channel:(SRGChannel *)channel
+- (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition segment:(SRGSegment *)segment channel:(SRGChannel *)channel
 {
     if (mediaComposition) {
         media = [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
@@ -266,14 +287,21 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         URN = media.URN;
     }
     
+    // We do not check that the data actually changed. The reason is that object comparison is shallow and only checks
+    // object identity (e.g. medias are compared by URN). Checking objects for equality here would not take into account
+    // data changes, which might occur in rare cases. Sending a few additional notifications, even when no real change
+    // occurred, is harmless, though.
+    
     SRGMediaURN *previousURN = self.URN;
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
+    SRGSegment *previousSegment = self.segment;
     SRGChannel *previousChannel = self.channel;
     
     self.URN = URN;
     self.media = media;
     self.mediaComposition = mediaComposition;
+    self.segment = segment;
     self.channel = channel;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
@@ -286,6 +314,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     if (mediaComposition) {
         userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
     }
+    if (segment) {
+        userInfo[SRGLetterboxSegmentKey] = segment;
+    }
     if (channel) {
         userInfo[SRGLetterboxChannelKey] = channel;
     }
@@ -297,6 +328,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     if (previousMediaComposition) {
         userInfo[SRGLetterboxPreviousMediaCompositionKey] = previousMediaComposition;
+    }
+    if (previousSegment) {
+        userInfo[SRGLetterboxPreviousSegmentKey] = previousSegment;
     }
     if (previousChannel) {
         userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
@@ -317,7 +351,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             return;
         }
         
-        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition channel:channel];
+        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel];
     };
     
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
@@ -392,7 +426,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                         return;
                     }
                     
-                    [self updateWithURN:nil media:medias.firstObject mediaComposition:nil channel:nil];
+                    [self updateWithURN:nil media:medias.firstObject mediaComposition:nil segment:nil channel:nil];
                     [self.mediaPlayerController playURL:contentURL];
                 };
                 
@@ -417,7 +451,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             return;
         }
         
-        [self updateWithURN:nil media:nil mediaComposition:mediaComposition channel:nil];
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition segment:mediaComposition.mainSegment channel:nil];
         [self updateChannel];
         
         // Do not go further if the content is blocked
@@ -477,7 +511,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         return NO;
     }
     
-    [self updateWithURN:nil media:nil mediaComposition:mediaComposition channel:nil];
+    [self updateWithURN:nil media:nil mediaComposition:mediaComposition segment:segment channel:nil];
     
     // If playing another media or if the player is not playing, restart
     if ([segment isKindOfClass:[SRGChapter class]]
@@ -553,7 +587,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
     
-    [self updateWithURN:URN media:media mediaComposition:nil channel:nil];
+    [self updateWithURN:URN media:media mediaComposition:nil segment:nil channel:nil];
 }
 
 - (void)reportError:(NSError *)error
@@ -758,6 +792,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
         self.seekTargetTime = kCMTimeInvalid;
     }
+}
+
+- (void)segmentDidStart:(NSNotification *)notification
+{
+    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
+    [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:segment channel:self.channel];
+}
+
+- (void)segmentDidEnd:(NSNotification *)notification
+{
+    [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:nil channel:self.channel];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification

@@ -48,6 +48,30 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
+/**
+ *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
+ *  position is provided, if any.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment interactive:(BOOL)interactive;
+
+/**
+ *  Implement this method to have a callback when the user did a long press on a segment cell.
+ *
+ *  @discussion This method gets called when the user interface made a long press on segment cell.
+ *              Just after this call, the method `letterboxView:isFavoriteSegment:` will be called on this segment.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressOnSegment:(SRGSegment *)segment;
+
+/**
+ *  Implement this method to hide or show the favorite image on a segment cell.
+ *
+ *  This method gets called when the user interface is about to display a segment cell or when a long press fired.
+ *  By defaut, if non implemented, return YES.
+ *
+ *  @discussion: see `-setNeedsFavoriteOnSegmentsUpdate`
+ */
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteOnSegment:(SRGSegment *)segment;
+
 @end
 
 /**
@@ -57,6 +81,10 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  A view can be bound to at most one controller at a time, and displays what is currently being played by the controller. 
  *  It is immediately updated when the content played by the controller changes, or when the controller itself is changed.
+ *
+ *  Conversely, you can bind a controller to several Letterbox views, but only the last one to be bound will display the
+ *  video content of what is being played. Other Letterbox views will only provide a way to control playback. This is
+ *  a known an assumed limitation, as having several views display the same media at the same time makes little sense.
  *
  *  To instantiate a Letterbox view, simply drop an instance onto a xib or a storyboard, set constraints appropriately, 
  *  and bind it to a controller. If the controller itself has been added as an object to the storyboard, this setup can 
@@ -86,8 +114,18 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
  *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
- *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly.
+ *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You
+ *  can respond to the `-letterboxView:didScrollWithSegment:interactive:` delegate method to respond to the timeline
+ *  being moved, either interactively or during normal playback
  *  
+ *  ## Long press and favorite status on segments
+ *
+ *  The Letterbox view delegate has two optional methods:
+ *  Implementing the `-letterboxView:didLongPressOnSegment:` will catch a long press on a segment cell in the timeline view.
+ *  Implementing the `-letterboxView:hideFavoriteOnSegment:` calls to display or hide an SRG favorite icon on the
+ *  segment cell.
+ *  To force a refresh, call the `setNeedsFavoriteSegmentsUpdate` on Letterbox view.
+ *
  *  ## Full-screen
  *
  *  Full-screen is a usual feature of media players. Since the view and view controller hierarchy is not known to the
@@ -144,6 +182,17 @@ IB_DESIGNABLE
 @property (nonatomic, readonly, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 
 /**
+ *  Change the user interface controls visibility. Togglability is not altered.
+ *
+ *  @param hidden Whether the user interface must be hidden.
+ *  @param animated Whether the transition must be animated.
+ *
+ *  @discussion When Airplay is enabled or an error has been encountered, the UI behavior is overridden. This method
+ *              will only apply changes once overrides are lifted.
+ */
+- (void)setUserInterfaceHidden:(BOOL)userInterfaceHidden animated:(BOOL)animated;
+
+/**
  *  Change the user interface controls behavior.
  *
  *  @param hidden Whether the user interface must be hidden.
@@ -160,7 +209,7 @@ IB_DESIGNABLE
  *  the animations to be performed alongside the player user interface animations when controls or segments are shown or 
  *  hidden. An optional block to be called on completion can be provided as well.
  *
- *  @param animations The animations to be performed when controls are shown or hidden. The timeline height is provided
+ *  @param animations The animations to be performed when controls are shown or hidden. The expansion height is provided
  *                    as information if you need to adjust your layout to provide it with enough space. You can e.g.
  *                    simply use this value as constant of an aspect ratio layout constraint to make the player view
  *                    slightly taller.
@@ -168,7 +217,15 @@ IB_DESIGNABLE
  *
  *  @discussion Attempting to call this method outside the correct delegate method will throw an exception.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat timelineHeight))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat expansionHeight))animations completion:(nullable void (^)(BOOL finished))completion;
+
+/**
+ *  The current expansion height.
+ *
+ *  @discussion Value should be the timelineHeight or more if a notification message displayed, 0.f otherwise. During an animation,
+ *  this value could be different.
+ */
+@property (nonatomic, readonly) CGFloat expansionHeight;
 
 /**
  *  Return `YES` when the view is full screen.
@@ -195,7 +252,7 @@ IB_DESIGNABLE
  *  The current segment timeline height.
  *
  *  @discussion Value should be the preferredTimelineHeight if the media has segments, 0.f otherwise. During an animation,
- *  this value could be different.
+ *  this value could be different. If using for your layout, please consider `-expansionHeight` too.
  */
 @property (nonatomic, readonly) CGFloat timelineHeight;
 
@@ -218,6 +275,12 @@ IB_DESIGNABLE
  *  @discussion By default, the height is 120.f. To always hide the segment timeline, set it to 0.f.
  */
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated;
+
+/**
+ *  Need to update favorite status on segment cells.
+ *  It will call Letterbox view delegate method `-letterboxView:hideFavoriteOnSegment` on each segment cells
+ */
+- (void)setNeedsFavoriteOnSegmentsUpdate;
 
 @end
 

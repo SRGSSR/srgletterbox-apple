@@ -14,10 +14,33 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
+
+@property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @end
 
 @implementation SRGLetterboxSegmentCell
+
+#pragma mark View life cycle
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.hiddenFavoriteImage = YES;
+    
+    UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(longPress:)];
+    longPressGestureRecognizer.minimumPressDuration = 1.f;
+    [self addGestureRecognizer:longPressGestureRecognizer];
+    self.longPressGestureRecognizer = longPressGestureRecognizer;
+    
+    // Workaround UIImage view tint color bug
+    // See http://stackoverflow.com/a/26042893/760435
+    UIImage *favoriteImage = self.favoriteImageView.image;
+    self.favoriteImageView.image = nil;
+    self.favoriteImageView.image = favoriteImage;
+}
 
 #pragma mark Getters and setters
 
@@ -45,6 +68,12 @@
     }
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
+    
+    BOOL hiddenFavoriteImage = YES;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
+        hiddenFavoriteImage = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
+    }
+    self.hiddenFavoriteImage = hiddenFavoriteImage;
 }
 
 - (void)setProgress:(float)progress
@@ -55,6 +84,30 @@
 - (void)setCurrent:(BOOL)current
 {
     self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
+}
+
+ -(void)setHiddenFavoriteImage:(BOOL)hiddenFavoriteImage
+{
+    if (_hiddenFavoriteImage != hiddenFavoriteImage) {
+        _hiddenFavoriteImage = hiddenFavoriteImage;
+        self.favoriteImageView.alpha = hiddenFavoriteImage ? 0.f : 1.f;
+    }
+}
+
+#pragma mark Gesture recognizers
+
+- (void)longPress:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan &&
+        self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellDidLongPress:)]) {
+        [self.delegate letterboxSegmentCellDidLongPress:self];
+        
+        BOOL hiddenFavoriteImage = self.hiddenFavoriteImage;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
+            hiddenFavoriteImage = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
+        }
+        self.hiddenFavoriteImage = hiddenFavoriteImage;
+    }
 }
 
 @end

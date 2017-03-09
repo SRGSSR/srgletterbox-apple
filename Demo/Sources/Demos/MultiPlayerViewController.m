@@ -28,7 +28,7 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @end
 
@@ -42,19 +42,21 @@
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
     if ([pictureInPictureDelegate isKindOfClass:[self class]]) {
-        return (MultiPlayerViewController *)pictureInPictureDelegate;
+        MultiPlayerViewController *multiplayerViewController = (MultiPlayerViewController *)pictureInPictureDelegate;
+        if ([multiplayerViewController.URN isEqual:URN] && [multiplayerViewController.URN1 isEqual:URN1] && [multiplayerViewController.URN2 isEqual:URN2]) {
+            return multiplayerViewController;
+        }
     }
-    else {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-        MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
-        
-        multiPlayerViewController.URN = URN;
-        multiPlayerViewController.URN1 = URN1;
-        multiPlayerViewController.URN2 = URN2;
-        multiPlayerViewController.userInterfaceAlwaysHidden = userInterfaceAlwaysHidden;
-        
-        return multiPlayerViewController;
-    }
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
+    
+    multiPlayerViewController.URN = URN;
+    multiPlayerViewController.URN1 = URN1;
+    multiPlayerViewController.URN2 = URN2;
+    multiPlayerViewController.userInterfaceAlwaysHidden = userInterfaceAlwaysHidden;
+    
+    return multiPlayerViewController;
 }
 
 - (void)dealloc
@@ -157,9 +159,9 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat timelineHeight) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error) ? 0.f : 1.f;
-        self.aspectRatioConstraint.constant = timelineHeight;
+        self.letterboxAspectRatioConstraint.constant = expansionHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

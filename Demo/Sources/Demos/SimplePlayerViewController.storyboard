@@ -6,7 +6,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -38,40 +37,13 @@
                                     <outlet property="delegate" destination="A6A-Ps-0a8" id="U27-KZ-gZo"/>
                                 </connections>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aUa-mE-Ygf">
-                                <rect key="frame" x="20" y="483" width="728" height="21"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;now&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Gd-xH-zl0">
-                                <rect key="frame" x="20" y="512" width="728" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;next&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2sW-Zo-d1S">
-                                <rect key="frame" x="20" y="541" width="728" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="63i-Jg-ODk"/>
-                            <constraint firstItem="aUa-mE-Ygf" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="bottom" constant="31.5" id="88W-8K-Os7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="aUa-mE-Ygf" secondAttribute="trailing" id="DoN-gb-rh0"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" id="MrA-9P-bOA"/>
-                            <constraint firstItem="aUa-mE-Ygf" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leadingMargin" id="OYH-2i-aD2"/>
-                            <constraint firstItem="2sW-Zo-d1S" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leadingMargin" id="WW0-A1-ZYt"/>
-                            <constraint firstItem="7Gd-xH-zl0" firstAttribute="top" secondItem="aUa-mE-Ygf" secondAttribute="bottom" constant="8" id="XP1-AT-hEk"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="qG1-n2-WwX" secondAttribute="bottom" id="fxb-uz-LpR"/>
                             <constraint firstItem="tQY-ak-0yd" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="bottom" id="k8Z-rt-Sbi"/>
-                            <constraint firstItem="7Gd-xH-zl0" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leadingMargin" id="qGi-ne-jgl"/>
-                            <constraint firstItem="2sW-Zo-d1S" firstAttribute="top" secondItem="7Gd-xH-zl0" secondAttribute="bottom" constant="8" id="rYy-nv-mPz"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="7Gd-xH-zl0" secondAttribute="trailing" id="uJz-Qz-b2t"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="2sW-Zo-d1S" secondAttribute="trailing" id="veJ-1x-7a7"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -85,11 +57,8 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="aspectRatioConstraint" destination="dLS-h7-FwA" id="2p4-pr-B6T"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="dLS-h7-FwA" id="hmh-IM-48Q"/>
                         <outlet property="letterboxController" destination="fsa-hY-eK6" id="8XD-Wh-Z1m"/>
-                        <outlet property="nextLabel" destination="2sW-Zo-d1S" id="upF-JC-MFp"/>
-                        <outlet property="nowLabel" destination="7Gd-xH-zl0" id="ot0-FP-MmS"/>
-                        <outlet property="titleLabel" destination="aUa-mE-Ygf" id="FR2-fd-3zC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9I3-9b-01C" userLabel="First Responder" sceneMemberID="firstResponder"/>

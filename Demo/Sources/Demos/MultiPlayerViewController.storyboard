@@ -100,8 +100,8 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="aspectRatioConstraint" destination="H3H-pd-Ynf" id="1Ho-iL-H1t"/>
                         <outlet property="closeButton" destination="mnt-gM-iQ3" id="prb-D8-f7X"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="H3H-pd-Ynf" id="hRq-eF-PvB"/>
                         <outlet property="letterboxController" destination="Z7p-HD-xJW" id="M9C-Uq-Fqy"/>
                         <outlet property="letterboxView" destination="1bb-qO-DK7" id="DqY-ZJ-gur"/>
                         <outlet property="smallLetterboxController1" destination="QUZ-dT-8iK" id="RXP-CJ-Faf"/>
