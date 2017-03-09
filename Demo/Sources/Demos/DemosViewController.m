@@ -138,12 +138,12 @@
                 }
                     
                 case 1: {
-                    [self openSimplePlayerWithURNString:kVideoOnDemandSegmentsURNString];
+                    [self openSimplePlayerWithURNString:kVideoOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
                 case 2: {
-                    [self openSimplePlayerWithURNString:kAudioOnDemandSegmentsURNString];
+                    [self openSimplePlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
@@ -170,12 +170,12 @@
                 }
                     
                 case 1: {
-                    [self openStandalonePlayerWithURNString:kVideoOnDemandSegmentsURNString];
+                    [self openStandalonePlayerWithURNString:kVideoOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
                 case 2: {
-                    [self openStandalonePlayerWithURNString:kAudioOnDemandSegmentsURNString];
+                    [self openStandalonePlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
