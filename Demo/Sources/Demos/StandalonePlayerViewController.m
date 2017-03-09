@@ -19,7 +19,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 @property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @end
 
@@ -123,7 +123,7 @@
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
-        self.aspectRatioConstraint.constant = expansionHeight;
+        self.letterboxAspectRatioConstraint.constant = expansionHeight;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

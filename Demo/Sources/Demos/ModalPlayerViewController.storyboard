@@ -32,6 +32,24 @@
                                     <outlet property="delegate" destination="FcC-Qn-oGg" id="XzF-48-ayl"/>
                                 </connections>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fbH-pV-VxN">
+                                <rect key="frame" x="16" y="241" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;now&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oxw-uk-Eue">
+                                <rect key="frame" x="16" y="270" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;next&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XDA-ee-aQO">
+                                <rect key="frame" x="16" y="299" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePn-4e-JbK" userLabel="Close Button">
                                 <rect key="frame" x="0.0" y="20" width="40" height="40"/>
                                 <constraints>
@@ -45,42 +63,42 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md4-t4-5he">
-                                <rect key="frame" x="0.0" y="241" width="179.5" height="30"/>
+                                <rect key="frame" x="0.0" y="340" width="179.5" height="30"/>
                                 <state key="normal" title="Hide controls"/>
                                 <connections>
                                     <action selector="hideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="Cx0-DG-7VH"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-r1-Pgs">
-                                <rect key="frame" x="195.5" y="241" width="179.5" height="30"/>
+                                <rect key="frame" x="195.5" y="340" width="179.5" height="30"/>
                                 <state key="normal" title="Show controls"/>
                                 <connections>
                                     <action selector="showControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="DC9-QM-IKK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
-                                <rect key="frame" x="0.0" y="279" width="179.5" height="30"/>
+                                <rect key="frame" x="0.0" y="378" width="179.5" height="30"/>
                                 <state key="normal" title="Always hide controls"/>
                                 <connections>
                                     <action selector="forceHideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="ENm-2M-VN0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
-                                <rect key="frame" x="195" y="279" width="179.5" height="30"/>
+                                <rect key="frame" x="195" y="378" width="179.5" height="30"/>
                                 <state key="normal" title="Always show controls"/>
                                 <connections>
                                     <action selector="forceShowControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="wb8-e8-gnS"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
-                                <rect key="frame" x="98" y="317" width="179.5" height="30"/>
+                                <rect key="frame" x="98" y="416" width="179.5" height="30"/>
                                 <state key="normal" title="Full screen"/>
                                 <connections>
                                     <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTc-Lp-HkH">
-                                <rect key="frame" x="0.0" y="355" width="374.5" height="100"/>
+                                <rect key="frame" x="0.0" y="454" width="374.5" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="P8q-Ss-LI2"/>
                                 </constraints>
@@ -104,18 +122,27 @@
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="top" secondItem="WSi-1R-LWr" secondAttribute="bottom" constant="8" id="I5G-lB-icc"/>
                             <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="59R-UF-qF1" secondAttribute="bottom" priority="900" id="LDp-cD-NhZ"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="width" secondItem="JvK-aX-fgP" secondAttribute="width" id="NQp-fq-Vlf"/>
+                            <constraint firstItem="oxw-uk-Eue" firstAttribute="leading" secondItem="fbH-pV-VxN" secondAttribute="leading" id="Q8E-oq-b4d"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="QEM-bZ-dhh"/>
-                            <constraint firstItem="Md4-t4-5he" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="Rb6-lz-xGB"/>
+                            <constraint firstItem="XDA-ee-aQO" firstAttribute="top" secondItem="oxw-uk-Eue" secondAttribute="bottom" constant="8" id="Qu2-eO-iPg"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="centerY" secondItem="gMD-r1-Pgs" secondAttribute="centerY" id="Rdc-7p-qIn"/>
+                            <constraint firstItem="XDA-ee-aQO" firstAttribute="trailing" secondItem="oxw-uk-Eue" secondAttribute="trailing" id="Rf3-Uf-F1O"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="top" secondItem="Md4-t4-5he" secondAttribute="bottom" constant="8" id="UGf-RW-rCm"/>
                             <constraint firstItem="FTc-Lp-HkH" firstAttribute="leading" secondItem="WSi-1R-LWr" secondAttribute="leading" id="VHH-sZ-HSw"/>
+                            <constraint firstItem="fbH-pV-VxN" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="czR-YZ-XdV"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="width" secondItem="Md4-t4-5he" secondAttribute="width" id="fND-Gj-3vx"/>
+                            <constraint firstItem="fbH-pV-VxN" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" constant="16" id="flQ-S7-9j9"/>
                             <constraint firstItem="txU-Ep-CJb" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" priority="850" id="gAz-aw-sDx"/>
+                            <constraint firstItem="Md4-t4-5he" firstAttribute="top" secondItem="XDA-ee-aQO" secondAttribute="bottom" constant="20" id="h1X-w3-cE1"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="top" id="iL4-uS-ed9"/>
+                            <constraint firstItem="oxw-uk-Eue" firstAttribute="top" secondItem="fbH-pV-VxN" secondAttribute="bottom" constant="8" id="ias-zK-hW2"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="ity-mH-uwB"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="centerX" secondItem="JvK-aX-fgP" secondAttribute="centerX" id="jnL-Wz-deK"/>
+                            <constraint firstAttribute="trailing" secondItem="fbH-pV-VxN" secondAttribute="trailing" constant="16" id="kca-pR-EMT"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="width" secondItem="WSi-1R-LWr" secondAttribute="width" id="qaB-9B-a8O"/>
+                            <constraint firstItem="XDA-ee-aQO" firstAttribute="leading" secondItem="oxw-uk-Eue" secondAttribute="leading" id="tPQ-aa-ptb"/>
                             <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" id="tsO-HP-lR4"/>
+                            <constraint firstItem="oxw-uk-Eue" firstAttribute="trailing" secondItem="fbH-pV-VxN" secondAttribute="trailing" id="uPU-kp-VFI"/>
                         </constraints>
                     </view>
                     <connections>
@@ -124,7 +151,10 @@
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
                         <outlet property="letterboxController" destination="V5l-nr-tDL" id="po7-Q3-coI"/>
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
+                        <outlet property="nextLabel" destination="XDA-ee-aQO" id="rwp-mh-ICO"/>
+                        <outlet property="nowLabel" destination="oxw-uk-Eue" id="fue-hN-kxF"/>
                         <outlet property="preferredTimelineHeight" destination="FTc-Lp-HkH" id="14d-Gq-TI0"/>
+                        <outlet property="titleLabel" destination="fbH-pV-VxN" id="h1M-zQ-aaa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -143,11 +143,6 @@
                 }
                     
                 case 2: {
-                    [self openSimplePlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
-                    break;
-                }
-                    
-                case 3: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openSimplePlayerWithURNString:URNString];
@@ -175,11 +170,6 @@
                 }
                     
                 case 2: {
-                    [self openStandalonePlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
-                    break;
-                }
-                    
-                case 3: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openStandalonePlayerWithURNString:URNString];

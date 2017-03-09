@@ -22,6 +22,10 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *nowLabel;
+@property (nonatomic, weak) IBOutlet UILabel *nextLabel;
+
 @property (nonatomic, weak) IBOutlet UIPickerView *preferredTimelineHeight;
 
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
@@ -77,6 +81,13 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
     [self.letterboxView setFullScreen:isLandscape animated:NO];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(metadataDidChange:)
+                                                 name:SRGLetterboxMetadataDidChangeNotification
+                                               object:self.letterboxController];
+    
+    [self reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -117,6 +128,26 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
         BOOL isLandscape = (size.width > size.height);
         [self.letterboxView setFullScreen:isLandscape animated:NO];
     } completion:nil];
+}
+
+#pragma mark Data
+
+- (void)reloadData
+{
+    [self reloadDataOverriddenWithMedia:nil];
+}
+
+- (void)reloadDataOverriddenWithMedia:(SRGMedia *)media
+{
+    if (! media) {
+        media = (self.URN.mediaType == SRGMediaTypeVideo) ? self.letterboxController.fullLengthMedia : self.letterboxController.media;
+    }
+    
+    self.titleLabel.text = media.title;
+    
+    SRGChannel *channel = self.letterboxController.channel;
+    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
+    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title] : nil;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
@@ -166,6 +197,14 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:nil];
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment interactive:(BOOL)interactive
+{
+    if (interactive) {
+        SRGMedia *media = segment ? [self.letterboxController.mediaComposition mediaForSegment:segment] : nil;
+        [self reloadDataOverriddenWithMedia:media];
+    }
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
@@ -302,6 +341,13 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)fullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
+}
+
+#pragma mark Notifications
+
+- (void)metadataDidChange:(NSNotification *)notification
+{
+    [self reloadDataOverriddenWithMedia:self.letterboxController.segmentMedia];
 }
 
 @end
