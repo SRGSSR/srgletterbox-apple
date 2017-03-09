@@ -89,8 +89,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="aspectRatioConstraint" destination="dLS-h7-FwA" id="Oex-9i-H67"/>
                         <outlet property="closeButton" destination="z05-5d-RZc" id="bJF-Qz-es8"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="dLS-h7-FwA" id="rVU-uy-YxZ"/>
                         <outlet property="letterboxController" destination="m76-hn-RkO" id="EDf-jv-Qb1"/>
                         <outlet property="letterboxView" destination="LJc-Y6-KTE" id="9gb-8D-HAg"/>
                         <outlet property="mirroredSwitch" destination="g2T-7b-725" id="mqg-dW-Mq8"/>
