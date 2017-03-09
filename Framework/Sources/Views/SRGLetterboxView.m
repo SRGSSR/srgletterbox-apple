@@ -894,13 +894,21 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Segments
 
-// Return the segment (not chapter) at the specified time
-- (SRGSegment *)segmentAtTime:(CMTime)time
+// Return the segment in the timeline at the specified time
+- (SRGSegment *)segmentOnTimelineAtTime:(CMTime)time
 {
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return ![segment isKindOfClass:[SRGChapter class]] && CMTimeRangeContainsTime(segment.srg_timeRange, time);
-    }];
-    return [self.timelineView.segments filteredArrayUsingPredicate:predicate].firstObject;
+    // - If audio or video (without segment), it's the chapter
+    // - If video with segments, it's the segment at time
+    SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+    SRGSegment *segment = mainChapter;
+    
+    if (mainChapter.segments.count) {
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
+            return CMTimeRangeContainsTime(segment.srg_timeRange, time);
+        }];
+        segment = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
+    }
+    return [self.timelineView.segments containsObject:segment] ? segment : nil;
 }
 
 #pragma mark Gesture recognizers
@@ -1029,17 +1037,17 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
-    SRGSegment *segment = [self segmentAtTime:time];
+    SRGSegment *selectedSegment = [self segmentOnTimelineAtTime:time];
     
     if (interactive) {
-        NSInteger selectedIndex = [self.timelineView.segments indexOfObject:segment];
+        NSInteger selectedIndex = [self.timelineView.segments indexOfObject:selectedSegment];
         self.timelineView.selectedIndex = selectedIndex;
         [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
     self.timelineView.time = time;
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSegment:segment interactive:interactive];
+        [self.delegate letterboxView:self didScrollWithSegment:selectedSegment interactive:interactive];
     }
 }
 
@@ -1089,11 +1097,8 @@ static void commonInit(SRGLetterboxView *self);
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
         
-        if (self.timelineView.selectedIndex != NSNotFound &&
-            ![[self.timelineView.segments objectAtIndex:self.timelineView.selectedIndex] isKindOfClass:[SRGChapter class]]) {
-            SRGSegment *segment = [self segmentAtTime:seekTargetTime];
-            self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
-        }
+        SRGSegment *segment = [self segmentOnTimelineAtTime:seekTargetTime];
+        self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
         
         self.timelineView.time = seekTargetTime;
         [self.timelineView scrollToSelectedIndexAnimated:YES];
