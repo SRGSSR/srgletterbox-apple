@@ -138,7 +138,7 @@
                 }
                     
                 case 1: {
-                    [self openSimplePlayerWithURNString:kVideoOnDemandStartOnSegmentURNString];
+                    [self openSimplePlayerWithURNString:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
@@ -165,7 +165,7 @@
                 }
                     
                 case 1: {
-                    [self openStandalonePlayerWithURNString:kVideoOnDemandStartOnSegmentURNString];
+                    [self openStandalonePlayerWithURNString:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
