@@ -86,7 +86,7 @@
 - (void)reloadDataOverriddenWithMedia:(SRGMedia *)media
 {
     if (! media) {
-        media = self.letterboxController.fullLengthMedia ?: self.letterboxController.media;
+        media = (self.URN.mediaType == SRGMediaTypeVideo) ? self.letterboxController.fullLengthMedia : self.letterboxController.media;
     }
     
     self.titleLabel.text = media.title;
@@ -107,10 +107,12 @@
     } completion:nil];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment interactive:(BOOL)interactive
 {
-    SRGMedia *media = segment ? [self.letterboxController.mediaComposition mediaForSegment:segment] : nil;
-    [self reloadDataOverriddenWithMedia:media];
+    if (interactive) {
+        SRGMedia *media = segment ? [self.letterboxController.mediaComposition mediaForSegment:segment] : nil;
+        [self reloadDataOverriddenWithMedia:media];
+    }
 }
 
 #pragma mark Notifications

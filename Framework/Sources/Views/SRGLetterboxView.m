@@ -1044,8 +1044,8 @@ static void commonInit(SRGLetterboxView *self);
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:)]) {
-        [self.delegate letterboxView:self didScrollWithSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSegment:segment interactive:interactive];
     }
 }
 

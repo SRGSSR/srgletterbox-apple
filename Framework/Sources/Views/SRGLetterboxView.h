@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
  *  position is provided, if any.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment interactive:(BOOL)interactive;
 
 /**
  *  Implement this method to have a callback when the user did a long press on a segment cell.
@@ -114,9 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
  *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
- *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly.
- *  When the user scrolls in the media, you can implement the delegate method `letterboxView:didScrollWithSegment:` to be
- *  notify on which segment the slider is.
+ *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You
+ *  can respond to the `-letterboxView:didScrollWithSegment:interactive:` delegate method to respond to the timeline
+ *  being moved, either interactively or during normal playback
  *  
  *  ## Long press and favorite status on segments
  *
