@@ -19,6 +19,7 @@
                 <outlet property="airplayButton" destination="CRu-wz-mvo" id="clN-q2-KCP"/>
                 <outlet property="airplayLabel" destination="45I-mU-kju" id="MMP-fx-1UF"/>
                 <outlet property="airplayView" destination="WC6-gu-laR" id="E3S-Du-nlZ"/>
+                <outlet property="backgroundInteractionView" destination="oRJ-Ix-YZ1" id="u2b-IQ-H0e"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
@@ -49,6 +50,14 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diO-OC-keM" userLabel="Playback View">
                     <rect key="frame" x="0.0" y="0.0" width="474" height="225"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-Ix-YZ1" userLabel="Background Interaction View">
+                            <rect key="frame" x="0.0" y="0.0" width="474" height="225"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="Si8-HF-UEx" appends="YES" id="5yN-rq-d5c"/>
+                            </connections>
+                        </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
                             <rect key="frame" x="37" y="0.0" width="400" height="225"/>
                         </imageView>
@@ -119,7 +128,7 @@
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                                    <rect key="frame" x="8" y="223" width="7582" height="22"/>
+                                    <rect key="frame" x="8" y="223" width="7608" height="22"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGAirplayButton">
                                             <rect key="frame" x="0.0" y="0.0" width="28" height="22"/>
@@ -145,7 +154,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="ASValueTrackingSlider">
-                                            <rect key="frame" x="4378" y="0.0" width="226" height="23"/>
+                                            <rect key="frame" x="4378" y="0.0" width="252.5" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <userDefinedRuntimeAttributes>
@@ -159,13 +168,13 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="4610" y="0.0" width="27.5" height="22"/>
+                                            <rect key="frame" x="4636.5" y="0.0" width="27.5" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="6081.5" y="0.0" width="28" height="22"/>
+                                            <rect key="frame" x="6108" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -177,7 +186,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button">
-                                            <rect key="frame" x="7553.5" y="0.0" width="28" height="22"/>
+                                            <rect key="frame" x="7580" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="28" id="wp2-4M-YHh"/>
@@ -223,20 +232,24 @@
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="1mJ-0L-8o5"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="height" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="height" id="6j2-gE-2a5"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="centerX" secondItem="diO-OC-keM" secondAttribute="centerX" id="9ko-Sj-9qF"/>
+                        <constraint firstAttribute="bottom" secondItem="oRJ-Ix-YZ1" secondAttribute="bottom" id="CXx-a0-lSb"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="D8d-Io-txc"/>
                         <constraint firstItem="WC6-gu-laR" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="Grz-uW-inw"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="QtC-pP-mdx"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="centerY" secondItem="diO-OC-keM" secondAttribute="centerY" id="R9n-ta-4XL"/>
+                        <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="750" id="SUi-VM-ZW7"/>
                         <constraint firstItem="WC6-gu-laR" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="WHZ-bk-yhu"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="fpx-1w-GZO"/>
+                        <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="jze-An-ZpH"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstItem="WC6-gu-laR" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="l1D-3h-7Ww"/>
                         <constraint firstItem="45I-mU-kju" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="bottom" constant="-68" id="nwL-di-rtl"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="width" secondItem="diO-OC-keM" secondAttribute="width" priority="750" id="oTI-AU-Fne"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="sZo-VD-nMG"/>
+                        <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="yt8-Kl-aFS"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View">
@@ -327,6 +340,11 @@
         <tapGestureRecognizer id="iXq-HC-lOl">
             <connections>
                 <action selector="retry:" destination="-1" id="6N3-uz-ppc"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="Si8-HF-UEx">
+            <connections>
+                <action selector="hideUserInterface:" destination="-1" id="Z5Z-gf-ZmY"/>
             </connections>
         </tapGestureRecognizer>
     </objects>

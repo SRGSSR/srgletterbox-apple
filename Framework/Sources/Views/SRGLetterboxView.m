@@ -35,6 +35,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
 
+@property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
+
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
 @property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
@@ -540,6 +542,7 @@ static void commonInit(SRGLetterboxView *self);
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
+        self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
         CGFloat notificationHeight = (notificationMessage != nil) ? 30.f : 0.f;
