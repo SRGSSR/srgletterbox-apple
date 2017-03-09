@@ -539,6 +539,9 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
+    if (timelineHeight != 0.f) {
+        [self.timelineView scrollToSelectedIndexAnimated:NO];
+    }
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
@@ -553,11 +556,6 @@ static void commonInit(SRGLetterboxView *self);
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
             self.userInterfaceHidden = hidden;
-            
-            // Focus on the current segment when opening the timeline again
-            if (timelineHeight != 0.f) {
-                [self.timelineView scrollToSelectedIndexAnimated:animated];
-            }
         }
         
         self.completion ? self.completion(finished) : nil;
@@ -740,13 +738,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Update the segments user interface for the current segment list
-- (void)updateUserInterfaceForCurrentSegmentsHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-}
-
 // Update the segments user interface with the last user-defined visibility settings
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
@@ -761,7 +752,8 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        [self updateUserInterfaceForCurrentSegmentsHidden:hidden animated:animated];
+        NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
     }];
 }
 
@@ -1073,7 +1065,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)metadataDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
-    [self updateUserInterfaceForCurrentSegmentsAnimated:YES];
     [self reloadData];
 }
 
@@ -1102,6 +1093,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self.timelineView scrollToSelectedIndexAnimated:YES];
+        [self updateUserInterfaceForCurrentSegmentsAnimated:YES];
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1122,6 +1114,10 @@ static void commonInit(SRGLetterboxView *self);
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
     [self.timelineView scrollToSelectedIndexAnimated:YES];
+    
+    if ([notification.userInfo[SRGMediaPlayerSelectedKey] boolValue]) {
+        [self updateUserInterfaceForCurrentSegmentsAnimated:YES];
+    }
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
