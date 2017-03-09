@@ -600,8 +600,8 @@ static void commonInit(SRGLetterboxView *self);
         SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         
         if (playbackState == SRGMediaPlayerPlaybackStatePlaying) {
-            // Hide if playing a video in Airplay or if "true screen mirroring" (device screen copy with no full-screen
-            // playbackl on the initiatedByCaller device) is used
+            // Hide if playing a video in Airplay or if "true screen mirroring" is used (device screen copy with no full-screen
+            // playback on the external device)
             SRGMedia *media = self.controller.media;
             BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive;
             self.imageView.alpha = hidden ? 0.f : 1.f;
