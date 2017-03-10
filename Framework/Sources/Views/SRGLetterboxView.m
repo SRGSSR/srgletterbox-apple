@@ -1018,20 +1018,20 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.time = segment.srg_timeRange.start;
 }
 
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressOnSegmentdidLongPressOnSegment:(SRGSegment *)segment
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressOnSegment:)]) {
-        [self.delegate letterboxView:self didLongPressOnSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressWithSegment:)]) {
+        [self.delegate letterboxView:self didLongPressWithSegment:segment];
     }
 }
 
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView hideFavoriteOnSegment:(SRGSegment *)segment
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldFavoriteSegment:(SRGSegment *)segment
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:hideFavoriteOnSegment:)]) {
-        return [self.delegate letterboxView:self hideFavoriteOnSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldFavoriteSegment:)]) {
+        return [self.delegate letterboxView:self shouldFavoriteSegment:segment];
     }
     else {
-        return YES;
+        return NO;
     }
 }
 

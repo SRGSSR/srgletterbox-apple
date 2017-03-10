@@ -26,10 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 /**
- *  This method gets called when the user interface is about to being displayed.
- *  By defaut, if non implemented, return YES.
+ *  This method gets called when the user interface is about to display a segment cell or when a long press has been
+ *  fired. By defaut, if non implemented, the behavior is the same as if the method returns `NO`.
  */
-- (BOOL)letterboxSegmentCellHideFavoriteImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (BOOL)letterboxSegmentCellShouldFavorite:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 @end
 
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Set to NO to display a favorite icon
  */
-@property (nonatomic, getter=isHiddenFavoriteImage) BOOL hiddenFavoriteImage;
+@property (nonatomic, getter=isFavoriteImageHidden) BOOL favoriteImageHidden;
 
 /**
  *  View optional delegate.
