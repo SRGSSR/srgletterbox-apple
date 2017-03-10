@@ -992,9 +992,9 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)setNeedsFavoriteOnSegmentsUpdate
+- (void)setNeedsSegmentFavoritesUpdate
 {
-    [self.timelineView setNeedsFavoriteOnSegmentsUpdate];
+    [self.timelineView setNeedsSegmentFavoritesUpdate];
 }
 
 #pragma mark SRGAirplayViewDelegate protocol

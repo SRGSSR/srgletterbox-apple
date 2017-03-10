@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface is about to display a segment cell or when a long press fired.
  *  By defaut, if non implemented, return YES.
  *
- *  @discussion: see `-setNeedsFavoriteOnSegmentsUpdate`
+ *  @discussion @see `-setNeedsSegmentFavoritesUpdate`
  */
 - (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteOnSegment:(SRGSegment *)segment;
 
@@ -280,7 +280,7 @@ IB_DESIGNABLE
  *  Need to update favorite status on segment cells.
  *  It will call Letterbox view delegate method `-letterboxView:hideFavoriteOnSegment` on each segment cells
  */
-- (void)setNeedsFavoriteOnSegmentsUpdate;
+- (void)setNeedsSegmentFavoritesUpdate;
 
 @end
 

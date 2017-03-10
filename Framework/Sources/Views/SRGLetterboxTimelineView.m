@@ -66,7 +66,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self updateCellAppearance];
 }
 
-- (void)setNeedsFavoriteOnSegmentsUpdate
+- (void)setNeedsSegmentFavoritesUpdate
 {
     [self.collectionView reloadData];
 }

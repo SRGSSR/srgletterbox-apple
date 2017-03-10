@@ -76,7 +76,7 @@ IB_DESIGNABLE
  *  Need to update favorite status on segment cells.
  *  It will call the delegate method `-letterboxView:hideFavoriteOnSegment` on each segment cells
  */
-- (void)setNeedsFavoriteOnSegmentsUpdate;
+- (void)setNeedsSegmentFavoritesUpdate;
 
 @end
 
