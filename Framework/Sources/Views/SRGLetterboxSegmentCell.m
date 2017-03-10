@@ -70,7 +70,7 @@
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     
     BOOL hiddenFavoriteImage = YES;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
+    if ([self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
         hiddenFavoriteImage = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
     }
     self.hiddenFavoriteImage = hiddenFavoriteImage;
@@ -98,12 +98,11 @@
 
 - (void)longPress:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan &&
-        self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellDidLongPress:)]) {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan && [self.delegate respondsToSelector:@selector(letterboxSegmentCellDidLongPress:)]) {
         [self.delegate letterboxSegmentCellDidLongPress:self];
         
         BOOL hiddenFavoriteImage = self.hiddenFavoriteImage;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
+        if ([self.delegate respondsToSelector:@selector(letterboxSegmentCellHideFavoriteImage:)]) {
             hiddenFavoriteImage = [self.delegate letterboxSegmentCellHideFavoriteImage:self];
         }
         self.hiddenFavoriteImage = hiddenFavoriteImage;

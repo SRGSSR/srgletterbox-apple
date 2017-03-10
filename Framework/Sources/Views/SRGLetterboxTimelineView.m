@@ -190,14 +190,14 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressOnSegmentdidLongPressOnSegment:)]) {
+    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressOnSegmentdidLongPressOnSegment:)]) {
         [self.delegate letterboxTimelineView:self didLongPressOnSegmentdidLongPressOnSegment:letterboxSegmentCell.segment];
     }
 }
 
 - (BOOL)letterboxSegmentCellHideFavoriteImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideFavoriteOnSegment:)]) {
+    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:hideFavoriteOnSegment:)]) {
         return [self.delegate letterboxTimelineView:self hideFavoriteOnSegment:letterboxSegmentCell.segment];
     }
     else {
