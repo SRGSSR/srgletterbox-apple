@@ -1107,6 +1107,10 @@ static void commonInit(SRGLetterboxView *self);
             [self.timelineView scrollToSelectedIndexAnimated:YES];
         }
     }
+    // If the player was playing or paused
+    else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
+        [self internal_setUserInterfaceHidden:NO animated:YES];
+    }
 }
 
 - (void)segmentDidStart:(NSNotification *)notification
