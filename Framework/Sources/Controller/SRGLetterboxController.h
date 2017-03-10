@@ -164,6 +164,12 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  */
 @property (nonatomic) BOOL resumesAfterRestart;
 
+/**
+ *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is 
+ *  unplugged or a Bluetooth headset is switched off abruptly). Default is `NO`.
+ */
+@property (nonatomic) BOOL resumesAfterRouteBecomesUnavailable;
+
 @end
 
 /**

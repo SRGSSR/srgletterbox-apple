@@ -74,9 +74,11 @@
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
+    self.smallLetterboxController1.resumesAfterRouteBecomesUnavailable = YES;
     
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;
+    self.smallLetterboxController2.resumesAfterRouteBecomesUnavailable = YES;
     
     [self.smallLetterboxView1 setUserInterfaceHidden:self.userInterfaceAlwaysHidden animated:NO togglable:! self.userInterfaceAlwaysHidden];
     [self.smallLetterboxView2 setUserInterfaceHidden:self.userInterfaceAlwaysHidden animated:NO togglable:! self.userInterfaceAlwaysHidden];
@@ -188,10 +190,13 @@
     
     self.letterboxController.muted = NO;
     self.letterboxController.tracked = YES;
+    self.letterboxController.resumesAfterRouteBecomesUnavailable = NO;
+    
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
+    self.smallLetterboxController1.resumesAfterRouteBecomesUnavailable = YES;
 }
 
 - (void)switchToStream2:(UIGestureRecognizer *)gestureRecognizer
@@ -207,10 +212,13 @@
     
     self.letterboxController.muted = NO;
     self.letterboxController.tracked = YES;
+    self.letterboxController.resumesAfterRouteBecomesUnavailable = NO;
+    
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;
+    self.smallLetterboxController2.resumesAfterRouteBecomesUnavailable = YES;
 }
 
 #pragma mark Notifications
