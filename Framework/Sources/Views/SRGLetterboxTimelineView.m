@@ -66,7 +66,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self updateCellAppearance];
 }
 
-- (void)setNeedsFavoriteOnSegmentsUpdate
+- (void)setNeedsSegmentFavoritesUpdate
 {
     [self.collectionView reloadData];
 }
@@ -190,18 +190,18 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressOnSegmentdidLongPressOnSegment:)]) {
-        [self.delegate letterboxTimelineView:self didLongPressOnSegmentdidLongPressOnSegment:letterboxSegmentCell.segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressWithSegment:)]) {
+        [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
     }
 }
 
-- (BOOL)letterboxSegmentCellHideFavoriteImage:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (BOOL)letterboxSegmentCellShouldFavorite:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(letterboxTimelineView:hideFavoriteOnSegment:)]) {
-        return [self.delegate letterboxTimelineView:self hideFavoriteOnSegment:letterboxSegmentCell.segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:shouldFavoriteSegment:)]) {
+        return [self.delegate letterboxTimelineView:self shouldFavoriteSegment:letterboxSegmentCell.segment];
     }
     else {
-        return YES;
+        return NO;
     }
 }
 

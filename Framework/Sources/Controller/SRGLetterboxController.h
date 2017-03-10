@@ -164,6 +164,12 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  */
 @property (nonatomic) BOOL resumesAfterRestart;
 
+/**
+ *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is 
+ *  unplugged or a Bluetooth headset is switched off abruptly). Default is `NO`.
+ */
+@property (nonatomic) BOOL resumesAfterRouteBecomesUnavailable;
+
 @end
 
 /**
@@ -341,7 +347,8 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 /**
  *  Provides a way to override the content URL which has been retrieved for a media. This is for example useful
- *  to replace the original URL with a local file URL.
+ *  to replace the original URL with a local file URL. Content overriding takes place when a play request is
+ *  initiated, content overriding must be setup before such requests are made, otherwise it won't take place.
  *
  *  @discussion When a URL has been overridden, the player will only work with the media, not the full playback
  *              context (since the context is tightly related to the original content URL, this would open the

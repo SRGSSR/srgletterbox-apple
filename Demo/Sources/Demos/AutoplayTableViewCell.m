@@ -48,6 +48,7 @@
     if (newWindow) {
         self.letterboxController = [[SRGLetterboxController alloc] init];
         self.letterboxController.muted = YES;
+        self.letterboxController.resumesAfterRouteBecomesUnavailable = YES;
         self.letterboxView.controller = self.letterboxController;
     }
     else {

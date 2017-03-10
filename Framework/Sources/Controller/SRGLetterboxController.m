@@ -123,6 +123,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.channelUpdateInterval = 30.;
         
         self.resumesAfterRestart = YES;
+        self.resumesAfterRouteBecomesUnavailable = NO;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -144,6 +145,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                                                  selector:@selector(playbackDidFail:)
                                                      name:SRGMediaPlayerPlaybackDidFailNotification
                                                    object:self.mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(routeDidChange:)
+                                                     name:AVAudioSessionRouteChangeNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -808,6 +813,23 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)playbackDidFail:(NSNotification *)notification
 {
     [self reportError:notification.userInfo[SRGMediaPlayerErrorKey]];
+}
+
+- (void)routeDidChange:(NSNotification *)notification
+{
+    NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
+    if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable
+            && self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+        // Playback is automatically paused by the system. Force resume if desired. Wait a little bit (0.1 is an
+        // empirical value), the system induced state change occurs slightly after this notification is received.
+        // We could probably do something more robust (e.g. wait until the real state change), but this would lead
+        // to additional complexity or states which do not seem required for correct behavior. Improve later if needed.
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (self.resumesAfterRouteBecomesUnavailable) {
+                [self play];
+            }
+        });
+    }
 }
 
 #pragma mark Description

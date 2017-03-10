@@ -31,7 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(void (^)(BOOL finished))completionHandler;
 
 /**
- *  Implement this method and return `NO` to disable full-screen toggle button display.
+ *  This method is called when the user interface is considering displaying a full-screen button. Implement this method 
+ *  and return `YES` to display the button.
  *
  *  If not implemented, the behavior is equivalent to returning `YES`.
  *
@@ -55,22 +56,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment interactive:(BOOL)interactive;
 
 /**
- *  Implement this method to have a callback when the user did a long press on a segment cell.
+ *  This method is called when the user did a long press on a segment cell.
  *
- *  @discussion This method gets called when the user interface made a long press on segment cell.
- *              Just after this call, the method `letterboxView:isFavoriteSegment:` will be called on this segment.
+ *  @discussion Just after this method has been called, the method `-letterboxView:shouldFavoriteSegment:` will be called 
+ *              with the same segment.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressOnSegment:(SRGSegment *)segment;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressWithSegment:(SRGSegment *)segment;
 
 /**
- *  Implement this method to hide or show the favorite image on a segment cell.
+ *  Implement this method to decide whether a segment cell should display a favorite image.
  *
- *  This method gets called when the user interface is about to display a segment cell or when a long press fired.
- *  By defaut, if non implemented, return YES.
+ *  This method gets called when the user interface is about to display a segment cell or when a long press has been 
+ *  fired. By defaut, if non implemented, the behavior is the same as if the method returns `NO`.
  *
- *  @discussion: see `-setNeedsFavoriteOnSegmentsUpdate`
+ *  @discussion @see `-setNeedsSegmentFavoritesUpdate`
  */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView hideFavoriteOnSegment:(SRGSegment *)segment;
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldFavoriteSegment:(SRGSegment *)segment;
 
 @end
 
@@ -121,8 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  ## Long press and favorite status on segments
  *
  *  The Letterbox view delegate has two optional methods:
- *  Implementing the `-letterboxView:didLongPressOnSegment:` will catch a long press on a segment cell in the timeline view.
- *  Implementing the `-letterboxView:hideFavoriteOnSegment:` calls to display or hide an SRG favorite icon on the
+ *  Implementing the `-letterboxView:didLongPressWithSegment:` will catch a long press on a segment cell in the timeline view.
+ *  Implementing the `-letterboxView:shouldFavoriteSegment:` calls to display or hide an SRG favorite icon on the
  *  segment cell.
  *  To force a refresh, call the `setNeedsFavoriteSegmentsUpdate` on Letterbox view.
  *
@@ -251,7 +252,7 @@ IB_DESIGNABLE
 /**
  *  The current segment timeline height.
  *
- *  @discussion Value should be the preferredTimelineHeight if the media has segments, 0.f otherwise. During an animation,
+ *  @discussion Value should be the `preferredTimelineHeight` if the media has segments, 0.f otherwise. During an animation,
  *  this value could be different. If using for your layout, please consider `-expansionHeight` too.
  */
 @property (nonatomic, readonly) CGFloat timelineHeight;
@@ -277,10 +278,11 @@ IB_DESIGNABLE
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated;
 
 /**
- *  Need to update favorite status on segment cells.
- *  It will call Letterbox view delegate method `-letterboxView:hideFavoriteOnSegment` on each segment cells
+ *  Call to schedule an update request for segment favorites.
+ *
+ *  For more information, @see `SRGLetterboxViewDelegate`.
  */
-- (void)setNeedsFavoriteOnSegmentsUpdate;
+- (void)setNeedsSegmentFavoritesUpdate;
 
 @end
 
