@@ -569,7 +569,7 @@ static void commonInit(SRGLetterboxView *self);
     
     CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
     if (timelineHeight != 0.f) {
-        [self.timelineView scrollToSelectedIndexAnimated:NO];
+        // [self.timelineView scrollToSelectedIndexAnimated:NO];
     }
     
     self.finalUserInterfaceHidden = @(hidden);
@@ -1024,7 +1024,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.timelineView.selectedIndex = [timelineView.segments indexOfObject:segment];
-    [self.timelineView scrollToSelectedIndexAnimated:YES];
+    //[self.timelineView scrollToSelectedIndexAnimated:YES];
     
     self.timelineView.time = segment.srg_timeRange.start;
 }
@@ -1099,12 +1099,12 @@ static void commonInit(SRGLetterboxView *self);
     [self updateControlsForController:self.controller animated:YES];
     [self updateLoadingIndicatorForController:self.controller animated:YES];
     
-    // Initially scroll to the selected segment or chapter initially (if any)
+    // Initially scroll to the selected segment or chapter (if any)
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
+        // [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1115,7 +1115,7 @@ static void commonInit(SRGLetterboxView *self);
             self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
             
             self.timelineView.time = seekTargetTime;
-            [self.timelineView scrollToSelectedIndexAnimated:YES];
+            // [self.timelineView scrollToSelectedIndexAnimated:YES];
         }
     }
     // If the player was playing or paused
