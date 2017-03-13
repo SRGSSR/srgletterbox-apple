@@ -414,6 +414,18 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineHeightConstraint.constant + self.notificationHeightConstraint.constant;
 }
 
+- (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
+{
+    CGFloat validPreferredTimelineHeight = (preferredTimelineHeight >= 0.f) ? preferredTimelineHeight : 0.f;
+    
+    if (self.preferredTimelineHeight != validPreferredTimelineHeight) {
+        self.preferredTimelineHeight = preferredTimelineHeight;
+        if (!self.isUserInterfaceHidden) {
+            // [self internal_setUserInterfaceHidden:NO animated:animated togglable:self.userInterfaceTogglable];
+        }
+    }
+}
+
 - (CGFloat)timelineHeight
 {
     return self.timelineHeightConstraint.constant;
@@ -480,7 +492,7 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [self internal_setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
+    [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:previousContext.togglable];
 }
 
 // Public method for changing user interface behavior. Always update interface settings, except when a UI state has been
@@ -495,19 +507,19 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
+    [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
 }
 
-// Simply refresh the user interface state using current values
+// Simply refresh the user interface state using current values (and the current segment list)
 - (void)refreshUserInterfaceAnimated:(BOOL)animated
 {
-    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
+    // [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
-// Show or hide the user interface, doing nothing if the interface is not togglable
-- (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+// Show or hide the user interface, doing nothing if the interface is not togglable or in an overridden state
+- (void)conditional_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable || self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+    if (! self.userInterfaceTogglable || self.restorationContexts.count != 0) {
         return;
     }
     
@@ -516,21 +528,21 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
-- (void)internal_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
+- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
     self.userInterfaceTogglable = togglable;
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
 // factorisation method which is not intended for direct use. This method always shows or hides the user interface. Segments
 // and notification messages are taken into account for proper UI adjustments depending on their presence
-- (void)internal_setUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments notificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
+- (void)imperative_updateUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments notificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -577,18 +589,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
-{
-    CGFloat validPreferredTimelineHeight = (preferredTimelineHeight >= 0.f) ? preferredTimelineHeight : 0.f;
-    
-    if (self.preferredTimelineHeight != validPreferredTimelineHeight) {
-        self.preferredTimelineHeight = preferredTimelineHeight;
-        if (!self.isUserInterfaceHidden) {
-            [self internal_setUserInterfaceHidden:NO animated:animated togglable:self.userInterfaceTogglable];
-        }
-    }
-}
-
 // Called to update the main player subviews (player view, background image, error overlay). Independent of the global
 // status of the control overlay
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
@@ -622,11 +622,11 @@ static void commonInit(SRGLetterboxView *self);
             
             // Force display of the controls at the end of the playback
             if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
-                [self internal_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+                [self conditional_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
             }
         }
         else if (playbackState == SRGMediaPlayerPlaybackStatePaused) {
-            [self internal_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
+            [self conditional_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
         }
     };
     
@@ -705,12 +705,12 @@ static void commonInit(SRGLetterboxView *self);
     
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         [self applyUserInterfaceChanges:^{
-            [self internal_setUserInterfaceHidden:NO animated:animated togglable:NO];
+            [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO];
         } withRestorationIdentifier:kIdentifier];
     }
     else {
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
+            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
 }
@@ -726,14 +726,14 @@ static void commonInit(SRGLetterboxView *self);
         self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
         
         [self applyUserInterfaceChanges:^{
-            [self internal_setUserInterfaceHidden:YES animated:animated togglable:NO];
+            [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO];
         } withRestorationIdentifier:kIdentifier];
     }
     else {
         self.errorView.alpha = 0.f;
         
         [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self internal_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
+            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
 }
@@ -743,7 +743,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+        // [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
     }];
 }
 
@@ -753,7 +753,7 @@ static void commonInit(SRGLetterboxView *self);
     // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
     [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
         NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-        [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+        // [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
     }];
 }
 
@@ -826,7 +826,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = notificationMessage;
     self.notificationLabel.text = notificationMessage;
     
-    [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
+    // [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
 }
@@ -914,12 +914,12 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self internal_setUserInterfaceHidden:NO animated:YES];
+    [self conditional_setUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self internal_setUserInterfaceHidden:YES animated:YES];
+    [self conditional_setUserInterfaceHidden:YES animated:YES];
 }
 
 #pragma mark Timers
@@ -932,7 +932,7 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self internal_setUserInterfaceHidden:YES animated:YES];
+        [self conditional_setUserInterfaceHidden:YES animated:YES];
     }
 }
 
@@ -1109,7 +1109,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     // If the player was playing or paused
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        [self internal_setUserInterfaceHidden:NO animated:YES];
+        [self conditional_setUserInterfaceHidden:NO animated:YES];
     }
 }
 
