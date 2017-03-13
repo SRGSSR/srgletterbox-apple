@@ -1035,6 +1035,10 @@ static void commonInit(SRGLetterboxView *self);
     
     self.timelineView.selectedIndex = [timelineView.segments indexOfObject:segment];
     self.timelineView.time = segment.srg_timeRange.start;
+    
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSegment:)]) {
+        [self.delegate letterboxView:self didSelectSegment:segment];
+    }
 }
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment

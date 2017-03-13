@@ -56,6 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment interactive:(BOOL)interactive;
 
 /**
+ *  This method is called when the user has selected a segment interactively.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectSegment:(SRGSegment *)segment;
+
+/**
  *  This method is called when the user did a long press on a segment cell.
  *
  *  @discussion Just after this method has been called, the method `-letterboxView:shouldFavoriteSegment:` will be called 
