@@ -940,7 +940,10 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
-    // [self conditional_setUserInterfaceHidden:YES animated:YES];
+    // Defer execution to avoid conflicts with the activity gesture above
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self conditional_setUserInterfaceHidden:YES animated:YES];
+    });
 }
 
 #pragma mark Timers
