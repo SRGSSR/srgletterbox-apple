@@ -175,9 +175,9 @@ static void commonInit(SRGLetterboxView *self);
     if (newWindow) {
         [self updateVisibleSubviewsAnimated:NO];
         [self updateUserInterfaceForServicePlayback];
-        [self updateUserInterfaceForCurrentSegmentsAnimated:NO];
         [self updateUserInterfaceForAirplayAnimated:NO];
         [self updateUserInterfaceForErrorAnimated:NO];
+        [self updateUserInterfaceAnimated:NO];
         [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -297,10 +297,9 @@ static void commonInit(SRGLetterboxView *self);
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:controller.mediaComposition];
-    [self updateUserInterfaceForSegments:segments animated:NO];
     [self updateLoadingIndicatorForController:controller animated:NO];
     [self updateUserInterfaceForErrorAnimated:NO];
+    [self updateUserInterfaceAnimated:NO];
     [self reloadDataForController:controller];
     
     if (controller) {
@@ -431,7 +430,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.preferredTimelineHeight = preferredTimelineHeight;
-    [self imperative_updateUserInterfaceAnimated:animated];
+    [self updateUserInterfaceAnimated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -546,13 +545,6 @@ static void commonInit(SRGLetterboxView *self);
     [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
-// Force a UI refresh for the current settings and segments
-- (void)imperative_updateUserInterfaceAnimated:(BOOL)animated
-{
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-}
-
 - (void)imperative_updateUserInterfaceWithSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
     [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
@@ -615,6 +607,13 @@ static void commonInit(SRGLetterboxView *self);
         animations();
         completion(YES);
     }
+}
+
+// Force a UI refresh for the current settings and segments
+- (void)updateUserInterfaceAnimated:(BOOL)animated
+{
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
 // Called to update the main player subviews (player view, background image, error overlay). Independent of the global
@@ -766,18 +765,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Update the segments user interface with the last user-defined visibility settings
-- (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
-{
-    [self imperative_updateUserInterfaceWithSegments:segments animated:animated];
-}
-
-// Update the segments user interface with the last user-defined visibility settings for controls and segments
-- (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
-{
-    [self imperative_updateUserInterfaceAnimated:animated];
-}
-
 - (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
     void (^animations)(void) = ^{
@@ -847,7 +834,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = notificationMessage;
     self.notificationLabel.text = notificationMessage;
     
-    [self imperative_updateUserInterfaceAnimated:YES];
+    [self imperative_updateUserInterfaceWithNotifiationMessage:notificationMessage animated:YES];
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
 }
@@ -857,7 +844,7 @@ static void commonInit(SRGLetterboxView *self);
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self imperative_updateUserInterfaceAnimated:YES];
+    [self updateUserInterfaceAnimated:YES];
 }
 
 #pragma mark UI changes and restoration
@@ -1116,8 +1103,8 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+        [self updateUserInterfaceAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
-        [self updateUserInterfaceForCurrentSegmentsAnimated:YES];
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1142,10 +1129,6 @@ static void commonInit(SRGLetterboxView *self);
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
     [self.timelineView scrollToSelectedIndexAnimated:YES];
-    
-    if ([notification.userInfo[SRGMediaPlayerSelectedKey] boolValue]) {
-        [self updateUserInterfaceForCurrentSegmentsAnimated:YES];
-    }
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
