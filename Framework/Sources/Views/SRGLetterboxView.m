@@ -67,8 +67,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 
-@property (nonatomic) NSNumber *finalUserInterfaceHidden;
-@property (nonatomic, readonly, getter=isEffectiveUserInterfaceHidden) BOOL effectiveUserInterfaceHidden;
+@property (nonatomic) NSNumber *finalUserInterfaceHidden;                                                           // Final userInterfaceHidden value when an animation is taking place (nil if none)
+@property (nonatomic, readonly, getter=isEffectiveUserInterfaceHidden) BOOL effectiveUserInterfaceHidden;           // Final userInterfaceHidden value if available, current value if none
 
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
@@ -488,7 +488,7 @@ static void commonInit(SRGLetterboxView *self);
     return [self reloadDataForController:self.controller];
 }
 
-#pragma mark UI
+#pragma mark UI public methods
 
 // Public method for changing user interface visibility only. Always update visibility, except when a UI state has been
 // forced (in which case changes will be applied after restoration)
@@ -522,6 +522,8 @@ static void commonInit(SRGLetterboxView *self);
     [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
 }
 
+#pragma mark UI methods subject to conditional execution
+
 // Show or hide the user interface, doing nothing if the interface is not togglable or in an overridden state
 - (void)conditional_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
@@ -536,6 +538,8 @@ static void commonInit(SRGLetterboxView *self);
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
     [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
+
+#pragma mark UI methods always performing their work
 
 - (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
@@ -567,9 +571,13 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
+    // Always scroll to the selected segment when opening the timeline. Schedule for scrolling on the next run loop so
+    // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
     CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
     if (timelineHeight != 0.f) {
-        //[self.timelineView scrollToSelectedIndexAnimated:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.timelineView scrollToSelectedIndexAnimated:NO];
+        });
     }
     
     self.finalUserInterfaceHidden = @(hidden);
@@ -608,6 +616,8 @@ static void commonInit(SRGLetterboxView *self);
         completion(YES);
     }
 }
+
+#pragma mark UI updates
 
 // Force a UI refresh for the current settings and segments
 - (void)updateUserInterfaceAnimated:(BOOL)animated
