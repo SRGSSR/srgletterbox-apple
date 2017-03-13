@@ -1089,6 +1089,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackDidFail:(NSNotification *)notification
 {
+    self.timelineView.selectedIndex = NSNotFound;
+    self.timelineView.time = kCMTimeZero;
+    
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self reloadData];
@@ -1118,10 +1121,8 @@ static void commonInit(SRGLetterboxView *self);
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
             CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
-            
             SRGSegment *segment = [self segmentOnTimelineAtTime:seekTargetTime];
             self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
-            
             self.timelineView.time = seekTargetTime;
         }
     }
