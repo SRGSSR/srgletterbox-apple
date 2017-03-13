@@ -66,8 +66,13 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
+
+@property (nonatomic) NSNumber *finalUserInterfaceHidden;
+@property (nonatomic, readonly, getter=isEffectiveUserInterfaceHidden) BOOL effectiveUserInterfaceHidden;
+
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
+
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
@@ -431,6 +436,11 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineHeightConstraint.constant;
 }
 
+- (BOOL)effectiveUserInterfaceHidden
+{
+    return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
+}
+
 #pragma mark Data display
 
 - (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
@@ -513,7 +523,8 @@ static void commonInit(SRGLetterboxView *self);
 // Simply refresh the user interface state using current values (and the current segment list)
 - (void)refreshUserInterfaceAnimated:(BOOL)animated
 {
-    // [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
 }
 
 // Show or hide the user interface, doing nothing if the interface is not togglable or in an overridden state
@@ -523,7 +534,7 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    if (self.userInterfaceHidden == hidden) {
+    if (self.effectiveUserInterfaceHidden == hidden) {
         return;
     }
     
@@ -555,6 +566,8 @@ static void commonInit(SRGLetterboxView *self);
         [self.timelineView scrollToSelectedIndexAnimated:NO];
     }
     
+    self.finalUserInterfaceHidden = @(hidden);
+    
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
         self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
@@ -568,6 +581,7 @@ static void commonInit(SRGLetterboxView *self);
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
             self.userInterfaceHidden = hidden;
+            self.finalUserInterfaceHidden = nil;
         }
         
         self.completion ? self.completion(finished) : nil;
