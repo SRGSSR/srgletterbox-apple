@@ -421,14 +421,17 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
 {
-    CGFloat validPreferredTimelineHeight = (preferredTimelineHeight >= 0.f) ? preferredTimelineHeight : 0.f;
-    
-    if (self.preferredTimelineHeight != validPreferredTimelineHeight) {
-        self.preferredTimelineHeight = preferredTimelineHeight;
-        if (!self.isUserInterfaceHidden) {
-            // [self internal_setUserInterfaceHidden:NO animated:animated togglable:self.userInterfaceTogglable];
-        }
+    if (preferredTimelineHeight < 0.f) {
+        SRGLetterboxLogWarning(@"view", @"The preferred timeline height must be >= 0. Fixed to 0");
+        preferredTimelineHeight = 0.f;
     }
+    
+    if (self.preferredTimelineHeight == preferredTimelineHeight) {
+        return;
+    }
+    
+    self.preferredTimelineHeight = preferredTimelineHeight;
+    [self imperative_updateUserInterfaceAnimated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -436,7 +439,7 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineHeightConstraint.constant;
 }
 
-- (BOOL)effectiveUserInterfaceHidden
+- (BOOL)isEffectiveUserInterfaceHidden
 {
     return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
 }
@@ -520,13 +523,6 @@ static void commonInit(SRGLetterboxView *self);
     [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
 }
 
-// Simply refresh the user interface state using current values (and the current segment list)
-- (void)refreshUserInterfaceAnimated:(BOOL)animated
-{
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-}
-
 // Show or hide the user interface, doing nothing if the interface is not togglable or in an overridden state
 - (void)conditional_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
@@ -548,6 +544,24 @@ static void commonInit(SRGLetterboxView *self);
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
     [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+}
+
+// Force a UI refresh for the current settings and segments
+- (void)imperative_updateUserInterfaceAnimated:(BOOL)animated
+{
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+}
+
+- (void)imperative_updateUserInterfaceWithSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+{
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+}
+
+- (void)imperative_updateUserInterfaceWithNotifiationMessage:(NSString *)notificationMessage animated:(BOOL)animated
+{
+    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:notificationMessage animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
@@ -755,20 +769,13 @@ static void commonInit(SRGLetterboxView *self);
 // Update the segments user interface with the last user-defined visibility settings
 - (void)updateUserInterfaceForSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
-    // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
-    [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        // [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-    }];
+    [self imperative_updateUserInterfaceWithSegments:segments animated:animated];
 }
 
 // Update the segments user interface with the last user-defined visibility settings for controls and segments
 - (void)updateUserInterfaceForCurrentSegmentsAnimated:(BOOL)animated
 {
-    // Use restoration values to determine the status to apply (still consider the current UI state if togglable)
-    [self calculateRestorationValuesWithBlock:^(BOOL hidden, BOOL togglable) {
-        NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-        // [self internal_setUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-    }];
+    [self imperative_updateUserInterfaceAnimated:animated];
 }
 
 - (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
@@ -840,7 +847,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = notificationMessage;
     self.notificationLabel.text = notificationMessage;
     
-    // [self internal_setUserInterfaceHidden:self.userInterfaceHidden animated:YES togglable:self.userInterfaceTogglable];
+    [self imperative_updateUserInterfaceAnimated:YES];
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
 }
@@ -850,7 +857,7 @@ static void commonInit(SRGLetterboxView *self);
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self refreshUserInterfaceAnimated:YES];
+    [self imperative_updateUserInterfaceAnimated:YES];
 }
 
 #pragma mark UI changes and restoration
@@ -933,7 +940,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self conditional_setUserInterfaceHidden:YES animated:YES];
+    // [self conditional_setUserInterfaceHidden:YES animated:YES];
 }
 
 #pragma mark Timers
