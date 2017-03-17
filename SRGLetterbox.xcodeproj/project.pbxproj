@@ -11,9 +11,6 @@
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
 		087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
-		08B934BF1E390C2400CFE85A /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
-		08B934C01E390C3200CFE85A /* ASValueTrackingSlider.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
-		08B934C11E390C6100CFE85A /* ASValueTrackingSlider.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
@@ -127,9 +124,6 @@
 		6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
-		6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
-		6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */; };
 		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */; };
@@ -156,6 +150,10 @@
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
+		6FEBEC371E7BC766003F760F /* ASValuePopUpView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC331E7BC766003F760F /* ASValuePopUpView.h */; };
+		6FEBEC381E7BC766003F760F /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC341E7BC766003F760F /* ASValuePopUpView.m */; };
+		6FEBEC391E7BC766003F760F /* ASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC351E7BC766003F760F /* ASValueTrackingSlider.h */; };
+		6FEBEC3A1E7BC766003F760F /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC361E7BC766003F760F /* ASValueTrackingSlider.m */; };
 		6FFDE8AE1E52DF2900EF4A3D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */; };
 		6FFDE8AF1E52DF2900EF4A3D /* HockeySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -185,7 +183,6 @@
 			dstSubfolderSpec = 16;
 			files = (
 				6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				08B934C01E390C3200CFE85A /* ASValueTrackingSlider.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FDF1E30A6D1000215F3 /* ComScore.framework in Copy Framework Dependencies For Xcode View Rendering */,
@@ -222,7 +219,6 @@
 				6FAB3B6C1E2905CA00CC2197 /* libextobjc.framework in Embed Frameworks */,
 				08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */,
 				6FAB3B761E2905CA00CC2197 /* SRGDataProvider.framework in Embed Frameworks */,
-				6FD30A021E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Embed Frameworks */,
 				6FAB3B6A1E2905CA00CC2197 /* ComScore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -235,7 +231,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */,
-				08B934C11E390C6100CFE85A /* ASValueTrackingSlider.framework in CopyFiles */,
 				6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */,
 				6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in CopyFiles */,
 				6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */,
@@ -349,6 +344,10 @@
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
+		6FEBEC331E7BC766003F760F /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
+		6FEBEC341E7BC766003F760F /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
+		6FEBEC351E7BC766003F760F /* ASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValueTrackingSlider.h; sourceTree = "<group>"; };
+		6FEBEC361E7BC766003F760F /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
 		6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Demo/Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -372,7 +371,6 @@
 				08FA0D221E30F92F000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B751E2905CA00CC2197 /* SRGDataProvider.framework in Frameworks */,
 				6FAB3B691E2905CA00CC2197 /* ComScore.framework in Frameworks */,
-				6FD30A011E3A0CA2005E66B6 /* ASValueTrackingSlider.framework in Frameworks */,
 				6FFDE8AE1E52DF2900EF4A3D /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -382,7 +380,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
-				6FD30A031E3A0D33005E66B6 /* ASValueTrackingSlider.framework in Frameworks */,
 				6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */,
 				6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */,
 				6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */,
@@ -404,7 +401,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
-				08B934BF1E390C2400CFE85A /* ASValueTrackingSlider.framework in Frameworks */,
 				08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */,
 				08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B9B1E291A8500CC2197 /* YYWebImage.framework in Frameworks */,
@@ -497,6 +493,7 @@
 		6F48559D1E3A311C00B0141C /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				6FEBEC321E7BC766003F760F /* ASValueTrackingSlider */,
 				6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */,
 			);
 			path = Externals;
@@ -674,6 +671,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6FEBEC321E7BC766003F760F /* ASValueTrackingSlider */ = {
+			isa = PBXGroup;
+			children = (
+				6FEBEC331E7BC766003F760F /* ASValuePopUpView.h */,
+				6FEBEC341E7BC766003F760F /* ASValuePopUpView.m */,
+				6FEBEC351E7BC766003F760F /* ASValueTrackingSlider.h */,
+				6FEBEC361E7BC766003F760F /* ASValueTrackingSlider.m */,
+			);
+			path = ASValueTrackingSlider;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -683,11 +691,13 @@
 			files = (
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
+				6FEBEC391E7BC766003F760F /* ASValueTrackingSlider.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				08FA0CC61E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
+				6FEBEC371E7BC766003F760F /* ASValuePopUpView.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
 				6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */,
@@ -894,12 +904,14 @@
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
+				6FEBEC3A1E7BC766003F760F /* ASValueTrackingSlider.m in Sources */,
 				6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 				08FA0CC71E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m in Sources */,
+				6FEBEC381E7BC766003F760F /* ASValuePopUpView.m in Sources */,
 				6F324A0E1E557239007523AA /* SRGLetterboxViewRestorationContext.m in Sources */,
 				08FA0CC31E2E72E7000C94EF /* UIFont+SRGLetterbox.m in Sources */,
 			);

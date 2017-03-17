@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxView.h"
 
+#import "ASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -16,7 +17,6 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
-#import <ASValueTrackingSlider/ASValueTrackingSlider.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>

@@ -31,7 +31,6 @@ github "SRGSSR/srgletterbox-ios"
 
 Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your projet:
 
-  * `ASValueTrackingSlider`: A slider component imported as a framework (custom SRG SSR fork)
   * `ComScore`: comScore framework
   * `FXReachability`: A reachability framework
   * `libextobjc`: A utility framework
