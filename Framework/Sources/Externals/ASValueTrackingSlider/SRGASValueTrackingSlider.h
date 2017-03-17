@@ -1,5 +1,5 @@
 //
-//  ASValueTrackingSlider.h
+//  SRGASValueTrackingSlider.h
 //  ValueTrackingSlider
 //
 //  Created by Alan Skipp on 19/10/2013.
@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <SRGMediaPlayer/SRGTimeSlider.h>
 
-@protocol ASValueTrackingSliderDelegate;
-@protocol ASValueTrackingSliderDataSource;
+@protocol SRGASValueTrackingSliderDelegate;
+@protocol SRGASValueTrackingSliderDataSource;
 
-@interface ASValueTrackingSlider : SRGTimeSlider
+@interface SRGASValueTrackingSlider : SRGTimeSlider
 
 // present the popUpView manually, without touch event.
 - (void)showPopUpViewAnimated:(BOOL)animated;
@@ -59,38 +59,38 @@
 @property (copy, nonatomic) NSNumberFormatter *numberFormatter;
 
 // supply entirely customized strings for slider values using the datasource protocol - see below
-@property (weak, nonatomic) id<ASValueTrackingSliderDataSource> dataSource;
+@property (weak, nonatomic) id<SRGASValueTrackingSliderDataSource> dataSource;
 
 // delegate is only needed when used with a TableView or CollectionView - see below
-@property (weak, nonatomic) id<ASValueTrackingSliderDelegate> asDelegate;
+@property (weak, nonatomic) id<SRGASValueTrackingSliderDelegate> asDelegate;
 @end
 
 
 
-// to supply custom text to the popUpView label, implement <ASValueTrackingSliderDataSource>
+// to supply custom text to the popUpView label, implement <SRGASValueTrackingSliderDataSource>
 // the dataSource will be messaged each time the slider value changes
-@protocol ASValueTrackingSliderDataSource <NSObject>
-- (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
+@protocol SRGASValueTrackingSliderDataSource <NSObject>
+- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 @end
 
-// when embedding an ASValueTrackingSlider inside a TableView or CollectionView
+// when embedding an SRGASValueTrackingSlider inside a TableView or CollectionView
 // you need to ensure that the cell it resides in is brought to the front of the view hierarchy
 // to prevent the popUpView from being obscured
-@protocol ASValueTrackingSliderDelegate <NSObject>
-- (void)sliderWillDisplayPopUpView:(ASValueTrackingSlider *)slider;
+@protocol SRGASValueTrackingSliderDelegate <NSObject>
+- (void)sliderWillDisplayPopUpView:(SRGASValueTrackingSlider *)slider;
 
 @optional
-- (void)sliderDidDisplayPopUpView:(ASValueTrackingSlider *)slider;
+- (void)sliderDidDisplayPopUpView:(SRGASValueTrackingSlider *)slider;
 
-- (void)sliderWillHidePopUpView:(ASValueTrackingSlider *)slider;
-- (void)sliderDidHidePopUpView:(ASValueTrackingSlider *)slider;
+- (void)sliderWillHidePopUpView:(SRGASValueTrackingSlider *)slider;
+- (void)sliderDidHidePopUpView:(SRGASValueTrackingSlider *)slider;
 @end
 
 /*
 // the recommended technique for use with a tableView is to create a UITableViewCell subclass ↓
  
- @interface SliderCell : UITableViewCell <ASValueTrackingSliderDelegate>
- @property (weak, nonatomic) IBOutlet ASValueTrackingSlider *slider;
+ @interface SliderCell : UITableViewCell <SRGASValueTrackingSliderDelegate>
+ @property (weak, nonatomic) IBOutlet SRGASValueTrackingSlider *slider;
  @end
  
  @implementation SliderCell
@@ -100,7 +100,7 @@
     self.slider.delegate = self;
  }
  
- - (void)sliderWillDisplayPopUpView:(ASValueTrackingSlider *)slider;
+ - (void)sliderWillDisplayPopUpView:(SRGASValueTrackingSlider *)slider;
  {
     [self.superview bringSubviewToFront:self];
  }

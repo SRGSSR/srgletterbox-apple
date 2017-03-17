@@ -1,5 +1,5 @@
 //
-//  ASValuePopUpView.h
+//  SRGASValuePopUpView.h
 //  ValueTrackingSlider
 //
 //  Created by Alan Skipp on 27/03/2014.
@@ -7,24 +7,24 @@
 //
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// This UIView subclass is used internally by ASValueTrackingSlider
-// The public API is declared in ASValueTrackingSlider.h
+// This UIView subclass is used internally by SRGASValueTrackingSlider
+// The public API is declared in SRGASValueTrackingSlider.h
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import <UIKit/UIKit.h>
 
-@class ASValueTrackingSlider;
+@class SRGASValueTrackingSlider;
 
-@protocol ASValuePopUpViewDelegate <NSObject>
+@protocol SRGASValuePopUpViewDelegate <NSObject>
 - (CGFloat)currentValueOffset; //expects value in the range 0.0 - 1.0
 - (void)colorDidUpdate:(UIColor *)opaqueColor;
 @end
 
-@interface ASValuePopUpView : UIView
+@interface SRGASValuePopUpView : UIView
 
-- (instancetype)initWithTrackingSlider:(ASValueTrackingSlider *)trackingSlider;
+- (instancetype)initWithTrackingSlider:(SRGASValueTrackingSlider *)trackingSlider;
 
-@property (weak, nonatomic) id <ASValuePopUpViewDelegate> delegate;
+@property (weak, nonatomic) id <SRGASValuePopUpViewDelegate> delegate;
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat arrowLength;
 @property (nonatomic) CGFloat widthPaddingFactor;

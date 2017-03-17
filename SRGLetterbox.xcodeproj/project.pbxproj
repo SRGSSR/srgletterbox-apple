@@ -150,10 +150,10 @@
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
-		6FEBEC371E7BC766003F760F /* ASValuePopUpView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC331E7BC766003F760F /* ASValuePopUpView.h */; };
-		6FEBEC381E7BC766003F760F /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC341E7BC766003F760F /* ASValuePopUpView.m */; };
-		6FEBEC391E7BC766003F760F /* ASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC351E7BC766003F760F /* ASValueTrackingSlider.h */; };
-		6FEBEC3A1E7BC766003F760F /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC361E7BC766003F760F /* ASValueTrackingSlider.m */; };
+		6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC331E7BC766003F760F /* SRGASValuePopUpView.h */; };
+		6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */; };
+		6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */; };
+		6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */; };
 		6FFDE8AE1E52DF2900EF4A3D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */; };
 		6FFDE8AF1E52DF2900EF4A3D /* HockeySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -344,10 +344,10 @@
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
-		6FEBEC331E7BC766003F760F /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
-		6FEBEC341E7BC766003F760F /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
-		6FEBEC351E7BC766003F760F /* ASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValueTrackingSlider.h; sourceTree = "<group>"; };
-		6FEBEC361E7BC766003F760F /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
+		6FEBEC331E7BC766003F760F /* SRGASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGASValuePopUpView.h; sourceTree = "<group>"; };
+		6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValuePopUpView.m; sourceTree = "<group>"; };
+		6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGASValueTrackingSlider.h; sourceTree = "<group>"; };
+		6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValueTrackingSlider.m; sourceTree = "<group>"; };
 		6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Demo/Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -674,10 +674,10 @@
 		6FEBEC321E7BC766003F760F /* ASValueTrackingSlider */ = {
 			isa = PBXGroup;
 			children = (
-				6FEBEC331E7BC766003F760F /* ASValuePopUpView.h */,
-				6FEBEC341E7BC766003F760F /* ASValuePopUpView.m */,
-				6FEBEC351E7BC766003F760F /* ASValueTrackingSlider.h */,
-				6FEBEC361E7BC766003F760F /* ASValueTrackingSlider.m */,
+				6FEBEC331E7BC766003F760F /* SRGASValuePopUpView.h */,
+				6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */,
+				6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */,
+				6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */,
 			);
 			path = ASValueTrackingSlider;
 			sourceTree = "<group>";
@@ -691,13 +691,13 @@
 			files = (
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
-				6FEBEC391E7BC766003F760F /* ASValueTrackingSlider.h in Headers */,
+				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				08FA0CC61E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
-				6FEBEC371E7BC766003F760F /* ASValuePopUpView.h in Headers */,
+				6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
 				6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */,
@@ -904,14 +904,14 @@
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
-				6FEBEC3A1E7BC766003F760F /* ASValueTrackingSlider.m in Sources */,
+				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
 				6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 				08FA0CC71E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m in Sources */,
-				6FEBEC381E7BC766003F760F /* ASValuePopUpView.m in Sources */,
+				6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */,
 				6F324A0E1E557239007523AA /* SRGLetterboxViewRestorationContext.m in Sources */,
 				08FA0CC31E2E72E7000C94EF /* UIFont+SRGLetterbox.m in Sources */,
 			);

@@ -1,20 +1,20 @@
 //
-//  ASValueTrackingSlider.m
+//  SRGASValueTrackingSlider.m
 //  ValueTrackingSlider
 //
 //  Created by Alan Skipp on 19/10/2013.
 //  Copyright (c) 2013 Alan Skipp. All rights reserved.
 //
 
-#import "ASValueTrackingSlider.h"
-#import "ASValuePopUpView.h"
+#import "SRGASValueTrackingSlider.h"
+#import "SRGASValuePopUpView.h"
 
-@interface ASValueTrackingSlider() <ASValuePopUpViewDelegate>
-@property (strong, nonatomic) ASValuePopUpView *popUpView;
+@interface SRGASValueTrackingSlider() <SRGASValuePopUpViewDelegate>
+@property (strong, nonatomic) SRGASValuePopUpView *popUpView;
 @property (nonatomic) BOOL popUpViewAlwaysOn; // default is NO
 @end
 
-@implementation ASValueTrackingSlider
+@implementation SRGASValueTrackingSlider
 {
     NSNumberFormatter *_numberFormatter;
     UIColor *_popUpViewColor;
@@ -197,7 +197,7 @@
     [self _hidePopUpViewAnimated:animated];
 }
 
-#pragma mark - ASValuePopUpViewDelegate
+#pragma mark - SRGASValuePopUpViewDelegate
 
 - (void)colorDidUpdate:(UIColor *)opaqueColor
 {
@@ -225,7 +225,7 @@
     [formatter setMinimumFractionDigits:2];
     _numberFormatter = formatter;
 
-    self.popUpView = [[ASValuePopUpView alloc] initWithTrackingSlider:self];
+    self.popUpView = [[SRGASValuePopUpView alloc] initWithTrackingSlider:self];
     self.popUpViewColor = [UIColor colorWithHue:0.6 saturation:0.6 brightness:0.5 alpha:0.8];
 
     self.popUpView.alpha = 0.0;

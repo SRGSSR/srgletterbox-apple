@@ -1,5 +1,5 @@
 //
-//  ASValuePopUpView.m
+//  SRGASValuePopUpView.m
 //  ValueTrackingSlider
 //
 //  Created by Alan Skipp on 27/03/2014.
@@ -7,12 +7,12 @@
 //
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// This UIView subclass is used internally by ASValueTrackingSlider
-// The public API is declared in ASValueTrackingSlider.h
+// This UIView subclass is used internally by SRGASValueTrackingSlider
+// The public API is declared in SRGASValueTrackingSlider.h
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#import "ASValuePopUpView.h"
-#import "ASValueTrackingSlider.h"
+#import "SRGASValuePopUpView.h"
+#import "SRGASValueTrackingSlider.h"
 
 @implementation CALayer (ASAnimationAdditions)
 
@@ -28,20 +28,20 @@
 }
 @end
 
-NSString *const SliderFillColorAnim = @"fillColor";
+static NSString *const SliderFillColorAnim = @"fillColor";
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-@interface ASValuePopUpView () <CAAnimationDelegate>
+@interface SRGASValuePopUpView () <CAAnimationDelegate>
 @end
 #endif
 
-@interface ASValuePopUpView ()
+@interface SRGASValuePopUpView ()
 
-@property (nonatomic, weak) ASValueTrackingSlider *trackingSlider;
+@property (nonatomic, weak) SRGASValueTrackingSlider *trackingSlider;
 
 @end
 
-@implementation ASValuePopUpView
+@implementation SRGASValuePopUpView
 {
     BOOL _shouldAnimate;
     CFTimeInterval _animDuration;
@@ -77,7 +77,7 @@ NSString *const SliderFillColorAnim = @"fillColor";
 
 #pragma mark - public
 
-- (id)initWithTrackingSlider:(ASValueTrackingSlider *)trackingSlider
+- (id)initWithTrackingSlider:(SRGASValueTrackingSlider *)trackingSlider
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
