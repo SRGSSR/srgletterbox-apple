@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxView.h"
 
+#import "SRGASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -16,21 +17,20 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
-#import <ASValueTrackingSlider/ASValueTrackingSlider.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <ASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
+@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *controlsView;
 @property (nonatomic, weak) IBOutlet SRGPlaybackButton *playbackButton;
-@property (nonatomic, weak) IBOutlet ASValueTrackingSlider *timeSlider;
+@property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
@@ -988,9 +988,9 @@ static void commonInit(SRGLetterboxView *self);
     [self.controller restart];
 }
 
-#pragma mark ASValueTrackingSliderDataSource protocol
+#pragma mark SRGASValueTrackingSliderDataSource protocol
 
-- (NSAttributedString *)slider:(ASValueTrackingSlider *)slider attributedStringForValue:(float)value;
+- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 {
     if (self.controller.media.contentType == SRGContentTypeLivestream) {
         static dispatch_once_t onceToken;
