@@ -82,7 +82,7 @@ The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger
 
 ### Control preview in Interface Builder
 
-Interface Builder can render custom controls dropped onto a storyboard or a xib. If you want to enable this feature for Letterbox controls, and after Carthage has been run, open the `Carthage/Build/iOS/SRGLetterbox.framework/Designables` directory, **copy** the `SRGLetterboxDesignables.m` file it contains to your project and add it to your target.
+Interface Builder can render custom controls dropped onto a storyboard or a xib. If you want to enable this feature for Letterbox controls, and after Carthage has been run, open the `Carthage/Checkouts/srgletterbox-ios/Designables` directory, **copy** the `SRGLetterboxDesignables.m` file it contains to your project and add it to your target.
 
 When dropping a view (e.g. `SRGLetterboxView`) onto a storyboard or xib, Xcode will now build your project in the background and render the view when it is done.
 
