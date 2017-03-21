@@ -846,7 +846,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self imperative_updateUserInterfaceWithNotifiationMessage:notificationMessage animated:YES];
     
-    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
+    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
 }
 
 - (void)dismissNotificationView
