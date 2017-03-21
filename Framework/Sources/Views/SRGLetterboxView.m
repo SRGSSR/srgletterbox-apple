@@ -846,7 +846,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self imperative_updateUserInterfaceWithNotifiationMessage:notificationMessage animated:YES];
     
-    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:3.];
+    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
 }
 
 - (void)dismissNotificationView
@@ -1022,7 +1022,10 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
 {
-    self.airplayLabel.text = NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay device");
+    // Set the cutom label to nil. If removed from SRGAirplayView, the default Airplay view will be shown.
+    self.airplayLabel.text = @"";
+    [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay")];
+    
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
