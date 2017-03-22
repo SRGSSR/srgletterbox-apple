@@ -39,6 +39,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
+@property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
 @property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *errorView;
@@ -152,7 +153,14 @@ static void commonInit(SRGLetterboxView *self);
     
     self.timelineHeightConstraint.constant = 0.f;
     self.notificationHeightConstraint.constant = 0.f;
+    
+    // Workaround UIImage view tint color bug
+    // See http://stackoverflow.com/a/26042893/760435
+    UIImage *notificationImage = self.notificationImageView.image;
+    self.notificationImageView.image = nil;
+    self.notificationImageView.image = notificationImage;
     self.notificationLabel.text = nil;
+    self.notificationImageView.hidden = YES;
     
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
@@ -587,6 +595,8 @@ static void commonInit(SRGLetterboxView *self);
         self.controlsView.alpha = hidden ? 0.f : 1.f;
         self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
+        
+        self.notificationImageView.hidden = (notificationMessage == nil);
         
         // We need to know what will be the notification height, depending of the new notification message.
         CGFloat notificationHeight = 0.f;
