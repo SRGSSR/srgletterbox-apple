@@ -58,17 +58,17 @@
                             </connections>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
-                            <rect key="frame" x="26.5" y="0.0" width="421" height="237"/>
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hl-p0-Y81">
-                            <rect key="frame" x="26.5" y="0.0" width="421" height="237"/>
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="4hl-p0-Y81" secondAttribute="height" multiplier="16:9" id="Pqd-7p-JcS"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WC6-gu-laR" customClass="SRGAirplayView">
-                            <rect key="frame" x="26.5" y="0.0" width="421" height="237"/>
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;airplay&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45I-mU-kju" userLabel="Airplay Label">
                                     <rect key="frame" x="8" y="169" width="405" height="16"/>
@@ -85,7 +85,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View">
-                            <rect key="frame" x="26.5" y="0.0" width="421" height="237"/>
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5q-RH-Wvg" userLabel="User Interface Toggle Active View">
                                     <rect key="frame" x="0.0" y="0.0" width="421" height="205"/>
@@ -95,7 +95,7 @@
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="140.5" y="102" width="35" height="35"/>
+                                    <rect key="frame" x="141" y="102" width="35" height="35"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <state key="normal" image="backward-35"/>
                                     <connections>
@@ -103,7 +103,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGPlaybackButton">
-                                    <rect key="frame" x="195.5" y="102" width="30" height="34"/>
+                                    <rect key="frame" x="196" y="102" width="30" height="34"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="image" keyPath="playImage" value="play-50"/>
@@ -111,7 +111,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="245.5" y="102" width="35" height="35"/>
+                                    <rect key="frame" x="246" y="102" width="35" height="35"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <state key="normal" image="forward-35"/>
                                     <connections>
@@ -119,7 +119,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="300.5" y="102" width="35" height="35"/>
+                                    <rect key="frame" x="301" y="102" width="35" height="35"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <state key="normal" image="back_live-35"/>
                                     <connections>
@@ -262,7 +262,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.18431372549019609" green="0.47058823529411764" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="erX-bp-o7I" secondAttribute="bottom" id="3RX-Pg-fxA"/>
                         <constraint firstAttribute="trailing" secondItem="erX-bp-o7I" secondAttribute="trailing" constant="8" id="Kwn-ub-39g"/>
