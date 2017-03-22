@@ -587,8 +587,24 @@ static void commonInit(SRGLetterboxView *self);
         self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
-        CGFloat notificationHeight = (notificationMessage != nil) ? 30.f : 0.f;
-        self.notificationHeightConstraint.constant = notificationHeight;
+        // We need to know what will be the notification height, depending of the new notification message.
+        CGFloat notificationHeight = 0.f;
+        self.notificationLabel.text = notificationMessage;
+        if (notificationMessage != nil) {
+            
+            // Force autolayout
+            [self.notificationLabel setNeedsLayout];
+            [self.notificationLabel layoutIfNeeded];
+            
+            // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
+            // adjusts
+            // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
+            CGSize fittingSize = UILayoutFittingCompressedSize;
+            fittingSize.width = CGRectGetWidth(self.notificationLabel.frame);
+            notificationHeight = [self.notificationLabel systemLayoutSizeFittingSize:fittingSize
+                                                       withHorizontalFittingPriority:UILayoutPriorityRequired
+                                                             verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+        }
         
         self.animations ? self.animations(hidden, timelineHeight + notificationHeight) : nil;
     };
@@ -842,7 +858,6 @@ static void commonInit(SRGLetterboxView *self);
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
     
     self.notificationMessage = notificationMessage;
-    self.notificationLabel.text = notificationMessage;
     
     [self imperative_updateUserInterfaceWithNotifiationMessage:notificationMessage animated:YES];
     
