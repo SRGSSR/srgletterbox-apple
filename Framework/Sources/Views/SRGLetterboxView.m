@@ -152,6 +152,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.timelineHeightConstraint.constant = 0.f;
     self.notificationHeightConstraint.constant = 0.f;
+    self.notificationLabel.text = nil;
     
     self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
