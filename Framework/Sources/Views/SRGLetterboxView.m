@@ -39,9 +39,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
-@property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
-@property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
-
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
@@ -56,6 +53,9 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationHeightConstraint;
+
+@property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
+@property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
