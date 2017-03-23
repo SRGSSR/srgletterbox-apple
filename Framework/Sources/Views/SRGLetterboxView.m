@@ -45,8 +45,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 
-@property (nonatomic, weak) IBOutlet SRGAirplayView *airplayView;
-@property (nonatomic, weak) IBOutlet UILabel *airplayLabel;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
@@ -141,7 +139,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
-    self.airplayView.delegate = self;
     self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = YES;
@@ -165,7 +162,6 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabel.text = nil;
     self.notificationImageView.hidden = YES;
     
-    self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
@@ -299,7 +295,6 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.playbackButton.mediaPlayerController = mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
-    self.airplayView.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
@@ -1052,16 +1047,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setNeedsSegmentFavoritesUpdate
 {
     [self.timelineView setNeedsSegmentFavoritesUpdate];
-}
-
-#pragma mark SRGAirplayViewDelegate protocol
-
-- (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
-{
-    // Set the cutom label to nil. If removed from SRGAirplayView, the default Airplay view will be shown.
-    self.airplayLabel.text = @"";
-    [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
-    
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
