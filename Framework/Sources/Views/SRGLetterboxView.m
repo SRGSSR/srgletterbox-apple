@@ -623,8 +623,8 @@ static void commonInit(SRGLetterboxView *self);
         self.timelineHeightConstraint.constant = timelineHeight;
         
         self.notificationImageView.hidden = (notificationMessage == nil);
-        self.notificationLabelBottomConstraint.constant = (notificationMessage != nil) ? 2.f : 0.f;
-        self.notificationLabelTopConstraint.constant = (notificationMessage != nil) ? 2.f : 0.f;
+        self.notificationLabelBottomConstraint.constant = (notificationMessage != nil) ? 6.f : 0.f;
+        self.notificationLabelTopConstraint.constant = (notificationMessage != nil) ? 6.f : 0.f;
         
         // We need to know what will be the notification view height, depending of the new notification message.
         CGFloat notificationHeight = 0.f;
