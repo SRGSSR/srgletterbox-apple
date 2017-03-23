@@ -214,9 +214,7 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
         
-        if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-            [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:NO];
-        }
+        [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -248,7 +246,7 @@ static void commonInit(SRGLetterboxView *self);
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
     if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
         
-        [self layoutForNotificationHeight];
+        [self layoutNotificationViewAndUpdateNotificationHeight];
         if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
             [self updateUserInterfaceAnimated:YES];
         }
@@ -607,7 +605,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // We need to know what will be the notification view height, depending of the new notification message.
         self.notificationLabel.text = self.notificationMessage;
-        [self layoutForNotificationHeight];
+        [self layoutNotificationViewAndUpdateNotificationHeight];
         
         self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
     };
@@ -850,9 +848,16 @@ static void commonInit(SRGLetterboxView *self);
     return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
 }
 
-#pragma Layout updates
+- (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
+{
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+        [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:animated];
+    }
+}
 
-- (void)layoutForNotificationHeight {
+#pragma mark Layout updates
+
+- (void)layoutNotificationViewAndUpdateNotificationHeight {
     // Force autolayout
     [self.notificationView setNeedsLayout];
     [self.notificationView layoutIfNeeded];
@@ -1148,15 +1153,10 @@ static void commonInit(SRGLetterboxView *self);
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
-        
-        if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-            [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
-        }
+        [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
-        if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-            [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
-        }
+        [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1203,10 +1203,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
-    
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
-    }
+    [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
