@@ -250,7 +250,7 @@ static void commonInit(SRGLetterboxView *self);
         
         [self layoutForNotificationHeight];
         if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
-            [self imperative_updateUserInterfaceWithNotifiationMessage:self.notificationMessage animated:YES];
+            [self updateUserInterfaceAnimated:YES];
         }
     }
 }
@@ -557,7 +557,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments animated:animated];
 }
 
 #pragma mark UI methods always performing their work
@@ -567,24 +567,18 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments animated:animated];
 }
 
 - (void)imperative_updateUserInterfaceWithSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
-}
-
-- (void)imperative_updateUserInterfaceWithNotifiationMessage:(NSString *)notificationMessage animated:(BOOL)animated
-{
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:notificationMessage animated:animated];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
 // factorisation method which is not intended for direct use. This method always shows or hides the user interface. Segments
-// and notification messages are taken into account for proper UI adjustments depending on their presence
-- (void)imperative_updateUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments notificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
+// and notification message text are taken into account for proper UI adjustments depending on their presence
+- (void)imperative_updateUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -608,12 +602,12 @@ static void commonInit(SRGLetterboxView *self);
         self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
-        self.notificationImageView.hidden = (notificationMessage == nil);
-        self.notificationLabelBottomConstraint.constant = (notificationMessage != nil) ? 6.f : 0.f;
-        self.notificationLabelTopConstraint.constant = (notificationMessage != nil) ? 6.f : 0.f;
+        self.notificationImageView.hidden = (self.notificationMessage == nil);
+        self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
+        self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
         
         // We need to know what will be the notification view height, depending of the new notification message.
-        self.notificationLabel.text = notificationMessage;
+        self.notificationLabel.text = self.notificationMessage;
         [self layoutForNotificationHeight];
         
         self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
@@ -649,7 +643,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments notificationMessage:self.notificationMessage animated:animated];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments animated:animated];
 }
 
 // Called to update the main player subviews (player view, background image, error overlay). Independent of the global
@@ -886,7 +880,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = notificationMessage;
     
-    [self imperative_updateUserInterfaceWithNotifiationMessage:notificationMessage animated:YES];
+    [self updateUserInterfaceAnimated:YES];
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
 }
