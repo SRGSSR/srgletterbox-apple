@@ -29,7 +29,6 @@
                 <outlet property="fullScreenButton" destination="WT7-v6-7uh" id="GtS-jh-IoR"/>
                 <outlet property="imageView" destination="gv4-Rp-xBi" id="OaD-1O-nnk"/>
                 <outlet property="mainView" destination="ZVz-wN-LVi" id="How-3U-mon"/>
-                <outlet property="notificationHeightConstraint" destination="nvC-jZ-r0S" id="eeB-Pb-QyE"/>
                 <outlet property="notificationImageView" destination="0Mg-fI-Oss" id="6UF-Zn-1BI"/>
                 <outlet property="notificationLabel" destination="erX-bp-o7I" id="oIu-It-4KD"/>
                 <outlet property="notificationLabelBottomConstraint" destination="3RX-Pg-fxA" id="TKx-Zl-GmV"/>
@@ -282,7 +281,6 @@
                         <constraint firstAttribute="trailing" secondItem="erX-bp-o7I" secondAttribute="trailing" constant="8" id="Kwn-ub-39g"/>
                         <constraint firstItem="erX-bp-o7I" firstAttribute="top" secondItem="aun-4y-dBi" secondAttribute="top" id="c2l-pr-BAi"/>
                         <constraint firstItem="erX-bp-o7I" firstAttribute="leading" secondItem="0Mg-fI-Oss" secondAttribute="trailing" constant="8" id="jjx-fQ-EO9"/>
-                        <constraint firstAttribute="height" priority="1" constant="22" id="nvC-jZ-r0S"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-Uc-uEb" customClass="SRGLetterboxTimelineView">

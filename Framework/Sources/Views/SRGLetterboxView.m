@@ -52,7 +52,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationHeightConstraint;
 
 @property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
 @property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
@@ -81,6 +80,9 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
 @property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on top of the main user context
+
+// Get the future notification height, with the `layoutForNotificationHeight`method
+@property (nonatomic, readonly) CGFloat notificationHeight;
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat expansionHeight);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
@@ -154,7 +156,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.delegate = self;
     
     self.timelineHeightConstraint.constant = 0.f;
-    self.notificationHeightConstraint.constant = 0.f;
     
     // Workaround UIImage view tint color bug
     // See http://stackoverflow.com/a/26042893/760435
@@ -245,10 +246,10 @@ static void commonInit(SRGLetterboxView *self);
     self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
     
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
-    if (self.notificationHeightConstraint.constant != 0.f) {
+    if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
         
-        CGFloat layoutSizeNotificationHeight = [self layoutSizeNotificationHeight];
-        if (layoutSizeNotificationHeight != self.notificationHeightConstraint.constant) {
+        [self layoutForNotificationHeight];
+        if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
             [self imperative_updateUserInterfaceWithNotifiationMessage:self.notificationMessage animated:YES];
         }
     }
@@ -435,7 +436,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)expansionHeight
 {
-    return self.timelineHeightConstraint.constant + self.notificationHeightConstraint.constant;
+    return self.timelineHeightConstraint.constant + self.notificationHeight;
 }
 
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
@@ -461,21 +462,6 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isEffectiveUserInterfaceHidden
 {
     return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
-}
-
-- (CGFloat)layoutSizeNotificationHeight {
-    // Force autolayout
-    [self.notificationView setNeedsLayout];
-    [self.notificationView layoutIfNeeded];
-    
-    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
-    // adjusts
-    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
-    CGSize fittingSize = UILayoutFittingCompressedSize;
-    fittingSize.width = CGRectGetWidth(self.notificationView.frame);
-    return  [self.notificationView systemLayoutSizeFittingSize:fittingSize
-                                 withHorizontalFittingPriority:UILayoutPriorityRequired
-                                       verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
 }
 
 #pragma mark Data display
@@ -627,15 +613,10 @@ static void commonInit(SRGLetterboxView *self);
         self.notificationLabelTopConstraint.constant = (notificationMessage != nil) ? 6.f : 0.f;
         
         // We need to know what will be the notification view height, depending of the new notification message.
-        CGFloat notificationHeight = 0.f;
         self.notificationLabel.text = notificationMessage;
-        if (notificationMessage != nil) {
-            notificationHeight = [self layoutSizeNotificationHeight];
-        }
+        [self layoutForNotificationHeight];
         
-        self.notificationHeightConstraint.constant = notificationHeight;
-        
-        self.animations ? self.animations(hidden, timelineHeight + notificationHeight) : nil;
+        self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         if (finished) {
@@ -874,6 +855,23 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+}
+
+#pragma Layout updates
+
+- (void)layoutForNotificationHeight {
+    // Force autolayout
+    [self.notificationView setNeedsLayout];
+    [self.notificationView layoutIfNeeded];
+    
+    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
+    // adjusts
+    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
+    CGSize fittingSize = UILayoutFittingCompressedSize;
+    fittingSize.width = CGRectGetWidth(self.notificationView.frame);
+    _notificationHeight = [self.notificationView systemLayoutSizeFittingSize:fittingSize
+                                                   withHorizontalFittingPriority:UILayoutPriorityRequired
+                                                         verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
 }
 
 #pragma mark Letterbox notification banners
