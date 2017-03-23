@@ -213,6 +213,10 @@ static void commonInit(SRGLetterboxView *self);
         if ([SRGLetterboxService sharedService].controller == self.controller) {
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
+        
+        if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+            [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:NO];
+        }
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -1144,6 +1148,11 @@ static void commonInit(SRGLetterboxView *self);
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
+        
+        if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+            [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
+        }
+    }
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1188,6 +1197,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
+    
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+        [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
+    }
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
