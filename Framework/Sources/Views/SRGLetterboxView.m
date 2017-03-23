@@ -243,6 +243,15 @@ static void commonInit(SRGLetterboxView *self);
     [super layoutSubviews];
     
     self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
+    
+    // We need to know what will be the notification height, depending of the notification message and the layout resizing.
+    if (self.notificationHeightConstraint.constant != 0.f) {
+        
+        CGFloat layoutSizeNotificationHeight = [self layoutSizeNotificationHeight];
+        if (layoutSizeNotificationHeight != self.notificationHeightConstraint.constant) {
+            [self imperative_updateUserInterfaceWithNotifiationMessage:self.notificationMessage animated:YES];
+        }
+    }
 }
 
 #pragma mark Getters and setters
@@ -454,6 +463,21 @@ static void commonInit(SRGLetterboxView *self);
     return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
 }
 
+- (CGFloat)layoutSizeNotificationHeight {
+    // Force autolayout
+    [self.notificationView setNeedsLayout];
+    [self.notificationView layoutIfNeeded];
+    
+    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
+    // adjusts
+    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
+    CGSize fittingSize = UILayoutFittingCompressedSize;
+    fittingSize.width = CGRectGetWidth(self.notificationView.frame);
+    return  [self.notificationView systemLayoutSizeFittingSize:fittingSize
+                                 withHorizontalFittingPriority:UILayoutPriorityRequired
+                                       verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+}
+
 #pragma mark Data display
 
 - (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
@@ -602,24 +626,14 @@ static void commonInit(SRGLetterboxView *self);
         self.notificationLabelBottomConstraint.constant = (notificationMessage != nil) ? 2.f : 0.f;
         self.notificationLabelTopConstraint.constant = (notificationMessage != nil) ? 2.f : 0.f;
         
-        // We need to know what will be the notification height, depending of the new notification message.
+        // We need to know what will be the notification view height, depending of the new notification message.
         CGFloat notificationHeight = 0.f;
         self.notificationLabel.text = notificationMessage;
         if (notificationMessage != nil) {
-            
-            // Force autolayout
-            [self.notificationView setNeedsLayout];
-            [self.notificationView layoutIfNeeded];
-            
-            // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
-            // adjusts
-            // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
-            CGSize fittingSize = UILayoutFittingCompressedSize;
-            fittingSize.width = CGRectGetWidth(self.notificationView.frame);
-            notificationHeight = [self.notificationView systemLayoutSizeFittingSize:fittingSize
-                                                       withHorizontalFittingPriority:UILayoutPriorityRequired
-                                                             verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+            notificationHeight = [self layoutSizeNotificationHeight];
         }
+        
+        self.notificationHeightConstraint.constant = notificationHeight;
         
         self.animations ? self.animations(hidden, timelineHeight + notificationHeight) : nil;
     };
