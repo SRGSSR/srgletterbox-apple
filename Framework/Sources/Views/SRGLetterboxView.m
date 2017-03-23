@@ -1153,6 +1153,10 @@ static void commonInit(SRGLetterboxView *self);
             [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
         }
     }
+    else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+        if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+            [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
+        }
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
