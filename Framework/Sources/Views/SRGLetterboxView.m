@@ -45,8 +45,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 
-@property (nonatomic, weak) IBOutlet SRGAirplayView *airplayView;
-@property (nonatomic, weak) IBOutlet UILabel *airplayLabel;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
@@ -141,7 +139,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
-    self.airplayView.delegate = self;
     self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = YES;
@@ -165,7 +162,6 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabel.text = nil;
     self.notificationImageView.hidden = YES;
     
-    self.airplayLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleFootnote];
     self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
@@ -217,6 +213,8 @@ static void commonInit(SRGLetterboxView *self);
         if ([SRGLetterboxService sharedService].controller == self.controller) {
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
+        
+        [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
         self.inactivityTimer = nil;                 // Invalidate timer
@@ -248,7 +246,7 @@ static void commonInit(SRGLetterboxView *self);
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
     if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
         
-        [self layoutForNotificationHeight];
+        [self layoutNotificationViewAndUpdateNotificationHeight];
         if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
             [self updateUserInterfaceAnimated:YES];
         }
@@ -299,7 +297,6 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.playbackButton.mediaPlayerController = mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
-    self.airplayView.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
@@ -608,7 +605,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // We need to know what will be the notification view height, depending of the new notification message.
         self.notificationLabel.text = self.notificationMessage;
-        [self layoutForNotificationHeight];
+        [self layoutNotificationViewAndUpdateNotificationHeight];
         
         self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
     };
@@ -851,9 +848,16 @@ static void commonInit(SRGLetterboxView *self);
     return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
 }
 
-#pragma Layout updates
+- (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
+{
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+        [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:animated];
+    }
+}
 
-- (void)layoutForNotificationHeight {
+#pragma mark Layout updates
+
+- (void)layoutNotificationViewAndUpdateNotificationHeight {
     // Force autolayout
     [self.notificationView setNeedsLayout];
     [self.notificationView layoutIfNeeded];
@@ -870,7 +874,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Letterbox notification banners
 
-- (void)showNotificationMessage:(NSString *)notificationMessage
+- (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
 {
     if (notificationMessage.length == 0) {
         return;
@@ -880,7 +884,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = notificationMessage;
     
-    [self updateUserInterfaceAnimated:YES];
+    [self updateUserInterfaceAnimated:animated];
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
 }
@@ -1054,16 +1058,6 @@ static void commonInit(SRGLetterboxView *self);
     [self.timelineView setNeedsSegmentFavoritesUpdate];
 }
 
-#pragma mark SRGAirplayViewDelegate protocol
-
-- (void)airplayView:(SRGAirplayView *)airplayView didShowWithAirplayRouteName:(NSString *)routeName
-{
-    // Set the cutom label to nil. If removed from SRGAirplayView, the default Airplay view will be shown.
-    self.airplayLabel.text = @"";
-    [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay")];
-    
-}
-
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
@@ -1159,6 +1153,10 @@ static void commonInit(SRGLetterboxView *self);
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
+        [self showAirplayNotificationMessageIfNeededAnimated:YES];
+    }
+    else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+        [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1172,6 +1170,8 @@ static void commonInit(SRGLetterboxView *self);
     // If the player was playing or paused
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         [self conditional_setUserInterfaceHidden:NO animated:YES];
+        
+        [self dismissNotificationView];
     }
 }
 
@@ -1191,7 +1191,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     NSString *notificationMessage = SRGMessageForBlockingReason(segment.blockingReason);
-    [self showNotificationMessage:notificationMessage];
+    [self showNotificationMessage:notificationMessage animated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -1203,6 +1203,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
+    [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
