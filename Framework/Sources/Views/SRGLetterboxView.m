@@ -56,6 +56,8 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
 @property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelBottomConstraint;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
@@ -597,6 +599,8 @@ static void commonInit(SRGLetterboxView *self);
         self.timelineHeightConstraint.constant = timelineHeight;
         
         self.notificationImageView.hidden = (notificationMessage == nil);
+        self.notificationLabelBottomConstraint.constant = (notificationMessage != nil) ? 2.f : 0.f;
+        self.notificationLabelTopConstraint.constant = (notificationMessage != nil) ? 2.f : 0.f;
         
         // We need to know what will be the notification height, depending of the new notification message.
         CGFloat notificationHeight = 0.f;
@@ -604,15 +608,15 @@ static void commonInit(SRGLetterboxView *self);
         if (notificationMessage != nil) {
             
             // Force autolayout
-            [self.notificationLabel setNeedsLayout];
-            [self.notificationLabel layoutIfNeeded];
+            [self.notificationView setNeedsLayout];
+            [self.notificationView layoutIfNeeded];
             
             // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
             // adjusts
             // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
             CGSize fittingSize = UILayoutFittingCompressedSize;
-            fittingSize.width = CGRectGetWidth(self.notificationLabel.frame);
-            notificationHeight = [self.notificationLabel systemLayoutSizeFittingSize:fittingSize
+            fittingSize.width = CGRectGetWidth(self.notificationView.frame);
+            notificationHeight = [self.notificationView systemLayoutSizeFittingSize:fittingSize
                                                        withHorizontalFittingPriority:UILayoutPriorityRequired
                                                              verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
         }

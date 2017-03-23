@@ -32,6 +32,8 @@
                 <outlet property="notificationHeightConstraint" destination="nvC-jZ-r0S" id="eeB-Pb-QyE"/>
                 <outlet property="notificationImageView" destination="0Mg-fI-Oss" id="6UF-Zn-1BI"/>
                 <outlet property="notificationLabel" destination="erX-bp-o7I" id="oIu-It-4KD"/>
+                <outlet property="notificationLabelBottomConstraint" destination="3RX-Pg-fxA" id="TKx-Zl-GmV"/>
+                <outlet property="notificationLabelTopConstraint" destination="c2l-pr-BAi" id="3jI-u3-Ilu"/>
                 <outlet property="notificationView" destination="aun-4y-dBi" id="M09-fc-S7k"/>
                 <outlet property="pictureInPictureButton" destination="83c-T2-D7p" id="82z-fW-6X3"/>
                 <outlet property="playbackButton" destination="yE6-Vv-zcn" id="fUC-nh-edo"/>
