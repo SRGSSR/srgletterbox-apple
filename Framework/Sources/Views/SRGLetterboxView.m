@@ -870,7 +870,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Letterbox notification banners
 
-- (void)showNotificationMessage:(NSString *)notificationMessage
+- (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
 {
     if (notificationMessage.length == 0) {
         return;
@@ -880,7 +880,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = notificationMessage;
     
-    [self updateUserInterfaceAnimated:YES];
+    [self updateUserInterfaceAnimated:animated];
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
 }
@@ -1060,7 +1060,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     // Set the cutom label to nil. If removed from SRGAirplayView, the default Airplay view will be shown.
     self.airplayLabel.text = @"";
-    [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay")];
+    [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:YES];
     
 }
 
@@ -1191,7 +1191,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
     NSString *notificationMessage = SRGMessageForBlockingReason(segment.blockingReason);
-    [self showNotificationMessage:notificationMessage];
+    [self showNotificationMessage:notificationMessage animated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
