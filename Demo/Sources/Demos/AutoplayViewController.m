@@ -13,7 +13,9 @@
 @interface AutoplayViewController ()
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
-@property (nonatomic) SRGRequest *request;
+
+@property (nonatomic) SRGDataProvider *dataProvider;
+@property (nonatomic, weak) SRGRequest *request;
 
 @end
 
@@ -33,6 +35,7 @@
 {
     [super viewDidLoad];
     
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
     [self refresh];
 }
 
@@ -49,12 +52,12 @@
 
 - (void)refresh
 {
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
-    self.request = [[dataProvider tvTrendingMediasWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    SRGRequest *request = [[self.dataProvider tvTrendingMediasWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         self.medias = medias;
         [self.tableView reloadData];
     }] withPageSize:50];
-    [self.request resume];
+    [request resume];
+    self.request = request;
 }
 
 #pragma mark UITableViewDataSource protocol
