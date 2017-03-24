@@ -29,7 +29,7 @@ The library can be added to a project using [Carthage](https://github.com/Cartha
 github "SRGSSR/srgletterbox-ios"
 ```
 
-Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your projet:
+Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your project:
 
   * `ComScore`: comScore framework
   * `FXReachability`: A reachability framework
