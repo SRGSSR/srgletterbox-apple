@@ -1,6 +1,4 @@
-github "ashaman/libextobjc" "e24f2be3af2cf7fc88a78295f116ef98d0832bcf"
 github "ibireme/YYWebImage" "1.0.5"
 github "SnapKit/Masonry" "v1.0.2"
-github "SRGSSR/MAKVONotificationCenter" "4a127e52997889729286510103f7e27100223730"
 github "SRGSSR/FXReachability" "3cad7998f717145c90ff97eef552053d66063339"
-github "SRGSSR/srganalytics-ios" "0ca105697d6329597ca577e3beb004cd1d6b9131"
+github "SRGSSR/srganalytics-ios" "374d2ac1634081ed168ef33e13cf18e96ad9b4d9"
