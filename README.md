@@ -48,7 +48,7 @@ For more information about Carthage and its use, refer to the [official document
 
 ## Usage
 
-When you want to classes or functions provided by the library in your code, you must import it from your source files first.
+When you want to use classes or functions provided by the library in your code, you must import it from your source files first.
 
 ### Usage from Objective-C source files
 
