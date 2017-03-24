@@ -69,6 +69,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) NSInteger preferredStartBitRate;
 @property (nonatomic) NSError *error;
 
+@property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 @property (nonatomic, weak) id streamAvailabilityPeriodicTimeObserver;
@@ -241,14 +242,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             }
         };
         
-        SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
-        
         if (self.media.mediaType == SRGMediaTypeVideo) {
-            [[dataProvider tvMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[self.dataProvider tvMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
         else if (self.media.mediaType == SRGMediaTypeAudio) {
-            [[dataProvider radioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[self.dataProvider radioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
     }];
 }
@@ -359,14 +357,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel];
     };
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        [[dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
+        [[self.dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
         // TODO: Regional radio support
-        [[dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+        [[self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
     }
 }
 
@@ -412,9 +408,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
     }];
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
-    
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
         NSURL *contentURL = self.contentURLOverridingBlock(URN);
@@ -436,11 +429,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 };
                 
                 if (URN.mediaType == SRGMediaTypeVideo) {
-                    SRGRequest *mediaRequest = [dataProvider tvMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [self.dataProvider tvMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
                 else {
-                    SRGRequest *mediaRequest = [dataProvider radioMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [self.dataProvider radioMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
             }
@@ -493,11 +486,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     };
     
     if (URN.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [dataProvider tvMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [self.dataProvider tvMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
     else if (URN.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [dataProvider radioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [self.dataProvider radioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -585,6 +578,14 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)resetWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media
 {
+    if (URN) {
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
+    }
+    else {
+        self.dataProvider = nil;
+    }
+    
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     
