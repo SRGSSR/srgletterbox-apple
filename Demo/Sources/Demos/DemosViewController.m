@@ -35,7 +35,7 @@
     versionString = [@"🌙 " stringByAppendingString:versionString];
 #endif
     
-    return [NSString stringWithFormat:@"Letterbox demos %@ (%@)", versionString, bundleVersion];
+    return [NSString stringWithFormat:@"Letterbox %@ demos (build %@)", versionString, bundleVersion];
 }
 
 #pragma mark Players
@@ -101,10 +101,10 @@
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"urn:swi:video:41981254";
     }];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Play", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         completionBlock(alertController.textFields.firstObject.text);
     }]];
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 

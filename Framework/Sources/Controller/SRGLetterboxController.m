@@ -245,10 +245,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                                                              businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
         
         if (self.media.mediaType == SRGMediaTypeVideo) {
-            [[dataProvider mediaCompositionForVideoWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[dataProvider tvMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
         else if (self.media.mediaType == SRGMediaTypeAudio) {
-            [[dataProvider mediaCompositionForAudioWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[dataProvider radioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
     }];
 }
@@ -362,11 +362,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
                                                          businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        [[dataProvider videoChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
+        [[dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
         // TODO: Regional radio support
-        [[dataProvider audioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+        [[dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
     }
 }
 
@@ -436,11 +436,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 };
                 
                 if (URN.mediaType == SRGMediaTypeVideo) {
-                    SRGRequest *mediaRequest = [dataProvider videosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [dataProvider tvMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
                 else {
-                    SRGRequest *mediaRequest = [dataProvider audiosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [dataProvider radioMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
             }
@@ -493,11 +493,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     };
     
     if (URN.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForVideoWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [dataProvider tvMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
     else if (URN.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [dataProvider mediaCompositionForAudioWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [dataProvider radioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -528,7 +528,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     // Playing another segment from the same media. Seek
     else {
         self.seekTargetTime = segment.srg_timeRange.start;
-        [self.mediaPlayerController seekToSegment:segment withCompletionHandler:nil];
+        [self.mediaPlayerController seekToSegment:segment withCompletionHandler:^(BOOL finished) {
+            [self.mediaPlayerController play];
+        }];
     }
     
     return YES;
