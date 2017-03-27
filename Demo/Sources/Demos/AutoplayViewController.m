@@ -55,7 +55,7 @@
     SRGRequest *request = [[self.dataProvider tvTrendingMediasWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         self.medias = medias;
         [self.tableView reloadData];
-    }] withPageSize:50];
+    }] requestWithPageSize:50];
     [request resume];
     self.request = request;
 }
