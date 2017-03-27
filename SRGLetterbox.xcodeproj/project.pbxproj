@@ -252,7 +252,6 @@
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
 		087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+SRGLetterbox.m"; sourceTree = "<group>"; };
-		08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ASValueTrackingSlider.framework; path = Carthage/Build/iOS/ASValueTrackingSlider.framework; sourceTree = "<group>"; };
 		08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxView.xib; sourceTree = "<group>"; };
 		08FA0CA81E2E325F000C94EF /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -524,7 +523,6 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				08B934BE1E390C2400CFE85A /* ASValueTrackingSlider.framework */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
