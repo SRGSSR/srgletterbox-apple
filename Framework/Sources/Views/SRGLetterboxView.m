@@ -98,10 +98,9 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (self = [super initWithFrame:frame]) {
         commonInit(self);
-        // The top-level view loaded from the xib file, with `commonInit` method is NOT an SRGLetterboxView. The manual
-        // `-awakeFromNib`call forces the final view initialisation.
-        //
-        // @see: `commonInit` method to know the real reason of this choice.
+        
+        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGLetterboxView. Manually
+        // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
         [self awakeFromNib];
     }
     return self;
