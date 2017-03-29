@@ -263,24 +263,23 @@ IB_DESIGNABLE
 @property (nonatomic, readonly) CGFloat timelineHeight;
 
 /**
- *  The preferred segment timeline height.
+ *  Allow to display the timeline or always hide it.
  *
- *  Will be use when displaying the segment timeline. Negative value will be ignore and value set to 0.f;
- *
- *  @discussion By default, the height is 120.f. To always hide the segment timeline, call
- *  `-setPreferredTimelineHeight:animated:` with a 0.f value.
+ *  @discussion By default, the value is NO. The timeline is display when the media has segments. To always hide the
+ *  timeline, even if the media has segements, call `-setPreferredTimelineHeight:animated:`setAlwaysHiddenTimeline:animated:`
+ *  with the YES value.
  */
-@property (nonatomic, readonly) CGFloat preferredTimelineHeight;
+@property (nonatomic, readonly) BOOL alwaysHiddenTimeline;
 
 /**
- *  Change the preferred segment timeline height
+ *  Change the timeline displayable state
  *
- *  @param preferredTimelineHeight set the hight of the timeline
+ *  @param alwaysHiddenTimeline Allow to display the timeline or always hide it
  *  @param animated Whether the transition must be animated.
  *
- *  @discussion By default, the height is 120.f. To always hide the segment timeline, set it to 0.f.
+ *  @discussion By default, the value is NO. To always hide the segment timeline, set alwaysHiddenTimeline to YES.
  */
-- (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated;
+- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated;
 
 /**
  *  Call to schedule an update request for segment favorites.
