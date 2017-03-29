@@ -97,25 +97,13 @@
                                     <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
                                 </connections>
                             </button>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTc-Lp-HkH">
-                                <rect key="frame" x="0.0" y="454" width="374.5" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="P8q-Ss-LI2"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="dataSource" destination="FcC-Qn-oGg" id="UtR-RA-syC"/>
-                                    <outlet property="delegate" destination="FcC-Qn-oGg" id="O7b-3l-NFn"/>
-                                </connections>
-                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="width" secondItem="gMD-r1-Pgs" secondAttribute="width" id="2w0-CJ-uZv"/>
-                            <constraint firstItem="FTc-Lp-HkH" firstAttribute="top" secondItem="SpT-Mg-MmS" secondAttribute="bottom" constant="8" id="39R-O1-90b"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="Md4-t4-5he" secondAttribute="centerX" id="4UG-yS-wtK"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="leading" secondItem="Md4-t4-5he" secondAttribute="trailing" constant="16" id="5RU-2L-7Sb"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="6hy-A6-kfe"/>
-                            <constraint firstItem="FTc-Lp-HkH" firstAttribute="trailing" secondItem="JvK-aX-fgP" secondAttribute="trailing" id="776-2g-yL3"/>
                             <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="F2Z-fU-P1b"/>
                             <constraint firstItem="JvK-aX-fgP" firstAttribute="top" secondItem="gMD-r1-Pgs" secondAttribute="bottom" constant="8" id="F4n-Es-e3G"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="centerX" secondItem="LBa-rV-Hj0" secondAttribute="centerX" id="FvJ-lD-qwg"/>
@@ -128,7 +116,6 @@
                             <constraint firstItem="Md4-t4-5he" firstAttribute="centerY" secondItem="gMD-r1-Pgs" secondAttribute="centerY" id="Rdc-7p-qIn"/>
                             <constraint firstItem="XDA-ee-aQO" firstAttribute="trailing" secondItem="oxw-uk-Eue" secondAttribute="trailing" id="Rf3-Uf-F1O"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="top" secondItem="Md4-t4-5he" secondAttribute="bottom" constant="8" id="UGf-RW-rCm"/>
-                            <constraint firstItem="FTc-Lp-HkH" firstAttribute="leading" secondItem="WSi-1R-LWr" secondAttribute="leading" id="VHH-sZ-HSw"/>
                             <constraint firstItem="fbH-pV-VxN" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="czR-YZ-XdV"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="width" secondItem="Md4-t4-5he" secondAttribute="width" id="fND-Gj-3vx"/>
                             <constraint firstItem="fbH-pV-VxN" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" constant="16" id="flQ-S7-9j9"/>
@@ -153,7 +140,6 @@
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
                         <outlet property="nextLabel" destination="XDA-ee-aQO" id="rwp-mh-ICO"/>
                         <outlet property="nowLabel" destination="oxw-uk-Eue" id="fue-hN-kxF"/>
-                        <outlet property="preferredTimelineHeight" destination="FTc-Lp-HkH" id="14d-Gq-TI0"/>
                         <outlet property="titleLabel" destination="fbH-pV-VxN" id="h1M-zQ-aaa"/>
                     </connections>
                 </viewController>
