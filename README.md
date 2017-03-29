@@ -31,7 +31,7 @@ github "SRGSSR/srgletterbox-ios"
 
 Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your project:
 
-  * `ComScore`: comScore framework
+  * `ComScore`: The comScore framework
   * `FXReachability`: A reachability framework
   * `libextobjc`: A utility framework
   * `MAKVONotificationCenter`: A safe KVO framework
@@ -40,6 +40,7 @@ Then run `carthage update --platform iOS` to update the dependencies. You will n
   * `SRGAnalytics`: The main analytics framework
   * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework
   * `SRGAnalytics_DataProvider`: The data provider analytics companion framework
+  * `SRGAppearance`: The appearance framework
   * `SRGLogger`: The framework used for internal logging
   * `SRGMediaPlayer`: The media player framework (if not already in your project)
   * `YYWebImage`: A framework for image retrieval

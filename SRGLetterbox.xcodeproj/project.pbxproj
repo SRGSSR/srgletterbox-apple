@@ -16,12 +16,7 @@
 		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CBA1E2E5874000C94EF /* Images.xcassets */; };
-		08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */; };
-		08FA0CC31E2E72E7000C94EF /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */; };
-		08FA0CC61E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CC41E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h */; };
-		08FA0CC71E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CC51E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m */; };
 		08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */; };
-		08FA0CEF1E2E8F62000C94EF /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CEE1E2E8F62000C94EF /* Fonts */; };
 		08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */; };
 		08FA0CF41E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF21E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h */; };
 		08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */; };
@@ -129,6 +124,14 @@
 		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
 		6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController.m */; };
 		6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */; };
+		6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
+		6FE08CE31E8B80F200EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
+		6FE08CE41E8B80F200EC4716 /* SRGAppearance.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FE08CE51E8B810D00EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
+		6FE08CE61E8B811500EC4716 /* SRGAppearance.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */; };
+		6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */; };
+		6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */; };
 		6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; };
 		6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; };
 		6FE655D41E2CA3F9000033D4 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; };
@@ -219,6 +222,7 @@
 				08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */,
 				6FAB3B761E2905CA00CC2197 /* SRGDataProvider.framework in Embed Frameworks */,
 				6FAB3B6A1E2905CA00CC2197 /* ComScore.framework in Embed Frameworks */,
+				6FE08CE41E8B80F200EC4716 /* SRGAppearance.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -229,6 +233,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6FE08CE61E8B811500EC4716 /* SRGAppearance.framework in CopyFiles */,
 				6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */,
 				6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */,
 				6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in CopyFiles */,
@@ -255,12 +260,7 @@
 		08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxView.xib; sourceTree = "<group>"; };
 		08FA0CA81E2E325F000C94EF /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
-		08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
-		08FA0CC41E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFontDescriptor+SRGLetterbox.h"; sourceTree = "<group>"; };
-		08FA0CC51E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFontDescriptor+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		08FA0CEE1E2E8F62000C94EF /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxLogger.h; sourceTree = "<group>"; };
 		08FA0CF21E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -331,6 +331,10 @@
 		6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemosViewController.h; sourceTree = "<group>"; };
 		6FD9BA301E3095F00013CC97 /* DemosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemosViewController.m; sourceTree = "<group>"; };
 		6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DemosViewController.storyboard; sourceTree = "<group>"; };
+		6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGAppearance.framework; path = Carthage/Build/iOS/SRGAppearance.framework; sourceTree = "<group>"; };
+		6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
 		6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SRGLetterbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimelineView.h; sourceTree = "<group>"; };
 		6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxTimelineView.m; sourceTree = "<group>"; };
@@ -367,6 +371,7 @@
 				6FAB3B6B1E2905CA00CC2197 /* libextobjc.framework in Frameworks */,
 				08FA0D221E30F92F000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B751E2905CA00CC2197 /* SRGDataProvider.framework in Frameworks */,
+				6FE08CE31E8B80F200EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FAB3B691E2905CA00CC2197 /* ComScore.framework in Frameworks */,
 				6FFDE8AE1E52DF2900EF4A3D /* HockeySDK.framework in Frameworks */,
 			);
@@ -376,6 +381,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FE08CE51E8B810D00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */,
 				6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */,
@@ -397,6 +403,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */,
 				08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */,
@@ -430,10 +437,10 @@
 		08FA0CB91E2E585B000C94EF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
-				08FA0CEE1E2E8F62000C94EF /* Fonts */,
-				08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */,
+				6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */,
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
+				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
+				08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -474,10 +481,8 @@
 				6F324A0C1E557239007523AA /* SRGLetterboxViewRestorationContext.m */,
 				087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */,
 				087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */,
-				08FA0CC01E2E72E7000C94EF /* UIFont+SRGLetterbox.h */,
-				08FA0CC11E2E72E7000C94EF /* UIFont+SRGLetterbox.m */,
-				08FA0CC41E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h */,
-				08FA0CC51E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m */,
+				6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */,
+				6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */,
 				08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */,
 				08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */,
 				08FA0CF21E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h */,
@@ -534,6 +539,7 @@
 				6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */,
 				6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */,
 				6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */,
+				6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */,
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
@@ -688,9 +694,7 @@
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
-				08FA0CC21E2E72E7000C94EF /* UIFont+SRGLetterbox.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
-				08FA0CC61E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
 				6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
@@ -698,6 +702,7 @@
 				6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */,
 				6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
+				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
 				6F324A0D1E557239007523AA /* SRGLetterboxViewRestorationContext.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
@@ -849,10 +854,10 @@
 			files = (
 				6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */,
 				6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */,
-				08FA0CEF1E2E8F62000C94EF /* Fonts in Resources */,
 				6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */,
 				08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
+				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -896,6 +901,7 @@
 				6FE844EB1E60349900F90F67 /* SRGLetterboxTimelineView.m in Sources */,
 				6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */,
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
+				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
 				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
@@ -904,10 +910,8 @@
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
-				08FA0CC71E2E73D7000C94EF /* UIFontDescriptor+SRGLetterbox.m in Sources */,
 				6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */,
 				6F324A0E1E557239007523AA /* SRGLetterboxViewRestorationContext.m in Sources */,
-				08FA0CC31E2E72E7000C94EF /* UIFont+SRGLetterbox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
