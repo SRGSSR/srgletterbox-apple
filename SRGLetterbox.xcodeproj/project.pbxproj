@@ -288,7 +288,6 @@
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AE1E3A66AB00B0141C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AF1E3A66B100B0141C /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
-		6F4855B01E3A66B800B0141C /* rm-CH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "rm-CH"; path = "rm-CH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxController+Private.h"; sourceTree = "<group>"; };
 		6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+LetterboxDemo.h"; sourceTree = "<group>"; };
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
@@ -811,7 +810,7 @@
 				de,
 				fr,
 				it,
-				"rm-CH",
+				rm,
 			);
 			mainGroup = 6FE321371E28E24E00FD8E42;
 			productRefGroup = 6FE321421E28E24E00FD8E42 /* Products */;
@@ -938,7 +937,7 @@
 				6F4855AD1E3A66A400B0141C /* en */,
 				6F4855AE1E3A66AB00B0141C /* fr */,
 				6F4855AF1E3A66B100B0141C /* it */,
-				6F4855B01E3A66B800B0141C /* rm-CH */,
+				08B2D8FE1E802B3C000DEF4F /* rm */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
