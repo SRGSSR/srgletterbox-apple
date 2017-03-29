@@ -856,7 +856,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:animated];
+        [self showNotificationMessage:SRGLetterboxLocalizedString(@"Playback on AirPlay", @"Message displayed when broadcasting on an AirPlay device") animated:animated];
     }
 }
 

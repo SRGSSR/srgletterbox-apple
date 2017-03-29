@@ -1,9 +1,5 @@
-
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "A network issue has been encountered. Please check your Internet connection and network settings";
-
-/* Message displayed when playing on an AirPlay device */
-"Connected to AirPlay" = "Connected to AirPlay";
 
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "Live" = "Live";
@@ -11,6 +7,8 @@
 /* Text displayed when no media is available for playback */
 "No media" = "No media";
 
+/* Message displayed when broadcasting on an AirPlay device */
+"Playback on AirPlay" = "Playback on AirPlay";
+
 /* Message displayed when a media cannot be played for some reason (the user should not know about) */
 "The media cannot be played" = "The media cannot be played";
-
