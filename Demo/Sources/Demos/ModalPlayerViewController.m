@@ -290,6 +290,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [self.letterboxView setFullScreen:YES animated:YES];
 }
 
+- (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
+{
+    [self.letterboxView setAlwaysHiddenTimeline:sender.on animated:YES];
+}
+
 #pragma mark Notifications
 
 - (void)metadataDidChange:(NSNotification *)notification
