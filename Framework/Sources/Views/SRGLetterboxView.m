@@ -22,6 +22,8 @@
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 
+const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
+
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
@@ -454,6 +456,16 @@ static void commonInit(SRGLetterboxView *self);
     
     self.preferredTimelineHeight = preferredTimelineHeight;
     [self updateUserInterfaceAnimated:animated];
+}
+
+- (BOOL)alwaysHiddenTimeline
+{
+    return self.preferredTimelineHeight != 0;
+}
+
+- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated
+{
+    [self setPreferredTimelineHeight:(alwaysHiddenTimeline) ? 0.f : SRGLetterboxViewDefaultTimelineHeight animated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -1244,7 +1256,7 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     
-    self.preferredTimelineHeight = 120.f;
+    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
     
     // Create an initial matching restoration context
     self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];

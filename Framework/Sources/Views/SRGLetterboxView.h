@@ -263,14 +263,23 @@ IB_DESIGNABLE
 @property (nonatomic, readonly) CGFloat timelineHeight;
 
 /**
+ *  Allow to display the timeline or always hide it.
  *
+ *  @discussion By default, the value is NO. The timeline is display when the media has segments. To always hide the
+ *  timeline, even if the media has segements, call `-setPreferredTimelineHeight:animated:`setAlwaysHiddenTimeline:animated:`
+ *  with the YES value.
  */
+@property (nonatomic, readonly) BOOL alwaysHiddenTimeline;
 
 /**
+ *  Change the timeline displayable state
  *
+ *  @param alwaysHiddenTimeline Allow to display the timeline or always hide it
  *  @param animated Whether the transition must be animated.
  *
+ *  @discussion By default, the value is NO. To always hide the segment timeline, set alwaysHiddenTimeline to YES.
  */
+- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated;
 
 /**
  *  Call to schedule an update request for segment favorites.
