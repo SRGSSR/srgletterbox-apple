@@ -474,14 +474,14 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceAnimated:animated];
 }
 
-- (BOOL)alwaysHiddenTimeline
+- (BOOL)isTimelineAlwaysHidden
 {
     return self.preferredTimelineHeight != 0;
 }
 
-- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated
+- (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
 {
-    [self setPreferredTimelineHeight:(alwaysHiddenTimeline) ? 0.f : SRGLetterboxViewDefaultTimelineHeight animated:animated];
+    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxViewDefaultTimelineHeight) animated:animated];
 }
 
 - (CGFloat)timelineHeight

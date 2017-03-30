@@ -292,7 +292,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
 {
-    [self.letterboxView setAlwaysHiddenTimeline:sender.on animated:YES];
+    [self.letterboxView setTimelineAlwaysHidden:sender.on animated:YES];
 }
 
 #pragma mark Notifications

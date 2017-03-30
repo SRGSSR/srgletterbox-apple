@@ -255,23 +255,20 @@ IB_DESIGNABLE
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
 /**
- *  Allow to display the timeline or always hide it.
- *
- *  @discussion By default, the value is NO. The timeline is display when the media has segments. To always hide the
- *  timeline, even if the media has segements, call `-setPreferredTimelineHeight:animated:`setAlwaysHiddenTimeline:animated:`
- *  with the YES value.
+ *  Return `YES` iff timeline was forced to be always hidden.
  */
-@property (nonatomic, readonly) BOOL alwaysHiddenTimeline;
+@property (nonatomic, readonly, getter=isTimelineAlwaysHidden) BOOL timelineAlwaysHidden;
 
 /**
- *  Change the timeline displayable state
+ *  Set to `YES` to force the timeline to be always hidden. The default value is `NO`.
  *
- *  @param alwaysHiddenTimeline Allow to display the timeline or always hide it
- *  @param animated Whether the transition must be animated.
+ *  @param timelineAlwaysHidden `YES` to hide the timeline.
+ *  @param animated Whether the change must be animated or not.
  *
- *  @discussion By default, the value is NO. To always hide the segment timeline, set alwaysHiddenTimeline to YES.
+ *  @discussion When changing this value, the current control visibility state is not altered. If controls were hidden,
+ *              the timeline behavior change will not be observed until controls are displayed again.
  */
-- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated;
+- (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
  *  Call to schedule an update request for segment favorites.
