@@ -60,7 +60,7 @@ You can also respond to view height changes in the same way, e.g. when a timelin
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         // Show or hide your own overlays here, or adjust your layout to respond to height changes
     } completion:nil];
 }
@@ -72,7 +72,7 @@ Within the block, you can apply any `UIView` or layout change, as you would in a
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         // Show or hide your own overlays here, or adjust your layout to respond to height changes
         [self.view layoutIfNeeded];
     } completion:nil];
