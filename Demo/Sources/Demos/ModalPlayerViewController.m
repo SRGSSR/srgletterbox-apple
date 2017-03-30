@@ -195,8 +195,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
-        self.letterboxAspectRatioConstraint.constant = expansionHeight;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+        self.letterboxAspectRatioConstraint.constant = heightOffset;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:nil];
@@ -292,7 +292,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
 {
-    [self.letterboxView setAlwaysHiddenTimeline:sender.on animated:YES];
+    [self.letterboxView setTimelineAlwaysHidden:sender.on animated:YES];
 }
 
 #pragma mark Notifications

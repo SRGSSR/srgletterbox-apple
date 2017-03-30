@@ -215,23 +215,18 @@ IB_DESIGNABLE
  *  the animations to be performed alongside the player user interface animations when controls or segments are shown or 
  *  hidden. An optional block to be called on completion can be provided as well.
  *
- *  @param animations The animations to be performed when controls are shown or hidden. The expansion height is provided
- *                    as information if you need to adjust your layout to provide it with enough space. You can e.g.
- *                    simply use this value as constant of an aspect ratio layout constraint to make the player view
- *                    slightly taller.
+ *  @param animations The animations to be performed when controls are shown or hidden. The view is usually animated in
+ *                    response to more information being displayed within it (e.g. a segment timeline or a notification
+ *                    message). If the view frame is not changed, the player will be temporarily shrink to make room
+ *                    for such additional elements. If you prefer your parent layout to provide more space so that
+ *                    shrinking does not occur, the required height offset is provided as information, so that you can
+ *                    adjust your layout accordingly. You can e.g. use this value as the constant of an aspect ratio layout 
+ *                    constraint to make the player view slightly taller.
  *  @param completion The block to be called on completion.
  *
  *  @discussion Attempting to call this method outside the correct delegate method will throw an exception.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat expansionHeight))animations completion:(nullable void (^)(BOOL finished))completion;
-
-/**
- *  The current expansion height.
- *
- *  @discussion Value should be the timelineHeight or more if a notification message displayed, 0.f otherwise. During an animation,
- *  this value could be different.
- */
-@property (nonatomic, readonly) CGFloat expansionHeight;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.
@@ -255,31 +250,20 @@ IB_DESIGNABLE
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
 /**
- *  The current segment timeline height.
- *
- *  @discussion Value should be the `preferredTimelineHeight` if the media has segments, 0.f otherwise. During an animation,
- *  this value could be different. If using for your layout, please consider `-expansionHeight` too.
+ *  Return `YES` iff timeline was forced to be always hidden.
  */
-@property (nonatomic, readonly) CGFloat timelineHeight;
+@property (nonatomic, readonly, getter=isTimelineAlwaysHidden) BOOL timelineAlwaysHidden;
 
 /**
- *  Allow to display the timeline or always hide it.
+ *  Set to `YES` to force the timeline to be always hidden. The default value is `NO`.
  *
- *  @discussion By default, the value is NO. The timeline is display when the media has segments. To always hide the
- *  timeline, even if the media has segements, call `-setPreferredTimelineHeight:animated:`setAlwaysHiddenTimeline:animated:`
- *  with the YES value.
+ *  @param timelineAlwaysHidden `YES` to hide the timeline.
+ *  @param animated Whether the change must be animated or not.
+ *
+ *  @discussion When changing this value, the current control visibility state is not altered. If controls were hidden,
+ *              the timeline behavior change will not be observed until controls are displayed again.
  */
-@property (nonatomic, readonly) BOOL alwaysHiddenTimeline;
-
-/**
- *  Change the timeline displayable state
- *
- *  @param alwaysHiddenTimeline Allow to display the timeline or always hide it
- *  @param animated Whether the transition must be animated.
- *
- *  @discussion By default, the value is NO. To always hide the segment timeline, set alwaysHiddenTimeline to YES.
- */
-- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated;
+- (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
  *  Call to schedule an update request for segment favorites.

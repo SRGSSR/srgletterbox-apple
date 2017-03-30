@@ -85,7 +85,7 @@ static void commonInit(SRGLetterboxView *self);
 // Get the future notification height, with the `layoutForNotificationHeight`method
 @property (nonatomic, readonly) CGFloat notificationHeight;
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat expansionHeight);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @end
@@ -454,11 +454,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (CGFloat)expansionHeight
-{
-    return self.timelineHeightConstraint.constant + self.notificationHeight;
-}
-
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
 {
     if (preferredTimelineHeight < 0.f) {
@@ -474,14 +469,14 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceAnimated:animated];
 }
 
-- (BOOL)alwaysHiddenTimeline
+- (BOOL)isTimelineAlwaysHidden
 {
     return self.preferredTimelineHeight != 0;
 }
 
-- (void)setAlwaysHiddenTimeline:(BOOL)alwaysHiddenTimeline animated:(BOOL)animated
+- (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
 {
-    [self setPreferredTimelineHeight:(alwaysHiddenTimeline) ? 0.f : SRGLetterboxViewDefaultTimelineHeight animated:animated];
+    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxViewDefaultTimelineHeight) animated:animated];
 }
 
 - (CGFloat)timelineHeight
