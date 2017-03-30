@@ -255,14 +255,6 @@ IB_DESIGNABLE
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
 /**
- *  The current segment timeline height.
- *
- *  @discussion Value should be the `preferredTimelineHeight` if the media has segments, 0.f otherwise. During an animation,
- *  this value could be different. If using for your layout, please consider `-expansionHeight` too.
- */
-@property (nonatomic, readonly) CGFloat timelineHeight;
-
-/**
  *  Allow to display the timeline or always hide it.
  *
  *  @discussion By default, the value is NO. The timeline is display when the media has segments. To always hide the
