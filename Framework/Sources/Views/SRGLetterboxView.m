@@ -85,7 +85,7 @@ static void commonInit(SRGLetterboxView *self);
 // Get the future notification height, with the `layoutForNotificationHeight`method
 @property (nonatomic, readonly) CGFloat notificationHeight;
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat expansionHeight);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @end

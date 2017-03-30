@@ -121,9 +121,9 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
-        self.letterboxAspectRatioConstraint.constant = expansionHeight;
+        self.letterboxAspectRatioConstraint.constant = heightOffset;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

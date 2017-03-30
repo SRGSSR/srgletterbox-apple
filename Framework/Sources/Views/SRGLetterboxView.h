@@ -215,15 +215,18 @@ IB_DESIGNABLE
  *  the animations to be performed alongside the player user interface animations when controls or segments are shown or 
  *  hidden. An optional block to be called on completion can be provided as well.
  *
- *  @param animations The animations to be performed when controls are shown or hidden. The expansion height is provided
- *                    as information if you need to adjust your layout to provide it with enough space. You can e.g.
- *                    simply use this value as constant of an aspect ratio layout constraint to make the player view
- *                    slightly taller.
+ *  @param animations The animations to be performed when controls are shown or hidden. The view is usually animated in
+ *                    response to more information being displayed within it (e.g. a segment timeline or a notification
+ *                    message). If the view frame is not changed, the player will be temporarily shrink to make room
+ *                    for such additional elements. If you prefer your parent layout to provide more space so that
+ *                    shrinking does not occur, the required height offset is provided as information, so that you can
+ *                    adjust your layout accordingly. You can e.g. use this value as the constant of an aspect ratio layout 
+ *                    constraint to make the player view slightly taller.
  *  @param completion The block to be called on completion.
  *
  *  @discussion Attempting to call this method outside the correct delegate method will throw an exception.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat expansionHeight))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.
