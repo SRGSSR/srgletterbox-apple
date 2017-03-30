@@ -101,6 +101,23 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contentSizeCategoryDidChange:)
+                                                     name:UIContentSizeCategoryDidChangeNotification
+                                                   object:nil];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
+    }
+}
+
 #pragma mark Cell appearance
 
 // We must not call -reloadData to update cells when not necessary (this invalidates taps)
@@ -203,6 +220,13 @@ static void commonInit(SRGLetterboxTimelineView *self);
     else {
         return NO;
     }
+}
+
+#pragma mark Notifications
+
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification
+{
+    [self.collectionView reloadData];
 }
 
 @end

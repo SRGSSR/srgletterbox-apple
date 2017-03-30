@@ -149,7 +149,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = YES;
-    self.timeSlider.font = [UIFont srg_regularFontWithSize:14.f];
     self.timeSlider.popUpViewColor = UIColor.whiteColor;
     self.timeSlider.textColor = UIColor.blackColor;
     self.timeSlider.popUpViewWidthPaddingFactor = 1.5f;
@@ -168,8 +167,6 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationImageView.image = notificationImage;
     self.notificationLabel.text = nil;
     self.notificationImageView.hidden = YES;
-    
-    self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
@@ -215,6 +212,12 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(serviceSettingsDidChange:)
                                                      name:SRGLetterboxServiceSettingsDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contentSizeCategoryDidChange:)
+                                                     name:UIContentSizeCategoryDidChangeNotification
+                                                   object:nil];
+        
+        [self updateFonts];
         
         // Automatically resumes in the view when displayed and if picture in picture was active
         if ([SRGLetterboxService sharedService].controller == self.controller) {
@@ -241,6 +244,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGLetterboxServiceSettingsDidChangeNotification
                                                       object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
     }
 }
 
@@ -258,6 +264,16 @@ static void commonInit(SRGLetterboxView *self);
             [self updateUserInterfaceAnimated:YES];
         }
     }
+}
+
+#pragma mark Fonts
+
+- (void)updateFonts
+{
+    self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
 #pragma mark Getters and setters
@@ -1058,15 +1074,15 @@ static void commonInit(SRGLetterboxView *self);
             dateFormatter.timeStyle = kCFDateFormatterShortStyle;
         });
         
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"  " attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:13.f] }];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"  " attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
         
         NSString *string = (self.timeSlider.isLive) ? SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
-        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_regularFontWithSize:13.f] }]];
+        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }]];
         
         return [attributedString copy];
     }
     else {
-        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: @"--:--"];
+        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: @"--:--" attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
     }
 }
 
@@ -1239,6 +1255,11 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateUserInterfaceForServicePlayback];
+}
+
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification
+{
+    [self updateFonts];
 }
 
 @end

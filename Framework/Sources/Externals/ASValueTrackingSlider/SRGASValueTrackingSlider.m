@@ -244,6 +244,11 @@
     }
 }
 
+- (void)contentSizeCategoryDidChange:(NSNotification *)note
+{
+    [self updatePopUpView];
+}
+
 - (void)updatePopUpView
 {
     NSAttributedString *valueAttributedString; // ask dataSource for string, if nil or blank, get string from _numberFormatter
@@ -336,7 +341,12 @@
 - (void)didMoveToWindow
 {
     if (!self.window) { // removed from window - cancel notifications
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIApplicationDidBecomeActiveNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
     }
     else { // added to window - register notifications
         
@@ -347,6 +357,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didBecomeActiveNotification:)
                                                      name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contentSizeCategoryDidChange:)
+                                                     name:UIContentSizeCategoryDidChangeNotification
                                                    object:nil];
     }
 }

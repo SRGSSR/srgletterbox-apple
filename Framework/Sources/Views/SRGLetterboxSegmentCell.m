@@ -8,6 +8,8 @@
 
 #import "UIImageView+SRGLetterbox.h"
 
+#import <SRGAppearance/SRGAppearance.h>
+
 @interface SRGLetterboxSegmentCell ()
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
@@ -49,6 +51,8 @@
     _segment = segment;
     
     self.titleLabel.text = segment.title;
+    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    
     [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium placeholderImageName:@"placeholder_media-180"];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
@@ -66,6 +70,7 @@
     else {
         self.durationLabel.hidden = YES;
     }
+    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     

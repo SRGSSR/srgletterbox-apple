@@ -9,5 +9,6 @@
 @interface UIFont (SRGLetterbox)
 
 + (UIFont *)srg_awesomeFontWithSize:(CGFloat)size;
++ (UIFont *)srg_awesomeFontWithTextStyle:(NSString *)textStyle;
 
 @end
