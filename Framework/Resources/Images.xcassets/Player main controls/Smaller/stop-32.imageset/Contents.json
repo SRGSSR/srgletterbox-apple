@@ -2,7 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "back_35.pdf"
+      "filename" : "stop_32.pdf"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "stop_64.pdf",
+      "width-class" : "regular"
     }
   ],
   "info" : {

@@ -1,0 +1,20 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "play_32.pdf"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "play_64.pdf",
+      "width-class" : "regular"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}
