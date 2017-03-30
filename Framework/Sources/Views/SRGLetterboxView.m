@@ -132,8 +132,8 @@ static void commonInit(SRGLetterboxView *self);
     loadingImageView.alpha = 0.f;
     [self.mainView insertSubview:loadingImageView aboveSubview:self.playbackButton];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.playbackButton.mas_top).with.offset(-20.f);
         make.centerX.equalTo(self.playbackButton.mas_centerX);
+        make.centerY.equalTo(self.playbackButton.mas_centerY);
     }];
     self.loadingImageView = loadingImageView;
     
@@ -742,7 +742,6 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-                self.playbackButton.alpha = 1.f;
                 break;
             }
                 
@@ -750,7 +749,6 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-                self.playbackButton.alpha = 1.f;
                 break;
             }
                 
@@ -759,14 +757,12 @@ static void commonInit(SRGLetterboxView *self);
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-                self.playbackButton.alpha = 1.f;
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.alpha = 0.f;
                 break;
             }
         }
@@ -836,10 +832,14 @@ static void commonInit(SRGLetterboxView *self);
         
         BOOL visible = isPlayerLoading || isWaitingForData;
         if (visible) {
+            self.playbackButton.alpha = 0.f;
+            
             self.loadingImageView.alpha = 1.f;
             [self.loadingImageView startAnimating];
         }
         else {
+            self.playbackButton.alpha = 1.f;
+            
             self.loadingImageView.alpha = 0.f;
             [self.loadingImageView stopAnimating];
         }
