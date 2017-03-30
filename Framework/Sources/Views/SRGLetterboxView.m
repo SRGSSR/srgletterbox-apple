@@ -128,8 +128,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super awakeFromNib];
     
-    // FIXME: Currently added in code, but we should provide a more customizable activity indicator
-    //        in the SRG Media Player library soon. Replace when available
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
     [self.mainView insertSubview:loadingImageView aboveSubview:self.playbackButton];
@@ -189,6 +187,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceForAirplayAnimated:NO];
         [self updateUserInterfaceForErrorAnimated:NO];
+        [self updateLoadingIndicatorAnimated:NO];
         [self updateUserInterfaceAnimated:NO];
         [self reloadData];
         
@@ -781,6 +780,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)updateControlsAnimated:(BOOL)animated
+{
+    [self updateControlsForController:self.controller animated:animated];
+}
+
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
     static NSString * const kIdentifier = @"airplay";
@@ -824,12 +828,21 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        self.loadingImageView.alpha = (! mediaPlayerController
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
-        [self.loadingImageView startAnimating];
+        BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
+        BOOL isWaitingForData = ! controller.mediaComposition && controller.URN && ! controller.error;
+        
+        BOOL visible = isPlayerLoading || isWaitingForData;
+        if (visible) {
+            self.loadingImageView.alpha = 1.f;
+            [self.loadingImageView startAnimating];
+        }
+        else {
+            self.loadingImageView.alpha = 0.f;
+            [self.loadingImageView stopAnimating];
+        }
     };
     
     if (animated) {
@@ -838,6 +851,11 @@ static void commonInit(SRGLetterboxView *self);
     else {
         animations();
     }
+}
+
+- (void)updateLoadingIndicatorAnimated:(BOOL)animated
+{
+    [self updateLoadingIndicatorForController:self.controller animated:animated];
 }
 
 - (void)updateUserInterfaceForServicePlayback
@@ -1159,11 +1177,13 @@ static void commonInit(SRGLetterboxView *self);
     
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
+    [self updateLoadingIndicatorAnimated:YES];
     [self reloadData];
 }
 
 - (void)playbackDidRestart:(NSNotification *)notification
 {
+    [self updateLoadingIndicatorAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
 }
 
@@ -1172,8 +1192,8 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
-    [self updateControlsForController:self.controller animated:YES];
-    [self updateLoadingIndicatorForController:self.controller animated:YES];
+    [self updateControlsAnimated:YES];
+    [self updateLoadingIndicatorAnimated:YES];
     
     // Initially scroll to the selected segment or chapter (if any)
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
