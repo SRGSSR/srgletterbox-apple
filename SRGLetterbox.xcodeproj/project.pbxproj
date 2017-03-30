@@ -35,6 +35,7 @@
 		6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController.m */; };
 		6F0AD07B1E5EAB1A000A61A5 /* AutoplayViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController.storyboard */; };
 		6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */; };
+		6F131A7D1E8CCDDB000D6BEC /* SRGAppearance.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
 		6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
@@ -184,6 +185,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				6F131A7D1E8CCDDB000D6BEC /* SRGAppearance.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */,
