@@ -454,11 +454,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (CGFloat)expansionHeight
-{
-    return self.timelineHeightConstraint.constant + self.notificationHeight;
-}
-
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
 {
     if (preferredTimelineHeight < 0.f) {
