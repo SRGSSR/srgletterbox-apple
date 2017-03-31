@@ -24,6 +24,23 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
+#define SRGLetterboxViewIsNormalSize() (CGRectGetWidth(self.bounds) < 668.f) // iPhone X PLus in landscape
+
+const CGFloat PlaybackControlsHorizontalSpacingNormal = 20.f;
+const CGFloat PlaybackControlsHorizontalSpacingBigger = 40.f;
+
+const CGFloat PlaybackButtonSizeNormal = 32.f; // Use in the file image name
+const CGFloat PlaybackButtonSizeBigger = 64.f; // Use in the file image name
+const CGFloat SeekButtonSizeNormal = 28.f; // Use in the file image name
+const CGFloat SeekButtonSizeBigger = 46.f; // Use in the file image name
+
+#define PlaybackControlsHorizontalSpacing() SRGLetterboxViewIsNormalSize() ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger
+#define PlaybackButtonSize() SRGLetterboxViewIsNormalSize() ? PlaybackButtonSizeNormal : PlaybackButtonSizeBigger
+#define SeekButtonSize() SRGLetterboxViewIsNormalSize() ? SeekButtonSizeNormal : SeekButtonSizeBigger
+
+#define PlaybackControlImage(name, size) [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@", name, @(size)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection]
+
+
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
@@ -679,9 +696,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateControlsUserInterfaceIfNeededAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        CGFloat width = CGRectGetWidth(self.bounds);
-        BOOL isNormalSize = (width < 668.f); // iPhone X PLus in landscape
-        CGFloat horizontalSpacing = isNormalSize ? 20.f : 40.f;
+        CGFloat horizontalSpacing = PlaybackControlsHorizontalSpacing();
         
         if (self.horizontalSpacingPlaybackToBackwardConstraint.constant != horizontalSpacing)
         {
@@ -689,22 +704,22 @@ static void commonInit(SRGLetterboxView *self);
             self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
             self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
             
-            NSInteger playbackButtonSize = isNormalSize ? 32 : 64;
-            NSInteger seekButtonSize = isNormalSize ? 28 : 46;
+            NSInteger playbackButtonSize = PlaybackButtonSize();
+            NSInteger seekButtonSize = SeekButtonSize();
             
-            self.playbackButton.playImage = [UIImage imageNamed:[NSString stringWithFormat:@"play-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+            self.playbackButton.playImage = PlaybackControlImage(@"play", playbackButtonSize);
             
             if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-                self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"stop-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"stop", playbackButtonSize);
             }
             else {
-                self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"pause-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", playbackButtonSize);
 
             }
             
-            [self.backwardSeekButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"backward-%@", @(seekButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection] forState:UIControlStateNormal];
-            [self.forwardSeekButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"forward-%@", @(seekButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection] forState:UIControlStateNormal];
-            [self.seekToLiveButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"back_live-%@", @(seekButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection] forState:UIControlStateNormal];
+            [self.backwardSeekButton setImage: PlaybackControlImage(@"backward", seekButtonSize) forState:UIControlStateNormal];
+            [self.forwardSeekButton setImage:PlaybackControlImage(@"forward", seekButtonSize) forState:UIControlStateNormal];
+            [self.seekToLiveButton setImage:PlaybackControlImage(@"back_live", seekButtonSize) forState:UIControlStateNormal];
         }
     };
     
@@ -774,15 +789,15 @@ static void commonInit(SRGLetterboxView *self);
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
-        BOOL isNormalSize = (self.horizontalSpacingPlaybackToBackwardConstraint.constant == 20.f);
-        NSInteger playbackButtonSize = isNormalSize ? 32 : 64;
+        NSInteger currentPlaybackButtonSize = (self.horizontalSpacingPlaybackToBackwardConstraint.constant == PlaybackControlsHorizontalSpacingNormal) ?
+        PlaybackButtonSizeNormal : PlaybackButtonSizeBigger;
         
         // Special cases when the player is idle or preparing
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"pause-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+            self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
             return;
         }
         
@@ -791,7 +806,7 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"pause-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
                 self.playbackButton.alpha = 1.f;
                 break;
             }
@@ -799,7 +814,7 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"stop-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"stop", currentPlaybackButtonSize);
                 self.playbackButton.alpha = 1.f;
                 break;
             }
@@ -808,7 +823,7 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"pause-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
                 self.playbackButton.alpha = 1.f;
                 break;
             }
@@ -816,7 +831,7 @@ static void commonInit(SRGLetterboxView *self);
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage imageNamed:[NSString stringWithFormat:@"pause-%@", @(playbackButtonSize)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
                 self.playbackButton.alpha = 0.f;
                 break;
             }
