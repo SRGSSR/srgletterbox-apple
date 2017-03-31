@@ -807,7 +807,6 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
-                self.playbackButton.alpha = 1.f;
                 break;
             }
                 
@@ -815,7 +814,6 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = PlaybackControlImage(@"stop", currentPlaybackButtonSize);
-                self.playbackButton.alpha = 1.f;
                 break;
             }
                 
@@ -824,7 +822,6 @@ static void commonInit(SRGLetterboxView *self);
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
-                self.playbackButton.alpha = 1.f;
                 break;
             }
                 
@@ -832,7 +829,6 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
-                self.playbackButton.alpha = 0.f;
                 break;
             }
         }
