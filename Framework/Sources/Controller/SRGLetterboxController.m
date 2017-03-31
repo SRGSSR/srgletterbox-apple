@@ -13,6 +13,7 @@
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
@@ -21,6 +22,10 @@ const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
+
+NSString * const SRGLetterboxControllerStateDidChangeNotification = @"SRGLetterboxControllerStateDidChangeNotification";
+NSString * const SRGLetterboxControllerStateKey = @"SRGLetterboxControllerStateKey";
+NSString * const SRGLetterboxControllerPreviousStateKey = @"SRGLetterboxControllerPreviousStateKey";
 
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
@@ -68,6 +73,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGQuality preferredQuality;
 @property (nonatomic) NSInteger preferredStartBitRate;
 @property (nonatomic) NSError *error;
+
+@property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
@@ -123,6 +130,13 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.streamAvailabilityCheckInterval = 5. * 60.;
         self.channelUpdateInterval = 30.;
         
+        // Observe playback state changes
+        [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+            @strongify(self)
+            self.playbackState = [notification.newValue integerValue];
+        }];
+        self.playbackState = self.mediaPlayerController.playbackState;
+        
         self.resumesAfterRestart = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
@@ -163,6 +177,22 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 }
 
 #pragma mark Getters and setters
+
+- (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
+{
+    if (_playbackState == playbackState) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@keypath(self.playbackState)];
+    _playbackState = playbackState;
+    [self didChangeValueForKey:@keypath(self.playbackState)];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerStateDidChangeNotification
+                                                        object:self
+                                                      userInfo:@{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
+                                                                  SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) }];
+}
 
 - (void)setMuted:(BOOL)muted
 {
@@ -832,6 +862,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 [self play];
             }
         });
+    }
+}
+
+#pragma mark KVO
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
+{
+    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]) {
+        return NO;
+    }
+    else {
+        return [super automaticallyNotifiesObserversForKey:key];
     }
 }
 

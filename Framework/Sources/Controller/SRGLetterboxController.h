@@ -5,6 +5,7 @@
 //
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGMediaPlayer/SRGMediaPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -12,6 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  Types.
  */
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
+
+/**
+ *  Notification sent when the controller playback state changes. Use the `SRGLetterboxControllerPreviousPlaybackStateKey` 
+ *  to retrieve previous state information from the notification `userInfo` dictionary.
+ */
+OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;              // Notification name.
+OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateKey;                                // Key to access the current state as an `NSNumber` (wrapping an `SRGMediaPlayerPlaybackState` value).
+OBJC_EXTERN NSString * const SRGLetterboxControllerPreviousPlaybackStateKey;                        // Key to access the previous state as an `NSNumber` (wrapping an `SRGMediaPlayerPlaybackState` value).
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -153,6 +162,13 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Reset playback and reset all playback information.
  */
 - (void)reset;
+
+/**
+ *  The current letterbox controller state
+ *
+ *  @discussion This property is key-value observable.
+ */
+@property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
 
 /**
  *  Set to `YES` to mute the player. Default is `NO`.
