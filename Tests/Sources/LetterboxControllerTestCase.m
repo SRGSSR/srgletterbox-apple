@@ -421,6 +421,16 @@
     XCTAssertTrue([self.controller canSeekBackward]);
 }
 
+- (void)testPlaybackStateKeyValueObserving
+{
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@"playbackState" expectedValue:@(SRGMediaPlayerPlaybackStatePreparing)];
+    
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
+
 // TODO: Properly test and describe guarantees about media, mediaComposition and segment information provided by the
 //       controller, in particular:
 //         - Initially
