@@ -15,12 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
 
 /**
- *  Notification sent when the controller playback state changes. Use the `SRGLetterboxControllerPreviousPlaybackStateKey` 
- *  to retrieve previous state information from the notification `userInfo` dictionary.
+ *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
+ *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
+ *  notification `userInfo` dictionary.
  */
-OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;              // Notification name.
-OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateKey;                                // Key to access the current state as an `NSNumber` (wrapping an `SRGMediaPlayerPlaybackState` value).
-OBJC_EXTERN NSString * const SRGLetterboxControllerPreviousPlaybackStateKey;                        // Key to access the previous state as an `NSNumber` (wrapping an `SRGMediaPlayerPlaybackState` value).
+OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -164,13 +163,6 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 - (void)reset;
 
 /**
- *  The current letterbox controller state
- *
- *  @discussion This property is key-value observable.
- */
-@property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
-
-/**
  *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;
@@ -185,6 +177,22 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  unplugged or a Bluetooth headset is switched off abruptly). Default is `NO`.
  */
 @property (nonatomic) BOOL resumesAfterRouteBecomesUnavailable;
+
+@end
+
+@interface SRGLetterboxController (PlaybackInformation)
+
+/**
+ *  The current letterbox controller state
+ *
+ *  @discussion This property is key-value observable.
+ */
+@property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
+
+/**
+ *  Return `YES` iff the stream is currently played in live conditions (@see `liveTolerance`).
+ */
+@property (nonatomic, readonly, getter=isLive) BOOL live;
 
 @end
 
@@ -253,7 +261,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Playback information. Changes are notified through `SRGLetterboxMetadataDidChangeNotification` and
  *  `SRGLetterboxPlaybackDidFailNotification`.
  */
-@interface SRGLetterboxController (PlaybackInformation)
+@interface SRGLetterboxController (Metadata)
 
 /**
  *  Unified Resource Name of the media being played.

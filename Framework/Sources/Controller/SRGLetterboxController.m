@@ -23,10 +23,7 @@ const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
-NSString * const SRGLetterboxControllerStateDidChangeNotification = @"SRGLetterboxControllerStateDidChangeNotification";
-NSString * const SRGLetterboxControllerStateKey = @"SRGLetterboxControllerStateKey";
-NSString * const SRGLetterboxControllerPreviousStateKey = @"SRGLetterboxControllerPreviousStateKey";
-
+NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -135,7 +132,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             @strongify(self)
             self.playbackState = [notification.newValue integerValue];
         }];
-        self.playbackState = self.mediaPlayerController.playbackState;
+        _playbackState = self.mediaPlayerController.playbackState;          // No setter used on purpose to set the initial value. The setter will notify changes
         
         self.resumesAfterRestart = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
@@ -188,10 +185,15 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerStateDidChangeNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
                                                         object:self
                                                       userInfo:@{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
                                                                   SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) }];
+}
+
+- (BOOL)isLive
+{
+    return self.mediaPlayerController.live;
 }
 
 - (void)setMuted:(BOOL)muted
