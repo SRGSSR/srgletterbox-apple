@@ -8,6 +8,7 @@
 
 #import "SRGASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGControlsView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -24,19 +25,39 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
+#define SRGLetterboxViewIsNormalSize() (CGRectGetWidth(self.playerView.bounds) < 668.f) // iPhone X PLus in landscape
+
+const CGFloat PlaybackControlsHorizontalSpacingNormal = 0.f; // Adding to the 10 pts of the content inset on each side of a button image
+const CGFloat PlaybackControlsHorizontalSpacingBigger = 20.f; // Adding to the 10 pts of the content inset on each side of a button image
+
+const CGFloat PlaybackButtonSizeNormal = 32.f; // Use in the file image name
+const CGFloat PlaybackButtonSizeBigger = 52.f; // Use in the file image name
+const CGFloat SeekButtonSizeNormal = 28.f; // Use in the file image name
+const CGFloat SeekButtonSizeBigger = 38.f; // Use in the file image name
+
+#define PlaybackControlsHorizontalSpacing() SRGLetterboxViewIsNormalSize() ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger
+#define PlaybackButtonSize() SRGLetterboxViewIsNormalSize() ? PlaybackButtonSizeNormal : PlaybackButtonSizeBigger
+#define SeekButtonSize() SRGLetterboxViewIsNormalSize() ? SeekButtonSizeNormal : SeekButtonSizeBigger
+
+#define PlaybackControlImage(name, size) [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@", name, @(size)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection]
+
+
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
+@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UIView *controlsView;
+
+@property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet SRGPlaybackButton *playbackButton;
-@property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
-@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
+@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSeekToLiveConstraint;
 
 @property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
 
@@ -46,9 +67,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
-@property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
-
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
+@property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
+@property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
@@ -670,6 +691,45 @@ static void commonInit(SRGLetterboxView *self);
     [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments animated:animated];
 }
 
+// Adapt buttons controls sizes, depending of the witdh.
+- (void)updateControlsUserInterfaceIfNeededAnimated:(BOOL)animated
+{
+    void (^animations)(void) = ^{
+        CGFloat horizontalSpacing = PlaybackControlsHorizontalSpacing();
+        
+        if (self.horizontalSpacingPlaybackToBackwardConstraint.constant != horizontalSpacing)
+        {
+            self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
+            self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
+            self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+            
+            NSInteger playbackButtonSize = PlaybackButtonSize();
+            NSInteger seekButtonSize = SeekButtonSize();
+            
+            self.playbackButton.playImage = PlaybackControlImage(@"play", playbackButtonSize);
+            
+            if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+                self.playbackButton.pauseImage = PlaybackControlImage(@"stop", playbackButtonSize);
+            }
+            else {
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", playbackButtonSize);
+
+            }
+            
+            [self.backwardSeekButton setImage: PlaybackControlImage(@"backward", seekButtonSize) forState:UIControlStateNormal];
+            [self.forwardSeekButton setImage:PlaybackControlImage(@"forward", seekButtonSize) forState:UIControlStateNormal];
+            [self.seekToLiveButton setImage:PlaybackControlImage(@"back_live", seekButtonSize) forState:UIControlStateNormal];
+        }
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
+    }
+    else {
+        animations();
+    }
+}
+
 // Called to update the main player subviews (player view, background image, error overlay). Independent of the global
 // status of the control overlay
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
@@ -728,11 +788,15 @@ static void commonInit(SRGLetterboxView *self);
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
+        NSInteger currentPlaybackButtonSize = (self.horizontalSpacingPlaybackToBackwardConstraint.constant == PlaybackControlsHorizontalSpacingNormal) ?
+        PlaybackButtonSizeNormal : PlaybackButtonSizeBigger;
+        
         // Special cases when the player is idle or preparing
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
+            self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
             return;
         }
         
@@ -741,14 +805,14 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"stop", currentPlaybackButtonSize);
                 break;
             }
                 
@@ -756,13 +820,14 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
+                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
                 break;
             }
         }
@@ -1102,6 +1167,13 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setNeedsSegmentFavoritesUpdate
 {
     [self.timelineView setNeedsSegmentFavoritesUpdate];
+}
+
+#pragma mark SRGControlsViewDelegate protocol
+
+- (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
+{
+    [self updateControlsUserInterfaceIfNeededAnimated:YES];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
