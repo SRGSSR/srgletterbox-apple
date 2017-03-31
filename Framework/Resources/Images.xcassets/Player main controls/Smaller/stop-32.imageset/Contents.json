@@ -3,11 +3,6 @@
     {
       "idiom" : "universal",
       "filename" : "stop_32.pdf"
-    },
-    {
-      "idiom" : "universal",
-      "filename" : "stop_64.pdf",
-      "width-class" : "regular"
     }
   ],
   "info" : {

@@ -3,11 +3,6 @@
     {
       "idiom" : "universal",
       "filename" : "pause_32.pdf"
-    },
-    {
-      "idiom" : "universal",
-      "filename" : "pause_64.pdf",
-      "width-class" : "regular"
     }
   ],
   "info" : {
