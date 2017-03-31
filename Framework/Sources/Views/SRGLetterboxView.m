@@ -27,8 +27,8 @@ const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
 #define SRGLetterboxViewIsNormalSize() (CGRectGetWidth(self.playerView.bounds) < 668.f) // iPhone X PLus in landscape
 
-const CGFloat PlaybackControlsHorizontalSpacingNormal = 20.f;
-const CGFloat PlaybackControlsHorizontalSpacingBigger = 40.f;
+const CGFloat PlaybackControlsHorizontalSpacingNormal = 0.f; // Adding to the 10 pts of the content inset on each side of a button image
+const CGFloat PlaybackControlsHorizontalSpacingBigger = 20.f; // Adding to the 10 pts of the content inset on each side of a button image
 
 const CGFloat PlaybackButtonSizeNormal = 32.f; // Use in the file image name
 const CGFloat PlaybackButtonSizeBigger = 52.f; // Use in the file image name
