@@ -272,7 +272,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 
                 NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                      code:SRGLetterboxErrorCodeBlocked
-                                                 userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
+                                                 userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
                 [self reportError:error];
                 return;
             }
@@ -285,10 +285,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         };
         
         if (self.media.mediaType == SRGMediaTypeVideo) {
-            [[self.dataProvider tvMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[self.dataProvider videoMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
         else if (self.media.mediaType == SRGMediaTypeAudio) {
-            [[self.dataProvider radioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[self.dataProvider audioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
     }];
 }
@@ -483,11 +483,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 };
                 
                 if (URN.mediaType == SRGMediaTypeVideo) {
-                    SRGRequest *mediaRequest = [self.dataProvider tvMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [self.dataProvider videosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
                 else {
-                    SRGRequest *mediaRequest = [self.dataProvider radioMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [self.dataProvider audiosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
             }
@@ -511,7 +511,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         if (blockingReason == SRGBlockingReasonGeoblocking) {
             NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                  code:SRGLetterboxErrorCodeBlocked
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(mediaComposition.mainChapter.blockingReason) }];
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
             [self.requestQueue reportError:error];
             return;
         }
@@ -540,11 +540,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     };
     
     if (URN.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [self.dataProvider tvMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [self.dataProvider videoMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
     else if (URN.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [self.dataProvider radioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [self.dataProvider audioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }

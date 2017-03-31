@@ -1238,7 +1238,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
-    NSString *notificationMessage = SRGMessageForBlockingReason(segment.blockingReason);
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(segment.blockingReason);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 
