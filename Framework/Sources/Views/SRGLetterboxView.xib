@@ -25,6 +25,9 @@
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="tY8-JW-edg"/>
                 <outlet property="forwardSeekButton" destination="Suw-jc-FuV" id="FJB-Vi-Dbp"/>
                 <outlet property="fullScreenButton" destination="WT7-v6-7uh" id="GtS-jh-IoR"/>
+                <outlet property="horizontalSpacingForwardToSeekToLiveConstraint" destination="gyT-pT-X3e" id="Fyc-9h-8Kd"/>
+                <outlet property="horizontalSpacingPlaybackToBackwardConstraint" destination="1MA-ls-Rsr" id="fZD-aP-Ko2"/>
+                <outlet property="horizontalSpacingPlaybackToForwardConstraint" destination="X6k-u9-6wa" id="HXW-l1-cpq"/>
                 <outlet property="imageView" destination="gv4-Rp-xBi" id="OaD-1O-nnk"/>
                 <outlet property="mainView" destination="ZVz-wN-LVi" id="How-3U-mon"/>
                 <outlet property="notificationImageView" destination="0Mg-fI-Oss" id="6UF-Zn-1BI"/>
