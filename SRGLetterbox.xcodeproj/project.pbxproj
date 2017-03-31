@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		080A6B161E8E79EF0084F484 /* SRGControlsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 080A6B141E8E79EF0084F484 /* SRGControlsView.h */; };
+		080A6B171E8E79EF0084F484 /* SRGControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 080A6B151E8E79EF0084F484 /* SRGControlsView.m */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
@@ -254,6 +256,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		080A6B141E8E79EF0084F484 /* SRGControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlsView.h; sourceTree = "<group>"; };
+		080A6B151E8E79EF0084F484 /* SRGControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGControlsView.m; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -511,6 +515,8 @@
 		6FAB3AFF1E28F76800CC2197 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				080A6B141E8E79EF0084F484 /* SRGControlsView.h */,
+				080A6B151E8E79EF0084F484 /* SRGControlsView.m */,
 				6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */,
 				6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */,
 				6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */,
@@ -689,6 +695,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				080A6B161E8E79EF0084F484 /* SRGControlsView.h in Headers */,
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
@@ -898,6 +905,7 @@
 				087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */,
 				08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */,
 				6FE844EB1E60349900F90F67 /* SRGLetterboxTimelineView.m in Sources */,
+				080A6B171E8E79EF0084F484 /* SRGControlsView.m in Sources */,
 				6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */,
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,

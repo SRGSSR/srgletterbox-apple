@@ -8,6 +8,7 @@
 
 #import "SRGASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGControlsView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -24,7 +25,7 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
-#define SRGLetterboxViewIsNormalSize() (CGRectGetWidth(self.bounds) < 668.f) // iPhone X PLus in landscape
+#define SRGLetterboxViewIsNormalSize() (CGRectGetWidth(self.playerView.bounds) < 668.f) // iPhone X PLus in landscape
 
 const CGFloat PlaybackControlsHorizontalSpacingNormal = 20.f;
 const CGFloat PlaybackControlsHorizontalSpacingBigger = 40.f;
@@ -43,13 +44,13 @@ const CGFloat SeekButtonSizeBigger = 46.f; // Use in the file image name
 
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
+@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
-@property (nonatomic, weak) IBOutlet UIView *controlsView;
+@property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet SRGPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
@@ -274,8 +275,6 @@ static void commonInit(SRGLetterboxView *self);
     [super layoutSubviews];
     
     self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
-    
-    [self updateControlsUserInterfaceIfNeededAnimated:YES];
     
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
     if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
@@ -1168,6 +1167,13 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setNeedsSegmentFavoritesUpdate
 {
     [self.timelineView setNeedsSegmentFavoritesUpdate];
+}
+
+#pragma mark SRGControlsViewDelegate protocol
+
+- (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
+{
+    [self updateControlsUserInterfaceIfNeededAnimated:YES];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol

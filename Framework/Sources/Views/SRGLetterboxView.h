@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class SRGLetterboxView;
 
 /**
- *  Letterbox view delegate protocol for optiona full-screen support and additional overlay animations.
+ *  Letterbox view delegate protocol for optional full-screen support and additional overlay animations.
  */
 @protocol SRGLetterboxViewDelegate <NSObject>
 
