@@ -195,6 +195,18 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, getter=isLive) BOOL live;
 
 /**
+ *  The current player time.
+ */
+@property (nonatomic, readonly) CMTime currentTime;
+
+/**
+ *  The current media time range (might be empty or indefinite).
+ *
+ *  @discussion Use `CMTimeRange` macros for checking time ranges.
+ */
+@property (nonatomic, readonly) CMTimeRange timeRange;
+
+/**
  *  Register a block for periodic execution when the controller is not in the idle state.
  *
  *  @param interval Time interval between block executions.

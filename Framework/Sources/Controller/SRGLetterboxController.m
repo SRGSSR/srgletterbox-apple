@@ -196,6 +196,16 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.mediaPlayerController.live;
 }
 
+- (CMTime)currentTime
+{
+    return self.mediaPlayerController.player.currentTime;
+}
+
+- (CMTimeRange)timeRange
+{
+    return self.mediaPlayerController.timeRange;
+}
+
 - (void)setMuted:(BOOL)muted
 {
     _muted = muted;
