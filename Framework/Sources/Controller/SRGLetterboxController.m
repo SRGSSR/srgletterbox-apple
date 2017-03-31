@@ -308,6 +308,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
 }
 
+#pragma mark Periodic time observers
+
+- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
+{
+    return [self.mediaPlayerController addPeriodicTimeObserverForInterval:interval queue:queue usingBlock:block];
+}
+
+- (void)removePeriodicTimeObserver:(id)observer
+{
+    [self.mediaPlayerController removePeriodicTimeObserver:observer];
+}
+
 #pragma mark Data
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive

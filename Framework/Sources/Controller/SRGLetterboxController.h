@@ -180,7 +180,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 @end
 
-@interface SRGLetterboxController (PlaybackInformation)
+@interface SRGLetterboxController (Playback)
 
 /**
  *  The current letterbox controller state
@@ -193,6 +193,23 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Return `YES` iff the stream is currently played in live conditions (@see `liveTolerance`).
  */
 @property (nonatomic, readonly, getter=isLive) BOOL live;
+
+/**
+ *  Register a block for periodic execution when the controller is not in the idle state.
+ *
+ *  @param interval Time interval between block executions.
+ *  @param queue    The serial queue onto which block should be enqueued (main queue if `NULL`).
+ *  @param block	The block to be periodically executed.
+ *
+ *  @return The time observer. The observer is retained by the controller, you can store a weak reference to it and 
+ *          remove it at a later time if needed.
+ */
+- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(nullable dispatch_queue_t)queue usingBlock:(void (^)(CMTime time))block;
+
+/**
+ *  Remove a time observer (does nothing if the observer is not registered).
+ */
+- (void)removePeriodicTimeObserver:(nullable id)observer;
 
 @end
 
