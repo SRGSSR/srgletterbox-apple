@@ -31,9 +31,9 @@ const CGFloat PlaybackControlsHorizontalSpacingNormal = 20.f;
 const CGFloat PlaybackControlsHorizontalSpacingBigger = 40.f;
 
 const CGFloat PlaybackButtonSizeNormal = 32.f; // Use in the file image name
-const CGFloat PlaybackButtonSizeBigger = 64.f; // Use in the file image name
+const CGFloat PlaybackButtonSizeBigger = 52.f; // Use in the file image name
 const CGFloat SeekButtonSizeNormal = 28.f; // Use in the file image name
-const CGFloat SeekButtonSizeBigger = 46.f; // Use in the file image name
+const CGFloat SeekButtonSizeBigger = 38.f; // Use in the file image name
 
 #define PlaybackControlsHorizontalSpacing() SRGLetterboxViewIsNormalSize() ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger
 #define PlaybackButtonSize() SRGLetterboxViewIsNormalSize() ? PlaybackButtonSizeNormal : PlaybackButtonSizeBigger
