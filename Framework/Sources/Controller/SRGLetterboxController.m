@@ -13,6 +13,7 @@
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
@@ -22,6 +23,7 @@ const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
+NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -68,6 +70,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGQuality preferredQuality;
 @property (nonatomic) NSInteger preferredStartBitRate;
 @property (nonatomic) NSError *error;
+
+@property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
@@ -123,6 +127,13 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.streamAvailabilityCheckInterval = 5. * 60.;
         self.channelUpdateInterval = 30.;
         
+        // Observe playback state changes
+        [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+            @strongify(self)
+            self.playbackState = [notification.newValue integerValue];
+        }];
+        _playbackState = self.mediaPlayerController.playbackState;          // No setter used on purpose to set the initial value. The setter will notify changes
+        
         self.resumesAfterRestart = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
@@ -163,6 +174,37 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 }
 
 #pragma mark Getters and setters
+
+- (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
+{
+    if (_playbackState == playbackState) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@keypath(self.playbackState)];
+    _playbackState = playbackState;
+    [self didChangeValueForKey:@keypath(self.playbackState)];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
+                                                        object:self
+                                                      userInfo:@{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
+                                                                  SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) }];
+}
+
+- (BOOL)isLive
+{
+    return self.mediaPlayerController.live;
+}
+
+- (CMTime)currentTime
+{
+    return self.mediaPlayerController.player.currentTime;
+}
+
+- (CMTimeRange)timeRange
+{
+    return self.mediaPlayerController.timeRange;
+}
 
 - (void)setMuted:(BOOL)muted
 {
@@ -274,6 +316,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (SRGMedia *)segmentMedia
 {
     return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
+}
+
+#pragma mark Periodic time observers
+
+- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
+{
+    return [self.mediaPlayerController addPeriodicTimeObserverForInterval:interval queue:queue usingBlock:block];
+}
+
+- (void)removePeriodicTimeObserver:(id)observer
+{
+    [self.mediaPlayerController removePeriodicTimeObserver:observer];
 }
 
 #pragma mark Data
@@ -832,6 +886,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 [self play];
             }
         });
+    }
+}
+
+#pragma mark KVO
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
+{
+    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]) {
+        return NO;
+    }
+    else {
+        return [super automaticallyNotifiesObserversForKey:key];
     }
 }
 

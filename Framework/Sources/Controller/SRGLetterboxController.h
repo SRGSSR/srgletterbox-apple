@@ -5,6 +5,7 @@
 //
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGMediaPlayer/SRGMediaPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -12,6 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  Types.
  */
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
+
+/**
+ *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
+ *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
+ *  notification `userInfo` dictionary.
+ */
+OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -172,6 +180,52 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 @end
 
+@interface SRGLetterboxController (Playback)
+
+/**
+ *  The current letterbox controller playback state.
+ *
+ *  @discussion This property is key-value observable.
+ */
+@property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
+
+/**
+ *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the 
+ *  last 30 seconds of a DVR stream).
+ */
+@property (nonatomic, readonly, getter=isLive) BOOL live;
+
+/**
+ *  The current player time.
+ */
+@property (nonatomic, readonly) CMTime currentTime;
+
+/**
+ *  The current media time range (might be empty or indefinite).
+ *
+ *  @discussion Use `CMTimeRange` macros for checking time ranges.
+ */
+@property (nonatomic, readonly) CMTimeRange timeRange;
+
+/**
+ *  Register a block for periodic execution when the controller is not in the idle state.
+ *
+ *  @param interval Time interval between block executions.
+ *  @param queue    The serial queue onto which block should be enqueued (main queue if `NULL`).
+ *  @param block	The block to be periodically executed.
+ *
+ *  @return The time observer. The observer is retained by the controller, you can store a weak reference to it and 
+ *          remove it at a later time if needed.
+ */
+- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(nullable dispatch_queue_t)queue usingBlock:(void (^)(CMTime time))block;
+
+/**
+ *  Remove a time observer (does nothing if the observer is not registered).
+ */
+- (void)removePeriodicTimeObserver:(nullable id)observer;
+
+@end
+
 /**
  *  Convenience methods
  */
@@ -237,7 +291,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Playback information. Changes are notified through `SRGLetterboxMetadataDidChangeNotification` and
  *  `SRGLetterboxPlaybackDidFailNotification`.
  */
-@interface SRGLetterboxController (PlaybackInformation)
+@interface SRGLetterboxController (Metadata)
 
 /**
  *  Unified Resource Name of the media being played.
