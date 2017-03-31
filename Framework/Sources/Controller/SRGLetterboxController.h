@@ -183,14 +183,15 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @interface SRGLetterboxController (Playback)
 
 /**
- *  The current letterbox controller state
+ *  The current letterbox controller playback state.
  *
  *  @discussion This property is key-value observable.
  */
 @property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
 
 /**
- *  Return `YES` iff the stream is currently played in live conditions (@see `liveTolerance`).
+ *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the 
+ *  last 30 seconds of a DVR stream).
  */
 @property (nonatomic, readonly, getter=isLive) BOOL live;
 
