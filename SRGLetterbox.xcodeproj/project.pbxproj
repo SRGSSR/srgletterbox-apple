@@ -258,6 +258,7 @@
 /* Begin PBXFileReference section */
 		080A6B141E8E79EF0084F484 /* SRGControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlsView.h; sourceTree = "<group>"; };
 		080A6B151E8E79EF0084F484 /* SRGControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGControlsView.m; sourceTree = "<group>"; };
+		08152F2A1E9269290053AB34 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -945,6 +946,7 @@
 				6F4855AD1E3A66A400B0141C /* en */,
 				6F4855AE1E3A66AB00B0141C /* fr */,
 				6F4855AF1E3A66B100B0141C /* it */,
+				08152F2A1E9269290053AB34 /* rm */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

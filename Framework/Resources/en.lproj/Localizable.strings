@@ -5,10 +5,10 @@
 "Live" = "Live";
 
 /* Text displayed when no media is available for playback */
-"No media" = "No media";
+"No media" = "No content";
 
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Playback on AirPlay";
 
 /* Message displayed when a media cannot be played for some reason (the user should not know about) */
-"The media cannot be played" = "The media cannot be played";
+"The media cannot be played" = "The content cannot be played";

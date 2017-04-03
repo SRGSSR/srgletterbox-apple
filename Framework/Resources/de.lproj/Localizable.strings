@@ -1,8 +1,14 @@
-﻿/* Message displayed when a network error has been encountered */
-"A network issue has been encountered. Please check your Internet connection and network settings" = "A network issue has been encountered. Please check your Internet connection and network settings";
+/* Message displayed when a network error has been encountered */
+"A network issue has been encountered. Please check your Internet connection and network settings" = "Ein Netzwerkproblem ist aufgetreten. Bitte überprüfen Sie Ihre Internet-Anbindung und Ihre Netzwerk-Einstellungen.";
+
+/* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
+"Live" = "Live";
 
 /* Text displayed when no media is available for playback */
-"No media" = "No media";
+"No media" = "Kein File vorhanden";
+
+/* Message displayed when broadcasting on an AirPlay device */
+"Playback on AirPlay" = "Wiedergabe über Airplay";
 
 /* Message displayed when a media cannot be played for some reason (the user should not know about) */
-"The media cannot be played" = "The media cannot be played";
+"The media cannot be played" = "Der Inhalt kann nicht abgespielt werden.";
