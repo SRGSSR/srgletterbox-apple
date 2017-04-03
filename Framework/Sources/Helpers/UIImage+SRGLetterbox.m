@@ -6,6 +6,8 @@
 
 #import "UIImage+SRGLetterbox.h"
 
+#import "NSBundle+SRGLetterbox.h"
+
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
 {
     static NSDictionary *s_widths;
@@ -124,28 +126,9 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return [self srg_vectorImageNamed:imageName inBundle:bundle withSize:size];
 }
 
-- (UIImage *)play_imageTintedWithColor:(UIColor *)color
++ (UIImage *)srg_letterboxImageNamed:(NSString *)imageName
 {
-    if (!color) {
-        return self;
-    }
-    
-    CGRect rect = CGRectMake(0.f, 0.f, self.size.width, self.size.height);
-    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.f);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextTranslateCTM(context, 0.f, self.size.height);
-    CGContextScaleCTM(context, 1.0f, -1.0f);
-    
-    CGContextDrawImage(context, rect, self.CGImage);
-    CGContextSetBlendMode(context, kCGBlendModeSourceIn);
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    CGContextFillRect(context, rect);
-    
-    UIImage *tintedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return tintedImage;
+    return [UIImage imageNamed:imageName inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
 }
 
 - (UIImage *)srg_imageTintedWithColor:(UIColor *)color

@@ -6,8 +6,8 @@
 
 #import "SRGLetterboxView.h"
 
-#import "SRGASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGASValueTrackingSlider.h"
 #import "SRGControlsView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -25,8 +25,6 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
-#define SRGLetterboxViewIsNormalSize() (CGRectGetWidth(self.playerView.bounds) < 668.f) // iPhone X PLus in landscape
-
 const CGFloat PlaybackControlsHorizontalSpacingNormal = 0.f; // Adding to the 10 pts of the content inset on each side of a button image
 const CGFloat PlaybackControlsHorizontalSpacingBigger = 20.f; // Adding to the 10 pts of the content inset on each side of a button image
 
@@ -34,13 +32,6 @@ const CGFloat PlaybackButtonSizeNormal = 32.f; // Use in the file image name
 const CGFloat PlaybackButtonSizeBigger = 52.f; // Use in the file image name
 const CGFloat SeekButtonSizeNormal = 28.f; // Use in the file image name
 const CGFloat SeekButtonSizeBigger = 38.f; // Use in the file image name
-
-#define PlaybackControlsHorizontalSpacing() SRGLetterboxViewIsNormalSize() ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger
-#define PlaybackButtonSize() SRGLetterboxViewIsNormalSize() ? PlaybackButtonSizeNormal : PlaybackButtonSizeBigger
-#define SeekButtonSize() SRGLetterboxViewIsNormalSize() ? SeekButtonSizeNormal : SeekButtonSizeBigger
-
-#define PlaybackControlImage(name, size) [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@", name, @(size)] inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:self.traitCollection]
-
 
 static void commonInit(SRGLetterboxView *self);
 
@@ -279,7 +270,7 @@ static void commonInit(SRGLetterboxView *self);
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
     if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
         
-        [self layoutNotificationViewAndUpdateNotificationHeight];
+        [self layoutNotificationView];
         if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
             [self updateUserInterfaceAnimated:YES];
         }
@@ -653,7 +644,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // We need to know what will be the notification view height, depending of the new notification message.
         self.notificationLabel.text = self.notificationMessage;
-        [self layoutNotificationViewAndUpdateNotificationHeight];
+        [self layoutNotificationView];
         
         self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
     };
@@ -695,31 +686,28 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateControlsUserInterfaceIfNeededAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        CGFloat horizontalSpacing = PlaybackControlsHorizontalSpacing();
+        BOOL isNormalLayout = [self isNormalLayout];
+        CGFloat horizontalSpacing = isNormalLayout ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger;
         
-        if (self.horizontalSpacingPlaybackToBackwardConstraint.constant != horizontalSpacing)
-        {
-            self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
-            self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-            self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
-            
-            NSInteger playbackButtonSize = PlaybackButtonSize();
-            NSInteger seekButtonSize = SeekButtonSize();
-            
-            self.playbackButton.playImage = PlaybackControlImage(@"play", playbackButtonSize);
-            
-            if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-                self.playbackButton.pauseImage = PlaybackControlImage(@"stop", playbackButtonSize);
-            }
-            else {
-                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", playbackButtonSize);
-
-            }
-            
-            [self.backwardSeekButton setImage: PlaybackControlImage(@"backward", seekButtonSize) forState:UIControlStateNormal];
-            [self.forwardSeekButton setImage:PlaybackControlImage(@"forward", seekButtonSize) forState:UIControlStateNormal];
-            [self.seekToLiveButton setImage:PlaybackControlImage(@"back_live", seekButtonSize) forState:UIControlStateNormal];
+        self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
+        self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
+        self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+        
+        self.playbackButton.playImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"play-32"] : [UIImage srg_letterboxImageNamed:@"play-52"];
+        
+        if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+            self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
         }
+        else {
+            self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+        }
+        
+        [self.backwardSeekButton setImage:isNormalLayout ? [UIImage srg_letterboxImageNamed:@"backward-28"] : [UIImage srg_letterboxImageNamed:@"backward-38"]
+                                 forState:UIControlStateNormal];
+        [self.forwardSeekButton setImage:isNormalLayout ? [UIImage srg_letterboxImageNamed:@"forward-28"] : [UIImage srg_letterboxImageNamed:@"forward-38"]
+                                forState:UIControlStateNormal];
+        [self.seekToLiveButton setImage:isNormalLayout ? [UIImage srg_letterboxImageNamed:@"back_live-28"] : [UIImage srg_letterboxImageNamed:@"back_live-38"]
+                               forState:UIControlStateNormal];
     };
     
     if (animated) {
@@ -788,15 +776,14 @@ static void commonInit(SRGLetterboxView *self);
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
-        NSInteger currentPlaybackButtonSize = (self.horizontalSpacingPlaybackToBackwardConstraint.constant == PlaybackControlsHorizontalSpacingNormal) ?
-        PlaybackButtonSizeNormal : PlaybackButtonSizeBigger;
+        BOOL isNormalLayout = [self isNormalLayout];
         
         // Special cases when the player is idle or preparing
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
+            self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
             return;
         }
         
@@ -805,14 +792,14 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
+                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = PlaybackControlImage(@"stop", currentPlaybackButtonSize);
+                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
                 break;
             }
                 
@@ -820,14 +807,14 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
+                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = PlaybackControlImage(@"pause", currentPlaybackButtonSize);
+                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
                 break;
             }
         }
@@ -966,9 +953,10 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark Layout updates
+#pragma mark Layout
 
-- (void)layoutNotificationViewAndUpdateNotificationHeight {
+- (void)layoutNotificationView
+{
     // Force autolayout
     [self.notificationView setNeedsLayout];
     [self.notificationView layoutIfNeeded];
@@ -981,6 +969,12 @@ static void commonInit(SRGLetterboxView *self);
     _notificationHeight = [self.notificationView systemLayoutSizeFittingSize:fittingSize
                                                    withHorizontalFittingPriority:UILayoutPriorityRequired
                                                          verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+}
+
+- (BOOL)isNormalLayout
+{
+    // iPhone Plus in landscape
+    return (CGRectGetWidth(self.playerView.bounds) < 668.f);
 }
 
 #pragma mark Letterbox notification banners

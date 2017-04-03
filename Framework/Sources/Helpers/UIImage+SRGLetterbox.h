@@ -29,6 +29,11 @@ OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 + (UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle  withScale:(SRGImageScale)imageScale;
 
 /**
+ *  Return the specified image from the Letterbox resource bundle.
+ */
++ (nullable UIImage *)srg_letterboxImageNamed:(NSString *)imageName;
+
+/**
  *  Return the receiver, tinted with the specified color (if color is `nil`, the image is returned as is)
  */
 - (UIImage *)srg_imageTintedWithColor:(nullable UIColor *)color;
