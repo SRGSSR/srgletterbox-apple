@@ -9,5 +9,5 @@
 #import "SRGLetterboxService.h"
 #import "SRGLetterboxView.h"
 
-// Official version number
+// Official version number.
 FOUNDATION_EXPORT NSString * SRGLetterboxMarketingVersion(void);

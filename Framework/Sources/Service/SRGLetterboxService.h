@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The Letterbox service is a singleton, which can provide the following application-wide features for one Letterbox 
  *  controller at a time:
- *    - Airplay
+ *    - AirPlay
  *    - Picture in picture (for devices supporting it)
  *    - Control center and lock screen media information
  *    - Remote playback controls
@@ -82,13 +82,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  those will be transferred to the new controller.
  *
  *  If you want to disable background services, you can call `-disable` at any time. This will remove the ability to
- *  use Airplay or picture in picture, and clear control center and lock screen information. Any Airplay or picture
+ *  use AirPlay or picture in picture, and clear control center and lock screen information. Any AirPlay or picture
  *  in picture playback will be immediately stopped.
  */
 @interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
 
 /**
- *  The service singleton instance
+ *  The service singleton instance.
  */
 + (SRGLetterboxService *)sharedService;
 

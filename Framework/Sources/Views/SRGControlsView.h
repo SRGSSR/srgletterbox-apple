@@ -8,10 +8,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Forward declarations.
 @class SRGControlsView;
 
 /**
- *  Controls view delegate protocol gets the layoutSubviews event
+ *  Controls view delegate protocol.
  */
 @protocol SRGControlsViewDelegate <NSObject>
 

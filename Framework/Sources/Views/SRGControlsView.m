@@ -12,8 +12,6 @@
 {
     [super layoutSubviews];
     
-    if (self.delegate) {
-        [self.delegate controlsViewDidLayoutSubviews:self];
-    }
+    [self.delegate controlsViewDidLayoutSubviews:self];
 }
 @end

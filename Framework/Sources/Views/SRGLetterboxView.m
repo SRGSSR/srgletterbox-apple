@@ -677,39 +677,6 @@ static void commonInit(SRGLetterboxView *self);
     [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments animated:animated];
 }
 
-// Adapt buttons controls sizes, depending of the witdh.
-- (void)updateControlsUserInterfaceIfNeededAnimated:(BOOL)animated
-{
-    void (^animations)(void) = ^{
-        SRGImageSet imageSet = [self imageSet];
-        CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
-        
-        self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
-        self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-        self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
-        
-        self.playbackButton.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
-        
-        if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-            self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-        }
-        else {
-            self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-        }
-        
-        [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
-        [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
-        [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations];
-    }
-    else {
-        animations();
-    }
-}
-
 // Called to update the main player subviews (player view, background image, error overlay). Independent of the global
 // status of the control overlay
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
@@ -963,6 +930,30 @@ static void commonInit(SRGLetterboxView *self);
                                                          verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
 }
 
+// Ajust control size to fit view width best.
+- (void)updateControlSet
+{
+    SRGImageSet imageSet = [self imageSet];
+    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
+    
+    self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+    
+    self.playbackButton.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
+    
+    if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+        self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
+    }
+    else {
+        self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
+    }
+    
+    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+}
+
 - (SRGImageSet)imageSet
 {
     // iPhone Plus in landscape
@@ -1159,7 +1150,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
 {
-    [self updateControlsUserInterfaceIfNeededAnimated:YES];
+    [self updateControlSet];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol

@@ -13,12 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIImageView (SRGLetterbox)
 
 /**
- *  Standard loading indicators. Call `-startAnimating` to animate.
+ *  Standard loading indicator. Call `-startAnimating` to animate.
  */
 + (UIImageView *)srg_loadingImageView35WithTintColor:(nullable UIColor *)tintColor;
 
 /**
- *  Remark: If object is nil, the placeholder will also be used
+ *  Request an image for the specified object, for a given scale.
+ *
+ *  @param object               The object to request the image for.
+ *  @param scale                The scale to use
+ *  @param placeholderImageName The name of the placeholder image name to use
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale
