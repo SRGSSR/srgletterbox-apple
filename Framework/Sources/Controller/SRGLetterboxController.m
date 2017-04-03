@@ -415,8 +415,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         [[self.dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
-        // TODO: Regional radio support
-        [[self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+        NSString *livestreamUid = ! [self.media.uid isEqualToString:self.media.channel.uid] ? self.media.uid : nil;
+        [[self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:livestreamUid completionBlock:completionBlock] resume];
     }
 }
 
