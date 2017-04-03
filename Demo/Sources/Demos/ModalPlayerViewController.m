@@ -149,8 +149,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     self.titleLabel.text = media.title;
     
     SRGChannel *channel = self.letterboxController.channel;
-    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
-    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title] : nil;
+    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
+    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

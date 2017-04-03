@@ -125,7 +125,8 @@
     
     static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
     static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:8399354";
-    static NSString * const kAudioDVRURNString = @"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31";
+    static NSString * const kAudioDVRURNString = @"urn:rts:audio:3262363";
+    static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
     
@@ -247,16 +248,21 @@
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithURNString:kInvalidURNString];
                     break;
                 }
                     
                 case 14: {
+                    [self openModalPlayerWithURNString:nil];
+                    break;
+                }
+                    
+                case 15: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];
