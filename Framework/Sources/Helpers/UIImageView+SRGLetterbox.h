@@ -17,9 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (UIImageView *)srg_loadingImageView35WithTintColor:(nullable UIColor *)tintColor;
 
-- (void)srg_startAnimatingLoading35WithTintColor:(nullable UIColor *)tintColor;
-- (void)srg_stopAnimating;
-
 /**
  *  Remark: If object is nil, the placeholder will also be used
  */

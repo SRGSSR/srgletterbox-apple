@@ -50,27 +50,6 @@
     return [images copy];
 }
 
-#pragma mark Loading animation
-
-- (void)srg_startAnimatingLoading35WithTintColor:(nullable UIColor *)tintColor
-{
-    [self srg_startAnimatingWithImagesNamed:@"loading-35" withTintColor:tintColor];
-}
-
-- (void)srg_startAnimatingWithImagesNamed:(NSString *)name withTintColor:(nullable UIColor *)tintColor
-{
-    self.animationImages = [UIImageView srg_animatedImageNamed:name withTintColor:tintColor];
-    self.image = self.animationImages.firstObject;
-    self.animationDuration = 1.;
-    [self startAnimating];
-}
-
-- (void)srg_stopAnimating
-{
-    [self stopAnimating];
-    self.animationImages = nil;
-}
-
 #pragma mark Standard image loading
 
 - (void)srg_requestImageForObject:(id<SRGImageMetadata>)object
