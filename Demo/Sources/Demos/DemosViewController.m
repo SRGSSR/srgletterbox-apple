@@ -125,7 +125,7 @@
     
     static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
     static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:8399354";
-    static NSString * const kAudioDVRURNString = @"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31";
+    static NSString * const kAudioDVRURNString = @"urn:rts:audio:3262363";
     
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
     
