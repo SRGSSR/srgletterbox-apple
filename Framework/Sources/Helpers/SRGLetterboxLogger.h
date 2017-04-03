@@ -7,7 +7,7 @@
 #import <SRGLogger/SRGLogger.h>
 
 /**
- *  Macros for logging
+ *  Macros for logging.
  */
 #define SRGLetterboxLogVerbose(category, format, ...) SRGLogVerbose(@"ch.srgssr.letterbox", category, format, ##__VA_ARGS__)
 #define SRGLetterboxLogDebug(category, format, ...)   SRGLogDebug(@"ch.srgssr.letterbox", category, format, ##__VA_ARGS__)

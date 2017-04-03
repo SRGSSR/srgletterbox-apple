@@ -53,10 +53,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 - (BOOL)canSeekForward;
 
 /**
- *  Return YES iff the player can seek to play live
- *
- *  @discussion For live stream only, and only possible if seeking wouldn't jump past the end. For DVR streams,
- *              possible until the stream is played live.
+ *  Return YES iff the player can seek to live conditions.
  */
 - (BOOL)canSeekToLive;
 

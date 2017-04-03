@@ -59,8 +59,7 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
- *  Notification sent when playback has been restarted (might be automatic when network is reachable again). Errors
- *  are still reported through `SRGLetterboxPlaybackDidFailNotification` notifications.
+ *  Notification sent when playback has been restarted (might be automatic when network is reachable again).
  */
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRestartNotification;
 
@@ -76,10 +75,10 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *
  *  Applications can use a Letterbox controller to play some content in the background. If they need to display what
  *  is being played, a Letterbox controller needs to be bound to a Letterbox view (@see `SRGLetterboxView`). By integrating
- *  this view into their own hierarchy, and by listening to metadata and error controller notitications, applications can 
+ *  this view into their own hierarchy, and by listening to metadata and error controller notifications, applications can
  *  provide rich playback interfaces with contextual information about the content currently being played.
  *
- *  Letterbox controllers can also be integrated with application-wide features like Airplay or picture in picture.
+ *  Letterbox controllers can also be integrated with application-wide features like AirPlay or picture in picture.
  *  Such features can only be enabled for at most one controller at a time by starting the Letterbox service singleton
  *  for this controller (@see `SRGLetterboxService`). Your application is free to use as many controllers as needed, 
  *  though, and you can change at any time which controller is enabled for such services.
@@ -106,8 +105,8 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *                               with no result guarantee, though it should in general be applied. The nearest available
  *                               quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
  *                               ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
- *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
- *                           block will only be called if the media could be successfully prepared.
+ *  @param completionHandler     The completion block to be called after the controller has finished preparing the media. This
+ *                               block will only be called if the media could be successfully prepared.
  *
  *  @discussion Does nothing if the URN is the one currently being played. If the preferred quality is set to
  *              `SRGQualityNone`, the best available quality will be automatically played. You might want to set
@@ -121,7 +120,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 /**
  *  Same as `-prepareToPlayURN:withPreferredQuality:preferredStartBitRate:completionHandler`, but for a media. 
  *
- *  @discussion Media metadata is immediately available from the controller and through update notifications.
+ *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
       withPreferredQuality:(SRGQuality)preferredQuality
@@ -151,7 +150,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 /**
  *  Restart playback completely for the same URN or media. Does nothing if no URN or media has currently been set.
  *
- *  @discussion Whether playback should automatically starts when the player is restarted can be controlled using the
+ *  @discussion Whether playback should automatically start when the player is restarted can be controlled using the
  *              `resumesAfterRestart` property. The `-restart` method is also called when a dropped network connection
  *              is established again.
  */
@@ -227,7 +226,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @end
 
 /**
- *  Convenience methods
+ *  Convenience methods.
  */
 @interface SRGLetterboxController (Convenience)
 
@@ -314,17 +313,17 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
 /**
- *  The current segment being played (if any)
+ *  The current segment being played (if any).
  */
 @property (nonatomic, readonly, nullable) SRGSegment *segment;
 
 /**
- *  The current segment being played (if any), as an `SRGMedia` object
+ *  The current segment being played (if any), as an `SRGMedia` object.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *segmentMedia;
 
 /**
- *  The current full-length information (if available)
+ *  The current full-length information (if available).
  */
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 
@@ -370,7 +369,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @end
 
 /**
- *  Settings for periodic updates
+ *  Settings for periodic updates.
  */
 @interface SRGLetterboxController (PeriodicUpdates)
 
