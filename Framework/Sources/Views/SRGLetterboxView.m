@@ -26,14 +26,6 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
-const CGFloat PlaybackControlsHorizontalSpacingNormal = 0.f; // Adding to the 10 pts of the content inset on each side of a button image
-const CGFloat PlaybackControlsHorizontalSpacingBigger = 20.f; // Adding to the 10 pts of the content inset on each side of a button image
-
-const CGFloat PlaybackButtonSizeNormal = 32.f; // Use in the file image name
-const CGFloat PlaybackButtonSizeBigger = 52.f; // Use in the file image name
-const CGFloat SeekButtonSizeNormal = 28.f; // Use in the file image name
-const CGFloat SeekButtonSizeBigger = 38.f; // Use in the file image name
-
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
@@ -688,7 +680,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGImageSet imageSet = [self imageSet];
-        CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger;
+        CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
         
         self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
         self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
