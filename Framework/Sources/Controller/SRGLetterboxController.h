@@ -92,7 +92,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 /**
  *  The URL of the service data must be returned from. By default or if reset to `nil`, the production server is
- *  used. Official URL values can be bound in `SRGDataProvider.h`.
+ *  used. Official URL values can be found in `SRGDataProvider.h`.
  */
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
