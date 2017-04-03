@@ -74,15 +74,11 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openMultiPlayerWithURNString:(NSString *)URNString URNString1:(NSString *)URNString1 URNString2:(NSString *)URNString2
+- (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
 {
-    NSParameterAssert(URNString);
-    NSParameterAssert(URNString1);
-    NSParameterAssert(URNString2);
-    
-    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
-    SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:URNString1];
-    SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:URNString2];
+    SRGMediaURN *URN = (URNString) ? [SRGMediaURN mediaURNWithString:URNString] : nil;
+    SRGMediaURN *URN1 = (URNString1) ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
+    SRGMediaURN *URN2 = (URNString2) ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
     
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
     

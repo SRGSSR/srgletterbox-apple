@@ -36,7 +36,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN URN1:(SRGMediaURN *)URN1 URN2:(SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
+- (instancetype)initWithURN:(nullable SRGMediaURN *)URN URN1:(nullable SRGMediaURN *)URN1 URN2:(nullable SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
 {
     id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = [SRGLetterboxService sharedService].pictureInPictureDelegate;
     
