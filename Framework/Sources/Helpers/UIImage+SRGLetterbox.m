@@ -128,7 +128,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 - (UIImage *)srg_imageTintedWithColor:(UIColor *)color
 {
-    if (!color) {
+    if (! color) {
         return self;
     }
     

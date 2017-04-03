@@ -442,6 +442,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         URN = media.URN;
     }
     
+    if (! URN) {
+        return;
+    }
+    
     if (preferredStartBitRate < 0) {
         preferredStartBitRate = 0;
     }

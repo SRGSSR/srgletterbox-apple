@@ -527,7 +527,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGSegment *segment = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
-    self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+    self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
@@ -1136,7 +1136,8 @@ static void commonInit(SRGLetterboxView *self);
             dateFormatter.timeStyle = kCFDateFormatterShortStyle;
         });
         
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"  " attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+        // Use NSLocalizedString to suppress analyzer warning (no localization required, though)
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"  ", nil) attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
         
         NSString *string = (self.timeSlider.isLive) ? SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
         [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }]];
@@ -1144,7 +1145,8 @@ static void commonInit(SRGLetterboxView *self);
         return [attributedString copy];
     }
     else {
-        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: @"--:--" attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+        // Use NSLocalizedString to suppress analyzer warning (no localization required, though)
+        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: NSLocalizedString(@"--:--", nil) attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
     }
 }
 

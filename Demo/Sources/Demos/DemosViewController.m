@@ -62,7 +62,7 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString
 {
-    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
+    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -76,9 +76,13 @@
 
 - (void)openMultiPlayerWithURNString:(NSString *)URNString URNString1:(NSString *)URNString1 URNString2:(NSString *)URNString2
 {
-    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    SRGMediaURN *URN1 = URNString1 ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
-    SRGMediaURN *URN2 = URNString2 ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
+    NSParameterAssert(URNString);
+    NSParameterAssert(URNString1);
+    NSParameterAssert(URNString2);
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
+    SRGMediaURN *URN1 = [SRGMediaURN mediaURNWithString:URNString1];
+    SRGMediaURN *URN2 = [SRGMediaURN mediaURNWithString:URNString2];
     
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
     
@@ -99,7 +103,7 @@
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"urn:swi:video:41981254";
+        textField.placeholder = NSLocalizedString(@"urn:swi:video:41981254", nil);
     }];
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Play", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
