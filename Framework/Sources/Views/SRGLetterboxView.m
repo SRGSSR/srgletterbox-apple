@@ -16,6 +16,7 @@
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
 #import "UIFont+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
@@ -686,28 +687,25 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateControlsUserInterfaceIfNeededAnimated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        BOOL isNormalLayout = [self isNormalLayout];
-        CGFloat horizontalSpacing = isNormalLayout ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger;
+        SRGImageSet imageSet = [self imageSet];
+        CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? PlaybackControlsHorizontalSpacingNormal : PlaybackControlsHorizontalSpacingBigger;
         
         self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
         self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
         self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
         
-        self.playbackButton.playImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"play-32"] : [UIImage srg_letterboxImageNamed:@"play-52"];
+        self.playbackButton.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
         
         if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-            self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
+            self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
         }
         else {
-            self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+            self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
         }
         
-        [self.backwardSeekButton setImage:isNormalLayout ? [UIImage srg_letterboxImageNamed:@"backward-28"] : [UIImage srg_letterboxImageNamed:@"backward-38"]
-                                 forState:UIControlStateNormal];
-        [self.forwardSeekButton setImage:isNormalLayout ? [UIImage srg_letterboxImageNamed:@"forward-28"] : [UIImage srg_letterboxImageNamed:@"forward-38"]
-                                forState:UIControlStateNormal];
-        [self.seekToLiveButton setImage:isNormalLayout ? [UIImage srg_letterboxImageNamed:@"back_live-28"] : [UIImage srg_letterboxImageNamed:@"back_live-38"]
-                               forState:UIControlStateNormal];
+        [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
+        [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+        [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     };
     
     if (animated) {
@@ -776,14 +774,14 @@ static void commonInit(SRGLetterboxView *self);
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
-        BOOL isNormalLayout = [self isNormalLayout];
+        SRGImageSet imageSet = [self imageSet];
         
         // Special cases when the player is idle or preparing
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+            self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
             return;
         }
         
@@ -792,14 +790,14 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
+                self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
                 break;
             }
                 
@@ -807,14 +805,14 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = isNormalLayout ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
                 break;
             }
         }
@@ -971,10 +969,10 @@ static void commonInit(SRGLetterboxView *self);
                                                          verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
 }
 
-- (BOOL)isNormalLayout
+- (SRGImageSet)imageSet
 {
     // iPhone Plus in landscape
-    return (CGRectGetWidth(self.playerView.bounds) < 668.f);
+    return (CGRectGetWidth(self.playerView.bounds) < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
 }
 
 #pragma mark Letterbox notification banners

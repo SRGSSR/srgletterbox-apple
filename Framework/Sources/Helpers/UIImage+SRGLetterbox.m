@@ -126,11 +126,6 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return [self srg_vectorImageNamed:imageName inBundle:bundle withSize:size];
 }
 
-+ (UIImage *)srg_letterboxImageNamed:(NSString *)imageName
-{
-    return [UIImage imageNamed:imageName inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-}
-
 - (UIImage *)srg_imageTintedWithColor:(UIColor *)color
 {
     if (!color) {
@@ -153,6 +148,45 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     UIGraphicsEndImageContext();
     
     return tintedImage;
+}
+
+@end
+
+@implementation UIImage (SRGLetterboxImages)
+
++ (UIImage *)srg_letterboxImageNamed:(NSString *)imageName
+{
+    return [UIImage imageNamed:imageName inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+}
+
++ (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-32"] : [UIImage srg_letterboxImageNamed:@"play-52"];
+}
+
++ (UIImage *)srg_letterboxPauseImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+}
+
++ (UIImage *)srg_letterboxStopImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
+}
+
++ (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-28"] : [UIImage srg_letterboxImageNamed:@"forward-38"];
+}
+
++ (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-28"] : [UIImage srg_letterboxImageNamed:@"backward-38"];
+}
+
++ (UIImage *)srg_letterboxSeekToLiveImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-28"] : [UIImage srg_letterboxImageNamed:@"back_live-38"];
 }
 
 @end

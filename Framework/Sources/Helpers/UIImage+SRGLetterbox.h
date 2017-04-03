@@ -14,6 +14,12 @@ typedef NS_ENUM(NSInteger, SRGImageScale) {
     SRGImageScaleLarge
 };
 
+typedef NS_ENUM(NSInteger, SRGImageSet) {
+    SRGImageSetNormal,
+    SRGImageSetLarge
+};
+
+
 OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 
 @interface UIImage (SRGLetterbox)
@@ -26,17 +32,27 @@ OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 /**
  *  Resize a given vector image to a given predefined scale
  */
-+ (UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle  withScale:(SRGImageScale)imageScale;
-
-/**
- *  Return the specified image from the Letterbox resource bundle.
- */
-+ (nullable UIImage *)srg_letterboxImageNamed:(NSString *)imageName;
++ (UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle withScale:(SRGImageScale)imageScale;
 
 /**
  *  Return the receiver, tinted with the specified color (if color is `nil`, the image is returned as is)
  */
 - (UIImage *)srg_imageTintedWithColor:(nullable UIColor *)color;
+
+@end
+
+/**
+ *  Standard images from Letterbox bundle
+ */
+@interface UIImage (SRGLetterboxImages)
+
++ (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet;
++ (UIImage *)srg_letterboxPauseImageInSet:(SRGImageSet)imageSet;
++ (UIImage *)srg_letterboxStopImageInSet:(SRGImageSet)imageSet;
+
++ (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet;
++ (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet;
++ (UIImage *)srg_letterboxSeekToLiveImageInSet:(SRGImageSet)imageSet;
 
 @end
 
