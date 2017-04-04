@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  View optional delegate.
  */
-@property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
+@property (nonatomic, weak) id<SRGControlsViewDelegate> delegate;
 
 @end
 

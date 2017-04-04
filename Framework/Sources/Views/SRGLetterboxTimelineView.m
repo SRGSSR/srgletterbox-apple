@@ -176,6 +176,18 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
 }
 
+#pragma mark SRGLetterboxSegmentCellDelegate protocol
+
+- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
+}
+
+- (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSegment:letterboxSegmentCell.segment];
+}
+
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -201,18 +213,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
     cell.delegate = self;
     cell.segment = self.segments[indexPath.row];
     [self updateAppearanceForCell:cell];
-}
-
-#pragma mark SRGLetterboxSegmentCellDelegate protocol
-
-- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
-{
-    [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
-}
-
-- (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell
-{
-    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSegment:letterboxSegmentCell.segment];
 }
 
 #pragma mark Notifications

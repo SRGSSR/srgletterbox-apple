@@ -19,13 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGLetterboxSegmentCellDelegate <NSObject>
 
 /**
- *  This method is called when the user interface made a long press on segment cell.
+ *  Called when the user interface made a long press on segment cell.
  */
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 /**
- *  This method is called when the user interface needs to determine whether a favorite icon must be displayed. If no
- *  delegate has been set, no favorite icon will be displayed.
+ *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been 
+ *  set, no favorite icon will be displayed.
  */
 - (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
