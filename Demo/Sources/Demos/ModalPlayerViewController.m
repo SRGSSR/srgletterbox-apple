@@ -243,7 +243,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
 }
 
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldFavoriteSegment:(SRGSegment *)segment
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSegment:(SRGSegment *)segment
 {
     return [self.favoriteSegments containsObject:segment];
 }

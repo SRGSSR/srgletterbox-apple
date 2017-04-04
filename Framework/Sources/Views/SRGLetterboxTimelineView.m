@@ -207,19 +207,12 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressWithSegment:)]) {
-        [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
-    }
+    [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
 }
 
-- (BOOL)letterboxSegmentCellShouldFavorite:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:shouldFavoriteSegment:)]) {
-        return [self.delegate letterboxTimelineView:self shouldFavoriteSegment:letterboxSegmentCell.segment];
-    }
-    else {
-        return NO;
-    }
+    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSegment:letterboxSegmentCell.segment];
 }
 
 #pragma mark Notifications

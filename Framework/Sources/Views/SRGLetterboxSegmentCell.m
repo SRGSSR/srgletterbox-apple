@@ -30,8 +30,6 @@
 {
     [super awakeFromNib];
     
-    self.favoriteImageHidden = YES;
-    
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(longPress:)];
     longPressGestureRecognizer.minimumPressDuration = 1.;
@@ -74,8 +72,7 @@
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
-    
-    self.favoriteImageHidden = ! self.delegate || ! [self.delegate letterboxSegmentCellShouldFavorite:self];
+    self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
 }
 
 - (void)setProgress:(float)progress
@@ -88,20 +85,13 @@
     self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
 }
 
-- (void)setFavoriteImageHidden:(BOOL)favoriteImageHidden
-{
-    _favoriteImageHidden = favoriteImageHidden;
-    
-    self.favoriteImageView.alpha = favoriteImageHidden ? 0.f : 1.f;
-}
-
 #pragma mark Gesture recognizers
 
 - (void)longPress:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if (self.delegate) {
-            self.favoriteImageHidden = ! [self.delegate letterboxSegmentCellShouldFavorite:self];
+            self.favoriteImageView.hidden = ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
             [self.delegate letterboxSegmentCellDidLongPress:self];
         }
     }

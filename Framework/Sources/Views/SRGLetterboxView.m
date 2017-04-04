@@ -1177,10 +1177,10 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldFavoriteSegment:(SRGSegment *)segment
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSegment:(SRGSegment *)segment
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldFavoriteSegment:)]) {
-        return [self.delegate letterboxView:self shouldFavoriteSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldDisplayFavoriteForSegment:)]) {
+        return [self.delegate letterboxView:self shouldDisplayFavoriteForSegment:segment];
     }
     else {
         return NO;

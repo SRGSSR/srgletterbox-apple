@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This method is called when the user did a long press on a segment cell.
  *
- *  @discussion Just after this method has been called, the method `-letterboxView:shouldFavoriteSegment:` will be called 
+ *  @discussion Just after this method has been called, the method `-letterboxView:shouldDisplayFavoriteForSegment:` will be called 
  *              with the same segment.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressWithSegment:(SRGSegment *)segment;
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion @see `-setNeedsSegmentFavoritesUpdate`
  */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldFavoriteSegment:(SRGSegment *)segment;
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSegment:(SRGSegment *)segment;
 
 @end
 
@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The Letterbox view delegate has two optional methods:
  *  Implementing the `-letterboxView:didLongPressWithSegment:` will catch a long press on a segment cell in the timeline view.
- *  Implementing the `-letterboxView:shouldFavoriteSegment:` calls to display or hide an SRG favorite icon on the
+ *  Implementing the `-letterboxView:shouldDisplayFavoriteForSegment:` calls to display or hide an SRG favorite icon on the
  *  segment cell.
  *  To force a refresh, call the `setNeedsFavoriteSegmentsUpdate` on Letterbox view.
  *

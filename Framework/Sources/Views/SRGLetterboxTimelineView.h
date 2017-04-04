@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface made a long press on segment cell
  *
  *  @discussion Method to be inform about the user interaction. Could save a state.
- *  Just after this call, the method `-letterboxTimelineView:shouldFavoriteSegment:` will be called.
+ *  Just after this call, the method `-letterboxTimelineView:shouldDisplayFavoriteForSegment:` will be called.
  */
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment;
 
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method gets called when the user interface is about to display a segment cell or when a long press has been
  *  fired. By defaut, if non implemented, the behavior is the same as if the method returns `NO`.
  */
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldFavoriteSegment:(SRGSegment *)segment;
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSegment:(SRGSegment *)segment;
 
 @end
 
@@ -76,7 +76,7 @@ IB_DESIGNABLE
 
 /**
  *  Need to update favorite status on segment cells.
- *  It will call the delegate method `-letterboxView:shouldFavoriteSegment` on each segment cells
+ *  It will call the delegate method `-letterboxView:shouldDisplayFavoriteForSegment` on each segment cells
  */
 - (void)setNeedsSegmentFavoritesUpdate;
 

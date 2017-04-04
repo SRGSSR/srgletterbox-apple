@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method is called when the user interface needs to determine whether a favorite icon must be displayed. If no
  *  delegate has been set, no favorite icon will be displayed.
  */
-- (BOOL)letterboxSegmentCellShouldFavorite:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
+- (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 @end
 
@@ -47,20 +47,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) float progress;
 
 /**
- *  Set to YES iff the segment is the current one.
+ *  Set to `YES` iff the segment is the current one.
  */
 @property (nonatomic, getter=isCurrent) BOOL current;
 
 /**
- *  Set to NO to display a favorite icon
- */
-@property (nonatomic, getter=isFavoriteImageHidden) BOOL favoriteImageHidden;
-
-/**
- *  View optional delegate.
+ *  Cell optional delegate.
  */
 @property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxSegmentCellDelegate> delegate;
-
 
 @end
 
