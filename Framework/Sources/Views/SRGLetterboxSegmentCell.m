@@ -91,8 +91,8 @@
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if (self.delegate) {
-            self.favoriteImageView.hidden = ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
             [self.delegate letterboxSegmentCellDidLongPress:self];
+            self.favoriteImageView.hidden = ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
         }
     }
 }
