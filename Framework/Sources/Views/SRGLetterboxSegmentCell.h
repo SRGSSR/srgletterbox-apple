@@ -10,31 +10,29 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Forward declarations
 @class SRGLetterboxSegmentCell;
 
 /**
- *  Letterbox segment cell delegate protocol for long press or favorite image
+ *  Segment cell delegate protocol.
  */
 @protocol SRGLetterboxSegmentCellDelegate <NSObject>
 
 /**
- *  This method gets called when the user interface made a long press on segment cell
- *
- *  @discussion Method to be inform about the user interaction. Could save a state.
- *  Just after this call, the method `letterboxSegmentCellHideFavoriteImage:` will be called.
+ *  This method is called when the user interface made a long press on segment cell.
  */
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 /**
- *  This method gets called when the user interface is about to display a segment cell or when a long press has been
- *  fired. By defaut, if non implemented, the behavior is the same as if the method returns `NO`.
+ *  This method is called when the user interface needs to determine whether a favorite icon must be displayed. If no
+ *  delegate has been set, no favorite icon will be displayed.
  */
 - (BOOL)letterboxSegmentCellShouldFavorite:(SRGLetterboxSegmentCell *)letterboxSegmentCell;
 
 @end
 
 /**
- *  Cell for displaying a segment.
+ *  Cell for displaying a segment. Values are set by the caller
  */
 @interface SRGLetterboxSegmentCell : UICollectionViewCell
 
