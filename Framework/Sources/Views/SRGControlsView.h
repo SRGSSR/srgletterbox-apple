@@ -16,22 +16,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol SRGControlsViewDelegate <NSObject>
 
+/**
+ *  Called when the view did layout its subviews.
+ */
 - (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView;
 
 @end
 
 /**
- *  This simple view has just a delegate to forward layoutSubviews events. Control buttons aren't here.
- *
- *  @discussion See `SRGLetterboxView` to see all control buttons
+ *  Internal view class for controls layout.
  */
-
 @interface SRGControlsView : UIView
 
 /**
  *  View optional delegate.
  */
-@property (nonatomic, weak, nullable) IBOutlet id<SRGControlsViewDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
 
 @end
 

@@ -151,6 +151,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
+    self.controlsView.delegate = self;
     self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = YES;
