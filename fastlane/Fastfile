@@ -15,7 +15,8 @@ platform :ios do
   before_all do
     carthage(
       command: "bootstrap",
-      platform: "iOS"
+      platform: "iOS",
+      use_ssh: true
     )
     
   end
