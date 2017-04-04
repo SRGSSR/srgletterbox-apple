@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Called when the user made a long press on segment cell.
  */
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSegment:(SRGSegment *)segment;
 
 /**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been

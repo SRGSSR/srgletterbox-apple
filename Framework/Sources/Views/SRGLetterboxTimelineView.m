@@ -180,7 +180,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 - (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
 {
-    [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
+    [self.delegate letterboxTimelineView:self didLongPressSegment:letterboxSegmentCell.segment];
 }
 
 - (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell

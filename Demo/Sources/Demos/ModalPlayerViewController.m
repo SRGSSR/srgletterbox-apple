@@ -248,7 +248,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     return [self.favoriteSegments containsObject:segment];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressWithSegment:(SRGSegment *)segment
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSegment:(SRGSegment *)segment
 {
     if ([self.favoriteSegments containsObject:segment]) {
         [self.favoriteSegments removeObject:segment];

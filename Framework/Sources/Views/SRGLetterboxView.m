@@ -1170,10 +1170,10 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSegment:(SRGSegment *)segment
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressWithSegment:)]) {
-        [self.delegate letterboxView:self didLongPressWithSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressSegment:)]) {
+        [self.delegate letterboxView:self didLongPressSegment:segment];
     }
 }
 

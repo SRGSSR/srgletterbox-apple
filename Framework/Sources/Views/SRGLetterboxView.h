@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This method is called when the user did a long press on a segment cell.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressWithSegment:(SRGSegment *)segment;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSegment:(SRGSegment *)segment;
 
 /**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  
  *  ## Long press on segments and favorites
  *
- *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressWithSegment:` 
+ *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressSegment:` 
  *  delegate method is called when the user holds her finger still on a cell for a few seconds, providing you with 
  *  the ability to store a segment as being favorited. The `-letterboxView:shouldDisplayFavoriteForSegment:` delegate
  *  method lets you decide whether a segment cell should display a favorite icon or not.
