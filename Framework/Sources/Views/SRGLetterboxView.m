@@ -1126,8 +1126,8 @@ static void commonInit(SRGLetterboxView *self);
         static NSDateFormatter *dateFormatter;
         dispatch_once(&onceToken, ^{
             dateFormatter = [[NSDateFormatter alloc] init];
-            dateFormatter.dateStyle = kCFDateFormatterNoStyle;
-            dateFormatter.timeStyle = kCFDateFormatterShortStyle;
+            dateFormatter.dateStyle = NSDateFormatterNoStyle;
+            dateFormatter.timeStyle = NSDateFormatterShortStyle;
         });
         
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
