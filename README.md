@@ -10,7 +10,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 * A service to manage application-wide playback. 
 * A player view with the official SRG SSR look and feel, and supporting segment browsing and selection. The design is standard and cannot be altered. You can bind your own custom overlays to the default player controls, though.
 * Access to all SRG SSR business unit medias.
-* Native Airplay and picture in picture support.
+* Native AirPlay and picture in picture support.
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
 
 <p align="center"><img src="README-images/letterbox.jpg"/></p>

@@ -2,11 +2,11 @@
 Getting started
 ===============
 
-The SRG Letterbox library is made of three components:
+The SRG Letterbox library is made of three core components:
 
-* `SRGLetterboxController`: A controller to play medias.
-* `SRGLetterboxView`: A player view reflecting what an associated controller is currently playing, and providing controls to manage playback.
-* `SRGLetterboxService`: A service to enable application-wide features like Airplay and picture in picture.
+* `SRGLetterboxController`: A controller to play medias. The controller automatically retrieves metadata associated with the playback (media information, and channel information for DVR and livestreams). It also manages errors and restarts playback after a network loss.
+* `SRGLetterboxView`: A player view reflecting what an associated controller is currently playing, and providing controls to manage playback. The controller of a Letterbox view can be changed at any time.
+* `SRGLetterboxService`: A service to enable application-wide features like AirPla, picture in picture or control center integration.
 
 The following guide describes how these components can be easily combined to add advanced media playback capabilities to your application.
 
@@ -18,7 +18,7 @@ To play a media, instantiate and retain a Letterbox controller somewhere:
 self.controller = [[SRGLetterboxController alloc] init];
 ```
 
-and call one of the play methods on it:
+then call one of the play methods on it:
 
 ```objective-c
 SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
@@ -45,7 +45,9 @@ Each controller broadcasts metadata updates and errors through `SRGLetterboxMeta
 
 ### Simultaneous playback
 
-Your application can use as many controllers as needed. Each controller can at most be bound to one view, and you are free to change controller - view relationships as will depending on your needs. When several controllers are playing at the same time, you might want to mute some of them, which can be achieved by setting the `muted` property to `NO`.
+Your application can use as many controllers as needed. Each controller can at most be bound to one view, and you are free to change controller - view relationships at will depending on your needs.
+
+ When several controllers are playing at the same time, you might want to mute some of them, which can be achieved by setting the `muted` property to `NO`.
 
 ## Letterbox view
 
@@ -89,9 +91,9 @@ Refer to the modal view controller demo implementation for a concrete example.
 
 ## Application-wide services
 
-The `SRGLetterboxService` singleton makes it possible to enable Airplay and picture in picture for at most one Letterbox controller at a time. This automatically adds the following features for this controller:
+The `SRGLetterboxService` singleton makes it possible to enable AirPlay and picture in picture for at most one Letterbox controller at a time. This automatically adds the following features for this controller:
 
- * Airplay support.
+ * AirPlay support.
  * Picture in picture (for devices supporting it).
  * Control center and lock screen media information.
  * Remote playback controls.
@@ -102,15 +104,15 @@ To enable application-wide services for a Letterbox controller, simply call:
 [[SRGLetterboxService sharedService] enableWithController:controller pictureInPictureDelegate:nil];
 ```
 
-If a Letterbox view is bound to the controller, its user interface automatically reflects which services are available for the underlying controller, letting you toggle Airplay or picture in picture directly from it.
+If a Letterbox view is bound to the controller, its user interface automatically reflects which services are available for the underlying controller, letting you toggle AirPlay or picture in picture directly from it.
 
 #### Remark
 
-In this example, no picture in picture delegate is provided. All services except picture in picture will be available (picture in picture delegates are discussed below).
+In the example above, no picture in picture delegate is provided. All services except picture in picture will therefore be available (picture in picture delegates are discussed below).
 
 ### Target configuration
 
-To be able to call the _enable_ method above, you must set the _Audio, Airplay, and Picture in Picture_ flag of your target Background modes to ensure Airplay, background audio and picture and picture work as intended. If this flag is not set, Letterbox will throw an exception when the above method is called.
+To be able to call the _enable_ method above, you must set the _Audio, AirPlay, and Picture in Picture_ flag of your target Background modes to ensure AirPlay, background audio and picture and picture work as intended. If this flag is not set, Letterbox will throw an exception when the above method is called.
 
 ### Disabling services
 
@@ -120,9 +122,9 @@ To disable services for the currently registered controller, call:
 [[SRGLetterboxService sharedService] disable];
 ```
 
-This will disable all application-wide features, removing the media from the control center and lock screen as well. Any playback currently made via Airplay and picture in picture will automatically be cancelled.
+This will disable all application-wide features, removing the media from the control center and lock screen as well. Any playback currently made via AirPlay and picture in picture will automatically be cancelled.
 
-At any time, you can call the _enable_ method again with a new controller to enable application-wide services for it. This will automatically disable these services for any controllers which might already benefit from them.
+At any time, you can call the _enable_ method again with a new controller to enable application-wide services for it. This will automatically disable these services for any controllers which might already benefit from them, and enable them for the new one.
 
 ### Picture in picture
 
