@@ -46,9 +46,16 @@
 
 #pragma mark Tests
 
-- (void)testShortLifetime
+- (void)testDeallocation
 {
-    __unused SRGLetterboxController *letterboxController = [[SRGLetterboxController alloc] init];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-unsafe-retained-assign"
+    __weak SRGLetterboxController *letterboxController;
+    @autoreleasepool {
+        letterboxController = [[SRGLetterboxController alloc] init];
+    }
+    XCTAssertNil(letterboxController);
+#pragma clang diagnostic pop
 }
 
 - (void)testPlayURN

@@ -1268,7 +1268,6 @@ static void commonInit(SRGLetterboxView *self);
     // If the player was playing or paused
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         [self conditional_setUserInterfaceHidden:NO animated:YES];
-        
         [self dismissNotificationView];
     }
 }
