@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="Basic player" footerTitle="This basic player can be used with Airplay but does not implement full screen or picture in picture." id="UBf-VC-DOH">
+                            <tableViewSection headerTitle="Basic player" footerTitle="This basic player can be used with AirPlay but does not implement full screen or picture in picture." id="UBf-VC-DOH">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="WSH-5o-eKS">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
@@ -66,7 +66,7 @@
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Standalone player" id="htq-ar-MLR">
-                                <string key="footerTitle">This player is not enabled for Airplay playback or picture in picture by default. You can enable or disable these features on the fly.</string>
+                                <string key="footerTitle">This player is not enabled for AirPlay playback or picture in picture by default. You can enable or disable these features on the fly.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="7Z1-Dy-PYB">
                                         <rect key="frame" x="0.0" y="235" width="375" height="44"/>
@@ -115,7 +115,7 @@
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Advanced player" id="Zpc-ea-DC4">
-                                <string key="footerTitle">This player implements full screen and picture in picture and can be used with Airplay. It starts with hidden controls, and a close button has been added as custom control. You can also play with various user interface configurations.</string>
+                                <string key="footerTitle">This player implements full screen and picture in picture and can be used with AirPlay. It starts with hidden controls, and a close button has been added as custom control. You can also play with various user interface configurations.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Nmd-zI-AKs">
                                         <rect key="frame" x="0.0" y="430.5" width="375" height="44"/>
@@ -472,7 +472,7 @@
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Multiple player" id="z61-kH-pJI">
-                                <string key="footerTitle">This player plays three streams at the same time, and can be used with Airplay and picture in picture. You can tap on a smaller stream to play it as main stream.</string>
+                                <string key="footerTitle">This player plays three streams at the same time, and can be used with AirPlay and picture in picture. You can tap on a smaller stream to play it as main stream.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="UWr-yR-ldc">
                                         <rect key="frame" x="0.0" y="1274" width="375" height="44"/>
