@@ -10,5 +10,8 @@
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Wiedergabe über Airplay";
 
+/* Message displayed when an error has occurred and the ability to retry */
+"Tap to retry" = "Erneut versuchen";
+
 /* Message displayed when a media cannot be played for some reason (the user should not know about) */
 "The media cannot be played" = "Der Inhalt kann nicht abgespielt werden.";
