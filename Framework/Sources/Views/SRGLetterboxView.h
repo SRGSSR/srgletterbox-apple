@@ -11,10 +11,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Forward declarations
 @class SRGLetterboxView;
 
 /**
- *  Letterbox view delegate protocol for optiona full-screen support and additional overlay animations.
+ *  Letterbox view delegate protocol for optional full-screen support and view animations.
  */
 @protocol SRGLetterboxViewDelegate <NSObject>
 
@@ -51,44 +52,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
- *  position is provided, if any.
+ *  position is provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made by the user.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment interactive:(BOOL)interactive;
 
 /**
- *  This method is called when the user has selected a segment interactively.
+ *  This method is called when the user has actively selected a segment.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectSegment:(SRGSegment *)segment;
 
 /**
  *  This method is called when the user did a long press on a segment cell.
- *
- *  @discussion Just after this method has been called, the method `-letterboxView:shouldFavoriteSegment:` will be called 
- *              with the same segment.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressWithSegment:(SRGSegment *)segment;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSegment:(SRGSegment *)segment;
 
 /**
- *  Implement this method to decide whether a segment cell should display a favorite image.
+ *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
+ *  set or if this method is not implemented, no favorite icon will be displayed.
  *
- *  This method gets called when the user interface is about to display a segment cell or when a long press has been 
- *  fired. By defaut, if non implemented, the behavior is the same as if the method returns `NO`.
- *
- *  @discussion @see `-setNeedsSegmentFavoritesUpdate`
+ *  The method is called when appropriate, but you can manually trigger a favorite status refresh by calling the
+ *  LetterboxView `-setNeedsSegmentFavoritesUpdate` method.
  */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldFavoriteSegment:(SRGSegment *)segment;
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSegment:(SRGSegment *)segment;
 
 @end
 
 /**
- *  The Letterbox view provides a way to display and manage what is currently being played by a Letterbox controller
+ *  A Letterbox view provides a way to display and manage what is currently being played by a Letterbox controller
  *  (@see `SRGLetterboxController`). The view is provided with minimalist non-customizable overlay controls, but offers
  *  a way to integrate additional elements as if they were part of the overlay.
  *
  *  A view can be bound to at most one controller at a time, and displays what is currently being played by the controller. 
  *  It is immediately updated when the content played by the controller changes, or when the controller itself is changed.
  *
- *  Conversely, you can bind a controller to several Letterbox views, but only the last one to be bound will display the
+ *  Note that you can bind a controller to several Letterbox views, but only the last one to be bound will display the
  *  video content of what is being played. Other Letterbox views will only provide a way to control playback. This is
  *  a known an assumed limitation, as having several views display the same media at the same time makes little sense.
  *
@@ -96,10 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  and bind it to a controller. If the controller itself has been added as an object to the storyboard, this setup can 
  *  entirely be done in Interface builder. Then start playing a media with the controller.
  *
- *  ## Controls
+ *  ## Controls and views
  *
- *  The following controls are supported out of the box for any kind of media played in a Letterbox controller (on-demand,
- *  live and DVR audio and video streams):
+ *  The following controls and views are supported out of the box, most of them available for any kind of media played 
+ *  by a Letterbox controller (on-demand, live and DVR audio and video streams):
  *    - Buttons to control playback (play / pause, +/- 30 seconds, back to live for DVR streams)
  *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams)
  *    - Error display
@@ -109,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
  *    - Activity indicator
  *    - Image placeholder when loading or playing on an external display
  *
- *  The controls are displayed initially, and hidden after an inactivity delay. The user is also able to toggle the
+ *  Controls are displayed initially, and hidden after an inactivity delay. The user is also able to toggle the
  *  controls on or off by tapping on the overlay. If needed, you can programmatically show or hide the controls, or 
  *  disable the ability for the user to toggle them, by calling `-setUserInterfaceHidden:animated:togglable:.
  *
@@ -120,17 +117,16 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
  *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
- *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You
- *  can respond to the `-letterboxView:didScrollWithSegment:interactive:` delegate method to respond to the timeline
+ *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You can
+ *  also respond to the `-letterboxView:didScrollWithSegment:interactive:` delegate method to respond to the timeline
  *  being moved, either interactively or during normal playback
  *  
- *  ## Long press and favorite status on segments
+ *  ## Long press on segments and favorites
  *
- *  The Letterbox view delegate has two optional methods:
- *  Implementing the `-letterboxView:didLongPressWithSegment:` will catch a long press on a segment cell in the timeline view.
- *  Implementing the `-letterboxView:shouldFavoriteSegment:` calls to display or hide an SRG favorite icon on the
- *  segment cell.
- *  To force a refresh, call the `setNeedsFavoriteSegmentsUpdate` on Letterbox view.
+ *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressSegment:` 
+ *  delegate method is called when the user holds her finger still on a cell for a few seconds, providing you with 
+ *  the ability to store a segment as being favorited. The `-letterboxView:shouldDisplayFavoriteForSegment:` delegate
+ *  method lets you decide whether a segment cell should display a favorite icon or not.
  *
  *  ## Full-screen
  *
@@ -148,21 +144,22 @@ NS_ASSUME_NONNULL_BEGIN
  *  implemented and your Letterbox view occupies the whole screen when full screen, pressing the home button will
  *  automatically switch playback to picture in picture. This behavior is an Apple standard and cannot be disabled.
  *
- *  ## Airplay
+ *  ## AirPlay
  *
- *  An Airplay button is displayed if application-wide services have been enabled for the controller bound to the
- *  view (@see `SRGLetterboxService`) and an external display is available. During Airplay playback, controls cannot
- *  be toggled on or off (they can be hidden programmatically, though).
+ *  An AirPlay button is displayed if application-wide services have been enabled for the controller bound to the
+ *  view (@see `SRGLetterboxService`) and an external display is available. During AirPlay playback, controls cannot
+ *  be toggled on or off.
  
  *  If `mirroredOnExternalScreen` has been set to `YES` on the service singleton, the Letterbox view will behave as 
- *  if no Airplay playback was possible, and won't switch to external display. This way, your application can be mirrored 
- *  as is via Airplay, which is especially convenient for presentation purposes.
+ *  if no AirPlay playback was possible, and won't switch to external display. This way, your application can be 
+ *  mirrored as is via AirPlay, which is especially convenient for presentation purposes.
  */
 IB_DESIGNABLE
 @interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, SRGTimeSliderDelegate, UIGestureRecognizerDelegate>
 
 /**
- *  The controller bound to the view. Can be changed at any time.
+ *  The controller bound to the view. The controller can be changed at any time, the view will automatically be updated
+ *  accordingly.
  */
 @property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
 
@@ -190,10 +187,10 @@ IB_DESIGNABLE
 /**
  *  Change the user interface controls visibility. Togglability is not altered.
  *
- *  @param hidden Whether the user interface must be hidden.
+ *  @param hidden   Whether the user interface must be hidden.
  *  @param animated Whether the transition must be animated.
  *
- *  @discussion When Airplay is enabled or an error has been encountered, the UI behavior is overridden. This method
+ *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
  *              will only apply changes once overrides are lifted.
  */
 - (void)setUserInterfaceHidden:(BOOL)userInterfaceHidden animated:(BOOL)animated;
@@ -201,37 +198,33 @@ IB_DESIGNABLE
 /**
  *  Change the user interface controls behavior.
  *
- *  @param hidden Whether the user interface must be hidden.
- *  @param animated Whether the transition must be animated.
+ *  @param hidden    Whether the user interface must be hidden.
+ *  @param animated  Whether the transition must be animated.
  *  @param togglable Whether the interface can be shown or hidden by the user.
  *
- *  @discussion When Airplay is enabled or an error has been encountered, the UI behavior is overridden. This method
+ *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
  *              will only apply changes once overrides are lifted.
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
 /**
  *  Call this method from within the delegate `-letterboxViewWillAnimateUserInterface:` method implementation to provide
- *  the animations to be performed alongside the player user interface animations when controls or segments are shown or 
- *  hidden. An optional block to be called on completion can be provided as well.
+ *  the animations to be performed alongside the player user interface animations when controls, segments or notifications
+ *  are shown or hidden. An optional block to be called on completion can be provided as well.
  *
- *  @param animations The animations to be performed when controls are shown or hidden. The expansion height is provided
- *                    as information if you need to adjust your layout to provide it with enough space. You can e.g.
- *                    simply use this value as constant of an aspect ratio layout constraint to make the player view
- *                    slightly taller.
+ *  @param animations The animations to be performed when these subviews are shown or hidden. The main view is usually 
+ *                    animated in response to more information being displayed within it (e.g. a segment timeline or a
+ *                    notification). If the view frame is not changed, the player will be temporarily shrinked to make room
+ *                    for such additional elements. If you prefer your parent layout to provide more space so that
+ *                    shrinking does not occur, the required height offset is provided as information, so that you can
+ *                    adjust your layout accordingly. You can e.g. use this value as the constant of an aspect ratio layout 
+ *                    constraint to make the player view slightly taller.
  *  @param completion The block to be called on completion.
  *
- *  @discussion Attempting to call this method outside the correct delegate method will throw an exception.
+ *  @discussion Attempting to call this method outside the correct delegate method is a programming error and will throw
+ *              an exception.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat expansionHeight))animations completion:(nullable void (^)(BOOL finished))completion;
-
-/**
- *  The current expansion height.
- *
- *  @discussion Value should be the timelineHeight or more if a notification message displayed, 0.f otherwise. During an animation,
- *  this value could be different.
- */
-@property (nonatomic, readonly) CGFloat expansionHeight;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.
@@ -247,7 +240,7 @@ IB_DESIGNABLE
  *  Calling this method will call the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:`.
  *
  *  @param fullScreen `YES` for full screen.
- *  @param animated Whether the transition must be animated or not.
+ *  @param animated   Whether the transition must be animated or not.
  *
  *  @discussion If the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` is not implemented, no full screen
  *              button is displayed, and this method doesn't do anything. Calling this method when a transition is running does nothing.
@@ -255,32 +248,20 @@ IB_DESIGNABLE
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated;
 
 /**
- *  The current segment timeline height.
- *
- *  @discussion Value should be the `preferredTimelineHeight` if the media has segments, 0.f otherwise. During an animation,
- *  this value could be different. If using for your layout, please consider `-expansionHeight` too.
+ *  Return `YES` iff timeline was forced to be always hidden.
  */
-@property (nonatomic, readonly) CGFloat timelineHeight;
+@property (nonatomic, readonly, getter=isTimelineAlwaysHidden) BOOL timelineAlwaysHidden;
 
 /**
- *  The preferred segment timeline height.
+ *  Set to `YES` to force the timeline to be always hidden. The default value is `NO`.
  *
- *  Will be use when displaying the segment timeline. Negative value will be ignore and value set to 0.f;
+ *  @param timelineAlwaysHidden `YES` to hide the timeline.
+ *  @param animated             Whether the change must be animated or not.
  *
- *  @discussion By default, the height is 120.f. To always hide the segment timeline, call
- *  `-setPreferredTimelineHeight:animated:` with a 0.f value.
+ *  @discussion When changing this value, the current control visibility state is not altered. If controls were already hidden,
+ *              the timeline behavior change will not be observed until controls are displayed again.
  */
-@property (nonatomic, readonly) CGFloat preferredTimelineHeight;
-
-/**
- *  Change the preferred segment timeline height
- *
- *  @param preferredTimelineHeight set the hight of the timeline
- *  @param animated Whether the transition must be animated.
- *
- *  @discussion By default, the height is 120.f. To always hide the segment timeline, set it to 0.f.
- */
-- (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated;
+- (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
  *  Call to schedule an update request for segment favorites.

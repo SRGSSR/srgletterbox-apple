@@ -8,6 +8,11 @@
 
 #import "SRGLetterboxController.h"
 
+NSString *SRGLetterboxNonLocalizedString(NSString *string)
+{
+    return string;
+}
+
 @implementation NSBundle (SRGLetterbox)
 
 #pragma mark Class methods

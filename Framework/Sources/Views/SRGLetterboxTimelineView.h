@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Forward declarations
+// Forward declarations.
 @class SRGLetterboxTimelineView;
 
 /**
@@ -26,20 +26,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
 
 /**
- *  This method gets called when the user interface made a long press on segment cell
- *
- *  @discussion Method to be inform about the user interaction. Could save a state.
- *  Just after this call, the method `-letterboxTimelineView:shouldFavoriteSegment:` will be called.
+ *  Called when the user made a long press on segment cell.
  */
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSegment:(SRGSegment *)segment;
 
 /**
- *  Implement this method to decide whether a segment cell should display a favorite image.
- *
- *  This method gets called when the user interface is about to display a segment cell or when a long press has been
- *  fired. By defaut, if non implemented, the behavior is the same as if the method returns `NO`.
+ *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
+ *  set, no favorite icon will be displayed.
  */
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldFavoriteSegment:(SRGSegment *)segment;
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSegment:(SRGSegment *)segment;
 
 @end
 
@@ -60,7 +55,7 @@ IB_DESIGNABLE
 @property (nonatomic, nullable) NSArray<SRGSegment *> *segments;
 
 /**
- *  The time to display the timeline for.
+ *  The time to display the timeline progress for.
  */
 @property (nonatomic) CMTime time;
 
@@ -75,8 +70,7 @@ IB_DESIGNABLE
 - (void)scrollToSelectedIndexAnimated:(BOOL)animated;
 
 /**
- *  Need to update favorite status on segment cells.
- *  It will call the delegate method `-letterboxView:shouldFavoriteSegment` on each segment cells
+ *  Call to ask for a segment favorite status update.
  */
 - (void)setNeedsSegmentFavoritesUpdate;
 

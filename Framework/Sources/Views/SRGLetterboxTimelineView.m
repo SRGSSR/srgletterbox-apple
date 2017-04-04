@@ -101,6 +101,23 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contentSizeCategoryDidChange:)
+                                                     name:UIContentSizeCategoryDidChangeNotification
+                                                   object:nil];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
+    }
+}
+
 #pragma mark Cell appearance
 
 // We must not call -reloadData to update cells when not necessary (this invalidates taps)
@@ -159,6 +176,18 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
 }
 
+#pragma mark SRGLetterboxSegmentCellDelegate protocol
+
+- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    [self.delegate letterboxTimelineView:self didLongPressSegment:letterboxSegmentCell.segment];
+}
+
+- (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+{
+    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSegment:letterboxSegmentCell.segment];
+}
+
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -186,23 +215,11 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self updateAppearanceForCell:cell];
 }
 
-#pragma mark SRGLetterboxSegmentCellDelegate protocol
+#pragma mark Notifications
 
-- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:didLongPressWithSegment:)]) {
-        [self.delegate letterboxTimelineView:self didLongPressWithSegment:letterboxSegmentCell.segment];
-    }
-}
-
-- (BOOL)letterboxSegmentCellShouldFavorite:(SRGLetterboxSegmentCell *)letterboxSegmentCell
-{
-    if ([self.delegate respondsToSelector:@selector(letterboxTimelineView:shouldFavoriteSegment:)]) {
-        return [self.delegate letterboxTimelineView:self shouldFavoriteSegment:letterboxSegmentCell.segment];
-    }
-    else {
-        return NO;
-    }
+    [self.collectionView reloadData];
 }
 
 @end

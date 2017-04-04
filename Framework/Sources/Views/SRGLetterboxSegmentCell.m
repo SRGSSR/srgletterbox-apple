@@ -8,6 +8,8 @@
 
 #import "UIImageView+SRGLetterbox.h"
 
+#import <SRGAppearance/SRGAppearance.h>
+
 @interface SRGLetterboxSegmentCell ()
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
@@ -27,11 +29,10 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    self.favoriteImageHidden = YES;
     
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(longPress:)];
-    longPressGestureRecognizer.minimumPressDuration = 1.f;
+    longPressGestureRecognizer.minimumPressDuration = 1.;
     [self addGestureRecognizer:longPressGestureRecognizer];
     self.longPressGestureRecognizer = longPressGestureRecognizer;
     
@@ -49,6 +50,8 @@
     _segment = segment;
     
     self.titleLabel.text = segment.title;
+    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    
     [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium placeholderImageName:@"placeholder_media-180"];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
@@ -59,21 +62,17 @@
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
     });
     
-    if (segment.duration != 0) {
+    if (segment.duration != 0.) {
         self.durationLabel.hidden = NO;
         self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
     }
     else {
         self.durationLabel.hidden = YES;
     }
+    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
-    
-    BOOL favoriteImageHidden = YES;
-    if ([self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldFavorite:)]) {
-        favoriteImageHidden = ![self.delegate letterboxSegmentCellShouldFavorite:self];
-    }
-    self.favoriteImageHidden = favoriteImageHidden;
+    self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
 }
 
 - (void)setProgress:(float)progress
@@ -86,26 +85,15 @@
     self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
 }
 
-- (void)setFavoriteImageHidden:(BOOL)favoriteImageHidden
-{
-    if (_favoriteImageHidden != favoriteImageHidden) {
-        _favoriteImageHidden = favoriteImageHidden;
-        self.favoriteImageView.alpha = favoriteImageHidden ? 0.f : 1.f;
-    }
-}
-
 #pragma mark Gesture recognizers
 
 - (void)longPress:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan && [self.delegate respondsToSelector:@selector(letterboxSegmentCellDidLongPress:)]) {
-        [self.delegate letterboxSegmentCellDidLongPress:self];
-        
-        BOOL favoriteImageHidden = self.favoriteImageHidden;
-        if ([self.delegate respondsToSelector:@selector(letterboxSegmentCellShouldFavorite:)]) {
-            favoriteImageHidden = ![self.delegate letterboxSegmentCellShouldFavorite:self];
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        if (self.delegate) {
+            [self.delegate letterboxSegmentCellDidLongPress:self];
+            self.favoriteImageView.hidden = ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
         }
-        self.favoriteImageHidden = favoriteImageHidden;
     }
 }
 

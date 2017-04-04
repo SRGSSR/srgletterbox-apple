@@ -10,7 +10,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 * A service to manage application-wide playback. 
 * A player view with the official SRG SSR look and feel, and supporting segment browsing and selection. The design is standard and cannot be altered. You can bind your own custom overlays to the default player controls, though.
 * Access to all SRG SSR business unit medias.
-* Native Airplay and picture in picture support.
+* Native AirPlay and picture in picture support.
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
 
 <p align="center"><img src="README-images/letterbox.jpg"/></p>
@@ -31,7 +31,7 @@ github "SRGSSR/srgletterbox-ios"
 
 Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your project:
 
-  * `ComScore`: comScore framework
+  * `ComScore`: The comScore framework
   * `FXReachability`: A reachability framework
   * `libextobjc`: A utility framework
   * `MAKVONotificationCenter`: A safe KVO framework
@@ -40,6 +40,7 @@ Then run `carthage update --platform iOS` to update the dependencies. You will n
   * `SRGAnalytics`: The main analytics framework
   * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework
   * `SRGAnalytics_DataProvider`: The data provider analytics companion framework
+  * `SRGAppearance`: The appearance framework
   * `SRGLogger`: The framework used for internal logging
   * `SRGMediaPlayer`: The media player framework (if not already in your project)
   * `YYWebImage`: A framework for image retrieval

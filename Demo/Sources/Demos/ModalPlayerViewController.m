@@ -26,8 +26,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, weak) IBOutlet UILabel *nowLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nextLabel;
 
-@property (nonatomic, weak) IBOutlet UIPickerView *preferredTimelineHeight;
-
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
@@ -151,8 +149,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     self.titleLabel.text = media.title;
     
     SRGChannel *channel = self.letterboxController.channel;
-    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:@"Now: %@", channel.currentProgram.title] : nil;
-    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:@"Next: %@", channel.nextProgram.title] : nil;
+    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
+    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
@@ -197,8 +195,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
-        self.letterboxAspectRatioConstraint.constant = expansionHeight;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+        self.letterboxAspectRatioConstraint.constant = heightOffset;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:nil];
@@ -245,12 +243,12 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
 }
 
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldFavoriteSegment:(SRGSegment *)segment
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSegment:(SRGSegment *)segment
 {
     return [self.favoriteSegments containsObject:segment];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressWithSegment:(SRGSegment *)segment
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSegment:(SRGSegment *)segment
 {
     if ([self.favoriteSegments containsObject:segment]) {
         [self.favoriteSegments removeObject:segment];
@@ -258,62 +256,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     else {
         [self.favoriteSegments addObject:segment];
     }
-}
-
-#pragma mark UIPickerViewDataSource protocol
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return 3;
-}
-
-#pragma mark UIPickerViewDelegate protocol
-
-- (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSString *title = nil;
-    switch (row) {
-        case 0:
-            title = @(120).stringValue;
-            break;
-        case 1:
-            title = @(80).stringValue;
-            break;
-        case 2:
-            title = @(0).stringValue;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return [NSString stringWithFormat:@"Timeline height %@", title];
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    CGFloat preferredTimelineHeight = 120.f;
-    switch (row) {
-        case 0:
-            preferredTimelineHeight = 120.f;
-            break;
-        case 1:
-            preferredTimelineHeight = 80.f;
-            break;
-        case 2:
-            preferredTimelineHeight = 0.f;
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self.letterboxView setPreferredTimelineHeight:preferredTimelineHeight animated:YES];
 }
 
 #pragma mark Actions
@@ -346,6 +288,11 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)fullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
+}
+
+- (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
+{
+    [self.letterboxView setTimelineAlwaysHidden:sender.on animated:YES];
 }
 
 #pragma mark Notifications

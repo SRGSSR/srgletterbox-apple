@@ -1,0 +1,17 @@
+/* Message displayed when a network error has been encountered */
+"A network issue has been encountered. Please check your Internet connection and network settings" = "Errur da colliaziun. Per plaschair controllar las colliaziuns da internet / rait";
+
+/* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
+"Live" = "Live";
+
+/* Text displayed when no media is available for playback */
+"No media" = "Naginas medias";
+
+/* Message displayed when broadcasting on an AirPlay device */
+"Playback on AirPlay" = "Playback sin AirPlay";
+
+/* Message displayed when an error has occurred and the ability to retry */
+"Tap to retry" = "Cliccar per empruvar danovamain";
+
+/* Message displayed when a media cannot be played for some reason (the user should not know about) */
+"The media cannot be played" = "Quest cuntegn na sa betg vegnì laschà ir";

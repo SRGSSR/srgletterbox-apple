@@ -70,8 +70,8 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat expansionHeight) {
-        self.letterboxAspectRatioConstraint.constant = expansionHeight;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+        self.letterboxAspectRatioConstraint.constant = heightOffset;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

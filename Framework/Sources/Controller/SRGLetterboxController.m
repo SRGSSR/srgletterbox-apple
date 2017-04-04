@@ -13,6 +13,7 @@
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
@@ -22,6 +23,7 @@ const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
 const NSInteger SRGLetterboxForwardSeekInterval = 30.;
 
+NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -69,6 +71,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) NSInteger preferredStartBitRate;
 @property (nonatomic) NSError *error;
 
+@property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
+
+@property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 @property (nonatomic, weak) id streamAvailabilityPeriodicTimeObserver;
@@ -122,6 +127,13 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.streamAvailabilityCheckInterval = 5. * 60.;
         self.channelUpdateInterval = 30.;
         
+        // Observe playback state changes
+        [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+            @strongify(self)
+            self.playbackState = [notification.newValue integerValue];
+        }];
+        _playbackState = self.mediaPlayerController.playbackState;          // No setter used on purpose to set the initial value. The setter will notify changes
+        
         self.resumesAfterRestart = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
@@ -162,6 +174,37 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 }
 
 #pragma mark Getters and setters
+
+- (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
+{
+    if (_playbackState == playbackState) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@keypath(self.playbackState)];
+    _playbackState = playbackState;
+    [self didChangeValueForKey:@keypath(self.playbackState)];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
+                                                        object:self
+                                                      userInfo:@{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
+                                                                  SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) }];
+}
+
+- (BOOL)isLive
+{
+    return self.mediaPlayerController.live;
+}
+
+- (CMTime)currentTime
+{
+    return self.mediaPlayerController.player.currentTime;
+}
+
+- (CMTimeRange)timeRange
+{
+    return self.mediaPlayerController.timeRange;
+}
 
 - (void)setMuted:(BOOL)muted
 {
@@ -229,7 +272,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 
                 NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                      code:SRGLetterboxErrorCodeBlocked
-                                                 userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(blockingReason) }];
+                                                 userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
                 [self reportError:error];
                 return;
             }
@@ -241,14 +284,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             }
         };
         
-        SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                             businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
-        
         if (self.media.mediaType == SRGMediaTypeVideo) {
-            [[dataProvider tvMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[self.dataProvider videoMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
         else if (self.media.mediaType == SRGMediaTypeAudio) {
-            [[dataProvider radioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
+            [[self.dataProvider audioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
         }
     }];
 }
@@ -276,6 +316,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (SRGMedia *)segmentMedia
 {
     return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
+}
+
+#pragma mark Periodic time observers
+
+- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
+{
+    return [self.mediaPlayerController addPeriodicTimeObserverForInterval:interval queue:queue usingBlock:block];
+}
+
+- (void)removePeriodicTimeObserver:(id)observer
+{
+    [self.mediaPlayerController removePeriodicTimeObserver:observer];
 }
 
 #pragma mark Data
@@ -359,14 +411,16 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel];
     };
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(self.media.vendor)];
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        [[dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
+        [[self.dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock] resume];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
-        // TODO: Regional radio support
-        [[dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+        if (self.media.vendor == SRGVendorSRF && ! [self.media.uid isEqualToString:self.media.channel.uid]) {
+            [[self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:self.media.uid completionBlock:completionBlock] resume];
+        }
+        else {
+            [[self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock] resume];
+        }
     }
 }
 
@@ -386,6 +440,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 {
     if (media) {
         URN = media.URN;
+    }
+    
+    if (! URN) {
+        return;
     }
     
     if (preferredStartBitRate < 0) {
@@ -412,9 +470,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
     }];
     
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                         businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
-    
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
         NSURL *contentURL = self.contentURLOverridingBlock(URN);
@@ -436,11 +491,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 };
                 
                 if (URN.mediaType == SRGMediaTypeVideo) {
-                    SRGRequest *mediaRequest = [dataProvider tvMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [self.dataProvider videosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
                 else {
-                    SRGRequest *mediaRequest = [dataProvider radioMediasWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
+                    SRGRequest *mediaRequest = [self.dataProvider audiosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
                     [self.requestQueue addRequest:mediaRequest resume:YES];
                 }
             }
@@ -464,7 +519,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         if (blockingReason == SRGBlockingReasonGeoblocking) {
             NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                  code:SRGLetterboxErrorCodeBlocked
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockingReason(mediaComposition.mainChapter.blockingReason) }];
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
             [self.requestQueue reportError:error];
             return;
         }
@@ -487,17 +542,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         else {
             NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                  code:SRGLetterboxErrorCodeNotFound
-                                             userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"The media cannot be played", nil) }];
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self.requestQueue reportError:error];
         }
     };
     
     if (URN.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [dataProvider tvMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [self.dataProvider videoMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
     else if (URN.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [dataProvider radioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
+        SRGRequest *mediaCompositionRequest = [self.dataProvider audioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
         [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
     }
 }
@@ -585,6 +640,14 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)resetWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media
 {
+    if (URN) {
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
+                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
+    }
+    else {
+        self.dataProvider = nil;
+    }
+    
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     
@@ -831,6 +894,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 [self play];
             }
         });
+    }
+}
+
+#pragma mark KVO
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
+{
+    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]) {
+        return NO;
+    }
+    else {
+        return [super automaticallyNotifiesObserversForKey:key];
     }
 }
 

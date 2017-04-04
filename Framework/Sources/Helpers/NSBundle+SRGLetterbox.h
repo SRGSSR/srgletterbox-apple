@@ -13,6 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 #define SRGLetterboxLocalizedString(key, comment) [[NSBundle srg_letterboxBundle] localizedStringForKey:(key) value:@"" table:nil]
 
+/**
+ *  Use to avoid user-facing text analyzer warnings.
+ *
+ *  See https://clang-analyzer.llvm.org/faq.html.
+ */
+__attribute__((annotate("returns_localized_nsstring")))
+OBJC_EXTERN NSString *SRGLetterboxNonLocalizedString(NSString *string);
+
 @interface NSBundle (SRGLetterbox)
 
 /**

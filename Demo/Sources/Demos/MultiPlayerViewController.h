@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MultiPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN URN1:(SRGMediaURN *)URN1 URN2:(SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden;
+- (instancetype)initWithURN:(nullable SRGMediaURN *)URN URN1:(nullable SRGMediaURN *)URN1 URN2:(nullable SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden;
 
 @end
 

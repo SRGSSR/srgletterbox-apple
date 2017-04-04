@@ -6,8 +6,9 @@
 
 #import "SRGLetterboxView.h"
 
-#import "SRGASValueTrackingSlider.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGASValueTrackingSlider.h"
+#import "SRGControlsView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -15,25 +16,32 @@
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
 #import "UIFont+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
+#import <SRGAppearance/SRGAppearance.h>
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 
+const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
+
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate>
+@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UIView *controlsView;
+
+@property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet SRGPlaybackButton *playbackButton;
-@property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
-@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
+@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSeekToLiveConstraint;
 
 @property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
 
@@ -43,9 +51,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
-@property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
-
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
+@property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
+@property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
 
@@ -82,7 +90,7 @@ static void commonInit(SRGLetterboxView *self);
 // Get the future notification height, with the `layoutForNotificationHeight`method
 @property (nonatomic, readonly) CGFloat notificationHeight;
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat expansionHeight);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @end
@@ -98,6 +106,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (self = [super initWithFrame:frame]) {
         commonInit(self);
+        
+        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGLetterboxView. Manually
+        // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
+        [self awakeFromNib];
     }
     return self;
 }
@@ -121,16 +133,16 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super awakeFromNib];
     
-    // FIXME: Currently added in code, but we should provide a more customizable activity indicator
-    //        in the SRG Media Player library soon. Replace when available
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
     [self.mainView insertSubview:loadingImageView aboveSubview:self.playbackButton];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.playbackButton.mas_top).with.offset(-20.f);
         make.centerX.equalTo(self.playbackButton.mas_centerX);
+        make.centerY.equalTo(self.playbackButton.mas_centerY);
     }];
     self.loadingImageView = loadingImageView;
+    
+    self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
@@ -139,10 +151,10 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
+    self.controlsView.delegate = self;
     self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = YES;
-    self.timeSlider.font = [UIFont srg_regularFontWithSize:14.f];
     self.timeSlider.popUpViewColor = UIColor.whiteColor;
     self.timeSlider.textColor = UIColor.blackColor;
     self.timeSlider.popUpViewWidthPaddingFactor = 1.5f;
@@ -161,8 +173,6 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationImageView.image = notificationImage;
     self.notificationLabel.text = nil;
     self.notificationImageView.hidden = YES;
-    
-    self.errorLabel.font = [UIFont srg_regularFontWithTextStyle:UIFontTextStyleSubheadline];
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
@@ -185,6 +195,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateUserInterfaceForServicePlayback];
         [self updateUserInterfaceForAirplayAnimated:NO];
         [self updateUserInterfaceForErrorAnimated:NO];
+        [self updateLoadingIndicatorAnimated:NO];
         [self updateUserInterfaceAnimated:NO];
         [self reloadData];
         
@@ -208,6 +219,12 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(serviceSettingsDidChange:)
                                                      name:SRGLetterboxServiceSettingsDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contentSizeCategoryDidChange:)
+                                                     name:UIContentSizeCategoryDidChangeNotification
+                                                   object:nil];
+        
+        [self updateFonts];
         
         // Automatically resumes in the view when displayed and if picture in picture was active
         if ([SRGLetterboxService sharedService].controller == self.controller) {
@@ -234,6 +251,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGLetterboxServiceSettingsDidChangeNotification
                                                       object:[SRGLetterboxService sharedService]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
     }
 }
 
@@ -246,11 +266,21 @@ static void commonInit(SRGLetterboxView *self);
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
     if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
         
-        [self layoutNotificationViewAndUpdateNotificationHeight];
+        [self layoutNotificationView];
         if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
             [self updateUserInterfaceAnimated:YES];
         }
     }
+}
+
+#pragma mark Fonts
+
+- (void)updateFonts
+{
+    self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
 #pragma mark Getters and setters
@@ -431,11 +461,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (CGFloat)expansionHeight
-{
-    return self.timelineHeightConstraint.constant + self.notificationHeight;
-}
-
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
 {
     if (preferredTimelineHeight < 0.f) {
@@ -449,6 +474,16 @@ static void commonInit(SRGLetterboxView *self);
     
     self.preferredTimelineHeight = preferredTimelineHeight;
     [self updateUserInterfaceAnimated:animated];
+}
+
+- (BOOL)isTimelineAlwaysHidden
+{
+    return self.preferredTimelineHeight != 0;
+}
+
+- (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
+{
+    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxViewDefaultTimelineHeight) animated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -495,7 +530,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGSegment *segment = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
-    self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+    self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
     [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
     self.errorLabel.text = [self error].localizedDescription;
@@ -605,7 +640,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // We need to know what will be the notification view height, depending of the new notification message.
         self.notificationLabel.text = self.notificationMessage;
-        [self layoutNotificationViewAndUpdateNotificationHeight];
+        [self layoutNotificationView];
         
         self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
     };
@@ -701,11 +736,14 @@ static void commonInit(SRGLetterboxView *self);
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
+        SRGImageSet imageSet = [self imageSet];
+        
         // Special cases when the player is idle or preparing
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
+            self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
             return;
         }
         
@@ -714,16 +752,14 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-                self.playbackButton.alpha = 1.f;
+                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"stop-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-                self.playbackButton.alpha = 1.f;
+                self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
                 break;
             }
                 
@@ -731,15 +767,14 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage imageNamed:@"pause-50" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-                self.playbackButton.alpha = 1.f;
+                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.alpha = 0.f;
+                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
                 break;
             }
         }
@@ -751,6 +786,11 @@ static void commonInit(SRGLetterboxView *self);
     else {
         animations();
     }
+}
+
+- (void)updateControlsAnimated:(BOOL)animated
+{
+    [self updateControlsForController:self.controller animated:animated];
 }
 
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
@@ -796,12 +836,25 @@ static void commonInit(SRGLetterboxView *self);
 {
     void (^animations)(void) = ^{
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        self.loadingImageView.alpha = (! mediaPlayerController
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded
-                                       || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) ? 0.f : 1.f;
-        [self.loadingImageView startAnimating];
+        BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
+            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
+        BOOL isWaitingForData = ! controller.mediaComposition && controller.URN && ! controller.error;
+        
+        BOOL visible = isPlayerLoading || isWaitingForData;
+        if (visible) {
+            self.playbackButton.alpha = 0.f;
+            
+            self.loadingImageView.alpha = 1.f;
+            [self.loadingImageView startAnimating];
+        }
+        else {
+            self.playbackButton.alpha = 1.f;
+            
+            self.loadingImageView.alpha = 0.f;
+            [self.loadingImageView stopAnimating];
+        }
     };
     
     if (animated) {
@@ -810,6 +863,11 @@ static void commonInit(SRGLetterboxView *self);
     else {
         animations();
     }
+}
+
+- (void)updateLoadingIndicatorAnimated:(BOOL)animated
+{
+    [self updateLoadingIndicatorForController:self.controller animated:animated];
 }
 
 - (void)updateUserInterfaceForServicePlayback
@@ -851,13 +909,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        [self showNotificationMessage:NSLocalizedString(@"Connected to Airplay", @"Message displayed when playing on an Airplay") animated:animated];
+        [self showNotificationMessage:SRGLetterboxLocalizedString(@"Playback on AirPlay", @"Message displayed when broadcasting on an AirPlay device") animated:animated];
     }
 }
 
-#pragma mark Layout updates
+#pragma mark Layout
 
-- (void)layoutNotificationViewAndUpdateNotificationHeight {
+- (void)layoutNotificationView
+{
     // Force autolayout
     [self.notificationView setNeedsLayout];
     [self.notificationView layoutIfNeeded];
@@ -870,6 +929,36 @@ static void commonInit(SRGLetterboxView *self);
     _notificationHeight = [self.notificationView systemLayoutSizeFittingSize:fittingSize
                                                    withHorizontalFittingPriority:UILayoutPriorityRequired
                                                          verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+}
+
+// Ajust control size to fit view width best.
+- (void)updateControlSet
+{
+    SRGImageSet imageSet = [self imageSet];
+    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
+    
+    self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+    
+    self.playbackButton.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
+    
+    if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+        self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
+    }
+    else {
+        self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
+    }
+    
+    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+}
+
+- (SRGImageSet)imageSet
+{
+    // iPhone Plus in landscape
+    return (CGRectGetWidth(self.playerView.bounds) < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
 }
 
 #pragma mark Letterbox notification banners
@@ -1041,21 +1130,28 @@ static void commonInit(SRGLetterboxView *self);
             dateFormatter.timeStyle = kCFDateFormatterShortStyle;
         });
         
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"  " attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:13.f] }];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
         
-        NSString *string = (self.timeSlider.isLive) ? NSLocalizedString(@"Live", nil) : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
-        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_regularFontWithSize:13.f] }]];
+        NSString *string = (self.timeSlider.isLive) ? SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
+        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }]];
         
         return [attributedString copy];
     }
     else {
-        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: @"--:--"];
+        return [[NSAttributedString alloc] initWithString:self.timeSlider.valueString ?: SRGLetterboxNonLocalizedString(@"--:--") attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
     }
 }
 
 - (void)setNeedsSegmentFavoritesUpdate
 {
     [self.timelineView setNeedsSegmentFavoritesUpdate];
+}
+
+#pragma mark SRGControlsViewDelegate protocol
+
+- (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
+{
+    [self updateControlSet];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
@@ -1074,17 +1170,17 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressWithSegment:(SRGSegment *)segment
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSegment:(SRGSegment *)segment
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressWithSegment:)]) {
-        [self.delegate letterboxView:self didLongPressWithSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressSegment:)]) {
+        [self.delegate letterboxView:self didLongPressSegment:segment];
     }
 }
 
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldFavoriteSegment:(SRGSegment *)segment
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSegment:(SRGSegment *)segment
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldFavoriteSegment:)]) {
-        return [self.delegate letterboxView:self shouldFavoriteSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldDisplayFavoriteForSegment:)]) {
+        return [self.delegate letterboxView:self shouldDisplayFavoriteForSegment:segment];
     }
     else {
         return NO;
@@ -1131,11 +1227,13 @@ static void commonInit(SRGLetterboxView *self);
     
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
+    [self updateLoadingIndicatorAnimated:YES];
     [self reloadData];
 }
 
 - (void)playbackDidRestart:(NSNotification *)notification
 {
+    [self updateLoadingIndicatorAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
 }
 
@@ -1144,8 +1242,8 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
     [self updateUserInterfaceForAirplayAnimated:YES];
-    [self updateControlsForController:self.controller animated:YES];
-    [self updateLoadingIndicatorForController:self.controller animated:YES];
+    [self updateControlsAnimated:YES];
+    [self updateLoadingIndicatorAnimated:YES];
     
     // Initially scroll to the selected segment or chapter (if any)
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
@@ -1170,7 +1268,6 @@ static void commonInit(SRGLetterboxView *self);
     // If the player was playing or paused
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         [self conditional_setUserInterfaceHidden:NO animated:YES];
-        
         [self dismissNotificationView];
     }
 }
@@ -1190,7 +1287,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
     SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
-    NSString *notificationMessage = SRGMessageForBlockingReason(segment.blockingReason);
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(segment.blockingReason);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 
@@ -1224,6 +1321,11 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForServicePlayback];
 }
 
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification
+{
+    [self updateFonts];
+}
+
 @end
 
 static void commonInit(SRGLetterboxView *self)
@@ -1239,7 +1341,7 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     
-    self.preferredTimelineHeight = 120.f;
+    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
     
     // Create an initial matching restoration context
     self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];

@@ -62,7 +62,7 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString
 {
-    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
+    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -74,11 +74,11 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openMultiPlayerWithURNString:(NSString *)URNString URNString1:(NSString *)URNString1 URNString2:(NSString *)URNString2
+- (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
 {
-    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    SRGMediaURN *URN1 = URNString1 ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
-    SRGMediaURN *URN2 = URNString2 ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
+    SRGMediaURN *URN = (URNString) ? [SRGMediaURN mediaURNWithString:URNString] : nil;
+    SRGMediaURN *URN1 = (URNString1) ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
+    SRGMediaURN *URN2 = (URNString2) ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
     
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
     
@@ -99,7 +99,7 @@
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"urn:swi:video:41981254";
+        textField.placeholder = NSLocalizedString(@"urn:swi:video:41981254", nil);
     }];
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Play", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -125,7 +125,8 @@
     
     static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
     static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:8399354";
-    static NSString * const kAudioDVRURNString = @"urn:rtr:audio:a029e818-77a5-4c2e-ad70-d573bb865e31";
+    static NSString * const kAudioDVRURNString = @"urn:rts:audio:3262363";
+    static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
     
@@ -247,16 +248,21 @@
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithURNString:kInvalidURNString];
                     break;
                 }
                     
                 case 14: {
+                    [self openModalPlayerWithURNString:nil];
+                    break;
+                }
+                    
+                case 15: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];
@@ -285,6 +291,7 @@
                     
                 case 2: {
                     [self openMultiPlayerWithURNString:@"urn:rts:video:3608517" URNString1:nil URNString2:@"urn:rts:video:1234567"];
+                    break;
                 }
                     
                 default: {

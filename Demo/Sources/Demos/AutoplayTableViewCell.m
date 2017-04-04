@@ -6,6 +6,7 @@
 
 #import "AutoplayTableViewCell.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 @interface AutoplayTableViewCell ()
@@ -13,6 +14,7 @@
 @property (nonatomic) SRGLetterboxController *letterboxController;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
+@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 
 @end
 
@@ -39,6 +41,14 @@
     [super awakeFromNib];
     
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
+    self.progressView.hidden = YES;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.progressView.hidden = YES;
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -50,6 +60,20 @@
         self.letterboxController.muted = YES;
         self.letterboxController.resumesAfterRouteBecomesUnavailable = YES;
         self.letterboxView.controller = self.letterboxController;
+        
+        @weakify(self)
+        [self.letterboxController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            
+            CMTimeRange timeRange = self.letterboxController.timeRange;
+            if (CMTIMERANGE_IS_VALID(timeRange) && ! CMTIMERANGE_IS_EMPTY(timeRange)) {
+                self.progressView.progress = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)) / CMTimeGetSeconds(timeRange.duration);
+                self.progressView.hidden = NO;
+            }
+            else {
+                self.progressView.hidden = YES;
+            }
+        }];
     }
     else {
         [self.letterboxController reset];
