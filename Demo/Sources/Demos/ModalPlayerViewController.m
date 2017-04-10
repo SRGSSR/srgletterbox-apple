@@ -326,9 +326,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     
     switch (panGestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
+            // Avoid duplicate dismissal (which can make it impossible to dismiss the view controller altogether)
+            if (self.interactiveTransition) {
+                return;
+            }
+            
             // Install the interactive transition animation before triggering it
             self.interactiveTransition = [[ModalTransition alloc] initForPresentation:NO];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+                // Only stop tracking the interactive transition at the very end. The completion block is called
+                // whether the transition ended or was cancelled
+                self.interactiveTransition = nil;
+            }];
             break;
         }
             
@@ -337,9 +346,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             break;
         }
             
+        case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateCancelled: {
             [self.interactiveTransition cancelInteractiveTransitionWithVelocity:velocity];
-            self.interactiveTransition = nil;
             break;
         }
             
@@ -351,7 +360,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             else {
                 [self.interactiveTransition cancelInteractiveTransitionWithVelocity:velocity];
             }
-            self.interactiveTransition = nil;
             break;
         }
             

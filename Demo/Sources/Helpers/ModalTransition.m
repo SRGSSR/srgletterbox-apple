@@ -109,7 +109,7 @@
         return;
     }
     
-    [self.transitionContext updateInteractiveTransition:progress];    
+    [self.transitionContext updateInteractiveTransition:progress];
     [self updateTransition:self.transitionContext withProgress:progress];
 }
 
@@ -149,7 +149,7 @@
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-    return 0.9;
+    return 0.4;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
