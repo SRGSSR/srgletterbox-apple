@@ -94,13 +94,7 @@ If rendering does not work properly:
 
 ## Demo project
 
-To test what the library is capable of, try running the associated demo by opening the workspace and building the associated scheme. You must perform both following commands from the root directory, as well as from the `Demo` folder:
-
-```
-carthage bootstrap --platform iOS
-```
-
-This will update all framework dependencies required to run the demo project.
+To test what the library is capable of, run the associated demo.
 
 ## Known issues
 
