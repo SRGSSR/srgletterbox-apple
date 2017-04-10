@@ -6,6 +6,7 @@
 
 #import "ModalPlayerViewController.h"
 
+#import "ModalTransition.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -33,6 +34,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
 @property (nonatomic) NSMutableArray<SRGSegment *> *favoriteSegments;
+
+@property (nonatomic) ModalTransition *interactiveTransition;
 
 @end
 
@@ -69,6 +72,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Use custom modal transition
+    self.transitioningDelegate = self;
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
@@ -258,6 +264,24 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
+#pragma mark UIViewControllerTransitioningDelegate protocol
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    return [[ModalTransition alloc] initForPresentation:YES];
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    return [[ModalTransition alloc] initForPresentation:NO];
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    // Return the installed interactive transition, if any
+    return self.interactiveTransition;
+}
+
 #pragma mark Actions
 
 - (IBAction)close:(id)sender
@@ -293,6 +317,56 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
 {
     [self.letterboxView setTimelineAlwaysHidden:sender.on animated:YES];
+}
+
+- (IBAction)pullDown:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    CGFloat progress = [panGestureRecognizer translationInView:self.view].y / CGRectGetHeight(self.view.frame);
+    CGFloat velocity = [panGestureRecognizer velocityInView:self.view].y;
+    
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan: {
+            // Avoid duplicate dismissal (which can make it impossible to dismiss the view controller altogether)
+            if (self.interactiveTransition) {
+                return;
+            }
+            
+            // Install the interactive transition animation before triggering it
+            self.interactiveTransition = [[ModalTransition alloc] initForPresentation:NO];
+            [self dismissViewControllerAnimated:YES completion:^{
+                // Only stop tracking the interactive transition at the very end. The completion block is called
+                // whether the transition ended or was cancelled
+                self.interactiveTransition = nil;
+            }];
+            break;
+        }
+            
+        case UIGestureRecognizerStateChanged: {
+            [self.interactiveTransition updateInteractiveTransitionWithProgress:progress];
+            break;
+        }
+            
+        case UIGestureRecognizerStateFailed:
+        case UIGestureRecognizerStateCancelled: {
+            [self.interactiveTransition cancelInteractiveTransitionWithVelocity:velocity];
+            break;
+        }
+            
+        case UIGestureRecognizerStateEnded: {
+            // Finish the transition if the view was dragged by 20% and the user is dragging downwards
+            if (progress > 0.2f && velocity >= 0.f) {
+                [self.interactiveTransition finishInteractiveTransitionWithVelocity:velocity];
+            }
+            else {
+                [self.interactiveTransition cancelInteractiveTransitionWithVelocity:velocity];
+            }
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
 }
 
 #pragma mark Notifications
