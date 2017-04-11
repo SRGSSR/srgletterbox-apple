@@ -96,9 +96,11 @@ If rendering does not work properly:
 
 To test what the library is capable of, run the associated demo.
 
-## Known issues
+## Known issues and behaviors
 
 Control center and lock screen integrations are not working reliably in the iOS simulator. This is a known simulator-only limitation, everything works fine on a device. 
+
+Moreover, if playback is paused from the application and the device is locked afterwards, the lock screen will surprisingly not display playback controls. This is standard iOS behavior (Apple Podcasts application works the same). Playback can be restarted from the control center, though.
 
 ## License
 
