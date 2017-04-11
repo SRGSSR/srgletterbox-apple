@@ -68,7 +68,7 @@
         fromView.frame = containerView.bounds;
         
         UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
-        toView.alpha = progress;
+        toView.alpha = 1.f;
         toView.frame = CGRectMake(0.f,
                                   (1.f - progress) * CGRectGetMaxY(containerView.bounds),
                                   CGRectGetWidth(containerView.bounds),
@@ -76,7 +76,7 @@
     }
     else {
         UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
-        fromView.alpha = 1.f - progress;
+        fromView.alpha = 1.f;
         fromView.frame = CGRectMake(0.f,
                                     progress * CGRectGetMaxY(containerView.bounds),
                                     CGRectGetWidth(containerView.bounds),
