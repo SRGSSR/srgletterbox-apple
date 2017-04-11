@@ -264,6 +264,13 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
+#pragma mark UIGestureRecognizerDelegate protocol
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
 #pragma mark UIViewControllerTransitioningDelegate protocol
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source

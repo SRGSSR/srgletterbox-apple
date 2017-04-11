@@ -172,6 +172,7 @@
                 <panGestureRecognizer minimumNumberOfTouches="1" id="IWJ-iK-R0H">
                     <connections>
                         <action selector="pullDown:" destination="FcC-Qn-oGg" id="B9F-UX-EhH"/>
+                        <outlet property="delegate" destination="FcC-Qn-oGg" id="rD5-Rv-O31"/>
                     </connections>
                 </panGestureRecognizer>
             </objects>
