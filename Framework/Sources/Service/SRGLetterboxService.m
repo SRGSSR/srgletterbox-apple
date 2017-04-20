@@ -177,7 +177,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     });
     
     self.controller = controller;
-    self.pictureInPictureDelegate = pictureInPictureDelegate;
+    self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
     
     _disablingAudioServices = NO;
     

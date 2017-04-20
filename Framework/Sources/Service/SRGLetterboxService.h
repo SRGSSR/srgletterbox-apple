@@ -101,8 +101,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param pictureInPictureDelegate The picture in picture delegate. Unlike most delegates, this delegate is RETAINED.
  *                                  If none is provided, picture in picture will not be available for the controller.
  *                                  Note that you can provide a delegate in all cases, even if some devices you target 
- *                                  do not actually support picture in picture. The delegate will be released when a
- *                                  new deléegate is set, or when `-disable` is called.
+ *                                  do not actually support picture in picture (the delegate won't be saved, though). 
+ *                                  The delegate will be released when a new delegate is set, or when `-disable` is called.
  *
  *  @discussion The 'Audio, Airplay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
  *              this method will throw an exception when called.
@@ -134,6 +134,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The picture in picture delegate, if any has been set.
+ *
+ *  @discussion This property always returns `nil` on devices which do not support picture in picture.
  */
 @property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
