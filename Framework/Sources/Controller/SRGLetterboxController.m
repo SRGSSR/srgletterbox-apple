@@ -318,6 +318,15 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
 }
 
+- (BOOL)isContentURLOverridden
+{
+    if (! self.URN) {
+        return NO;
+    }
+    
+    return self.contentURLOverridingBlock && self.contentURLOverridingBlock(self.URN);
+}
+
 #pragma mark Periodic time observers
 
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block

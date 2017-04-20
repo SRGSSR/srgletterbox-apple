@@ -840,7 +840,7 @@ static void commonInit(SRGLetterboxView *self);
             && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
             && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
             && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-        BOOL isWaitingForData = ! controller.mediaComposition && controller.URN && ! controller.error;
+        BOOL isWaitingForData = ! controller.contentURLOverridden && ! controller.mediaComposition && controller.URN && ! controller.error;
         
         BOOL visible = isPlayerLoading || isWaitingForData;
         if (visible) {
