@@ -48,7 +48,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
-    if ([service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
+    if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
         return (ModalPlayerViewController *)service.pictureInPictureDelegate;
     }
     // Otherwise instantiate a fresh new one
