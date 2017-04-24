@@ -657,6 +657,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.dataProvider = nil;
     }
     
+    // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil segment:nil channel:nil];
     
     self.error = nil;
