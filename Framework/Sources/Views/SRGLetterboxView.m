@@ -196,6 +196,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateUserInterfaceForAirplayAnimated:NO];
         [self updateUserInterfaceForErrorAnimated:NO];
         [self updateLoadingIndicatorAnimated:NO];
+        [self updateUserInterfaceForStartupAnimated:NO];
         [self updateUserInterfaceAnimated:NO];
         [self reloadData];
         
@@ -346,6 +347,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = nil;
     
     [self updateLoadingIndicatorForController:controller animated:NO];
+    [self updateUserInterfaceForStartupWithController:controller animated:NO];
     [self updateUserInterfaceForErrorAnimated:NO];
     [self updateUserInterfaceAnimated:NO];
     [self reloadDataForController:controller];
@@ -876,6 +878,28 @@ static void commonInit(SRGLetterboxView *self);
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
 }
 
+- (void)updateUserInterfaceForStartupWithController:(SRGLetterboxController *)controller animated:(BOOL)animated
+{
+    static NSString *kRestorationIdentifier = @"preparation";
+    
+    BOOL isWaitingForData = ! controller.contentURLOverridden && ! controller.mediaComposition && controller.URN && ! controller.error;
+    if (controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing || isWaitingForData) {
+        [self applyUserInterfaceChanges:^{
+            [self imperative_setUserInterfaceHidden:YES animated:YES togglable:NO];
+        } withRestorationIdentifier:kRestorationIdentifier];
+    }
+    else {
+        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
+            [self imperative_setUserInterfaceHidden:hidden animated:YES togglable:togglable];
+        }];
+    }
+}
+
+- (void)updateUserInterfaceForStartupAnimated:(BOOL)animated
+{
+    [self updateUserInterfaceForStartupWithController:self.controller animated:animated];
+}
+
 - (void)resetInactivityTimer
 {
     self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
@@ -1239,6 +1263,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackDidRestart:(NSNotification *)notification
 {
     [self updateLoadingIndicatorAnimated:YES];
+    [self updateUserInterfaceForStartupAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
 }
 
@@ -1249,22 +1274,9 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
+    [self updateUserInterfaceForStartupAnimated:YES];
     
-    static NSString *kRestorationIdentifier = @"preparation";
-    
-    // Hide the controls while the player is preparing
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
-    if (playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self applyUserInterfaceChanges:^{
-            [self imperative_setUserInterfaceHidden:YES animated:YES togglable:NO];
-        } withRestorationIdentifier:kRestorationIdentifier];
-    }
-    else {
-        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self imperative_setUserInterfaceHidden:hidden animated:YES togglable:togglable];
-        }];
-    }
-    
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
