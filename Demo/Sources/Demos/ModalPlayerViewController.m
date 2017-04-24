@@ -341,7 +341,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)pullDown:(UIPanGestureRecognizer *)panGestureRecognizer
 {
     CGFloat progress = [panGestureRecognizer translationInView:self.view].y / CGRectGetHeight(self.view.frame);
-    CGFloat velocity = [panGestureRecognizer velocityInView:self.view].y;
     
     switch (panGestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
@@ -367,17 +366,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
             
         case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateCancelled: {
-            [self.interactiveTransition cancelInteractiveTransitionWithVelocity:velocity];
+            [self.interactiveTransition cancelInteractiveTransition];
             break;
         }
             
         case UIGestureRecognizerStateEnded: {
             // Finish the transition if the view was dragged by 20% and the user is dragging downwards
+            CGFloat velocity = [panGestureRecognizer velocityInView:self.view].y;
             if (progress > 0.2f && velocity >= 0.f) {
-                [self.interactiveTransition finishInteractiveTransitionWithVelocity:velocity];
+                [self.interactiveTransition finishInteractiveTransition];
             }
             else {
-                [self.interactiveTransition cancelInteractiveTransitionWithVelocity:velocity];
+                [self.interactiveTransition cancelInteractiveTransition];
             }
             break;
         }
