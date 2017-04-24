@@ -980,10 +980,15 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dismissNotificationView
 {
+    [self dismissNotificationViewAnimated:YES];
+}
+
+- (void)dismissNotificationViewAnimated:(BOOL)animated
+{
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self updateUserInterfaceAnimated:YES];
+    [self updateUserInterfaceAnimated:animated];
 }
 
 #pragma mark UI changes and restoration
@@ -1245,7 +1250,6 @@ static void commonInit(SRGLetterboxView *self);
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     
-    // Initially scroll to the selected segment or chapter (if any)
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
@@ -1256,7 +1260,6 @@ static void commonInit(SRGLetterboxView *self);
     else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
-    // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
             CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
@@ -1265,10 +1268,9 @@ static void commonInit(SRGLetterboxView *self);
             self.timelineView.time = seekTargetTime;
         }
     }
-    // If the player was playing or paused
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         [self conditional_setUserInterfaceHidden:NO animated:YES];
-        [self dismissNotificationView];
+        [self dismissNotificationViewAnimated:YES];
     }
 }
 

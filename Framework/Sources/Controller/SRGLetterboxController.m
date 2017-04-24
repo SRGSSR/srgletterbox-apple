@@ -657,6 +657,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.dataProvider = nil;
     }
     
+    [self updateWithURN:URN media:media mediaComposition:nil segment:nil channel:nil];
+    
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     
@@ -665,8 +667,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
-    
-    [self updateWithURN:URN media:media mediaComposition:nil segment:nil channel:nil];
 }
 
 - (void)reportError:(NSError *)error
