@@ -266,6 +266,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 #pragma mark UIGestureRecognizerDelegate protocol
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
+        CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
+        return fabs(velocity.y) > fabs(velocity.x);
+    }
+    else {
+        return YES;
+    }
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
