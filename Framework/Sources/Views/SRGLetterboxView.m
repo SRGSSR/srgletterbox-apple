@@ -795,15 +795,15 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
-    static NSString * const kIdentifier = @"airplay";
+    static NSString * const kRestorationIdentifier = @"airplay";
     
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         [self applyUserInterfaceChanges:^{
             [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO];
-        } withRestorationIdentifier:kIdentifier];
+        } withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
-        [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
+        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
             [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
@@ -811,7 +811,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceForErrorAnimated:(BOOL)animated
 {
-    static NSString * const kIdentifier = @"error";
+    static NSString * const kRestorationIdentifier = @"error";
     
     if ([self error]) {
         self.errorView.alpha = 1.f;
@@ -821,12 +821,12 @@ static void commonInit(SRGLetterboxView *self);
         
         [self applyUserInterfaceChanges:^{
             [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO];
-        } withRestorationIdentifier:kIdentifier];
+        } withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
         self.errorView.alpha = 0.f;
         
-        [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
+        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
             [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
         }];
     }
@@ -1250,7 +1250,21 @@ static void commonInit(SRGLetterboxView *self);
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     
+    static NSString *kRestorationIdentifier = @"preparation";
+    
+    // Hide the controls while the player is preparing
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+    if (playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+        [self applyUserInterfaceChanges:^{
+            [self imperative_setUserInterfaceHidden:YES animated:YES togglable:NO];
+        } withRestorationIdentifier:kRestorationIdentifier];
+    }
+    else {
+        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
+            [self imperative_setUserInterfaceHidden:hidden animated:YES togglable:togglable];
+        }];
+    }
+    
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
