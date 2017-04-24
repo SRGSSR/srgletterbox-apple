@@ -82,7 +82,7 @@
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="137" y="85.5" width="48" height="68"/>
+                                    <rect key="frame" x="153" y="85.5" width="48" height="68"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                     <state key="normal" image="backward-28"/>
@@ -91,7 +91,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGPlaybackButton">
-                                    <rect key="frame" x="185" y="83" width="52" height="72"/>
+                                    <rect key="frame" x="201" y="88" width="20" height="62"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                     <userDefinedRuntimeAttributes>
@@ -100,7 +100,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="237" y="85.5" width="48" height="68"/>
+                                    <rect key="frame" x="221" y="85.5" width="48" height="68"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                     <state key="normal" image="forward-28"/>
@@ -109,7 +109,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="285" y="85.5" width="48" height="68"/>
+                                    <rect key="frame" x="269" y="85.5" width="48" height="68"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                     <state key="normal" image="back_live-28"/>
@@ -117,8 +117,8 @@
                                         <action selector="seekToLive:" destination="-1" eventType="touchUpInside" id="DY5-NU-cqh"/>
                                     </connections>
                                 </button>
-                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                                    <rect key="frame" x="8" y="205" width="7598.5" height="22"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
+                                    <rect key="frame" x="8" y="205" width="405" height="22"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGAirplayButton">
                                             <rect key="frame" x="0.0" y="0.0" width="28" height="22"/>
@@ -132,7 +132,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="83c-T2-D7p" customClass="SRGPictureInPictureButton">
-                                            <rect key="frame" x="2908" y="0.0" width="28" height="22"/>
+                                            <rect key="frame" x="36" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -143,8 +143,8 @@
                                                 <userDefinedRuntimeAttribute type="image" keyPath="stopImage" value="picture_in_picture_stop-22"/>
                                             </userDefinedRuntimeAttributes>
                                         </view>
-                                        <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGASValueTrackingSlider">
-                                            <rect key="frame" x="4378" y="0.0" width="243" height="23"/>
+                                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGASValueTrackingSlider">
+                                            <rect key="frame" x="70" y="0.0" width="231" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <userDefinedRuntimeAttributes>
@@ -157,14 +157,14 @@
                                                 <outlet property="timeLeftValueLabel" destination="5WU-3U-ZqK" id="QHc-ru-oQ3"/>
                                             </connections>
                                         </slider>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="4627" y="0.0" width="27.5" height="22"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
+                                            <rect key="frame" x="307" y="0.0" width="26" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="6098.5" y="0.0" width="28" height="22"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
+                                            <rect key="frame" x="341" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -175,8 +175,8 @@
                                                 <userDefinedRuntimeAttribute type="image" keyPath="selectedImage" value="subtitles_on-22"/>
                                             </userDefinedRuntimeAttributes>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button">
-                                            <rect key="frame" x="7570.5" y="0.0" width="28" height="22"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button">
+                                            <rect key="frame" x="377" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="28" id="wp2-4M-YHh"/>
@@ -194,7 +194,7 @@
                                     </constraints>
                                 </stackView>
                             </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="leading" secondItem="cih-8k-dqC" secondAttribute="trailing" id="1MA-ls-Rsr"/>
