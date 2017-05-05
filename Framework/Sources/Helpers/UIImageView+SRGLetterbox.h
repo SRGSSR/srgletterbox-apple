@@ -22,19 +22,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param object The object to request the image for.
  *  @param scale  The scale to use.
- */
-- (void)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
-                        withScale:(SRGImageScale)imageScale;
-
-/**
- *  Request the main image of the first object for which a valid image is available.
  *
- *  @param objects The objects to consider, in order.
- *  @param scale   The scale to use
+ *  @return `YES` iff a valid image URL could be found.
  */
-// FIXME: This is an ugly fix for services with bad images. Remove when image services have been sanitized.
-- (void)srg_requestFirstValidImageForObjects:(NSArray<id<SRGImageMetadata>> *)objects
-                                   withScale:(SRGImageScale)imageScale;
+// FIXME: Image validity should not have to be checked, but some services are returning bad URLs. When this has been
+//        fixed, return void
+- (BOOL)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
+                        withScale:(SRGImageScale)imageScale;
 
 /**
  *  Cancel any running image request.

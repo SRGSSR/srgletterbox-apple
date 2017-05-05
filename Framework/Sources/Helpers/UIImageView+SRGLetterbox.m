@@ -55,36 +55,24 @@
 
 #pragma mark Standard image loading
 
-- (void)srg_requestImageForObject:(id<SRGImageMetadata>)object
+- (BOOL)srg_requestImageForObject:(id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale
 {
     CGSize size = SRGSizeForImageScale(imageScale);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
     if (! object) {
         self.image = placeholderImage;
-        return;
+        return NO;
     }
     
     NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
-    [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
-}
-
-- (void)srg_requestFirstValidImageForObjects:(NSArray<id<SRGImageMetadata>> *)objects
-                                   withScale:(SRGImageScale)imageScale
-{
-    if (objects.count == 0) {
-        return;
+    if (! URL || [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"]) {
+        self.image = placeholderImage;
+        return NO;
     }
     
-    CGSize size = SRGSizeForImageScale(imageScale);
-    for (id<SRGImageMetadata> object in objects) {
-        NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
-        if (URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"]) {
-            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
-            [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
-            return;
-        }
-    }
+    [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    return YES;
 }
 
 - (void)srg_cancelCurrentImageRequest

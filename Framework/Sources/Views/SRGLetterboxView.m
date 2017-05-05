@@ -532,14 +532,9 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
-    NSMutableArray *imageObjects = [NSMutableArray array];
-    if (controller.channel.currentProgram) {
-        [imageObjects addObject:controller.channel.currentProgram];
+    if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
+        [self.imageView srg_requestImageForObject:controller.media withScale:SRGImageScaleLarge];
     }
-    if (controller.media) {
-        [imageObjects addObject:controller.media];
-    }
-    [self.imageView srg_requestFirstValidImageForObjects:imageObjects withScale:SRGImageScaleLarge];
     
     self.errorLabel.text = [self error].localizedDescription;
 }
