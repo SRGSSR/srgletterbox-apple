@@ -7,6 +7,7 @@
 #import "UIImageView+SRGLetterbox.h"
 #import "NSBundle+SRGLetterbox.h"
 
+#import <SRGAppearance/SRGAppearance.h>
 #import <YYWebImage/YYWebImage.h>
 
 @implementation UIImageView (SRGLetterbox)
@@ -54,12 +55,9 @@
 
 - (void)srg_requestImageForObject:(id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale
-             placeholderImageName:(NSString *)placeholderImageName
 {
     CGSize size = SRGSizeForImageScale(imageScale);
-    UIImage *placeholderImage = placeholderImageName ? [UIImage srg_vectorImageNamed:placeholderImageName
-                                                                            inBundle:[NSBundle srg_letterboxBundle]
-                                                                            withSize:size] : nil;
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGAppearanceMediaPlaceholderFilePath() withSize:size];
     if (! object) {
         self.image = placeholderImage;
         return;

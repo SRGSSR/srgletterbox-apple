@@ -52,7 +52,7 @@
     self.titleLabel.text = segment.title;
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium placeholderImageName:@"placeholder_media-180"];
+    [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;

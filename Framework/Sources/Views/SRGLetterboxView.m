@@ -533,7 +533,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
     id<SRGImageMetadata> imageObject = controller.channel.currentProgram ?: controller.media;
-    [self.imageView srg_requestImageForObject:imageObject withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    [self.imageView srg_requestImageForObject:imageObject withScale:SRGImageScaleLarge];
     self.errorLabel.text = [self error].localizedDescription;
 }
 

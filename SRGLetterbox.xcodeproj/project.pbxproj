@@ -25,7 +25,6 @@
 		08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */; };
 		08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */; };
 		08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */; };
-		08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */; };
 		08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D231E30F92F000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
@@ -280,7 +279,6 @@
 		08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SRGLetterbox.m"; sourceTree = "<group>"; };
-		08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		08FA0D1F1E30F820000C94EF /* FXReachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FXReachability.framework; path = Carthage/Build/iOS/FXReachability.framework; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
@@ -454,7 +452,6 @@
 				6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */,
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
 				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
-				08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -877,7 +874,6 @@
 				6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */,
 				6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */,
 				6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */,
-				08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
 				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,

@@ -22,11 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param object               The object to request the image for.
  *  @param scale                The scale to use
- *  @param placeholderImageName The name of the placeholder image name to use
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
-                        withScale:(SRGImageScale)imageScale
-             placeholderImageName:(nullable NSString *)placeholderImageName;
+                        withScale:(SRGImageScale)imageScale;
 - (void)srg_cancelCurrentImageRequest;
 
 @end
