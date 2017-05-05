@@ -69,6 +69,24 @@
     [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
 }
 
+- (void)srg_requestFirstValidImageForObjects:(NSArray<id<SRGImageMetadata>> *)objects
+                                   withScale:(SRGImageScale)imageScale
+{
+    if (objects.count == 0) {
+        return;
+    }
+    
+    CGSize size = SRGSizeForImageScale(imageScale);
+    for (id<SRGImageMetadata> object in objects) {
+        NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
+        if (URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"]) {
+            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+            [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            return;
+        }
+    }
+}
+
 - (void)srg_cancelCurrentImageRequest
 {
     [self yy_cancelCurrentImageRequest];
