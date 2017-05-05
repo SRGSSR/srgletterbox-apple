@@ -155,6 +155,7 @@
 		6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */; };
 		6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */; };
 		6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */; };
+		6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */; };
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
@@ -356,6 +357,7 @@
 		6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxSegmentCell.h; sourceTree = "<group>"; };
 		6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxSegmentCell.m; sourceTree = "<group>"; };
 		6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxSegmentCell.xib; sourceTree = "<group>"; };
+		6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */,
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
 				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
+				6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -876,6 +879,7 @@
 				6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
 				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
+				6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

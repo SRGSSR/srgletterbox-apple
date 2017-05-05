@@ -8,6 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Paths of standard supplied vector images.
+OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder
+
 /**
  *  Available image scales.
  */

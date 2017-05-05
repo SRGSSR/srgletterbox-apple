@@ -5,7 +5,9 @@
 //
 
 #import "UIImageView+SRGLetterbox.h"
+
 #import "NSBundle+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
 #import <YYWebImage/YYWebImage.h>
@@ -57,7 +59,7 @@
                         withScale:(SRGImageScale)imageScale
 {
     CGSize size = SRGSizeForImageScale(imageScale);
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGAppearanceMediaPlaceholderFilePath() withSize:size];
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
     if (! object) {
         self.image = placeholderImage;
         return;

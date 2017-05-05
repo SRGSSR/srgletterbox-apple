@@ -8,6 +8,11 @@
 
 #import "NSBundle+SRGLetterbox.h"
 
+NSString *SRGLetterboxMediaPlaceholderFilePath(void)
+{
+    return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-180" ofType:@"pdf"];
+}
+
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
 {
     static NSDictionary *s_widths;
