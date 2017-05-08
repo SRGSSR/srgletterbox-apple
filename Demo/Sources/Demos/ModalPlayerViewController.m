@@ -91,24 +91,16 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    [self reloadData];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        // Special case to test multi chapters and segments. Should be removed when an example is available in production
-        if ([self.URN.uid containsString:@","]) {
-            self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-        }
-        else {
-            self.letterboxController.serviceURL = nil;
-        }
-        
-        [self.letterboxController playURN:self.URN];
+    // Special case to test multi chapters and segments. Should be removed when an example is available in production
+    if ([self.URN.uid containsString:@","]) {
+        self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
     }
+    else {
+        self.letterboxController.serviceURL = nil;
+    }
+    [self.letterboxController playURN:self.URN];
+    
+    [self reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

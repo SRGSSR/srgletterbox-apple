@@ -57,15 +57,8 @@
     [super viewDidLoad];
     
     self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
-    if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        [self.letterboxController playURN:self.URN];
-    }
+    [self.letterboxController playURN:self.URN];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

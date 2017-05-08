@@ -93,18 +93,11 @@
                                              selector:@selector(applicationDidBecomeActive:)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
-    if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        if (! self.letterboxController.pictureInPictureActive) {
-            [self.letterboxController playURN:self.URN];
-            [self.smallLetterboxController1 playURN:self.URN1];
-            [self.smallLetterboxController2 playURN:self.URN2];
-        }
+    if (! self.letterboxController.pictureInPictureActive) {
+        [self.letterboxController playURN:self.URN];
+        [self.smallLetterboxController1 playURN:self.URN1];
+        [self.smallLetterboxController2 playURN:self.URN2];
     }
 }
 
