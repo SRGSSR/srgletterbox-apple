@@ -532,8 +532,16 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
-    if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
-        [self.imageView srg_requestImageForObject:controller.media withScale:SRGImageScaleLarge];
+    // Do not display any thumbnail for livestreams until channel information is available
+    SRGMedia *media = controller.media;
+    BOOL isChannelAvailable = media && (media.contentType != SRGContentTypeLivestream || controller.channel);
+    if (isChannelAvailable) {
+        if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
+            [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
+        }
+    }
+    else {
+        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
     }
     
     self.errorLabel.text = [self error].localizedDescription;
