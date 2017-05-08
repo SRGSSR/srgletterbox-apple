@@ -4,7 +4,7 @@ github "SRGSSR/MAKVONotificationCenter" "4a127e52997889729286510103f7e2710022373
 github "SRGSSR/SRGMediaPlayer-iOS" "2.0"
 github "SRGSSR/libextobjc" "076c968c9ade619ee836c89a935e09e6708d6ef2"
 github "SRGSSR/srganalytics-ios" "c2b1f1b41aa4dbbe9a00522b9cafdf881ee7eb51"
-github "SRGSSR/srgappearance-ios" "27ff24363eed76d619f5880eedd0301b66570832"
+github "SRGSSR/srgappearance-ios" "b86ed32f4a3dbecc2a8b0b590569f6839fd3c3df"
 github "SRGSSR/srgdataprovider-ios" "d37354c13ff668917426cf631cda7af7daa332f5"
 github "SRGSSR/srglogger-ios" "1.0"
 github "SnapKit/Masonry" "v1.0.2"
