@@ -534,8 +534,8 @@ static void commonInit(SRGLetterboxView *self);
     
     // Do not display any thumbnail for livestreams until channel information is available
     SRGMedia *media = controller.media;
-    BOOL isChannelAvailable = media && (media.contentType != SRGContentTypeLivestream || controller.channel);
-    if (isChannelAvailable) {
+    BOOL isDataAvailable = media && (media.contentType != SRGContentTypeLivestream || controller.channel);
+    if (isDataAvailable) {
         if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
             if (! [self.imageView srg_requestImageForObject:controller.channel withScale:SRGImageScaleLarge]) {
                 [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
@@ -543,7 +543,7 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     else {
-        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
+        [self.imageView srg_requestImageForObject:nil /* placeholder */ withScale:SRGImageScaleLarge];
     }
     
     self.errorLabel.text = [self error].localizedDescription;

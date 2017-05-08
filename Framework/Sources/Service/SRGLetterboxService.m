@@ -322,10 +322,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     NSURL *imageURL = nil;
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
     
-    // Display current program information for livestreams
+    // Display current program information for livestreams when available
     SRGChannel *channel = controller.channel;
-    BOOL isChannelAvailable = media && (media.contentType != SRGContentTypeLivestream || channel);
-    if (isChannelAvailable) {
+    BOOL isDataAvailable = media && (media.contentType != SRGContentTypeLivestream || channel);
+    if (isDataAvailable) {
         nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: channel.title ?: media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = channel.title;
         
@@ -339,9 +339,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     else {
-        nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
-        imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:dimension];
+        nowPlayingInfo[MPMediaItemPropertyTitle] = nil;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = nil;
     }
     
     // SRGLetterboxImageURL might return file URLs for overridden images
