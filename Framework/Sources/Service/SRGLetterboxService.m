@@ -249,6 +249,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
     skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
     [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackward:)];
+    
+    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
+    [seekForwardCommand addTarget:self action:@selector(seekForward:)];
+    
+    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
+    [seekBackwardCommand addTarget:self action:@selector(seekBackward:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -358,6 +364,20 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (void)skipBackward:(id)sender
 {
     [self.controller skipBackwardWithCompletionHandler:nil];
+}
+
+- (void)seekForward:(MPSeekCommandEvent *)event
+{
+    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
+        [self.controller skipForwardWithCompletionHandler:nil];
+    }
+}
+
+- (void)seekBackward:(MPSeekCommandEvent *)event
+{
+    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
+        [self.controller skipBackwardWithCompletionHandler:nil];
+    }
 }
 
 #pragma mark Picture in picture
