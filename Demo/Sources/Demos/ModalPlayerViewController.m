@@ -266,21 +266,19 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 #pragma mark UIGestureRecognizerDelegate protocol
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
-        CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
-        return fabs(velocity.y) > fabs(velocity.x);
-    }
-    else {
-        return YES;
-    }
+    return ! [touch.view isKindOfClass:[UISlider class]];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
 }
 
 #pragma mark UIViewControllerTransitioningDelegate protocol
