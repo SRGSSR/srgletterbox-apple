@@ -89,8 +89,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                      object:previousMediaPlayerController];
+                                                        name:SRGLetterboxMetadataDidChangeNotification
+                                                      object:_controller];
         
         // Probably register for media metadata updates to reload the control center. Apply same logic as in Letterbox UIView
         // to display show info first
@@ -140,9 +140,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:mediaPlayerController];
+                                                 selector:@selector(metadataDidChange:)
+                                                     name:SRGLetterboxMetadataDidChangeNotification
+                                                   object:controller];
         
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             [self updateRemoteCommandCenterWithController:controller];
@@ -481,11 +481,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 #pragma mark Notifications
 
-- (void)playbackStateDidChange:(NSNotification *)notification
+- (void)metadataDidChange:(NSNotification *)notification
 {
-    if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self updateNowPlayingInformationWithController:self.controller];
-    }
+    [self updateNowPlayingInformationWithController:self.controller];
 }
 
 // Update commands while transitioning from / to the background (since control availability might be affected)
