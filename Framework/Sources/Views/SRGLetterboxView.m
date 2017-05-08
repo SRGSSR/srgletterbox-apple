@@ -733,9 +733,9 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateControlsForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        self.forwardSeekButton.alpha = [controller canSeekForward] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [controller canSeekBackward] ? 1.f : 0.f;
-        self.seekToLiveButton.alpha = [controller canSeekToLive] ? 1.f : 0.f;
+        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
+        self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
@@ -1098,14 +1098,14 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)seekBackward:(id)sender
 {
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)seekForward:(id)sender
 {
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
@@ -1117,7 +1117,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)seekToLive:(id)sender
 {
-    [self.controller seekToLiveWithCompletionHandler:nil];
+    [self.controller skipToLiveWithCompletionHandler:nil];
 }
 
 - (IBAction)retry:(id)sender

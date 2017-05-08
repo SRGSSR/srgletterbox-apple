@@ -91,6 +91,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         
+        // Probably register for media metadata updates to reload the control center. Apply same logic as in Letterbox UIView
+        // to display show info first
+        
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
@@ -240,12 +243,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [togglePlayPauseCommand addTarget:self action:@selector(togglePlayPause:)];
     
     MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
-    skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxForwardSeekInterval)];
-    [skipForwardIntervalCommand addTarget:self action:@selector(seekForward:)];
+    skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxForwardSkipInterval)];
+    [skipForwardIntervalCommand addTarget:self action:@selector(skipForward:)];
     
     MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
-    skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSeekInterval)];
-    [skipBackwardIntervalCommand addTarget:self action:@selector(seekBackward:)];
+    skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
+    [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackward:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -264,8 +267,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = [controller canSeekForward];
-        commandCenter.skipBackwardCommand.enabled = [controller canSeekBackward];
+        commandCenter.skipForwardCommand.enabled = [controller canSkipForward];
+        commandCenter.skipBackwardCommand.enabled = [controller canSkipBackward];
+        commandCenter.seekForwardCommand.enabled = YES;
+        commandCenter.seekBackwardCommand.enabled = YES;
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -273,6 +278,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.togglePlayPauseCommand.enabled = NO;
         commandCenter.skipForwardCommand.enabled = NO;
         commandCenter.skipBackwardCommand.enabled = NO;
+        commandCenter.seekForwardCommand.enabled = NO;
+        commandCenter.seekBackwardCommand.enabled = NO;
     }
 }
 
@@ -343,14 +350,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [self.controller.mediaPlayerController togglePlayPause];
 }
 
-- (void)seekForward:(id)sender
+- (void)skipForward:(id)sender
 {
-    [self.controller seekForwardWithCompletionHandler:nil];
+    [self.controller skipForwardWithCompletionHandler:nil];
 }
 
-- (void)seekBackward:(id)sender
+- (void)skipBackward:(id)sender
 {
-    [self.controller seekBackwardWithCompletionHandler:nil];
+    [self.controller skipBackwardWithCompletionHandler:nil];
 }
 
 #pragma mark Picture in picture
