@@ -343,7 +343,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // SRGLetterboxImageURL might return file URLs for overridden images
     if (imageURL.fileURL) {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [UIImage imageWithContentsOfFile:imageURL.path];
+        UIImage *image = [UIImage imageWithContentsOfFile:imageURL.path];
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
     }
     else if (imageURL) {
         NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
