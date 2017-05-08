@@ -4,12 +4,21 @@
 //  License information is available from the LICENSE file.
 //
 
+#import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 // Paths of standard supplied vector images.
 OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder
+
+/**
+ *  Return the image URL for an object and size, `nil` if the image URL is not found or invalid.
+ *
+ *  @discussion If some images have been overridden by local versions (see SRGDataProvider NSURL+SRGDataProvider.h file),
+ *              the returned URL might be a file URL.
+ */
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGSize size);
 
 /**
  *  Available image scales.

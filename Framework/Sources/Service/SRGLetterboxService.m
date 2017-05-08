@@ -8,6 +8,7 @@
 
 #import "SRGLetterboxController+Private.h"
 #import "UIDevice+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
@@ -316,23 +317,50 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-    nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
-    
-    // FIXME: Arbitrary resizing should probably be moved to the data provider library
+    // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
+    // FIXME: This arbitrary resizing should probably be moved to the data provider library
+    NSURL *imageURL = nil;
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
-    NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:dimension];
-    NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
-    NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
-    self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (image) {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
-            }
-            
-            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-        });
-    }];
+    
+    // Display current program information for livestreams
+    SRGChannel *channel = controller.channel;
+    BOOL isChannelAvailable = media && (media.contentType != SRGContentTypeLivestream || channel);
+    if (isChannelAvailable) {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: media.title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = channel.title;
+        
+        CGSize size = CGSizeMake(dimension, dimension);
+        imageURL = SRGLetterboxImageURL(channel.currentProgram, size);
+        if (! imageURL) {
+            imageURL = SRGLetterboxImageURL(media, size);
+        }
+    }
+    else {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
+        imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:dimension];
+    }
+    
+    // SRGLetterboxImageURL might return file URLs for overridden images
+    if (imageURL.fileURL) {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [UIImage imageWithContentsOfFile:imageURL.path];
+    }
+    else if (imageURL) {
+        NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
+        NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
+        self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (image) {
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
+                }
+                
+                [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+            });
+        }];
+    }
+    else {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+    }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
