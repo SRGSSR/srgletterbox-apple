@@ -326,13 +326,16 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     SRGChannel *channel = controller.channel;
     BOOL isChannelAvailable = media && (media.contentType != SRGContentTypeLivestream || channel);
     if (isChannelAvailable) {
-        nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: media.title;
+        nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: channel.title ?: media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = channel.title;
         
         CGSize size = CGSizeMake(dimension, dimension);
         imageURL = SRGLetterboxImageURL(channel.currentProgram, size);
         if (! imageURL) {
-            imageURL = SRGLetterboxImageURL(media, size);
+            imageURL = SRGLetterboxImageURL(channel, size);
+            if (! imageURL) {
+                imageURL = SRGLetterboxImageURL(media, size);
+            }
         }
     }
     else {

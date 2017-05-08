@@ -537,7 +537,9 @@ static void commonInit(SRGLetterboxView *self);
     BOOL isChannelAvailable = media && (media.contentType != SRGContentTypeLivestream || controller.channel);
     if (isChannelAvailable) {
         if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
-            [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
+            if (! [self.imageView srg_requestImageForObject:controller.channel withScale:SRGImageScaleLarge]) {
+                [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
+            }
         }
     }
     else {
