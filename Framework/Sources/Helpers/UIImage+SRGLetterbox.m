@@ -16,8 +16,9 @@
 
 @end
 
-@interface SRGChannel (SRGLetterbox_Private_SRGDataProvider)
+@interface NSObject (SRGLetterbox_Private_SRGDataProvider)
 
+// Declare internal image URL accessor
 @property (nonatomic, readonly) NSURL *imageURL;
 
 @end
@@ -45,13 +46,13 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
 
 NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension)
 {
-    if (! [object isKindOfClass:[SRGChannel class]]) {
-        return SRGLetterboxImageURL(object, dimension);
+    if (! [object respondsToSelector:@selector(imageURL)]) {
+        return nil;
     }
-    else {
-        SRGChannel *channel = (SRGChannel *)object;
-        return [[channel imageURL] srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:channel.uid type:@"artwork"];
-    }
+    
+    NSURL *imageURL = [object performSelector:@selector(imageURL)];
+    NSString *uid = [object respondsToSelector:@selector(uid)] ? [object performSelector:@selector(uid)] : nil;
+    return [imageURL srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:uid type:@"artwork"];
 }
 
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
