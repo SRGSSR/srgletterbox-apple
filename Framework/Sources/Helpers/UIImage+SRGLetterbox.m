@@ -20,7 +20,7 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
     }
     
     NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
-    if (! URL || [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"]) {
+    if (! URL || [URL.absoluteString containsString:@"NOT_SPECIFIED"]) {
         return nil;
     }
     
