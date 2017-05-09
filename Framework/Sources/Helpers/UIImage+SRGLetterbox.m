@@ -48,7 +48,7 @@ NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable obj
     static const CGFloat kWidth = 512.f;
     
     if (! [object isKindOfClass:[SRGChannel class]]) {
-        return SRGLetterboxImageURL(object, 512.f);
+        return SRGLetterboxImageURL(object, kWidth);
     }
     else {
         SRGChannel *channel = (SRGChannel *)object;
