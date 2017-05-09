@@ -8,6 +8,7 @@
 
 #import "SRGLetterboxController+Private.h"
 #import "UIDevice+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
@@ -88,8 +89,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                      object:previousMediaPlayerController];
+                                                        name:SRGLetterboxMetadataDidChangeNotification
+                                                      object:_controller];
         
         // Probably register for media metadata updates to reload the control center. Apply same logic as in Letterbox UIView
         // to display show info first
@@ -139,9 +140,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:mediaPlayerController];
+                                                 selector:@selector(metadataDidChange:)
+                                                     name:SRGLetterboxMetadataDidChangeNotification
+                                                   object:controller];
         
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             [self updateRemoteCommandCenterWithController:controller];
@@ -316,23 +317,52 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-    nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
-    
-    // FIXME: Arbitrary resizing should probably be moved to the data provider library
+    // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
+    // FIXME: This arbitrary resizing should probably be moved to the data provider library
+    NSURL *imageURL = nil;
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
-    NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:dimension];
-    NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
-    NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
-    self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (image) {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
-            }
-            
-            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-        });
-    }];
+    CGSize size = CGSizeMake(dimension, dimension);
+    
+    // For livestreams, only rely on channel information
+    if (media.contentType == SRGContentTypeLivestream) {
+        SRGChannel *channel = controller.channel;
+        
+        NSString *title = channel.currentProgram.title ?: channel.title;
+        nowPlayingInfo[MPMediaItemPropertyTitle] = title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
+        
+        imageURL = SRGLetterboxImageURL(channel.currentProgram, size);
+        if (! imageURL) {
+            imageURL = SRGLetterboxImageURL(channel, size);
+        }
+    }
+    else {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
+        imageURL = SRGLetterboxImageURL(media, size);
+    }
+    
+    // SRGLetterboxImageURL might return file URLs for overridden images
+    if (imageURL.fileURL) {
+        UIImage *image = [UIImage imageWithContentsOfFile:imageURL.path];
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
+    }
+    else if (imageURL) {
+        NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
+        NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
+        self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (image) {
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
+                }
+                
+                [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+            });
+        }];
+    }
+    else {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+    }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
@@ -453,11 +483,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 #pragma mark Notifications
 
-- (void)playbackStateDidChange:(NSNotification *)notification
+- (void)metadataDidChange:(NSNotification *)notification
 {
-    if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self updateNowPlayingInformationWithController:self.controller];
-    }
+    [self updateNowPlayingInformationWithController:self.controller];
 }
 
 // Update commands while transitioning from / to the background (since control availability might be affected)

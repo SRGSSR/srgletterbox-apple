@@ -91,24 +91,16 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    [self reloadData];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        // Special case to test multi chapters and segments. Should be removed when an example is available in production
-        if ([self.URN.uid containsString:@","]) {
-            self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-        }
-        else {
-            self.letterboxController.serviceURL = nil;
-        }
-        
-        [self.letterboxController playURN:self.URN];
+    // Special case to test multi chapters and segments. Should be removed when an example is available in production
+    if ([self.URN.uid containsString:@","]) {
+        self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
     }
+    else {
+        self.letterboxController.serviceURL = nil;
+    }
+    [self.letterboxController playURN:self.URN];
+    
+    [self reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -266,21 +258,19 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 #pragma mark UIGestureRecognizerDelegate protocol
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
-        CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
-        return fabs(velocity.y) > fabs(velocity.x);
-    }
-    else {
-        return YES;
-    }
+    return ! [touch.view isKindOfClass:[UISlider class]];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
 }
 
 #pragma mark UIViewControllerTransitioningDelegate protocol

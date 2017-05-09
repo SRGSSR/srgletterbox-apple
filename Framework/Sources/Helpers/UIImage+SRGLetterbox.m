@@ -13,6 +13,20 @@ NSString *SRGLetterboxMediaPlaceholderFilePath(void)
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-180" ofType:@"pdf"];
 }
 
+NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGSize size)
+{
+    if (! object) {
+        return nil;
+    }
+    
+    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
+    if (! URL || [URL.absoluteString containsString:@"NOT_SPECIFIED"]) {
+        return nil;
+    }
+    
+    return URL;
+}
+
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
 {
     static NSDictionary *s_widths;

@@ -60,17 +60,13 @@
 {
     CGSize size = SRGSizeForImageScale(imageScale);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
-    if (! object) {
+    
+    NSURL *URL = SRGLetterboxImageURL(object, size);
+    if (! URL) {
         self.image = placeholderImage;
         return NO;
     }
-    
-    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
-    if (! URL || [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"]) {
-        self.image = placeholderImage;
-        return NO;
-    }
-    
+        
     [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
     return YES;
 }
