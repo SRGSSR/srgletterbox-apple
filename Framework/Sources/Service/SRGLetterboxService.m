@@ -321,7 +321,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     // FIXME: This arbitrary resizing should probably be moved to the data provider library
     NSURL *imageURL = nil;
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
-    CGSize size = CGSizeMake(dimension, dimension);
     
     // For livestreams, only rely on channel information
     if (media.contentType == SRGContentTypeLivestream) {
@@ -331,15 +330,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyTitle] = title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
         
-        imageURL = SRGLetterboxImageURL(channel.currentProgram, size);
+        imageURL = SRGLetterboxImageURL(channel.currentProgram, dimension);
         if (! imageURL) {
-            imageURL = SRGLetterboxImageURL(channel, size);
+            imageURL = SRGLetterboxImageURL(channel, dimension);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-        imageURL = SRGLetterboxImageURL(media, size);
+        imageURL = SRGLetterboxImageURL(media, dimension);
     }
     
     // SRGLetterboxImageURL might return file URLs for overridden images

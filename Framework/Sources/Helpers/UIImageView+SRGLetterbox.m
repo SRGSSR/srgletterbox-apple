@@ -61,7 +61,7 @@
     CGSize size = SRGSizeForImageScale(imageScale);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
     
-    NSURL *URL = SRGLetterboxImageURL(object, size);
+    NSURL *URL = SRGLetterboxImageURL(object, size.width);
     if (! URL) {
         self.image = placeholderImage;
         return NO;
