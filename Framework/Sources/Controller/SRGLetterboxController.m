@@ -413,8 +413,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     void (^completionBlock)(SRGChannel * _Nullable, NSError * _Nullable) = ^(SRGChannel * _Nullable channel, NSError * _Nullable error) {
-        // Use channel information available from the media if no detailed channel information could be retrieved
-        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel ?: self.media.channel];
+        if (error) {
+            return;
+        }
+        
+        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel];
     };
     
     if (self.media.mediaType == SRGMediaTypeVideo) {
