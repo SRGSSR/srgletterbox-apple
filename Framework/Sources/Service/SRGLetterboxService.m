@@ -323,26 +323,20 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
     CGSize size = CGSizeMake(dimension, dimension);
     
-    // Display current program information for livestreams when available
-    SRGChannel *channel = controller.channel;
-    BOOL isDataAvailable = media && (media.contentType != SRGContentTypeLivestream || channel);
-    if (isDataAvailable) {
-        nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: channel.title ?: media.title;
+    // For livestreams, only rely on channel information
+    if (media.contentType == SRGContentTypeLivestream) {
+        SRGChannel *channel = controller.channel;
+        nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: channel.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = channel.title;
         
         imageURL = SRGLetterboxImageURL(channel.currentProgram, size);
         if (! imageURL) {
-            // FIXME: Does not work for RTS and SRF. For RTS a second series of ids is required for overrides,
-            //        and for SRF the channel is always the main one for regional radios (i.e. images are the same)
-            // imageURL = SRGLetterboxImageURL(channel, size);
-            // if (! imageURL) {
-                imageURL = SRGLetterboxImageURL(media, size);
-            // }
+            imageURL = SRGLetterboxImageURL(channel, size);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.channel.title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
         imageURL = SRGLetterboxImageURL(media, size);
     }
     

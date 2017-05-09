@@ -532,16 +532,12 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
-    // Do not display any thumbnail for livestreams until channel information is available
+    // For livestreams, only rely on channel information
     SRGMedia *media = controller.media;
-    BOOL isDataAvailable = media && (media.contentType != SRGContentTypeLivestream || controller.channel);
-    if (isDataAvailable) {
-        if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
-            // FIXME: Does not work for RTS and SRF. For RTS a second series of ids is required for overrides,
-            //        and for SRF the channel is always the main one for regional radios (i.e. images are the same)
-            // if (! [self.imageView srg_requestImageForObject:controller.channel withScale:SRGImageScaleLarge]) {
-                [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
-            // }
+    if (media.contentType == SRGContentTypeLivestream) {
+        SRGChannel *channel = controller.channel;
+        if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
+            [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
         }
     }
     else {
