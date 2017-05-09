@@ -8,6 +8,22 @@
 
 #import "NSBundle+SRGLetterbox.h"
 
+// ** Private SRGDataProvider fixes for Play. See NSURL+SRGDataProvider.h for more information
+
+@interface NSURL (SRGLetterbox_Private_SRGDataProvider)
+
+- (NSURL *)srg_URLForDimension:(SRGImageDimension)dimension withValue:(CGFloat)value uid:(nullable NSString *)uid type:(nullable NSString *)type;
+
+@end
+
+@interface SRGChannel (SRGLetterbox_Private_SRGDataProvider)
+
+@property (nonatomic, readonly) NSURL *imageURL;
+
+@end
+
+// **
+
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
 {
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-180" ofType:@"pdf"];
@@ -25,6 +41,19 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
     }
     
     return URL;
+}
+
+NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object)
+{
+    static const CGFloat kWidth = 512.f;
+    
+    if (! [object isKindOfClass:[SRGChannel class]]) {
+        return SRGLetterboxImageURL(object, 512.f);
+    }
+    else {
+        SRGChannel *channel = (SRGChannel *)object;
+        return [[channel imageURL] srg_URLForDimension:SRGImageDimensionWidth withValue:kWidth uid:channel.uid type:@"artwork"];
+    }
 }
 
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)

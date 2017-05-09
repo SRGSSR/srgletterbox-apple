@@ -21,6 +21,11 @@ OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);               
 OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGFloat width);
 
 /**
+ *  Return the artwork image URL for an object.
+ */
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object);
+
+/**
  *  Available image scales.
  */
 typedef NS_ENUM(NSInteger, SRGImageScale) {
