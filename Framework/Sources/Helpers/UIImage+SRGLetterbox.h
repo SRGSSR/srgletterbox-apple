@@ -21,9 +21,9 @@ OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);               
 OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGFloat width);
 
 /**
- *  Return the artwork image URL for an object.
+ *  Return the (square) artwork image URL for an object, with a given dimension.
  */
-OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object);
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension);
 
 /**
  *  Available image scales.

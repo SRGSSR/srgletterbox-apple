@@ -43,16 +43,14 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
     return URL;
 }
 
-NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object)
+NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension)
 {
-    static const CGFloat kWidth = 512.f;
-    
     if (! [object isKindOfClass:[SRGChannel class]]) {
-        return SRGLetterboxImageURL(object, kWidth);
+        return SRGLetterboxImageURL(object, dimension);
     }
     else {
         SRGChannel *channel = (SRGChannel *)object;
-        return [[channel imageURL] srg_URLForDimension:SRGImageDimensionWidth withValue:kWidth uid:channel.uid type:@"artwork"];
+        return [[channel imageURL] srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:channel.uid type:@"artwork"];
     }
 }
 

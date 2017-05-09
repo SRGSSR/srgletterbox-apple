@@ -321,6 +321,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     // FIXME: This arbitrary resizing should probably be moved to the data provider library
     NSURL *imageURL = nil;
     
+    static CGFloat kArtworkWidth = 512.f;
+    
     // For livestreams, only rely on channel information
     if (media.contentType == SRGContentTypeLivestream) {
         SRGChannel *channel = controller.channel;
@@ -329,15 +331,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyTitle] = title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
         
-        imageURL = SRGLetterboxArtworkImageURL(channel.currentProgram);
+        imageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, kArtworkWidth);
         if (! imageURL) {
-            imageURL = SRGLetterboxArtworkImageURL(channel);
+            imageURL = SRGLetterboxArtworkImageURL(channel, kArtworkWidth);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-        imageURL = SRGLetterboxArtworkImageURL(media);
+        imageURL = SRGLetterboxArtworkImageURL(media, kArtworkWidth);
     }
     
     // SRGLetterboxImageURL might return file URLs for overridden images
@@ -346,7 +348,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
     }
     else if (imageURL) {
-        CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
+        CGFloat dimension = kArtworkWidth * [UIScreen mainScreen].scale;
         NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
         NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
         self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
