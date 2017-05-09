@@ -321,6 +321,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     // FIXME: This arbitrary resizing should probably be moved to the data provider library
     NSURL *imageURL = nil;
     CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
+    CGSize size = CGSizeMake(dimension, dimension);
     
     // Display current program information for livestreams when available
     SRGChannel *channel = controller.channel;
@@ -329,18 +330,20 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyTitle] = channel.currentProgram.title ?: channel.title ?: media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = channel.title;
         
-        CGSize size = CGSizeMake(dimension, dimension);
         imageURL = SRGLetterboxImageURL(channel.currentProgram, size);
         if (! imageURL) {
-            imageURL = SRGLetterboxImageURL(channel, size);
-            if (! imageURL) {
+            // FIXME: Does not work for RTS and SRF. For RTS a second series of ids is required for overrides,
+            //        and for SRF the channel is always the main one for regional radios (i.e. images are the same)
+            // imageURL = SRGLetterboxImageURL(channel, size);
+            // if (! imageURL) {
                 imageURL = SRGLetterboxImageURL(media, size);
-            }
+            // }
         }
     }
     else {
-        nowPlayingInfo[MPMediaItemPropertyTitle] = nil;
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = nil;
+        nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.channel.title;
+        imageURL = SRGLetterboxImageURL(media, size);
     }
     
     // SRGLetterboxImageURL might return file URLs for overridden images

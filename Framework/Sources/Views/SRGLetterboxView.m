@@ -537,13 +537,15 @@ static void commonInit(SRGLetterboxView *self);
     BOOL isDataAvailable = media && (media.contentType != SRGContentTypeLivestream || controller.channel);
     if (isDataAvailable) {
         if (! [self.imageView srg_requestImageForObject:controller.channel.currentProgram withScale:SRGImageScaleLarge]) {
-            if (! [self.imageView srg_requestImageForObject:controller.channel withScale:SRGImageScaleLarge]) {
+            // FIXME: Does not work for RTS and SRF. For RTS a second series of ids is required for overrides,
+            //        and for SRF the channel is always the main one for regional radios (i.e. images are the same)
+            // if (! [self.imageView srg_requestImageForObject:controller.channel withScale:SRGImageScaleLarge]) {
                 [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
-            }
+            // }
         }
     }
     else {
-        [self.imageView srg_requestImageForObject:nil /* placeholder */ withScale:SRGImageScaleLarge];
+        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
     }
     
     self.errorLabel.text = [self error].localizedDescription;
