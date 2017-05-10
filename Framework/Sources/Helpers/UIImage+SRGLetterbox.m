@@ -8,6 +8,28 @@
 
 #import "NSBundle+SRGLetterbox.h"
 
+// ** Private SRGDataProvider fixes for Play. See NSURL+SRGDataProvider.h for more information
+
+@interface NSURL (SRGLetterbox_Private_SRGDataProvider)
+
+- (NSURL *)srg_URLForDimension:(SRGImageDimension)dimension withValue:(CGFloat)value uid:(nullable NSString *)uid type:(nullable NSString *)type;
+
+@end
+
+@interface NSObject (SRGLetterbox_Private_SRGDataProvider)
+
+// Declare internal image URL accessor
+@property (nonatomic, readonly) NSURL *imageURL;
+
+@end
+
+// **
+
+static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
+{
+    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED"];
+}
+
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
 {
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-180" ofType:@"pdf"];
@@ -20,11 +42,27 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
     }
     
     NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:width];
-    if (! URL || [URL.absoluteString containsString:@"NOT_SPECIFIED"]) {
+    if (! SRGLetterboxIsValidURL(URL)) {
         return nil;
     }
     
     return URL;
+}
+
+NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension)
+{
+    if (! [object respondsToSelector:@selector(imageURL)]) {
+        return nil;
+    }
+    
+    NSURL *imageURL = [object performSelector:@selector(imageURL)];
+    NSString *uid = [object respondsToSelector:@selector(uid)] ? [object performSelector:@selector(uid)] : nil;
+    NSURL *artworkURL = [imageURL srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:uid type:@"artwork"];
+    if (! SRGLetterboxIsValidURL(artworkURL)) {
+        return nil;
+    }
+    
+    return artworkURL;
 }
 
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
