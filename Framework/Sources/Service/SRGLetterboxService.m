@@ -321,7 +321,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     // FIXME: This arbitrary resizing should probably be moved to the data provider library
     NSURL *imageURL = nil;
     
-    static CGFloat kArtworkWidth = 512.f;
+    CGFloat artworkDimension = 512.f * [UIScreen mainScreen].scale;
     
     // For livestreams, only rely on channel information
     if (media.contentType == SRGContentTypeLivestream) {
@@ -331,15 +331,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyTitle] = title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
         
-        imageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, kArtworkWidth);
+        imageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
         if (! imageURL) {
-            imageURL = SRGLetterboxArtworkImageURL(channel, kArtworkWidth);
+            imageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-        imageURL = SRGLetterboxArtworkImageURL(media, kArtworkWidth);
+        imageURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
     }
     
     // SRGLetterboxImageURL might return file URLs for overridden images
@@ -348,8 +348,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
     }
     else if (imageURL) {
-        CGFloat dimension = kArtworkWidth * [UIScreen mainScreen].scale;
-        NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
+        NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, imageURL.absoluteString];
         NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
         self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
