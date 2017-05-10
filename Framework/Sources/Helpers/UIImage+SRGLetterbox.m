@@ -56,12 +56,13 @@ NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable obj
     }
     
     NSURL *imageURL = [object performSelector:@selector(imageURL)];
-    if (! SRGLetterboxIsValidURL(imageURL)) {
+    NSString *uid = [object respondsToSelector:@selector(uid)] ? [object performSelector:@selector(uid)] : nil;
+    NSURL *artworkURL = [imageURL srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:uid type:@"artwork"];
+    if (! SRGLetterboxIsValidURL(artworkURL)) {
         return nil;
     }
     
-    NSString *uid = [object respondsToSelector:@selector(uid)] ? [object performSelector:@selector(uid)] : nil;
-    return [imageURL srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:uid type:@"artwork"];
+    return artworkURL;
 }
 
 CGSize SRGSizeForImageScale(SRGImageScale imageScale)
