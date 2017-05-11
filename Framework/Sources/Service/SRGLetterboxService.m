@@ -345,12 +345,24 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (media.contentType == SRGContentTypeLivestream) {
         SRGChannel *channel = controller.channel;
         
-        NSString *title = channel.currentProgram.title ?: channel.title;
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title;
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
-        
-        artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
-        if (! artworkImageURL) {
+        // Display program information (if any) when the controller position is within the current program, otherwise channel
+        // information.
+        NSDate *playbackDate = [NSDate dateWithTimeIntervalSinceNow:-CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), controller.currentTime))];
+        if (channel.currentProgram
+                && [channel.currentProgram.startDate compare:playbackDate] != NSOrderedDescending
+                && [playbackDate compare:channel.currentProgram.endDate] != NSOrderedDescending) {
+            NSString *title = channel.currentProgram.title;
+            nowPlayingInfo[MPMediaItemPropertyTitle] = title;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
+            
+            artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
+            if (! artworkImageURL) {
+                artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+            }
+        }
+        else {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
+            
             artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
         }
     }

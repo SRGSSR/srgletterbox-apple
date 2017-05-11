@@ -544,8 +544,7 @@ static void commonInit(SRGLetterboxView *self);
     if (media.contentType == SRGContentTypeLivestream) {
         SRGChannel *channel = controller.channel;
         
-        // Display program artwork (if any) when the slider position is within the current program, orhterwise
-        // channel artwork^.
+        // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
         NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
         if (channel.currentProgram
                 && [channel.currentProgram.startDate compare:sliderDate] != NSOrderedDescending
