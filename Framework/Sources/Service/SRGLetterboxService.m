@@ -31,6 +31,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
 
+@property (nonatomic) NSURL *currentArtworkImageURL;
+@property (nonatomic) MPMediaItemArtwork *currentArtwork;
+
 @end
 
 @implementation SRGLetterboxService
@@ -145,6 +148,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                    object:controller];
         
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            [self updateNowPlayingInformationWithController:controller];
             [self updateRemoteCommandCenterWithController:controller];
         }];
     }
@@ -294,6 +298,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     SRGMedia *media = controller.media;
     if (! media) {
+        self.currentArtworkImageURL = nil;
+        self.currentArtwork = nil;
+        
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
         return;
     }
@@ -317,9 +324,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
-    // FIXME: This arbitrary resizing should probably be moved to the data provider library
-    NSURL *imageURL = nil;
+    NSURL *artworkImageURL = nil;
     
     CGFloat artworkDimension = 512.f * [UIScreen mainScreen].scale;
     
@@ -331,37 +336,53 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyTitle] = title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
         
-        imageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
-        if (! imageURL) {
-            imageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+        artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
+        if (! artworkImageURL) {
+            artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-        imageURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
+        artworkImageURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
     }
     
-    // SRGLetterboxImageURL might return file URLs for overridden images
-    if (imageURL.fileURL) {
-        UIImage *image = [UIImage imageWithContentsOfFile:imageURL.path];
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
-    }
-    else if (imageURL) {
-        NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, imageURL.absoluteString];
-        NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
-        self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (image) {
-                    nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
-                }
-                
-                [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-            });
-        }];
+    if (! [artworkImageURL isEqual:self.currentArtworkImageURL] || ! self.currentArtwork) {
+        self.currentArtwork = nil;
+        
+        // SRGLetterboxImageURL might return file URLs for overridden images
+        if (artworkImageURL.fileURL) {
+            UIImage *image = [UIImage imageWithContentsOfFile:artworkImageURL.path];
+            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+            self.currentArtworkImageURL = artworkImageURL;
+            self.currentArtwork = artwork;
+        }
+        else if (artworkImageURL) {
+            // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
+            // FIXME: This arbitrary resizing could be moved to the data provider library
+            NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkImageURL.absoluteString];
+            NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
+            self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (! image) {
+                        return;
+                    }
+                    
+                    MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+                    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+                    self.currentArtworkImageURL = artworkImageURL;
+                    self.currentArtwork = artwork;
+                });
+            }];
+        }
+        else {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+        }
     }
     else {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = self.currentArtwork;
     }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
