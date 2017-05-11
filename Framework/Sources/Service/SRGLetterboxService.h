@@ -13,6 +13,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Available Letterbox commands for playback control remotes, control center and lock screen.
+ */
+typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
+    SRGLetterboxCommandMinimal              = 0,                // Minimal controls (play / pause only).
+    SRGLetterboxCommandSkipBackward         = 1 << 0,           // -30 seconds.
+    SRGLetterboxCommandSkipForward          = 1 << 1,           // +30 seconds.
+    SRGLetterboxCommandSeekBackward         = 1 << 2,           // Seek backward.
+    SRGLetterboxCommandSeekForward          = 1 << 3,           // Seek forward.
+    SRGLetterboxCommandPreviousTrack        = 1 << 4,           // Previous track.
+    SRGLetterboxCommandNextTrack            = 1 << 5            // Next track.
+};
+
+/**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
  *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
@@ -65,6 +78,41 @@ NS_ASSUME_NONNULL_BEGIN
  *  @discussion The `-letterboxDidEndPictureInPicture` method is called in this case as well.
  */
 - (void)letterboxDidStopPlaybackFromPictureInPicture;
+
+@end
+
+/**
+ *  Delegate protocol for playback command customization.
+ *
+ *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which 
+ *              button will be available. Other commands remain available when using a remote, though:
+ *                - Tap twice to play the next track.
+ *                - Tap three times to play the previous track.
+ *                - Tap twice and hold to seek forward.
+ *                - Tap three times and hold to see backward.
+ */
+@protocol SRGLetterboxCommandDelegate <NSObject>
+
+/**
+ *  Return the set of commands which should be available during playback. If not implemented, the seek and skip commands
+ *  will be available.
+ *
+ *  @discussion The play / pause command cannot be customized. This method is called continuously during playback,
+ *              you can therefore alter the availability of the commands during playback as well.
+ */
+- (SRGLetterboxCommands)letterboxAvailableCommands;
+
+@optional
+
+/**
+ *  Called when the previous track must be played.
+ */
+- (void)letterboxWillSkipToPreviousTrack;
+
+/**
+ *  Called when the next track mjust be played.
+ */
+- (void)letterboxWillSkipToNextTrack;
 
 @end
 
@@ -133,11 +181,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
 
 /**
- *  The picture in picture delegate, if any has been set.
+ *  The picture in picture delegate, if any has been set. Use it to enable and customize picture in picture behavior.
  *
  *  @discussion This property always returns `nil` on devices which do not support picture in picture.
  */
 @property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+
+/**
+ *  The playback command delegate, if any has been set. Use it to customize commands available in the control center
+ *  and on the lock screen, as well as with remotes (e.g. headsets).
+ */
+@property (nonatomic, weak, nullable) id<SRGLetterboxCommandDelegate> commandDelegate;
 
 /**
  *  If set to `YES`, playback never switches to full-screen playback on an external screen. This is especially handy 
