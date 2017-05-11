@@ -275,19 +275,24 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // Videos can only be controlled when the device has been locked (mostly for Airplay playback). We don't allow
     // video playback while the app is fully in background for the moment (except if Airplay is enabled)
-    if (mediaPlayerController
-            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
-            && (mediaPlayerController.mediaType == SRGMediaTypeAudio
-                    || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
-                    || [AVAudioSession srg_isAirplayActive]
-                    || [UIDevice srg_isLocked])) {
+    if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
+                                                                                                            || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
+                                                                                                            || [AVAudioSession srg_isAirplayActive]
+                                                                                                            || [UIDevice srg_isLocked])) {
+        SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
+        if ([self.commandDelegate respondsToSelector:@selector(letterboxAvailableCommands)]) {
+            availableCommands = [self.commandDelegate letterboxAvailableCommands];
+        }
+        
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = [controller canSkipForward];
-        commandCenter.skipBackwardCommand.enabled = [controller canSkipBackward];
-        commandCenter.seekForwardCommand.enabled = YES;
-        commandCenter.seekBackwardCommand.enabled = YES;
+        commandCenter.skipForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
+        commandCenter.skipBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
+        commandCenter.seekForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekForward);
+        commandCenter.seekBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekBackward);
+        commandCenter.nextTrackCommand.enabled = (availableCommands & SRGLetterboxCommandNextTrack);
+        commandCenter.previousTrackCommand.enabled = (availableCommands & SRGLetterboxCommandPreviousTrack);
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -297,6 +302,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.skipBackwardCommand.enabled = NO;
         commandCenter.seekForwardCommand.enabled = NO;
         commandCenter.seekBackwardCommand.enabled = NO;
+        commandCenter.nextTrackCommand.enabled = NO;
+        commandCenter.previousTrackCommand.enabled = NO;
     }
 }
 
@@ -439,12 +446,16 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)previousTrack:(id)sender
 {
-    
+    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToPreviousTrack)]) {
+        [self.commandDelegate letterboxWillSkipToPreviousTrack];
+    }
 }
 
 - (void)nextTrack:(id)sender
 {
-
+    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToNextTrack)]) {
+        [self.commandDelegate letterboxWillSkipToNextTrack];
+    }
 }
 
 #pragma mark Picture in picture
