@@ -260,6 +260,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
     [seekBackwardCommand addTarget:self action:@selector(seekBackward:)];
+    
+    MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+    [previousTrackCommand addTarget:self action:@selector(previousTrack:)];
+    
+    MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+    [nextTrackCommand addTarget:self action:@selector(nextTrack:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -429,6 +435,16 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (event.type == MPSeekCommandEventTypeBeginSeeking) {
         [self.controller skipBackwardWithCompletionHandler:nil];
     }
+}
+
+- (void)previousTrack:(id)sender
+{
+    
+}
+
+- (void)nextTrack:(id)sender
+{
+
 }
 
 #pragma mark Picture in picture
