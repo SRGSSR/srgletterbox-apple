@@ -15,6 +15,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -546,9 +547,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
         NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
-        if (channel.currentProgram
-                && [channel.currentProgram.startDate compare:sliderDate] != NSOrderedDescending
-                && [sliderDate compare:channel.currentProgram.endDate] != NSOrderedDescending) {
+        if (channel.currentProgram && [channel.currentProgram containsDate:sliderDate]) {
             if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
                 [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
             }
