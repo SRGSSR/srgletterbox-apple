@@ -405,7 +405,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                 }];
             }
             
-            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
+            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
             nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
         }
     }

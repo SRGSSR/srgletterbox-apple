@@ -35,6 +35,11 @@ NSString *SRGLetterboxMediaPlaceholderFilePath(void)
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-180" ofType:@"pdf"];
 }
 
+NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
+{
+    return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-320" ofType:@"pdf"];
+}
+
 NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGFloat width)
 {
     if (! object) {

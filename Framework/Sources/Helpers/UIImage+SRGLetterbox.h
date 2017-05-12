@@ -10,7 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Paths of standard supplied vector images.
-OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder
+OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder (16:9 usual ratio).
+OBJC_EXTERN NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void);           // Media artwork placeholder (1:1 ratio).
 
 /**
  *  Return the image URL for an object and width, `nil` if the image URL is not found or invalid.
