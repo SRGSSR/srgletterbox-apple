@@ -851,7 +851,8 @@ static void commonInit(SRGLetterboxView *self);
 {
     static NSString * const kRestorationIdentifier = @"airplay";
     
-    if ([AVAudioSession srg_isAirplayActive] && self.controller.mediaPlayerController.player.externalPlaybackActive) {
+    if ([AVAudioSession srg_isAirplayActive]
+            && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
         [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
