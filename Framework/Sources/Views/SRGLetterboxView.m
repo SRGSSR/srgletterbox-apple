@@ -15,6 +15,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -532,19 +533,32 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
+    [self reloadImageForController:controller];
+    
+    self.errorLabel.text = [self error].localizedDescription;
+}
+
+- (void)reloadImageForController:(SRGLetterboxController *)controller
+{
     // For livestreams, only rely on channel information
     SRGMedia *media = controller.media;
     if (media.contentType == SRGContentTypeLivestream) {
         SRGChannel *channel = controller.channel;
-        if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
+        
+        // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
+        NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
+        if ([channel.currentProgram containsDate:sliderDate]) {
+            if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
+                [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
+            }
+        }
+        else {
             [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
         }
     }
     else {
         [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
     }
-    
-    self.errorLabel.text = [self error].localizedDescription;
 }
 
 - (void)reloadData
@@ -1219,6 +1233,8 @@ static void commonInit(SRGLetterboxView *self);
     if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:interactive:)]) {
         [self.delegate letterboxView:self didScrollWithSegment:selectedSegment interactive:interactive];
     }
+    
+    [self reloadImageForController:self.controller];
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol

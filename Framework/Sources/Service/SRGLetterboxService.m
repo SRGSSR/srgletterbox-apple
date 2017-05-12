@@ -7,12 +7,14 @@
 #import "SRGLetterboxService.h"
 
 #import "SRGLetterboxController+Private.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <SRGAppearance/SRGAppearance.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
@@ -31,7 +33,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
 
-@property (nonatomic) NSURL *currentArtworkImageURL;
+@property (nonatomic) NSURL *currentArtworkURL;
 @property (nonatomic) MPMediaItemArtwork *currentArtwork;
 
 @end
@@ -311,7 +313,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     SRGMedia *media = controller.segmentMedia ?: controller.fullLengthMedia ?: controller.media;
     if (! media) {
-        self.currentArtworkImageURL = nil;
+        self.currentArtworkURL = nil;
         self.currentArtwork = nil;
         
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
@@ -345,12 +347,22 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (media.contentType == SRGContentTypeLivestream) {
         SRGChannel *channel = controller.channel;
         
-        NSString *title = channel.currentProgram.title ?: channel.title;
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title;
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
-        
-        artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
-        if (! artworkImageURL) {
+        // Display program information (if any) when the controller position is within the current program, otherwise channel
+        // information.
+        NSDate *playbackDate = [NSDate dateWithTimeIntervalSinceNow:-CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), controller.currentTime))];
+        if ([channel.currentProgram containsDate:playbackDate]) {
+            NSString *title = channel.currentProgram.title;
+            nowPlayingInfo[MPMediaItemPropertyTitle] = title;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
+            
+            artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
+            if (! artworkImageURL) {
+                artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+            }
+        }
+        else {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
+            
             artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
         }
     }
@@ -360,7 +372,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         artworkImageURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
     }
     
-    if (! [artworkImageURL isEqual:self.currentArtworkImageURL] || ! self.currentArtwork) {
+    if (! [artworkImageURL isEqual:self.currentArtworkURL] || ! self.currentArtwork) {
         self.currentArtwork = nil;
         
         // SRGLetterboxImageURL might return file URLs for overridden images
@@ -368,30 +380,32 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             UIImage *image = [UIImage imageWithContentsOfFile:artworkImageURL.path];
             MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
             nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-            self.currentArtworkImageURL = artworkImageURL;
+            self.currentArtworkURL = artworkImageURL;
             self.currentArtwork = artwork;
         }
-        else if (artworkImageURL) {
-            // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
-            // FIXME: This arbitrary resizing could be moved to the data provider library
-            NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkImageURL.absoluteString];
-            NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
-            self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (! image) {
-                        return;
-                    }
-                    
-                    MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
-                    nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-                    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-                    self.currentArtworkImageURL = artworkImageURL;
-                    self.currentArtwork = artwork;
-                });
-            }];
-        }
         else {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+            if (artworkImageURL) {
+                // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
+                // FIXME: This arbitrary resizing could be moved to the data provider library
+                NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkImageURL.absoluteString];
+                NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
+                self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (! image) {
+                            return;
+                        }
+                        
+                        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+                        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+                        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+                        self.currentArtworkURL = artworkImageURL;
+                        self.currentArtwork = artwork;
+                    });
+                }];
+            }
+            
+            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
         }
     }
     else {
