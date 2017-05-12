@@ -822,15 +822,11 @@ static void commonInit(SRGLetterboxView *self);
 {
     static NSString * const kRestorationIdentifier = @"airplay";
     
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        [self applyUserInterfaceChanges:^{
-            [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO];
-        } withRestorationIdentifier:kRestorationIdentifier];
+    if ([AVAudioSession srg_isAirplayActive]) {
+        [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
-        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-        }];
+        [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
     }
 }
 
@@ -844,16 +840,12 @@ static void commonInit(SRGLetterboxView *self);
         // Only display retry instructions if there is a media to retry with
         self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
         
-        [self applyUserInterfaceChanges:^{
-            [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO];
-        } withRestorationIdentifier:kRestorationIdentifier];
+        [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
         self.errorView.alpha = 0.f;
         
-        [self restoreUserInterfaceForIdentifier:kRestorationIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-        }];
+        [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
     }
 }
 
@@ -1020,51 +1012,31 @@ static void commonInit(SRGLetterboxView *self);
 
 // Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
 // identifier are applied at most once. Synchronous.
-- (void)applyUserInterfaceChanges:(void (^)(void))changes withRestorationIdentifier:(NSString *)restorationIdentifier
+- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withRestorationIdentifier:(NSString *)restorationIdentifier
 {
-    NSParameterAssert(changes);
-    
     SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    restorationContext.hidden = self.userInterfaceHidden;
-    restorationContext.togglable = self.userInterfaceTogglable;
+    restorationContext.hidden = hidden;
+    restorationContext.togglable = togglable;
     
     if (! [self.restorationContexts containsObject:restorationContext]) {
         [self.restorationContexts addObject:restorationContext];
-        changes();
+        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
     }
 }
 
 // Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
 // is provided in the `changes` block. Synchronous.
-- (void)restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier withChanges:(void (^)(BOOL hidden, BOOL togglable))changes
+- (void)imperative_restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier animated:(BOOL)animated
 {
-    NSParameterAssert(changes);
-    
     SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
     if ([self.restorationContexts containsObject:restorationContext]) {
         [self.restorationContexts removeObject:restorationContext];
-        [self calculateRestorationValuesWithBlock:changes];
+        
+        SRGLetterboxViewRestorationContext *lastRestorationContext = self.restorationContexts.lastObject;
+        BOOL hidden = lastRestorationContext ? lastRestorationContext.hidden : self.mainRestorationContext.hidden;
+        BOOL togglable = lastRestorationContext ? lastRestorationContext.togglable : self.mainRestorationContext.togglable;
+        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
     }
-}
-
-// Synchronous.
-- (void)calculateRestorationValuesWithBlock:(void (^)(BOOL hidden, BOOL togglable))block
-{
-    NSParameterAssert(block);
-    
-    BOOL hidden = self.mainRestorationContext.hidden;
-    BOOL togglable = self.mainRestorationContext.togglable;
-    
-    for (SRGLetterboxViewRestorationContext *restorationContext in self.restorationContexts) {
-        if (restorationContext.hidden) {
-            hidden = YES;
-        }
-        if (! restorationContext.togglable) {
-            togglable = NO;
-        }
-    }
-    
-    block(hidden, togglable);
 }
 
 #pragma mark Segments
