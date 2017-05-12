@@ -694,6 +694,35 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+#pragma mark UI changes and restoration
+
+// Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
+// identifier are applied at most once. Synchronous.
+- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withRestorationIdentifier:(NSString *)restorationIdentifier
+{
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
+    restorationContext.hidden = hidden;
+    restorationContext.togglable = togglable;
+    
+    if (! [self.restorationContexts containsObject:restorationContext]) {
+        [self.restorationContexts addObject:restorationContext];
+        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
+    }
+}
+
+// Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
+// is provided in the `changes` block. Synchronous.
+- (void)imperative_restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier animated:(BOOL)animated
+{
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
+    if ([self.restorationContexts containsObject:restorationContext]) {
+        [self.restorationContexts removeObject:restorationContext];
+        
+        SRGLetterboxViewRestorationContext *restorationContext = self.restorationContexts.lastObject ?: self.mainRestorationContext;
+        [self imperative_setUserInterfaceHidden:restorationContext.hidden animated:animated togglable:restorationContext.togglable];
+    }
+}
+
 #pragma mark UI updates
 
 // Force a UI refresh for the current settings and segments
@@ -1006,37 +1035,6 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = nil;
     [self updateUserInterfaceAnimated:animated];
-}
-
-#pragma mark UI changes and restoration
-
-// Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
-// identifier are applied at most once. Synchronous.
-- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withRestorationIdentifier:(NSString *)restorationIdentifier
-{
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    restorationContext.hidden = hidden;
-    restorationContext.togglable = togglable;
-    
-    if (! [self.restorationContexts containsObject:restorationContext]) {
-        [self.restorationContexts addObject:restorationContext];
-        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-    }
-}
-
-// Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
-// is provided in the `changes` block. Synchronous.
-- (void)imperative_restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier animated:(BOOL)animated
-{
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    if ([self.restorationContexts containsObject:restorationContext]) {
-        [self.restorationContexts removeObject:restorationContext];
-        
-        SRGLetterboxViewRestorationContext *lastRestorationContext = self.restorationContexts.lastObject;
-        BOOL hidden = lastRestorationContext ? lastRestorationContext.hidden : self.mainRestorationContext.hidden;
-        BOOL togglable = lastRestorationContext ? lastRestorationContext.togglable : self.mainRestorationContext.togglable;
-        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-    }
 }
 
 #pragma mark Segments
