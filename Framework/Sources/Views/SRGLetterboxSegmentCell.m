@@ -62,9 +62,12 @@
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
     });
     
+    self.durationLabel.hidden = (segment.duration == 0.);
+    
     if (segment.duration != 0.) {
         self.durationLabel.hidden = NO;
-        self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
+        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
+        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", durationString];
     }
     else {
         self.durationLabel.hidden = YES;
