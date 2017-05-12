@@ -110,7 +110,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            player.allowsExternalPlayback = YES;
+            // Do not switch to external playback when playing anything other than video. External playback is namely only
+            // intended for video playback. If you try to play audio with external playback, then:
+            //   - The screen will be black instead of displaying a media notification.
+            //   - The user won't be able to change the volume with the phone controls.
+            // Remark: For video external playback, it is normal that the user cannot control the volume from her device.
+            player.allowsExternalPlayback = (controller.media.mediaType == SRGMediaTypeVideo);
             player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
         };
         [controller reloadPlayerConfiguration];
