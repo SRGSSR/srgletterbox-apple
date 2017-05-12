@@ -110,7 +110,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            // Do not switch to external playback when playing anything other than video. External playback is namely only
+            // Do not switch to external playback when playing anything other than videos. External playback is namely only
             // intended for video playback. If you try to play audio with external playback, then:
             //   - The screen will be black instead of displaying a media notification.
             //   - The user won't be able to change the volume with the phone controls.
