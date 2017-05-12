@@ -62,17 +62,16 @@
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
     });
     
-    self.durationLabel.hidden = (segment.duration == 0.);
+    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.durationLabel.hidden = (segment.duration == 0.f);
     
-    if (segment.duration != 0.) {
-        self.durationLabel.hidden = NO;
+    if (! self.durationLabel.hidden) {
         NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", durationString];
     }
     else {
-        self.durationLabel.hidden = YES;
+        self.durationLabel.text = nil;
     }
-    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
