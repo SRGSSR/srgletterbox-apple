@@ -11,10 +11,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Standard seek intervals.
+ *  Standard skip intervals.
  */
-OBJC_EXTERN const NSInteger SRGLetterboxBackwardSeekInterval;
-OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
+OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;
+OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
 
 /**
  *  Interface for internal use.
@@ -38,48 +38,48 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSeekInterval;
 - (BOOL)switchToSegment:(SRGSegment *)segment;
 
 /**
- *  Return YES iff the player can seek backward from a standard amount of seconds.
+ *  Return YES iff the player can skip backward from a standard amount of seconds.
  *
  *  @discussion Always possible for on-demand and DVR streams.
  */
-- (BOOL)canSeekBackward;
+- (BOOL)canSkipBackward;
 
 /**
- *  Return YES iff the player can seek forward from a standard amount of seconds.
+ *  Return YES iff the player can skip forward from a standard amount of seconds.
  *
  *  @discussion For on-demand and streams, only possible if seeking wouldn't jump past the end. For DVR streams,
  *              possible until the stream is played live.
  */
-- (BOOL)canSeekForward;
+- (BOOL)canSkipForward;
 
 /**
- *  Return YES iff the player can seek to live conditions.
+ *  Return YES iff the player can skip to live conditions.
  */
-- (BOOL)canSeekToLive;
+- (BOOL)canSkipToLive;
 
 /**
- *  Seek backward from a standard amount of seconds.
+ *  Skip backward from a standard amount of seconds.
  *
- *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
+ *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
  *              finished set to `NO`.
  */
-- (void)seekBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (void)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Seek forward from a standard amount of seconds.
+ *  Skip forward from a standard amount of seconds.
  *
- *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
+ *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
  *              finished set to `NO`.
  */
-- (void)seekForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (void)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Seek forward to live conditions.
+ *  Skip forward to live conditions.
  *
- *  @discussion If seeking is not possible or if a seek is interrupted, the completion handler will be called with
+ *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
  *              finished set to `NO`.
  */
-- (void)seekToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (void)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Optional block which gets called right after player creation, when the player changes, or when the configuration is

@@ -245,7 +245,7 @@
     }];
 }
 
-- (void)testOnDemandStreamSeeks
+- (void)testOnDemandStreamSkips
 {
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -256,8 +256,8 @@
     [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertTrue([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertTrue([self.controller canSkipForward]);
 
     // Seek to near the end
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -269,36 +269,36 @@
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertFalse([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipForward]);
     
-    // Use standard seeks
+    // Use standard skips
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertTrue([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertTrue([self.controller canSkipForward]);
     
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertFalse([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipForward]);
 }
 
-- (void)testLiveStreamSeeks
+- (void)testLiveStreamSkips
 {
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -308,19 +308,19 @@
     [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertFalse([self.controller canSeekBackward]);
-    XCTAssertFalse([self.controller canSeekForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipForward]);
     
-    // Cannot seek
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    // Cannot skip
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertFalse(finished);
     }];
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertFalse(finished);
     }];
 }
 
-- (void)testDVRStreamSeeks
+- (void)testDVRStreamSkips
 {
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -332,41 +332,41 @@
     
     XCTAssertTrue(self.controller.live);
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertFalse([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipForward]);
     
-    // Seek in the past
+    // Skip backward
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertFalse(self.controller.live);
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertTrue([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertTrue([self.controller canSkipForward]);
     
-    // Seek forward again
+    // Skip forward again
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue(self.controller.live);
     
-    XCTAssertTrue([self.controller canSeekBackward]);
-    XCTAssertFalse([self.controller canSeekForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipForward]);
 }
 
-- (void)testMultipleSeeks
+- (void)testMultipleSkips
 {
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -376,37 +376,37 @@
     [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // Pile up seeks forwards
+    // Pile up skips forward
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertFalse(finished);
     }];
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
     
-    // Pile up seeks backwards
+    // Pile up skips backward
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertFalse(finished);
     }];
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertTrue([self.controller canSeekBackward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
 }
 
 - (void)testPlaybackStateKeyValueObserving

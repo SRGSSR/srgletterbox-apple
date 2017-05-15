@@ -116,6 +116,7 @@
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="width" secondItem="gMD-r1-Pgs" secondAttribute="width" id="2w0-CJ-uZv"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="Md4-t4-5he" secondAttribute="centerX" id="4UG-yS-wtK"/>
@@ -151,6 +152,9 @@
                             <constraint firstItem="xXK-rE-ke9" firstAttribute="centerX" secondItem="JvK-aX-fgP" secondAttribute="centerX" id="uvb-FR-MHE"/>
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="SpT-Mg-MmS" secondAttribute="centerX" id="vd1-Y0-NE7"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="IWJ-iK-R0H" appends="YES" id="JOB-QI-D2K"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
@@ -165,6 +169,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="V5l-nr-tDL" customClass="SRGLetterboxController"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="IWJ-iK-R0H">
+                    <connections>
+                        <action selector="pullDown:" destination="FcC-Qn-oGg" id="B9F-UX-EhH"/>
+                        <outlet property="delegate" destination="FcC-Qn-oGg" id="rD5-Rv-O31"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="189.59999999999999" y="78.710644677661179"/>
         </scene>

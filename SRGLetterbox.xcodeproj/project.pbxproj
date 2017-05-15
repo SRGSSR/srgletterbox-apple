@@ -25,7 +25,6 @@
 		08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */; };
 		08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */; };
 		08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */; };
-		08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */; };
 		08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D231E30F92F000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
@@ -57,6 +56,8 @@
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
 		6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F4855AA1E3A669B00B0141C /* Localizable.strings */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
+		6FA562CE1E9BABE400A1344F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FA562CD1E9BABE400A1344F /* HockeySDK.framework */; };
+		6FA562CF1E9BABE400A1344F /* HockeySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FA562CD1E9BABE400A1344F /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */; };
 		6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */; };
@@ -109,6 +110,8 @@
 		6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB017981E975F87004CCAF8 /* ModalTransition.h */; };
+		6FB6BB031EC2E103006672EC /* ModalTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB017991E975F87004CCAF8 /* ModalTransition.m */; };
 		6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */; };
 		6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */; };
 		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -119,6 +122,9 @@
 		6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
+		6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */; };
+		6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
+		6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
 		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
@@ -152,6 +158,7 @@
 		6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */; };
 		6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */; };
 		6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */; };
+		6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */; };
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
@@ -159,8 +166,6 @@
 		6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */; };
 		6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */; };
 		6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */; };
-		6FFDE8AE1E52DF2900EF4A3D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */; };
-		6FFDE8AF1E52DF2900EF4A3D /* HockeySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -215,7 +220,7 @@
 				6FB97FF51E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */,
 				6FAB3B651E2905B400CC2197 /* SRGLetterbox.framework in Embed Frameworks */,
 				08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */,
-				6FFDE8AF1E52DF2900EF4A3D /* HockeySDK.framework in Embed Frameworks */,
+				6FA562CF1E9BABE400A1344F /* HockeySDK.framework in Embed Frameworks */,
 				6FAB3B781E2905CA00CC2197 /* SRGLogger.framework in Embed Frameworks */,
 				6FAB3B741E2905CA00CC2197 /* SRGAnalytics.framework in Embed Frameworks */,
 				6FAB3B6E1E2905CA00CC2197 /* Mantle.framework in Embed Frameworks */,
@@ -278,7 +283,6 @@
 		08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SRGLetterbox.m"; sourceTree = "<group>"; };
-		08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		08FA0D1F1E30F820000C94EF /* FXReachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FXReachability.framework; path = Carthage/Build/iOS/FXReachability.framework; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
@@ -303,6 +307,7 @@
 		6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxController+Private.h"; sourceTree = "<group>"; };
 		6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+LetterboxDemo.h"; sourceTree = "<group>"; };
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
+		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
 		6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxView.m; sourceTree = "<group>"; };
 		6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterbox.m; sourceTree = "<group>"; };
@@ -328,12 +333,17 @@
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxControllerTestCase.m; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
+		6FB017981E975F87004CCAF8 /* ModalTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalTransition.h; sourceTree = "<group>"; };
+		6FB017991E975F87004CCAF8 /* ModalTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalTransition.m; sourceTree = "<group>"; };
 		6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandalonePlayerViewController.h; sourceTree = "<group>"; };
 		6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandalonePlayerViewController.m; sourceTree = "<group>"; };
 		6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StandalonePlayerViewController.storyboard; sourceTree = "<group>"; };
 		6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxService.h; sourceTree = "<group>"; };
 		6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxService.m; sourceTree = "<group>"; };
 		6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MAKVONotificationCenter.framework; path = Carthage/Build/iOS/MAKVONotificationCenter.framework; sourceTree = "<group>"; };
+		6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-320.pdf"; sourceTree = "<group>"; };
+		6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGProgram+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGProgram+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlayerViewController.h; sourceTree = "<group>"; };
 		6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiPlayerViewController.m; sourceTree = "<group>"; };
 		6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MultiPlayerViewController.storyboard; sourceTree = "<group>"; };
@@ -353,6 +363,7 @@
 		6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxSegmentCell.h; sourceTree = "<group>"; };
 		6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxSegmentCell.m; sourceTree = "<group>"; };
 		6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxSegmentCell.xib; sourceTree = "<group>"; };
+		6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
@@ -360,7 +371,6 @@
 		6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValuePopUpView.m; sourceTree = "<group>"; };
 		6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGASValueTrackingSlider.h; sourceTree = "<group>"; };
 		6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValueTrackingSlider.m; sourceTree = "<group>"; };
-		6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Demo/Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -372,6 +382,7 @@
 				6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */,
 				08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B771E2905CA00CC2197 /* SRGLogger.framework in Frameworks */,
+				6FA562CE1E9BABE400A1344F /* HockeySDK.framework in Frameworks */,
 				6FAB3B731E2905CA00CC2197 /* SRGAnalytics.framework in Frameworks */,
 				6FAB3B6D1E2905CA00CC2197 /* Mantle.framework in Frameworks */,
 				6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */,
@@ -383,7 +394,6 @@
 				6FAB3B751E2905CA00CC2197 /* SRGDataProvider.framework in Frameworks */,
 				6FE08CE31E8B80F200EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FAB3B691E2905CA00CC2197 /* ComScore.framework in Frameworks */,
-				6FFDE8AE1E52DF2900EF4A3D /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +460,8 @@
 				6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */,
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
 				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
-				08FA0CFA1E2FC3B2000C94EF /* placeholder_media-180.pdf */,
+				6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */,
+				6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -489,6 +500,8 @@
 				08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */,
 				6F324A0B1E557239007523AA /* SRGLetterboxViewRestorationContext.h */,
 				6F324A0C1E557239007523AA /* SRGLetterboxViewRestorationContext.m */,
+				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
+				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
 				087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */,
 				087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */,
 				6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */,
@@ -513,6 +526,8 @@
 		6F73FB0A1E4C6F01000986C2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				6FB017981E975F87004CCAF8 /* ModalTransition.h */,
+				6FB017991E975F87004CCAF8 /* ModalTransition.m */,
 				6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */,
 				6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */,
 			);
@@ -543,7 +558,7 @@
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
-				6FFDE8AD1E52DF2900EF4A3D /* HockeySDK.framework */,
+				6FA562CD1E9BABE400A1344F /* HockeySDK.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
 				6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
@@ -710,6 +725,7 @@
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
+				6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */,
 				6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
@@ -719,6 +735,7 @@
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
 				6F324A0D1E557239007523AA /* SRGLetterboxViewRestorationContext.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
+				6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
 				08FA0CF41E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h in Headers */,
 			);
@@ -870,9 +887,10 @@
 				6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */,
 				6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */,
 				6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */,
-				08FA0CFB1E2FC3B2000C94EF /* placeholder_media-180.pdf in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
 				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
+				6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */,
+				6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -886,6 +904,7 @@
 			files = (
 				6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell.m in Sources */,
 				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */,
+				6FB6BB031EC2E103006672EC /* ModalTransition.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
@@ -921,6 +940,7 @@
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
 				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
+				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
 				6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
@@ -998,7 +1018,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1014,7 +1034,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1057,7 +1077,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/Demo/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1091,7 +1110,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/Demo/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1110,7 +1128,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/Demo/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1173,7 +1190,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1194,7 +1211,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1228,7 +1245,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1243,7 +1260,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

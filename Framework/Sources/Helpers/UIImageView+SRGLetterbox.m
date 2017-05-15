@@ -5,8 +5,11 @@
 //
 
 #import "UIImageView+SRGLetterbox.h"
-#import "NSBundle+SRGLetterbox.h"
 
+#import "NSBundle+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
+
+#import <SRGAppearance/SRGAppearance.h>
 #import <YYWebImage/YYWebImage.h>
 
 @implementation UIImageView (SRGLetterbox)
@@ -52,21 +55,20 @@
 
 #pragma mark Standard image loading
 
-- (void)srg_requestImageForObject:(id<SRGImageMetadata>)object
+- (BOOL)srg_requestImageForObject:(id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale
-             placeholderImageName:(NSString *)placeholderImageName
 {
     CGSize size = SRGSizeForImageScale(imageScale);
-    UIImage *placeholderImage = placeholderImageName ? [UIImage srg_vectorImageNamed:placeholderImageName
-                                                                            inBundle:[NSBundle srg_letterboxBundle]
-                                                                            withSize:size] : nil;
-    if (! object) {
-        self.image = placeholderImage;
-        return;
-    }
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
     
-    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:size.width];
+    NSURL *URL = SRGLetterboxImageURL(object, size.width);
+    if (! URL) {
+        self.image = placeholderImage;
+        return NO;
+    }
+        
     [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    return YES;
 }
 
 - (void)srg_cancelCurrentImageRequest

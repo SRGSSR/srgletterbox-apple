@@ -52,7 +52,7 @@
     self.titleLabel.text = segment.title;
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium placeholderImageName:@"placeholder_media-180"];
+    [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -62,14 +62,16 @@
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
     });
     
-    if (segment.duration != 0.) {
-        self.durationLabel.hidden = NO;
-        self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
+    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.durationLabel.hidden = (segment.duration == 0.f);
+    
+    if (! self.durationLabel.hidden) {
+        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
+        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", durationString];
     }
     else {
-        self.durationLabel.hidden = YES;
+        self.durationLabel.text = nil;
     }
-    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
     self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];

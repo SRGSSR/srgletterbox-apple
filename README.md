@@ -94,17 +94,19 @@ If rendering does not work properly:
 
 ## Demo project
 
-To test what the library is capable of, try running the associated demo by opening the workspace and building the associated scheme. You must perform both following commands from the root directory, as well as from the `Demo` folder:
-
-```
-carthage bootstrap --platform iOS
-```
-
-This will update all framework dependencies required to run the demo project.
+To test what the library is capable of, run the associated demo.
 
 ## Known issues
 
 Control center and lock screen integrations are not working reliably in the iOS simulator. This is a known simulator-only limitation, everything works fine on a device. 
+
+Moreover, standard view controller transitions (e.g. screen edge pan in a navigation controller), more generally those based on `UIPercentDrivenInteractiveTransition`, will interfere with playback, since they alter layer speeds (and thus `AVPlayerLayer` speed). For a perfect result you should therefore implement your own transition animator. An example is supplied with the demo.
+
+## Standard system behaviors
+
+If playback is paused from the application and the device is locked afterwards, the lock screen will surprisingly not display playback controls. This is standard iOS behavior (Apple Podcasts application works the same). Playback can be restarted from the control center, though.
+
+Moreover, video playback is paused by the system automatically when putting the application in the background, except when picture in picture is used.
 
 ## License
 

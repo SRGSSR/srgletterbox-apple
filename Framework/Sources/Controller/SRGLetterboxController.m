@@ -20,8 +20,8 @@
 
 const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 
-const NSInteger SRGLetterboxBackwardSeekInterval = 30.;
-const NSInteger SRGLetterboxForwardSeekInterval = 30.;
+const NSInteger SRGLetterboxBackwardSkipInterval = 30.;
+const NSInteger SRGLetterboxForwardSkipInterval = 30.;
 
 NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
@@ -318,6 +318,15 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
 }
 
+- (BOOL)isContentURLOverridden
+{
+    if (! self.URN) {
+        return NO;
+    }
+    
+    return self.contentURLOverridingBlock && self.contentURLOverridingBlock(self.URN);
+}
+
 #pragma mark Periodic time observers
 
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
@@ -404,11 +413,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     void (^completionBlock)(SRGChannel * _Nullable, NSError * _Nullable) = ^(SRGChannel * _Nullable channel, NSError * _Nullable error) {
-        if (error) {
-            return;
-        }
-        
-        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel];
+        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel ?: self.media.channel];
     };
     
     if (self.media.mediaType == SRGMediaTypeVideo) {
@@ -648,6 +653,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.dataProvider = nil;
     }
     
+    // Update metadata first so that it is current when the player status is changed below
+    [self updateWithURN:URN media:media mediaComposition:nil segment:nil channel:nil];
+    
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     
@@ -656,8 +664,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
-    
-    [self updateWithURN:URN media:media mediaComposition:nil segment:nil channel:nil];
 }
 
 - (void)reportError:(NSError *)error
@@ -734,27 +740,27 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 #pragma mark Standard seeks
 
-- (BOOL)canSeekBackward
+- (BOOL)canSkipBackward
 {
-    return [self canSeekBackwardFromTime:[self seekStartTime]];
+    return [self canSkipBackwardFromTime:[self seekStartTime]];
 }
 
-- (BOOL)canSeekForward
+- (BOOL)canSkipForward
 {
-    return [self canSeekForwardFromTime:[self seekStartTime]];
+    return [self canSkipForwardFromTime:[self seekStartTime]];
 }
 
-- (BOOL)canSeekToLive
+- (BOOL)canSkipToLive
 {
-    return (self.media.contentType == SRGContentTypeLivestream && [self canSeekForward]);
+    return (self.media.contentType == SRGContentTypeLivestream && [self canSkipForward]);
 }
 
-- (void)seekBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (void)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     [self seekBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
 
-- (void)seekForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (void)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     [self seekForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
@@ -766,7 +772,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return CMTIME_IS_VALID(self.seekTargetTime) ? self.seekTargetTime : self.mediaPlayerController.player.currentTime;
 }
 
-- (BOOL)canSeekBackwardFromTime:(CMTime)time
+- (BOOL)canSkipBackwardFromTime:(CMTime)time
 {
     if (CMTIME_IS_INVALID(time)) {
         return NO;
@@ -776,25 +782,25 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
 }
 
-- (BOOL)canSeekForwardFromTime:(CMTime)time
+- (BOOL)canSkipForwardFromTime:(CMTime)time
 {
     if (CMTIME_IS_INVALID(time)) {
         return NO;
     }
     
     SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
-    return (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSeekInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
+    return (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSkipInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
         || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
 }
 
 - (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (![self canSeekBackwardFromTime:time]) {
+    if (![self canSkipBackwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
         return;
     }
     
-    self.seekTargetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSeekInterval, NSEC_PER_SEC));
+    self.seekTargetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSkipInterval, NSEC_PER_SEC));
     [self.mediaPlayerController seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
         if (finished) {
             [self.mediaPlayerController play];
@@ -805,12 +811,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (![self canSeekForwardFromTime:time]) {
+    if (![self canSkipForwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
         return;
     }
     
-    self.seekTargetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSeekInterval, NSEC_PER_SEC));
+    self.seekTargetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSkipInterval, NSEC_PER_SEC));
     [self.mediaPlayerController seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
         if (finished) {
             [self.mediaPlayerController play];
@@ -819,7 +825,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }];
 }
 
-- (void)seekToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (void)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (self.media.contentType == SRGContentTypeLivestream) {
         CMTimeRange timeRange = self.mediaPlayerController.timeRange;

@@ -4,9 +4,27 @@
 //  License information is available from the LICENSE file.
 //
 
+#import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+// Paths of standard supplied vector images.
+OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder (16:9 usual ratio).
+OBJC_EXTERN NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void);           // Media artwork placeholder (1:1 ratio).
+
+/**
+ *  Return the image URL for an object and width, `nil` if the image URL is not found or invalid.
+ *
+ *  @discussion If some images have been overridden by local versions (see SRGDataProvider NSURL+SRGDataProvider.h file),
+ *              the returned URL might be a file URL.
+ */
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGFloat width);
+
+/**
+ *  Return the (square) artwork image URL for an object, with a given dimension.
+ */
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension);
 
 /**
  *  Available image scales.
@@ -29,25 +47,6 @@ typedef NS_ENUM(NSInteger, SRGImageSet) {
  *  Return the recommended size matching a given image scale.
  */
 OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
-
-@interface UIImage (SRGLetterbox)
-
-/**
- *  Resize a given vector image to a given size.
- */
-+ (nullable UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle withSize:(CGSize)size;
-
-/**
- *  Resize a given vector image for a predefined scale.
- */
-+ (nullable UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle withScale:(SRGImageScale)imageScale;
-
-/**
- *  Return the receiver, tinted with the specified color (if color is `nil`, the image is returned as is).
- */
-- (UIImage *)srg_imageTintedWithColor:(nullable UIColor *)color;
-
-@end
 
 /**
  *  Standard images from Letterbox bundle.

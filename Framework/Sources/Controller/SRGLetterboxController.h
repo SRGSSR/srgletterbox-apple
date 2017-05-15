@@ -409,6 +409,13 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  */
 @property (nonatomic, copy, nullable) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
+/**
+ *  Return `YES` iff the URL played by the controller is overridden.
+ *
+ *  @discussion If no media URN is attached to the controller, the property returns `NO`.  
+ */
+@property (nonatomic, readonly, getter=isContentURLOverridden) BOOL contentURLOverridden;
+
 @end
 
 NS_ASSUME_NONNULL_END

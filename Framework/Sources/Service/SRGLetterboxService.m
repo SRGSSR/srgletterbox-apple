@@ -7,11 +7,14 @@
 #import "SRGLetterboxService.h"
 
 #import "SRGLetterboxController+Private.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <SRGAppearance/SRGAppearance.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
@@ -29,6 +32,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
+
+@property (nonatomic) NSURL *currentArtworkURL;
+@property (nonatomic) MPMediaItemArtwork *currentArtwork;
 
 @end
 
@@ -88,8 +94,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                      object:previousMediaPlayerController];
+                                                        name:SRGLetterboxMetadataDidChangeNotification
+                                                      object:_controller];
+        
+        // Probably register for media metadata updates to reload the control center. Apply same logic as in Letterbox UIView
+        // to display show info first
         
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
@@ -101,7 +110,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            player.allowsExternalPlayback = YES;
+            // Do not switch to external playback when playing anything other than videos. External playback is namely only
+            // intended for video playback. If you try to play audio with external playback, then:
+            //   - The screen will be black instead of displaying a media notification.
+            //   - The user won't be able to change the volume with the phone controls.
+            // Remark: For video external playback, it is normal that the user cannot control the volume from her device.
+            player.allowsExternalPlayback = (controller.media.mediaType == SRGMediaTypeVideo);
             player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
         };
         [controller reloadPlayerConfiguration];
@@ -136,11 +150,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:mediaPlayerController];
+                                                 selector:@selector(metadataDidChange:)
+                                                     name:SRGLetterboxMetadataDidChangeNotification
+                                                   object:controller];
         
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            [self updateNowPlayingInformationWithController:controller];
             [self updateRemoteCommandCenterWithController:controller];
         }];
     }
@@ -177,7 +192,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     });
     
     self.controller = controller;
-    self.pictureInPictureDelegate = pictureInPictureDelegate;
+    self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
     
     _disablingAudioServices = NO;
     
@@ -240,12 +255,24 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [togglePlayPauseCommand addTarget:self action:@selector(togglePlayPause:)];
     
     MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
-    skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxForwardSeekInterval)];
-    [skipForwardIntervalCommand addTarget:self action:@selector(seekForward:)];
+    skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxForwardSkipInterval)];
+    [skipForwardIntervalCommand addTarget:self action:@selector(skipForward:)];
     
     MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
-    skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSeekInterval)];
-    [skipBackwardIntervalCommand addTarget:self action:@selector(seekBackward:)];
+    skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
+    [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackward:)];
+    
+    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
+    [seekForwardCommand addTarget:self action:@selector(seekForward:)];
+    
+    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
+    [seekBackwardCommand addTarget:self action:@selector(seekBackward:)];
+    
+    MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+    [previousTrackCommand addTarget:self action:@selector(previousTrack:)];
+    
+    MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+    [nextTrackCommand addTarget:self action:@selector(nextTrack:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -255,17 +282,24 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // Videos can only be controlled when the device has been locked (mostly for Airplay playback). We don't allow
     // video playback while the app is fully in background for the moment (except if Airplay is enabled)
-    if (mediaPlayerController
-            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
-            && (mediaPlayerController.mediaType == SRGMediaTypeAudio
-                    || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
-                    || [AVAudioSession srg_isAirplayActive]
-                    || [UIDevice srg_isLocked])) {
+    if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
+                                                                                                            || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
+                                                                                                            || [AVAudioSession srg_isAirplayActive]
+                                                                                                            || [UIDevice srg_isLocked])) {
+        SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
+        if (self.commandDelegate) {
+            availableCommands = [self.commandDelegate letterboxAvailableCommands];
+        }
+        
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = [controller canSeekForward];
-        commandCenter.skipBackwardCommand.enabled = [controller canSeekBackward];
+        commandCenter.skipForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
+        commandCenter.skipBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
+        commandCenter.seekForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekForward);
+        commandCenter.seekBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekBackward);
+        commandCenter.nextTrackCommand.enabled = (availableCommands & SRGLetterboxCommandNextTrack);
+        commandCenter.previousTrackCommand.enabled = (availableCommands & SRGLetterboxCommandPreviousTrack);
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -273,13 +307,20 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.togglePlayPauseCommand.enabled = NO;
         commandCenter.skipForwardCommand.enabled = NO;
         commandCenter.skipBackwardCommand.enabled = NO;
+        commandCenter.seekForwardCommand.enabled = NO;
+        commandCenter.seekBackwardCommand.enabled = NO;
+        commandCenter.nextTrackCommand.enabled = NO;
+        commandCenter.previousTrackCommand.enabled = NO;
     }
 }
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
-    SRGMedia *media = controller.media;
+    SRGMedia *media = controller.segmentMedia ?: controller.fullLengthMedia ?: controller.media;
     if (! media) {
+        self.currentArtworkURL = nil;
+        self.currentArtwork = nil;
+        
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
         return;
     }
@@ -303,27 +344,82 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-    nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.lead;
+    NSURL *artworkImageURL = nil;
     
-    // FIXME: Arbitrary resizing should probably be moved to the data provider library
-    CGFloat dimension = 256.f * [UIScreen mainScreen].scale;
-    NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:dimension];
-    NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, imageURL.absoluteString];
-    NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
-    self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (image) {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:image];
+    CGFloat artworkDimension = 512.f * [UIScreen mainScreen].scale;
+    
+    // For livestreams, only rely on channel information
+    if (media.contentType == SRGContentTypeLivestream) {
+        SRGChannel *channel = controller.channel;
+        
+        // Display program information (if any) when the controller position is within the current program, otherwise channel
+        // information.
+        NSDate *playbackDate = [NSDate dateWithTimeIntervalSinceNow:-CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), controller.currentTime))];
+        if ([channel.currentProgram containsDate:playbackDate]) {
+            NSString *title = channel.currentProgram.title;
+            nowPlayingInfo[MPMediaItemPropertyTitle] = title;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
+            
+            artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
+            if (! artworkImageURL) {
+                artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+            }
+        }
+        else {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
+            
+            artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+        }
+    }
+    else {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
+        artworkImageURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
+    }
+    
+    if (! [artworkImageURL isEqual:self.currentArtworkURL] || ! self.currentArtwork) {
+        self.currentArtwork = nil;
+        
+        // SRGLetterboxImageURL might return file URLs for overridden images
+        if (artworkImageURL.fileURL) {
+            UIImage *image = [UIImage imageWithContentsOfFile:artworkImageURL.path];
+            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+            self.currentArtworkURL = artworkImageURL;
+            self.currentArtwork = artwork;
+        }
+        else {
+            if (artworkImageURL) {
+                // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
+                // FIXME: This arbitrary resizing could be moved to the data provider library
+                NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkImageURL.absoluteString];
+                NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
+                self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (! image) {
+                            return;
+                        }
+                        
+                        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+                        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+                        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+                        self.currentArtworkURL = artworkImageURL;
+                        self.currentArtwork = artwork;
+                    });
+                }];
             }
             
-            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-        });
-    }];
+            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
+        }
+    }
+    else {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = self.currentArtwork;
+    }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
-    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration));
+    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.timeRange.duration));
     
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
 }
@@ -343,14 +439,42 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [self.controller.mediaPlayerController togglePlayPause];
 }
 
-- (void)seekForward:(id)sender
+- (void)skipForward:(id)sender
 {
-    [self.controller seekForwardWithCompletionHandler:nil];
+    [self.controller skipForwardWithCompletionHandler:nil];
 }
 
-- (void)seekBackward:(id)sender
+- (void)skipBackward:(id)sender
 {
-    [self.controller seekBackwardWithCompletionHandler:nil];
+    [self.controller skipBackwardWithCompletionHandler:nil];
+}
+
+- (void)seekForward:(MPSeekCommandEvent *)event
+{
+    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
+        [self.controller skipForwardWithCompletionHandler:nil];
+    }
+}
+
+- (void)seekBackward:(MPSeekCommandEvent *)event
+{
+    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
+        [self.controller skipBackwardWithCompletionHandler:nil];
+    }
+}
+
+- (void)previousTrack:(id)sender
+{
+    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToPreviousTrack)]) {
+        [self.commandDelegate letterboxWillSkipToPreviousTrack];
+    }
+}
+
+- (void)nextTrack:(id)sender
+{
+    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToNextTrack)]) {
+        [self.commandDelegate letterboxWillSkipToNextTrack];
+    }
 }
 
 #pragma mark Picture in picture
@@ -426,11 +550,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 #pragma mark Notifications
 
-- (void)playbackStateDidChange:(NSNotification *)notification
+- (void)metadataDidChange:(NSNotification *)notification
 {
-    if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self updateNowPlayingInformationWithController:self.controller];
-    }
+    [self updateNowPlayingInformationWithController:self.controller];
 }
 
 // Update commands while transitioning from / to the background (since control availability might be affected)

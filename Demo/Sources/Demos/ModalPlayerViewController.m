@@ -6,6 +6,7 @@
 
 #import "ModalPlayerViewController.h"
 
+#import "ModalTransition.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -34,6 +35,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 @property (nonatomic) NSMutableArray<SRGSegment *> *favoriteSegments;
 
+@property (nonatomic) ModalTransition *interactiveTransition;
+
 @end
 
 @implementation ModalPlayerViewController
@@ -45,7 +48,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
-    if ([service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
+    if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
         return (ModalPlayerViewController *)service.pictureInPictureDelegate;
     }
     // Otherwise instantiate a fresh new one
@@ -70,6 +73,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
+    // Use custom modal transition
+    self.transitioningDelegate = self;
+    
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     // Start with a hidden interface
@@ -85,24 +91,16 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    [self reloadData];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        // Special case to test multi chapters and segments. Should be removed when an example is available in production
-        if ([self.URN.uid containsString:@","]) {
-            self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-        }
-        else {
-            self.letterboxController.serviceURL = nil;
-        }
-        
-        [self.letterboxController playURN:self.URN];
+    // Special case to test multi chapters and segments. Should be removed when an example is available in production
+    if ([self.URN.uid containsString:@","]) {
+        self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
     }
+    else {
+        self.letterboxController.serviceURL = nil;
+    }
+    [self.letterboxController playURN:self.URN];
+    
+    [self reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -197,7 +195,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         self.letterboxAspectRatioConstraint.constant = heightOffset;
-        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
+        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:nil];
 }
@@ -258,6 +256,41 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     }
 }
 
+#pragma mark UIGestureRecognizerDelegate protocol
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return ! [touch.view isKindOfClass:[UISlider class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
+}
+
+#pragma mark UIViewControllerTransitioningDelegate protocol
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    return [[ModalTransition alloc] initForPresentation:YES];
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    return [[ModalTransition alloc] initForPresentation:NO];
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    // Return the installed interactive transition, if any
+    return self.interactiveTransition;
+}
+
 #pragma mark Actions
 
 - (IBAction)close:(id)sender
@@ -293,6 +326,56 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
 {
     [self.letterboxView setTimelineAlwaysHidden:sender.on animated:YES];
+}
+
+- (IBAction)pullDown:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    CGFloat progress = [panGestureRecognizer translationInView:self.view].y / CGRectGetHeight(self.view.frame);
+    
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan: {
+            // Avoid duplicate dismissal (which can make it impossible to dismiss the view controller altogether)
+            if (self.interactiveTransition) {
+                return;
+            }
+            
+            // Install the interactive transition animation before triggering it
+            self.interactiveTransition = [[ModalTransition alloc] initForPresentation:NO];
+            [self dismissViewControllerAnimated:YES completion:^{
+                // Only stop tracking the interactive transition at the very end. The completion block is called
+                // whether the transition ended or was cancelled
+                self.interactiveTransition = nil;
+            }];
+            break;
+        }
+            
+        case UIGestureRecognizerStateChanged: {
+            [self.interactiveTransition updateInteractiveTransitionWithProgress:progress];
+            break;
+        }
+            
+        case UIGestureRecognizerStateFailed:
+        case UIGestureRecognizerStateCancelled: {
+            [self.interactiveTransition cancelInteractiveTransition];
+            break;
+        }
+            
+        case UIGestureRecognizerStateEnded: {
+            // Finish the transition if the view was dragged by 20% and the user is dragging downwards
+            CGFloat velocity = [panGestureRecognizer velocityInView:self.view].y;
+            if (progress > 0.2f && velocity >= 0.f) {
+                [self.interactiveTransition finishInteractiveTransition];
+            }
+            else {
+                [self.interactiveTransition cancelInteractiveTransition];
+            }
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
 }
 
 #pragma mark Notifications

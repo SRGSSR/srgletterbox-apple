@@ -18,15 +18,21 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImageView *)srg_loadingImageView35WithTintColor:(nullable UIColor *)tintColor;
 
 /**
- *  Request an image for the specified object, for a given scale.
+ *  Request the main image for the specified object, for a given scale.
  *
- *  @param object               The object to request the image for.
- *  @param scale                The scale to use
- *  @param placeholderImageName The name of the placeholder image name to use
+ *  @param object The object to request the image for.
+ *  @param scale  The scale to use.
+ *
+ *  @return `YES` iff a valid image URL could be found.
  */
-- (void)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
-                        withScale:(SRGImageScale)imageScale
-             placeholderImageName:(nullable NSString *)placeholderImageName;
+// FIXME: Image validity should not have to be checked, but some services are returning bad URLs. When this has been
+//        fixed, return void
+- (BOOL)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
+                        withScale:(SRGImageScale)imageScale;
+
+/**
+ *  Cancel any running image request.
+ */
 - (void)srg_cancelCurrentImageRequest;
 
 @end

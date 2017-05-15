@@ -57,15 +57,8 @@
     [super viewDidLoad];
     
     self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
-    if ([self isMovingToParentViewController] || [self isBeingPresented]) {
-        [self.letterboxController playURN:self.URN];
-    }
+    [self.letterboxController playURN:self.URN];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -122,7 +115,7 @@
 {
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.URN) ? 0.f : 1.f;
+        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
         self.letterboxAspectRatioConstraint.constant = heightOffset;
         [self.view layoutIfNeeded];
     } completion:nil];

@@ -15,6 +15,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -532,8 +533,32 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
     
-    [self.imageView srg_requestImageForObject:self.controller.media withScale:SRGImageScaleLarge placeholderImageName:@"placeholder_media-180"];
+    [self reloadImageForController:controller];
+    
     self.errorLabel.text = [self error].localizedDescription;
+}
+
+- (void)reloadImageForController:(SRGLetterboxController *)controller
+{
+    // For livestreams, only rely on channel information
+    SRGMedia *media = controller.media;
+    if (media.contentType == SRGContentTypeLivestream) {
+        SRGChannel *channel = controller.channel;
+        
+        // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
+        NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
+        if ([channel.currentProgram containsDate:sliderDate]) {
+            if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
+                [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
+            }
+        }
+        else {
+            [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
+        }
+    }
+    else {
+        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
+    }
 }
 
 - (void)reloadData
@@ -669,6 +694,35 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+#pragma mark UI changes and restoration
+
+// Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
+// identifier are applied at most once. Synchronous.
+- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withRestorationIdentifier:(NSString *)restorationIdentifier
+{
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
+    restorationContext.hidden = hidden;
+    restorationContext.togglable = togglable;
+    
+    if (! [self.restorationContexts containsObject:restorationContext]) {
+        [self.restorationContexts addObject:restorationContext];
+        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
+    }
+}
+
+// Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
+// is provided in the `changes` block. Synchronous.
+- (void)imperative_restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier animated:(BOOL)animated
+{
+    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
+    if ([self.restorationContexts containsObject:restorationContext]) {
+        [self.restorationContexts removeObject:restorationContext];
+        
+        SRGLetterboxViewRestorationContext *restorationContext = self.restorationContexts.lastObject ?: self.mainRestorationContext;
+        [self imperative_setUserInterfaceHidden:restorationContext.hidden animated:animated togglable:restorationContext.togglable];
+    }
+}
+
 #pragma mark UI updates
 
 // Force a UI refresh for the current settings and segments
@@ -730,9 +784,9 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateControlsForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
     void (^animations)(void) = ^{
-        self.forwardSeekButton.alpha = [controller canSeekForward] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [controller canSeekBackward] ? 1.f : 0.f;
-        self.seekToLiveButton.alpha = [controller canSeekToLive] ? 1.f : 0.f;
+        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
+        self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
@@ -795,23 +849,20 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateUserInterfaceForAirplayAnimated:(BOOL)animated
 {
-    static NSString * const kIdentifier = @"airplay";
+    static NSString * const kRestorationIdentifier = @"airplay";
     
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        [self applyUserInterfaceChanges:^{
-            [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO];
-        } withRestorationIdentifier:kIdentifier];
+    if ([AVAudioSession srg_isAirplayActive]
+            && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
+        [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
-        [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-        }];
+        [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
     }
 }
 
 - (void)updateUserInterfaceForErrorAnimated:(BOOL)animated
 {
-    static NSString * const kIdentifier = @"error";
+    static NSString * const kRestorationIdentifier = @"error";
     
     if ([self error]) {
         self.errorView.alpha = 1.f;
@@ -819,16 +870,12 @@ static void commonInit(SRGLetterboxView *self);
         // Only display retry instructions if there is a media to retry with
         self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
         
-        [self applyUserInterfaceChanges:^{
-            [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO];
-        } withRestorationIdentifier:kIdentifier];
+        [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
         self.errorView.alpha = 0.f;
         
-        [self restoreUserInterfaceForIdentifier:kIdentifier withChanges:^(BOOL hidden, BOOL togglable) {
-            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-        }];
+        [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
     }
 }
 
@@ -840,7 +887,7 @@ static void commonInit(SRGLetterboxView *self);
             && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
             && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
             && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-        BOOL isWaitingForData = ! controller.mediaComposition && controller.URN && ! controller.error;
+        BOOL isWaitingForData = ! controller.contentURLOverridden && ! controller.mediaComposition && controller.URN && ! controller.error;
         
         BOOL visible = isPlayerLoading || isWaitingForData;
         if (visible) {
@@ -980,61 +1027,15 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dismissNotificationView
 {
+    [self dismissNotificationViewAnimated:YES];
+}
+
+- (void)dismissNotificationViewAnimated:(BOOL)animated
+{
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self updateUserInterfaceAnimated:YES];
-}
-
-#pragma mark UI changes and restoration
-
-// Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
-// identifier are applied at most once. Synchronous.
-- (void)applyUserInterfaceChanges:(void (^)(void))changes withRestorationIdentifier:(NSString *)restorationIdentifier
-{
-    NSParameterAssert(changes);
-    
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    restorationContext.hidden = self.userInterfaceHidden;
-    restorationContext.togglable = self.userInterfaceTogglable;
-    
-    if (! [self.restorationContexts containsObject:restorationContext]) {
-        [self.restorationContexts addObject:restorationContext];
-        changes();
-    }
-}
-
-// Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
-// is provided in the `changes` block. Synchronous.
-- (void)restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier withChanges:(void (^)(BOOL hidden, BOOL togglable))changes
-{
-    NSParameterAssert(changes);
-    
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    if ([self.restorationContexts containsObject:restorationContext]) {
-        [self.restorationContexts removeObject:restorationContext];
-        [self calculateRestorationValuesWithBlock:changes];
-    }
-}
-
-// Synchronous.
-- (void)calculateRestorationValuesWithBlock:(void (^)(BOOL hidden, BOOL togglable))block
-{
-    NSParameterAssert(block);
-    
-    BOOL hidden = self.mainRestorationContext.hidden;
-    BOOL togglable = self.mainRestorationContext.togglable;
-    
-    for (SRGLetterboxViewRestorationContext *restorationContext in self.restorationContexts) {
-        if (restorationContext.hidden) {
-            hidden = YES;
-        }
-        if (! restorationContext.togglable) {
-            togglable = NO;
-        }
-    }
-    
-    block(hidden, togglable);
+    [self updateUserInterfaceAnimated:animated];
 }
 
 #pragma mark Segments
@@ -1090,14 +1091,14 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)seekBackward:(id)sender
 {
-    [self.controller seekBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)seekForward:(id)sender
 {
-    [self.controller seekForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
@@ -1109,7 +1110,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)seekToLive:(id)sender
 {
-    [self.controller seekToLiveWithCompletionHandler:nil];
+    [self.controller skipToLiveWithCompletionHandler:nil];
 }
 
 - (IBAction)retry:(id)sender
@@ -1203,6 +1204,8 @@ static void commonInit(SRGLetterboxView *self);
     if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:interactive:)]) {
         [self.delegate letterboxView:self didScrollWithSegment:selectedSegment interactive:interactive];
     }
+    
+    [self reloadImageForController:self.controller];
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
@@ -1245,7 +1248,6 @@ static void commonInit(SRGLetterboxView *self);
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     
-    // Initially scroll to the selected segment or chapter (if any)
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
@@ -1256,7 +1258,6 @@ static void commonInit(SRGLetterboxView *self);
     else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
-    // Update the current segment when starting seeking
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
             CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
@@ -1265,10 +1266,9 @@ static void commonInit(SRGLetterboxView *self);
             self.timelineView.time = seekTargetTime;
         }
     }
-    // If the player was playing or paused
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         [self conditional_setUserInterfaceHidden:NO animated:YES];
-        [self dismissNotificationView];
+        [self dismissNotificationViewAnimated:YES];
     }
 }
 
