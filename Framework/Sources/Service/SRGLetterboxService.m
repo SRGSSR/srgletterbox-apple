@@ -378,8 +378,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
     
     if (! [artworkImageURL isEqual:self.currentArtworkURL] || ! self.currentArtwork) {
-        self.currentArtwork = nil;
-        
         // SRGLetterboxImageURL might return file URLs for overridden images
         if (artworkImageURL.fileURL) {
             UIImage *image = [UIImage imageWithContentsOfFile:artworkImageURL.path];
@@ -396,21 +394,24 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                 NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
                 self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (! image) {
-                            return;
-                        }
-                        
-                        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+                        // Reset to the placeholder if an error is encountered
+                        UIImage *artworkImage = image ?: [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
+                        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:artworkImage];
                         nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
                         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-                        self.currentArtworkURL = artworkImageURL;
+                        
+                        self.currentArtworkURL = image ? artworkImageURL : nil;
                         self.currentArtwork = artwork;
                     });
                 }];
+                
+                // Keep the current image for smoother transitions
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = self.currentArtwork;
             }
-            
-            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
+            else {
+                UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
+            }
         }
     }
     else {
