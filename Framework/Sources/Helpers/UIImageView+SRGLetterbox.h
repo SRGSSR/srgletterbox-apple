@@ -30,11 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale;
 
-/**
- *  Cancel any running image request.
- */
-- (void)srg_cancelCurrentImageRequest;
-
 @end
 
 NS_ASSUME_NONNULL_END
