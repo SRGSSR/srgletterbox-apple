@@ -436,6 +436,13 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.timeRange.duration));
     
+    // Available starting with iOS 10. Only used for non-DVR livestreams (since when this property is set to YES the
+    // playback button is replaced with a stop button)
+    // TODO: Remove when the minimum required version is iOS 10
+    if (&MPNowPlayingInfoPropertyIsLiveStream) {
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
+    }
+    
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
 }
 
