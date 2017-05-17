@@ -56,7 +56,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
-@property (nonatomic, weak) IBOutlet UIButton *fullScreenButton;
+@property (nonatomic) IBOutletCollection(UIButton) NSArray *fullScreenButtons;
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
 
@@ -182,7 +182,10 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self.mainView addGestureRecognizer:activityGestureRecognizer];
     
-    self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
+    BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
+    [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+        button.hidden = fullScreenButtonHidden;
+    }];
     
     [self reloadData];
 }
@@ -262,7 +265,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super layoutSubviews];
     
-    self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
+    BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
+    [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+        button.hidden = fullScreenButtonHidden;
+    }];
     
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
     if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
@@ -406,7 +412,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
 {
     _delegate = delegate;
-    self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
+    
+    BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
+    [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+        button.hidden = fullScreenButtonHidden;
+    }];
 }
 
 - (void)setFullScreen:(BOOL)fullScreen
@@ -433,8 +443,12 @@ static void commonInit(SRGLetterboxView *self);
     
     [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
         if (finished) {
-            self.fullScreenButton.selected = fullScreen;
-            self.fullScreenButton.hidden = [self shouldHideFullScreenButton];
+            BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
+            [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+                button.selected = fullScreen;
+                button.hidden = fullScreenButtonHidden;
+            }];
+            
             _fullScreen = fullScreen;
         }
         self.fullScreenAnimationRunning = NO;

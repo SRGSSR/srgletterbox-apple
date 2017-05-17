@@ -368,7 +368,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.media = media;
     self.mediaComposition = mediaComposition;
     self.segment = segment;
-    self.channel = channel;
+    self.channel = channel ?: media.channel;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     if (URN) {
@@ -413,7 +413,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     void (^completionBlock)(SRGChannel * _Nullable, NSError * _Nullable) = ^(SRGChannel * _Nullable channel, NSError * _Nullable error) {
-        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel ?: self.media.channel];
+        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition segment:self.segment channel:channel];
     };
     
     if (self.media.mediaType == SRGMediaTypeVideo) {

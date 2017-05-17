@@ -66,14 +66,11 @@
         self.image = placeholderImage;
         return NO;
     }
-        
-    [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    
+    // Do not alter the current image if available, otherwise display the placeholder. This makes transitions more beautiful,
+    // avoiding an intermediate step when updating an image
+    [self yy_setImageWithURL:URL placeholder:self.image ?: placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
     return YES;
-}
-
-- (void)srg_cancelCurrentImageRequest
-{
-    [self yy_cancelCurrentImageRequest];
 }
 
 @end
