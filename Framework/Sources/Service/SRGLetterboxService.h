@@ -161,6 +161,10 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
  *              easy way to restore the view controller in the exact same state as it was before picture in picture
  *              started.
+ *
+ *              Note that controller configuration performed in `playerConfigurationBlock` might be overridden when
+ *              a controller has been assigned to the service (e.g. external playback will be enabled). Normal
+ *              non-overridden behavior will resume after services are disabled for the controller.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;

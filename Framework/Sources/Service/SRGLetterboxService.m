@@ -87,7 +87,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     if (_controller) {
         // Revert back to default behavior
-        _controller.playerConfigurationBlock = nil;
+        _controller.playerMandatoryConfigurationBlock = nil;
         [_controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
@@ -109,7 +109,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [self updateNowPlayingInformationWithController:controller];
     
     if (controller) {
-        controller.playerConfigurationBlock = ^(AVPlayer *player) {
+        controller.playerMandatoryConfigurationBlock = ^(AVPlayer *player) {
             // Do not switch to external playback when playing anything other than videos. External playback is namely only
             // intended for video playback. If you try to play audio with external playback, then:
             //   - The screen will be black instead of displaying a media notification.
