@@ -43,6 +43,13 @@
     self.favoriteImageView.image = favoriteImage;
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    [self.imageView srg_resetWithScale:SRGImageScaleMedium];
+}
+
 #pragma mark Getters and setters
 
 - (void)setSegment:(SRGSegment *)segment

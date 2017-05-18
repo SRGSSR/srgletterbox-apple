@@ -30,6 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
                         withScale:(SRGImageScale)imageScale;
 
+/**
+ *  Reset the image to the placeholder and cancel any pending image request.
+ */
+- (void)srg_resetWithScale:(SRGImageScale)imageScale;
+
 @end
 
 NS_ASSUME_NONNULL_END
