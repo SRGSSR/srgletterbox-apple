@@ -866,6 +866,7 @@ static void commonInit(SRGLetterboxView *self);
     static NSString * const kRestorationIdentifier = @"airplay";
     
     if ([AVAudioSession srg_isAirplayActive]
+            && self.userInterfaceTogglable      // No change if the user interface cannot be toggled
             && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
         [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
