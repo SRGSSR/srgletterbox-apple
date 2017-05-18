@@ -165,6 +165,10 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  *              Note that controller configuration performed in `playerConfigurationBlock` might be overridden when
  *              a controller has been assigned to the service (e.g. external playback will be enabled). Normal
  *              non-overridden behavior will resume after services are disabled for the controller.
+ *
+ *              Also note that enabling a controller with the service will alter audio session settings. Be especially
+ *              careful if you plan to change audio settings yourself elsewhere in your application, as you might
+ *              prevent the service from correctly working.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
