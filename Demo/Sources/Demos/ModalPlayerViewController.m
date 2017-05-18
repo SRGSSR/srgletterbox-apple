@@ -91,13 +91,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    // Special case to test multi chapters and segments. Should be removed when an example is available in production
-    if ([self.URN.uid containsString:@","]) {
-        self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-    }
-    else {
-        self.letterboxController.serviceURL = nil;
-    }
     [self.letterboxController playURN:self.URN];
     
     [self reloadData];

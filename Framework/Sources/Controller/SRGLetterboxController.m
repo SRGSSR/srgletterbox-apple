@@ -260,7 +260,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
         
-        void (^completionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        [self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
             if (error) {
                 return;
             }
@@ -282,14 +282,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
                 [self playMedia:media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
             }
-        };
-        
-        if (self.media.mediaType == SRGMediaTypeVideo) {
-            [[self.dataProvider videoMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
-        }
-        else if (self.media.mediaType == SRGMediaTypeAudio) {
-            [[self.dataProvider audioMediaCompositionWithUid:self.media.uid completionBlock:completionBlock] resume];
-        }
+        }];
     }];
 }
 
@@ -508,7 +501,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
     }
     
-    void (^mediaCompositionCompletionBlock)(SRGMediaComposition * _Nullable, NSError * _Nullable) = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         @strongify(self)
         
         if (error) {
@@ -550,16 +543,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self.requestQueue reportError:error];
         }
-    };
-    
-    if (URN.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *mediaCompositionRequest = [self.dataProvider videoMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
-        [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
-    }
-    else if (URN.mediaType == SRGMediaTypeAudio) {
-        SRGRequest *mediaCompositionRequest = [self.dataProvider audioMediaCompositionWithUid:URN.uid completionBlock:mediaCompositionCompletionBlock];
-        [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
-    }
+    }];
+    [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
 - (BOOL)switchToSegment:(SRGSegment *)segment
