@@ -149,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  An AirPlay button is displayed if application-wide services have been enabled for the controller bound to the
  *  view (@see `SRGLetterboxService`) and an external display is available. During AirPlay playback, controls cannot
  *  be toggled on or off (they will keep the current visibility at the time Airplay has been enabled).
- 
+ *
  *  If `mirroredOnExternalScreen` has been set to `YES` on the service singleton, the Letterbox view will behave as 
  *  if no AirPlay playback was possible, and won't switch to external display. This way, your application can be 
  *  mirrored as is via AirPlay, which is especially convenient for presentation purposes.
