@@ -97,9 +97,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                         name:SRGLetterboxMetadataDidChangeNotification
                                                       object:_controller];
         
-        // Probably register for media metadata updates to reload the control center. Apply same logic as in Letterbox UIView
-        // to display show info first
-        
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
