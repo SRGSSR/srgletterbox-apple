@@ -84,7 +84,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) CMTime seekTargetTime;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
-@property (nonatomic, copy) void (^playerMandatoryConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
@@ -118,11 +117,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 [[AVAudioSession sharedInstance] setMode:mode error:NULL];
             }
             
-            // Apply optional user configuration (overriding the default behavior above)
+            // Call the configuration block afterwards (so that the above default behavior can be overridden)
             self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
-            
-            // Override with mandatory configuration (used for internal purposes)
-            self.playerMandatoryConfigurationBlock ? self.playerMandatoryConfigurationBlock(player) : nil;
             player.muted = self.muted;
         };
         self.seekTargetTime = kCMTimeInvalid;

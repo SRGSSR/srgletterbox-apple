@@ -82,15 +82,13 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
 - (void)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Mandatory configuration block which gets called right after player creation, when the player changes, or when the 
- *  configuration is reloaded by calling `-reloadPlayerConfiguration`. Does not get called when the player is set to `nil`.
- *  This block takes precedence over the user-defined configuration block and exists for internal implementation purposes
- *  only.
+ *  Optional block which gets called right after player creation, when the player changes, or when the configuration is
+ *  reloaded by calling `-reloadPlayerConfiguration`. Does not get called when the player is set to `nil`.
  *
  *  @discussion The player starts with external playback disabled and default audio session settings for the media
  *              being played. The configuration block might be used to override these default values.
  */
-@property (nonatomic, copy, nullable) void (^playerMandatoryConfigurationBlock)(AVPlayer *player);
+@property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
 
 /**
  *  Ask the player to reload its configuration by calling the associated configuration block, if any. Does nothing if
