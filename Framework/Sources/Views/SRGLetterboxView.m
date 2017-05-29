@@ -1282,7 +1282,6 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        [self conditional_setUserInterfaceHidden:NO animated:YES];
         [self dismissNotificationViewAnimated:YES];
     }
 }
