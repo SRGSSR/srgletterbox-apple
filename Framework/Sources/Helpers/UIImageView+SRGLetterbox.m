@@ -63,13 +63,21 @@
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width);
     if (! URL) {
-        self.image = placeholderImage;
+        [self yy_setImageWithURL:nil placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
         return NO;
     }
     
-    // Do not alter the current image if available, otherwise display the placeholder. This makes transitions more beautiful,
-    // avoiding an intermediate step when updating an image
-    [self yy_setImageWithURL:URL placeholder:self.image ?: placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    if (! [URL isEqual:self.yy_imageURL]) {
+        // Do not alter the current image if available, otherwise display the placeholder. This makes transitions more beautiful,
+        // avoiding an intermediate step when updating an image
+        [self yy_setImageWithURL:URL placeholder:self.image ?: placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+            // Reset to the placeholder if retrieval failed
+            if (stage == YYWebImageStageCancelled || (stage == YYWebImageStageFinished && ! image)) {
+                [self yy_setImageWithURL:nil placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
+        }];
+    }
+    
     return YES;
 }
 
