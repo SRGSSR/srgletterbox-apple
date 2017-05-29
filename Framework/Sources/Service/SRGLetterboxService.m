@@ -313,7 +313,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
-    SRGMedia *media = controller.segmentMedia ?: controller.media ?: controller.fullLengthMedia;
+    SRGMedia *media = nil;
+    if (controller.URN.mediaType == SRGMediaTypeVideo) {
+        media = controller.segmentMedia ?: controller.fullLengthMedia ?: controller.media;
+    }
+    else {
+        media = controller.media;
+    }
+    
     if (! media) {
         self.currentArtworkURL = nil;
         self.currentArtwork = nil;
