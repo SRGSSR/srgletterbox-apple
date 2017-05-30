@@ -554,9 +554,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
 {
-    // For livestreams, only rely on channel information
+    // For livestreams, rely on channel information when available
     SRGMedia *media = controller.media;
-    if (media.contentType == SRGContentTypeLivestream) {
+    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
         SRGChannel *channel = controller.channel;
         
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
