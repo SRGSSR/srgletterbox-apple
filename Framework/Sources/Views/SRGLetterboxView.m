@@ -866,9 +866,11 @@ static void commonInit(SRGLetterboxView *self);
     static NSString * const kRestorationIdentifier = @"airplay";
     
     if ([AVAudioSession srg_isAirplayActive]
-            && self.userInterfaceTogglable      // No change if the user interface cannot be toggled
             && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
-        [self imperative_setUserInterfaceHidden:NO animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
+        // If the user interface is togglable, show controls, otherwise do not alter visibility. We do not want controls
+        // to be displayed while using Airplay if the interface was forced to be hidden
+        BOOL hidden = self.userInterfaceTogglable ? NO : self.userInterfaceHidden;
+        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
         [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
