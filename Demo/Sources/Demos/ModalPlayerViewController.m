@@ -193,7 +193,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     } completion:nil];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment interactive:(BOOL)interactive
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment time:(CMTime)time interactive:(BOOL)interactive
 {
     if (interactive) {
         SRGMedia *media = segment ? [self.letterboxController.mediaComposition mediaForSegment:segment] : nil;

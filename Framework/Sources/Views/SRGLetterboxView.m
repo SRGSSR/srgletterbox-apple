@@ -511,6 +511,16 @@ static void commonInit(SRGLetterboxView *self);
     return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
 }
 
+- (CMTime)time
+{
+    return self.timeSlider.time;
+}
+
+- (BOOL)isLive
+{
+    return self.timeSlider.live;
+}
+
 #pragma mark Data display
 
 - (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
@@ -1218,8 +1228,8 @@ static void commonInit(SRGLetterboxView *self);
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSegment:selectedSegment interactive:interactive];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:time:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSegment:selectedSegment time:time interactive:interactive];
     }
     
     [self reloadImageForController:self.controller];
