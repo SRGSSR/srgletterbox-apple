@@ -10,13 +10,13 @@
 
 // ** Private SRGDataProvider fixes for Play. See NSURL+SRGDataProvider.h for more information
 
-@interface NSURL (srgletterbox_containsDatePrivate_SRGDataProvider)
+@interface NSURL (SRGLetterbox_Private_SRGDataProvider)
 
 - (NSURL *)srg_URLForDimension:(SRGImageDimension)dimension withValue:(CGFloat)value uid:(nullable NSString *)uid type:(nullable NSString *)type;
 
 @end
 
-@interface NSObject (srgletterbox_containsDatePrivate_SRGDataProvider)
+@interface NSObject (SRGLetterbox_Private_SRGDataProvider)
 
 // Declare internal image URL accessor
 @property (nonatomic, readonly) NSURL *imageURL;
