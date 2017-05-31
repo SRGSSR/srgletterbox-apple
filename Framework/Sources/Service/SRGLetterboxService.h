@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
     SRGLetterboxCommandMinimal              = 0,                // Minimal controls (play / pause only).
-    SRGLetterboxCommandSkipBackward         = 1 << 0,           // -30 seconds.
+    SRGLetterboxCommandSkipBackward         = 1 << 0,           // -10 seconds.
     SRGLetterboxCommandSkipForward          = 1 << 1,           // +30 seconds.
     SRGLetterboxCommandSeekBackward         = 1 << 2,           // Seek backward.
     SRGLetterboxCommandSeekForward          = 1 << 3,           // Seek forward.

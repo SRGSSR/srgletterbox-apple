@@ -20,7 +20,7 @@
 
 const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 
-const NSInteger SRGLetterboxBackwardSkipInterval = 30.;
+const NSInteger SRGLetterboxBackwardSkipInterval = 10.;
 const NSInteger SRGLetterboxForwardSkipInterval = 30.;
 
 NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";

@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The following controls and views are supported out of the box, most of them available for any kind of media played 
  *  by a Letterbox controller (on-demand, live and DVR audio and video streams):
- *    - Buttons to control playback (play / pause, +/- 30 seconds, back to live for DVR streams)
+ *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams)
  *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams)
  *    - Error display
  *    - Airplay, picture in picture and subtitles / audio tracks buttons

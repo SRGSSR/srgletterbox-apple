@@ -238,17 +238,17 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-28"] : [UIImage srg_letterboxImageNamed:@"forward-38"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-32"] : [UIImage srg_letterboxImageNamed:@"forward-52"];
 }
 
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-28"] : [UIImage srg_letterboxImageNamed:@"backward-38"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-32"] : [UIImage srg_letterboxImageNamed:@"backward-52"];
 }
 
 + (UIImage *)srg_letterboxSeekToLiveImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-28"] : [UIImage srg_letterboxImageNamed:@"back_live-38"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
 }
 
 @end
