@@ -352,8 +352,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     CGFloat artworkDimension = 512.f * [UIScreen mainScreen].scale;
     
-    // For livestreams, only rely on channel information
-    if (media.contentType == SRGContentTypeLivestream) {
+    // For livestreams, rely on channel information when available
+    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
         SRGChannel *channel = controller.channel;
         
         // Display program information (if any) when the controller position is within the current program, otherwise channel
