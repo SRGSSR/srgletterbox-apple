@@ -511,6 +511,16 @@ static void commonInit(SRGLetterboxView *self);
     return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
 }
 
+- (CMTime)time
+{
+    return self.timeSlider.time;
+}
+
+- (BOOL)isLive
+{
+    return self.timeSlider.live;
+}
+
 #pragma mark Data display
 
 - (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
@@ -561,7 +571,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
         NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
-        if ([channel.currentProgram containsDate:sliderDate]) {
+        if ([channel.currentProgram srgletterbox_containsDate:sliderDate]) {
             if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
                 [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
             }
@@ -1218,8 +1228,8 @@ static void commonInit(SRGLetterboxView *self);
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSegment:selectedSegment interactive:interactive];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:time:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSegment:selectedSegment time:time interactive:interactive];
     }
     
     [self reloadImageForController:self.controller];

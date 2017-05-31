@@ -8,7 +8,7 @@
 
 @implementation SRGProgram (SRGLetterbox)
 
-- (BOOL)containsDate:(NSDate *)date
+- (BOOL)srgletterbox_containsDate:(NSDate *)date
 {
     return [self.startDate compare:date] != NSOrderedDescending && [date compare:self.endDate] != NSOrderedDescending;
 }
