@@ -122,7 +122,7 @@
 
 - (NSString *)accessibilityHint
 {
-    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Short media cell description");
+    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Short media or segment cell hint");
 }
 
 @end

@@ -594,7 +594,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxAccessibilityLocalizedString(@"Video", @"The main area on the letterbox view, where the video or its thumbnail is displayed");
     
     self.backgroundInteractionView.accessibilityHint = (self.isUserInterfaceTogglable) ?
-    SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls", @"Hint for the letterbox view") :
+    SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") :
     nil;
 }
 
