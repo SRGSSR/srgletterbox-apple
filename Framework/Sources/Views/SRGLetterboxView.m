@@ -215,6 +215,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateUserInterfaceForErrorAnimated:NO];
         [self updateLoadingIndicatorAnimated:NO];
         [self updateUserInterfaceAnimated:NO];
+        [self accessibilityVoiceOverStatusChanged:nil];
         [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -240,6 +241,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(contentSizeCategoryDidChange:)
                                                      name:UIContentSizeCategoryDidChangeNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(accessibilityVoiceOverStatusChanged:)
+                                                     name:UIAccessibilityVoiceOverStatusChanged
                                                    object:nil];
         
         [self updateFonts];
@@ -271,6 +276,9 @@ static void commonInit(SRGLetterboxView *self);
                                                       object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIAccessibilityVoiceOverStatusChanged
                                                       object:nil];
     }
 }
@@ -971,7 +979,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)resetInactivityTimer
 {
-    self.inactivityTimer = [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO];
+    self.inactivityTimer = (! UIAccessibilityIsVoiceOverRunning()) ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO] : nil;
 }
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
@@ -1371,6 +1379,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification
 {
     [self updateFonts];
+}
+
+- (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
+{
+    [self resetInactivityTimer];
 }
 
 @end
