@@ -187,6 +187,8 @@ static void commonInit(SRGLetterboxView *self);
         button.hidden = fullScreenButtonHidden;
     }];
     
+    self.backgroundInteractionView.isAccessibilityElement = YES;
+    
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
@@ -582,6 +584,14 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
+    
+    self.backgroundInteractionView.accessibilityLabel = (controller.media.mediaType == SRGMediaTypeAudio) ?
+    SRGLetterboxAccessibilityLocalizedString(@"Audio", @"The main area on the letterbox view, where the audio or its thumbnail is displayed") :
+    SRGLetterboxAccessibilityLocalizedString(@"Video", @"The main area on the letterbox view, where the video or its thumbnail is displayed");
+    
+    self.backgroundInteractionView.accessibilityHint = (self.isUserInterfaceTogglable) ?
+    SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls", @"Hint for the letterbox view") :
+    nil;
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -702,7 +712,7 @@ static void commonInit(SRGLetterboxView *self);
     
     void (^animations)(void) = ^{
         self.controlsView.alpha = hidden ? 0.f : 1.f;
-        self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
+        self.backgroundInteractionView.alpha = (hidden && ! UIAccessibilityIsVoiceOverRunning()) ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
         self.notificationImageView.hidden = (self.notificationMessage == nil);
@@ -1383,6 +1393,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
 {
+    self.backgroundInteractionView.alpha = (self.userInterfaceHidden && ! UIAccessibilityIsVoiceOverRunning()) ? 0.f : 1.f;
     [self resetInactivityTimer];
 }
 
