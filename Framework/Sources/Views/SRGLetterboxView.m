@@ -185,6 +185,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
+        [self updateFullScreenAccessibiltyButton:button];
     }];
     
     self.backgroundInteractionView.isAccessibilityElement = YES;
@@ -292,6 +293,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
+        [self updateFullScreenAccessibiltyButton:button];
     }];
     
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
@@ -440,6 +442,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
+        [self updateFullScreenAccessibiltyButton:button];
     }];
 }
 
@@ -471,6 +474,7 @@ static void commonInit(SRGLetterboxView *self);
             [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
                 button.selected = fullScreen;
                 button.hidden = fullScreenButtonHidden;
+                [self updateFullScreenAccessibiltyButton:button];
             }];
             
             _fullScreen = fullScreen;
@@ -1395,6 +1399,15 @@ static void commonInit(SRGLetterboxView *self);
 {
     self.backgroundInteractionView.alpha = (self.userInterfaceHidden && ! UIAccessibilityIsVoiceOverRunning()) ? 0.f : 1.f;
     [self resetInactivityTimer];
+}
+
+#pragma mark Accessibility
+
+- (void)updateFullScreenAccessibiltyButton:(UIButton *)fullScreenButton
+{
+    fullScreenButton.accessibilityLabel = (fullScreenButton.selected) ?
+    SRGLetterboxAccessibilityLocalizedString(@"Exit full screen", @"Full screen button label in the letterbox view, when the view is in the full screen state") :
+    SRGLetterboxAccessibilityLocalizedString(@"Full screen", @"Full screen button label in the letterbox view, when the view is NOT in the full screen state");
 }
 
 @end
