@@ -187,6 +187,18 @@ static void commonInit(SRGLetterboxView *self);
         button.hidden = fullScreenButtonHidden;
     }];
     
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond;
+    });
+    
+    self.backwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGMediaPlaybackButtonBackwardAccessibilityLabelFormat,
+                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
+    self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGMediaPlaybackButtonBackwardAccessibilityLabelFormat,
+                                                 [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     [self reloadData];
 }
 
