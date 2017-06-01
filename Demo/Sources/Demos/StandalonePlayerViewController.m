@@ -7,6 +7,7 @@
 #import "StandalonePlayerViewController.h"
 
 #import "UIWindow+LetterboxDemo.h"
+#import "NSBundle+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
 
@@ -55,6 +56,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button on player view");
     
     self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
     

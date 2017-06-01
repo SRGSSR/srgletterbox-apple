@@ -8,6 +8,7 @@
 
 #import "ModalTransition.h"
 #import "UIWindow+LetterboxDemo.h"
+#import "NSBundle+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -72,6 +73,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button on player view");
     
     // Use custom modal transition
     self.transitioningDelegate = self;
