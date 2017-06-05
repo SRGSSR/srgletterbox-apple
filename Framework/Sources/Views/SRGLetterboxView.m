@@ -12,6 +12,7 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
+#import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxViewRestorationContext.h"
@@ -36,7 +37,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
-@property (nonatomic, weak) IBOutlet SRGPlaybackButton *playbackButton;
+@property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
@@ -854,14 +855,14 @@ static void commonInit(SRGLetterboxView *self);
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         
         SRGImageSet imageSet = [self imageSet];
+        self.playbackButton.imageSet = imageSet;
         
         // Special cases when the player is idle or preparing
         if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-            self.playbackButton.pauseImageAccessibilityLabel = nil;
+            self.playbackButton.stopInsteadOfPauseImage = NO;
             return;
         }
         
@@ -870,16 +871,14 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-                self.playbackButton.pauseImageAccessibilityLabel = nil;
+                self.playbackButton.stopInsteadOfPauseImage = NO;
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-                self.playbackButton.pauseImageAccessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label");
+                self.playbackButton.stopInsteadOfPauseImage = YES;
                 break;
             }
                 
@@ -887,16 +886,14 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-                self.playbackButton.pauseImageAccessibilityLabel = nil;
+                self.playbackButton.stopInsteadOfPauseImage = NO;
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-                self.playbackButton.pauseImageAccessibilityLabel = nil;
+                self.playbackButton.stopInsteadOfPauseImage = NO;
                 break;
             }
         }
@@ -1059,16 +1056,7 @@ static void commonInit(SRGLetterboxView *self);
     self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
     self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
     
-    self.playbackButton.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
-    
-    if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-        self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-        self.playbackButton.pauseImageAccessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label");
-    }
-    else {
-        self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-        self.playbackButton.pauseImageAccessibilityLabel = nil;
-    }
+    self.playbackButton.imageSet = imageSet;
     
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
