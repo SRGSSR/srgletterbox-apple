@@ -198,11 +198,11 @@ static void commonInit(SRGLetterboxView *self);
         s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond;
     });
     
-    self.backwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGMediaPlaybackButtonBackwardAccessibilityLabelFormat,
+    self.backwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ backward", @"Seek backward button label with a custom time range"),
                                                   [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
-    self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGMediaPlaybackButtonForwardAccessibilityLabelFormat,
+    self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
-    self.seekToLiveButton.accessibilityLabel = SRGMediaPlaybackButtonGoToLiveAccessibilityLabel;
+    self.seekToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Go to live", @"Go to live label");;
     
     [self reloadData];
 }
@@ -876,7 +876,7 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-                self.playbackButton.pauseImageAccessibilityLabel = SRGMediaPlaybackButtonStopAccessibilityLabel;
+                self.playbackButton.pauseImageAccessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label");
                 break;
             }
                 
@@ -1060,7 +1060,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
         self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-        self.playbackButton.pauseImageAccessibilityLabel = SRGMediaPlaybackButtonStopAccessibilityLabel;
+        self.playbackButton.pauseImageAccessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label");
     }
     else {
         self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
