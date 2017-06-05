@@ -1091,6 +1091,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = notificationMessage;
     
     [self updateUserInterfaceAnimated:animated];
+    UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
 }
