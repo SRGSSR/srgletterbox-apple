@@ -858,7 +858,7 @@ static void commonInit(SRGLetterboxView *self);
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
             self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-            self.playbackButton.accessibilityLabel = nil;
+            self.playbackButton.pauseImageAccessibilityLabel = nil;
             return;
         }
         
@@ -868,7 +868,7 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-                self.playbackButton.accessibilityLabel = nil;
+                self.playbackButton.pauseImageAccessibilityLabel = nil;
                 break;
             }
                 
@@ -876,7 +876,7 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
                 self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-                self.playbackButton.accessibilityLabel = SRGMediaPlaybackButtonStopAccessibilityLabel;
+                self.playbackButton.pauseImageAccessibilityLabel = SRGMediaPlaybackButtonStopAccessibilityLabel;
                 break;
             }
                 
@@ -885,7 +885,7 @@ static void commonInit(SRGLetterboxView *self);
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-                self.playbackButton.accessibilityLabel = nil;
+                self.playbackButton.pauseImageAccessibilityLabel = nil;
                 break;
             }
                 
@@ -893,7 +893,7 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
                 self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-                self.playbackButton.accessibilityLabel = nil;
+                self.playbackButton.pauseImageAccessibilityLabel = nil;
                 break;
             }
         }
@@ -1060,11 +1060,11 @@ static void commonInit(SRGLetterboxView *self);
     
     if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
         self.playbackButton.pauseImage = [UIImage srg_letterboxStopImageInSet:imageSet];
-        self.playbackButton.accessibilityLabel = SRGMediaPlaybackButtonStopAccessibilityLabel;
+        self.playbackButton.pauseImageAccessibilityLabel = SRGMediaPlaybackButtonStopAccessibilityLabel;
     }
     else {
         self.playbackButton.pauseImage = [UIImage srg_letterboxPauseImageInSet:imageSet];
-        self.playbackButton.accessibilityLabel = nil;
+        self.playbackButton.pauseImageAccessibilityLabel = nil;
     }
     
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
