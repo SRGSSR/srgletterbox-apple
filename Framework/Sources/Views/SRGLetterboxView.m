@@ -206,7 +206,7 @@ static void commonInit(SRGLetterboxView *self);
                                                   [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
-    self.seekToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Go to live", @"Go to live label");;
+    self.seekToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
     
     [self reloadData];
 }
