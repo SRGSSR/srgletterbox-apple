@@ -56,7 +56,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View">
-                            <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                         </view>
@@ -231,20 +231,20 @@
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="centerX" secondItem="diO-OC-keM" secondAttribute="centerX" id="9ko-Sj-9qF"/>
                         <constraint firstAttribute="bottom" secondItem="oRJ-Ix-YZ1" secondAttribute="bottom" id="CXx-a0-lSb"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="D8d-Io-txc"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="HEd-9T-y5X"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="QtC-pP-mdx"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="centerY" secondItem="diO-OC-keM" secondAttribute="centerY" id="R9n-ta-4XL"/>
                         <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="Rfk-L4-GMy"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="750" id="SUi-VM-ZW7"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="fpx-1w-GZO"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
-                        <constraint firstAttribute="trailing" secondItem="q5e-ai-PQA" secondAttribute="trailing" id="gZU-uQ-I5S"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="hlr-Iu-Fci"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="jze-An-ZpH"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="width" secondItem="diO-OC-keM" secondAttribute="width" priority="750" id="oTI-AU-Fne"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="sZo-VD-nMG"/>
-                        <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="vEu-aE-gho"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="yt8-Kl-aFS"/>
                     </constraints>
                 </view>
