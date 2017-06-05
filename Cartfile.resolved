@@ -1,7 +1,7 @@
 github "Mantle/Mantle" "2.1.0"
 github "SRGSSR/FXReachability" "3cad7998f717145c90ff97eef552053d66063339"
 github "SRGSSR/MAKVONotificationCenter" "4a127e52997889729286510103f7e27100223730"
-github "SRGSSR/SRGMediaPlayer-iOS" "754a01384065da28496ff3c6407061baee147e0d"
+github "SRGSSR/SRGMediaPlayer-iOS" "a3b529a5295b18411cd0be933942e442baeb7328"
 github "SRGSSR/libextobjc" "076c968c9ade619ee836c89a935e09e6708d6ef2"
 github "SRGSSR/srganalytics-ios" "4d20f3cc21b0dae849ce2f74368d2a5193ccf4a5"
 github "SRGSSR/srgappearance-ios" "1.1"

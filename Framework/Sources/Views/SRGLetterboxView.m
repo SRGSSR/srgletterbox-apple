@@ -862,7 +862,7 @@ static void commonInit(SRGLetterboxView *self);
                 || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
             self.timeSlider.alpha = 0.f;
             self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.stopInsteadOfPauseImage = NO;
+            self.playbackButton.useStopImage = NO;
             return;
         }
         
@@ -871,14 +871,14 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.stopInsteadOfPauseImage = NO;
+                self.playbackButton.useStopImage = NO;
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.stopInsteadOfPauseImage = YES;
+                self.playbackButton.useStopImage = YES;
                 break;
             }
                 
@@ -886,14 +886,14 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.stopInsteadOfPauseImage = NO;
+                self.playbackButton.useStopImage = NO;
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.stopInsteadOfPauseImage = NO;
+                self.playbackButton.useStopImage = NO;
                 break;
             }
         }
