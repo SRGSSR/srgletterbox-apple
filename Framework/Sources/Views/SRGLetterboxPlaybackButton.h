@@ -8,15 +8,18 @@
 
 #import "UIImage+SRGLetterbox.h"
 
+/**
+ *  Playback button.
+ */
 @interface SRGLetterboxPlaybackButton : SRGPlaybackButton
 
 /**
-*  Switch from Pause image to Stop image for the play / pause image
+*  Switch from Pause image to Stop image for the play / pause image.
 */
-@property (nonatomic) BOOL useStopImage;
+@property (nonatomic) BOOL usesStopImage;
 
 /**
- *  Switch the image set
+ *  Switch the image set.
  */
 @property (nonatomic) SRGImageSet imageSet;
 

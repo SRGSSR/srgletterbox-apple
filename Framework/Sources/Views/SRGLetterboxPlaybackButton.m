@@ -6,14 +6,14 @@
 
 #import "SRGLetterboxPlaybackButton.h"
 
-#import "UIImage+SRGLetterbox.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 
 static void commonInit(SRGLetterboxPlaybackButton *self);
 
 @implementation SRGLetterboxPlaybackButton
 
-@synthesize useStopImage = _useStopImage;
+@synthesize usesStopImage = _usesStopImage;
 @synthesize imageSet = _imageSet;
 
 #pragma mark Object lifecycle
@@ -36,11 +36,11 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
 
 #pragma mark Overrides
 
-- (void)setUseStopImage:(BOOL)useStopImage
+- (void)setusesStopImage:(BOOL)usesStopImage
 {
-    _useStopImage = useStopImage;
+    _usesStopImage = usesStopImage;
     
-    self.pauseImage = (useStopImage) ? [UIImage srg_letterboxStopImageInSet:self.imageSet] : [UIImage srg_letterboxPauseImageInSet:self.imageSet];
+    self.pauseImage = (usesStopImage) ? [UIImage srg_letterboxStopImageInSet:self.imageSet] : [UIImage srg_letterboxPauseImageInSet:self.imageSet];
 }
 
 - (void)setImageSet:(SRGImageSet)imageSet
@@ -48,14 +48,14 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     _imageSet = imageSet;
     
     self.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
-    self.pauseImage = (self.useStopImage) ? [UIImage srg_letterboxStopImageInSet:imageSet] : [UIImage srg_letterboxPauseImageInSet:imageSet];
+    self.pauseImage = (self.usesStopImage) ? [UIImage srg_letterboxStopImageInSet:imageSet] : [UIImage srg_letterboxPauseImageInSet:imageSet];
 }
 
 #pragma mark Accessibility
 
 - (NSString *)accessibilityLabel
 {
-    if (self.playbackButtonState == SRGPlaybackButtonStatePause && self.useStopImage) {
+    if (self.playbackButtonState == SRGPlaybackButtonStatePause && self.usesStopImage) {
         return SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label");
     }
     else {
@@ -71,5 +71,3 @@ static void commonInit(SRGLetterboxPlaybackButton *self)
 {
     self.imageSet = SRGImageSetNormal;
 }
-
-
