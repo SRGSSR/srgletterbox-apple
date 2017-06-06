@@ -1,0 +1,29 @@
+/* Seek backward button label with a custom time range */
+"%@ backward" = "%@ zurück";
+
+/* Seek forward button label with a custom time range */
+"%@ forward" = "%@ vorwärts";
+
+/* The main area on the letterbox view, where the audio or its thumbnail is displayed */
+"Audio" = "Audio";
+
+/* Back to live label */
+"Back to live" = "Zurück zu live";
+
+/* Hint for the letterbox view */
+"Double tap to display or hide player controls." = "Zwei Mal tippen, um Bedienelemente anzuzeigen.";
+
+/* Full screen button label in the letterbox view, when the view is in the full screen state */
+"Exit full screen" = "Vollansicht verlassen";
+
+/* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
+"Full screen" = "Vollansicht starten";
+
+/* Short media or segment cell hint */
+"Plays the content." = "Inhalt abspielen";
+
+/* Stop button label */
+"Stop" = "Anhalten";
+
+/* The main area on the letterbox view, where the video or its thumbnail is displayed */
+"Video" = "Video";
