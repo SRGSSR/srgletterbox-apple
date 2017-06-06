@@ -207,7 +207,7 @@ static void commonInit(SRGLetterboxView *self);
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     self.seekToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
-    
+        
     [self reloadData];
 }
 
@@ -594,11 +594,11 @@ static void commonInit(SRGLetterboxView *self);
     self.errorLabel.text = [self error].localizedDescription;
     
     self.accessibilityView.accessibilityLabel = (controller.media.mediaType == SRGMediaTypeAudio) ?
-    SRGLetterboxAccessibilityLocalizedString(@"Audio", @"The main area on the letterbox view, where the audio or its thumbnail is displayed") :
-    SRGLetterboxAccessibilityLocalizedString(@"Video", @"The main area on the letterbox view, where the video or its thumbnail is displayed");
+        SRGLetterboxAccessibilityLocalizedString(@"Audio", @"The main area on the letterbox view, where the audio or its thumbnail is displayed") :
+        SRGLetterboxAccessibilityLocalizedString(@"Video", @"The main area on the letterbox view, where the video or its thumbnail is displayed");
     
     self.accessibilityView.accessibilityHint = (self.isUserInterfaceTogglable) ?
-    SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") :
+        SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") :
     nil;
 }
 

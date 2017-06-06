@@ -6,8 +6,8 @@
 
 #import "SRGLetterboxSegmentCell.h"
 
-#import "UIImageView+SRGLetterbox.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
 
@@ -116,7 +116,6 @@
 
 - (NSString *)accessibilityLabel
 {
-
     return self.segment.title;
 }
 
