@@ -14,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 #define SRGLetterboxLocalizedString(key, comment) [[NSBundle srg_letterboxBundle] localizedStringForKey:(key) value:@"" table:nil]
 
 /**
+ *  Return an accessibility-oriented localized string associated with the framework.
+ */
+#define SRGLetterboxAccessibilityLocalizedString(key, comment) [[NSBundle srg_letterboxBundle] localizedStringForKey:(key) value:@"" table:@"Accessibility"]
+
+/**
  *  Use to avoid user-facing text analyzer warnings.
  *
  *  See https://clang-analyzer.llvm.org/faq.html.

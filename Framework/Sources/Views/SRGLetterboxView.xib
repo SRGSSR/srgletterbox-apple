@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,6 +16,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGLetterboxView">
             <connections>
+                <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
                 <outlet property="airplayButton" destination="CRu-wz-mvo" id="clN-q2-KCP"/>
                 <outlet property="backgroundInteractionView" destination="oRJ-Ix-YZ1" id="u2b-IQ-H0e"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
@@ -54,6 +55,11 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diO-OC-keM" userLabel="Playback View">
                     <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View">
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-Ix-YZ1" userLabel="Background Interaction View">
                             <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -91,7 +97,7 @@
                                         <action selector="seekBackward:" destination="-1" eventType="touchUpInside" id="Gse-oB-T2j"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGPlaybackButton">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
                                     <rect key="frame" x="201" y="88" width="20" height="62"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
@@ -220,17 +226,21 @@
                     <constraints>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="0uM-Gz-1H6"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="1mJ-0L-8o5"/>
+                        <constraint firstAttribute="bottom" secondItem="q5e-ai-PQA" secondAttribute="bottom" id="4W6-J8-NtZ"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="height" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="height" id="6j2-gE-2a5"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="centerX" secondItem="diO-OC-keM" secondAttribute="centerX" id="9ko-Sj-9qF"/>
                         <constraint firstAttribute="bottom" secondItem="oRJ-Ix-YZ1" secondAttribute="bottom" id="CXx-a0-lSb"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="D8d-Io-txc"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="HEd-9T-y5X"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="QtC-pP-mdx"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="centerY" secondItem="diO-OC-keM" secondAttribute="centerY" id="R9n-ta-4XL"/>
                         <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="Rfk-L4-GMy"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="750" id="SUi-VM-ZW7"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="fpx-1w-GZO"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="hlr-Iu-Fci"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="jze-An-ZpH"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="width" secondItem="diO-OC-keM" secondAttribute="width" priority="750" id="oTI-AU-Fne"/>

@@ -6,6 +6,7 @@
 
 #import "MultiPlayerViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -69,6 +70,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
