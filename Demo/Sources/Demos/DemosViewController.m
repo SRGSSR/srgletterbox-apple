@@ -116,6 +116,7 @@
     static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8591082";
     static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8412757";
     static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8412759";
+    static NSString * const kVideoOnDemandWithNoFullLengthURNString = @"urn:rts:video:8686071";
     static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
     static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:audio:8581974";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
@@ -211,71 +212,76 @@
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandWithNoFullLengthURNString];
                     break;
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString];
                     break;
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kVideoDVRURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kVideoLiveURNString];
+                    [self openModalPlayerWithURNString:kVideoDVRURNString];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kVideoSquareURNString];
+                    [self openModalPlayerWithURNString:kVideoLiveURNString];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kVideoPortraitURNString];
+                    [self openModalPlayerWithURNString:kVideoSquareURNString];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
+                    [self openModalPlayerWithURNString:kVideoPortraitURNString];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
+                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:kAudioDVRURNString];
+                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRURNString];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithURNString:kInvalidURNString];
                     break;
                 }
                     
                 case 17: {
+                    [self openModalPlayerWithURNString:nil];
+                    break;
+                }
+                    
+                case 18: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];
