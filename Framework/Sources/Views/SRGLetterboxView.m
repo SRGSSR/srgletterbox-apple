@@ -918,9 +918,9 @@ static void commonInit(SRGLetterboxView *self);
     
     if ([AVAudioSession srg_isAirplayActive]
             && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
-        // If the user interface is togglable, show controls, otherwise do not alter visibility. We do not want controls
+        // If the user interface is togglable, show controls, use visibility as set by the API client. We do not want controls
         // to be displayed while using Airplay if the interface was forced to be hidden
-        BOOL hidden = self.userInterfaceTogglable ? NO : self.userInterfaceHidden;
+        BOOL hidden = self.userInterfaceTogglable ? NO : self.mainRestorationContext.hidden;
         [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
     }
     else {
