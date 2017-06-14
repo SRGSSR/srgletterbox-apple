@@ -1,14 +1,14 @@
 /* Seek backward button label with a custom time range */
-"%@ backward" = "%@ backward";
+"%@ backward" = "%@enavos";
 
 /* Seek forward button label with a custom time range */
-"%@ forward" = "%@ forward";
+"%@ forward" = "%@enavant";
 
 /* The main area on the letterbox view, where the audio or its thumbnail is displayed */
 "Audio" = "Audio";
 
 /* Back to live label */
-"Back to live" = "Back to live";
+"Back to live" = "Enavos a live";
 
 /* Hint for the letterbox view */
 "Double tap to display or hide player controls." = "Smatgar duas giadas per mussar u zuppar controlas.";
