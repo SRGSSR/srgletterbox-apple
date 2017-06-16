@@ -22,7 +22,14 @@
     [self.window makeKeyAndVisible];
     
 #ifndef DEBUG
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"7bf489539f6e44739133ae456c41dc2c"];
+    
+#ifdef NIGHTLY
+    NSString *hockeyIdentifier = @"fed0d464bba34c35bbb051f9f517a9d6";
+#else
+    NSString *hockeyIdentifier = @"7bf489539f6e44739133ae456c41dc2c";
+#endif
+    
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
