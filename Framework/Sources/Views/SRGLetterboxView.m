@@ -1184,7 +1184,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 {
-    if (self.controller.media.contentType == SRGContentTypeLivestream) {
+    if (self.controller.media.contentType == SRGContentTypeLivestream || self.controller.media.contentType == SRGContentTypeScheduledLivestream) {
         static dispatch_once_t onceToken;
         static NSDateFormatter *dateFormatter;
         dispatch_once(&onceToken, ^{
