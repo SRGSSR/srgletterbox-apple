@@ -2,5 +2,5 @@ Carthage
 xcuserdata
 .DS_Store
 *.xcscmblueprint
-report.xml
+report.*
 last-nightlies-success-git-commit-hash.txt

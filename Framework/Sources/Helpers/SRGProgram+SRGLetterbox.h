@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Returns `YES` iff the program is on air on the specified date.
  */
-- (BOOL)containsDate:(NSDate *)date;
+- (BOOL)srgletterbox_containsDate:(NSDate *)date;
 
 @end
 

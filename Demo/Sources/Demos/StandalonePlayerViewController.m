@@ -6,6 +6,7 @@
 
 #import "StandalonePlayerViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -56,6 +57,8 @@
 {
     [super viewDidLoad];
     
+    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
+    
     self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
     
     [self.letterboxController playURN:self.URN];
@@ -82,14 +85,14 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    return topPresentedViewController != self;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    [topPresentedViewController presentViewController:self animated:YES completion:^{
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];
 }

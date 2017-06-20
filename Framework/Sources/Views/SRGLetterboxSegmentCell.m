@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxSegmentCell.h"
 
+#import "NSBundle+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -41,6 +42,13 @@
     UIImage *favoriteImage = self.favoriteImageView.image;
     self.favoriteImageView.image = nil;
     self.favoriteImageView.image = favoriteImage;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    [self.imageView srg_resetWithScale:SRGImageScaleMedium];
 }
 
 #pragma mark Getters and setters
@@ -97,6 +105,23 @@
             self.favoriteImageView.hidden = ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
         }
     }
+}
+
+#pragma mark Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+    return YES;
+}
+
+- (NSString *)accessibilityLabel
+{
+    return self.segment.title;
+}
+
+- (NSString *)accessibilityHint
+{
+    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Short media or segment cell hint");
 }
 
 @end

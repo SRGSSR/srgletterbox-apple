@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
     SRGLetterboxCommandMinimal              = 0,                // Minimal controls (play / pause only).
-    SRGLetterboxCommandSkipBackward         = 1 << 0,           // -30 seconds.
+    SRGLetterboxCommandSkipBackward         = 1 << 0,           // -10 seconds.
     SRGLetterboxCommandSkipForward          = 1 << 1,           // +30 seconds.
     SRGLetterboxCommandSeekBackward         = 1 << 2,           // Seek backward.
     SRGLetterboxCommandSeekForward          = 1 << 3,           // Seek forward.
@@ -161,6 +161,10 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
  *              easy way to restore the view controller in the exact same state as it was before picture in picture
  *              started.
+ *
+ *              Also note that enabling a controller with the service will alter audio session settings. Be especially
+ *              careful if you plan to change audio settings yourself elsewhere in your application, as you might
+ *              prevent the service from correctly working.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;

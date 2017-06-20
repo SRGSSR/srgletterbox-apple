@@ -7,6 +7,7 @@
 #import "ModalPlayerViewController.h"
 
 #import "ModalTransition.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -73,6 +74,8 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 {
     [super viewDidLoad];
     
+    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
+    
     // Use custom modal transition
     self.transitioningDelegate = self;
     
@@ -91,13 +94,6 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    // Special case to test multi chapters and segments. Should be removed when an example is available in production
-    if ([self.URN.uid containsString:@","]) {
-        self.letterboxController.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-    }
-    else {
-        self.letterboxController.serviceURL = nil;
-    }
     [self.letterboxController playURN:self.URN];
     
     [self reloadData];
@@ -161,14 +157,14 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    return topPresentedViewController != self;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    [topPresentedViewController presentViewController:self animated:YES completion:^{
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];
 }
@@ -200,7 +196,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     } completion:nil];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment interactive:(BOOL)interactive
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment time:(CMTime)time interactive:(BOOL)interactive
 {
     if (interactive) {
         SRGMedia *media = segment ? [self.letterboxController.mediaComposition mediaForSegment:segment] : nil;

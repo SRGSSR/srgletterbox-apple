@@ -63,17 +63,25 @@
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width);
     if (! URL) {
-        self.image = placeholderImage;
+        [self yy_setImageWithURL:nil placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
         return NO;
     }
-        
-    [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    
+    if (! [URL isEqual:self.yy_imageURL]) {
+        // Do not alter the current image if available, otherwise display the placeholder. This makes transitions more beautiful,
+        // avoiding an intermediate step when updating an image
+        [self yy_setImageWithURL:URL placeholder:self.image ?: placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+    }
+    
     return YES;
 }
 
-- (void)srg_cancelCurrentImageRequest
+- (void)srg_resetWithScale:(SRGImageScale)imageScale
 {
     [self yy_cancelCurrentImageRequest];
+    
+    CGSize size = SRGSizeForImageScale(imageScale);
+    self.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
 }
 
 @end

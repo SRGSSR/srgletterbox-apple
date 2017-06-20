@@ -51,10 +51,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
 /**
- *  This method is called when the Letterbox view slider did scroll. The segment corresponding to the current slider
- *  position is provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made by the user.
+ *  This method is called when the Letterbox view slider did scroll. The segment and the time corresponding to the current 
+ *  slider position are provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made by the user.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment interactive:(BOOL)interactive;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment time:(CMTime)time interactive:(BOOL)interactive;
 
 /**
  *  This method is called when the user has actively selected a segment.
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The following controls and views are supported out of the box, most of them available for any kind of media played 
  *  by a Letterbox controller (on-demand, live and DVR audio and video streams):
- *    - Buttons to control playback (play / pause, +/- 30 seconds, back to live for DVR streams)
+ *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams)
  *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams)
  *    - Error display
  *    - Airplay, picture in picture and subtitles / audio tracks buttons
@@ -118,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
  *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
  *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You can
- *  also respond to the `-letterboxView:didScrollWithSegment:interactive:` delegate method to respond to the timeline
+ *  also respond to the `-letterboxView:didScrollWithSegment:time:interactive:` delegate method to respond to the timeline
  *  being moved, either interactively or during normal playback
  *  
  *  ## Long press on segments and favorites
@@ -148,8 +148,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  An AirPlay button is displayed if application-wide services have been enabled for the controller bound to the
  *  view (@see `SRGLetterboxService`) and an external display is available. During AirPlay playback, controls cannot
- *  be toggled on or off.
- 
+ *  be toggled on or off (they will keep the current visibility at the time Airplay has been enabled).
+ *
  *  If `mirroredOnExternalScreen` has been set to `YES` on the service singleton, the Letterbox view will behave as 
  *  if no AirPlay playback was possible, and won't switch to external display. This way, your application can be 
  *  mirrored as is via AirPlay, which is especially convenient for presentation purposes.
@@ -269,6 +269,24 @@ IB_DESIGNABLE
  *  For more information, @see `SRGLetterboxViewDelegate`.
  */
 - (void)setNeedsSegmentFavoritesUpdate;
+
+/**
+ *  The time corresponding to the current slider position.
+ *
+ *  @discussion While dragging, this property may not reflect the value current time property of the asset being played.
+ *              The slider `time` property namely reflects the current slider knob position, not the actual player
+ *              position.
+ */
+@property (nonatomic, readonly) CMTime time;
+
+/**
+ *  Return `YES` iff the current slider position matches the conditions of a live feed.
+ *
+ *  @discussion While dragging, this property may not reflect the value returned by the media player controller `live`
+ *              property. The slider `live` property namely reflects the current slider knob position, not the actual
+ *              player position.
+ */
+@property (nonatomic, readonly, getter=isLive) BOOL live;
 
 @end
 

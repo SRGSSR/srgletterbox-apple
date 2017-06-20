@@ -23,8 +23,9 @@
                 <rect key="frame" x="0.0" y="0.0" width="160" height="130"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fjo-Dj-oWj">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fjo-Dj-oWj">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="90"/>
+                        <color key="backgroundColor" red="0.090196078431372548" green="0.090196078431372548" blue="0.090196078431372548" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="Fjo-Dj-oWj" secondAttribute="height" multiplier="16:9" id="sLO-bx-sHF"/>
                         </constraints>

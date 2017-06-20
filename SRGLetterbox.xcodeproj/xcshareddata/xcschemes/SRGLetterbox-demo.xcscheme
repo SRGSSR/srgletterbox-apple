@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0900"
+   LastUpgradeVersion = "0820"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6FE321401E28E24E00FD8E42"
-               BuildableName = "SRGLetterbox.framework"
-               BlueprintName = "SRGLetterbox"
+               BlueprintIdentifier = "6FAB3B391E28FE2000CC2197"
+               BuildableName = "SRGLetterbox-demo.app"
+               BlueprintName = "SRGLetterbox-demo"
                ReferencedContainer = "container:SRGLetterbox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,23 +28,13 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6FAB3B7E1E29060100CC2197"
-               BuildableName = "SRGLetterbox-tests.xctest"
-               BlueprintName = "SRGLetterbox-tests"
-               ReferencedContainer = "container:SRGLetterbox.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6FE321401E28E24E00FD8E42"
-            BuildableName = "SRGLetterbox.framework"
-            BlueprintName = "SRGLetterbox"
+            BlueprintIdentifier = "6FAB3B391E28FE2000CC2197"
+            BuildableName = "SRGLetterbox-demo.app"
+            BlueprintName = "SRGLetterbox-demo"
             ReferencedContainer = "container:SRGLetterbox.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -61,15 +51,23 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6FE321401E28E24E00FD8E42"
-            BuildableName = "SRGLetterbox.framework"
-            BlueprintName = "SRGLetterbox"
+            BlueprintIdentifier = "6FAB3B391E28FE2000CC2197"
+            BuildableName = "SRGLetterbox-demo.app"
+            BlueprintName = "SRGLetterbox-demo"
             ReferencedContainer = "container:SRGLetterbox.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -79,15 +77,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6FE321401E28E24E00FD8E42"
-            BuildableName = "SRGLetterbox.framework"
-            BlueprintName = "SRGLetterbox"
+            BlueprintIdentifier = "6FAB3B391E28FE2000CC2197"
+            BuildableName = "SRGLetterbox-demo.app"
+            BlueprintName = "SRGLetterbox-demo"
             ReferencedContainer = "container:SRGLetterbox.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

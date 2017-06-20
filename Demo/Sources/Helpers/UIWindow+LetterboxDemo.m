@@ -8,13 +8,13 @@
 
 @implementation UIWindow (LetterboxDemo)
 
-- (UIViewController *)topPresentedViewController
+- (UIViewController *)topViewController
 {
-    UIViewController *topPresentedViewController = self.rootViewController;
-    while (topPresentedViewController.presentedViewController) {
-        topPresentedViewController = topPresentedViewController.presentedViewController;
+    UIViewController *topViewController = self.rootViewController;
+    while (topViewController.presentedViewController) {
+        topViewController = topViewController.presentedViewController;
     }
-    return topPresentedViewController;
+    return topViewController;
 }
 
 @end

@@ -6,6 +6,7 @@
 
 #import "MultiPlayerViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -70,6 +71,8 @@
 {
     [super viewDidLoad];
     
+    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
+    
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController1.muted = YES;
@@ -122,14 +125,14 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    return topPresentedViewController != self;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topPresentedViewController = [UIApplication sharedApplication].keyWindow.topPresentedViewController;
-    [topPresentedViewController presentViewController:self animated:YES completion:^{
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];
 }

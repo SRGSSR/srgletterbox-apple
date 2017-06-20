@@ -97,9 +97,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                         name:SRGLetterboxMetadataDidChangeNotification
                                                       object:_controller];
         
-        // Probably register for media metadata updates to reload the control center. Apply same logic as in Letterbox UIView
-        // to display show info first
-        
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
@@ -316,7 +313,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
-    SRGMedia *media = controller.segmentMedia ?: controller.fullLengthMedia ?: controller.media;
+    SRGMedia *media = nil;
+    if (controller.URN.mediaType == SRGMediaTypeVideo) {
+        media = controller.segmentMedia ?: controller.fullLengthMedia ?: controller.media;
+    }
+    else {
+        media = controller.media;
+    }
+    
     if (! media) {
         self.currentArtworkURL = nil;
         self.currentArtwork = nil;
@@ -344,73 +348,88 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    NSURL *artworkImageURL = nil;
+    NSURL *artworkURL = nil;
     
     CGFloat artworkDimension = 512.f * [UIScreen mainScreen].scale;
     
-    // For livestreams, only rely on channel information
-    if (media.contentType == SRGContentTypeLivestream) {
+    // For livestreams, rely on channel information when available
+    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
         SRGChannel *channel = controller.channel;
         
         // Display program information (if any) when the controller position is within the current program, otherwise channel
         // information.
         NSDate *playbackDate = [NSDate dateWithTimeIntervalSinceNow:-CMTimeGetSeconds(CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), controller.currentTime))];
-        if ([channel.currentProgram containsDate:playbackDate]) {
+        if ([channel.currentProgram srgletterbox_containsDate:playbackDate]) {
             NSString *title = channel.currentProgram.title;
             nowPlayingInfo[MPMediaItemPropertyTitle] = title;
             nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
             
-            artworkImageURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
-            if (! artworkImageURL) {
-                artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+            artworkURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
+            if (! artworkURL) {
+                artworkURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
             }
         }
         else {
             nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
             
-            artworkImageURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
+            artworkURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-        artworkImageURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
+        artworkURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
     }
     
-    if (! [artworkImageURL isEqual:self.currentArtworkURL] || ! self.currentArtwork) {
-        self.currentArtwork = nil;
-        
+    if (! [artworkURL isEqual:self.currentArtworkURL] || ! self.currentArtwork) {
         // SRGLetterboxImageURL might return file URLs for overridden images
-        if (artworkImageURL.fileURL) {
-            UIImage *image = [UIImage imageWithContentsOfFile:artworkImageURL.path];
+        if (artworkURL.fileURL) {
+            UIImage *image = [UIImage imageWithContentsOfFile:artworkURL.path];
             MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
             nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-            self.currentArtworkURL = artworkImageURL;
+            self.currentArtworkURL = artworkURL;
             self.currentArtwork = artwork;
         }
         else {
-            if (artworkImageURL) {
+            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
+            UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
+            
+            if (artworkURL) {
                 // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
                 // FIXME: This arbitrary resizing could be moved to the data provider library
-                NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkImageURL.absoluteString];
+                NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkURL.absoluteString];
                 NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
                 self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (! image) {
-                            return;
+                        if (image) {
+                            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+                            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+                            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+                            
+                            self.currentArtworkURL = artworkURL;
+                            self.currentArtwork = artwork;
                         }
-                        
-                        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
-                        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-                        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-                        self.currentArtworkURL = artworkImageURL;
-                        self.currentArtwork = artwork;
+                        else {
+                            MPMediaItemArtwork *placeholderArtwork = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
+                            nowPlayingInfo[MPMediaItemPropertyArtwork] = placeholderArtwork;
+                            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+                            
+                            self.currentArtworkURL = placeholderImageURL;
+                            self.currentArtwork = placeholderArtwork;
+                        }
                     });
                 }];
+                
+                // Keep the current artwork during retrieval (even if it does not match) for smoother transitions
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = self.currentArtwork;
             }
-            
-            UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
+            else {
+                MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
+                
+                self.currentArtworkURL = placeholderImageURL;
+                self.currentArtwork = artwork;
+            }
         }
     }
     else {
@@ -420,6 +439,13 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.timeRange.duration));
+    
+    // Available starting with iOS 10. Only used for non-DVR livestreams (since when this property is set to YES the
+    // playback button is replaced with a stop button)
+    // TODO: Remove when the minimum required version is iOS 10
+    if (&MPNowPlayingInfoPropertyIsLiveStream) {
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
+    }
     
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
 }

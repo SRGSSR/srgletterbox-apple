@@ -113,18 +113,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * const kVideoOnDemandURNString = @"urn:swi:video:41981254";
-    static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8368368";
+    static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8591082";
     static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8412757";
     static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8412759";
+    static NSString * const kVideoOnDemandWithNoFullLengthURNString = @"urn:rts:video:8686071";
     static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
-    static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:video:8414189,8419195,8368368,8389148";
+    static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:audio:8581974";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
     
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
-    
-    static NSString * const kVideoSquareURNString = @"urn:rts:video:8393241";
-    static NSString * const kVideoPortraitURNString = @"urn:rts:video:8412286";
     
     static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
     static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:8399354";
@@ -211,71 +209,66 @@
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandWithNoFullLengthURNString];
                     break;
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString];
                     break;
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kVideoDVRURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kVideoLiveURNString];
+                    [self openModalPlayerWithURNString:kVideoDVRURNString];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kVideoSquareURNString];
+                    [self openModalPlayerWithURNString:kVideoLiveURNString];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kVideoPortraitURNString];
-                    break;
-                }
-                    
-                case 11: {
                     [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
                     break;
                 }
                     
-                case 12: {
+                case 11: {
                     [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
-                case 13: {
+                case 12: {
                     [self openModalPlayerWithURNString:kAudioDVRURNString];
                     break;
                 }
                     
-                case 14: {
+                case 13: {
                     [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
                     break;
                 }
                     
-                case 15: {
+                case 14: {
                     [self openModalPlayerWithURNString:kInvalidURNString];
                     break;
                 }
                     
-                case 16: {
+                case 15: {
                     [self openModalPlayerWithURNString:nil];
                     break;
                 }
                     
-                case 17: {
+                case 16: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];

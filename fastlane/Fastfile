@@ -13,6 +13,7 @@ default_platform :ios
 
 platform :ios do
   before_all do
+    ensure_git_status_clean
     carthage(
       command: "bootstrap",
       platform: "iOS",
@@ -51,6 +52,9 @@ platform :ios do
     )
 
     clean_build_artifacts
+
+    saveLastNightliesSuccessGitCommitHash
+
   end
 
   desc "Build for a scheme and a configuration"
@@ -133,6 +137,21 @@ platform :ios do
     lastNightliesSuccessGitCommitHash
   end
 
+  after_all do |lane|
+    reset_git_repo
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    reset_git_repo
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
 end
 
 
