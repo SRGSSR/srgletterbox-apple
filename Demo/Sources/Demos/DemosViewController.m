@@ -129,8 +129,6 @@
     static NSString * const kAudioDVRURNString = @"urn:rts:audio:3262363";
     static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
-    static NSString * const kSwissTXTVideoURNString = @"urn:swisstxt:video:srf:270823";
-    
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
     
     switch (indexPath.section) {

@@ -425,30 +425,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="qVM-on-HFL">
-                                        <rect key="frame" x="0.0" y="1046.5" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qVM-on-HFL" id="Ei8-iT-Phe">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swiss Txt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ys-OO-CSz" userLabel="Swiss Txt">
-                                                    <rect key="frame" x="8" y="8" width="359" height="27.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="6ys-OO-CSz" firstAttribute="leading" secondItem="Ei8-iT-Phe" secondAttribute="leading" constant="8" id="AlJ-YE-JNk"/>
-                                                <constraint firstAttribute="bottom" secondItem="6ys-OO-CSz" secondAttribute="bottom" constant="8" id="BFN-Z3-Oys"/>
-                                                <constraint firstItem="6ys-OO-CSz" firstAttribute="top" secondItem="Ei8-iT-Phe" secondAttribute="top" constant="8" id="CvY-Fs-7Af"/>
-                                                <constraint firstAttribute="trailing" secondItem="6ys-OO-CSz" secondAttribute="trailing" constant="8" id="sIP-eP-HRG"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="yWg-Sm-Ou8">
-                                        <rect key="frame" x="0.0" y="1090.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="1046.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yWg-Sm-Ou8" id="DO3-F6-Z37">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
