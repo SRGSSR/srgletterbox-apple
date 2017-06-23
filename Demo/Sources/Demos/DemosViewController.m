@@ -259,21 +259,16 @@
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURNString:kSwissTXTVideoURNString];
-                    break;
-                }
-                    
-                case 15: {
                     [self openModalPlayerWithURNString:kInvalidURNString];
                     break;
                 }
                     
-                case 16: {
+                case 15: {
                     [self openModalPlayerWithURNString:nil];
                     break;
                 }
                     
-                case 17: {
+                case 16: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];
@@ -313,7 +308,27 @@
         }
         
         case 4: {
+            AutoPlayList autoPlayList = AutoPlayListUnknown;
+            switch (indexPath.row) {
+                case 0:
+                    autoPlayList = AutoPlayListMostPopularRTSVideo;
+                    break;
+                case 1:
+                    autoPlayList = AutoPlayListSRFVideoScheduledLivestreams;
+                    break;
+                case 2:
+                    autoPlayList = AutoPlayListRTSVideoScheduledLivestreams;
+                    break;
+                case 3:
+                    autoPlayList = AutoPlayListRSIVideoScheduledLivestreams;
+                    break;
+                    
+                default:
+                    break;
+            }
+            
             AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
+            autoplayViewController.autoPlayList = autoPlayList;
             [self.navigationController pushViewController:autoplayViewController animated:YES];
         }
             
