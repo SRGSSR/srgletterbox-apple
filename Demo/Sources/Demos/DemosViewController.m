@@ -81,7 +81,7 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openModalPlayerWithLatestLiveCenterVideoforVendor:(SRGDataProviderBusinessUnitIdentifier)dataProviderBusinessUnitIdentifier
+- (void)openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:(SRGDataProviderBusinessUnitIdentifier)dataProviderBusinessUnitIdentifier
 {
     [self.request cancel];
     
@@ -278,17 +278,17 @@
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithLatestLiveCenterVideoforVendor:SRGDataProviderBusinessUnitIdentifierSRF];
+                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithLatestLiveCenterVideoforVendor:SRGDataProviderBusinessUnitIdentifierRTS];
+                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithLatestLiveCenterVideoforVendor:SRGDataProviderBusinessUnitIdentifierRSI];
+                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRSI];
                     break;
                 }
                     
@@ -342,19 +342,19 @@
         }
         
         case 4: {
-            AutoPlayList autoPlayList = AutoPlayListUnknown;
+            AutoplayList autoplayList = AutoplayListUnknown;
             switch (indexPath.row) {
                 case 0:
-                    autoPlayList = AutoPlayListMostPopularRTSVideo;
+                    autoplayList = AutoplayListRTSTrendingMedias;
                     break;
                 case 1:
-                    autoPlayList = AutoPlayListSRFVideoScheduledLivestreams;
+                    autoplayList = AutoplayListSRFLiveCenterVideos;
                     break;
                 case 2:
-                    autoPlayList = AutoPlayListRTSVideoScheduledLivestreams;
+                    autoplayList = AutoplayListRTSLiveCenterVideos;
                     break;
                 case 3:
-                    autoPlayList = AutoPlayListRSIVideoScheduledLivestreams;
+                    autoplayList = AutoplayListRSILiveCenterVideos;
                     break;
                     
                 default:
@@ -362,7 +362,7 @@
             }
             
             AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
-            autoplayViewController.autoPlayList = autoPlayList;
+            autoplayViewController.autoplayList = autoplayList;
             [self.navigationController pushViewController:autoplayViewController animated:YES];
         }
             

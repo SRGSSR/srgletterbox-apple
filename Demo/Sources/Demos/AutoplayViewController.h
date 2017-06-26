@@ -11,32 +11,32 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Auto Play list
  */
-typedef NS_ENUM(NSInteger, AutoPlayList) {
+typedef NS_ENUM(NSInteger, AutoplayList) {
     /**
      *  Unknown list.
      */
-    AutoPlayListUnknown = 0,
+    AutoplayListUnknown = 0,
     /**
-     *  Most popular RTS video.
+     *  RTS trending videos
      */
-    AutoPlayListMostPopularRTSVideo,
+    AutoplayListRTSTrendingMedias,
     /**
-     *  SRF video scheduled livestreams
+     *  SRF live center videos
      */
-    AutoPlayListSRFVideoScheduledLivestreams,
+    AutoplayListSRFLiveCenterVideos,
     /**
-     *  Most populare RTS video.
+     *  RTS live center videos
      */
-    AutoPlayListRTSVideoScheduledLivestreams,
+    AutoplayListRTSLiveCenterVideos,
     /**
-     *  Most populare RTS video.
+     *  SRF live center videos
      */
-    AutoPlayListRSIVideoScheduledLivestreams
+    AutoplayListRSILiveCenterVideos
 };
 
 @interface AutoplayViewController : UITableViewController
 
-@property (nonatomic) AutoPlayList autoPlayList;
+@property (nonatomic) AutoplayList autoplayList;
 
 @end
 

@@ -49,22 +49,22 @@
 
 #pragma mark Setters
 
-- (void)setAutoPlayList:(AutoPlayList)autoPlayList
+- (void)setAutoplayList:(AutoplayList)autoplayList
 {
-    _autoPlayList = autoPlayList;
+    _autoplayList = autoplayList;
     
-    switch (autoPlayList) {
-        case AutoPlayListMostPopularRTSVideo:
-            self.title = @"Most popular RTS videos";
+    switch (autoplayList) {
+        case AutoplayListRTSTrendingMedias:
+            self.title = @"RTS trending videos";
             break;
-        case AutoPlayListSRFVideoScheduledLivestreams:
-            self.title = @"SRF live center";
+        case AutoplayListSRFLiveCenterVideos:
+            self.title = @"SRF live center videos";
             break;
-        case AutoPlayListRTSVideoScheduledLivestreams:
-            self.title = @"RTS live center";
+        case AutoplayListRTSLiveCenterVideos:
+            self.title = @"RTS live center videos";
             break;
-        case AutoPlayListRSIVideoScheduledLivestreams:
-            self.title = @"RSI live center";
+        case AutoplayListRSILiveCenterVideos:
+            self.title = @"RSI live center videos";
             break;
         default:
             self.title = nil;
@@ -87,15 +87,15 @@
     [self.tableView reloadData];
     
     SRGDataProviderBusinessUnitIdentifier buIdentifier = nil;
-    switch (self.autoPlayList) {
-        case AutoPlayListMostPopularRTSVideo:
-        case AutoPlayListRTSVideoScheduledLivestreams:
+    switch (self.autoplayList) {
+        case AutoplayListRTSTrendingMedias:
+        case AutoplayListRTSLiveCenterVideos:
             buIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
             break;
-        case AutoPlayListSRFVideoScheduledLivestreams:
+        case AutoplayListSRFLiveCenterVideos:
             buIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
              break;
-        case AutoPlayListRSIVideoScheduledLivestreams:
+        case AutoplayListRSILiveCenterVideos:
             buIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
             break;
         default:
@@ -111,13 +111,13 @@
         };
         
         SRGRequest *request = nil;
-        switch (self.autoPlayList) {
-            case AutoPlayListMostPopularRTSVideo:
+        switch (self.autoplayList) {
+            case AutoplayListRTSTrendingMedias:
                 request = [self.dataProvider tvTrendingMediasWithCompletionBlock:completionBlock];
                 break;
-            case AutoPlayListSRFVideoScheduledLivestreams:
-            case AutoPlayListRTSVideoScheduledLivestreams:
-            case AutoPlayListRSIVideoScheduledLivestreams:
+            case AutoplayListSRFLiveCenterVideos:
+            case AutoplayListRTSLiveCenterVideos:
+            case AutoplayListRSILiveCenterVideos:
                 request = [self.dataProvider livecenterVideoScheduledLivestreamsWithCompletionBlock:completionBlock];
                 break;
                 
