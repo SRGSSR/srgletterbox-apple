@@ -118,7 +118,7 @@
             case AutoplayListSRFLiveCenterVideos:
             case AutoplayListRTSLiveCenterVideos:
             case AutoplayListRSILiveCenterVideos:
-                request = [self.dataProvider livecenterVideoScheduledLivestreamsWithCompletionBlock:completionBlock];
+                request = [self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock];
                 break;
                 
             default:

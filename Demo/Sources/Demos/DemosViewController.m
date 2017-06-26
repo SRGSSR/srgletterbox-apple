@@ -86,7 +86,7 @@
     [self.request cancel];
     
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:dataProviderBusinessUnitIdentifier];
-    SRGRequest *request =  [self.dataProvider livecenterVideoScheduledLivestreamsWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         [self openModalPlayerWithURNString:medias.firstObject.URN.URNString];
     }];
     [request resume];
