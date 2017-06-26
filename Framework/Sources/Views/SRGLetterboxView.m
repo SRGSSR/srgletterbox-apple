@@ -7,8 +7,10 @@
 #import "SRGLetterboxView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
 #import "SRGControlsView.h"
+#import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -46,7 +48,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSeekToLiveConstraint;
 
 @property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
-@property (nonatomic, weak) IBOutlet UIView *accessibilityView;
+@property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
@@ -58,7 +60,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
-@property (nonatomic) IBOutletCollection(UIButton) NSArray *fullScreenButtons;
+@property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
 
@@ -154,6 +156,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
     
+    self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
     
     self.controlsView.delegate = self;
@@ -187,9 +190,8 @@ static void commonInit(SRGLetterboxView *self);
     [self.mainView addGestureRecognizer:activityGestureRecognizer];
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-    [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
-        [self updateFullScreenAccessibiltyButton:button];
     }];
     
     self.accessibilityView.isAccessibilityElement = YES;
@@ -295,9 +297,8 @@ static void commonInit(SRGLetterboxView *self);
     [super layoutSubviews];
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-    [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
-        [self updateFullScreenAccessibiltyButton:button];
     }];
     
     // We need to know what will be the notification height, depending of the notification message and the layout resizing.
@@ -444,9 +445,8 @@ static void commonInit(SRGLetterboxView *self);
     _delegate = delegate;
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-    [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
-        [self updateFullScreenAccessibiltyButton:button];
     }];
 }
 
@@ -475,10 +475,9 @@ static void commonInit(SRGLetterboxView *self);
     [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
         if (finished) {
             BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-            [self.fullScreenButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
                 button.selected = fullScreen;
                 button.hidden = fullScreenButtonHidden;
-                [self updateFullScreenAccessibiltyButton:button];
             }];
             
             _fullScreen = fullScreen;
@@ -592,14 +591,6 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
-    
-    self.accessibilityView.accessibilityLabel = (controller.media.mediaType == SRGMediaTypeAudio) ?
-        SRGLetterboxAccessibilityLocalizedString(@"Audio", @"The main area on the letterbox view, where the audio or its thumbnail is displayed") :
-        SRGLetterboxAccessibilityLocalizedString(@"Video", @"The main area on the letterbox view, where the video or its thumbnail is displayed");
-    
-    self.accessibilityView.accessibilityHint = (self.isUserInterfaceTogglable) ?
-        SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") :
-    nil;
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -1398,15 +1389,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self resetInactivityTimer];
-}
-
-#pragma mark Accessibility
-
-- (void)updateFullScreenAccessibiltyButton:(UIButton *)fullScreenButton
-{
-    fullScreenButton.accessibilityLabel = (fullScreenButton.selected) ?
-    SRGLetterboxAccessibilityLocalizedString(@"Exit full screen", @"Full screen button label in the letterbox view, when the view is in the full screen state") :
-    SRGLetterboxAccessibilityLocalizedString(@"Full screen", @"Full screen button label in the letterbox view, when the view is NOT in the full screen state");
 }
 
 @end
