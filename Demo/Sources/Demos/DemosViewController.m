@@ -12,6 +12,13 @@
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
+@interface DemosViewController ()
+
+@property (nonatomic) SRGDataProvider *dataProvider;
+@property (nonatomic, weak) SRGRequest *request;
+
+@end
+
 @implementation DemosViewController
 
 #pragma mark Object lifecycle
@@ -72,6 +79,18 @@
     }
     
     [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
+- (void)openModalPlayerWithLatestLiveCenterVideoforVendor:(SRGDataProviderBusinessUnitIdentifier)dataProviderBusinessUnitIdentifier
+{
+    [self.request cancel];
+    
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:dataProviderBusinessUnitIdentifier];
+    SRGRequest *request =  [self.dataProvider livecenterVideoScheduledLivestreamsWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        [self openModalPlayerWithURNString:medias.firstObject.URN.URNString];
+    }];
+    [request resume];
+    self.request = request;
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
@@ -259,16 +278,31 @@
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    [self openModalPlayerWithLatestLiveCenterVideoforVendor:SRGDataProviderBusinessUnitIdentifierSRF];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithLatestLiveCenterVideoforVendor:SRGDataProviderBusinessUnitIdentifierRTS];
                     break;
                 }
                     
                 case 16: {
+                    [self openModalPlayerWithLatestLiveCenterVideoforVendor:SRGDataProviderBusinessUnitIdentifierRSI];
+                    break;
+                }
+                    
+                case 17: {
+                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    break;
+                }
+                    
+                case 18: {
+                    [self openModalPlayerWithURNString:nil];
+                    break;
+                }
+                    
+                case 19: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];

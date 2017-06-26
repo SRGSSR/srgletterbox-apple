@@ -91,11 +91,6 @@
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    // Live center events are currently only available in test
-    // TODO: Remove when we have a fixed test stream URN in production
-    if (self.URN.liveCenterEvent) {
-        self.letterboxController.serviceURL = SRGIntegrationLayerTestServiceURL();
-    }
     [self.letterboxController playURN:self.URN];
     
     [self reloadData];
