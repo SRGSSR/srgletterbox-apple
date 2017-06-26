@@ -9,7 +9,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Auto Play list
+ *  Autoplay lists.
  */
 typedef NS_ENUM(NSInteger, AutoplayList) {
     /**
@@ -17,19 +17,19 @@ typedef NS_ENUM(NSInteger, AutoplayList) {
      */
     AutoplayListUnknown = 0,
     /**
-     *  RTS trending videos
+     *  RTS trending videos.
      */
     AutoplayListRTSTrendingMedias,
     /**
-     *  SRF live center videos
+     *  SRF live center videos.
      */
     AutoplayListSRFLiveCenterVideos,
     /**
-     *  RTS live center videos
+     *  RTS live center videos.
      */
     AutoplayListRTSLiveCenterVideos,
     /**
-     *  SRF live center videos
+     *  SRF live center videos.
      */
     AutoplayListRSILiveCenterVideos
 };

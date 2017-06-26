@@ -54,21 +54,30 @@
     _autoplayList = autoplayList;
     
     switch (autoplayList) {
-        case AutoplayListRTSTrendingMedias:
+        case AutoplayListRTSTrendingMedias: {
             self.title = @"RTS trending videos";
             break;
-        case AutoplayListSRFLiveCenterVideos:
+        }
+            
+        case AutoplayListSRFLiveCenterVideos: {
             self.title = @"SRF live center videos";
             break;
-        case AutoplayListRTSLiveCenterVideos:
+        }
+            
+        case AutoplayListRTSLiveCenterVideos: {
             self.title = @"RTS live center videos";
             break;
-        case AutoplayListRSILiveCenterVideos:
+        }
+            
+        case AutoplayListRSILiveCenterVideos: {
             self.title = @"RSI live center videos";
             break;
-        default:
+        }
+            
+        default: {
             self.title = nil;
             break;
+        }
     }
     
     if (self.viewLoaded) {
@@ -89,17 +98,24 @@
     SRGDataProviderBusinessUnitIdentifier buIdentifier = nil;
     switch (self.autoplayList) {
         case AutoplayListRTSTrendingMedias:
-        case AutoplayListRTSLiveCenterVideos:
+        case AutoplayListRTSLiveCenterVideos: {
             buIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
             break;
-        case AutoplayListSRFLiveCenterVideos:
+        }
+            
+        case AutoplayListSRFLiveCenterVideos: {
             buIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
-             break;
-        case AutoplayListRSILiveCenterVideos:
+            break;
+        }
+            
+        case AutoplayListRSILiveCenterVideos: {
             buIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
             break;
-        default:
+        }
+            
+        default: {
             break;
+        }
     }
     
     if (buIdentifier) {
@@ -110,20 +126,25 @@
             [self.tableView reloadData];
         };
         
-        SRGRequest *request = nil;
+        SRGFirstPageRequest *request = nil;
         switch (self.autoplayList) {
-            case AutoplayListRTSTrendingMedias:
+            case AutoplayListRTSTrendingMedias: {
                 request = [self.dataProvider tvTrendingMediasWithCompletionBlock:completionBlock];
                 break;
+            }
+                
             case AutoplayListSRFLiveCenterVideos:
             case AutoplayListRTSLiveCenterVideos:
-            case AutoplayListRSILiveCenterVideos:
+            case AutoplayListRSILiveCenterVideos: {
                 request = [self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock];
                 break;
+            }
                 
-            default:
+            default: {
                 break;
+            }
         }
+        request = [request requestWithPageSize:50];
         
         [request resume];
         self.request = request;

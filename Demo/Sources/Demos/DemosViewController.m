@@ -344,21 +344,29 @@
         case 4: {
             AutoplayList autoplayList = AutoplayListUnknown;
             switch (indexPath.row) {
-                case 0:
+                case 0: {
                     autoplayList = AutoplayListRTSTrendingMedias;
                     break;
-                case 1:
+                }
+                    
+                case 1: {
                     autoplayList = AutoplayListSRFLiveCenterVideos;
                     break;
-                case 2:
+                }
+                    
+                case 2: {
                     autoplayList = AutoplayListRTSLiveCenterVideos;
                     break;
-                case 3:
+                }
+                    
+                case 3: {
                     autoplayList = AutoplayListRSILiveCenterVideos;
                     break;
+                }
                     
-                default:
+                default: {
                     break;
+                }
             }
             
             AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
