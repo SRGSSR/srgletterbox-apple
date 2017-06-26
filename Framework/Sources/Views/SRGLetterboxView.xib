@@ -60,6 +60,13 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                         </view>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
+                        </imageView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hl-p0-Y81">
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-Ix-YZ1" userLabel="Background Interaction View">
                             <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -67,13 +74,6 @@
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="Si8-HF-UEx" appends="YES" id="5yN-rq-d5c"/>
                             </connections>
-                        </view>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
-                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
-                        </imageView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hl-p0-Y81">
-                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
                             <rect key="frame" x="27" y="0.0" width="421" height="237"/>
