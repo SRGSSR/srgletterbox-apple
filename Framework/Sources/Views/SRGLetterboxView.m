@@ -1389,7 +1389,14 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
 {
-    self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
+    if (UIAccessibilityIsVoiceOverRunning()) {
+        self.accessibilityView.alpha = 1.f;
+        [self conditional_setUserInterfaceHidden:NO animated:YES];
+    }
+    else {
+        self.accessibilityView.alpha = 0.f;
+    }
+    
     [self resetInactivityTimer];
 }
 
