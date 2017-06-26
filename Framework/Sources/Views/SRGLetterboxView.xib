@@ -56,7 +56,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View">
-                            <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
+                            <rect key="frame" x="27" y="0.0" width="421" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                         </view>
@@ -225,23 +225,23 @@
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="0Cx-sC-gU4"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="0uM-Gz-1H6"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="1mJ-0L-8o5"/>
-                        <constraint firstAttribute="bottom" secondItem="q5e-ai-PQA" secondAttribute="bottom" id="4W6-J8-NtZ"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="top" id="A0E-Ua-e5P"/>
                         <constraint firstAttribute="bottom" secondItem="oRJ-Ix-YZ1" secondAttribute="bottom" id="CXx-a0-lSb"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="centerX" secondItem="diO-OC-keM" secondAttribute="centerX" id="Cdj-6N-AdJ"/>
-                        <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="HEd-9T-y5X"/>
                         <constraint firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="IXZ-Sg-JH0"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="OJp-xR-jDn"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="width" secondItem="diO-OC-keM" secondAttribute="width" priority="750" id="Qaz-ey-eiw"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="RLX-vo-5ks"/>
                         <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
-                        <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="Rfk-L4-GMy"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="g8w-El-eYt"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
-                        <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="hlr-Iu-Fci"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="mzr-JP-j7C"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="750" id="nnM-C9-eos"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="qOR-YG-spO"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="height" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="height" id="tr5-Uh-yfq"/>
+                        <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="whS-M5-Csh"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="centerY" secondItem="diO-OC-keM" secondAttribute="centerY" id="x8P-ey-nJs"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="yt8-Kl-aFS"/>
                     </constraints>
