@@ -13,9 +13,6 @@
 #import <Masonry/Masonry.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 
-static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
-static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
-
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
@@ -206,6 +203,9 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
+    static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
+    static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
+    
     void (^animations)(void) = ^{
         if (fullScreen) {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
