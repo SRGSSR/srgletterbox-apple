@@ -8,7 +8,35 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  Autoplay lists.
+ */
+typedef NS_ENUM(NSInteger, AutoplayList) {
+    /**
+     *  Unknown list.
+     */
+    AutoplayListUnknown = 0,
+    /**
+     *  RTS trending videos.
+     */
+    AutoplayListRTSTrendingMedias,
+    /**
+     *  SRF live center videos.
+     */
+    AutoplayListSRFLiveCenterVideos,
+    /**
+     *  RTS live center videos.
+     */
+    AutoplayListRTSLiveCenterVideos,
+    /**
+     *  SRF live center videos.
+     */
+    AutoplayListRSILiveCenterVideos
+};
+
 @interface AutoplayViewController : UITableViewController
+
+@property (nonatomic) AutoplayList autoplayList;
 
 @end
 
