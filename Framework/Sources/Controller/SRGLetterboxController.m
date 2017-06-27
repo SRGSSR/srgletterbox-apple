@@ -737,7 +737,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (BOOL)canSkipToLive
 {
-    return (self.media.contentType == SRGContentTypeLivestream && [self canSkipForward]);
+    return ((self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) && [self canSkipForward]);
 }
 
 - (void)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -812,7 +812,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (self.media.contentType == SRGContentTypeLivestream) {
+    if (self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) {
         CMTimeRange timeRange = self.mediaPlayerController.timeRange;
         
         [self.mediaPlayerController seekEfficientlyToTime:CMTimeRangeGetEnd(timeRange) withCompletionHandler:^(BOOL finished) {
