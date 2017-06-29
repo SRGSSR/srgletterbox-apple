@@ -278,8 +278,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             }
             
             // Update the URL if needed
-            if (! [[self.mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR] isEqual:[mediaComposition.mainChapter resourcesForProtocol:SRGProtocolHLS_DVR]]) {
-                SRGMedia *media = [mediaComposition mediaForChapter:mediaComposition.mainChapter];
+            if (! [[self.mediaComposition.mainChapter resourcesForStreamingMethod:SRGStreamingMethodHLS] isEqual:[mediaComposition.mainChapter resourcesForStreamingMethod:SRGStreamingMethodHLS]]) {
+                SRGMedia *media = [mediaComposition mediaForRepresentation:mediaComposition.mainChapter];
                 [self playMedia:media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
             }
         }];
@@ -308,7 +308,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (SRGMedia *)segmentMedia
 {
-    return self.segment ? [self.mediaComposition mediaForSegment:self.segment] : nil;
+    return self.segment ? [self.mediaComposition mediaForRepresentation:self.segment] : nil;
 }
 
 - (BOOL)isContentURLOverridden
@@ -339,7 +339,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition segment:(SRGSegment *)segment channel:(SRGChannel *)channel
 {
     if (mediaComposition) {
-        media = [mediaComposition mediaForSegment:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
+        media = [mediaComposition mediaForRepresentation:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
     }
     
     if (media) {
@@ -523,7 +523,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
         
         @weakify(self)
-        SRGRequest *playRequest = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
+        SRGRequest *playRequest = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone preferredQuality:preferredQuality preferredStartBitRate:preferredStartBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             @strongify(self)
             
             if (error) {
@@ -555,7 +555,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     // Build the media composition for the provided segment (can be a chapter)
-    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSegment:segment];
+    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForRepresentation:segment];
     if (! mediaComposition) {
         SRGLetterboxLogInfo(@"controller", @"No media composition information is availble. Cannot switch to another segment");
         return NO;
@@ -567,7 +567,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     if ([segment isKindOfClass:[SRGChapter class]]
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredProtocol:SRGProtocolNone preferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate userInfo:nil resume:NO completionHandler:nil];
+        SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone preferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate userInfo:nil resume:NO completionHandler:nil];
         [self.requestQueue addRequest:request resume:YES];
     }
     // Playing another segment from the same media. Seek
