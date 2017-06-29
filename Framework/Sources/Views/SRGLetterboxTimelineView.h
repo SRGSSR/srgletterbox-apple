@@ -72,7 +72,7 @@ IB_DESIGNABLE
 /**
  *  Call to ask for a subdivision favorite status update.
  */
-- (void)setNeedsSubdivisionsFavoritesUpdate;
+- (void)setNeedsSubdivisionFavoritesUpdate;
 
 @end
 

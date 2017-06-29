@@ -1195,9 +1195,9 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)setNeedsSubdivisionsFavoritesUpdate
+- (void)setNeedsSubdivisionFavoritesUpdate
 {
-    [self.timelineView setNeedsSubdivisionsFavoritesUpdate];
+    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
 }
 
 #pragma mark SRGControlsViewDelegate protocol

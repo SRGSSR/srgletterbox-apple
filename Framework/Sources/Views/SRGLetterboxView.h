@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  set or if this method is not implemented, no favorite icon will be displayed.
  *
  *  The method is called when appropriate, but you can manually trigger a favorite status refresh by calling the
- *  LetterboxView `-setNeedsSubdivisionsFavoritesUpdate` method.
+ *  LetterboxView `-setNeedsSubdivisionFavoritesUpdate` method.
  */
 - (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision;
 
@@ -268,7 +268,7 @@ IB_DESIGNABLE
  *
  *  For more information, @see `SRGLetterboxViewDelegate`.
  */
-- (void)setNeedsSubdivisionsFavoritesUpdate;
+- (void)setNeedsSubdivisionFavoritesUpdate;
 
 /**
  *  The time corresponding to the current slider position.
