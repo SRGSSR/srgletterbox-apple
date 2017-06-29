@@ -8,7 +8,7 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
-#import "SRGLetterboxSegmentCell.h"
+#import "SRGLetterboxSubdivisionCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,28 +21,28 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGLetterboxTimelineViewDelegate <NSObject>
 
 /**
- *  Called when a segment has been actively selected by the user.
+ *  Called when a subdivision (segment or chapter) has been actively selected by the user.
  */
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision;
 
 /**
- *  Called when the user made a long press on segment cell.
+ *  Called when the user made a long press on subdivision cell.
  */
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSegment:(SRGSegment *)segment;
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
 /**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
  *  set, no favorite icon will be displayed.
  */
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSegment:(SRGSegment *)segment;
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision;
 
 @end
 
 /**
- *  Timeline displaying segments associated with a media.
+ *  Timeline displaying subdivisions (segments and chapters) associated with a media.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSegmentCellDelegate>
+@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSubdivisionCellDelegate>
 
 /**
  *  The timeline delegate.
@@ -50,9 +50,9 @@ IB_DESIGNABLE
 @property (nonatomic, weak, nullable) id<SRGLetterboxTimelineViewDelegate> delegate;
 
 /**
- *  The segments displayed by the timeline.
+ *  The subdivisions (segments or chapters) displayed by the timeline.
  */
-@property (nonatomic, nullable) NSArray<SRGSegment *> *segments;
+@property (nonatomic, nullable) NSArray<SRGSubdivision *> *subdivisions;
 
 /**
  *  The time to display the timeline progress for.
@@ -70,9 +70,9 @@ IB_DESIGNABLE
 - (void)scrollToSelectedIndexAnimated:(BOOL)animated;
 
 /**
- *  Call to ask for a segment favorite status update.
+ *  Call to ask for a subdivision favorite status update.
  */
-- (void)setNeedsSegmentFavoritesUpdate;
+- (void)setNeedsSubdivisionsFavoritesUpdate;
 
 @end
 

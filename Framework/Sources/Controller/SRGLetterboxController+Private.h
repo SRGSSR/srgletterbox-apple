@@ -30,12 +30,13 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
 /**
- *  Switch to the specified segment (or chapter) of the current media. Does nothing if no media composition is available
- *  yet, or if the segment is not related to the media composition. Playback is automatically resumed if necessary.
+ *  Switch to the specified subdivision (segment or chapter) of the current media. Does nothing if no media composition 
+ *  is available yet, or if the subdivision is not related to the media composition. Playback is automatically resumed if 
+ *  necessary.
  *
  *  Return `YES` iff switching is possible.
  */
-- (BOOL)switchToSegment:(SRGSegment *)segment;
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision;
 
 /**
  *  Return YES iff the player can skip backward from a standard amount of seconds.

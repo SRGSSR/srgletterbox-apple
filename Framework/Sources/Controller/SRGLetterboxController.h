@@ -36,7 +36,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxSegmentKey;
+OBJC_EXTERN NSString * const SRGLetterboxSubdivision;
 OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 
 /**
@@ -45,7 +45,7 @@ OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousSegmentKey;
+OBJC_EXTERN NSString * const SRGLetterboxPreviousSubdivisionKey;
 OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
 
 /**
@@ -313,14 +313,14 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
 /**
- *  The current segment being played (if any).
+ *  The current subdivision being played (if any).
  */
-@property (nonatomic, readonly, nullable) SRGSegment *segment;
+@property (nonatomic, readonly, nullable) SRGSubdivision *subdivision;
 
 /**
- *  The current segment being played (if any), as an `SRGMedia` object.
+ *  The current subdivision (segment or chapter) being played, if any, as an `SRGMedia` object.
  */
-@property (nonatomic, readonly, nullable) SRGMedia *segmentMedia;
+@property (nonatomic, readonly, nullable) SRGMedia *subdivisionMedia;
 
 /**
  *  The current full-length information (if available).
