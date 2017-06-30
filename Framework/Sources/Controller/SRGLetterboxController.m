@@ -267,7 +267,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             
             // If the user location has changed, she might be in a location where the content is now blocked
             SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-            if (blockingReason == SRGBlockingReasonNone) {
+            if (blockingReason != SRGBlockingReasonNone) {
                 [self.mediaPlayerController stop];
                 
                 NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
@@ -514,7 +514,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         
         // Do not go further if the content is blocked
         SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-        if (blockingReason == SRGBlockingReasonNone) {
+        if (blockingReason != SRGBlockingReasonNone) {
             NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                  code:SRGLetterboxErrorCodeBlocked
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
