@@ -36,7 +36,7 @@ OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
 OBJC_EXTERN NSString * const SRGLetterboxURNKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
 OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxSubdivision;
+OBJC_EXTERN NSString * const SRGLetterboxSubdivisionKey;
 OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
 
 /**

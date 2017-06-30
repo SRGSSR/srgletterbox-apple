@@ -29,7 +29,7 @@ NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetad
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
 NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
 NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
-NSString * const SRGLetterboxSubdivision = @"SRGLetterboxSubdivision";
+NSString * const SRGLetterboxSubdivisionKey = @"SRGLetterboxSubdivisionKey";
 NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannelKey";
 
 NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURNKey";
@@ -374,7 +374,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
     }
     if (subdivision) {
-        userInfo[SRGLetterboxSubdivision] = subdivision;
+        userInfo[SRGLetterboxSubdivisionKey] = subdivision;
     }
     if (channel) {
         userInfo[SRGLetterboxChannelKey] = channel;
