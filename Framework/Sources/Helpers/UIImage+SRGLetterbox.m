@@ -46,7 +46,7 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
         return nil;
     }
     
-    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:width type:nil];
+    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:width type:SRGImageTypeDefault];
     if (! SRGLetterboxIsValidURL(URL)) {
         return nil;
     }
