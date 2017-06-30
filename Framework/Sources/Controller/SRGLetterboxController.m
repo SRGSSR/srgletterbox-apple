@@ -277,8 +277,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 return;
             }
             
-            // Update the URL if needed
-            if (! [self.mediaComposition.mainChapter.playableResources isEqual:mediaComposition.mainChapter.playableResources]) {
+            // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
+            NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
+            NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
+            if (! [currentResources isEqualToSet:fetchedResources]) {
                 SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
                 [self playMedia:media withPreferredQuality:self.preferredQuality preferredStartBitRate:self.preferredStartBitRate];
             }
