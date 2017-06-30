@@ -97,14 +97,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The following controls and views are supported out of the box, most of them available for any kind of media played 
  *  by a Letterbox controller (on-demand, live and DVR audio and video streams):
- *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams)
- *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams)
- *    - Error display
- *    - Airplay, picture in picture and subtitles / audio tracks buttons
- *    - Optional full screen button (see below)
- *    - Overlay displayed when external Airplay playback is active
- *    - Activity indicator
- *    - Image placeholder when loading or playing on an external display
+ *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams).
+ *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams).
+ *    - Error display.
+ *    - Airplay, picture in picture and subtitles / audio tracks buttons.
+ *    - Optional full screen button (see below).
+ *    - Overlay displayed when external Airplay playback is active.
+ *    - Activity indicator.
+ *    - Image placeholder when loading or playing on an external display.
  *
  *  Controls are displayed initially, and hidden after an inactivity delay. The user is also able to toggle the
  *  controls on or off by tapping on the overlay. If needed, you can programmatically show or hide the controls, or 
@@ -115,18 +115,20 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  ## Subdivisions (segments and chapters)
  *
- *  The view automatically loads and displays subdivisions below the player. Since the subdivision timeline takes some space
- *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
- *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You can
- *  also respond to the `-letterboxView:didScrollWithSubdivision:time:interactive:` delegate method to respond to the timeline
- *  being moved, either interactively or during normal playback.
+ *  The view automatically loads and displays subdivisions as a timeline below the player. Since the subdivision timeline 
+ *  takes some space when present, you can have your code respond to timeline height adjustments by setting a Letterbox 
+ *  view delegate and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. 
+ *  You can also respond to the `-letterboxView:didScrollWithSubdivision:time:interactive:` delegate method to respond to 
+ *  the timeline being moved, either interactively or during normal playback.
  *  
  *  ## Long press on subdivisions and favorites
  *
  *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressSubdivision:` 
- *  delegate method is called when the user holds her finger still on a cell for a few seconds, providing you with 
- *  the ability to store a subdivision as being favorited. The `-letterboxView:shouldDisplayFavoriteForSubdivision:` 
- *  delegate method lets you decide whether a subdivision cell should display a favorite icon or not.
+ *  delegate method is called when the user holds her finger still on a timeline cell for a few seconds, providing you 
+ *  with the ability to mark the associated subdivision as being (un)favorited. 
+ *
+ *  A favorite icon can be displayed on favorited cells by implementing the `-letterboxView:shouldDisplayFavoriteForSubdivision:`
+ *  delegate method.
  *
  *  ## Full-screen
  *
