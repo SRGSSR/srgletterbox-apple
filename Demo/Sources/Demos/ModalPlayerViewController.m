@@ -53,7 +53,7 @@
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-        viewController.favoritedSubdivisions = @[].mutableCopy;
+        viewController.favoritedSubdivisions = [NSMutableArray array];
         viewController.URN = URN;
         return viewController;
     }
