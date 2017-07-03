@@ -281,6 +281,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
             NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
             if (! [currentResources isEqualToSet:fetchedResources]) {
+                [self stop];
+                
                 SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
                 [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate];
             }
