@@ -260,7 +260,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
         
-        [self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        [[self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
             if (error) {
                 return;
             }
@@ -284,7 +284,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
                 [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate];
             }
-        }];
+        }] resume];
     }];
 }
 
