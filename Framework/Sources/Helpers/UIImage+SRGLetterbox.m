@@ -27,7 +27,7 @@
 
 static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 {
-    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED"];
+    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"];
 }
 
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
@@ -40,13 +40,13 @@ NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-320" ofType:@"pdf"];
 }
 
-NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGFloat width)
+NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type)
 {
     if (! object) {
         return nil;
     }
     
-    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:width];
+    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:width type:type];
     if (! SRGLetterboxIsValidURL(URL)) {
         return nil;
     }
@@ -54,7 +54,7 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CG
     return URL;
 }
 
-NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension)
+NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension)
 {
     if (! [object respondsToSelector:@selector(imageURL)]) {
         return nil;

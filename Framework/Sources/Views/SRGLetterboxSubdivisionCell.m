@@ -4,14 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxSegmentCell.h"
+#import "SRGLetterboxSubdivisionCell.h"
 
 #import "NSBundle+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
 
-@interface SRGLetterboxSegmentCell ()
+@interface SRGLetterboxSubdivisionCell ()
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation SRGLetterboxSegmentCell
+@implementation SRGLetterboxSubdivisionCell
 
 #pragma mark View life cycle
 
@@ -53,14 +53,14 @@
 
 #pragma mark Getters and setters
 
-- (void)setSegment:(SRGSegment *)segment
+- (void)setSubdivision:(SRGSubdivision *)subdivision
 {
-    _segment = segment;
+    _subdivision = subdivision;
     
-    self.titleLabel.text = segment.title;
+    self.titleLabel.text = subdivision.title;
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    [self.imageView srg_requestImageForObject:segment withScale:SRGImageScaleMedium];
+    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -71,18 +71,18 @@
     });
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
-    self.durationLabel.hidden = (segment.duration == 0.f);
+    self.durationLabel.hidden = (subdivision.duration == 0.f);
     
     if (! self.durationLabel.hidden) {
-        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:segment.duration / 1000.];
+        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", durationString];
     }
     else {
         self.durationLabel.text = nil;
     }
     
-    self.alpha = (segment.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
-    self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
+    self.alpha = (subdivision.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
+    self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
 }
 
 - (void)setProgress:(float)progress
@@ -101,8 +101,8 @@
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if (self.delegate) {
-            [self.delegate letterboxSegmentCellDidLongPress:self];
-            self.favoriteImageView.hidden = ! [self.delegate letterboxSegmentCellShouldDisplayFavoriteIcon:self];
+            [self.delegate letterboxSubdivisionCellDidLongPress:self];
+            self.favoriteImageView.hidden = ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
         }
     }
 }
@@ -116,12 +116,12 @@
 
 - (NSString *)accessibilityLabel
 {
-    return self.segment.title;
+    return self.subdivision.title;
 }
 
 - (NSString *)accessibilityHint
 {
-    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Short media or segment cell hint");
+    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
 }
 
 @end

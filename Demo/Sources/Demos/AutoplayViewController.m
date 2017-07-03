@@ -95,21 +95,21 @@
     self.medias = nil;
     [self.tableView reloadData];
     
-    SRGDataProviderBusinessUnitIdentifier buIdentifier = nil;
+    SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = nil;
     switch (self.autoplayList) {
         case AutoplayListRTSTrendingMedias:
         case AutoplayListRTSLiveCenterVideos: {
-            buIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
             break;
         }
             
         case AutoplayListSRFLiveCenterVideos: {
-            buIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
             break;
         }
             
         case AutoplayListRSILiveCenterVideos: {
-            buIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
             break;
         }
             
@@ -118,25 +118,27 @@
         }
     }
     
-    if (buIdentifier) {
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:buIdentifier];
+    if (businessUnitIdentifier) {
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:businessUnitIdentifier];
         
-        SRGPaginatedMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
             self.medias = medias;
             [self.tableView reloadData];
         };
         
-        SRGFirstPageRequest *request = nil;
+        SRGRequest *request = nil;
         switch (self.autoplayList) {
             case AutoplayListRTSTrendingMedias: {
-                request = [self.dataProvider tvTrendingMediasWithCompletionBlock:completionBlock];
+                request = [self.dataProvider tvTrendingMediasWithLimit:@50 completionBlock:completionBlock];
                 break;
             }
                 
             case AutoplayListSRFLiveCenterVideos:
             case AutoplayListRTSLiveCenterVideos:
             case AutoplayListRSILiveCenterVideos: {
-                request = [self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock];
+                request = [[self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+                    completionBlock(medias, error);
+                }] requestWithPageSize:50];
                 break;
             }
                 
@@ -144,7 +146,6 @@
                 break;
             }
         }
-        request = [request requestWithPageSize:50];
         
         [request resume];
         self.request = request;

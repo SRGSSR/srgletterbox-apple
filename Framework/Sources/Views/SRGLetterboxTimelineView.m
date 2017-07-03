@@ -7,7 +7,7 @@
 #import "SRGLetterboxTimelineView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGLetterboxSegmentCell.h"
+#import "SRGLetterboxSubdivisionCell.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
@@ -44,15 +44,15 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark Getters and setters
 
-- (void)setSegments:(NSArray<SRGSegment *> *)segments
+- (void)setSubdivisions:(NSArray<SRGSubdivision *> *)subdivisions
 {
-    _segments = segments;
+    _subdivisions = subdivisions;
     [self.collectionView reloadData];
 }
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex
 {
-    if (selectedIndex >= self.segments.count) {
+    if (selectedIndex >= self.subdivisions.count) {
         selectedIndex = NSNotFound;
     }
     
@@ -66,7 +66,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self updateCellAppearance];
 }
 
-- (void)setNeedsSegmentFavoritesUpdate
+- (void)setNeedsSubdivisionFavoritesUpdate
 {
     [self.collectionView reloadData];
 }
@@ -85,7 +85,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     collectionViewLayout.minimumLineSpacing = 1.f;
     
-    NSString *identifier = NSStringFromClass([SRGLetterboxSegmentCell class]);
+    NSString *identifier = NSStringFromClass([SRGLetterboxSubdivisionCell class]);
     UINib *nib = [UINib nibWithNibName:identifier bundle:[NSBundle srg_letterboxBundle]];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
 }
@@ -124,22 +124,22 @@ static void commonInit(SRGLetterboxTimelineView *self);
 // Also see http://stackoverflow.com/questions/23940419/uicollectionview-cell-cant-be-selected-after-reload-in-case-if-cell-was-touched
 - (void)updateCellAppearance
 {
-    for (SRGLetterboxSegmentCell *cell in self.collectionView.visibleCells) {
+    for (SRGLetterboxSubdivisionCell *cell in self.collectionView.visibleCells) {
         [self updateAppearanceForCell:cell];
     }
 }
 
-- (void)updateAppearanceForCell:(SRGLetterboxSegmentCell *)cell
+- (void)updateAppearanceForCell:(SRGLetterboxSubdivisionCell *)cell
 {
-    SRGSegment *segment = cell.segment;
+    SRGSubdivision *subdivision = cell.subdivision;
     
-    NSUInteger index = [self.segments indexOfObject:segment];
+    NSUInteger index = [self.subdivisions indexOfObject:subdivision];
     cell.current = (index == self.selectedIndex);
     
-    // Only display time progress for segments, not chapters
-    if (! [segment isKindOfClass:[SRGChapter class]]) {
-        // Clamp progress so that past segments have progress = 1 and future ones have progress = 0
-        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, segment.srg_timeRange.start)) / CMTimeGetSeconds(segment.srg_timeRange.duration);
+    // Do not display progress for chapters
+    if (! [subdivision isKindOfClass:[SRGChapter class]]) {
+        // Clamp progress so that past subdivisions have progress = 1 and future ones have progress = 0
+        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, subdivision.srg_timeRange.start)) / CMTimeGetSeconds(subdivision.srg_timeRange.duration);
         cell.progress = fminf(1.f, fmaxf(0.f, progress));
     }
     else {
@@ -176,42 +176,42 @@ static void commonInit(SRGLetterboxTimelineView *self);
     }
 }
 
-#pragma mark SRGLetterboxSegmentCellDelegate protocol
+#pragma mark SRGLetterboxSubdivisionCellDelegate protocol
 
-- (void)letterboxSegmentCellDidLongPress:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (void)letterboxSubdivisionCellDidLongPress:(SRGLetterboxSubdivisionCell *)letterboxSubdivisionCell
 {
-    [self.delegate letterboxTimelineView:self didLongPressSegment:letterboxSegmentCell.segment];
+    [self.delegate letterboxTimelineView:self didLongPressSubdivision:letterboxSubdivisionCell.subdivision];
 }
 
-- (BOOL)letterboxSegmentCellShouldDisplayFavoriteIcon:(SRGLetterboxSegmentCell *)letterboxSegmentCell
+- (BOOL)letterboxSubdivisionCellShouldDisplayFavoriteIcon:(SRGLetterboxSubdivisionCell *)letterboxSubdivisionCell
 {
-    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSegment:letterboxSegmentCell.segment];
+    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSubdivision:letterboxSubdivisionCell.subdivision];
 }
 
 #pragma mark UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.segments.count;
+    return self.subdivisions.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSegmentCell class]) forIndexPath:indexPath];
+    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSubdivisionCell class]) forIndexPath:indexPath];
 }
 
 #pragma mark UICollectionViewDelegate protocol
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGSegment *segment = self.segments[indexPath.row];
-    [self.delegate letterboxTimelineView:self didSelectSegment:segment];
+    SRGSubdivision *subdivision = self.subdivisions[indexPath.row];
+    [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSegmentCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSubdivisionCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     cell.delegate = self;
-    cell.segment = self.segments[indexPath.row];
+    cell.subdivision = self.subdivisions[indexPath.row];
     [self updateAppearanceForCell:cell];
 }
 

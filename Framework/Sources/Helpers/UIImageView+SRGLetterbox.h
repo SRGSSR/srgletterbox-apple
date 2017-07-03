@@ -22,13 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param object The object to request the image for.
  *  @param scale  The scale to use.
+ *  @param type   The image type (use `SRGImageTypeDefault` for the default image).
  *
  *  @return `YES` iff a valid image URL could be found.
  */
 // FIXME: Image validity should not have to be checked, but some services are returning bad URLs. When this has been
 //        fixed, return void
-- (BOOL)srg_requestImageForObject:(nullable id<SRGImageMetadata>)object
-                        withScale:(SRGImageScale)imageScale;
+- (BOOL)srg_requestImageForObject:(nullable id<SRGImage>)object
+                        withScale:(SRGImageScale)scale
+                             type:(SRGImageType)type;
 
 /**
  *  Reset the image to the placeholder and cancel any pending image request.

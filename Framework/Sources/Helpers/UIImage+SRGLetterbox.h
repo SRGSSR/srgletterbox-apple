@@ -19,12 +19,12 @@ OBJC_EXTERN NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void);        
  *  @discussion If some images have been overridden by local versions (see SRGDataProvider NSURL+SRGDataProvider.h file),
  *              the returned URL might be a file URL.
  */
-OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImageMetadata> _Nullable object, CGFloat width);
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type);
 
 /**
  *  Return the (square) artwork image URL for an object, with a given dimension.
  */
-OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImageMetadata> _Nullable object, CGFloat dimension);
+OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension);
 
 /**
  *  Available image scales.

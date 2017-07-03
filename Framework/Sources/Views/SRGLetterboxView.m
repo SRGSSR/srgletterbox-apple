@@ -554,39 +554,39 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Data display
 
-- (NSArray<SRGSegment *> *)segmentsForMediaComposition:(SRGMediaComposition *)mediaComposition
+- (NSArray<SRGSubdivision *> *)subdivisionsForMediaComposition:(SRGMediaComposition *)mediaComposition
 {
     if (! mediaComposition) {
         return nil;
     }
     
-    // Show visible logical segments for the current chapter (if any), and display other chapters but not expanded. If
+    // Show visible segments for the current chapter (if any), and display other chapters but not expanded. If
     // there is only a chapter, do not display it
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSegment.new, hidden)];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSubdivision.new, hidden)];
     NSArray<SRGChapter *> *visibleChapters = [mediaComposition.chapters filteredArrayUsingPredicate:predicate];
  
-    NSMutableArray<SRGSegment *> *segments = [NSMutableArray array];
+    NSMutableArray<SRGSubdivision *> *subdivisions = [NSMutableArray array];
     for (SRGChapter *chapter in visibleChapters) {
         if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
             
             NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
-            [segments addObjectsFromArray:visibleSegments];
+            [subdivisions addObjectsFromArray:visibleSegments];
         }
         else if (visibleChapters.count > 1) {
-            [segments addObject:chapter];
+            [subdivisions addObject:chapter];
         }
     }
-    return [segments copy];
+    return [subdivisions copy];
 }
 
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadDataForController:(SRGLetterboxController *)controller
 {
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    SRGSegment *segment = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    SRGSubdivision *subdivision = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
-    self.timelineView.segments = [self segmentsForMediaComposition:mediaComposition];
-    self.timelineView.selectedIndex = segment ? [self.timelineView.segments indexOfObject:segment] : NSNotFound;
+    self.timelineView.subdivisions = [self subdivisionsForMediaComposition:mediaComposition];
+    self.timelineView.selectedIndex = subdivision ? [self.timelineView.subdivisions indexOfObject:subdivision] : NSNotFound;
     
     [self reloadImageForController:controller];
     
@@ -603,16 +603,16 @@ static void commonInit(SRGLetterboxView *self);
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
         NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
         if ([channel.currentProgram srgletterbox_containsDate:sliderDate]) {
-            if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge]) {
-                [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
+            if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault]) {
+                [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
             }
         }
         else {
-            [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge];
+            [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
         }
     }
     else {
-        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge];
+        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     }
 }
 
@@ -668,8 +668,8 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments animated:animated];
+    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:hidden withSubdivisions:subdivisions animated:animated];
 }
 
 #pragma mark UI methods always performing their work
@@ -678,19 +678,19 @@ static void commonInit(SRGLetterboxView *self);
 {
     self.userInterfaceTogglable = togglable;
     
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:hidden withSegments:segments animated:animated];
+    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:hidden withSubdivisions:subdivisions animated:animated];
 }
 
-- (void)imperative_updateUserInterfaceWithSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+- (void)imperative_updateUserInterfaceWithSubdivisions:(NSArray<SRGSubdivision *> *)subdivisions animated:(BOOL)animated
 {
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments animated:animated];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSubdivisions:subdivisions animated:animated];
 }
 
 // Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
-// factorisation method which is not intended for direct use. This method always shows or hides the user interface. Segments
+// factorisation method which is not intended for direct use. This method always shows or hides the user interface. Subdivisions
 // and notification message text are taken into account for proper UI adjustments depending on their presence
-- (void)imperative_updateUserInterfaceHidden:(BOOL)hidden withSegments:(NSArray<SRGSegment *> *)segments animated:(BOOL)animated
+- (void)imperative_updateUserInterfaceHidden:(BOOL)hidden withSubdivisions:(NSArray<SRGSubdivision *> *)subdivisions animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -698,9 +698,9 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
-    // Always scroll to the selected segment when opening the timeline. Schedule for scrolling on the next run loop so
+    // Always scroll to the selected subdivision when opening the timeline. Schedule for scrolling on the next run loop so
     // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
-    CGFloat timelineHeight = (segments.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
     if (timelineHeight != 0.f) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.timelineView scrollToSelectedIndexAnimated:NO];
@@ -780,11 +780,11 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI updates
 
-// Force a UI refresh for the current settings and segments
+// Force a UI refresh for the current settings and subdivisions
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
-    NSArray<SRGSegment *> *segments = [self segmentsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSegments:segments animated:animated];
+    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSubdivisions:subdivisions animated:animated];
 }
 
 // Called to update the main player subviews (player view, background image, error overlay). Independent of the global
@@ -1091,23 +1091,22 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceAnimated:animated];
 }
 
-#pragma mark Segments
+#pragma mark Subdivisions
 
-// Return the segment in the timeline at the specified time
-- (SRGSegment *)segmentOnTimelineAtTime:(CMTime)time
+// Return the subdivision in the timeline at the specified time
+- (SRGSubdivision *)subdivisionOnTimelineAtTime:(CMTime)time
 {
-    // - If audio or video (without segment), it's the chapter
-    // - If video with segments, it's the segment at time
     SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-    SRGSegment *segment = mainChapter;
+    SRGSubdivision *subdivision = mainChapter;
     
-    if (mainChapter.segments.count) {
+    // For chapters without segments, return the chapter, otherwise the segment at time
+    if (mainChapter.segments.count != 0) {
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
             return CMTimeRangeContainsTime(segment.srg_timeRange, time);
         }];
-        segment = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
+        subdivision = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
     }
-    return [self.timelineView.segments containsObject:segment] ? segment : nil;
+    return [self.timelineView.subdivisions containsObject:subdivision] ? subdivision : nil;
 }
 
 #pragma mark Gesture recognizers
@@ -1196,9 +1195,9 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)setNeedsSegmentFavoritesUpdate
+- (void)setNeedsSubdivisionFavoritesUpdate
 {
-    [self.timelineView setNeedsSegmentFavoritesUpdate];
+    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
 }
 
 #pragma mark SRGControlsViewDelegate protocol
@@ -1210,31 +1209,31 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
 
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSegment:(SRGSegment *)segment
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision
 {
-    if (! [self.controller switchToSegment:segment]) {
+    if (! [self.controller switchToSubdivision:subdivision]) {
         return;
     }
     
-    self.timelineView.selectedIndex = [timelineView.segments indexOfObject:segment];
-    self.timelineView.time = segment.srg_timeRange.start;
+    self.timelineView.selectedIndex = [timelineView.subdivisions indexOfObject:subdivision];
+    self.timelineView.time = subdivision.srg_timeRange.start;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSegment:)]) {
-        [self.delegate letterboxView:self didSelectSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSubdivision:)]) {
+        [self.delegate letterboxView:self didSelectSubdivision:subdivision];
     }
 }
 
-- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSegment:(SRGSegment *)segment
+- (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSubdivision:(SRGSubdivision *)subdivision
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressSegment:)]) {
-        [self.delegate letterboxView:self didLongPressSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressSubdivision:)]) {
+        [self.delegate letterboxView:self didLongPressSubdivision:subdivision];
     }
 }
 
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSegment:(SRGSegment *)segment
+- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldDisplayFavoriteForSegment:)]) {
-        return [self.delegate letterboxView:self shouldDisplayFavoriteForSegment:segment];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldDisplayFavoriteForSubdivision:)]) {
+        return [self.delegate letterboxView:self shouldDisplayFavoriteForSubdivision:subdivision];
     }
     else {
         return NO;
@@ -1245,17 +1244,17 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
 {
-    SRGSegment *selectedSegment = [self segmentOnTimelineAtTime:time];
+    SRGSubdivision *selectedSubdivision = [self subdivisionOnTimelineAtTime:time];
     
     if (interactive) {
-        NSInteger selectedIndex = [self.timelineView.segments indexOfObject:selectedSegment];
+        NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:selectedSubdivision];
         self.timelineView.selectedIndex = selectedIndex;
         [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSegment:time:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSegment:selectedSegment time:time interactive:interactive];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSubdivision:selectedSubdivision time:time interactive:interactive];
     }
     
     [self reloadImageForController:self.controller];
@@ -1314,8 +1313,8 @@ static void commonInit(SRGLetterboxView *self);
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
             CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
-            SRGSegment *segment = [self segmentOnTimelineAtTime:seekTargetTime];
-            self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+            SRGSubdivision *subdivision = [self subdivisionOnTimelineAtTime:seekTargetTime];
+            self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
             self.timelineView.time = seekTargetTime;
         }
     }
@@ -1326,8 +1325,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)segmentDidStart:(NSNotification *)notification
 {
-    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
-    self.timelineView.selectedIndex = [self.timelineView.segments indexOfObject:segment];
+    SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
+    self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
     [self.timelineView scrollToSelectedIndexAnimated:YES];
 }
 
@@ -1338,8 +1337,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
-    SRGSegment *segment = notification.userInfo[SRGMediaPlayerSegmentKey];
-    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(segment.blockingReason);
+    SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(subdivision.blockingReason);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 

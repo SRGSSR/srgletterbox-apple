@@ -315,7 +315,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     SRGMedia *media = nil;
     if (controller.URN.mediaType == SRGMediaTypeVideo) {
-        media = controller.segmentMedia ?: controller.fullLengthMedia ?: controller.media;
+        media = controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
     }
     else {
         media = controller.media;
