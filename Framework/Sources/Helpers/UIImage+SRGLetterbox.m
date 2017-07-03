@@ -27,7 +27,7 @@
 
 static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 {
-    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED"];
+    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"];
 }
 
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
