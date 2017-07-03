@@ -96,9 +96,9 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
 /**
- *  Prepare to play the specified URN (Uniform Resource Name), but with the player paused (if playback is not started
- *  in the completion handler). If you want playback to start right after preparation, call `-play` from the completion 
- *  handler.
+ *  Prepare to play the specified URN (Uniform Resource Name) with the preferred (non-guaranteed) settings, and with 
+ *  the player paused (if playback is not started in the completion handler). If you want playback to start right after 
+ *  preparation, call `-play` from the completion handler.
  *
  *  @param URN          The URN to prepare.
  *  @param quality      The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
