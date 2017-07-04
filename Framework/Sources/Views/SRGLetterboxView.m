@@ -1167,7 +1167,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)retry:(id)sender
 {
-    [self.controller stop];
     [self.controller restart];
 }
 

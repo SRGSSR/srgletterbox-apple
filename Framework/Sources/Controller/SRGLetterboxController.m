@@ -607,6 +607,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)restart
 {
+    [self stop];
+    
     @weakify(self)
     void (^completionHandler)(void) = ^{
         @strongify(self)
