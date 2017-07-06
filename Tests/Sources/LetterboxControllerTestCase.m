@@ -437,7 +437,6 @@
     [self waitForExpectationsWithTimeout:5. handler:nil];
 }
 
-
 - (void)testPlaybackStateKeyValueObserving
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"playbackState" expectedValue:@(SRGMediaPlayerPlaybackStatePreparing)];
