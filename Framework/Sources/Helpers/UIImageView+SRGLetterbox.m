@@ -55,13 +55,14 @@
 
 #pragma mark Standard image loading
 
-- (BOOL)srg_requestImageForObject:(id<SRGImageMetadata>)object
-                        withScale:(SRGImageScale)imageScale
+- (BOOL)srg_requestImageForObject:(id<SRGImage>)object
+                        withScale:(SRGImageScale)scale
+                             type:(SRGImageType)type
 {
-    CGSize size = SRGSizeForImageScale(imageScale);
+    CGSize size = SRGSizeForImageScale(scale);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
     
-    NSURL *URL = SRGLetterboxImageURL(object, size.width);
+    NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
         [self yy_setImageWithURL:nil placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
         return NO;

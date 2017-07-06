@@ -55,7 +55,7 @@ To display what is currently played by a controller, add a `SRGLetterboxView` in
 
 ### Controls and overlays
 
-The standard player controls (play / pause button, seek bar, etc.) and the segment timeline of a Letterbox view cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. 
+The standard player controls (play / pause button, seek bar, etc.) and the chapter and segment timeline of a Letterbox view cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. 
 
 You can also respond to view height changes in the same way, e.g. when a timeline or a notification are displayed. Simply set a delegate for the player view and respond to user interface state changes, as follows:
 

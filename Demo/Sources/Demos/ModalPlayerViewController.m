@@ -13,9 +13,6 @@
 #import <Masonry/Masonry.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 
-static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
-static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
-
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
@@ -34,7 +31,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
-@property (nonatomic) NSMutableArray<SRGSegment *> *favoriteSegments;
+@property (nonatomic) NSMutableArray<SRGSubdivision *> *favoritedSubdivisions;
 
 @property (nonatomic) ModalTransition *interactiveTransition;
 
@@ -56,7 +53,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-        viewController.favoriteSegments = @[].mutableCopy;
+        viewController.favoritedSubdivisions = [NSMutableArray array];
         viewController.URN = URN;
         return viewController;
     }
@@ -196,16 +193,19 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     } completion:nil];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(SRGSegment *)segment time:(CMTime)time interactive:(BOOL)interactive
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive
 {
     if (interactive) {
-        SRGMedia *media = segment ? [self.letterboxController.mediaComposition mediaForSegment:segment] : nil;
+        SRGMedia *media = subdivision ? [self.letterboxController.mediaComposition mediaForSubdivision:subdivision] : nil;
         [self reloadDataOverriddenWithMedia:media];
     }
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
+    static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
+    static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
+    
     void (^animations)(void) = ^{
         if (fullScreen) {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
@@ -237,18 +237,18 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
 }
 
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSegment:(SRGSegment *)segment
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision
 {
-    return [self.favoriteSegments containsObject:segment];
+    return [self.favoritedSubdivisions containsObject:subdivision];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSegment:(SRGSegment *)segment
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision
 {
-    if ([self.favoriteSegments containsObject:segment]) {
-        [self.favoriteSegments removeObject:segment];
+    if ([self.favoritedSubdivisions containsObject:subdivision]) {
+        [self.favoritedSubdivisions removeObject:subdivision];
     }
     else {
-        [self.favoriteSegments addObject:segment];
+        [self.favoritedSubdivisions addObject:subdivision];
     }
 }
 
@@ -378,7 +378,7 @@ static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataOverriddenWithMedia:self.letterboxController.segmentMedia];
+    [self reloadDataOverriddenWithMedia:self.letterboxController.subdivisionMedia];
 }
 
 @end

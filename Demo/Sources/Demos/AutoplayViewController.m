@@ -35,7 +35,6 @@
 {
     [super viewDidLoad];
     
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
     [self refresh];
 }
 
@@ -48,16 +47,109 @@
     }
 }
 
+#pragma mark Setters
+
+- (void)setAutoplayList:(AutoplayList)autoplayList
+{
+    _autoplayList = autoplayList;
+    
+    switch (autoplayList) {
+        case AutoplayListRTSTrendingMedias: {
+            self.title = @"RTS trending videos";
+            break;
+        }
+            
+        case AutoplayListSRFLiveCenterVideos: {
+            self.title = @"SRF live center videos";
+            break;
+        }
+            
+        case AutoplayListRTSLiveCenterVideos: {
+            self.title = @"RTS live center videos";
+            break;
+        }
+            
+        case AutoplayListRSILiveCenterVideos: {
+            self.title = @"RSI live center videos";
+            break;
+        }
+            
+        default: {
+            self.title = nil;
+            break;
+        }
+    }
+    
+    if (self.viewLoaded) {
+        [self refresh];
+    }
+}
+
 #pragma mark Data
 
 - (void)refresh
 {
-    SRGRequest *request = [[self.dataProvider tvTrendingMediasWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
-        self.medias = medias;
-        [self.tableView reloadData];
-    }] requestWithPageSize:50];
-    [request resume];
-    self.request = request;
+    [self.request cancel];
+    self.request = nil;
+    
+    self.medias = nil;
+    [self.tableView reloadData];
+    
+    SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = nil;
+    switch (self.autoplayList) {
+        case AutoplayListRTSTrendingMedias:
+        case AutoplayListRTSLiveCenterVideos: {
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
+            break;
+        }
+            
+        case AutoplayListSRFLiveCenterVideos: {
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
+            break;
+        }
+            
+        case AutoplayListRSILiveCenterVideos: {
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
+    
+    if (businessUnitIdentifier) {
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:businessUnitIdentifier];
+        
+        SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+            self.medias = medias;
+            [self.tableView reloadData];
+        };
+        
+        SRGRequest *request = nil;
+        switch (self.autoplayList) {
+            case AutoplayListRTSTrendingMedias: {
+                request = [self.dataProvider tvTrendingMediasWithLimit:@50 completionBlock:completionBlock];
+                break;
+            }
+                
+            case AutoplayListSRFLiveCenterVideos:
+            case AutoplayListRTSLiveCenterVideos:
+            case AutoplayListRSILiveCenterVideos: {
+                request = [[self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+                    completionBlock(medias, error);
+                }] requestWithPageSize:50];
+                break;
+            }
+                
+            default: {
+                break;
+            }
+        }
+        
+        [request resume];
+        self.request = request;
+    }
 }
 
 #pragma mark UITableViewDataSource protocol

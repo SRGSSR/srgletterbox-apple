@@ -137,6 +137,10 @@
 		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
 		6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController.m */; };
 		6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */; };
+		6FDF33B01F012D7500BA1D6E /* SRGAccessibilityView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FDF33AE1F012D7500BA1D6E /* SRGAccessibilityView.h */; };
+		6FDF33B11F012D7500BA1D6E /* SRGAccessibilityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF33AF1F012D7500BA1D6E /* SRGAccessibilityView.m */; };
+		6FDF33B41F012DA200BA1D6E /* SRGFullScreenButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FDF33B21F012DA200BA1D6E /* SRGFullScreenButton.h */; };
+		6FDF33B51F012DA200BA1D6E /* SRGFullScreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF33B31F012DA200BA1D6E /* SRGFullScreenButton.m */; };
 		6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
 		6FE08CE31E8B80F200EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
 		6FE08CE41E8B80F200EC4716 /* SRGAppearance.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -159,9 +163,9 @@
 		6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */; };
 		6FE844EB1E60349900F90F67 /* SRGLetterboxTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */; };
 		6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */; };
-		6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */; };
-		6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */; };
-		6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */; };
+		6FE844F01E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE844EE1E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h */; };
+		6FE844F11E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE844EF1E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m */; };
+		6FE844F31E605CDA00F90F67 /* SRGLetterboxSubdivisionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE844F21E605CDA00F90F67 /* SRGLetterboxSubdivisionCell.xib */; };
 		6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */; };
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
@@ -369,6 +373,10 @@
 		6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemosViewController.h; sourceTree = "<group>"; };
 		6FD9BA301E3095F00013CC97 /* DemosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemosViewController.m; sourceTree = "<group>"; };
 		6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DemosViewController.storyboard; sourceTree = "<group>"; };
+		6FDF33AE1F012D7500BA1D6E /* SRGAccessibilityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGAccessibilityView.h; sourceTree = "<group>"; };
+		6FDF33AF1F012D7500BA1D6E /* SRGAccessibilityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGAccessibilityView.m; sourceTree = "<group>"; };
+		6FDF33B21F012DA200BA1D6E /* SRGFullScreenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGFullScreenButton.h; sourceTree = "<group>"; };
+		6FDF33B31F012DA200BA1D6E /* SRGFullScreenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGFullScreenButton.m; sourceTree = "<group>"; };
 		6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGAppearance.framework; path = Carthage/Build/iOS/SRGAppearance.framework; sourceTree = "<group>"; };
 		6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -377,9 +385,9 @@
 		6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimelineView.h; sourceTree = "<group>"; };
 		6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxTimelineView.m; sourceTree = "<group>"; };
 		6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxTimelineView.xib; sourceTree = "<group>"; };
-		6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxSegmentCell.h; sourceTree = "<group>"; };
-		6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxSegmentCell.m; sourceTree = "<group>"; };
-		6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxSegmentCell.xib; sourceTree = "<group>"; };
+		6FE844EE1E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxSubdivisionCell.h; sourceTree = "<group>"; };
+		6FE844EF1E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxSubdivisionCell.m; sourceTree = "<group>"; };
+		6FE844F21E605CDA00F90F67 /* SRGLetterboxSubdivisionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGLetterboxSubdivisionCell.xib; sourceTree = "<group>"; };
 		6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
@@ -556,13 +564,17 @@
 		6FAB3AFF1E28F76800CC2197 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6FDF33AE1F012D7500BA1D6E /* SRGAccessibilityView.h */,
+				6FDF33AF1F012D7500BA1D6E /* SRGAccessibilityView.m */,
 				080A6B141E8E79EF0084F484 /* SRGControlsView.h */,
 				080A6B151E8E79EF0084F484 /* SRGControlsView.m */,
+				6FDF33B21F012DA200BA1D6E /* SRGFullScreenButton.h */,
+				6FDF33B31F012DA200BA1D6E /* SRGFullScreenButton.m */,
 				08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */,
 				08BDD8711EE5C876006A2704 /* SRGLetterboxPlaybackButton.m */,
-				6FE844EE1E6056AB00F90F67 /* SRGLetterboxSegmentCell.h */,
-				6FE844EF1E6056AB00F90F67 /* SRGLetterboxSegmentCell.m */,
-				6FE844F21E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib */,
+				6FE844EE1E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h */,
+				6FE844EF1E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m */,
+				6FE844F21E605CDA00F90F67 /* SRGLetterboxSubdivisionCell.xib */,
 				6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */,
 				6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */,
 				6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */,
@@ -745,6 +757,7 @@
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
+				6FDF33B41F012DA200BA1D6E /* SRGFullScreenButton.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
 				6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */,
@@ -753,10 +766,11 @@
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
 				6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */,
-				6FE844F01E6056AB00F90F67 /* SRGLetterboxSegmentCell.h in Headers */,
+				6FE844F01E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
 				6F324A0D1E557239007523AA /* SRGLetterboxViewRestorationContext.h in Headers */,
+				6FDF33B01F012D7500BA1D6E /* SRGAccessibilityView.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 				6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
@@ -910,7 +924,7 @@
 			files = (
 				6FE844ED1E603B3100F90F67 /* SRGLetterboxTimelineView.xib in Resources */,
 				6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */,
-				6FE844F31E605CDA00F90F67 /* SRGLetterboxSegmentCell.xib in Resources */,
+				6FE844F31E605CDA00F90F67 /* SRGLetterboxSubdivisionCell.xib in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
 				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
 				6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */,
@@ -957,17 +971,19 @@
 			files = (
 				087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */,
 				08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */,
+				6FDF33B51F012DA200BA1D6E /* SRGFullScreenButton.m in Sources */,
 				6FE844EB1E60349900F90F67 /* SRGLetterboxTimelineView.m in Sources */,
 				080A6B171E8E79EF0084F484 /* SRGControlsView.m in Sources */,
 				6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */,
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
+				6FDF33B11F012D7500BA1D6E /* SRGAccessibilityView.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
 				08BDD8731EE5C876006A2704 /* SRGLetterboxPlaybackButton.m in Sources */,
 				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
-				6FE844F11E6056AB00F90F67 /* SRGLetterboxSegmentCell.m in Sources */,
+				6FE844F11E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
@@ -1074,7 +1090,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1090,7 +1106,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1252,7 +1268,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1273,7 +1289,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1313,7 +1329,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1328,7 +1344,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

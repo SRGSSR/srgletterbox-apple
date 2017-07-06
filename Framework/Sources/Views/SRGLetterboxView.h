@@ -44,36 +44,36 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
 
 /**
- *  This method gets called when user interface controls or segments are shown or hidden. You can call the `SRGLetterboxView`
+ *  This method gets called when user interface controls or the timeline are shown or hidden. You can call the `SRGLetterboxView`
  *  `-animateAlongsideUserInterfaceWithAnimations:completion` method from within this method implementation to perform 
  *  animations alongside the built-in control animations.
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
 /**
- *  This method is called when the Letterbox view slider did scroll. The segment and the time corresponding to the current 
+ *  This method is called when the Letterbox view slider did scroll. The subdivision and the time corresponding to the current
  *  slider position are provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made by the user.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSegment:(nullable SRGSegment *)segment time:(CMTime)time interactive:(BOOL)interactive;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(nullable SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive;
 
 /**
- *  This method is called when the user has actively selected a segment.
+ *  This method is called when the user has actively selected a subdivision.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectSegment:(SRGSegment *)segment;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectSubdivision:(SRGSubdivision *)subdivision;
 
 /**
- *  This method is called when the user did a long press on a segment cell.
+ *  This method is called when the user did a long press on a subdivision cell.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSegment:(SRGSegment *)segment;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
 /**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
  *  set or if this method is not implemented, no favorite icon will be displayed.
  *
  *  The method is called when appropriate, but you can manually trigger a favorite status refresh by calling the
- *  LetterboxView `-setNeedsSegmentFavoritesUpdate` method.
+ *  LetterboxView `-setNeedsSubdivisionFavoritesUpdate` method.
  */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSegment:(SRGSegment *)segment;
+- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision;
 
 @end
 
@@ -97,14 +97,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The following controls and views are supported out of the box, most of them available for any kind of media played 
  *  by a Letterbox controller (on-demand, live and DVR audio and video streams):
- *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams)
- *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams)
- *    - Error display
- *    - Airplay, picture in picture and subtitles / audio tracks buttons
- *    - Optional full screen button (see below)
- *    - Overlay displayed when external Airplay playback is active
- *    - Activity indicator
- *    - Image placeholder when loading or playing on an external display
+ *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams).
+ *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams).
+ *    - Error display.
+ *    - Airplay, picture in picture and subtitles / audio tracks buttons.
+ *    - Optional full screen button (see below).
+ *    - Overlay displayed when external Airplay playback is active.
+ *    - Activity indicator.
+ *    - Image placeholder when loading or playing on an external display.
  *
  *  Controls are displayed initially, and hidden after an inactivity delay. The user is also able to toggle the
  *  controls on or off by tapping on the overlay. If needed, you can programmatically show or hide the controls, or 
@@ -113,20 +113,22 @@ NS_ASSUME_NONNULL_BEGIN
  *  Controls are shown and hidden with a fade in / fade out animation. You can animate additional view overlays alongside
  *  them by setting a view delegate and implementing the corresponding delegate protocol method.
  *
- *  ## Segments
+ *  ## Subdivisions (segments and chapters)
  *
- *  The view automatically loads and displays segments below the player. Since the segment timeline takes some space
- *  when present, you can have your code respond to timeline height adjustments by setting a Letterbox view delegate
- *  and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. You can
- *  also respond to the `-letterboxView:didScrollWithSegment:time:interactive:` delegate method to respond to the timeline
- *  being moved, either interactively or during normal playback
+ *  The view automatically loads and displays subdivisions as a timeline below the player. Since the subdivision timeline 
+ *  takes some space when present, you can have your code respond to timeline height adjustments by setting a Letterbox 
+ *  view delegate and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. 
+ *  You can also respond to the `-letterboxView:didScrollWithSubdivision:time:interactive:` delegate method to respond to 
+ *  the timeline being moved, either interactively or during normal playback.
  *  
- *  ## Long press on segments and favorites
+ *  ## Long press on subdivisions and favorites
  *
- *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressSegment:` 
- *  delegate method is called when the user holds her finger still on a cell for a few seconds, providing you with 
- *  the ability to store a segment as being favorited. The `-letterboxView:shouldDisplayFavoriteForSegment:` delegate
- *  method lets you decide whether a segment cell should display a favorite icon or not.
+ *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressSubdivision:` 
+ *  delegate method is called when the user holds her finger still on a timeline cell for a few seconds, providing you 
+ *  with the ability to mark the associated subdivision as being (un)favorited. 
+ *
+ *  A favorite icon can be displayed on favorited cells by implementing the `-letterboxView:shouldDisplayFavoriteForSubdivision:`
+ *  delegate method.
  *
  *  ## Full-screen
  *
@@ -209,11 +211,11 @@ IB_DESIGNABLE
 
 /**
  *  Call this method from within the delegate `-letterboxViewWillAnimateUserInterface:` method implementation to provide
- *  the animations to be performed alongside the player user interface animations when controls, segments or notifications
+ *  the animations to be performed alongside the player user interface animations when controls, timeline or notifications
  *  are shown or hidden. An optional block to be called on completion can be provided as well.
  *
  *  @param animations The animations to be performed when these subviews are shown or hidden. The main view is usually 
- *                    animated in response to more information being displayed within it (e.g. a segment timeline or a
+ *                    animated in response to more information being displayed within it (e.g. a subdivision timeline or a
  *                    notification). If the view frame is not changed, the player will be temporarily shrinked to make room
  *                    for such additional elements. If you prefer your parent layout to provide more space so that
  *                    shrinking does not occur, the required height offset is provided as information, so that you can
@@ -264,11 +266,11 @@ IB_DESIGNABLE
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
- *  Call to schedule an update request for segment favorites.
+ *  Call to schedule an update request for subdivision favorites.
  *
  *  For more information, @see `SRGLetterboxViewDelegate`.
  */
-- (void)setNeedsSegmentFavoritesUpdate;
+- (void)setNeedsSubdivisionFavoritesUpdate;
 
 /**
  *  The time corresponding to the current slider position.
