@@ -409,6 +409,34 @@
     XCTAssertTrue([self.controller canSkipBackward]);
 }
 
+- (void)testCurrentAndPreviousPlaybackStateAreDifferent
+{
+    BOOL (^expectationHandler)(NSNotification * _Nonnull notification) = ^BOOL(NSNotification * _Nonnull notification) {
+        SRGMediaPlayerPlaybackState currentState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+        SRGMediaPlayerPlaybackState previousState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
+        return currentState != previousState;
+    };
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller prepareToPlayURN:URN withCompletionHandler:NULL];
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller play];
+    [self waitForExpectationsWithTimeout:5. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller pause];
+    [self waitForExpectationsWithTimeout:5. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller reset];
+    [self waitForExpectationsWithTimeout:5. handler:nil];
+}
+
+
 - (void)testPlaybackStateKeyValueObserving
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"playbackState" expectedValue:@(SRGMediaPlayerPlaybackStatePreparing)];
