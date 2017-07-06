@@ -181,14 +181,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         return;
     }
     
+    NSDictionary *userInfo = @{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
+                                SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) };
+    
+
+    
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
                                                         object:self
-                                                      userInfo:@{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
-                                                                  SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) }];
+                                                      userInfo:userInfo];
 }
 
 - (BOOL)isLive
