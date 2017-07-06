@@ -184,8 +184,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     NSDictionary *userInfo = @{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
                                 SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) };
     
-
-    
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
