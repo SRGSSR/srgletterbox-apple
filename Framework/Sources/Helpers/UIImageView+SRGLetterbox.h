@@ -33,9 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
                              type:(SRGImageType)type;
 
 /**
- *  Reset the image to the placeholder and cancel any pending image request.
+ *  Reset the image and cancel any pending image request.
  */
-- (void)srg_resetWithScale:(SRGImageScale)imageScale;
+- (void)srg_resetImage;
 
 @end
 

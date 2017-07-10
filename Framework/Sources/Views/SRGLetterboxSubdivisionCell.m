@@ -48,7 +48,7 @@
 {
     [super prepareForReuse];
     
-    [self.imageView srg_resetWithScale:SRGImageScaleMedium];
+    [self.imageView srg_resetImage];
 }
 
 #pragma mark Getters and setters

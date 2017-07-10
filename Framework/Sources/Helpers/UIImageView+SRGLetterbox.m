@@ -77,12 +77,10 @@
     return YES;
 }
 
-- (void)srg_resetWithScale:(SRGImageScale)imageScale
+- (void)srg_resetImage
 {
     [self yy_cancelCurrentImageRequest];
-    
-    CGSize size = SRGSizeForImageScale(imageScale);
-    self.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+    self.image = nil;
 }
 
 @end
