@@ -27,7 +27,10 @@
 
 static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 {
-    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"];
+    // Fix for invalid images, incorrect Kids program images, and incorrect images for sports (RTS)
+    // See https://srfmmz.atlassian.net/browse/AIS-15672
+    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"] && ! [URL.absoluteString containsString:@"rts.ch/video/jeunesse"]
+        && ! [URL.absoluteString containsString:@".html"];
 }
 
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
