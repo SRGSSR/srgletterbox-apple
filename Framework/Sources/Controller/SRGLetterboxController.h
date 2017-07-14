@@ -189,6 +189,12 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
 
 /**
+ *  For DVR and live streams, returns the date corresponding to the current playback time. If the date cannot be
+ *  determined or for on-demand streams, the method returns `nil`.
+ */
+@property (nonatomic, readonly, nullable) NSDate *date;
+
+/**
  *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the 
  *  last 30 seconds of a DVR stream).
  */

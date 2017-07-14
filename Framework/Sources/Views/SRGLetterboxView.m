@@ -547,6 +547,11 @@ static void commonInit(SRGLetterboxView *self);
     return self.timeSlider.time;
 }
 
+- (NSDate *)date
+{
+    return self.timeSlider.date;
+}
+
 - (BOOL)isLive
 {
     return self.timeSlider.live;
@@ -601,8 +606,7 @@ static void commonInit(SRGLetterboxView *self);
         SRGChannel *channel = controller.channel;
         
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
-        NSDate *sliderDate = [NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue];
-        if ([channel.currentProgram srgletterbox_containsDate:sliderDate]) {
+        if ([channel.currentProgram srgletterbox_containsDate:self.timeSlider.date]) {
             if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault]) {
                 [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
             }

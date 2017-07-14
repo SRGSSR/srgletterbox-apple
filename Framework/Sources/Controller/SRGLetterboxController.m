@@ -203,6 +203,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.mediaPlayerController.player.currentTime;
 }
 
+- (NSDate *)date
+{
+    return self.mediaPlayerController.date;
+}
+
 - (CMTimeRange)timeRange
 {
     return self.mediaPlayerController.timeRange;
