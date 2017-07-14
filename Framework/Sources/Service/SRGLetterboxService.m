@@ -358,7 +358,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         
         // Display program information (if any) when the controller position is within the current program, otherwise channel
         // information.
-        if ([channel.currentProgram srgletterbox_containsDate:controller.date]) {
+        NSDate *playbackDate = controller.date;
+        if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
             NSString *title = channel.currentProgram.title;
             nowPlayingInfo[MPMediaItemPropertyTitle] = title;
             nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;

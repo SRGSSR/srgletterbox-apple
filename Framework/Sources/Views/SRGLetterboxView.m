@@ -606,7 +606,8 @@ static void commonInit(SRGLetterboxView *self);
         SRGChannel *channel = controller.channel;
         
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
-        if ([channel.currentProgram srgletterbox_containsDate:self.timeSlider.date]) {
+        NSDate *sliderDate = self.timeSlider.date;
+        if (sliderDate && [channel.currentProgram srgletterbox_containsDate:sliderDate]) {
             if (! [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault]) {
                 [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
             }
