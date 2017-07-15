@@ -59,9 +59,9 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
 OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 
 /**
- *  Notification sent when playback has been restarted (might be automatic when network is reachable again).
+ *  Notification sent when playback has been retried (might be automatic when network is reachable again).
  */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRestartNotification;
+OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRetryNotification;
 
 /**
  *  The default start bit rate to start (800 kbps).
@@ -109,7 +109,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @discussion Does nothing if the URN is the one currently being played.  You might want to set the `resumesAfterRestart` 
+ *  @discussion Does nothing if the URN is the one currently being played.  You might want to set the `resumesAfterRetry` 
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
@@ -151,8 +151,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Restart playback completely for the same URN or media. Does nothing if no URN or media has currently been set.
  *
  *  @discussion Whether playback should automatically start when the player is restarted can be controlled using the
- *              `resumesAfterRestart` property. The `-restart` method is also called when a dropped network connection
- *              is established again.
+ *              `resumesAfterRetry` property.
  */
 - (void)restart;
 
@@ -167,9 +166,9 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, getter=isMuted) BOOL muted;
 
 /**
- *  Set to `YES` so that a restart automatically resumes playback. Default is `YES`.
+ *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss). Default is `YES`.
  */
-@property (nonatomic) BOOL resumesAfterRestart;
+@property (nonatomic) BOOL resumesAfterRetry;
 
 /**
  *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is 

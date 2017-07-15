@@ -340,7 +340,7 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxPlaybackDidFailNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxPlaybackDidRestartNotification
+                                                        name:SRGLetterboxPlaybackDidRetryNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
@@ -409,8 +409,8 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:SRGLetterboxPlaybackDidFailNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackDidRestart:)
-                                                     name:SRGLetterboxPlaybackDidRestartNotification
+                                                 selector:@selector(playbackDidRetry:)
+                                                     name:SRGLetterboxPlaybackDidRetryNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -1291,7 +1291,7 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadData];
 }
 
-- (void)playbackDidRestart:(NSNotification *)notification
+- (void)playbackDidRetry:(NSNotification *)notification
 {
     [self updateLoadingIndicatorAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
