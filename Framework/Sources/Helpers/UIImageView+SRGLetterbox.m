@@ -55,14 +55,23 @@
 
 #pragma mark Standard image loading
 
-- (BOOL)srg_requestImageForObject:(id<SRGImage>)object
+- (void)srg_requestImageForObject:(id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
+            unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale);
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+    
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
-        return NO;
+        if (unavailabilityHandler) {
+            unavailabilityHandler();
+        }
+        else {
+            [self yy_setImageWithURL:nil placeholder:placeholderImage];
+        }
+        return;
     }
     
     if (! [URL isEqual:self.yy_imageURL]) {
@@ -82,12 +91,15 @@
                 [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
             }
             else {
-                UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
                 [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
             }
         }
     }
-    return YES;
+}
+
+- (void)srg_requestImageForObject:(id<SRGImage>)object withScale:(SRGImageScale)scale type:(SRGImageType)type
+{
+    [self srg_requestImageForObject:object withScale:scale type:type unavailabilityHandler:nil];
 }
 
 - (void)srg_resetImage
