@@ -60,27 +60,39 @@
                              type:(SRGImageType)type
 {
     CGSize size = SRGSizeForImageScale(scale);
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
-    
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
-        [self yy_setImageWithURL:nil placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
         return NO;
     }
     
     if (! [URL isEqual:self.yy_imageURL]) {
-        // Do not alter the current image if available, otherwise display the placeholder. This makes transitions more beautiful,
-        // avoiding an intermediate step when updating an image
-        [self yy_setImageWithURL:URL placeholder:self.image ?: placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+        // If an image is already displayed, use it as placeholder. This make the transition smooth between both images.
+        // Using the placeholder would add an unnecessary intermediate state leading to flickering
+        if (self.image) {
+            [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+        }
+        // If no image is already displayed, check if the image we want to display is already available from the cahce.
+        // If this is the case, use it as placeholder, avoiding an intermediate step which would lead to flickering
+        else {
+            YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
+            NSString *key = [webImageManager cacheKeyForURL:URL];
+            UIImage *image = [webImageManager.cache getImageForKey:key];
+            if (image) {
+                // Use the YYWebImage setter so that the URL is properly associated with the image view
+                [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
+            else {
+                UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
+        }
     }
-    
     return YES;
 }
 
 - (void)srg_resetImage
 {
-    [self yy_cancelCurrentImageRequest];
-    self.image = nil;
+    [self yy_setImageWithURL:nil options:0];
 }
 
 @end
