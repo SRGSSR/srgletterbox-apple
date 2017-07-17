@@ -40,7 +40,7 @@ NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannelK
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
 
-NSString * const SRGLetterboxPlaybackDidRestartNotification = @"SRGLetterboxPlaybackDidRestartNotification";
+NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlaybackDidRetryNotification";
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
@@ -134,7 +134,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }];
         _playbackState = self.mediaPlayerController.playbackState;          // No setter used on purpose to set the initial value. The setter will notify changes
         
-        self.resumesAfterRestart = YES;
+        self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -181,14 +181,16 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         return;
     }
     
+    NSDictionary *userInfo = @{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
+                                SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) };
+    
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
                                                         object:self
-                                                      userInfo:@{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
-                                                                  SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) }];
+                                                      userInfo:userInfo];
 }
 
 - (BOOL)isLive
@@ -199,6 +201,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (CMTime)currentTime
 {
     return self.mediaPlayerController.player.currentTime;
+}
+
+- (NSDate *)date
+{
+    return self.mediaPlayerController.date;
 }
 
 - (CMTimeRange)timeRange
@@ -605,28 +612,29 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     [self.mediaPlayerController stop];
 }
 
-- (void)restart
+- (void)retry
 {
-    [self stop];
-    
-    @weakify(self)
-    void (^completionHandler)(void) = ^{
-        @strongify(self)
-        
-        if (self.resumesAfterRestart) {
+    void (^prepareCompletioHandler)(void) = ^{
+        if (self.resumesAfterRetry) {
             [self play];
         }
     };
     
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
+        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:prepareCompletioHandler];
     }
     else if (self.URN) {
-        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
+        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:prepareCompletioHandler];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRestartNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
+}
+
+- (void)restart
+{
+    [self stop];
+    [self retry];
 }
 
 - (void)reset
@@ -841,7 +849,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
     if ([FXReachability sharedInstance].reachable) {
-        [self restart];
+        [self retry];
     }
 }
 

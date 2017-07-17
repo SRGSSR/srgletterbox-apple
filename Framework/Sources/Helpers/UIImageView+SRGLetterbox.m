@@ -55,34 +55,56 @@
 
 #pragma mark Standard image loading
 
-- (BOOL)srg_requestImageForObject:(id<SRGImage>)object
+- (void)srg_requestImageForObject:(id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
+            unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
-        [self yy_setImageWithURL:nil placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
-        return NO;
+        if (unavailabilityHandler) {
+            unavailabilityHandler();
+        }
+        else {
+            [self yy_setImageWithURL:nil placeholder:placeholderImage];
+        }
+        return;
     }
     
     if (! [URL isEqual:self.yy_imageURL]) {
-        // Do not alter the current image if available, otherwise display the placeholder. This makes transitions more beautiful,
-        // avoiding an intermediate step when updating an image
-        [self yy_setImageWithURL:URL placeholder:self.image ?: placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+        // If an image is already displayed, use it as placeholder. This make the transition smooth between both images.
+        // Using the placeholder would add an unnecessary intermediate state leading to flickering
+        if (self.image) {
+            [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+        }
+        // If no image is already displayed, check if the image we want to display is already available from the cahce.
+        // If this is the case, use it as placeholder, avoiding an intermediate step which would lead to flickering
+        else {
+            YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
+            NSString *key = [webImageManager cacheKeyForURL:URL];
+            UIImage *image = [webImageManager.cache getImageForKey:key];
+            if (image) {
+                // Use the YYWebImage setter so that the URL is properly associated with the image view
+                [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
+            else {
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
+        }
     }
-    
-    return YES;
 }
 
-- (void)srg_resetWithScale:(SRGImageScale)imageScale
+- (void)srg_requestImageForObject:(id<SRGImage>)object withScale:(SRGImageScale)scale type:(SRGImageType)type
 {
-    [self yy_cancelCurrentImageRequest];
-    
-    CGSize size = SRGSizeForImageScale(imageScale);
-    self.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+    [self srg_requestImageForObject:object withScale:scale type:type unavailabilityHandler:nil];
+}
+
+- (void)srg_resetImage
+{
+    [self yy_setImageWithURL:nil options:0];
 }
 
 @end

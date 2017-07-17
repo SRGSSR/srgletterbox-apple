@@ -85,7 +85,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
     
     __block SRGMedia *media = nil;
-    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerTestServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
     [[dataProvider videosWithUids:@[@"42844052"] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media = medias.firstObject;
         [expectation fulfill];
@@ -407,6 +407,34 @@
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSkipBackward]);
+}
+
+- (void)testCurrentAndPreviousPlaybackStateAreDifferent
+{
+    BOOL (^expectationHandler)(NSNotification * _Nonnull notification) = ^BOOL(NSNotification * _Nonnull notification) {
+        SRGMediaPlayerPlaybackState currentState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+        SRGMediaPlayerPlaybackState previousState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
+        XCTAssertTrue(currentState != previousState);
+        return YES;
+    };
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller prepareToPlayURN:URN withCompletionHandler:NULL];
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller play];
+    [self waitForExpectationsWithTimeout:5. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller pause];
+    [self waitForExpectationsWithTimeout:5. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
+    [self.controller reset];
+    [self waitForExpectationsWithTimeout:5. handler:nil];
 }
 
 - (void)testPlaybackStateKeyValueObserving

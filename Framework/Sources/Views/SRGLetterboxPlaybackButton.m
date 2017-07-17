@@ -36,7 +36,7 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
 
 #pragma mark Overrides
 
-- (void)setusesStopImage:(BOOL)usesStopImage
+- (void)setUsesStopImage:(BOOL)usesStopImage
 {
     _usesStopImage = usesStopImage;
     

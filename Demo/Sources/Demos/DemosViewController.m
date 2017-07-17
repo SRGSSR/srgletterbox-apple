@@ -137,6 +137,7 @@
     static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8412759";
     static NSString * const kVideoOnDemandWithNoFullLengthURNString = @"urn:rts:video:8686071";
     static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
+    static NSString * const kVideoOnDemandBlockedSegmentOverlapURNString = @"urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1";
     static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:audio:8581974";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
     
@@ -238,71 +239,76 @@
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentOverlapURNString];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kVideoDVRURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kVideoLiveURNString];
+                    [self openModalPlayerWithURNString:kVideoDVRURNString];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
+                    [self openModalPlayerWithURNString:kVideoLiveURNString];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
+                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kAudioDVRURNString];
+                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRURNString];
                     break;
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
+                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRSI];
+                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
                     break;
                 }
                     
                 case 17: {
-                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRSI];
                     break;
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithURNString:kInvalidURNString];
                     break;
                 }
                     
                 case 19: {
+                    [self openModalPlayerWithURNString:nil];
+                    break;
+                }
+                    
+                case 20: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString];

@@ -18,24 +18,33 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImageView *)srg_loadingImageView35WithTintColor:(nullable UIColor *)tintColor;
 
 /**
- *  Request the main image for the specified object, for a given scale.
+ *  Request an image of the specified object. Use `SRGImageTypeDefault` for the default image.
  *
- *  @param object The object to request the image for.
- *  @param scale  The scale to use.
- *  @param type   The image type (use `SRGImageTypeDefault` for the default image).
- *
- *  @return `YES` iff a valid image URL could be found.
+ *  @param object                The object for which the image must be requested.
+ *  @param scale                 The image scale.
+ *  @param type                  The image type.
+ *  @param unavailabilityHandler An optional handler called when the image is invalid (no object was provided or its
+ *                               associated image is invalid). You can implement this block to respond to such cases,
+ *                               e.g. to retrieve another image. If the block is set, no image will be set, otherwise
+ *                               the default placeholder will automatically be set.
  */
-// FIXME: Image validity should not have to be checked, but some services are returning bad URLs. When this has been
-//        fixed, return void
-- (BOOL)srg_requestImageForObject:(nullable id<SRGImage>)object
+- (void)srg_requestImageForObject:(nullable id<SRGImage>)object
+                        withScale:(SRGImageScale)scale
+                             type:(SRGImageType)type
+            unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler;
+
+/**
+ *  Same as `-srg_requestImageForObject:withScale:type:unavailabilityHandler:`, with no unavailability handler (thus
+ *  setting the default placeholder if no image is available).
+ */
+- (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type;
 
 /**
- *  Reset the image to the placeholder and cancel any pending image request.
+ *  Reset the image and cancel any pending image request.
  */
-- (void)srg_resetWithScale:(SRGImageScale)imageScale;
+- (void)srg_resetImage;
 
 @end
 
