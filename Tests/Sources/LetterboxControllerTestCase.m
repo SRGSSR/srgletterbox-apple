@@ -69,7 +69,7 @@
     }];
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
-    [self.controller playURN:URN];
+    [self.controller playURN:URN withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -103,7 +103,7 @@
         return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
     
-    [self.controller playMedia:media];
+    [self.controller playMedia:media withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -121,7 +121,7 @@
     }];
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
-    [self.controller playURN:URN];
+    [self.controller playURN:URN withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -155,7 +155,7 @@
     }];
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
-    [self.controller playURN:URN];
+    [self.controller playURN:URN withChaptersOnly:NO];
     
     // Media and composition not immediately available, fetched by the controller
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -186,7 +186,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -200,7 +200,7 @@
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -215,7 +215,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -238,7 +238,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -253,7 +253,7 @@
     }];
     
     // TTC
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"] withChaptersOnly:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSkipBackward]);
@@ -305,7 +305,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"] withChaptersOnly:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertFalse([self.controller canSkipBackward]);
@@ -327,7 +327,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"] withChaptersOnly:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue(self.controller.live);
@@ -373,7 +373,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"] withChaptersOnly:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Pile up skips forward
@@ -441,7 +441,7 @@
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"playbackState" expectedValue:@(SRGMediaPlayerPlaybackStatePreparing)];
     
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"]];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"] withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }

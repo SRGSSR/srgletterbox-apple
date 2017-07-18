@@ -98,9 +98,9 @@
                                                object:nil];
     
     if (! self.letterboxController.pictureInPictureActive) {
-        [self.letterboxController playURN:self.URN];
-        [self.smallLetterboxController1 playURN:self.URN1];
-        [self.smallLetterboxController2 playURN:self.URN2];
+        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+        [self.smallLetterboxController1 playURN:self.URN1 withChaptersOnly:NO];
+        [self.smallLetterboxController2 playURN:self.URN2 withChaptersOnly:NO];
     }
 }
 

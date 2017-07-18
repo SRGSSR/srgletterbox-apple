@@ -91,7 +91,7 @@
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    [self.letterboxController playURN:self.URN];
+    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
     
     [self reloadData];
 }

@@ -69,6 +69,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGSubdivision *subdivision;
 @property (nonatomic) SRGQuality quality;
 @property (nonatomic) NSInteger startBitRate;
+@property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
@@ -267,7 +268,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
         
-        [[self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
             if (error) {
                 return;
             }
@@ -291,7 +292,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 [self stop];
                 
                 SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
-                [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate];
+                [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
             }
         }] resume];
     }];
@@ -435,17 +436,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 #pragma mark Playback
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN media:nil withPreferredQuality:quality startBitRate:startBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:URN media:nil withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:nil media:media withPreferredQuality:quality startBitRate:startBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:nil media:media withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -466,9 +467,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     [self resetWithURN:URN media:media];
     
-    // Save the quality settings for restarting after connection loss
+    // Save the settings for restarting after connection loss
     self.quality = quality;
     self.startBitRate = startBitRate;
+    self.chaptersOnly = chaptersOnly;
     
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
@@ -512,7 +514,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
     }
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         @strongify(self)
         
         if (error) {
@@ -622,10 +624,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:prepareCompletioHandler];
+        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareCompletioHandler];
     }
     else if (self.URN) {
-        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:prepareCompletioHandler];
+        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareCompletioHandler];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
@@ -695,44 +697,44 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 #pragma mark Playback (convenience)
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN withCompletionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media withCompletionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
+    [self prepareToPlayMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
 {
     @weakify(self)
-    [self prepareToPlayURN:URN withPreferredQuality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayURN:URN withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
         
         [self play];
     }];
 }
 
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
 {
     @weakify(self)
-    [self prepareToPlayMedia:media withPreferredQuality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayMedia:media withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
         
         [self play];
     }];
 }
 
-- (void)playURN:(SRGMediaURN *)URN
+- (void)playURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly
 {
-    [self playURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self playURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
 }
 
-- (void)playMedia:(SRGMedia *)media
+- (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly
 {
-    [self playMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self playMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
 }
 
 #pragma mark Standard seeks

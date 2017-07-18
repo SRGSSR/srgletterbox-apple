@@ -61,7 +61,7 @@
     
     self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
     
-    [self.letterboxController playURN:self.URN];
+    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
