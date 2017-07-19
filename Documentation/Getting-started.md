@@ -23,7 +23,7 @@ then call one of the play methods on it:
 ```objective-c
 SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
 if (URN) {
-    [self.controller playURN:URN];
+    [self.controller playURN:URN withChaptersOnly:NO];
 }
 ```
 
@@ -32,7 +32,7 @@ You can also instantiate controllers directly in your xibs or storyboards if you
 A Letterbox controller can play any media from any SRG SSR business unit, simply starting from its URN. You can play an `SRGMedia` directly if you have one, for example if you already loaded some media list from the `SRGDataProvider` library:
 
 ```objective-c
-[self.controller playMedia:media];
+[self.controller playMedia:media withChaptersOnly:NO];
 ```
 
 The controller immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must bind a Letterbox view to your controller. 
