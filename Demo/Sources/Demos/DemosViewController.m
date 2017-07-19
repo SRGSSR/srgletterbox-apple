@@ -67,10 +67,10 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
 {
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -87,7 +87,7 @@
     
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:dataProviderBusinessUnitIdentifier];
     SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
-        [self openModalPlayerWithURNString:medias.firstObject.URN.URNString];
+        [self openModalPlayerWithURNString:medias.firstObject.URN.URNString chaptersOnly:NO];
     }];
     [request resume];
     self.request = request;
@@ -209,77 +209,77 @@
         case 2: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 1: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandShortClipURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandShortClipURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandStartOnSegmentURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandStartOnSegmentURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandWithNoFullLengthURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandWithNoFullLengthURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentOverlapURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentOverlapURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString];
+                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kVideoDVRURNString];
+                    [self openModalPlayerWithURNString:kVideoDVRURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kVideoLiveURNString];
+                    [self openModalPlayerWithURNString:kVideoLiveURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString];
+                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString];
+                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:kAudioDVRURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString];
+                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString chaptersOnly:NO];
                     break;
                 }
                     
@@ -299,19 +299,41 @@
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURNString:kInvalidURNString];
+                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 19: {
-                    [self openModalPlayerWithURNString:nil];
+                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
                     break;
                 }
                     
                 case 20: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openModalPlayerWithURNString:URNString];
+                        [self openModalPlayerWithURNString:URNString chaptersOnly:NO];
+                    }];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
+            
+        case 3: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString chaptersOnly:YES];
+                    break;
+                }
+                    
+                case 1: {
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
+                        [self openModalPlayerWithURNString:URNString chaptersOnly:YES];
                     }];
                     break;
                 }
@@ -323,7 +345,7 @@
             break;
         }
         
-        case 3: {
+        case 4: {
             switch (indexPath.row) {
                 case 0: {
                     [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:@"urn:rts:video:1967124"];
@@ -347,7 +369,7 @@
             break;
         }
         
-        case 4: {
+        case 5: {
             AutoplayList autoplayList = AutoplayListUnknown;
             switch (indexPath.row) {
                 case 0: {

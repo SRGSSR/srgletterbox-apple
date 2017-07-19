@@ -16,6 +16,7 @@
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic) BOOL chaptersOnly;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -41,7 +42,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -55,6 +56,7 @@
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
         viewController.URN = URN;
+        viewController.chaptersOnly = chaptersOnly;
         return viewController;
     }
 }
@@ -91,7 +93,7 @@
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
     
     [self reloadData];
 }
