@@ -421,7 +421,7 @@
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
     
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
-    [self.controller prepareToPlayURN:URN withCompletionHandler:NULL];
+    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:NULL];
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
