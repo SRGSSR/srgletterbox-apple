@@ -320,7 +320,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (SRGMedia *)subdivisionMedia
 {
-    return self.subdivision ? [self.mediaComposition mediaForSubdivision:self.subdivision] : nil;
+    return [self.mediaComposition mediaForSubdivision:self.subdivision];
 }
 
 - (BOOL)isContentURLOverridden
@@ -372,7 +372,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.URN = URN;
     self.media = media;
     self.mediaComposition = mediaComposition;
-    self.subdivision = subdivision;
+    self.subdivision = subdivision ?: self.mediaComposition.mainChapter;
     self.channel = channel ?: media.channel;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];

@@ -322,19 +322,19 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
 /**
- *  The current subdivision being played (if any).
+ *  The current subdivision being played.
  */
-@property (nonatomic, readonly, nullable) SRGSubdivision *subdivision;
+@property (nonatomic, readonly) SRGSubdivision *subdivision;
 
 /**
- *  The current subdivision (segment or chapter) being played, if any, as an `SRGMedia` object.
+ *  The current subdivision (segment or chapter) being played, as an `SRGMedia` object.
  */
-@property (nonatomic, readonly, nullable) SRGMedia *subdivisionMedia;
+@property (nonatomic, readonly) SRGMedia *subdivisionMedia;
 
 /**
- *  The current full-length information (if available).
+ *  The current full-length information .
  */
-@property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
+@property (nonatomic, readonly) SRGMedia *fullLengthMedia;
 
 /**
  *  Error (if any has been encountered).

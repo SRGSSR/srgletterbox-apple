@@ -131,12 +131,7 @@
 - (void)reloadDataOverriddenWithMedia:(SRGMedia *)media
 {
     if (! media) {
-        if (self.URN.mediaType == SRGMediaTypeVideo && self.letterboxController.fullLengthMedia) {
-            media = self.letterboxController.fullLengthMedia;
-        }
-        else {
-            media = self.letterboxController.media;
-        }
+        media = self.letterboxController.subdivisionMedia;
     }
     
     self.titleLabel.text = media.title;
@@ -198,7 +193,7 @@
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive
 {
     if (interactive) {
-        SRGMedia *media = subdivision ? [self.letterboxController.mediaComposition mediaForSubdivision:subdivision] : nil;
+        SRGMedia *media = subdivision ? [self.letterboxController.mediaComposition mediaForSubdivision:subdivision] : self.letterboxController.fullLengthMedia;
         [self reloadDataOverriddenWithMedia:media];
     }
 }
@@ -380,7 +375,7 @@
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataOverriddenWithMedia:self.letterboxController.subdivisionMedia];
+    [self reloadDataOverriddenWithMedia:nil];
 }
 
 @end
