@@ -141,6 +141,9 @@
     static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:audio:8581974";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
     
+    static NSString * const kVideoOnDemandChaptersOnlyFullLengthURNString = @"urn:srf:video:dc4a4f8c-e83e-46b3-a5e3-ebfde3a29b88";
+    static NSString * const kVideoOnDemandChaptersOnlyStartOnChapterURNString = @"urn:srf:video:519d66ec-b5ac-4373-b916-82c255928351";
+    
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
@@ -326,11 +329,16 @@
         case 3: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString chaptersOnly:YES];
+                    [self openModalPlayerWithURNString:kVideoOnDemandChaptersOnlyFullLengthURNString chaptersOnly:YES];
                     break;
                 }
                     
                 case 1: {
+                    [self openModalPlayerWithURNString:kVideoOnDemandChaptersOnlyStartOnChapterURNString chaptersOnly:YES];
+                    break;
+                }
+                    
+                case 2: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString chaptersOnly:YES];
