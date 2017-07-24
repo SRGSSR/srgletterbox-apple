@@ -1308,7 +1308,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceForErrorAnimated:YES];
-    [self updateUserInterfaceForAirplayAnimated:YES];
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     
@@ -1329,9 +1328,6 @@ static void commonInit(SRGLetterboxView *self);
             self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
             self.timelineView.time = seekTargetTime;
         }
-    }
-    else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        [self dismissNotificationViewAnimated:YES];
     }
 }
 
