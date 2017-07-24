@@ -4,22 +4,22 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxViewRestorationContext.h"
+#import "SRGLetterboxUserInterfaceContext.h"
 
-@interface SRGLetterboxViewRestorationContext ()
+@interface SRGLetterboxUserInterfaceContext ()
 
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *identifier;
 
 @end
 
-@implementation SRGLetterboxViewRestorationContext
+@implementation SRGLetterboxUserInterfaceContext
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithName:(NSString *)name
+- (instancetype)initWithIdentifier:(NSString *)identifier
 {
     if (self = [super init]) {
-        self.name = name;
+        self.identifier = identifier;
     }
     return self;
 }
@@ -36,25 +36,25 @@
         return NO;
     }
     
-    SRGLetterboxViewRestorationContext *otherRestorationContext = object;
-    return [self.name isEqualToString:otherRestorationContext.name];
+    SRGLetterboxUserInterfaceContext *otherRestorationContext = object;
+    return [self.identifier isEqualToString:otherRestorationContext.identifier];
 }
 
 - (NSUInteger)hash
 {
-    return self.name.hash;
+    return self.identifier.hash;
 }
 
 #pragma mark Description
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; hidden: %@; togglable: %@; name: %@>",
+    return [NSString stringWithFormat:@"<%@: %p; hidden: %@; togglable: %@; identifier: %@>",
             [self class],
             self,
             self.hidden ? @"YES" : @"NO",
             self.togglable ? @"YES" : @"NO",
-            self.name];
+            self.identifier];
 }
 
 @end

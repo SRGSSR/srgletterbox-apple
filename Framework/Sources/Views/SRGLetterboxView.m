@@ -17,7 +17,7 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
-#import "SRGLetterboxViewRestorationContext.h"
+#import "SRGLetterboxUserInterfaceContext.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
@@ -89,8 +89,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
-@property (nonatomic) SRGLetterboxViewRestorationContext *mainRestorationContext;                       // Context of the values supplied by the user
-@property (nonatomic) NSMutableArray<SRGLetterboxViewRestorationContext *> *restorationContexts;        // Contexts piled up internally on top of the main user context
+@property (nonatomic) SRGLetterboxUserInterfaceContext *mainContext;                              // Context bearing the values supplied by the user
+@property (nonatomic) NSMutableSet<SRGLetterboxUserInterfaceContext *> *appliedContexts;          // Contexts applied on top of the main context
 
 // Get the future notification height, with the `layoutForNotificationHeight`method
 @property (nonatomic, readonly) CGFloat notificationHeight;
@@ -388,6 +388,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self updateLoadingIndicatorForController:controller animated:NO];
     [self updateUserInterfaceForErrorAnimated:NO];
+    [self updateUserInterfaceForAirplayAnimated:NO];
     [self updateUserInterfaceAnimated:NO];
     [self reloadDataForController:controller];
     
@@ -639,13 +640,13 @@ static void commonInit(SRGLetterboxView *self);
 // forced (in which case changes will be applied after restoration)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    SRGLetterboxViewRestorationContext *previousContext = self.mainRestorationContext;
+    SRGLetterboxUserInterfaceContext *previousContext = self.mainContext;
     
-    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
-    self.mainRestorationContext.hidden = hidden;
-    self.mainRestorationContext.togglable = previousContext.togglable;
+    self.mainContext = [[SRGLetterboxUserInterfaceContext alloc] initWithIdentifier:@"main"];
+    self.mainContext.hidden = hidden;
+    self.mainContext.togglable = previousContext.togglable;
     
-    if (self.restorationContexts.count != 0) {
+    if (self.appliedContexts.count != 0) {
         return;
     }
     
@@ -653,14 +654,14 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Public method for changing user interface behavior. Always update interface settings, except when a UI state has been
-// forced (in which case changes will be applied after restoration)
+// forced (in which case changes will be applied after current context overrides have been lifted)
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
-    self.mainRestorationContext.hidden = hidden;
-    self.mainRestorationContext.togglable = togglable;
+    self.mainContext = [[SRGLetterboxUserInterfaceContext alloc] initWithIdentifier:@"main"];
+    self.mainContext.hidden = hidden;
+    self.mainContext.togglable = togglable;
     
-    if (self.restorationContexts.count != 0) {
+    if (self.appliedContexts.count != 0) {
         return;
     }
     
@@ -672,7 +673,7 @@ static void commonInit(SRGLetterboxView *self);
 // Show or hide the user interface, doing nothing if the interface is not togglable or in an overridden state
 - (void)conditional_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable || self.restorationContexts.count != 0) {
+    if (! self.userInterfaceTogglable || self.appliedContexts.count != 0) {
         return;
     }
     
@@ -763,31 +764,45 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI changes and restoration
 
-// Apply changes to the user interface and save previous values with the specified identifier. Changes for a given
-// identifier are applied at most once. Synchronous.
-- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withRestorationIdentifier:(NSString *)restorationIdentifier
+// Apply changes to the user interface, saving current values under the specified identifier. Only one UI context
+// can be saved at most for a given identifier. If applied twice, the previous context will be discarded, and the new
+// one will be saved instead.
+- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withIdentifier:(NSString *)identifier
 {
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    restorationContext.hidden = hidden;
-    restorationContext.togglable = togglable;
-    
-    if (! [self.restorationContexts containsObject:restorationContext]) {
-        [self.restorationContexts addObject:restorationContext];
-        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-    }
+    SRGLetterboxUserInterfaceContext *context = [[SRGLetterboxUserInterfaceContext alloc] initWithIdentifier:identifier];
+    context.hidden = hidden;
+    context.togglable = togglable;
+    [self.appliedContexts removeObject:context];
+    [self.appliedContexts addObject:context];
+
+    [self imperative_updateUserInterfaceWithCurrentContextsAnimated:animated];
 }
 
-// Restore the user interface state as if the change identified by the identifiers was not made. The suggested user interface state
-// is provided in the `changes` block. Synchronous.
-- (void)imperative_restoreUserInterfaceForIdentifier:(NSString *)restorationIdentifier animated:(BOOL)animated
+// Remove the context with the specified identifier and update the user interface behavior.
+- (void)imperative_removeContextWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
-    SRGLetterboxViewRestorationContext *restorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:restorationIdentifier];
-    if ([self.restorationContexts containsObject:restorationContext]) {
-        [self.restorationContexts removeObject:restorationContext];
+    SRGLetterboxUserInterfaceContext *restorationContext = [[SRGLetterboxUserInterfaceContext alloc] initWithIdentifier:identifier];
+    [self.appliedContexts removeObject:restorationContext];
+    
+    [self imperative_updateUserInterfaceWithCurrentContextsAnimated:animated];
+}
+
+- (void)imperative_updateUserInterfaceWithCurrentContextsAnimated:(BOOL)animated
+{
+    __block BOOL effectiveHidden = self.mainContext.hidden;
+    __block BOOL effectiveTogglable = self.mainContext.togglable;
+    
+    [self.appliedContexts enumerateObjectsUsingBlock:^(SRGLetterboxUserInterfaceContext * _Nonnull context, BOOL * _Nonnull stop) {
+        if (! context.hidden) {
+            effectiveHidden = NO;
+        }
         
-        SRGLetterboxViewRestorationContext *restorationContext = self.restorationContexts.lastObject ?: self.mainRestorationContext;
-        [self imperative_setUserInterfaceHidden:restorationContext.hidden animated:animated togglable:restorationContext.togglable];
-    }
+        if (! context.togglable) {
+            effectiveTogglable = NO;
+        }
+    }];
+    
+    [self imperative_setUserInterfaceHidden:effectiveHidden animated:animated togglable:effectiveTogglable];
 }
 
 #pragma mark UI updates
@@ -923,11 +938,11 @@ static void commonInit(SRGLetterboxView *self);
             && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
         // If the user interface is togglable, show controls, use visibility as set by the API client. We do not want controls
         // to be displayed while using Airplay if the interface was forced to be hidden
-        BOOL hidden = self.userInterfaceTogglable ? NO : self.mainRestorationContext.hidden;
-        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
+        BOOL hidden = self.mainContext.togglable ? NO : self.mainContext.hidden;
+        [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:NO withIdentifier:kRestorationIdentifier];
     }
     else {
-        [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
+        [self imperative_removeContextWithIdentifier:kRestorationIdentifier animated:animated];
     }
 }
 
@@ -941,12 +956,12 @@ static void commonInit(SRGLetterboxView *self);
         // Only display retry instructions if there is a media to retry with
         self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
         
-        [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withRestorationIdentifier:kRestorationIdentifier];
+        [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withIdentifier:kRestorationIdentifier];
     }
     else {
         self.errorView.alpha = 0.f;
         
-        [self imperative_restoreUserInterfaceForIdentifier:kRestorationIdentifier animated:animated];
+        [self imperative_removeContextWithIdentifier:kRestorationIdentifier animated:animated];
     }
 }
 
@@ -1315,10 +1330,12 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
+        [self updateUserInterfaceForAirplayAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+        [self updateUserInterfaceForAirplayAnimated:YES];
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
@@ -1362,6 +1379,7 @@ static void commonInit(SRGLetterboxView *self);
     [self updateVisibleSubviewsAnimated:YES];
 }
 
+// Called when the route is changed from the control center
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
@@ -1422,10 +1440,10 @@ static void commonInit(SRGLetterboxView *self)
     
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
     
-    // Create an initial matching restoration context
-    self.mainRestorationContext = [[SRGLetterboxViewRestorationContext alloc] initWithName:@"main"];
-    self.mainRestorationContext.hidden = self.userInterfaceHidden;
-    self.mainRestorationContext.togglable = self.userInterfaceTogglable;
+    // Create an initial corresponding restoration context
+    self.mainContext = [[SRGLetterboxUserInterfaceContext alloc] initWithIdentifier:@"main"];
+    self.mainContext.hidden = self.userInterfaceHidden;
+    self.mainContext.togglable = self.userInterfaceTogglable;
     
-    self.restorationContexts = [NSMutableArray array];
+    self.appliedContexts = [NSMutableSet set];
 }
