@@ -354,6 +354,9 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerWillSkipBlockedSegmentNotification
                                                       object:previousMediaPlayerController];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
+                                                      object:previousMediaPlayerController];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -427,6 +430,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(willSkipBlockedSegment:)
                                                      name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                                   object:mediaPlayerController];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(externalPlaybackStateDidChange:)
+                                                     name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                    object:mediaPlayerController];
         
         [self.playerView addSubview:mediaPlayerController.view];
@@ -1345,6 +1352,13 @@ static void commonInit(SRGLetterboxView *self);
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(subdivision.blockingReason);
     [self showNotificationMessage:notificationMessage animated:YES];
+}
+
+- (void)externalPlaybackStateDidChange:(NSNotification *)notification
+{
+    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceForAirplayAnimated:YES];
+    [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
