@@ -658,16 +658,14 @@ static void commonInit(SRGLetterboxView *self);
     return userInterfaceHidden;
 }
 
-- (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
+- (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden shouldFocus:(BOOL *)pShouldFocus
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
     CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
-    if (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.timelineView scrollToSelectedIndexAnimated:NO];
-        });
+    if (pShouldFocus) {
+        *pShouldFocus = (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
     }
     
     self.timelineHeightConstraint.constant = timelineHeight;
@@ -780,9 +778,11 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
+    __block BOOL shouldFocus = NO;
+    
     void (^animations)(void) = ^{
         BOOL userInterfaceHidden = [self updateLayoutForController:controller];
-        CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
+        CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden shouldFocus:&shouldFocus];
         CGFloat notificationHeight = [self updateNotificationLayout];
         [self updateControlsLayoutForController:controller];
         
@@ -793,6 +793,10 @@ static void commonInit(SRGLetterboxView *self);
         
         self.animations = nil;
         self.completion = nil;
+        
+        if (shouldFocus) {
+            [self.timelineView scrollToSelectedIndexAnimated:animated];
+        }
     };
     
     if (animated) {
