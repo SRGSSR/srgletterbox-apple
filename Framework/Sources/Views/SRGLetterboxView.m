@@ -639,11 +639,6 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI updates
 
-- (void)updateUserInterfaceAnimated:(BOOL)animated
-{
-    [self updateUserInterfaceForController:self.controller animated:animated];
-}
-
 - (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
@@ -752,66 +747,10 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark UI updates
-
-#if 0
-
-// Called to update the main player subviews (player view, background image). Independent of the global
-// status of the control overlay
-- (void)updateVisibleSubviewsAnimated:(BOOL)animated
+- (void)updateUserInterfaceAnimated:(BOOL)animated
 {
-    void (^animations)(void) = ^{
-        SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
-        
-        void (^updatePlaybackViews)(void) = ^{
-            // Hide if playing a video in Airplay or if "true screen mirroring" is used (device screen copy with no full-screen
-            // playback on the external device)
-            SRGMedia *media = self.controller.media;
-            BOOL hidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive;
-            self.imageView.alpha = hidden ? 0.f : 1.f;
-            mediaPlayerController.view.alpha = hidden ? 1.f : 0.f;
-        };
-        
-        if (playbackState == SRGMediaPlayerPlaybackStatePlaying) {
-            updatePlaybackViews();
-            
-            [self resetInactivityTimer];
-            
-            if (!self.showingPopup) {
-                self.showingPopup = YES;
-                [self.timeSlider showPopUpViewAnimated:NO /* already in animation block */];
-            }
-        }
-        else if (playbackState == SRGMediaPlayerPlaybackStateEnded
-                    || playbackState == SRGMediaPlayerPlaybackStateIdle) {
-            self.imageView.alpha = 1.f;
-            mediaPlayerController.view.alpha = 0.f;
-            
-            [self.timeSlider hidePopUpViewAnimated:NO /* already in animation block */];
-            self.showingPopup = NO;
-            
-            // Force display of the controls at the end of the playback
-            if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
-                [self conditional_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
-            }
-        }
-        else if (playbackState == SRGMediaPlayerPlaybackStatePaused) {
-            updatePlaybackViews();
-            
-            [self conditional_setUserInterfaceHidden:NO animated:NO /* already in animation block */];
-        }
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations];
-    }
-    else {
-        animations();
-    }
+    [self updateUserInterfaceForController:self.controller animated:animated];
 }
-
-#endif
 
 - (void)updateControlsForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
