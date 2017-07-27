@@ -789,7 +789,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)imperative_updateUserInterfaceWithCurrentContextsAnimated:(BOOL)animated
 {
-    __block BOOL effectiveHidden = self.mainContext.hidden;
+    __block BOOL effectiveHidden = self.userInterfaceHidden;
     __block BOOL effectiveTogglable = self.mainContext.togglable;
     
     [self.appliedContexts enumerateObjectsUsingBlock:^(SRGLetterboxUserInterfaceContext * _Nonnull context, BOOL * _Nonnull stop) {
