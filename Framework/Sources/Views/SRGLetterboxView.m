@@ -378,7 +378,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = nil;
     
     [self updateLoadingIndicatorForController:controller animated:NO];
-    [self updateUserInterfaceAnimated:NO];
+    [self updateUserInterfaceForController:controller animated:NO];
     [self reloadDataForController:controller];
     
     if (controller) {
@@ -640,6 +640,11 @@ static void commonInit(SRGLetterboxView *self);
 #pragma mark UI updates
 
 - (void)updateUserInterfaceAnimated:(BOOL)animated
+{
+    [self updateUserInterfaceForController:self.controller animated:animated];
+}
+
+- (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
