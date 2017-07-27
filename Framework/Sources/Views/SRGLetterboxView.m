@@ -1322,7 +1322,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateVisibleSubviewsAnimated:YES];
-    [self updateUserInterfaceForErrorAnimated:YES];
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     
@@ -1331,12 +1330,14 @@ static void commonInit(SRGLetterboxView *self);
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceAnimated:YES];
         [self updateUserInterfaceForAirplayAnimated:YES];
+        [self updateUserInterfaceForErrorAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self updateUserInterfaceForAirplayAnimated:YES];
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
+        [self updateUserInterfaceForErrorAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
