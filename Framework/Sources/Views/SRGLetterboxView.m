@@ -711,12 +711,6 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
-    // Controls and error overlay must never be displayed at the same time.
-    BOOL hasError = ([self error] != nil);
-    if (hasError) {
-        hidden = YES;
-    }
-    
     // Always scroll to the selected subdivision when opening the timeline. Schedule for scrolling on the next run loop so
     // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
     CGFloat timelineHeight = (subdivisions.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
@@ -729,8 +723,13 @@ static void commonInit(SRGLetterboxView *self);
     self.finalUserInterfaceHidden = @(hidden);
     
     void (^animations)(void) = ^{
-        self.controlsView.alpha = hidden ? 0.f : 1.f;
-        self.backgroundInteractionView.alpha = hidden ? 0.f : 1.f;
+        // Controls and error overlay must never be displayed at the same time. This does not change the final expected
+        // control visbility state variable, only its visual result.
+        BOOL hasError = ([self error] != nil);
+        BOOL controlsViewHidden = hasError ? YES : hidden;
+        
+        self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
+        self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
         self.notificationImageView.hidden = (self.notificationMessage == nil);
