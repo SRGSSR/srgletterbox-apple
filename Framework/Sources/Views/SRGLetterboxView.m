@@ -672,6 +672,9 @@ static void commonInit(SRGLetterboxView *self);
         if (hasError) {
             controlsViewHidden = YES;
         }
+        else if (! self.userInterfaceTogglable) {
+            controlsViewHidden = self.userInterfaceHidden;
+        }
         else if (! isUsingAirplay) {
             controlsViewHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
         }
