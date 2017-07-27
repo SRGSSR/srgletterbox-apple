@@ -287,8 +287,6 @@ static void commonInit(SRGLetterboxView *self);
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
     }];
-    
-    [self updateNotificationLayout];
 }
 
 #pragma mark Fonts
