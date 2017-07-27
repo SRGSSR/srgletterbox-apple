@@ -210,7 +210,6 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateLoadingIndicatorAnimated:NO];
         [self updateUserInterfaceAnimated:NO];
         [self accessibilityVoiceOverStatusChanged:nil];
         [self reloadData];
@@ -367,7 +366,6 @@ static void commonInit(SRGLetterboxView *self);
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
-    [self updateLoadingIndicatorForController:controller animated:NO];
     [self reloadDataForController:controller];
     
     if (controller) {
@@ -380,7 +378,6 @@ static void commonInit(SRGLetterboxView *self);
             @strongify(controller)
             [self updateUserInterfaceForController:controller animated:YES];
         }];
-        [self updateUserInterfaceForController:controller animated:NO];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(metadataDidChange:)
@@ -424,6 +421,7 @@ static void commonInit(SRGLetterboxView *self);
         
         [self.playerView layoutIfNeeded];
     }
+    [self updateUserInterfaceForController:controller animated:NO];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -699,7 +697,7 @@ static void commonInit(SRGLetterboxView *self);
                                       verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
 }
 
-- (void)updateControlsForController:(SRGLetterboxController *)controller
+- (void)updateControlsLayoutForController:(SRGLetterboxController *)controller
 {
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
@@ -711,7 +709,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Special cases when the player is idle or preparing
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
         self.playbackButton.usesStopImage = NO;
@@ -749,6 +747,26 @@ static void commonInit(SRGLetterboxView *self);
             break;
         }
     }
+    
+    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
+    BOOL isWaitingForData = ! controller.contentURLOverridden && ! controller.mediaComposition && controller.URN && ! controller.error;
+    
+    BOOL visible = isPlayerLoading || isWaitingForData;
+    if (visible) {
+        self.playbackButton.alpha = 0.f;
+        
+        self.loadingImageView.alpha = 1.f;
+        [self.loadingImageView startAnimating];
+    }
+    else {
+        self.playbackButton.alpha = 1.f;
+        
+        self.loadingImageView.alpha = 0.f;
+        [self.loadingImageView stopAnimating];
+    }
 }
 
 - (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
@@ -763,7 +781,7 @@ static void commonInit(SRGLetterboxView *self);
         BOOL userInterfaceHidden = [self updateLayoutForController:controller];
         CGFloat timelineHeight = [self updateTimelineLayoutForController:controller];
         CGFloat notificationHeight = [self updateNotificationLayout];
-        [self updateControlsForController:controller];
+        [self updateControlsLayoutForController:controller];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
     };
@@ -790,44 +808,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     [self updateUserInterfaceForController:self.controller animated:animated];
-}
-
-- (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
-{
-    void (^animations)(void) = ^{
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
-            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
-            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
-            && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-        BOOL isWaitingForData = ! controller.contentURLOverridden && ! controller.mediaComposition && controller.URN && ! controller.error;
-        
-        BOOL visible = isPlayerLoading || isWaitingForData;
-        if (visible) {
-            self.playbackButton.alpha = 0.f;
-            
-            self.loadingImageView.alpha = 1.f;
-            [self.loadingImageView startAnimating];
-        }
-        else {
-            self.playbackButton.alpha = 1.f;
-            
-            self.loadingImageView.alpha = 0.f;
-            [self.loadingImageView stopAnimating];
-        }
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations];
-    }
-    else {
-        animations();
-    }
-}
-
-- (void)updateLoadingIndicatorAnimated:(BOOL)animated
-{
-    [self updateLoadingIndicatorForController:self.controller animated:animated];
 }
 
 - (void)resetInactivityTimer
@@ -1113,19 +1093,16 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.time = kCMTimeZero;
     
     [self updateUserInterfaceAnimated:YES];
-    [self updateLoadingIndicatorAnimated:YES];
     [self reloadData];
 }
 
 - (void)playbackDidRetry:(NSNotification *)notification
 {
-    [self updateLoadingIndicatorAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateLoadingIndicatorAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
