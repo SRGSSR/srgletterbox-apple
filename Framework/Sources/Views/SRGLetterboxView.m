@@ -350,16 +350,6 @@ static void commonInit(SRGLetterboxView *self);
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
-    // Synchronize the slider popup and the loading indicator with the new controller state
-    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        [self.timeSlider hidePopUpViewAnimated:NO];
-    }
-    else {
-        [self.timeSlider showPopUpViewAnimated:NO];
-    }
-    
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
@@ -746,6 +736,15 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
+    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+                            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+                            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        [self.timeSlider hidePopUpViewAnimated:NO];
+    }
+    else {
+        [self.timeSlider showPopUpViewAnimated:NO];
+    }
+    
     BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
@@ -844,8 +843,6 @@ static void commonInit(SRGLetterboxView *self);
         [self showNotificationMessage:SRGLetterboxLocalizedString(@"Playback on AirPlay", @"Message displayed when broadcasting on an AirPlay device") animated:animated];
     }
 }
-
-#pragma mark Layout
 
 // Ajust control size to fit view width best.
 - (void)updateControlSet
