@@ -87,9 +87,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
-// Get the future notification height, with the `layoutForNotificationHeight`method
-@property (nonatomic, readonly) CGFloat notificationHeight;
-
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
@@ -292,14 +289,7 @@ static void commonInit(SRGLetterboxView *self);
         button.hidden = fullScreenButtonHidden;
     }];
     
-    // We need to know what will be the notification height, depending of the notification message and the layout resizing.
-    if (self.notificationMessage && CGRectGetHeight(self.notificationImageView.frame) != 0.f) {
-        
-        [self layoutNotificationView];
-        if (self.notificationHeight != CGRectGetHeight(self.notificationImageView.frame)) {
-            [self updateUserInterfaceAnimated:YES];
-        }
-    }
+    [self updateNotificationLayout];
 }
 
 #pragma mark Fonts
@@ -378,7 +368,6 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = nil;
     
     [self updateLoadingIndicatorForController:controller animated:NO];
-    [self updateUserInterfaceForController:controller animated:NO];
     [self reloadDataForController:controller];
     
     if (controller) {
@@ -389,9 +378,9 @@ static void commonInit(SRGLetterboxView *self);
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             @strongify(controller)
-            [self updateControlsForController:controller animated:YES];
+            [self updateUserInterfaceForController:controller animated:YES];
         }];
-        [self updateControlsForController:controller animated:NO];
+        [self updateUserInterfaceForController:controller animated:NO];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(metadataDidChange:)
@@ -639,6 +628,129 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI updates
 
+- (BOOL)updateLayoutForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
+    // Controls and error overlay must never be displayed at the same time. This does not change the final expected
+    // control visbility state variable, only its visual result.
+    BOOL hasError = ([self error] != nil);
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
+        && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    
+    BOOL controlsViewHidden = NO;
+    if (hasError) {
+        controlsViewHidden = YES;
+    }
+    else if (! self.userInterfaceTogglable) {
+        controlsViewHidden = self.userInterfaceHidden;
+    }
+    else if (! isUsingAirplay) {
+        controlsViewHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
+    }
+    
+    self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
+    self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
+    
+    self.notificationImageView.hidden = (self.notificationMessage == nil);
+    self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
+    self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
+
+    // Only display retry instructions if there is a media to retry with
+    self.errorView.alpha = hasError ? 1.f : 0.f;
+    self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
+    
+    // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
+    // playback on the external device)
+    SRGMedia *media = controller.media;
+    BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
+        && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
+    self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
+    mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
+    
+    return controlsViewHidden;
+}
+
+- (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller
+{
+    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
+    self.timelineHeightConstraint.constant = timelineHeight;
+    return timelineHeight;
+}
+
+- (CGFloat)updateNotificationLayout
+{
+    // The notification message determines the height of the view required to display it.
+    self.notificationLabel.text = self.notificationMessage;
+    
+    // Force autolayout
+    [self.notificationView setNeedsLayout];
+    [self.notificationView layoutIfNeeded];
+    
+    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
+    // adjusts
+    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
+    CGSize fittingSize = UILayoutFittingCompressedSize;
+    fittingSize.width = CGRectGetWidth(self.notificationView.frame);
+    return [self.notificationView systemLayoutSizeFittingSize:fittingSize
+                                withHorizontalFittingPriority:UILayoutPriorityRequired
+                                      verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+}
+
+- (void)updateControlsForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    
+    self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
+    self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
+    self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+    
+    self.playbackButton.imageSet = [self imageSet];
+    
+    // Special cases when the player is idle or preparing
+    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+        || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+        self.timeSlider.alpha = 0.f;
+        self.timeSlider.timeLeftValueLabel.hidden = YES;
+        self.playbackButton.usesStopImage = NO;
+        return;
+    }
+    
+    // Adjust the UI to best match type of the stream being played
+    switch (mediaPlayerController.streamType) {
+        case SRGMediaPlayerStreamTypeOnDemand: {
+            self.timeSlider.alpha = 1.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
+            self.playbackButton.usesStopImage = NO;
+            break;
+        }
+            
+        case SRGMediaPlayerStreamTypeLive: {
+            self.timeSlider.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.hidden = NO;
+            self.playbackButton.usesStopImage = YES;
+            break;
+        }
+            
+        case SRGMediaPlayerStreamTypeDVR: {
+            self.timeSlider.alpha = 1.f;
+            // Hide timeLeftValueLabel to give the width space to the timeSlider
+            self.timeSlider.timeLeftValueLabel.hidden = YES;
+            self.playbackButton.usesStopImage = NO;
+            break;
+        }
+            
+        default: {
+            self.timeSlider.alpha = 0.f;
+            self.timeSlider.timeLeftValueLabel.hidden = YES;
+            self.playbackButton.usesStopImage = NO;
+            break;
+        }
+    }
+}
+
 - (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
@@ -647,66 +759,13 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
-    // TODO: Has nothing to do here
-#if 0
-    // Always scroll to the selected subdivision when opening the timeline. Schedule for scrolling on the next run loop so
-    // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
-    if (timelineHeight != 0.f) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.timelineView scrollToSelectedIndexAnimated:NO];
-        });
-    }
-#endif
-    
     void (^animations)(void) = ^{
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+        BOOL userInterfaceHidden = [self updateLayoutForController:controller];
+        CGFloat timelineHeight = [self updateTimelineLayoutForController:controller];
+        CGFloat notificationHeight = [self updateNotificationLayout];
+        [self updateControlsForController:controller];
         
-        // Controls and error overlay must never be displayed at the same time. This does not change the final expected
-        // control visbility state variable, only its visual result.
-        BOOL hasError = ([self error] != nil);
-        BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
-            && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive);
-        
-        BOOL controlsViewHidden = NO;
-        if (hasError) {
-            controlsViewHidden = YES;
-        }
-        else if (! self.userInterfaceTogglable) {
-            controlsViewHidden = self.userInterfaceHidden;
-        }
-        else if (! isUsingAirplay) {
-            controlsViewHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
-        }
-        
-        self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
-        self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
-        
-        NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-        CGFloat timelineHeight = (subdivisions.count != 0 && ! self.userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
-        self.timelineHeightConstraint.constant = timelineHeight;
-        
-        self.notificationImageView.hidden = (self.notificationMessage == nil);
-        self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
-        self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
-        
-        // Only display retry instructions if there is a media to retry with
-        self.errorView.alpha = hasError ? 1.f : 0.f;
-        self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
-        
-        // We need to know what will be the notification view height, depending of the new notification message.
-        self.notificationLabel.text = self.notificationMessage;
-        [self layoutNotificationView];
-        
-        // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
-        // playback on the external device)
-        SRGMedia *media = controller.media;
-        BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
-            && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
-        self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
-        mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
-        
-        self.animations ? self.animations(controlsViewHidden, timelineHeight + self.notificationHeight) : nil;
+        self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -731,73 +790,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     [self updateUserInterfaceForController:self.controller animated:animated];
-}
-
-- (void)updateControlsForController:(SRGLetterboxController *)controller animated:(BOOL)animated
-{
-    void (^animations)(void) = ^{
-        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
-        self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
-        
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        
-        SRGImageSet imageSet = [self imageSet];
-        self.playbackButton.imageSet = imageSet;
-        
-        // Special cases when the player is idle or preparing
-        if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-            self.timeSlider.alpha = 0.f;
-            self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.usesStopImage = NO;
-            return;
-        }
-        
-        // Adjust the UI to best match type of the stream being played
-        switch (mediaPlayerController.streamType) {
-            case SRGMediaPlayerStreamTypeOnDemand: {
-                self.timeSlider.alpha = 1.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.usesStopImage = NO;
-                break;
-            }
-                
-            case SRGMediaPlayerStreamTypeLive: {
-                self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.usesStopImage = YES;
-                break;
-            }
-                
-            case SRGMediaPlayerStreamTypeDVR: {
-                self.timeSlider.alpha = 1.f;
-                // Hide timeLeftValueLabel to give the width space to the timeSlider
-                self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.usesStopImage = NO;
-                break;
-            }
-                
-            default: {
-                self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.usesStopImage = NO;
-                break;
-            }
-        }
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations];
-    }
-    else {
-        animations();
-    }
-}
-
-- (void)updateControlsAnimated:(BOOL)animated
-{
-    [self updateControlsForController:self.controller animated:animated];
 }
 
 - (void)updateLoadingIndicatorForController:(SRGLetterboxController *)controller animated:(BOOL)animated
@@ -876,22 +868,6 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Layout
-
-- (void)layoutNotificationView
-{
-    // Force autolayout
-    [self.notificationView setNeedsLayout];
-    [self.notificationView layoutIfNeeded];
-    
-    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
-    // adjusts
-    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
-    CGSize fittingSize = UILayoutFittingCompressedSize;
-    fittingSize.width = CGRectGetWidth(self.notificationView.frame);
-    _notificationHeight = [self.notificationView systemLayoutSizeFittingSize:fittingSize
-                                                   withHorizontalFittingPriority:UILayoutPriorityRequired
-                                                         verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
-}
 
 // Ajust control size to fit view width best.
 - (void)updateControlSet
@@ -1149,7 +1125,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
     
