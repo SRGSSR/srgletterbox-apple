@@ -635,19 +635,19 @@ static void commonInit(SRGLetterboxView *self);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
         && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
-    BOOL controlsViewHidden = NO;
+    BOOL userInterfaceHidden = NO;
     if (hasError) {
-        controlsViewHidden = YES;
+        userInterfaceHidden = YES;
     }
     else if (! self.userInterfaceTogglable) {
-        controlsViewHidden = self.userInterfaceHidden;
+        userInterfaceHidden = self.userInterfaceHidden;
     }
     else if (! isUsingAirplay) {
-        controlsViewHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
+        userInterfaceHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
     }
     
-    self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
-    self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
+    self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
+    self.backgroundInteractionView.alpha = userInterfaceHidden ? 0.f : 1.f;
     
     self.notificationImageView.hidden = (self.notificationMessage == nil);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
@@ -665,13 +665,13 @@ static void commonInit(SRGLetterboxView *self);
     self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
     
-    return controlsViewHidden;
+    return userInterfaceHidden;
 }
 
-- (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller
+- (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     self.timelineHeightConstraint.constant = timelineHeight;
     return timelineHeight;
 }
@@ -777,7 +777,7 @@ static void commonInit(SRGLetterboxView *self);
     
     void (^animations)(void) = ^{
         BOOL userInterfaceHidden = [self updateLayoutForController:controller];
-        CGFloat timelineHeight = [self updateTimelineLayoutForController:controller];
+        CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self updateNotificationLayout];
         [self updateControlsLayoutForController:controller];
         
