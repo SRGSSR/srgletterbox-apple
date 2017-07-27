@@ -662,8 +662,7 @@ static void commonInit(SRGLetterboxView *self);
 #if 0
         //
         
-        self.airplayButton.alwaysHidden = ! self.controller.backgroundServicesEnabled;
-        self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
+        
         
         //
         
@@ -681,8 +680,7 @@ static void commonInit(SRGLetterboxView *self);
         //
         
         if ([self error]) {
-            // Only display retry instructions if there is a media to retry with
-            self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
+            
             
             [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withIdentifier:kRestorationIdentifier];
         }
@@ -711,7 +709,9 @@ static void commonInit(SRGLetterboxView *self);
         self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
         self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
         
+        // Only display retry instructions if there is a media to retry with
         self.errorView.alpha = hasError ? 1.f : 0.f;
+        self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
         
         // We need to know what will be the notification view height, depending of the new notification message.
         self.notificationLabel.text = self.notificationMessage;
