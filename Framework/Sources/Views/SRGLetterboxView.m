@@ -711,6 +711,12 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
+    // Controls and error overlay must never be displayed at the same time.
+    BOOL hasError = ([self error] != nil);
+    if (hasError) {
+        hidden = YES;
+    }
+    
     // Always scroll to the selected subdivision when opening the timeline. Schedule for scrolling on the next run loop so
     // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
     CGFloat timelineHeight = (subdivisions.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
@@ -730,6 +736,8 @@ static void commonInit(SRGLetterboxView *self);
         self.notificationImageView.hidden = (self.notificationMessage == nil);
         self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
         self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
+        
+        self.errorView.alpha = hasError ? 1.f : 0.f;
         
         // We need to know what will be the notification view height, depending of the new notification message.
         self.notificationLabel.text = self.notificationMessage;
@@ -814,7 +822,7 @@ static void commonInit(SRGLetterboxView *self);
     [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSubdivisions:subdivisions animated:animated];
 }
 
-// Called to update the main player subviews (player view, background image, error overlay). Independent of the global
+// Called to update the main player subviews (player view, background image). Independent of the global
 // status of the control overlay
 - (void)updateVisibleSubviewsAnimated:(BOOL)animated
 {
@@ -957,16 +965,12 @@ static void commonInit(SRGLetterboxView *self);
     static NSString * const kRestorationIdentifier = @"error";
     
     if ([self error]) {
-        self.errorView.alpha = 1.f;
-        
         // Only display retry instructions if there is a media to retry with
         self.errorInstructionsLabel.alpha = self.controller.URN ? 1.f : 0.f;
         
         [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withIdentifier:kRestorationIdentifier];
     }
     else {
-        self.errorView.alpha = 0.f;
-        
         [self imperative_removeContextWithIdentifier:kRestorationIdentifier animated:animated];
     }
 }
