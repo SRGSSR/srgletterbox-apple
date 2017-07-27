@@ -693,8 +693,6 @@ static void commonInit(SRGLetterboxView *self);
     self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
     self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
     
-    self.playbackButton.imageSet = [self imageSet];
-    
     // Special cases when the player is idle or preparing
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
@@ -844,29 +842,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-// Ajust control size to fit view width best.
-- (void)updateControlSet
-{
-    SRGImageSet imageSet = [self imageSet];
-    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
-    
-    self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
-    
-    self.playbackButton.imageSet = imageSet;
-    
-    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
-}
-
-- (SRGImageSet)imageSet
-{
-    // iPhone Plus in landscape
-    return (CGRectGetWidth(self.playerView.bounds) < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
-}
-
 #pragma mark Letterbox notification banners
 
 - (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
@@ -1011,7 +986,19 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
 {
-    [self updateControlSet];
+    // Larger image set starting with iPhone Plus in landscape orientation
+    SRGImageSet imageSet = (CGRectGetWidth(self.playerView.bounds) < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
+    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
+    
+    self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+    
+    self.playbackButton.imageSet = imageSet;
+    
+    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
