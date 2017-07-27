@@ -719,6 +719,16 @@ static void commonInit(SRGLetterboxView *self);
         self.notificationLabel.text = self.notificationMessage;
         [self layoutNotificationView];
         
+        // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
+        // playback on the external device)
+        SRGMedia *media = controller.media;
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+        BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
+            && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
+        self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
+        mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
+        
         self.animations ? self.animations(self.userInterfaceHidden, timelineHeight + self.notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
