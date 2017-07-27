@@ -662,6 +662,14 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
     CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
+    
+    // Scroll to selected index when opening the timeline
+    if (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.timelineView scrollToSelectedIndexAnimated:NO];
+        });
+    }
+    
     self.timelineHeightConstraint.constant = timelineHeight;
     return timelineHeight;
 }
