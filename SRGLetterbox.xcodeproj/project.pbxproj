@@ -1187,7 +1187,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_IDENTIFIER_SUFFIX = "";
-				CUSTOM_BUNDLE_NAME = "SRG Letterbox";
+				CUSTOM_BUNDLE_NAME = Letterbox;
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
