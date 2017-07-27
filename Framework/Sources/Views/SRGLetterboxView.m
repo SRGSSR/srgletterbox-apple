@@ -647,15 +647,16 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
+    // TODO: Has nothing to do here
+#if 0
     // Always scroll to the selected subdivision when opening the timeline. Schedule for scrolling on the next run loop so
     // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
-    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     if (timelineHeight != 0.f) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.timelineView scrollToSelectedIndexAnimated:NO];
         });
     }
+#endif
     
     void (^animations)(void) = ^{
 #if 0
@@ -698,6 +699,9 @@ static void commonInit(SRGLetterboxView *self);
         
         self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
         self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
+        
+        NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+        CGFloat timelineHeight = (subdivisions.count != 0 && ! self.userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
         self.timelineHeightConstraint.constant = timelineHeight;
         
         self.notificationImageView.hidden = (self.notificationMessage == nil);
