@@ -659,44 +659,22 @@ static void commonInit(SRGLetterboxView *self);
 #endif
     
     void (^animations)(void) = ^{
-#if 0
-        //
-        
-        
-        
-        //
-        
-        if ([AVAudioSession srg_isAirplayActive]
-                && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
-            // If the user interface is togglable, show controls, use visibility as set by the API client. We do not want controls
-            // to be displayed while using Airplay if the interface was forced to be hidden
-            BOOL hidden = self.userInterfaceTogglable ? NO : self.userInterfaceHidden;
-            [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:NO withIdentifier:kRestorationIdentifier];
-        }
-        else {
-            [self imperative_removeContextWithIdentifier:kRestorationIdentifier animated:animated];
-        }
-        
-        //
-        
-        if ([self error]) {
-            
-            
-            [self imperative_setUserInterfaceHidden:YES animated:animated togglable:NO withIdentifier:kRestorationIdentifier];
-        }
-        else {
-            [self imperative_removeContextWithIdentifier:kRestorationIdentifier animated:animated];
-        }
-        
-#endif
-        
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         
         // Controls and error overlay must never be displayed at the same time. This does not change the final expected
         // control visbility state variable, only its visual result.
         BOOL hasError = ([self error] != nil);
-        BOOL controlsViewHidden = hasError ? YES : (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
+        BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
+            && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive);
+        
+        BOOL controlsViewHidden = NO;
+        if (hasError) {
+            controlsViewHidden = YES;
+        }
+        else if (! isUsingAirplay) {
+            controlsViewHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
+        }
         
         self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
         self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
