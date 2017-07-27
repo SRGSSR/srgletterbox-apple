@@ -697,10 +697,13 @@ static void commonInit(SRGLetterboxView *self);
         
 #endif
         
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+        
         // Controls and error overlay must never be displayed at the same time. This does not change the final expected
         // control visbility state variable, only its visual result.
         BOOL hasError = ([self error] != nil);
-        BOOL controlsViewHidden = hasError ? YES : self.userInterfaceHidden;
+        BOOL controlsViewHidden = hasError ? YES : (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
         
         self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
         self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
@@ -722,14 +725,12 @@ static void commonInit(SRGLetterboxView *self);
         // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
         // playback on the external device)
         SRGMedia *media = controller.media;
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
         BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
             && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
         self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
         mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
         
-        self.animations ? self.animations(self.userInterfaceHidden, timelineHeight + self.notificationHeight) : nil;
+        self.animations ? self.animations(controlsViewHidden, timelineHeight + self.notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -1230,17 +1231,16 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
+    [self updateUserInterfaceAnimated:YES];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self updateUserInterfaceAnimated:YES];
         [self.timelineView scrollToSelectedIndexAnimated:YES];
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
-        [self updateUserInterfaceAnimated:YES];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
         if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
