@@ -76,11 +76,10 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, copy) NSString *notificationMessage;
 
+// TODO: Rename these properties storing the USER setting. The user... properties will remain and contain the CURRENT
+//       real state of the UI
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
-
-@property (nonatomic) NSNumber *finalUserInterfaceHidden;                                                           // Final userInterfaceHidden value when an animation is taking place (nil if none)
-@property (nonatomic, readonly, getter=isEffectiveUserInterfaceHidden) BOOL effectiveUserInterfaceHidden;           // Final userInterfaceHidden value if available, current value if none
 
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
@@ -214,8 +213,6 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateVisibleSubviewsAnimated:NO];
-        [self updateUserInterfaceForServicePlayback];
         [self updateLoadingIndicatorAnimated:NO];
         [self updateUserInterfaceAnimated:NO];
         [self accessibilityVoiceOverStatusChanged:nil];
@@ -537,11 +534,6 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineHeightConstraint.constant;
 }
 
-- (BOOL)isEffectiveUserInterfaceHidden
-{
-    return self.finalUserInterfaceHidden ? self.finalUserInterfaceHidden.boolValue : self.userInterfaceHidden;
-}
-
 - (CMTime)time
 {
     return self.timeSlider.time;
@@ -626,55 +618,28 @@ static void commonInit(SRGLetterboxView *self);
     return [self reloadDataForController:self.controller];
 }
 
-#pragma mark UI public methods
+#pragma mark UI public behavior change methods
 
-// Public method for changing user interface visibility only
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
     if (! self.userInterfaceTogglable) {
         return;
     }
     
-    [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
-// Public method for changing user interface behavior
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
-    [self imperative_setUserInterfaceHidden:hidden animated:animated togglable:togglable];
-}
-
-#pragma mark UI methods subject to conditional execution
-
-// Show or hide the user interface, doing nothing if the interface is not togglable
-- (void)conditional_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    if (! self.userInterfaceTogglable) {
-        return;
-    }
-    
-    if (self.effectiveUserInterfaceHidden == hidden) {
-        return;
-    }
-    
-    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:hidden withSubdivisions:subdivisions animated:animated];
-}
-
-#pragma mark UI methods always performing their work
-
-- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
-{
+    self.userInterfaceHidden = hidden;
     self.userInterfaceTogglable = togglable;
     
-    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:hidden withSubdivisions:subdivisions animated:animated];
+    [self updateUserInterfaceAnimated:animated];
 }
 
-// Common implementation for -setUserInterfaceHidden:... methods. Use a distinct name to make aware this is an internal
-// factorisation method which is not intended for direct use. This method always shows or hides the user interface. Subdivisions
-// and notification message text are taken into account for proper UI adjustments depending on their presence
-- (void)imperative_updateUserInterfaceHidden:(BOOL)hidden withSubdivisions:(NSArray<SRGSubdivision *> *)subdivisions animated:(BOOL)animated
+#pragma mark UI updates
+
+- (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -684,19 +649,25 @@ static void commonInit(SRGLetterboxView *self);
     
     // Always scroll to the selected subdivision when opening the timeline. Schedule for scrolling on the next run loop so
     // that scrolling actually can work (no scrolling occurs when cells are not considered visible).
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! hidden) ? self.preferredTimelineHeight : 0.f;
+    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     if (timelineHeight != 0.f) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.timelineView scrollToSelectedIndexAnimated:NO];
         });
     }
     
-    self.finalUserInterfaceHidden = @(hidden);
-    
     void (^animations)(void) = ^{
 #if 0
+        //
+        
+        self.airplayButton.alwaysHidden = ! self.controller.backgroundServicesEnabled;
+        self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
+        
+        //
+        
         if ([AVAudioSession srg_isAirplayActive]
-            && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
+                && (self.controller.media.mediaType == SRGMediaTypeAudio || self.controller.mediaPlayerController.player.externalPlaybackActive)) {
             // If the user interface is togglable, show controls, use visibility as set by the API client. We do not want controls
             // to be displayed while using Airplay if the interface was forced to be hidden
             BOOL hidden = self.userInterfaceTogglable ? NO : self.userInterfaceHidden;
@@ -706,8 +677,7 @@ static void commonInit(SRGLetterboxView *self);
             [self imperative_removeContextWithIdentifier:kRestorationIdentifier animated:animated];
         }
         
-        
-        static NSString * const kRestorationIdentifier = @"error";
+        //
         
         if ([self error]) {
             // Only display retry instructions if there is a media to retry with
@@ -724,7 +694,7 @@ static void commonInit(SRGLetterboxView *self);
         // Controls and error overlay must never be displayed at the same time. This does not change the final expected
         // control visbility state variable, only its visual result.
         BOOL hasError = ([self error] != nil);
-        BOOL controlsViewHidden = hasError ? YES : hidden;
+        BOOL controlsViewHidden = hasError ? YES : self.userInterfaceHidden;
         
         self.controlsView.alpha = controlsViewHidden ? 0.f : 1.f;
         self.backgroundInteractionView.alpha = controlsViewHidden ? 0.f : 1.f;
@@ -740,14 +710,9 @@ static void commonInit(SRGLetterboxView *self);
         self.notificationLabel.text = self.notificationMessage;
         [self layoutNotificationView];
         
-        self.animations ? self.animations(hidden, timelineHeight + self.notificationHeight) : nil;
+        self.animations ? self.animations(self.userInterfaceHidden, timelineHeight + self.notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
-        if (finished) {
-            self.userInterfaceHidden = hidden;
-            self.finalUserInterfaceHidden = nil;
-        }
-        
         self.completion ? self.completion(finished) : nil;
         
         self.animations = nil;
@@ -767,35 +732,9 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark UI changes and restoration
-
-// Apply changes to the user interface, saving current values under the specified identifier. Only one UI context
-// can be saved at most for a given identifier. If applied twice, the previous context will be discarded, and the new
-// one will be saved instead.
-- (void)imperative_setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable withIdentifier:(NSString *)identifier
-{
-    [self imperative_updateUserInterfaceWithCurrentContextsAnimated:animated];
-}
-
-// Remove the context with the specified identifier and update the user interface behavior.
-- (void)imperative_removeContextWithIdentifier:(NSString *)identifier animated:(BOOL)animated
-{
-    [self imperative_updateUserInterfaceWithCurrentContextsAnimated:animated];
-}
-
-- (void)imperative_updateUserInterfaceWithCurrentContextsAnimated:(BOOL)animated
-{
-    [self imperative_setUserInterfaceHidden:self.userInterfaceHidden animated:animated togglable:self.userInterfaceTogglable];
-}
-
 #pragma mark UI updates
 
-// Force a UI refresh for the current settings and subdivisions
-- (void)updateUserInterfaceAnimated:(BOOL)animated
-{
-    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-    [self imperative_updateUserInterfaceHidden:self.effectiveUserInterfaceHidden withSubdivisions:subdivisions animated:animated];
-}
+#if 0
 
 // Called to update the main player subviews (player view, background image). Independent of the global
 // status of the control overlay
@@ -851,6 +790,8 @@ static void commonInit(SRGLetterboxView *self);
         animations();
     }
 }
+
+#endif
 
 - (void)updateControlsForController:(SRGLetterboxController *)controller animated:(BOOL)animated
 {
@@ -955,12 +896,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateLoadingIndicatorAnimated:(BOOL)animated
 {
     [self updateLoadingIndicatorForController:self.controller animated:animated];
-}
-
-- (void)updateUserInterfaceForServicePlayback
-{
-    self.airplayButton.alwaysHidden = ! self.controller.backgroundServicesEnabled;
-    self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
 }
 
 - (void)resetInactivityTimer
@@ -1095,14 +1030,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self conditional_setUserInterfaceHidden:NO animated:YES];
+    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
     // Defer execution to avoid conflicts with the activity gesture above
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self conditional_setUserInterfaceHidden:YES animated:YES];
+        [self setUserInterfaceHidden:YES animated:YES];
     });
 }
 
@@ -1116,7 +1051,7 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self conditional_setUserInterfaceHidden:YES animated:YES];
+        [self setUserInterfaceHidden:YES animated:YES];
     }
 }
 
@@ -1252,7 +1187,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceAnimated:YES];
     [self reloadData];
 }
 
@@ -1261,7 +1196,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = NSNotFound;
     self.timelineView.time = kCMTimeZero;
     
-    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     [self reloadData];
@@ -1275,7 +1209,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
     [self updateControlsAnimated:YES];
     [self updateLoadingIndicatorAnimated:YES];
     
@@ -1321,40 +1254,36 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)externalPlaybackStateDidChange:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceAnimated:YES];
 }
 
 // Called when the route is changed from the control center
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceAnimated:YES];
 }
 
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
-    [self updateVisibleSubviewsAnimated:YES];
+    [self updateUserInterfaceAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
     [self reloadData];
-    [self updateVisibleSubviewsAnimated:YES];
     [self updateUserInterfaceAnimated:YES];
-    [self updateUserInterfaceForServicePlayback];
 }
 
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification
@@ -1366,7 +1295,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (UIAccessibilityIsVoiceOverRunning()) {
         self.accessibilityView.alpha = 1.f;
-        [self conditional_setUserInterfaceHidden:NO animated:YES];
+        [self setUserInterfaceHidden:NO animated:YES];
     }
     else {
         self.accessibilityView.alpha = 0.f;
