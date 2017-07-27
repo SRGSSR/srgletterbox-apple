@@ -711,38 +711,38 @@ static void commonInit(SRGLetterboxView *self);
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
         self.playbackButton.usesStopImage = NO;
-        return;
     }
-    
-    // Adjust the UI to best match type of the stream being played
-    switch (mediaPlayerController.streamType) {
-        case SRGMediaPlayerStreamTypeOnDemand: {
-            self.timeSlider.alpha = 1.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
-            self.playbackButton.usesStopImage = NO;
-            break;
-        }
-            
-        case SRGMediaPlayerStreamTypeLive: {
-            self.timeSlider.alpha = 0.f;
-            self.timeSlider.timeLeftValueLabel.hidden = NO;
-            self.playbackButton.usesStopImage = YES;
-            break;
-        }
-            
-        case SRGMediaPlayerStreamTypeDVR: {
-            self.timeSlider.alpha = 1.f;
-            // Hide timeLeftValueLabel to give the width space to the timeSlider
-            self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.usesStopImage = NO;
-            break;
-        }
-            
-        default: {
-            self.timeSlider.alpha = 0.f;
-            self.timeSlider.timeLeftValueLabel.hidden = YES;
-            self.playbackButton.usesStopImage = NO;
-            break;
+    else {
+        // Adjust the UI to best match type of the stream being played
+        switch (mediaPlayerController.streamType) {
+            case SRGMediaPlayerStreamTypeOnDemand: {
+                self.timeSlider.alpha = 1.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.playbackButton.usesStopImage = NO;
+                break;
+            }
+                
+            case SRGMediaPlayerStreamTypeLive: {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.playbackButton.usesStopImage = YES;
+                break;
+            }
+                
+            case SRGMediaPlayerStreamTypeDVR: {
+                self.timeSlider.alpha = 1.f;
+                // Hide timeLeftValueLabel to give the width space to the timeSlider
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+                self.playbackButton.usesStopImage = NO;
+                break;
+            }
+                
+            default: {
+                self.timeSlider.alpha = 0.f;
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
+                self.playbackButton.usesStopImage = NO;
+                break;
+            }
         }
     }
     
