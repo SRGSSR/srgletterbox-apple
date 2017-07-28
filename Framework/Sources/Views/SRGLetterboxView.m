@@ -59,10 +59,10 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
+
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
-
 @property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
 @property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelTopConstraint;
@@ -82,7 +82,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 
-@property (nonatomic, getter=isShowingPopup) BOOL showingPopup;
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
