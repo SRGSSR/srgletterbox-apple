@@ -669,7 +669,7 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! controller.loading && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
     BOOL shouldFocus =  (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
