@@ -72,6 +72,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
+@property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -477,7 +478,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         @strongify(self)
         
         if (finished) {
+            self.loading = NO;
             [self reportError:error];
+        }
+        else {
+            self.loading = YES;
         }
     }];
     
@@ -659,6 +664,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
+    
+    self.loading = NO;
     
     self.quality = SRGQualityNone;
     self.startBitRate = 0;

@@ -165,6 +165,13 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 - (void)reset;
 
 /**
+ *  Return `YES` iff the player is controller is loading initial metadata. KVO-observable.
+ *
+ *  @discussion This property is not set to `YES` during periodic metadata updates.
+ */
+@property (nonatomic, readonly, getter=isLoading) BOOL loading;
+
+/**
  *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;
