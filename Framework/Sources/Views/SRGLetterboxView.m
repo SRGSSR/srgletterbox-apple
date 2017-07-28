@@ -597,10 +597,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable) {
-        return;
-    }
-    
     [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
