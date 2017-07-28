@@ -629,7 +629,7 @@ static void commonInit(SRGLetterboxView *self);
         userInterfaceHidden = self.userInterfaceHidden;
     }
     else if (! isUsingAirplay) {
-        userInterfaceHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && self.userInterfaceHidden);
+        userInterfaceHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStateIdle && self.userInterfaceHidden);
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
