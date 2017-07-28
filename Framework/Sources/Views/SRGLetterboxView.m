@@ -76,8 +76,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, copy) NSString *notificationMessage;
 
-// TODO: Rename these properties storing the USER setting. The user... properties will remain and contain the CURRENT
-//       real state of the UI
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 
@@ -211,7 +209,8 @@ static void commonInit(SRGLetterboxView *self);
     
     if (newWindow) {
         [self updateUserInterfaceAnimated:NO];
-        [self accessibilityVoiceOverStatusChanged:nil];
+        [self updateAccessibility];
+        [self updateFonts];
         [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -242,8 +241,6 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(accessibilityVoiceOverStatusChanged:)
                                                      name:UIAccessibilityVoiceOverStatusChanged
                                                    object:nil];
-        
-        [self updateFonts];
         
         // Automatically resumes in the view when displayed and if picture in picture was active
         if ([SRGLetterboxService sharedService].controller == self.controller) {
@@ -297,6 +294,21 @@ static void commonInit(SRGLetterboxView *self);
     self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+}
+
+#pragma mark Accessibility
+
+- (void)updateAccessibility
+{
+    if (UIAccessibilityIsVoiceOverRunning()) {
+        self.accessibilityView.alpha = 1.f;
+        [self setUserInterfaceHidden:NO animated:YES];
+    }
+    else {
+        self.accessibilityView.alpha = 0.f;
+    }
+    
+    [self resetInactivityTimer];
 }
 
 #pragma mark Getters and setters
@@ -693,19 +705,22 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
-    self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
-    self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
-    
-    // Special cases when the player is idle or preparing
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        self.forwardSeekButton.alpha = 0.f;
+        self.backwardSeekButton.alpha = 0.f;
+        self.seekToLiveButton.alpha = 0.f;
+        
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
         self.playbackButton.usesStopImage = NO;
     }
     else {
-        // Adjust the UI to best match type of the stream being played
+        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
+        self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        
         switch (mediaPlayerController.streamType) {
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
@@ -1169,15 +1184,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
 {
-    if (UIAccessibilityIsVoiceOverRunning()) {
-        self.accessibilityView.alpha = 1.f;
-        [self setUserInterfaceHidden:NO animated:YES];
-    }
-    else {
-        self.accessibilityView.alpha = 0.f;
-    }
-    
-    [self resetInactivityTimer];
+    [self updateAccessibility];
 }
 
 @end
