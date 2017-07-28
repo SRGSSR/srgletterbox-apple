@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(void (^)(BOOL finished))completionHandler;
 
 /**
- *  This method is called when the user interface is considering displaying a full-screen button. Implement this method 
+ *  This method is called when the view is considering whether it should display a full-screen button. Implement this method 
  *  and return `YES` to display the button.
  *
  *  If not implemented, the behavior is equivalent to returning `YES`.
@@ -100,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
  *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams).
  *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams).
  *    - Error display.
- *    - Airplay, picture in picture and subtitles / audio tracks buttons.
+ *    - AirPlay, picture in picture and subtitles / audio tracks buttons.
  *    - Optional full screen button (see below).
  *    - Overlay displayed when external Airplay playback is active.
  *    - Activity indicator.
@@ -120,6 +120,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  view delegate and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. 
  *  You can also respond to the `-letterboxView:didScrollWithSubdivision:time:interactive:` delegate method to respond to 
  *  the timeline being moved, either interactively or during normal playback.
+ *
+ *  If you don't need it, you can also entirely hide the timeline from view by calling `-setTimelineAlwaysHidden:animated:`.
  *  
  *  ## Long press on subdivisions and favorites
  *
@@ -149,12 +151,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  ## AirPlay
  *
  *  An AirPlay button is displayed if application-wide services have been enabled for the controller bound to the
- *  view (@see `SRGLetterboxService`) and an external display is available. During AirPlay playback, controls cannot
- *  be toggled on or off (they will keep the current visibility at the time Airplay has been enabled).
+ *  view (@see `SRGLetterboxService`) and an external display is available. During AirPlay playback, the actual control
+ *  visibility will be altered based on the current interface togglability (if controls are togglable they will be
+ *  displayed, otherwise not).
  *
  *  If `mirroredOnExternalScreen` has been set to `YES` on the service singleton, the Letterbox view will behave as 
  *  if no AirPlay playback was possible, and won't switch to external display. This way, your application can be 
  *  mirrored as is via AirPlay, which is especially convenient for presentation purposes.
+ *
+ *  ## Errors
+ *
+ *  The Letterbox view automatically displays errors of the underlying controller. When an error is displayed, the
+ *  controls will be hidden from view so that the error can be properly read.
  */
 IB_DESIGNABLE
 @interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, SRGTimeSliderDelegate, UIGestureRecognizerDelegate>
@@ -174,7 +182,9 @@ IB_DESIGNABLE
  *  Return `YES` iff the the user interface (with the controls on it) is hidden.
  *
  *  @discussion The view is initially created with a visible user interface. Call `-setUserInterfaceHidden:animated:togglable:`
- *              to change this behavior.
+ *              to change this behavior. If an error is encountered or if AirPlay is used, the actual visibility is overridden 
+ *              and might be different. The `userInterfaceHidden` value reflects the behavior which will be restored once these
+ *              overrides are lifted.
  */
 @property (nonatomic, readonly, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 
@@ -182,7 +192,9 @@ IB_DESIGNABLE
  *  Return `YES` iff the user interface can be toggled by the user (i.e. hidden or shown by interacting with it).
  *
  *  @discussion The view is initially created with togglable state. Call `-setUserInterfaceHidden:animated:togglable:`
- *              to change this behavior.
+ *              to change this behavior. If an error is encountered or if AirPlay is used, the actual togglability is overridden
+ *              and might be different. The `userInterfaceTogglable` value reflects the behavior which will be restored once these
+ *              overrides are lifted.
  */
 @property (nonatomic, readonly, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 
@@ -193,7 +205,7 @@ IB_DESIGNABLE
  *  @param animated Whether the transition must be animated.
  *
  *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
- *              will only apply changes once overrides are lifted.
+ *              definess the behavior when those overrides have been lifted.
  */
 - (void)setUserInterfaceHidden:(BOOL)userInterfaceHidden animated:(BOOL)animated;
 
@@ -205,7 +217,7 @@ IB_DESIGNABLE
  *  @param togglable Whether the interface can be shown or hidden by the user.
  *
  *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
- *              will only apply changes once overrides are lifted.
+ *              definess the behavior when those overrides have been lifted.
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
