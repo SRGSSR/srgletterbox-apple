@@ -604,12 +604,7 @@ static void commonInit(SRGLetterboxView *self);
     return [self reloadDataForController:self.controller];
 }
 
-#pragma mark UI public behavior change methods
-
-- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
-}
+#pragma mark UI behavior changes
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
@@ -617,6 +612,15 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     [self updateUserInterfaceAnimated:animated];
+}
+
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    if (! self.userInterfaceTogglable) {
+        return;
+    }
+    
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
 #pragma mark UI updates
@@ -632,19 +636,13 @@ static void commonInit(SRGLetterboxView *self);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
         && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
-    BOOL userInterfaceHidden = NO;
-    if (hasError) {
+    BOOL userInterfaceHidden = self.userInterfaceHidden;
+    if (hasError || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         userInterfaceHidden = YES;
     }
-    else if (! self.userInterfaceTogglable) {
-        userInterfaceHidden = self.userInterfaceHidden;
-    }
-    else if (isUsingAirplay) {
+    else if (self.userInterfaceTogglable
+                && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
         userInterfaceHidden = NO;
-    }
-    else {
-        userInterfaceHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStateIdle && self.userInterfaceHidden)
-            || controller.dataAvailability != SRGLetterboxDataAvailabilityLoaded;
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
