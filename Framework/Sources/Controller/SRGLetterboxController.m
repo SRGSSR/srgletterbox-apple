@@ -72,7 +72,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
-@property (nonatomic, getter=isLoading) BOOL loading;
+@property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -478,13 +478,16 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         @strongify(self)
         
         if (finished) {
-            self.loading = NO;
-            [self reportError:error];
-        }
-        else {
-            self.loading = YES;
+            if (! error) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            }
+            else {
+                [self reportError:error];
+            }
         }
     }];
+    
+    self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
     
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
@@ -665,7 +668,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
     
-    self.loading = NO;
+    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
     self.quality = SRGQualityNone;
     self.startBitRate = 0;

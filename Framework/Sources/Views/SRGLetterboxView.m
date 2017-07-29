@@ -639,8 +639,12 @@ static void commonInit(SRGLetterboxView *self);
     else if (! self.userInterfaceTogglable) {
         userInterfaceHidden = self.userInterfaceHidden;
     }
-    else if (! isUsingAirplay) {
-        userInterfaceHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStateIdle && self.userInterfaceHidden);
+    else if (isUsingAirplay) {
+        userInterfaceHidden = NO;
+    }
+    else {
+        userInterfaceHidden = (playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStateIdle && self.userInterfaceHidden)
+            || controller.dataAvailability != SRGLetterboxDataAvailabilityLoaded;
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
@@ -766,7 +770,7 @@ static void commonInit(SRGLetterboxView *self);
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
     
-    BOOL visible = isPlayerLoading || controller.loading;
+    BOOL visible = isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
     if (visible) {
         self.playbackButton.alpha = 0.f;
         
