@@ -482,6 +482,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             }
             else {
+                if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+                    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+                }
                 [self reportError:error];
             }
         }
