@@ -162,7 +162,7 @@ static void commonInit(SRGLetterboxView *self);
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
     
-    self.timeSlider.resumingAfterSeek = YES;
+    self.timeSlider.resumingAfterSeek = NO;
     self.timeSlider.popUpViewColor = UIColor.whiteColor;
     self.timeSlider.textColor = UIColor.blackColor;
     self.timeSlider.popUpViewWidthPaddingFactor = 1.5f;
