@@ -673,7 +673,7 @@ static void commonInit(SRGLetterboxView *self);
     CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
-    BOOL shouldFocus =  (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
+    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
     self.timelineHeightConstraint.constant = timelineHeight;
     
     if (shouldFocus) {
@@ -1097,8 +1097,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
     [self reloadData];
+    [self updateUserInterfaceAnimated:YES];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -1106,8 +1106,8 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = NSNotFound;
     self.timelineView.time = kCMTimeZero;
     
-    [self updateUserInterfaceAnimated:YES];
     [self reloadData];
+    [self updateUserInterfaceAnimated:YES];
 }
 
 - (void)playbackDidRetry:(NSNotification *)notification
