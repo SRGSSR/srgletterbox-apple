@@ -77,7 +77,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
      */
     SRGLetterboxDataAvailabilityNone,
     /**
-     *  Data is being loaded for the first time.
+     *  Data is being loaded.
      */
     SRGLetterboxDataAvailabilityLoading,
     /**
@@ -184,6 +184,9 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 
 /**
  *  Return the current data availability. KVO-observable.
+ *
+ *  @discussion If data was loaded and another media related to the same media composition already loaded is being
+ *              played, the availability will not be updated.
  */
 @property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
 
