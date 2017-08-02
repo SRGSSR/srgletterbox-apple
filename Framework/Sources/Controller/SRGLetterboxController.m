@@ -581,7 +581,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     // Build the media composition for the provided subdivision
     SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
     if (! mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is availble. Cannot switch to another subdivision");
+        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is available. Cannot switch to another subdivision");
         return NO;
     }
     

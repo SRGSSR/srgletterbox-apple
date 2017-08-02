@@ -185,8 +185,8 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 /**
  *  Return the current data availability. KVO-observable.
  *
- *  @discussion If data was loaded and another media related to the same media composition already loaded is being
- *              played, the availability will not be updated.
+ *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods
+ *              to play new content.
  */
 @property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
 
