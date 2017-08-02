@@ -301,7 +301,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (UIAccessibilityIsVoiceOverRunning()) {
         self.accessibilityView.alpha = 1.f;
-        [self setUserInterfaceHidden:NO animated:YES];
+        [self toggleUserInterfaceHidden:NO animated:YES];
     }
     else {
         self.accessibilityView.alpha = 0.f;
@@ -616,6 +616,11 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
+    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
+}
+
+- (void)toggleUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+{
     if (! self.userInterfaceTogglable) {
         return;
     }
@@ -829,7 +834,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)resetInactivityTimer
 {
-    self.inactivityTimer = ! UIAccessibilityIsVoiceOverRunning() ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO] : nil;
+    self.inactivityTimer = ! UIAccessibilityIsVoiceOverRunning() ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterfaceAfterInactivity:) userInfo:nil repeats:NO] : nil;
 }
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
@@ -918,20 +923,20 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self setUserInterfaceHidden:NO animated:YES];
+    [self toggleUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
     // Defer execution to avoid conflicts with the activity gesture above
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self setUserInterfaceHidden:YES animated:YES];
+        [self toggleUserInterfaceHidden:YES animated:YES];
     });
 }
 
 #pragma mark Timers
 
-- (void)hideInterface:(NSTimer *)timer
+- (void)hideInterfaceAfterInactivity:(NSTimer *)timer
 {
     // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
     // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
@@ -939,7 +944,7 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self setUserInterfaceHidden:YES animated:YES];
+        [self toggleUserInterfaceHidden:YES animated:YES];
     }
 }
 

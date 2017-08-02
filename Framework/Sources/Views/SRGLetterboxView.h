@@ -199,6 +199,17 @@ IB_DESIGNABLE
 @property (nonatomic, readonly, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
 
 /**
+ *  Change the user interface controls visibility. Togglability is not altered.
+ *
+ *  @param hidden   Whether the user interface must be hidden.
+ *  @param animated Whether the transition must be animated.
+ *
+ *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
+ *              defines the behavior when those overrides have been lifted.
+ */
+- (void)setUserInterfaceHidden:(BOOL)userInterfaceHidden animated:(BOOL)animated;
+
+/**
  *  Change the user interface controls behavior.
  *
  *  @param hidden    Whether the user interface must be hidden.
@@ -206,7 +217,7 @@ IB_DESIGNABLE
  *  @param togglable Whether the interface can be shown or hidden by the user.
  *
  *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
- *              definess the behavior when those overrides have been lifted.
+ *              defines the behavior when those overrides have been lifted.
  */
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable;
 
