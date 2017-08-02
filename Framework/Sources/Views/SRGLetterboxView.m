@@ -634,7 +634,7 @@ static void commonInit(SRGLetterboxView *self);
     // control visbility state variable, only its visual result.
     BOOL hasError = ([self error] != nil);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
-        && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+        && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     BOOL userInterfaceHidden = self.userInterfaceHidden;
     if (hasError || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
@@ -669,7 +669,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:self.controller.mediaComposition];
+    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:controller.mediaComposition];
     CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
@@ -706,6 +706,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
+    // General playback controls
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
@@ -754,6 +755,7 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
+    // Pop-up visibility
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
                             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
                             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
@@ -763,6 +765,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.timeSlider showPopUpViewAnimated:NO];
     }
     
+    // Play button / loading indicator visibility
     BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
@@ -826,7 +829,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)resetInactivityTimer
 {
-    self.inactivityTimer = (! UIAccessibilityIsVoiceOverRunning()) ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO] : nil;
+    self.inactivityTimer = ! UIAccessibilityIsVoiceOverRunning() ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterface:) userInfo:nil repeats:NO] : nil;
 }
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
