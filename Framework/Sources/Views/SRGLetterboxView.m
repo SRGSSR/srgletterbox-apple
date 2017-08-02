@@ -979,17 +979,16 @@ static void commonInit(SRGLetterboxView *self);
 - (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value;
 {
     if (self.controller.media.contentType == SRGContentTypeLivestream || self.controller.media.contentType == SRGContentTypeScheduledLivestream) {
-        static dispatch_once_t onceToken;
-        static NSDateFormatter *dateFormatter;
-        dispatch_once(&onceToken, ^{
-            dateFormatter = [[NSDateFormatter alloc] init];
-            dateFormatter.dateStyle = NSDateFormatterNoStyle;
-            dateFormatter.timeStyle = NSDateFormatterShortStyle;
+        static dispatch_once_t s_onceToken;
+        static NSDateFormatter *s_dateFormatter;
+        dispatch_once(&s_onceToken, ^{
+            s_dateFormatter = [[NSDateFormatter alloc] init];
+            s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
+            s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
         });
         
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
-        
-        NSString *string = (self.timeSlider.isLive) ? SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") : [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:self.timeSlider.value - self.timeSlider.maximumValue]];
+        NSString *string = self.timeSlider.isLive ? SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") : [s_dateFormatter stringFromDate:self.timeSlider.date];
         [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }]];
         
         return [attributedString copy];
