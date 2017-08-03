@@ -69,6 +69,24 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRetryNotification;
 OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 /**
+ *  Controller data availability.
+ */
+typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
+    /**
+     *  No data is available.
+     */
+    SRGLetterboxDataAvailabilityNone,
+    /**
+     *  Data is being loaded.
+     */
+    SRGLetterboxDataAvailabilityLoading,
+    /**
+     *  Data has been loaded once.
+     */
+    SRGLetterboxDataAvailabilityLoaded
+};
+
+/**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
@@ -163,6 +181,14 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  Reset playback and reset all playback information.
  */
 - (void)reset;
+
+/**
+ *  Return the current data availability. KVO-observable.
+ *
+ *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods
+ *              to play new content.
+ */
+@property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
 
 /**
  *  Set to `YES` to mute the player. Default is `NO`.

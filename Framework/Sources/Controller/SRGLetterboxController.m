@@ -72,6 +72,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
+@property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -477,9 +478,19 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         @strongify(self)
         
         if (finished) {
-            [self reportError:error];
+            if (! error) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            }
+            else {
+                if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+                    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+                }
+                [self reportError:error];
+            }
         }
     }];
+    
+    self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
     
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
@@ -570,7 +581,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     // Build the media composition for the provided subdivision
     SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
     if (! mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is availble. Cannot switch to another subdivision");
+        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is available. Cannot switch to another subdivision");
         return NO;
     }
     
@@ -659,6 +670,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     self.error = nil;
     self.seekTargetTime = kCMTimeInvalid;
+    
+    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
     self.quality = SRGQualityNone;
     self.startBitRate = 0;

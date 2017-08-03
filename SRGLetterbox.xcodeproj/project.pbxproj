@@ -55,8 +55,6 @@
 		6F1F5FE71E30A6D1000215F3 /* SRGMediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
 		6F1F5FE81E30A6D1000215F3 /* YYWebImage.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
-		6F324A0D1E557239007523AA /* SRGLetterboxUserInterfaceContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F324A0B1E557239007523AA /* SRGLetterboxUserInterfaceContext.h */; };
-		6F324A0E1E557239007523AA /* SRGLetterboxUserInterfaceContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F324A0C1E557239007523AA /* SRGLetterboxUserInterfaceContext.m */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
 		6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F4855AA1E3A669B00B0141C /* Localizable.strings */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
@@ -318,8 +316,6 @@
 		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalPlayerViewController.m; sourceTree = "<group>"; };
 		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ModalPlayerViewController.storyboard; sourceTree = "<group>"; };
 		6F28BAD11E323F6A004F43DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		6F324A0B1E557239007523AA /* SRGLetterboxUserInterfaceContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxUserInterfaceContext.h; sourceTree = "<group>"; };
-		6F324A0C1E557239007523AA /* SRGLetterboxUserInterfaceContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxUserInterfaceContext.m; sourceTree = "<group>"; };
 		6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGMediaPlayerDesignables.m; sourceTree = "<group>"; };
 		6F4855AB1E3A669B00B0141C /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -524,8 +520,6 @@
 				6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */,
 				6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */,
 				08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */,
-				6F324A0B1E557239007523AA /* SRGLetterboxUserInterfaceContext.h */,
-				6F324A0C1E557239007523AA /* SRGLetterboxUserInterfaceContext.m */,
 				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
 				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
 				087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */,
@@ -769,7 +763,6 @@
 				6FE844F01E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
-				6F324A0D1E557239007523AA /* SRGLetterboxUserInterfaceContext.h in Headers */,
 				6FDF33B01F012D7500BA1D6E /* SRGAccessibilityView.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 				6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */,
@@ -989,7 +982,6 @@
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 				6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */,
-				6F324A0E1E557239007523AA /* SRGLetterboxUserInterfaceContext.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1195,7 +1187,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_IDENTIFIER_SUFFIX = "";
-				CUSTOM_BUNDLE_NAME = "SRG Letterbox";
+				CUSTOM_BUNDLE_NAME = Letterbox;
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
