@@ -35,6 +35,7 @@
 #endif
     
     [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
+                                                     containerIdentifier:10
                                                      comScoreVirtualSite:@"app-test-v"
                                                      netMetrixIdentifier:@"test"];
     

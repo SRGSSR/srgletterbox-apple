@@ -19,6 +19,18 @@
 		08BDD8731EE5C876006A2704 /* SRGLetterboxPlaybackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 08BDD8711EE5C876006A2704 /* SRGLetterboxPlaybackButton.m */; };
 		08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		08E0BF601EE05BCD002D4012 /* Accessibility.strings in Resources */ = {isa = PBXBuildFile; fileRef = 08E0BF5E1EE05BCD002D4012 /* Accessibility.strings */; };
+		08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
+		08EB66A11F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
+		08EB66A21F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
+		08EB66A31F34C6B000E9D7CA /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
+		08EB66A41F34C6B000E9D7CA /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
+		08EB66A51F34C6B000E9D7CA /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
+		08EB66A61F34C73B00E9D7CA /* TCCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08EB66A71F34C73B00E9D7CA /* TCSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08EB66A81F34C76D00E9D7CA /* TCCore.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
+		08EB66A91F34C76D00E9D7CA /* TCSDK.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
+		08EB66AA1F34C77F00E9D7CA /* TCCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -198,6 +210,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				08EB66A81F34C76D00E9D7CA /* TCCore.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				08EB66A91F34C76D00E9D7CA /* TCSDK.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F131A7D1E8CCDDB000D6BEC /* SRGAppearance.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */,
@@ -222,6 +236,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				08EB66A61F34C73B00E9D7CA /* TCCore.framework in Embed Frameworks */,
+				08EB66A71F34C73B00E9D7CA /* TCSDK.framework in Embed Frameworks */,
 				6FAB3B721E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Embed Frameworks */,
 				6FB97FF51E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */,
 				6FAB3B651E2905B400CC2197 /* SRGLetterbox.framework in Embed Frameworks */,
@@ -248,6 +264,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				08EB66AA1F34C77F00E9D7CA /* TCCore.framework in CopyFiles */,
+				08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in CopyFiles */,
 				6FE08CE61E8B811500EC4716 /* SRGAppearance.framework in CopyFiles */,
 				6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */,
 				6FD9BA221E2FB2220013CC97 /* Masonry.framework in CopyFiles */,
@@ -294,6 +312,8 @@
 		08E0BF621EE05BD7002D4012 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08E0BF631EE05BD9002D4012 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08E0BF641EE05BDA002D4012 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Accessibility.strings; sourceTree = "<group>"; };
+		08EB669E1F34C6B000E9D7CA /* TCCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCCore.framework; path = Carthage/Build/iOS/TCCore.framework; sourceTree = "<group>"; };
+		08EB669F1F34C6B000E9D7CA /* TCSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCSDK.framework; path = Carthage/Build/iOS/TCSDK.framework; sourceTree = "<group>"; };
 		08FA0CA81E2E325F000C94EF /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -401,10 +421,12 @@
 			files = (
 				6FAB3B711E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */,
+				08EB66A41F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
 				08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B771E2905CA00CC2197 /* SRGLogger.framework in Frameworks */,
 				6FA562CE1E9BABE400A1344F /* HockeySDK.framework in Frameworks */,
 				6FAB3B731E2905CA00CC2197 /* SRGAnalytics.framework in Frameworks */,
+				08EB66A11F34C6B000E9D7CA /* TCCore.framework in Frameworks */,
 				6FAB3B6D1E2905CA00CC2197 /* Mantle.framework in Frameworks */,
 				6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */,
@@ -431,9 +453,11 @@
 				6FE655D51E2CA3F9000033D4 /* SRGAnalytics_DataProvider.framework in Frameworks */,
 				6FE655D61E2CA3F9000033D4 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FE655D71E2CA3F9000033D4 /* SRGAnalytics.framework in Frameworks */,
+				08EB66A51F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
 				6FE655D81E2CA3F9000033D4 /* SRGDataProvider.framework in Frameworks */,
 				6FE655D91E2CA3F9000033D4 /* SRGLogger.framework in Frameworks */,
 				6FE655DA1E2CA3F9000033D4 /* SRGMediaPlayer.framework in Frameworks */,
+				08EB66A21F34C6B000E9D7CA /* TCCore.framework in Frameworks */,
 				08FA0D231E30F92F000C94EF /* FXReachability.framework in Frameworks */,
 				6FE655DB1E2CA3F9000033D4 /* YYWebImage.framework in Frameworks */,
 				6FAB3B841E29060200CC2197 /* SRGLetterbox.framework in Frameworks */,
@@ -453,9 +477,11 @@
 				6FAB3B111E28FB1400CC2197 /* libextobjc.framework in Frameworks */,
 				6FAB3B121E28FB1400CC2197 /* Mantle.framework in Frameworks */,
 				6FAB3B131E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework in Frameworks */,
+				08EB66A31F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
 				6FAB3B141E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FAB3B151E28FB1400CC2197 /* SRGAnalytics.framework in Frameworks */,
 				6FAB3B161E28FB1400CC2197 /* SRGDataProvider.framework in Frameworks */,
+				08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */,
 				6FAB3B171E28FB1400CC2197 /* SRGLogger.framework in Frameworks */,
 				6FAB3B181E28FB1400CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */,
@@ -597,6 +623,8 @@
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
+				08EB669E1F34C6B000E9D7CA /* TCCore.framework */,
+				08EB669F1F34C6B000E9D7CA /* TCSDK.framework */,
 				6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */,
 			);
 			name = Frameworks;
@@ -1086,6 +1114,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1264,6 +1293,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1325,6 +1355,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
