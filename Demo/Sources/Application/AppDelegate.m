@@ -34,10 +34,13 @@
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
     
-    [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
-                                                     containerIdentifier:10
-                                                     comScoreVirtualSite:@"app-test-v"
-                                                     netMetrixIdentifier:@"test"];
+    SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
+                                                                                                       container:10
+                                                                                             comScoreVirtualSite:@"rts-app-test-v"
+                                                                                             netMetrixIdentifier:@"test"];
+    configuration.centralized = YES;
+    
+    [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
