@@ -10,6 +10,7 @@
 __attribute__((constructor)) static void SetupTestSingletonTracker(void)
 {
     [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
+                                                     containerIdentifier:10
                                                      comScoreVirtualSite:@"rts-app-test-v"
                                                      netMetrixIdentifier:@"test"];
 }
