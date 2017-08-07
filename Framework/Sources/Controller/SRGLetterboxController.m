@@ -498,6 +498,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         if (contentURL) {
             // Media readily available. Done
             if (media) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 [self.mediaPlayerController playURL:contentURL];
             }
             // Retrieve the media
