@@ -207,7 +207,6 @@ withToleranceBefore:(CMTime)toleranceBefore
     toleranceAfter:(CMTime)toleranceAfter
  completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
-
 /**
  *  Return the current data availability. KVO-observable.
  *
