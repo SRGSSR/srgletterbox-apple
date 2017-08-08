@@ -950,14 +950,14 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Actions
 
-- (IBAction)seekBackward:(id)sender
+- (IBAction)skipBackward:(id)sender
 {
     [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
-- (IBAction)seekForward:(id)sender
+- (IBAction)skipForward:(id)sender
 {
     [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
@@ -969,7 +969,7 @@ static void commonInit(SRGLetterboxView *self);
     [self setFullScreen:!self.isFullScreen animated:YES];
 }
 
-- (IBAction)seekToLive:(id)sender
+- (IBAction)skipToLive:(id)sender
 {
     [self.controller skipToLiveWithCompletionHandler:nil];
 }
