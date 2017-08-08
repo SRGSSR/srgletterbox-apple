@@ -17,7 +17,7 @@ platform :ios do
     carthage(
       command: "bootstrap",
       platform: "iOS",
-      use_ssh: true
+      cache_builds: true
     )
     
   end
