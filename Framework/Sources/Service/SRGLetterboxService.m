@@ -350,7 +350,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     NSURL *artworkURL = nil;
     
-    CGFloat artworkDimension = 512.f * [UIScreen mainScreen].scale;
+    CGFloat artworkDimension = 256.f * [UIScreen mainScreen].scale;
     
     // For livestreams, rely on channel information when available
     if (media.contentType == SRGContentTypeLivestream && controller.channel) {
