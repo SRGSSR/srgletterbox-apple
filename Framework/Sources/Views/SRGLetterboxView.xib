@@ -91,7 +91,7 @@
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="backward-32"/>
                                     <connections>
-                                        <action selector="seekBackward:" destination="-1" eventType="touchUpInside" id="Gse-oB-T2j"/>
+                                        <action selector="skipBackward:" destination="-1" eventType="touchUpInside" id="Loz-hP-9Pp"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
@@ -109,7 +109,7 @@
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="forward-32"/>
                                     <connections>
-                                        <action selector="seekForward:" destination="-1" eventType="touchUpInside" id="pef-E5-d6n"/>
+                                        <action selector="skipForward:" destination="-1" eventType="touchUpInside" id="3qu-4V-dhz"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
@@ -118,7 +118,7 @@
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="back_live-32"/>
                                     <connections>
-                                        <action selector="seekToLive:" destination="-1" eventType="touchUpInside" id="DY5-NU-cqh"/>
+                                        <action selector="skipToLive:" destination="-1" eventType="touchUpInside" id="7Hl-Fn-8uD"/>
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">

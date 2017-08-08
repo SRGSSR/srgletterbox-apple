@@ -183,6 +183,31 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 - (void)reset;
 
 /**
+ *  Ask the controller to seek to a given location. A paused player remains paused, while a playing player remains
+ *  playing. You can use the completion handler to change the player state if needed, e.g. to automatically
+ *  resume playback after a seek has been performed on a paused player.
+ *
+ *  @param time              The time to start at. If the time is invalid it will be set to `kCMTimeZero`. Setting a 
+ *                           start time outside the actual media time range will seek to the nearest location (either 
+ *                           zero or the end time).
+ *  @param toleranceBefore   The tolerance allowed before `time`. Use `kCMTimePositiveInfinity` for no tolerance
+ *                           requirements.
+ *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
+ *                           requirements.
+ *  @param completionHandler The completion block called when the seek ends. If the seek has been interrupted by
+ *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
+ *                           with `finished` set to `YES`.
+ *
+ *  @discussion Upon completion handler entry, the playback state will be up-to-date if the seek finished, otherwise
+ *              the player will still be in the seeking state. Note that if the media was not ready to play, seeking
+ *              won't take place, and the completion handler won't be called.
+ */
+- (void)seekToTime:(CMTime)time
+withToleranceBefore:(CMTime)toleranceBefore
+    toleranceAfter:(CMTime)toleranceAfter
+ completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
  *  Return the current data availability. KVO-observable.
  *
  *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods
@@ -318,6 +343,20 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly;
+
+/**
+ *  Ask the controller to seek to a given location efficiently (the seek might be not perfeclty accurate but will be faster).
+ *
+ *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
+ */
+- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Ask the controller to seek to a given location with no tolerance (this might incur some decoding overhead).
+ *
+ *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
+ */
+- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 @end
 
