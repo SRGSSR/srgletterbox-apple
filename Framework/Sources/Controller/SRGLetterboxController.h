@@ -192,8 +192,10 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *                             - For live and DVR streams: In live conditions, i.e. at the end of the stream.
  *                           If the time is invalid it will be set to `kCMTimeZero`. Setting a start time outside the
  *                           actual media time range will seek to the nearest location (either zero or the end time).
- *  @param toleranceBefore   The tolerance allowed before `time`.
- *  @param toleranceAfter    The tolerance allowed after `time`.
+ *  @param toleranceBefore   The tolerance allowed before `time`. Use `kCMTimePositiveInfinity` for no tolerance
+ *                           requirements.
+ *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
+ *                           requirements.
  *  @param completionHandler The completion block called when the seek ends. If the seek has been interrupted by
  *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
  *                           with `finished` set to `YES`.
@@ -343,6 +345,20 @@ withToleranceBefore:(CMTime)toleranceBefore
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly;
+
+/**
+ *  Ask the controller to seek to a given location efficiently (the seek might be not perfeclty accurate but will be faster).
+ *
+ *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
+ */
+- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Ask the controller to seek to a given location with no tolerance (this might incur some decoding overhead).
+ *
+ *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
+ */
+- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 @end
 
