@@ -389,17 +389,17 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  The current subdivision being played.
  */
-@property (nonatomic, readonly) SRGSubdivision *subdivision;
+@property (nonatomic, readonly, nullable) SRGSubdivision *subdivision;
 
 /**
  *  The current subdivision (segment or chapter) being played, as an `SRGMedia` object.
  */
-@property (nonatomic, readonly) SRGMedia *subdivisionMedia;
+@property (nonatomic, readonly, nullable) SRGMedia *subdivisionMedia;
 
 /**
  *  The current full-length information .
  */
-@property (nonatomic, readonly) SRGMedia *fullLengthMedia;
+@property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 
 /**
  *  Error (if any has been encountered).
