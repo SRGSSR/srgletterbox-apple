@@ -7,6 +7,7 @@
 #import "AutoplayViewController.h"
 
 #import "AutoplayTableViewCell.h"
+#import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
 
@@ -119,7 +120,7 @@
     }
     
     if (businessUnitIdentifier) {
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:businessUnitIdentifier];
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
         
         SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
             self.medias = medias;

@@ -8,6 +8,7 @@
 
 #import "ModalTransition.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -55,6 +56,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
+        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
         return viewController;

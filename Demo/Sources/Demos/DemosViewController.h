@@ -8,7 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DemosViewController : UITableViewController
+@interface DemosViewController : UITableViewController <UIPopoverPresentationControllerDelegate>
+
++ (UINavigationController *)demosViewControllerInstanceEmbedded;
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly;
 

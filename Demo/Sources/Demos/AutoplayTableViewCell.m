@@ -6,6 +6,8 @@
 
 #import "AutoplayTableViewCell.h"
 
+#import "SettingsViewController.h"
+
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
@@ -27,6 +29,7 @@
     _media = media;
     
     if (media) {
+        self.letterboxController.serviceURL = ApplicationSettingServiceURL();
         [self.letterboxController playMedia:media withChaptersOnly:NO];
     }
     else {

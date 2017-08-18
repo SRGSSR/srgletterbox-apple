@@ -434,6 +434,26 @@
         mediaListViewController.mediaListType = [sender integerValue];
         mediaListViewController.demosViewController = self;
     }
+    else if ([[segue identifier] isEqualToString:@"SettingsSegue"]) {
+        UIViewController *viewController = [segue destinationViewController];
+        viewController.modalPresentationStyle = UIModalPresentationPopover;
+        viewController.popoverPresentationController.delegate = self;
+    }
+}
+
+#pragma mark Actions
+
+- (IBAction)settings:(UIBarButtonItem *)barButtonItem
+{
+    [self performSegueWithIdentifier:@"SettingsSegue" sender:barButtonItem];
+}
+
+#pragma mark UIPopoverPresentationControllerDelegate protocol
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    // Needed for the iPhone
+    return UIModalPresentationNone;
 }
 
 @end

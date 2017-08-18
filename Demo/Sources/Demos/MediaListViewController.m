@@ -6,6 +6,8 @@
 
 #import "MediaListViewController.h"
 
+#import "SettingsViewController.h"
+
 #import <SRGDataProvider/SRGDataProvider.h>
 
 @interface MediaListViewController ()
@@ -47,7 +49,7 @@
             default:
                 break;
         }
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:businessUnitIdentifier];
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
         SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
             self.medias = medias;
             [self.tableView reloadData];
