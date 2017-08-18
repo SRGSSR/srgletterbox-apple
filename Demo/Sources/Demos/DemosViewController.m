@@ -7,31 +7,32 @@
 #import "DemosViewController.h"
 
 #import "AutoplayViewController.h"
+#import "MediaListViewController.h"
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
-
-@interface DemosViewController ()
-
-@property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic, weak) SRGRequest *request;
-
-@end
 
 @implementation DemosViewController
 
 #pragma mark Object lifecycle
 
-- (instancetype)init
++ (UINavigationController *)demosViewControllerInstanceEmbedded
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self) bundle:nil];
     return [storyboard instantiateInitialViewController];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.title = [self pageTitle];
 }
 
 #pragma mark Getters and setters
 
-- (NSString *)title
+- (NSString *)pageTitle
 {
     NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
     NSString *bundleVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
@@ -83,14 +84,17 @@
 
 - (void)openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:(SRGDataProviderBusinessUnitIdentifier)dataProviderBusinessUnitIdentifier
 {
-    [self.request cancel];
-    
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:dataProviderBusinessUnitIdentifier];
-    SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
-        [self openModalPlayerWithURNString:medias.firstObject.URN.URNString chaptersOnly:NO];
-    }];
-    [request resume];
-    self.request = request;
+    MediaListType mediaListType = MediaListUnknown;
+    if ([dataProviderBusinessUnitIdentifier isEqualToString:SRGDataProviderBusinessUnitIdentifierSRF]) {
+        mediaListType = MediaListLivecenterSRF;
+    }
+    else if ([dataProviderBusinessUnitIdentifier isEqualToString:SRGDataProviderBusinessUnitIdentifierRTS]) {
+        mediaListType = MediaListLivecenterRTS;
+    }
+    else if ([dataProviderBusinessUnitIdentifier isEqualToString:SRGDataProviderBusinessUnitIdentifierRSI]) {
+        mediaListType = MediaListLivecenterRSI;
+    }
+    [self performSegueWithIdentifier:@"MediaListSegue" sender:@(mediaListType)];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
@@ -420,6 +424,15 @@
         default: {
             break;
         }
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"MediaListSegue"]) {
+        MediaListViewController *mediaListViewController = [segue destinationViewController];
+        mediaListViewController.mediaListType = [sender integerValue];
+        mediaListViewController.demosViewController = self;
     }
 }
 

@@ -10,6 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DemosViewController : UITableViewController
 
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly;
+
 @end
 
 NS_ASSUME_NONNULL_END
