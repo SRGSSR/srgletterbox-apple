@@ -432,20 +432,12 @@
     if ([[segue identifier] isEqualToString:@"MediaListSegue"]) {
         MediaListViewController *mediaListViewController = [segue destinationViewController];
         mediaListViewController.mediaListType = [sender integerValue];
-        mediaListViewController.demosViewController = self;
     }
     else if ([[segue identifier] isEqualToString:@"SettingsSegue"]) {
         UIViewController *viewController = [segue destinationViewController];
         viewController.modalPresentationStyle = UIModalPresentationPopover;
         viewController.popoverPresentationController.delegate = self;
     }
-}
-
-#pragma mark Actions
-
-- (IBAction)settings:(UIBarButtonItem *)barButtonItem
-{
-    [self performSegueWithIdentifier:@"SettingsSegue" sender:barButtonItem];
 }
 
 #pragma mark UIPopoverPresentationControllerDelegate protocol

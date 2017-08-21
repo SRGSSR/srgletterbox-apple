@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="aYU-OO-tHL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="aYU-OO-tHL">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -846,15 +846,15 @@
                         <barButtonItem key="leftBarButtonItem" image="settings-22" id="z4w-EA-PoC" userLabel="Settings Bar Button Item">
                             <connections>
                                 <action selector="settings:" destination="4wm-Z9-GrR" id="jR0-gn-3V4"/>
+                                <segue destination="jk2-Dq-caD" kind="popoverPresentation" identifier="SettingsSegue" popoverAnchorBarButtonItem="z4w-EA-PoC" id="gTj-zO-sEq">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <segue destination="H25-mJ-xc4" kind="show" identifier="MediaListSegue" id="go6-NE-fUa"/>
-                        <segue destination="jk2-Dq-caD" kind="popoverPresentation" identifier="SettingsSegue" popoverAnchorBarButtonItem="z4w-EA-PoC" id="SOK-VZ-yDv">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mSl-0c-nK6" userLabel="First Responder" sceneMemberID="firstResponder"/>

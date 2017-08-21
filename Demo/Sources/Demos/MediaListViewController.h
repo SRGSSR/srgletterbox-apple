@@ -35,8 +35,6 @@ typedef NS_ENUM(NSInteger, MediaListType) {
 
 @property (nonatomic) MediaListType mediaListType;
 
-@property (nonatomic, weak) DemosViewController *demosViewController;
-
 @end
 
 NS_ASSUME_NONNULL_END

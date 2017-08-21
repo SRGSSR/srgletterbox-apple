@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UINavigationController *)demosViewControllerInstanceEmbedded;
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly;
-
 @end
 
 NS_ASSUME_NONNULL_END

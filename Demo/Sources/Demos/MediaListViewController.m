@@ -6,6 +6,7 @@
 
 #import "MediaListViewController.h"
 
+#import "ModalPlayerViewController.h"
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
@@ -104,7 +105,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.demosViewController openModalPlayerWithURNString:self.medias[indexPath.row].URN.URNString chaptersOnly:NO];
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:self.medias[indexPath.row].URN.URNString];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:NO];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playerViewController.presentingViewController) {
+        return;
+    }
+    
+    [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
 @end
