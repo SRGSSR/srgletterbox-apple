@@ -1,2 +1,5 @@
 /* Close button on player view */
 "Close" = "Serrai";
+
+/* Settings button label on main view */
+"Settings" = "Configurar";

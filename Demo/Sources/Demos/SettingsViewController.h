@@ -8,7 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DemosViewController : UITableViewController <UIPopoverPresentationControllerDelegate>
+OBJC_EXPORT NSURL * ApplicationSettingServiceURL(void);
+
+@interface SettingsViewController : UITableViewController
 
 @end
 

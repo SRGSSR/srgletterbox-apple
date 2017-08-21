@@ -7,6 +7,7 @@
 #import "MultiPlayerViewController.h"
 
 #import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -51,6 +52,10 @@
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
+    
+    multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
     
     multiPlayerViewController.URN = URN;
     multiPlayerViewController.URN1 = URN1;

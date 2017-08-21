@@ -7,15 +7,17 @@
 #import "DemosViewController.h"
 
 #import "AutoplayViewController.h"
+#import "MediaListViewController.h"
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
+#import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
 @interface DemosViewController ()
 
-@property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic, weak) SRGRequest *request;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsButtonItem;
 
 @end
 
@@ -29,9 +31,19 @@
     return [storyboard instantiateInitialViewController];
 }
 
+#pragma mark View lifecycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.title = [self pageTitle];
+    
+    self.settingsButtonItem.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Settings", @"Settings button label on main view");
+}
+
 #pragma mark Getters and setters
 
-- (NSString *)title
+- (NSString *)pageTitle
 {
     NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
     NSString *bundleVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
@@ -81,16 +93,10 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:(SRGDataProviderBusinessUnitIdentifier)dataProviderBusinessUnitIdentifier
+- (void)openMediaListWithType:(MediaListType)mediaListType
 {
-    [self.request cancel];
-    
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:dataProviderBusinessUnitIdentifier];
-    SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
-        [self openModalPlayerWithURNString:medias.firstObject.URN.URNString chaptersOnly:NO];
-    }];
-    [request resume];
-    self.request = request;
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType];
+    [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
@@ -289,17 +295,17 @@
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
+                    [self openMediaListWithType:MediaListLivecenterSRF];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+                    [self openMediaListWithType:MediaListLivecenterRTS];
                     break;
                 }
                     
                 case 17: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRSI];
+                    [self openMediaListWithType:MediaListLivecenterRSI];
                     break;
                 }
                     
@@ -421,6 +427,29 @@
             break;
         }
     }
+}
+
+#pragma mark UIPopoverPresentationControllerDelegate protocol
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    // Needed for the iPhone
+    return UIModalPresentationNone;
+}
+
+#pragma mark Actions
+
+- (IBAction)showSettingsPopup:(id)sender
+{
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    settingsViewController.modalPresentationStyle = UIModalPresentationPopover;
+    
+    settingsViewController.popoverPresentationController.delegate = self;
+    settingsViewController.popoverPresentationController.barButtonItem = self.settingsButtonItem;
+    
+    [self presentViewController:settingsViewController
+                       animated:YES
+                     completion:nil];
 }
 
 @end

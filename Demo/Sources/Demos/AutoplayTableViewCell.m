@@ -6,6 +6,8 @@
 
 #import "AutoplayTableViewCell.h"
 
+#import "SettingsViewController.h"
+
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
@@ -40,6 +42,7 @@
 {
     [super awakeFromNib];
     
+    self.letterboxController.serviceURL = ApplicationSettingServiceURL();
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
     self.progressView.hidden = YES;
 }

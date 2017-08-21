@@ -7,6 +7,7 @@
 #import "StandalonePlayerViewController.h"
 
 #import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -40,6 +41,7 @@
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
         viewController.URN = URN;
         return viewController;
     }
