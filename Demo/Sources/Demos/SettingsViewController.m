@@ -8,14 +8,41 @@
 
 #import <SRGDataProvider/SRGDataProvider.h>
 
-NSString * const LetterboxSRGSettingServiceDefaultURLString = @"https://il.srgssr.ch";
 NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
 
 NSURL * ApplicationSettingServiceURL(void)
 {
-    NSString *urlString = ([[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL]) ?: LetterboxSRGSettingServiceDefaultURLString;
-    return [NSURL URLWithString:urlString] ?: [NSURL URLWithString:LetterboxSRGSettingServiceDefaultURLString];
+    NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
+    return [NSURL URLWithString:urlString] ?: SRGIntegrationLayerProductionServiceURL();
 }
+
+@interface ServerSetting : NSObject
+
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSURL *url;
+
+- (instancetype)initWithName:(NSString *)name url:(NSURL *)url;
+
+@end
+
+@implementation ServerSetting
+
+- (instancetype)initWithName:(NSString *)name url:(NSURL *)url
+{
+    if (self = [super init]) {
+        _name = name;
+        _url = url;
+    }
+    return self;
+}
+
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+@end
 
 @interface SettingsViewController ()
 
@@ -23,6 +50,8 @@ NSURL * ApplicationSettingServiceURL(void)
 @property (nonatomic, weak) IBOutlet UITableViewCell *stageCell;
 @property (nonatomic, weak) IBOutlet UITableViewCell *testCell;
 @property (nonatomic, weak) IBOutlet UITableViewCell *mmfCell;
+
+@property (nonatomic) NSArray<ServerSetting *> *serverSettings;
 
 @end
 
@@ -34,6 +63,11 @@ NSURL * ApplicationSettingServiceURL(void)
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];
+    
+    viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"server setting") url:SRGIntegrationLayerProductionServiceURL()],
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"server setting") url:SRGIntegrationLayerStagingServiceURL()],
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"server setting") url:SRGIntegrationLayerTestServiceURL()],
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"server setting") url:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]]];
     return viewController;
 }
 
@@ -44,48 +78,47 @@ NSURL * ApplicationSettingServiceURL(void)
     [super viewDidLoad];
     
     self.title = NSLocalizedString(@"Settings", @"title of the settings view");
-    [self reloadData];
+    
+    [self.tableView reloadData];
 }
 
-- (void)reloadData {
-    
-    NSURL *serverURL = ApplicationSettingServiceURL();
-    
-    self.productionCell.accessoryType = [serverURL isEqual:SRGIntegrationLayerProductionServiceURL()] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-    self.stageCell.accessoryType = [serverURL isEqual:SRGIntegrationLayerStagingServiceURL()] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-    self.testCell.accessoryType = [serverURL isEqual:SRGIntegrationLayerTestServiceURL()] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-    self.mmfCell.accessoryType = [serverURL isEqual:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+#pragma mark UITableViewDataSource protocol
+
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return NSLocalizedString(@"Server", @"server header title in settings view");
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.serverSettings.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [tableView dequeueReusableCellWithIdentifier:@"SettingsCell" forIndexPath:indexPath];
 }
 
 #pragma mark UITableViewDelegate protocol
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.textLabel.text = self.serverSettings[indexPath.row].name;
+    
+    NSURL *serverURL = ApplicationSettingServiceURL();
+    cell.accessoryType = [serverURL isEqual:self.serverSettings[indexPath.row].url] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSURL *serverURL = ApplicationSettingServiceURL();
-    switch (indexPath.row) {
-        case 0:
-            serverURL = SRGIntegrationLayerProductionServiceURL();
-            break;
-        case 1:
-            serverURL = SRGIntegrationLayerStagingServiceURL();
-            break;
-        case 2:
-            serverURL = SRGIntegrationLayerTestServiceURL();
-            break;
-        case 3:
-            serverURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-            break;
-            
-        default:
-            break;
-    }
-    
+    NSURL *serverURL = self.serverSettings[indexPath.row].url;
     [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    [self reloadData];
+    [self.tableView reloadData];
 }
 
 @end
