@@ -1,2 +1,5 @@
 /* Close button on player view */
 "Close" = "Schliessen";
+
+/* Settings button label on main view */
+"Settings" = "Einstellungen";
