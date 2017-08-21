@@ -48,7 +48,7 @@
 
 - (CGSize)popUpSizeForAttributedString:(NSAttributedString *)attributedString;
 
-- (void)showAnimated:(BOOL)animated completionBlock:(void (^)())block;
-- (void)hideAnimated:(BOOL)animated completionBlock:(void (^)())block;
+- (void)showAnimated:(BOOL)animated completionBlock:(void (^)(void))block;
+- (void)hideAnimated:(BOOL)animated completionBlock:(void (^)(void))block;
 
 @end
