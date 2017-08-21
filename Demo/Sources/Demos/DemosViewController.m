@@ -11,23 +11,33 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
+
+@interface DemosViewController ()
+
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsButtonItem;
+
+@end
 
 @implementation DemosViewController
 
 #pragma mark Object lifecycle
 
-+ (UINavigationController *)demosViewControllerInstanceEmbedded
-{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self) bundle:nil];
+- (instancetype)init {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     return [storyboard instantiateInitialViewController];
 }
+
+#pragma mark View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.title = [self pageTitle];
+    
+    self.settingsButtonItem.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Settings", @"Settings button label on main view");
 }
 
 #pragma mark Getters and setters
@@ -418,21 +428,27 @@
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"SettingsSegue"]) {
-        UIViewController *viewController = [segue destinationViewController];
-        viewController.modalPresentationStyle = UIModalPresentationPopover;
-        viewController.popoverPresentationController.delegate = self;
-    }
-}
-
 #pragma mark UIPopoverPresentationControllerDelegate protocol
 
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
 {
     // Needed for the iPhone
     return UIModalPresentationNone;
+}
+
+#pragma mark Actions
+
+- (IBAction)showSettingsPopup:(id)sender
+{
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    settingsViewController.modalPresentationStyle = UIModalPresentationPopover;
+    
+    settingsViewController.popoverPresentationController.delegate = self;
+    settingsViewController.popoverPresentationController.barButtonItem = self.settingsButtonItem;
+    
+    [self presentViewController:settingsViewController
+                       animated:YES
+                     completion:nil];
 }
 
 @end

@@ -10,8 +10,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DemosViewController : UITableViewController <UIPopoverPresentationControllerDelegate>
 
-+ (UINavigationController *)demosViewControllerInstanceEmbedded;
-
 @end
 
 NS_ASSUME_NONNULL_END

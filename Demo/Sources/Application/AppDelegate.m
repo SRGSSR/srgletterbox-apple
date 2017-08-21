@@ -42,7 +42,8 @@
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
-    self.window.rootViewController = [DemosViewController demosViewControllerInstanceEmbedded];
+    DemosViewController *demosViewController = [[DemosViewController alloc] init];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
 
     return YES;
 }

@@ -28,6 +28,17 @@ NSURL * ApplicationSettingServiceURL(void)
 
 @implementation SettingsViewController
 
+#pragma mark Object lifecycle
+
+- (instancetype)init
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    SettingsViewController *viewController = [storyboard instantiateInitialViewController];
+    return viewController;
+}
+
+#pragma mark View lifecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
