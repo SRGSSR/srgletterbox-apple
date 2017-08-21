@@ -29,7 +29,6 @@
     _media = media;
     
     if (media) {
-        self.letterboxController.serviceURL = ApplicationSettingServiceURL();
         [self.letterboxController playMedia:media withChaptersOnly:NO];
     }
     else {
@@ -43,6 +42,7 @@
 {
     [super awakeFromNib];
     
+    self.letterboxController.serviceURL = ApplicationSettingServiceURL();
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
     self.progressView.hidden = YES;
 }
