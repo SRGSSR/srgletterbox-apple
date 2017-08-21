@@ -850,6 +850,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="settingsButtonItem" destination="z4w-EA-PoC" id="AIM-pi-JNU"/>
                     </connections>

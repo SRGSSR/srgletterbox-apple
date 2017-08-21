@@ -17,7 +17,7 @@
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
 
-@property (nonatomic) NSArray<SRGMedia *>*medias;
+@property (nonatomic) NSArray<SRGMedia *> *medias;
 
 @end
 
@@ -53,22 +53,17 @@
     
     self.title = [self pageTitle];
     
-    if (self.mediaListType != MediaListUnknown) {
-        
-        SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = nil;
-        switch (self.mediaListType) {
-            case MediaListLivecenterSRF:
-                businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
-                break;
-            case MediaListLivecenterRTS:
-                businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
-                break;
-            case MediaListLivecenterRSI:
-                businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
-                break;
-            default:
-                break;
-        }
+    static NSDictionary<NSNumber *, SRGDataProviderBusinessUnitIdentifier> *s_businessUnitIdentifiers;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_businessUnitIdentifiers = @{ @(MediaListLivecenterSRF) : SRGDataProviderBusinessUnitIdentifierSRF,
+                                       @(MediaListLivecenterRTS) : SRGDataProviderBusinessUnitIdentifierRTS,
+                                       @(MediaListLivecenterRSI) : SRGDataProviderBusinessUnitIdentifierRSI };
+    });
+    
+    SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = s_businessUnitIdentifiers[@(self.mediaListType)];
+    
+    if (businessUnitIdentifier) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
         SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
             self.medias = medias;

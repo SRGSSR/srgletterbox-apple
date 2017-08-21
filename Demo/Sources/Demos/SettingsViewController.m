@@ -17,8 +17,6 @@ NSURL * ApplicationSettingServiceURL(void)
     return [NSURL URLWithString:urlString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface ServerSetting : NSObject
 
 @property (nonatomic, readonly) NSString *name;
@@ -27,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithName:(NSString *)name url:(NSURL *)url;
 
 @end
-
-NS_ASSUME_NONNULL_END
 
 @implementation ServerSetting
 
@@ -50,11 +46,6 @@ NS_ASSUME_NONNULL_END
 @end
 
 @interface SettingsViewController ()
-
-@property (nonatomic, weak) IBOutlet UITableViewCell *productionCell;
-@property (nonatomic, weak) IBOutlet UITableViewCell *stageCell;
-@property (nonatomic, weak) IBOutlet UITableViewCell *testCell;
-@property (nonatomic, weak) IBOutlet UITableViewCell *mmfCell;
 
 @property (nonatomic) NSArray<ServerSetting *> *serverSettings;
 
@@ -101,7 +92,7 @@ NS_ASSUME_NONNULL_END
             return NSLocalizedString(@"Server", @"server header title in settings view");
             break;
         case 1:
-            return NSLocalizedString(@"Mirrored screens", @"Presentation mode header title in settings view");
+            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
             break;
             
         default:
@@ -147,12 +138,12 @@ NS_ASSUME_NONNULL_END
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disable", @"Mirrored screens state in settings view");
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Mirrored screens state in settings view");
                     cell.accessoryType = (! [SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enable", @"Mirrored screens state in settings view");
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Mirrored screens state in settings view");
                     cell.accessoryType = ([SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
