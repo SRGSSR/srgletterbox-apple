@@ -853,9 +853,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
-                    <connections>
-                        <segue destination="H25-mJ-xc4" kind="show" identifier="MediaListSegue" id="go6-NE-fUa"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mSl-0c-nK6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -978,34 +975,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qyh-RO-ffm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1769" y="-976"/>
-        </scene>
-        <!--Media List View Controller-->
-        <scene sceneID="Ksd-Yg-URb">
-            <objects>
-                <tableViewController storyboardIdentifier="MediaListViewController" id="H25-mJ-xc4" customClass="MediaListViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="fln-vy-hO0">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MediaListCell" id="7pQ-IF-pyT">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7pQ-IF-pyT" id="Bnp-q1-K4Y">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="H25-mJ-xc4" id="ooW-7T-8Qb"/>
-                            <outlet property="delegate" destination="H25-mJ-xc4" id="lJa-lz-CK0"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AsG-LB-ZI7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1770" y="-267"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="YR7-5l-sM8">

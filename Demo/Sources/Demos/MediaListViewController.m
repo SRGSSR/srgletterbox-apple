@@ -13,6 +13,7 @@
 
 @interface MediaListViewController ()
 
+@property (nonatomic) MediaListType mediaListType;
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
 
@@ -21,6 +22,24 @@
 @end
 
 @implementation MediaListViewController
+
+#pragma mark Object lifecycle
+
+- (instancetype)initWithMediaListType:(MediaListType)mediaListType
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    MediaListViewController *viewController = [storyboard instantiateInitialViewController];
+    viewController.mediaListType = mediaListType;
+    return viewController;
+}
+
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+#pragma mark View lifecycle
 
 - (void)viewDidLoad
 {

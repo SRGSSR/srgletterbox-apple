@@ -33,7 +33,9 @@ typedef NS_ENUM(NSInteger, MediaListType) {
 
 @interface MediaListViewController : UITableViewController
 
-@property (nonatomic) MediaListType mediaListType;
+- (instancetype)initWithMediaListType:(MediaListType)mediaListType;
+
+@property (nonatomic, readonly) MediaListType mediaListType;
 
 @end
 

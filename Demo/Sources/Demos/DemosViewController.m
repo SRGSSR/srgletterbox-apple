@@ -82,19 +82,10 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:(SRGDataProviderBusinessUnitIdentifier)dataProviderBusinessUnitIdentifier
+- (void)openMediaListWithType:(MediaListType)mediaListType
 {
-    MediaListType mediaListType = MediaListUnknown;
-    if ([dataProviderBusinessUnitIdentifier isEqualToString:SRGDataProviderBusinessUnitIdentifierSRF]) {
-        mediaListType = MediaListLivecenterSRF;
-    }
-    else if ([dataProviderBusinessUnitIdentifier isEqualToString:SRGDataProviderBusinessUnitIdentifierRTS]) {
-        mediaListType = MediaListLivecenterRTS;
-    }
-    else if ([dataProviderBusinessUnitIdentifier isEqualToString:SRGDataProviderBusinessUnitIdentifierRSI]) {
-        mediaListType = MediaListLivecenterRSI;
-    }
-    [self performSegueWithIdentifier:@"MediaListSegue" sender:@(mediaListType)];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType];
+    [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
@@ -293,17 +284,17 @@
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
+                    [self openMediaListWithType:MediaListLivecenterSRF];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+                    [self openMediaListWithType:MediaListLivecenterRTS];
                     break;
                 }
                     
                 case 17: {
-                    [self openModalPlayerWithLatestLiveCenterVideoForBusinessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRSI];
+                    [self openMediaListWithType:MediaListLivecenterRSI];
                     break;
                 }
                     
@@ -429,11 +420,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"MediaListSegue"]) {
-        MediaListViewController *mediaListViewController = [segue destinationViewController];
-        mediaListViewController.mediaListType = [sender integerValue];
-    }
-    else if ([[segue identifier] isEqualToString:@"SettingsSegue"]) {
+    if ([[segue identifier] isEqualToString:@"SettingsSegue"]) {
         UIViewController *viewController = [segue destinationViewController];
         viewController.modalPresentationStyle = UIModalPresentationPopover;
         viewController.popoverPresentationController.delegate = self;
