@@ -16,6 +16,8 @@ NSURL * ApplicationSettingServiceURL(void)
     return [NSURL URLWithString:urlString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface ServerSetting : NSObject
 
 @property (nonatomic, readonly) NSString *name;
@@ -24,6 +26,8 @@ NSURL * ApplicationSettingServiceURL(void)
 - (instancetype)initWithName:(NSString *)name url:(NSURL *)url;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 @implementation ServerSetting
 
