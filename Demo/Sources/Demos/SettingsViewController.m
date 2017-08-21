@@ -7,6 +7,7 @@
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
 
@@ -88,14 +89,41 @@ NS_ASSUME_NONNULL_END
 
 #pragma mark UITableViewDataSource protocol
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
+
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return NSLocalizedString(@"Server", @"server header title in settings view");
+    switch (section) {
+        case 0:
+            return NSLocalizedString(@"Server", @"server header title in settings view");
+            break;
+        case 1:
+            return NSLocalizedString(@"Mirrored screens", @"Presentation mode header title in settings view");
+            break;
+            
+        default:
+            break;
+    }
+    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.serverSettings.count;
+    switch (section) {
+        case 0:
+            return self.serverSettings.count;
+            break;
+        case 1:
+            return 2;
+            break;
+            
+        default:
+            break;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -107,18 +135,63 @@ NS_ASSUME_NONNULL_END
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = self.serverSettings[indexPath.row].name;
-    
-    NSURL *serverURL = ApplicationSettingServiceURL();
-    cell.accessoryType = [serverURL isEqual:self.serverSettings[indexPath.row].url] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-    
+    switch (indexPath.section) {
+        case 0: {
+            cell.textLabel.text = self.serverSettings[indexPath.row].name;
+            
+            NSURL *serverURL = ApplicationSettingServiceURL();
+            cell.accessoryType = [serverURL isEqual:self.serverSettings[indexPath.row].url] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+            break;
+        }
+            
+        case 1: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disable", @"Mirrored screens state in settings view");
+                    cell.accessoryType = (! [SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enable", @"Mirrored screens state in settings view");
+                    cell.accessoryType = ([SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        default: {
+            cell.textLabel.text = nil;
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            break;
+        }
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSURL *serverURL = self.serverSettings[indexPath.row].url;
-    [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    switch (indexPath.section) {
+        case 0: {
+            NSURL *serverURL = self.serverSettings[indexPath.row].url;
+            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            break;
+        }
+            
+        case 1: {
+            [SRGLetterboxService sharedService].mirroredOnExternalScreen = (indexPath.row == 1);
+            break;
+        }
+            
+        default:
+            break;
+    }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
