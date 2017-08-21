@@ -123,6 +123,8 @@ NS_ASSUME_NONNULL_END
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     [self.tableView reloadData];
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
