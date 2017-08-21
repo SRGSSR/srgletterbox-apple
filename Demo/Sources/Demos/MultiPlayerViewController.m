@@ -53,10 +53,6 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
     
-    self.letterboxController.serviceURL = ApplicationSettingServiceURL();
-    self.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
-    self.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
-    
     multiPlayerViewController.URN = URN;
     multiPlayerViewController.URN1 = URN1;
     multiPlayerViewController.URN2 = URN2;
@@ -77,6 +73,10 @@
     [super viewDidLoad];
     
     self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
+    
+    self.letterboxController.serviceURL = ApplicationSettingServiceURL();
+    self.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
+    self.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
