@@ -101,6 +101,17 @@ NSURL * ApplicationSettingServiceURL(void)
     return nil;
 }
 
+- (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return NSLocalizedString(@"This application is developed to present SRG Letterbox features on iOS.\nIt's only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
+ 
+    }
+    else {
+        return nil;
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     switch (section) {
