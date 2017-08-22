@@ -18,6 +18,7 @@
 
 @property (nonatomic) SRGMediaURN *URN;
 @property (nonatomic) BOOL chaptersOnly;
+@property (nonatomic) NSURL *serviceURL;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -43,7 +44,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly overrideServiceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -56,7 +57,8 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
-        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+        viewController.serviceURL = serviceURL;
+        viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
         return viewController;

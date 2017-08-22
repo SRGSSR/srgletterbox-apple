@@ -81,8 +81,13 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
 {
+    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly overrideServiceURL:nil];
+}
+
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly overrideServiceURL:(NSURL *)serviceURL
+{
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly overrideServiceURL:serviceURL];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -161,6 +166,7 @@
     static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_drm17_hls_1_delay";
     
     switch (indexPath.section) {
         case 0: {
@@ -315,16 +321,21 @@
                 }
                     
                 case 19: {
-                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString chaptersOnly:NO overrideServiceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]];
                     break;
                 }
                     
                 case 20: {
-                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 21: {
+                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    break;
+                }
+                    
+                case 22: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString chaptersOnly:NO];
