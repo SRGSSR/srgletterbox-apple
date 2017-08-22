@@ -17,6 +17,7 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
+#import "SRGMedia+SRGLetterbox.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
@@ -54,6 +55,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
+
+@property (nonatomic, weak) IBOutlet UIView *avaibilityView;
+@property (nonatomic, weak) IBOutlet UILabel *avaibilityLabel;
 
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
@@ -144,6 +148,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
+    self.avaibilityView.alpha = 0.f;
     
     self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
@@ -291,6 +296,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.avaibilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
@@ -574,6 +580,8 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
+    self.avaibilityLabel.text = [self avaibilityTextForController:controller];
+    
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -602,6 +610,23 @@ static void commonInit(SRGLetterboxView *self);
 - (void)reloadData
 {
     return [self reloadDataForController:self.controller];
+}
+
+- (NSString *)avaibilityTextForController:(SRGLetterboxController *)controller
+{
+    NSString *avaibilityText = nil;
+    switch (controller.media.letterbox_availability) {
+        case SRGMediaAvailabilitySoon:
+            avaibilityText = self.controller.media.letterbox_isToday ? @"Available today" : @"Available soon";
+            break;
+        case SRGMediaAvailabilityExpired:
+            avaibilityText = @"Expired";
+            break;
+            
+        default:
+            break;
+    }
+    return avaibilityText;
 }
 
 #pragma mark UI behavior changes
@@ -637,12 +662,13 @@ static void commonInit(SRGLetterboxView *self);
     
     // Controls and error overlay must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
+    BOOL availablePlayback = ([self avaibilityTextForController:controller] == nil);
     BOOL hasError = ([self error] != nil);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
         && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     BOOL userInterfaceHidden = self.userInterfaceHidden;
-    if (hasError || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    if (hasError || (! availablePlayback) || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         userInterfaceHidden = YES;
     }
     else if (self.userInterfaceTogglable
@@ -658,8 +684,10 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
     // Only display retry instructions if there is a media to retry with
-    self.errorView.alpha = hasError ? 1.f : 0.f;
+    self.errorView.alpha = (hasError && availablePlayback) ? 1.f : 0.f;
     self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
+    
+    self.avaibilityView.alpha = availablePlayback ? 0.f : 1.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
