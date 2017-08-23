@@ -81,13 +81,13 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
 {
-    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly overrideServiceURL:nil];
+    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil];
 }
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly overrideServiceURL:(NSURL *)serviceURL
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL
 {
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly overrideServiceURL:serviceURL];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -321,7 +321,7 @@
                 }
                     
                 case 19: {
-                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString chaptersOnly:NO overrideServiceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]];
+                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString chaptersOnly:NO serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]];
                     break;
                 }
                     

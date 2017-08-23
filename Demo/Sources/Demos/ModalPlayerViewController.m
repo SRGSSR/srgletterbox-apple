@@ -44,7 +44,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly overrideServiceURL:(NSURL *)serviceURL
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
