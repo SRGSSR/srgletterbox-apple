@@ -23,6 +23,7 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
+#import "UILabel+SRGLetterbox.h"
 
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -297,9 +298,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    
+    [self.availabilityLabel srg_displayAvailabilityLabelForMedia:self.controller.media];
 }
 
 #pragma mark Accessibility
@@ -581,7 +583,7 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
-    self.availabilityLabel.text = [self avaibilityTextForController:controller];
+    [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
     
 }
 
@@ -611,23 +613,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)reloadData
 {
     return [self reloadDataForController:self.controller];
-}
-
-- (NSString *)avaibilityTextForController:(SRGLetterboxController *)controller
-{
-    NSString *avaibilityText = nil;
-    switch (controller.media.srg_availability) {
-        case SRGMediaAvailabilitySoon:
-            avaibilityText = self.controller.media.srg_today  ? @"Available today" : @"Available soon";
-            break;
-        case SRGMediaAvailabilityExpired:
-            avaibilityText = @"Expired";
-            break;
-            
-        default:
-            break;
-    }
-    return avaibilityText;
 }
 
 #pragma mark UI behavior changes
@@ -663,7 +648,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Controls and error overlay must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
-    BOOL availablePlayback = ([self avaibilityTextForController:controller] == nil);
+    BOOL availablePlayback = (controller.media.srg_availability == SRGMediaAvailabilityAvailable);
     BOOL hasError = ([self error] != nil);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
         && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
