@@ -450,14 +450,16 @@ withToleranceBefore:(CMTime)toleranceBefore
 @interface SRGLetterboxController (PeriodicUpdates)
 
 /**
- *  Time interval between stream availability checks. Live streams might change (e.g. if a stream is toggled between DVR 
- *  and live-only versions) or not be available anymore (e.g. if the location of the user changes and the stream is not
- *  available for the new location). If a stream is changed, the new one is automatically played, otherwise playback
- *  stops with an error.
+ *  Time interval between metadata updates.
  *
  *  Default is 5 minutes, and minimum is 10 seconds.
+ *
+ *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or not be 
+ *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
+ *              location). If a stream is changed, the new one is automatically played, otherwise playback stops with an 
+ *              error.
  */
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval metadataUpdateInterval;
 
 /**
  *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`

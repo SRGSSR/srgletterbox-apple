@@ -86,7 +86,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval metadataUpdateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
@@ -123,7 +123,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         };
         
         // Also register the associated periodic time observers
-        self.streamAvailabilityCheckInterval = 5. * 60.;
+        self.metadataUpdateInterval = 5. * 60.;
         self.channelUpdateInterval = 30.;
         
         // Observe playback state changes
@@ -254,17 +254,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return self.mediaPlayerController.tracked;
 }
 
-- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+- (void)setMetadataUpdateInterval:(NSTimeInterval)metadataUpdateInterval
 {
-    if (streamAvailabilityCheckInterval < 10.) {
+    if (metadataUpdateInterval < 10.) {
         SRGLetterboxLogWarning(@"controller", @"The mimimum stream availability check interval is 10 seconds. Fixed to 10 seconds.");
-        streamAvailabilityCheckInterval = 10.;
+        metadataUpdateInterval = 10.;
     }
     
-    _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
+    _metadataUpdateInterval = metadataUpdateInterval;
     
     @weakify(self)
-    self.metadataUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.metadataUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:metadataUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
         [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
