@@ -166,7 +166,7 @@
     static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
-    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_drm17_hls_1_delay";
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_bipbop_basic_delay";
     
     switch (indexPath.section) {
         case 0: {
