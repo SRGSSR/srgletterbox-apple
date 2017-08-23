@@ -221,9 +221,9 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, getter=isMuted) BOOL muted;
 
 /**
- *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss or when the start time of
- *  a previously not available media has been reached). Default is `YES`. If set to `NO`, playback will only be prepared,
- *  but playback will not actually start.
+ *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss, when the start time of
+ *  a previously not available media has been reached, or when the content URL has changed). Default is `YES`. If 
+ *  set to `NO`, playback will only be prepared, but playback will not actually start.
  */
 @property (nonatomic) BOOL resumesAutomatically;
 

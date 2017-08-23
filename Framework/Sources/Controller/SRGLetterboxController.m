@@ -289,9 +289,14 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
             if (! [currentResources isEqualToSet:fetchedResources]) {
                 [self stop];
-                
-                SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+            }
+            
+            SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+            if (self.resumesAutomatically) {
                 [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+            }
+            else {
+                [self prepareToPlayMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
             }
         }] resume];
     }];
