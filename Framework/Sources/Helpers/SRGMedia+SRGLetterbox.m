@@ -8,7 +8,7 @@
 
 @implementation SRGMedia (Letterbox)
 
-- (SRGMediaAvailability)letterbox_availability
+- (SRGMediaAvailability)srg_availability
 {
     SRGMediaAvailability availability = SRGMediaAvailabilityNone;
     
@@ -42,7 +42,7 @@
     return availability;
 }
 
-- (BOOL)letterbox_isToday
+- (BOOL)srg_isToday 
 {
     return [[NSCalendar currentCalendar] isDateInToday:self.date];
 }

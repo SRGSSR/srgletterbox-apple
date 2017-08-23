@@ -615,9 +615,9 @@ static void commonInit(SRGLetterboxView *self);
 - (NSString *)avaibilityTextForController:(SRGLetterboxController *)controller
 {
     NSString *avaibilityText = nil;
-    switch (controller.media.letterbox_availability) {
+    switch (controller.media.srg_availability) {
         case SRGMediaAvailabilitySoon:
-            avaibilityText = self.controller.media.letterbox_isToday ? @"Available today" : @"Available soon";
+            avaibilityText = self.controller.media.srg_today  ? @"Available today" : @"Available soon";
             break;
         case SRGMediaAvailabilityExpired:
             avaibilityText = @"Expired";
