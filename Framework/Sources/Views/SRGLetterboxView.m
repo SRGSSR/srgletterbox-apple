@@ -56,8 +56,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
-@property (nonatomic, weak) IBOutlet UIView *avaibilityView;
-@property (nonatomic, weak) IBOutlet UILabel *avaibilityLabel;
+@property (nonatomic, weak) IBOutlet UIView *availabilityView;
+@property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
@@ -148,7 +148,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
-    self.avaibilityView.alpha = 0.f;
+    self.availabilityView.alpha = 0.f;
     
     self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
@@ -296,7 +296,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.avaibilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
@@ -580,7 +580,7 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
-    self.avaibilityLabel.text = [self avaibilityTextForController:controller];
+    self.availabilityLabel.text = [self avaibilityTextForController:controller];
     
 }
 
@@ -687,7 +687,7 @@ static void commonInit(SRGLetterboxView *self);
     self.errorView.alpha = (hasError && availablePlayback) ? 1.f : 0.f;
     self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
     
-    self.avaibilityView.alpha = availablePlayback ? 0.f : 1.f;
+    self.availabilityView.alpha = availablePlayback ? 0.f : 1.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
