@@ -133,7 +133,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }];
         _playbackState = self.mediaPlayerController.playbackState;          // No setter used on purpose to set the initial value. The setter will notify changes
         
-        self.resumesAfterRetry = YES;
+        self.resumesAutomatically = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -638,7 +638,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 - (void)retry
 {
     void (^prepareCompletioHandler)(void) = ^{
-        if (self.resumesAfterRetry) {
+        if (self.resumesAutomatically) {
             [self play];
         }
     };

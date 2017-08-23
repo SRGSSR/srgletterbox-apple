@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @discussion Does nothing if the URN is the one currently being played.  You might want to set the `resumesAfterRetry` 
+ *  @discussion Does nothing if the URN is the one currently being played.  You might want to set the `resumesAutomatically` 
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
@@ -173,7 +173,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *  Restart playback completely for the same URN or media. Does nothing if no URN or media has currently been set.
  *
  *  @discussion Whether playback should automatically start when the player is restarted can be controlled using the
- *              `resumesAfterRetry` property.
+ *              `resumesAutomatically` property.
  */
 - (void)restart;
 
@@ -221,9 +221,11 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, getter=isMuted) BOOL muted;
 
 /**
- *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss). Default is `YES`.
+ *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss or when the start time of
+ *  a previously not available media has been reached). Default is `YES`. If set to `NO`, playback will only be prepared,
+ *  but playback will not actually start.
  */
-@property (nonatomic) BOOL resumesAfterRetry;
+@property (nonatomic) BOOL resumesAutomatically;
 
 /**
  *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is 
