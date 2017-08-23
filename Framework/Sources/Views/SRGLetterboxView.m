@@ -61,6 +61,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
+@property (nonatomic) NSTimer *availabilityLabelUpdateTimer;
+
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
@@ -124,7 +126,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dealloc
 {
-    self.controller = nil;          // Unregister everything
+    self.availabilityLabelUpdateTimer = nil; // Invalidate timer
+    self.controller = nil;                   // Unregister everything
 }
 
 #pragma mark View lifecycle
@@ -374,6 +377,7 @@ static void commonInit(SRGLetterboxView *self);
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
+    self.availabilityLabelUpdateTimer = nil;
     [self reloadDataForController:controller];
     
     if (controller) {
@@ -440,6 +444,12 @@ static void commonInit(SRGLetterboxView *self);
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
     }];
+}
+
+- (void)setAvailabilityLabelUpdateTimer:(NSTimer *)availabilityLabelUpdateTimer
+{
+    [_availabilityLabelUpdateTimer invalidate];
+    _availabilityLabelUpdateTimer = availabilityLabelUpdateTimer;
 }
 
 - (void)setFullScreen:(BOOL)fullScreen
@@ -584,7 +594,16 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorLabel.text = [self error].localizedDescription;
     [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
-    
+    if (controller.media.srg_availability == SRGMediaAvailabilitySoon && controller.media.srg_isToday) {
+        @weakify(controller)
+        self.availabilityLabelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            @strongify(controller)
+            [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
+        }];
+    }
+    else {
+        self.availabilityLabelUpdateTimer = nil;
+    }
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller

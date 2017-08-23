@@ -6,7 +6,7 @@
 
 #import "SRGMedia+SRGLetterbox.h"
 
-@implementation SRGMedia (Letterbox)
+@implementation SRGMedia (SRGLetterbox)
 
 - (SRGMediaAvailability)srg_availability
 {

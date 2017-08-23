@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, SRGMediaAvailability) {
     SRGMediaAvailabilityExpired
 };
 
-@interface SRGMedia (Letterbox)
+@interface SRGMedia (SRGLetterbox)
 
 @property (nonatomic, readonly) SRGMediaAvailability srg_availability;
 @property (nonatomic, readonly, getter=srg_isToday) BOOL srg_today;

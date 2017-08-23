@@ -7,6 +7,9 @@
 #import "UILabel+SRGLetterbox.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "NSDateFormatter+SRGLetterbox.h"
+#import "NSString+SRGLetterbox.h"
 #import "SRGMedia+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -15,7 +18,7 @@
 
 #pragma mark Public
 
-- (void)play_displayDurationLabelForLive
+- (void)srg_displayDurationLabelForLive
 {
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", NSLocalizedString(@"LIVE", @"Short name to explain that a content is a live media. Display on the thumbnail in uppercase.")].uppercaseString
                                                                                        attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
@@ -38,7 +41,12 @@
         self.hidden = NO;
     }
     else if (media.srg_availability == SRGMediaAvailabilitySoon) {
-        NSString *availabilityLabelText = SRGLetterboxLocalizedString(@"SOON", @"Label to explain that a content will be available. Display of the view in uppercase.").uppercaseString;
+        NSString *availabilityLabelText = [[NSDateFormatter srg_relativeDateAndTimeFormatter] stringFromDate:media.date].srg_localizedUppercaseFirstLetterString;
+        NSString *availabilityAccessibilityLabelText = [[NSDateFormatter srg_relativeDateAndTimeAccessibilityFormatter] stringFromDate:media.date];
+        
+        if (media.srg_isToday) {
+            availabilityLabelText = [[NSDateComponentsFormatter srg_countdownDateComponentsFormatter] stringFromDate:media.startDate toDate:NSDate.date];
+        }
         
         if (media.contentType == SRGContentTypeScheduledLivestream) {
             NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", availabilityLabelText]
@@ -55,10 +63,12 @@
             self.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
 
         }
+        self.accessibilityLabel = availabilityAccessibilityLabelText;
         self.hidden = NO;
     }
     else {
         self.text = nil;
+        self.accessibilityLabel = nil;
         self.hidden = YES;
     }
 }
