@@ -7,6 +7,7 @@
 #import "SRGLetterboxController.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -78,8 +79,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
-@property (nonatomic, weak) id streamAvailabilityPeriodicTimeObserver;
-@property (nonatomic, weak) id channelUpdatePeriodicTimeObserver;
+// Use timers (not time observers) so that updates are performed also when the controller is idle
+@property (nonatomic) NSTimer *metadataUpdateTimer;
+@property (nonatomic) NSTimer *channelUpdateTimer;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
@@ -164,8 +166,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)dealloc
 {
-    [self.mediaPlayerController removePeriodicTimeObserver:self.streamAvailabilityPeriodicTimeObserver];
-    [self.mediaPlayerController removePeriodicTimeObserver:self.channelUpdatePeriodicTimeObserver];
+    // Invalidate timers
+    self.metadataUpdateTimer = nil;
+    self.channelUpdateTimer = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -261,7 +264,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
     
     @weakify(self)
-    self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+    self.metadataUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
         [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
@@ -302,8 +305,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     @weakify(self)
-    self.channelUpdatePeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(channelUpdateInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-        @strongify(self)
+    self.channelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+       @strongify(self)
         
         [self updateChannel];
     }];
@@ -326,6 +329,18 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     return self.contentURLOverridingBlock && self.contentURLOverridingBlock(self.URN);
+}
+
+- (void)setMetadataUpdateTimer:(NSTimer *)metadataUpdateTimer
+{
+    [_metadataUpdateTimer invalidate];
+    _metadataUpdateTimer = metadataUpdateTimer;
+}
+
+- (void)setChannelUpdateTimer:(NSTimer *)channelUpdateTimer
+{
+    [_channelUpdateTimer invalidate];
+    _channelUpdateTimer = channelUpdateTimer;
 }
 
 #pragma mark Periodic time observers

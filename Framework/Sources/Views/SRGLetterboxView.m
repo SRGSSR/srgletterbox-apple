@@ -7,6 +7,7 @@
 #import "SRGLetterboxView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
 #import "SRGControlsView.h"
@@ -862,7 +863,24 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)resetInactivityTimer
 {
-    self.inactivityTimer = ! UIAccessibilityIsVoiceOverRunning() ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterfaceAfterInactivity:) userInfo:nil repeats:NO] : nil;
+    if (! UIAccessibilityIsVoiceOverRunning()) {
+        @weakify(self)
+        self.inactivityTimer = [NSTimer srg_scheduledTimerWithTimeInterval:4. repeats:NO block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            
+            // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
+            // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
+            SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+            if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+                [self toggleUserInterfaceHidden:YES animated:YES];
+            }
+        }];
+    }
+    else {
+        self.inactivityTimer = nil;
+    }
 }
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
@@ -960,20 +978,6 @@ static void commonInit(SRGLetterboxView *self);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self toggleUserInterfaceHidden:YES animated:YES];
     });
-}
-
-#pragma mark Timers
-
-- (void)hideInterfaceAfterInactivity:(NSTimer *)timer
-{
-    // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
-    // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self toggleUserInterfaceHidden:YES animated:YES];
-    }
 }
 
 #pragma mark Actions
