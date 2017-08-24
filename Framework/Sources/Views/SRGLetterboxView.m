@@ -663,13 +663,13 @@ static void commonInit(SRGLetterboxView *self);
     
     // Controls and error overlay must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
-    BOOL availablePlayback = (controller.media.srg_availability == SRGMediaAvailabilityAvailable);
     BOOL hasError = ([self error] != nil);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
         && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     BOOL userInterfaceHidden = self.userInterfaceHidden;
-    if (hasError || (! availablePlayback) || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    BOOL isMediaAvailable = (controller.media.srg_availability == SRGMediaAvailabilityAvailable);
+    if (hasError || ! isMediaAvailable || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         userInterfaceHidden = YES;
     }
     else if (self.userInterfaceTogglable
@@ -685,10 +685,10 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
     // Only display retry instructions if there is a media to retry with
-    self.errorView.alpha = (hasError && availablePlayback) ? 1.f : 0.f;
+    self.errorView.alpha = hasError ? 1.f : 0.f;
     self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
     
-    self.availabilityView.alpha = availablePlayback ? 0.f : 1.f;
+    self.availabilityView.alpha = isMediaAvailable ? 0.f : 1.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
