@@ -496,8 +496,16 @@ static void commonInit(SRGLetterboxView *self);
 
 - (NSError *)error
 {
-    if (self.controller.error) {
-        return self.controller.error;
+    NSError *error = self.controller.error;
+    if (error) {
+        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
+        // displayed instead)
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+            return nil;
+        }
+        else {
+            return error;
+        }
     }
     else if (! self.controller.media && ! self.controller.URN) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain

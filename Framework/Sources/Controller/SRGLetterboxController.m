@@ -59,6 +59,26 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return s_businessUnitIdentifiers[@(vendor)];
 }
 
+static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *mediaComposition)
+{
+    SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
+    if (blockingReason == SRGBlockingReasonNone) {
+        return nil;
+    }
+    
+    
+    if (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotAvailable
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
+    }
+    else {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeBlocked
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
+    }
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -443,14 +463,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
         
         // If the user location has changed, she might be in a location where the content is now blocked
-        SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-        if (blockingReason != SRGBlockingReasonNone) {
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+        if (blockingReasonError) {
             [self.mediaPlayerController stop];
-            
-            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                 code:SRGLetterboxErrorCodeBlocked
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
-            [self reportError:error];
+            [self reportError:blockingReasonError];
             return;
         }
         
@@ -598,12 +614,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         [self updateChannel];
         
         // Do not go further if the content is blocked
-        SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-        if (blockingReason != SRGBlockingReasonNone) {
-            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                 code:SRGLetterboxErrorCodeBlocked
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
-            [self.requestQueue reportError:error];
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+        if (blockingReasonError) {
+            [self.requestQueue reportError:blockingReasonError];
             return;
         }
         
