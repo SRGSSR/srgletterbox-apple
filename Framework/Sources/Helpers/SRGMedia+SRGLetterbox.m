@@ -10,36 +10,16 @@
 
 - (SRGMediaAvailability)srg_availability
 {
-    SRGMediaAvailability availability = SRGMediaAvailabilityNone;
-    
-    if (self.contentType == SRGContentTypeLivestream) {
-        availability = SRGMediaAvailabilityAvailable;
+    NSDate *nowDate = NSDate.date;
+    if (self.startDate && [nowDate compare:self.startDate] == NSOrderedAscending) {
+        return SRGMediaAvailabilitySoon;
+    }
+    else if (self.endDate && [self.endDate compare:nowDate] == NSOrderedAscending) {
+        return SRGMediaAvailabilityExpired;
     }
     else {
-        NSDate *startDate = nil;
-        NSDate *endDate = nil;
-        
-        if (self.contentType == SRGContentTypeScheduledLivestream) {
-            startDate = self.startDate ?: self.date;
-            endDate = self.endDate ?: [self.date dateByAddingTimeInterval:self.duration / 1000.];
-        }
-        else {
-            startDate = (self.blockingReason == SRGBlockingReasonStartDate) ? self.startDate : nil;
-            endDate = (self.blockingReason == SRGBlockingReasonEndDate) ? self.endDate : nil;
-        }
-        
-        NSDate *nowDate = NSDate.date;
-        if (startDate && [nowDate compare:startDate] == NSOrderedAscending) {
-            availability = SRGMediaAvailabilitySoon;
-        }
-        else if (endDate && [endDate compare:nowDate] == NSOrderedAscending) {
-            availability = SRGMediaAvailabilityExpired;
-        }
-        else {
-            availability = SRGMediaAvailabilityAvailable;
-        }
+        return SRGMediaAvailabilityAvailable;
     }
-    return availability;
 }
 
 @end
