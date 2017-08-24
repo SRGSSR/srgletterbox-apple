@@ -17,7 +17,7 @@
 
 - (void)srg_displayAvailabilityLabelForMedia:(SRGMedia *)media
 {
-    self.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
     if (media.srg_availability == SRGMediaAvailabilityExpired) {
         self.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"EXPIRED", @"Label to explain that a content has expired. Display of the view in uppercase.").uppercaseString];
@@ -40,11 +40,11 @@
         
         if (media.contentType == SRGContentTypeScheduledLivestream) {
             NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", availabilityLabelText]
-                                                                                               attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
+                                                                                               attributes:@{ NSFontAttributeName : self.font,
                                                                                                              NSForegroundColorAttributeName : [UIColor whiteColor] }];
             
             [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"●  ")
-                                                                                   attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
+                                                                                   attributes:@{ NSFontAttributeName : self.font,
                                                                                                  NSForegroundColorAttributeName : [UIColor whiteColor] }]];
             
             self.attributedText = attributedText.copy;
