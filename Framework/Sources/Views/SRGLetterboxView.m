@@ -126,7 +126,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dealloc
 {
-    self.availabilityLabelUpdateTimer = nil; // Invalidate timer
     self.controller = nil;                   // Unregister everything
 }
 
@@ -259,7 +258,9 @@ static void commonInit(SRGLetterboxView *self);
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
-        self.inactivityTimer = nil;                 // Invalidate timer
+        // Invalidate timers
+        self.inactivityTimer = nil;
+        self.availabilityLabelUpdateTimer = nil;
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
