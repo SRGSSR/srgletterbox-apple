@@ -595,9 +595,9 @@ static void commonInit(SRGLetterboxView *self);
     self.errorLabel.text = [self error].localizedDescription;
     [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
     if (controller.media.srg_availability == SRGMediaAvailabilitySoon && controller.media.srg_isToday) {
-        @weakify(controller)
+        @weakify(self)
         self.availabilityLabelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(controller)
+            @strongify(self)
             [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
         }];
     }
@@ -876,8 +876,8 @@ static void commonInit(SRGLetterboxView *self);
             // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
             SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
             if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-                || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+                    || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+                    || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
                 [self toggleUserInterfaceHidden:YES animated:YES];
             }
         }];
