@@ -847,7 +847,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 
 - (BOOL)canSkipToLive
 {
-    return (self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) && [self canSkipForward];
+    return self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && [self canSkipForward];
 }
 
 - (void)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -922,7 +922,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 
 - (void)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) {
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         [self seekToTime:CMTimeRangeGetEnd(self.mediaPlayerController.timeRange) withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
             if (finished) {
                 [self.mediaPlayerController play];
