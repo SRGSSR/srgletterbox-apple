@@ -456,7 +456,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
             return;
         }
         
-        [self updateWithURN:self.URN media:self.media mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
         
         // If the user location has changed, she might be in a location where the content is now blocked
         NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
