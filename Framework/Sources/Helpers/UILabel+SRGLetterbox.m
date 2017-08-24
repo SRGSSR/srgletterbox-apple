@@ -15,22 +15,6 @@
 
 @implementation UILabel (SRGLetterbox)
 
-#pragma mark Public
-
-- (void)srg_displayDurationLabelForLive
-{
-    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", NSLocalizedString(@"LIVE", @"Short name to explain that a content is a live media. Display on the thumbnail in uppercase.")].uppercaseString
-                                                                                       attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                                     NSForegroundColorAttributeName : [UIColor whiteColor] }];
-    
-    [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"●  ")
-                                                                           attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                         NSForegroundColorAttributeName : [UIColor redColor] }]];
-    
-    self.attributedText = attributedText.copy;
-    self.hidden = NO;
-}
-
 - (void)srg_displayAvailabilityLabelForMedia:(SRGMedia *)media
 {
     self.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
