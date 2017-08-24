@@ -158,6 +158,8 @@
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_bipbop_basic_delay";
+    
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
     static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
@@ -166,7 +168,6 @@
     static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
     static NSString * const kInvalidURNString = @"urn:swi:video:1234567";
-    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_bipbop_basic_delay";
     
     switch (indexPath.section) {
         case 0: {
@@ -316,12 +317,12 @@
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString chaptersOnly:NO serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]];
                     break;
                 }
                     
                 case 19: {
-                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString chaptersOnly:NO serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]];
+                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
                     break;
                 }
                     
