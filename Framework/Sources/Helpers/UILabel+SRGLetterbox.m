@@ -7,7 +7,6 @@
 #import "UILabel+SRGLetterbox.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "NSDateFormatter+SRGLetterbox.h"
 #import "SRGMedia+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -20,12 +19,13 @@
     
     if (media.srg_availability == SRGMediaAvailabilityExpired) {
         self.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"EXPIRED", @"Label to explain that a content has expired. Display of the view in uppercase.").uppercaseString];
+        self.accessibilityLabel = SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate);
         self.hidden = NO;
     }
     else if (media.srg_availability == SRGMediaAvailabilitySoon) {
-        NSString *availabilityLabelText = nil;
         NSTimeInterval intervalToStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
+        NSString *availabilityLabelText = nil;
         if (intervalToStart > 60.f * 60.f) {
             static NSDateComponentsFormatter *s_dropLeadingDateComponentsFormatter;
             static dispatch_once_t s_onceToken;
@@ -60,10 +60,17 @@
         }
         else {
             self.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
-
         }
         
-        self.accessibilityLabel = [[NSDateFormatter srg_relativeDateAndTimeAccessibilityFormatter] stringFromDate:media.date];
+        static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+            s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+            s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+            s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        });
+        self.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"This media will be available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:intervalToStart]];
         self.hidden = NO;
     }
     else {
