@@ -71,14 +71,14 @@
 
 #pragma mark Getters and setters
 
-- (NSTimeInterval)metadataUpdateInterval
+- (NSTimeInterval)streamAvailabilityCheckInterval
 {
-    return self.letterboxController.metadataUpdateInterval;
+    return self.letterboxController.streamAvailabilityCheckInterval;
 }
 
-- (void)setMetadataUpdateInterval:(NSTimeInterval)metadataUpdateInterval
+- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
 {
-    self.letterboxController.metadataUpdateInterval = metadataUpdateInterval;
+    self.letterboxController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
 }
 
 #pragma mark View lifecycle

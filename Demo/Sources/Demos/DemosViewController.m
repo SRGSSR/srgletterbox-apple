@@ -81,15 +81,15 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
 {
-    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil metadataUpdateInterval:nil];
+    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil streamAvailabilityCheckInterval:nil];
 }
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL metadataUpdateInterval:(NSNumber *)metadataUpdateInterval
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL streamAvailabilityCheckInterval:(NSNumber *)streamAvailabilityCheckInterval
 {
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL];
-    if (metadataUpdateInterval) {
-        playerViewController.metadataUpdateInterval = metadataUpdateInterval.doubleValue;
+    if (streamAvailabilityCheckInterval) {
+        playerViewController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval.doubleValue;
     }
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -323,7 +323,7 @@
                     [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                                metadataUpdateInterval:@15];
+                       streamAvailabilityCheckInterval:@15];
                     break;
                 }
                     

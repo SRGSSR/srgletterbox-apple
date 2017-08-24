@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAutomatically` 
+ *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAfterRetry` 
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
@@ -173,7 +173,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *  Restart playback completely for the same URN or media. Does nothing if no URN or media has currently been set.
  *
  *  @discussion Whether playback should automatically start when the player is restarted can be controlled using the
- *              `resumesAutomatically` property.
+ *              `resumesAfterRetry` property.
  */
 - (void)restart;
 
@@ -225,7 +225,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  a previously not available media has been reached, or when the content URL has changed). Default is `YES`. If 
  *  set to `NO`, playback will only be prepared, but playback will not actually start.
  */
-@property (nonatomic) BOOL resumesAutomatically;
+@property (nonatomic) BOOL resumesAfterRetry;
 
 /**
  *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is 
@@ -450,16 +450,16 @@ withToleranceBefore:(CMTime)toleranceBefore
 @interface SRGLetterboxController (PeriodicUpdates)
 
 /**
- *  Time interval between metadata updates.
+ *  Time interval between stream availability checks.
  *
  *  Default is 5 minutes, and minimum is 10 seconds.
  *
- *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or not be 
+ *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
  *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
  *              location). If a stream is changed, the new one is automatically played, otherwise playback stops with an 
- *              error.
+ *              error. Some streams might also only be available within a specific date range.
  */
-@property (nonatomic) NSTimeInterval metadataUpdateInterval;
+@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
 
 /**
  *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
