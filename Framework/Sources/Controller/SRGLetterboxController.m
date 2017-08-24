@@ -725,8 +725,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.dataProvider = nil;
     }
     
-    // Update metadata first so that it is current when the player status is changed below
-    [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    [self.mediaPlayerController reset];
+    [self.requestQueue cancel];
     
     self.error = nil;
     
@@ -735,8 +735,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
     
-    [self.mediaPlayerController reset];
-    [self.requestQueue cancel];
+    // Update metadata first so that it is current when the player status is changed below
+    [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
 }
 
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
