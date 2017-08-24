@@ -7,7 +7,6 @@
 #import "UILabel+SRGLetterbox.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSDateFormatter+SRGLetterbox.h"
 #import "NSString+SRGLetterbox.h"
 #import "SRGMedia+SRGLetterbox.h"
@@ -44,8 +43,15 @@
         NSString *availabilityLabelText = [[NSDateFormatter srg_relativeDateAndTimeFormatter] stringFromDate:media.date].srg_localizedUppercaseFirstLetterString;
         NSString *availabilityAccessibilityLabelText = [[NSDateFormatter srg_relativeDateAndTimeAccessibilityFormatter] stringFromDate:media.date];
         
-        if (media.srg_isToday) {
-            availabilityLabelText = [[NSDateComponentsFormatter srg_countdownDateComponentsFormatter] stringFromDate:media.startDate toDate:NSDate.date];
+        if (media.srg_today) {
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+            });
+            availabilityLabelText = [s_dateComponentsFormatter stringFromDate:media.startDate toDate:NSDate.date];
         }
         
         if (media.contentType == SRGContentTypeScheduledLivestream) {
