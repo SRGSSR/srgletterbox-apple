@@ -798,8 +798,8 @@ static void commonInit(SRGLetterboxView *self);
     
     // Pop-up visibility
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-                            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-                            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         [self.timeSlider hidePopUpViewAnimated:NO];
     }
     else {
@@ -1020,9 +1020,9 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark SRGASValueTrackingSliderDataSource protocol
 
-- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value;
+- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value
 {
-    if (self.controller.media.contentType == SRGContentTypeLivestream || self.controller.media.contentType == SRGContentTypeScheduledLivestream) {
+    if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive || self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
         NSDate *date = slider.date;
         
