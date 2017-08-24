@@ -35,7 +35,7 @@
                 s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
                 s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
             });
-            availabilityLabelText = [s_dateComponentsFormatter stringFromDate:media.startDate toDate:NSDate.date];
+            availabilityLabelText = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:media.startDate];
         }
         
         if (media.contentType == SRGContentTypeScheduledLivestream) {
