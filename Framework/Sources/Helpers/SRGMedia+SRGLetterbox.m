@@ -42,9 +42,4 @@
     return availability;
 }
 
-- (BOOL)srg_isToday 
-{
-    return [[NSCalendar currentCalendar] isDateInToday:self.date];
-}
-
 @end

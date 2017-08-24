@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Use this method to display the correct availability label for a media
  */
-- (void)srg_displayAvailabilityLabelForMedia:(SRGMedia *)media;
+- (void)srg_displayAvailabilityLabelForMedia:(nullable SRGMedia *)media;
 
 @end
 

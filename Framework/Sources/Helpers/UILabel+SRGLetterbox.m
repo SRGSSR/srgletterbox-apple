@@ -8,7 +8,6 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateFormatter+SRGLetterbox.h"
-#import "NSString+SRGLetterbox.h"
 #import "SRGMedia+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -24,21 +23,31 @@
         self.hidden = NO;
     }
     else if (media.srg_availability == SRGMediaAvailabilitySoon) {
-        NSString *availabilityLabelText = [[NSDateFormatter srg_relativeDateAndTimeFormatter] stringFromDate:media.date].srg_localizedUppercaseFirstLetterString;
-        NSString *availabilityAccessibilityLabelText = [[NSDateFormatter srg_relativeDateAndTimeAccessibilityFormatter] stringFromDate:media.date];
+        NSString *availabilityLabelText = nil;
+        NSTimeInterval intervalToStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
-        if (media.srg_today) {
-            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+        if (intervalToStart > 60.f * 60.f) {
+            static NSDateComponentsFormatter *s_dropLeadingDateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
-                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
-                s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+                s_dropLeadingDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dropLeadingDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+                s_dropLeadingDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
             });
-            availabilityLabelText = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:media.startDate];
+            availabilityLabelText = [s_dropLeadingDateComponentsFormatter stringFromTimeInterval:intervalToStart];
+        }
+        else {
+            static NSDateComponentsFormatter *s_padDateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_padDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_padDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                s_padDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+            });
+            availabilityLabelText = [s_padDateComponentsFormatter stringFromTimeInterval:intervalToStart];
         }
         
-        if (media.contentType == SRGContentTypeScheduledLivestream) {
+        if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
             NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", availabilityLabelText]
                                                                                                attributes:@{ NSFontAttributeName : self.font,
                                                                                                              NSForegroundColorAttributeName : [UIColor whiteColor] }];
@@ -53,7 +62,8 @@
             self.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
 
         }
-        self.accessibilityLabel = availabilityAccessibilityLabelText;
+        
+        self.accessibilityLabel = [[NSDateFormatter srg_relativeDateAndTimeAccessibilityFormatter] stringFromDate:media.date];
         self.hidden = NO;
     }
     else {

@@ -33,7 +33,6 @@ typedef NS_ENUM(NSInteger, SRGMediaAvailability) {
 @interface SRGMedia (SRGLetterbox)
 
 @property (nonatomic, readonly) SRGMediaAvailability srg_availability;
-@property (nonatomic, readonly, getter=srg_isToday) BOOL srg_today;
 
 @end
 
