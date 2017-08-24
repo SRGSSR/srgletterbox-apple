@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithURN:(nullable SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(nullable NSURL *)serviceURL;
 
+@property (nonatomic) NSTimeInterval metadataUpdateInterval;
+
 @end
 
 @interface ModalPlayerViewController (Unavailable)

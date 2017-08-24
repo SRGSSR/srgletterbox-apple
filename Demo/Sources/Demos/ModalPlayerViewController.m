@@ -69,6 +69,18 @@
     return nil;
 }
 
+#pragma mark Getters and setters
+
+- (NSTimeInterval)metadataUpdateInterval
+{
+    return self.letterboxController.metadataUpdateInterval;
+}
+
+- (void)setMetadataUpdateInterval:(NSTimeInterval)metadataUpdateInterval
+{
+    self.letterboxController.metadataUpdateInterval = metadataUpdateInterval;
+}
+
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
