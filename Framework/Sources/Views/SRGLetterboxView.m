@@ -593,17 +593,13 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
+    
+    @weakify(self)
+    self.availabilityLabelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        @strongify(self)
+        [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
+    }];
     [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
-    if (controller.media.srg_availability == SRGMediaAvailabilitySoon && controller.media.srg_isToday) {
-        @weakify(self)
-        self.availabilityLabelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
-        }];
-    }
-    else {
-        self.availabilityLabelUpdateTimer = nil;
-    }
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
