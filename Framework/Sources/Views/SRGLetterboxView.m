@@ -377,7 +377,6 @@ static void commonInit(SRGLetterboxView *self);
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
-    self.availabilityLabelUpdateTimer = nil;
     [self reloadDataForController:controller];
     
     if (controller) {
