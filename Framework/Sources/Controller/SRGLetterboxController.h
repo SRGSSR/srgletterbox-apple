@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @discussion Does nothing if the URN is the one currently being played.  You might want to set the `resumesAutomatically` 
+ *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAutomatically` 
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN

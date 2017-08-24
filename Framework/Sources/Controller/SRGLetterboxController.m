@@ -66,17 +66,10 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         return nil;
     }
     
-    
-    if (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) {
-        return [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                   code:SRGLetterboxErrorCodeNotAvailable
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
-    }
-    else {
-        return [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                   code:SRGLetterboxErrorCodeBlocked
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
-    }
+    NSInteger code = (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) ? SRGLetterboxErrorCodeNotAvailable : SRGLetterboxErrorCodeBlocked;
+    return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                               code:code
+                           userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
 }
 
 @interface SRGLetterboxController ()
@@ -103,6 +96,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 @property (nonatomic) NSTimer *metadataUpdateTimer;
 @property (nonatomic) NSTimer *channelUpdateTimer;
 
+// Timers for single metadata updates at start and end times
 @property (nonatomic) NSTimer *startDateTimer;
 @property (nonatomic) NSTimer *endDateTimer;
 
