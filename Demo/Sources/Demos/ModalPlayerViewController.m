@@ -43,7 +43,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -56,7 +56,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
-        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+        viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
         return viewController;
@@ -67,6 +67,18 @@
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+#pragma mark Getters and setters
+
+- (NSTimeInterval)streamAvailabilityCheckInterval
+{
+    return self.letterboxController.streamAvailabilityCheckInterval;
+}
+
+- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+{
+    self.letterboxController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
 }
 
 #pragma mark View lifecycle

@@ -12,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ModalPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly;
+- (instancetype)initWithURN:(nullable SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(nullable NSURL *)serviceURL;
+
+@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
 
 @end
 

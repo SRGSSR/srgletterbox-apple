@@ -81,8 +81,16 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
 {
+    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil streamAvailabilityCheckInterval:nil];
+}
+
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL streamAvailabilityCheckInterval:(NSNumber *)streamAvailabilityCheckInterval
+{
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL];
+    if (streamAvailabilityCheckInterval) {
+        playerViewController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval.doubleValue;
+    }
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -152,6 +160,8 @@
     
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
+    
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_bipbop_basic_delay";
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
@@ -310,21 +320,29 @@
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                       streamAvailabilityCheckInterval:@15];
                     break;
                 }
                     
                 case 19: {
-                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 20: {
-                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 21: {
+                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    break;
+                }
+                    
+                case 22: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString chaptersOnly:NO];

@@ -7,6 +7,7 @@
 #import "SRGLetterboxView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
 #import "SRGControlsView.h"
@@ -17,10 +18,12 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
+#import "SRGMedia+SRGLetterbox.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
+#import "UILabel+SRGLetterbox.h"
 
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -54,6 +57,11 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *errorView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
+
+@property (nonatomic, weak) IBOutlet UIView *availabilityView;
+@property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
+
+@property (nonatomic) NSTimer *availabilityLabelUpdateTimer;
 
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
@@ -118,7 +126,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dealloc
 {
-    self.controller = nil;          // Unregister everything
+    self.controller = nil;                   // Unregister everything
 }
 
 #pragma mark View lifecycle
@@ -144,6 +152,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
+    self.availabilityView.alpha = 0.f;
     
     self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
@@ -249,7 +258,9 @@ static void commonInit(SRGLetterboxView *self);
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
-        self.inactivityTimer = nil;                 // Invalidate timer
+        // Invalidate timers
+        self.inactivityTimer = nil;
+        self.availabilityLabelUpdateTimer = nil;
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -293,6 +304,8 @@ static void commonInit(SRGLetterboxView *self);
     self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    
+    [self.availabilityLabel srg_displayAvailabilityLabelForMedia:self.controller.media];
 }
 
 #pragma mark Accessibility
@@ -433,6 +446,12 @@ static void commonInit(SRGLetterboxView *self);
     }];
 }
 
+- (void)setAvailabilityLabelUpdateTimer:(NSTimer *)availabilityLabelUpdateTimer
+{
+    [_availabilityLabelUpdateTimer invalidate];
+    _availabilityLabelUpdateTimer = availabilityLabelUpdateTimer;
+}
+
 - (void)setFullScreen:(BOOL)fullScreen
 {
     [self setFullScreen:fullScreen animated:NO];
@@ -477,8 +496,16 @@ static void commonInit(SRGLetterboxView *self);
 
 - (NSError *)error
 {
-    if (self.controller.error) {
-        return self.controller.error;
+    NSError *error = self.controller.error;
+    if (error) {
+        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
+        // displayed instead)
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+            return nil;
+        }
+        else {
+            return error;
+        }
     }
     else if (! self.controller.media && ! self.controller.URN) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
@@ -574,6 +601,13 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     self.errorLabel.text = [self error].localizedDescription;
+    
+    @weakify(self)
+    self.availabilityLabelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        @strongify(self)
+        [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
+    }];
+    [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -642,7 +676,8 @@ static void commonInit(SRGLetterboxView *self);
         && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     BOOL userInterfaceHidden = self.userInterfaceHidden;
-    if (hasError || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    BOOL isMediaAvailable = (controller.media.srg_availability == SRGMediaAvailabilityAvailable);
+    if (hasError || ! isMediaAvailable || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         userInterfaceHidden = YES;
     }
     else if (self.userInterfaceTogglable
@@ -660,6 +695,8 @@ static void commonInit(SRGLetterboxView *self);
     // Only display retry instructions if there is a media to retry with
     self.errorView.alpha = hasError ? 1.f : 0.f;
     self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
+    
+    self.availabilityView.alpha = isMediaAvailable ? 0.f : 1.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
@@ -762,8 +799,8 @@ static void commonInit(SRGLetterboxView *self);
     
     // Pop-up visibility
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-                            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-                            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         [self.timeSlider hidePopUpViewAnimated:NO];
     }
     else {
@@ -834,7 +871,24 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)resetInactivityTimer
 {
-    self.inactivityTimer = ! UIAccessibilityIsVoiceOverRunning() ? [NSTimer scheduledTimerWithTimeInterval:4. target:self selector:@selector(hideInterfaceAfterInactivity:) userInfo:nil repeats:NO] : nil;
+    if (! UIAccessibilityIsVoiceOverRunning()) {
+        @weakify(self)
+        self.inactivityTimer = [NSTimer srg_scheduledTimerWithTimeInterval:4. repeats:NO block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            
+            // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
+            // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
+            SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+            if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                    || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
+                    || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+                [self toggleUserInterfaceHidden:YES animated:YES];
+            }
+        }];
+    }
+    else {
+        self.inactivityTimer = nil;
+    }
 }
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
@@ -934,20 +988,6 @@ static void commonInit(SRGLetterboxView *self);
     });
 }
 
-#pragma mark Timers
-
-- (void)hideInterfaceAfterInactivity:(NSTimer *)timer
-{
-    // Only auto-hide the UI when it makes sense (e.g. not when the player is paused or loading). When the state
-    // of the player returns to playing, the inactivity timer will be reset (see -playbackStateDidChange:)
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-        [self toggleUserInterfaceHidden:YES animated:YES];
-    }
-}
-
 #pragma mark Actions
 
 - (IBAction)skipBackward:(id)sender
@@ -981,9 +1021,9 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark SRGASValueTrackingSliderDataSource protocol
 
-- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value;
+- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value
 {
-    if (self.controller.media.contentType == SRGContentTypeLivestream || self.controller.media.contentType == SRGContentTypeScheduledLivestream) {
+    if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive || self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
         NSDate *date = slider.date;
         

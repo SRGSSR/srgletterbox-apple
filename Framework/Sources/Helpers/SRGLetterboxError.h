@@ -27,7 +27,11 @@ typedef NS_ENUM(NSInteger, SRGLetterboxErrorCode) {
     /**
      *  The media is blocked.
      */
-    SRGLetterboxErrorCodeBlocked
+    SRGLetterboxErrorCodeBlocked,
+    /**
+     *  The media is not available yet or anymore.
+     */
+    SRGLetterboxErrorCodeNotAvailable
 };
 
 /**
