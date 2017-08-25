@@ -21,6 +21,8 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
+    application.accessibilityLanguage = @"en";
+    
 #ifndef DEBUG
     
 #ifdef NIGHTLY
