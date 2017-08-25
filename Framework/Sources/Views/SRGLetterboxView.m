@@ -61,7 +61,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
-@property (nonatomic) NSTimer *availabilityLabelUpdateTimer;
+@property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
@@ -80,7 +80,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
 @property (nonatomic) NSTimer *inactivityTimer;
-@property (nonatomic, weak) id periodicTimeObserver;
 
 @property (nonatomic, copy) NSString *notificationMessage;
 
@@ -260,7 +259,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         // Invalidate timers
         self.inactivityTimer = nil;
-        self.availabilityLabelUpdateTimer = nil;
+        self.userInterfaceUpdateTimer = nil;
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -332,8 +331,9 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     if (_controller) {
+        self.userInterfaceUpdateTimer = nil;
+        
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGLetterboxMetadataDidChangeNotification
@@ -363,6 +363,8 @@ static void commonInit(SRGLetterboxView *self);
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
         }
+        
+        [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
     }
     
     _controller = controller;
@@ -385,10 +387,11 @@ static void commonInit(SRGLetterboxView *self);
         
         @weakify(self)
         @weakify(controller)
-        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             @strongify(controller)
             [self updateUserInterfaceForController:controller animated:YES];
+            [self updateAvailabilityForController:controller];
         }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -446,10 +449,10 @@ static void commonInit(SRGLetterboxView *self);
     }];
 }
 
-- (void)setAvailabilityLabelUpdateTimer:(NSTimer *)availabilityLabelUpdateTimer
+- (void)setUserInterfaceUpdateTimer:(NSTimer *)userInterfaceUpdateTimer
 {
-    [_availabilityLabelUpdateTimer invalidate];
-    _availabilityLabelUpdateTimer = availabilityLabelUpdateTimer;
+    [_userInterfaceUpdateTimer invalidate];
+    _userInterfaceUpdateTimer = userInterfaceUpdateTimer;
 }
 
 - (void)setFullScreen:(BOOL)fullScreen
@@ -602,11 +605,11 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorLabel.text = [self error].localizedDescription;
     
-    @weakify(self)
-    self.availabilityLabelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-        @strongify(self)
-        [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
-    }];
+    [self updateAvailabilityForController:controller];
+}
+
+- (void)updateAvailabilityForController:(SRGLetterboxController *)controller
+{
     [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
 }
 
