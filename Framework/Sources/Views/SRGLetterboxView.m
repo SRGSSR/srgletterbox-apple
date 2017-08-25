@@ -23,7 +23,6 @@
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
-#import "UILabel+SRGLetterbox.h"
 
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -304,7 +303,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    [self.availabilityLabel srg_displayAvailabilityLabelForMedia:self.controller.media];
+    [self updateAvailabilityLabelForController:self.controller];
 }
 
 #pragma mark Accessibility
@@ -364,7 +363,7 @@ static void commonInit(SRGLetterboxView *self);
             [previousMediaPlayerController.view removeFromSuperview];
         }
         
-        [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
+        [self updateAvailabilityLabelForController:controller];
     }
     
     _controller = controller;
@@ -391,7 +390,7 @@ static void commonInit(SRGLetterboxView *self);
             @strongify(self)
             @strongify(controller)
             [self updateUserInterfaceForController:controller animated:YES];
-            [self updateAvailabilityForController:controller];
+            [self updateAvailabilityLabelForController:controller];
         }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -605,12 +604,75 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorLabel.text = [self error].localizedDescription;
     
-    [self updateAvailabilityForController:controller];
+    [self updateAvailabilityLabelForController:controller];
 }
 
-- (void)updateAvailabilityForController:(SRGLetterboxController *)controller
+- (void)updateAvailabilityLabelForController:(SRGLetterboxController *)controller
 {
-    [self.availabilityLabel srg_displayAvailabilityLabelForMedia:controller.media];
+    SRGMedia *media = controller.media;
+    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    
+    if (media.srg_availability == SRGMediaAvailabilityExpired) {
+        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
+        self.availabilityLabel.accessibilityLabel = SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate);
+        self.availabilityLabel.hidden = NO;
+    }
+    else if (media.srg_availability == SRGMediaAvailabilityNotYet) {
+        NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
+        
+        NSString *availabilityLabelText = nil;
+        if (timeIntervalBeforeStart > 60. * 60.) {
+            static NSDateComponentsFormatter *s_longDateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_longDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_longDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+                s_longDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+            });
+            availabilityLabelText = [s_longDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+        }
+        else {
+            static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+            });
+            availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+        }
+        
+        if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
+            NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", availabilityLabelText]
+                                                                                               attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle],
+                                                                                                             NSForegroundColorAttributeName : [UIColor whiteColor] }];
+            
+            [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"●  ")
+                                                                                   attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle],
+                                                                                                 NSForegroundColorAttributeName : [UIColor whiteColor] }]];
+            
+            self.availabilityLabel.attributedText = [attributedText copy];
+        }
+        else {
+            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
+        }
+        
+        static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+            s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+            s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+            s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        });
+        self.availabilityLabel.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"This media will be available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
+        self.availabilityLabel.hidden = NO;
+    }
+    else {
+        self.availabilityLabel.text = nil;
+        self.availabilityLabel.accessibilityLabel = nil;
+        self.availabilityLabel.hidden = YES;
+    }
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
