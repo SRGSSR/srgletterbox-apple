@@ -26,7 +26,7 @@
         NSTimeInterval intervalToStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
         NSString *availabilityLabelText = nil;
-        if (intervalToStart > 60.f * 60.f) {
+        if (intervalToStart > 60. * 60.) {
             static NSDateComponentsFormatter *s_dropLeadingDateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
