@@ -61,15 +61,32 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *mediaComposition)
 {
-    SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-    if (blockingReason == SRGBlockingReasonNone) {
+    SRGChapter *mainChapter = mediaComposition.mainChapter;
+    SRGBlockingReason blockingReason = mainChapter.blockingReason;
+    
+    NSDate *currentDate = [NSDate date];
+    
+    // Observe start and end dates first. If we are offline, the date range information is more reliable blocking reasons,
+    // if retrieved easlier, might be outdated.
+    if ([currentDate compare:mainChapter.startDate] == NSOrderedAscending) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotAvailable
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonStartDate) }];
+    }
+    else if ([mainChapter.endDate compare:currentDate] == NSOrderedAscending) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotAvailable
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate) }];
+    }
+    // Date blocking has been dealt with more reliably above
+    else if (blockingReason != SRGBlockingReasonNone && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeBlocked
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
+    }
+    else {
         return nil;
     }
-    
-    NSInteger code = (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) ? SRGLetterboxErrorCodeNotAvailable : SRGLetterboxErrorCodeBlocked;
-    return [NSError errorWithDomain:SRGLetterboxErrorDomain
-                               code:code
-                           userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
 }
 
 @interface SRGLetterboxController ()
@@ -452,13 +469,19 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 - (void)checkStreamAvailability
 {
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-        if (error) {
+        // Update metadata if retrieved, otherwise perform a check with the metadata we already have
+        if (mediaComposition) {
+            [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
+        }
+        else {
+            mediaComposition = self.mediaComposition;
+        }
+        
+        if (! mediaComposition) {
             return;
         }
         
-        [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
-        
-        // If the user location has changed, she might be in a location where the content is now blocked
+        // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
         NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
         if (blockingReasonError) {
             [self stop];
