@@ -22,7 +22,7 @@
         self.accessibilityLabel = SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate);
         self.hidden = NO;
     }
-    else if (media.srg_availability == SRGMediaAvailabilitySoon) {
+    else if (media.srg_availability == SRGMediaAvailabilityNotYet) {
         NSTimeInterval intervalToStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
         NSString *availabilityLabelText = nil;

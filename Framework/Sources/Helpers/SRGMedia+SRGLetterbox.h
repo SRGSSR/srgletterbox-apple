@@ -17,15 +17,15 @@ typedef NS_ENUM(NSInteger, SRGMediaAvailability) {
      */
     SRGMediaAvailabilityNone = 0,
     /**
-     *  Soon available content
+     *  The media is not available yet.
      */
-    SRGMediaAvailabilitySoon,
+    SRGMediaAvailabilityNotYet,
     /**
-     *  Available content
+     *  The media is available.
      */
     SRGMediaAvailabilityAvailable,
     /**
-     *  Expired available content
+     *  The media has expired and is not available anymore.
      */
     SRGMediaAvailabilityExpired
 };

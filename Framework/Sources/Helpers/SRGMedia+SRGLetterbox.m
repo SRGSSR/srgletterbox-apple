@@ -12,7 +12,7 @@
 {
     NSDate *nowDate = NSDate.date;
     if (self.startDate && [nowDate compare:self.startDate] == NSOrderedAscending) {
-        return SRGMediaAvailabilitySoon;
+        return SRGMediaAvailabilityNotYet;
     }
     else if (self.endDate && [self.endDate compare:nowDate] == NSOrderedAscending) {
         return SRGMediaAvailabilityExpired;
