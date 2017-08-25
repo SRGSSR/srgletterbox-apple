@@ -614,7 +614,6 @@ static void commonInit(SRGLetterboxView *self);
     
     if (media.srg_availability == SRGMediaAvailabilityExpired) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
-        self.availabilityLabel.accessibilityLabel = SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate);
         self.availabilityLabel.hidden = NO;
     }
     else if (media.srg_availability == SRGMediaAvailabilityNotYet) {
