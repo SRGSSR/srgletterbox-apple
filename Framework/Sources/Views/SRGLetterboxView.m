@@ -694,7 +694,7 @@ static void commonInit(SRGLetterboxView *self);
 
     // Only display retry instructions if there is a media to retry with
     self.errorView.alpha = hasError ? 1.f : 0.f;
-    self.errorInstructionsLabel.alpha = controller.URN ? 1.f : 0.f;
+    self.errorInstructionsLabel.alpha = (hasError && controller.URN) ? 1.f : 0.f;
     
     self.availabilityView.alpha = isMediaAvailable ? 0.f : 1.f;
     
