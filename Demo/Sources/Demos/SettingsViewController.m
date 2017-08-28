@@ -11,28 +11,28 @@
 
 NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
 
-NSURL * ApplicationSettingServiceURL(void)
+NSURL *ApplicationSettingServiceURL(void)
 {
-    NSString *urlString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
-    return [NSURL URLWithString:urlString] ?: SRGIntegrationLayerProductionServiceURL();
+    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
+    return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
 @interface ServerSetting : NSObject
 
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSURL *url;
+- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL;
 
-- (instancetype)initWithName:(NSString *)name url:(NSURL *)url;
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSURL *URL;
 
 @end
 
 @implementation ServerSetting
 
-- (instancetype)initWithName:(NSString *)name url:(NSURL *)url
+- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL
 {
     if (self = [super init]) {
         _name = name;
-        _url = url;
+        _URL = URL;
     }
     return self;
 }
@@ -60,10 +60,10 @@ NSURL * ApplicationSettingServiceURL(void)
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];
     
-    viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"server setting") url:SRGIntegrationLayerProductionServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"server setting") url:SRGIntegrationLayerStagingServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"server setting") url:SRGIntegrationLayerTestServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"server setting") url:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]]];
+    viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]]];
     return viewController;
 }
 
@@ -73,7 +73,7 @@ NSURL * ApplicationSettingServiceURL(void)
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"Settings", @"title of the settings view");
+    self.title = NSLocalizedString(@"Settings", @"Title of the settings view");
     
     [self.tableView reloadData];
 }
@@ -85,27 +85,30 @@ NSURL * ApplicationSettingServiceURL(void)
     return 2;
 }
 
-- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     switch (section) {
-        case 0:
-            return NSLocalizedString(@"Server", @"server header title in settings view");
+        case 0: {
+            return NSLocalizedString(@"Server", @"Server header title in settings view");
             break;
-        case 1:
+        }
+            
+        case 1: {
             return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
             break;
+        }
             
-        default:
+        default: {
             break;
+        }
     }
     return nil;
 }
 
-- (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == 1) {
-        return NSLocalizedString(@"This application is developed to present SRG Letterbox features on iOS.\nIt's only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
- 
+        return NSLocalizedString(@"This demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
     }
     else {
         return nil;
@@ -115,17 +118,21 @@ NSURL * ApplicationSettingServiceURL(void)
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     switch (section) {
-        case 0:
+        case 0: {
             return self.serverSettings.count;
             break;
-        case 1:
+        }
+            
+        case 1: {
             return 2;
             break;
+        }
             
-        default:
+        default: {
+            return 0;
             break;
+        }
     }
-    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -142,7 +149,7 @@ NSURL * ApplicationSettingServiceURL(void)
             cell.textLabel.text = self.serverSettings[indexPath.row].name;
             
             NSURL *serverURL = ApplicationSettingServiceURL();
-            cell.accessoryType = [serverURL isEqual:self.serverSettings[indexPath.row].url] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+            cell.accessoryType = [serverURL isEqual:self.serverSettings[indexPath.row].URL] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
             break;
         }
             
@@ -153,6 +160,7 @@ NSURL * ApplicationSettingServiceURL(void)
                     cell.accessoryType = (! [SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
+                    
                 case 1: {
                     cell.textLabel.text = NSLocalizedString(@"Enabled", @"Mirrored screens state in settings view");
                     cell.accessoryType = ([SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
@@ -180,7 +188,7 @@ NSURL * ApplicationSettingServiceURL(void)
 {
     switch (indexPath.section) {
         case 0: {
-            NSURL *serverURL = self.serverSettings[indexPath.row].url;
+            NSURL *serverURL = self.serverSettings[indexPath.row].URL;
             [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
             [[NSUserDefaults standardUserDefaults] synchronize];
             break;
@@ -191,8 +199,9 @@ NSURL * ApplicationSettingServiceURL(void)
             break;
         }
             
-        default:
+        default: {
             break;
+        }
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

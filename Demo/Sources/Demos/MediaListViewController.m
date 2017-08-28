@@ -45,12 +45,6 @@
 {
     [super viewDidLoad];
     
-    [self reloadData];
-}
-
-- (void)reloadData {
-    [self.request cancel];
-    
     self.title = [self pageTitle];
     
     static NSDictionary<NSNumber *, SRGDataProviderBusinessUnitIdentifier> *s_businessUnitIdentifiers;
@@ -62,40 +56,47 @@
     });
     
     SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = s_businessUnitIdentifiers[@(self.mediaListType)];
+    NSAssert(businessUnitIdentifier != nil, @"The business unit must be supported");
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
     
-    if (businessUnitIdentifier) {
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
-        SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
-            self.medias = medias;
-            [self.tableView reloadData];
-        }];
-        [request resume];
-        self.request = request;
+    [self refresh];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+        [self.request cancel];
     }
 }
 
+#pragma mark Getters and setters
+
 - (NSString *)pageTitle
 {
-    NSString *title = nil;
-    switch (self.mediaListType) {
-        case MediaListLivecenterSRF:
-            title = @"SRF Live center";
-            break;
-            
-        case MediaListLivecenterRTS:
-            title = @"RTS Live center";
-            break;
-            
-        case MediaListLivecenterRSI:
-            title = @"RSI Live center";
-            break;
-            
-        default:
-            title = @"Unknown";
-            break;
-    }
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_titles;
+    dispatch_once(&s_onceToken, ^{
+        s_titles = @{ @(MediaListLivecenterSRF) : @"SRF Live center",
+                      @(MediaListLivecenterRTS) : @"RTS Live center",
+                      @(MediaListLivecenterRSI) : @"RSI Live center" };
+    });
+    return s_titles[@(self.mediaListType)] ?: @"Unknown";
+}
+
+#pragma mark Data
+
+- (void)refresh
+{
+    [self.request cancel];
     
-    return title;
+    SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        self.medias = medias;
+        [self.tableView reloadData];
+    }];
+    [request resume];
+    self.request = request;
 }
 
 #pragma mark UITableViewDataSource protocol

@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-OBJC_EXPORT NSURL * ApplicationSettingServiceURL(void);
+OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 
 @interface SettingsViewController : UITableViewController
 
