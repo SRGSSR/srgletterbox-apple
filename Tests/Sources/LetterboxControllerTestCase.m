@@ -253,7 +253,7 @@
     }];
     
     // TTC
-    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"] withChaptersOnly:NO];
+    [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"] withChaptersOnly:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSkipBackward]);
@@ -272,12 +272,12 @@
     XCTAssertTrue([self.controller canSkipBackward]);
     XCTAssertFalse([self.controller canSkipForward]);
     
-    // Use standard skips
+    // Seek far enough from the media end
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -289,7 +289,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller seekPreciselyToTime:CMTimeRangeGetEnd(self.controller.timeRange) withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -335,12 +335,12 @@
     XCTAssertTrue([self.controller canSkipBackward]);
     XCTAssertFalse([self.controller canSkipForward]);
     
-    // Skip backward
+    // Seek far enough from live conditions
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -355,7 +355,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller seekEfficientlyToTime:CMTimeRangeGetEnd(self.controller.timeRange) withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -445,13 +445,5 @@
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
-
-
-// TODO: Properly test and describe guarantees about media, mediaComposition and segment information provided by the
-//       controller, in particular:
-//         - Initially
-//         - When selecting a segment actively
-//         - When reaching a segment during normal playback
-//       The data must be clearly defined so that users can easily find which information they need to display.
 
 @end
