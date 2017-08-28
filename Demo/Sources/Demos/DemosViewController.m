@@ -16,7 +16,7 @@
 
 @interface DemosViewController ()
 
-@property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsButtonItem;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsBarButtonItem;
 
 @end
 
@@ -461,7 +461,7 @@
     settingsViewController.modalPresentationStyle = UIModalPresentationPopover;
     
     settingsViewController.popoverPresentationController.delegate = self;
-    settingsViewController.popoverPresentationController.barButtonItem = self.settingsButtonItem;
+    settingsViewController.popoverPresentationController.barButtonItem = self.settingsBarButtonItem;
     
     [self presentViewController:settingsViewController
                        animated:YES
