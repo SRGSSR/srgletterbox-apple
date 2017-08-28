@@ -14,10 +14,13 @@
 @interface MediaListViewController ()
 
 @property (nonatomic) MediaListType mediaListType;
+
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
+
+@property (nonatomic, weak) UIRefreshControl *refreshControl;
 
 @end
 
@@ -59,6 +62,11 @@
     NSAssert(businessUnitIdentifier != nil, @"The business unit must be supported");
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
     
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView insertSubview:refreshControl atIndex:0];
+    self.refreshControl = refreshControl;
+    
     [self refresh];
 }
 
@@ -92,6 +100,10 @@
     [self.request cancel];
     
     SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        if (self.refreshControl.refreshing) {
+            [self.refreshControl endRefreshing];
+        }
+        
         self.medias = medias;
         [self.tableView reloadData];
     }];
@@ -130,6 +142,13 @@
     }
     
     [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
+#pragma mark Actions
+
+- (void)refresh:(id)sender
+{
+    [self refresh];
 }
 
 @end
