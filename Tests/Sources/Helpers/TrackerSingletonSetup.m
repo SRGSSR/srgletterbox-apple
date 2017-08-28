@@ -9,7 +9,10 @@
 // The singleton can be only setup once. Do not perform in a test case setup
 __attribute__((constructor)) static void SetupTestSingletonTracker(void)
 {
-    [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierTEST
-                                                     comScoreVirtualSite:@"rts-app-test-v"
-                                                     netMetrixIdentifier:@"test"];
+    SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
+                                                                                                       container:7
+                                                                                             comScoreVirtualSite:@"rts-app-test-v"
+                                                                                             netMetrixIdentifier:@"test"];
+    configuration.unitTesting = YES;
+    [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
 }

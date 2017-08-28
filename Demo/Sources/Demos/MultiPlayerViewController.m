@@ -6,7 +6,7 @@
 
 #import "MultiPlayerViewController.h"
 
-#import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -52,6 +52,10 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
     
+    multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
+    
     multiPlayerViewController.URN = URN;
     multiPlayerViewController.URN1 = URN1;
     multiPlayerViewController.URN2 = URN2;
@@ -70,8 +74,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
@@ -98,9 +100,9 @@
                                                object:nil];
     
     if (! self.letterboxController.pictureInPictureActive) {
-        [self.letterboxController playURN:self.URN];
-        [self.smallLetterboxController1 playURN:self.URN1];
-        [self.smallLetterboxController2 playURN:self.URN2];
+        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+        [self.smallLetterboxController1 playURN:self.URN1 withChaptersOnly:NO];
+        [self.smallLetterboxController2 playURN:self.URN2 withChaptersOnly:NO];
     }
 }
 
@@ -139,12 +141,12 @@
 
 - (void)letterboxDidStartPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_start"];
 }
 
 - (void)letterboxDidEndPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_end"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_end"];
 }
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture

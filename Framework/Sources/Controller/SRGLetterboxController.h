@@ -69,6 +69,24 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRetryNotification;
 OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 
 /**
+ *  Controller data availability.
+ */
+typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
+    /**
+     *  No data is available.
+     */
+    SRGLetterboxDataAvailabilityNone,
+    /**
+     *  Data is being loaded.
+     */
+    SRGLetterboxDataAvailabilityLoading,
+    /**
+     *  Data has been loaded once.
+     */
+    SRGLetterboxDataAvailabilityLoaded
+};
+
+/**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
@@ -100,21 +118,24 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  the player paused (if playback is not started in the completion handler). If you want playback to start right after 
  *  preparation, call `-play` from the completion handler.
  *
- *  @param URN          The URN to prepare.
- *  @param quality      The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
- *  @param startBitRate The bit rate the media should start playing with, in kbps. This parameter is a recommendation
- *                      with no result guarantee, though it should in general be applied. The nearest available
- *                      quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
- *                      ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
+ *  @param URN               The URN to prepare.
+ *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
+ *  @param startBitRate      The bit rate the media should start playing with, in kbps. This parameter is a recommendation
+ *                           with no result guarantee, though it should in general be applied. The nearest available
+ *                           quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
+ *                           ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
+ *  @param chaptersOnly      If set to `YES`, only chapters will be played, otherwise a possible mixture of chapters and
+ *                           segments. U
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @discussion Does nothing if the URN is the one currently being played.  You might want to set the `resumesAfterRetry` 
+ *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAfterRetry` 
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
     withPreferredQuality:(SRGQuality)quality
             startBitRate:(NSInteger)startBitRate
+            chaptersOnly:(BOOL)chaptersOnly
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
@@ -125,6 +146,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 - (void)prepareToPlayMedia:(SRGMedia *)media
       withPreferredQuality:(SRGQuality)quality
               startBitRate:(NSInteger)startBitRate
+              chaptersOnly:(BOOL)chaptersOnly
          completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
@@ -161,12 +183,47 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 - (void)reset;
 
 /**
+ *  Ask the controller to seek to a given location. A paused player remains paused, while a playing player remains
+ *  playing. You can use the completion handler to change the player state if needed, e.g. to automatically
+ *  resume playback after a seek has been performed on a paused player.
+ *
+ *  @param time              The time to start at. If the time is invalid it will be set to `kCMTimeZero`. Setting a 
+ *                           start time outside the actual media time range will seek to the nearest location (either 
+ *                           zero or the end time).
+ *  @param toleranceBefore   The tolerance allowed before `time`. Use `kCMTimePositiveInfinity` for no tolerance
+ *                           requirements.
+ *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
+ *                           requirements.
+ *  @param completionHandler The completion block called when the seek ends. If the seek has been interrupted by
+ *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
+ *                           with `finished` set to `YES`.
+ *
+ *  @discussion Upon completion handler entry, the playback state will be up-to-date if the seek finished, otherwise
+ *              the player will still be in the seeking state. Note that if the media was not ready to play, seeking
+ *              won't take place, and the completion handler won't be called.
+ */
+- (void)seekToTime:(CMTime)time
+withToleranceBefore:(CMTime)toleranceBefore
+    toleranceAfter:(CMTime)toleranceAfter
+ completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Return the current data availability. KVO-observable.
+ *
+ *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods
+ *              to play new content.
+ */
+@property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
+
+/**
  *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;
 
 /**
- *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss). Default is `YES`.
+ *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss, when the start time of
+ *  a previously not available media has been reached, or when the content URL has changed). Default is `YES`. If 
+ *  set to `NO`, playback will only be prepared, but playback will not actually start.
  */
 @property (nonatomic) BOOL resumesAfterRetry;
 
@@ -242,7 +299,8 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
-   withCompletionHandler:(nullable void (^)(void))completionHandler;
+        withChaptersOnly:(BOOL)chaptersOnly
+       completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Prepare to play the specified media (Uniform Resource Name).
@@ -251,7 +309,8 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
-     withCompletionHandler:(nullable void (^)(void))completionHandler;
+          withChaptersOnly:(BOOL)chaptersOnly
+         completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -260,7 +319,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified media.
@@ -269,7 +328,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -277,7 +336,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)playURN:(SRGMediaURN *)URN;
+- (void)playURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified media.
@@ -285,7 +344,21 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)playMedia:(SRGMedia *)media;
+- (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly;
+
+/**
+ *  Ask the controller to seek to a given location efficiently (the seek might be not perfeclty accurate but will be faster).
+ *
+ *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
+ */
+- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Ask the controller to seek to a given location with no tolerance (this might incur some decoding overhead).
+ *
+ *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
+ */
+- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 @end
 
@@ -316,17 +389,17 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
 /**
- *  The current subdivision being played (if any).
+ *  The current subdivision being played.
  */
 @property (nonatomic, readonly, nullable) SRGSubdivision *subdivision;
 
 /**
- *  The current subdivision (segment or chapter) being played, if any, as an `SRGMedia` object.
+ *  The current subdivision (segment or chapter) being played, as an `SRGMedia` object.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *subdivisionMedia;
 
 /**
- *  The current full-length information (if available).
+ *  The current full-length information .
  */
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 
@@ -377,12 +450,14 @@ OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
 @interface SRGLetterboxController (PeriodicUpdates)
 
 /**
- *  Time interval between stream availability checks. Live streams might change (e.g. if a stream is toggled between DVR 
- *  and live-only versions) or not be available anymore (e.g. if the location of the user changes and the stream is not
- *  available for the new location). If a stream is changed, the new one is automatically played, otherwise playback
- *  stops with an error.
+ *  Time interval between stream availability checks.
  *
  *  Default is 5 minutes, and minimum is 10 seconds.
+ *
+ *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
+ *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
+ *              location). If a stream is changed, the new one is automatically played, otherwise playback stops with an 
+ *              error. Some streams might also only be available within a specific date range.
  */
 @property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
 

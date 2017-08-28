@@ -6,6 +6,8 @@
 
 #import "SimplePlayerViewController.h"
 
+#import "SettingsViewController.h"
+
 @interface SimplePlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
@@ -23,6 +25,7 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+    viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.URN = URN;
     return viewController;
 }
@@ -46,7 +49,7 @@
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
-    [self.letterboxController playURN:self.URN];
+    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

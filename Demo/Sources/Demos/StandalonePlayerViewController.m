@@ -6,7 +6,7 @@
 
 #import "StandalonePlayerViewController.h"
 
-#import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
@@ -40,6 +40,7 @@
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
         viewController.URN = URN;
         return viewController;
     }
@@ -57,11 +58,9 @@
 {
     [super viewDidLoad];
     
-    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
-    
     self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
     
-    [self.letterboxController playURN:self.URN];
+    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -99,12 +98,12 @@
 
 - (void)letterboxDidStartPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_start"];
 }
 
 - (void)letterboxDidEndPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_end"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_end"];
 }
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture

@@ -161,6 +161,7 @@ static void commonInit(SRGLetterboxTimelineView *self);
     
     void (^animations)(void) = ^{
         if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
+            [self layoutIfNeeded];
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
                                         atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:NO];
@@ -169,7 +170,11 @@ static void commonInit(SRGLetterboxTimelineView *self);
     
     if (animated) {
         // Override the standard scroll to item animation duration for faster snapping
-        [UIView animateWithDuration:0.1 animations:animations completion:nil];
+        [self layoutIfNeeded];
+        [UIView animateWithDuration:0.1 animations:^{
+            animations();
+            [self layoutIfNeeded];
+        } completion:nil];
     }
     else {
         animations();

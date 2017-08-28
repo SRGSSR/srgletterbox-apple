@@ -7,7 +7,7 @@
 #import "ModalPlayerViewController.h"
 
 #import "ModalTransition.h"
-#import "NSBundle+LetterboxDemo.h"
+#import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -16,6 +16,7 @@
 @interface ModalPlayerViewController ()
 
 @property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic) BOOL chaptersOnly;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -41,7 +42,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -54,7 +55,9 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
+        viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.URN = URN;
+        viewController.chaptersOnly = chaptersOnly;
         return viewController;
     }
 }
@@ -65,13 +68,23 @@
     return nil;
 }
 
+#pragma mark Getters and setters
+
+- (NSTimeInterval)streamAvailabilityCheckInterval
+{
+    return self.letterboxController.streamAvailabilityCheckInterval;
+}
+
+- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+{
+    self.letterboxController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
+}
+
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
     
     // Use custom modal transition
     self.transitioningDelegate = self;
@@ -91,7 +104,10 @@
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    [self.letterboxController playURN:self.URN];
+    self.letterboxController.contentURLOverridingBlock = ^NSURL * _Nullable(SRGMediaURN * _Nonnull URN) {
+        return [URN isEqual:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8806790"]] ? [NSURL URLWithString:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
+    };
+    [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
     
     [self reloadData];
 }
@@ -129,12 +145,7 @@
 - (void)reloadDataOverriddenWithMedia:(SRGMedia *)media
 {
     if (! media) {
-        if (self.URN.mediaType == SRGMediaTypeVideo && self.letterboxController.fullLengthMedia) {
-            media = self.letterboxController.fullLengthMedia;
-        }
-        else {
-            media = self.letterboxController.media;
-        }
+        media = self.letterboxController.subdivisionMedia;
     }
     
     self.titleLabel.text = media.title;
@@ -168,12 +179,12 @@
 
 - (void)letterboxDidStartPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_start"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_start"];
 }
 
 - (void)letterboxDidEndPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithTitle:@"pip_end"];
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_end"];
 }
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
@@ -196,7 +207,7 @@
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive
 {
     if (interactive) {
-        SRGMedia *media = subdivision ? [self.letterboxController.mediaComposition mediaForSubdivision:subdivision] : nil;
+        SRGMedia *media = subdivision ? [self.letterboxController.mediaComposition mediaForSubdivision:subdivision] : self.letterboxController.fullLengthMedia;
         [self reloadDataOverriddenWithMedia:media];
     }
 }
@@ -378,7 +389,7 @@
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataOverriddenWithMedia:self.letterboxController.subdivisionMedia];
+    [self reloadDataOverriddenWithMedia:nil];
 }
 
 @end

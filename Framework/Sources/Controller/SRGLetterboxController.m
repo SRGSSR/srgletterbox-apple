@@ -7,6 +7,7 @@
 #import "SRGLetterboxController.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -58,6 +59,36 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return s_businessUnitIdentifiers[@(vendor)];
 }
 
+static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *mediaComposition)
+{
+    SRGChapter *mainChapter = mediaComposition.mainChapter;
+    SRGBlockingReason blockingReason = mainChapter.blockingReason;
+    
+    NSDate *currentDate = [NSDate date];
+    
+    // Observe start and end dates first. If we are offline, the date range information is more reliable blocking reasons,
+    // if retrieved easlier, might be outdated.
+    if (mainChapter.startDate && [currentDate compare:mainChapter.startDate] == NSOrderedAscending) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotAvailable
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonStartDate) }];
+    }
+    else if (mainChapter.endDate && [mainChapter.endDate compare:currentDate] == NSOrderedAscending) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeNotAvailable
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate) }];
+    }
+    // Date blocking has been dealt with more reliably above
+    else if (blockingReason != SRGBlockingReasonNone && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) {
+        return [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                   code:SRGLetterboxErrorCodeBlocked
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
+    }
+    else {
+        return nil;
+    }
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -69,19 +100,22 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 @property (nonatomic) SRGSubdivision *subdivision;
 @property (nonatomic) SRGQuality quality;
 @property (nonatomic) NSInteger startBitRate;
+@property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
+@property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
-@property (nonatomic, weak) id streamAvailabilityPeriodicTimeObserver;
-@property (nonatomic, weak) id channelUpdatePeriodicTimeObserver;
+// Use timers (not time observers) so that updates are performed also when the controller is idle
+@property (nonatomic) NSTimer *streamAvailabilyCheckTimer;
+@property (nonatomic) NSTimer *channelUpdateTimer;
 
-// For successive seeks, update the target time (previous seeks are cancelled). This makes it possible to seek faster
-// to a desired location
-@property (nonatomic) CMTime seekTargetTime;
+// Timers for single metadata updates at start and end times
+@property (nonatomic) NSTimer *startDateTimer;
+@property (nonatomic) NSTimer *endDateTimer;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
@@ -121,7 +155,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
             self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
             player.muted = self.muted;
         };
-        self.seekTargetTime = kCMTimeInvalid;
         
         // Also register the associated periodic time observers
         self.streamAvailabilityCheckInterval = 5. * 60.;
@@ -167,8 +200,11 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)dealloc
 {
-    [self.mediaPlayerController removePeriodicTimeObserver:self.streamAvailabilityPeriodicTimeObserver];
-    [self.mediaPlayerController removePeriodicTimeObserver:self.channelUpdatePeriodicTimeObserver];
+    // Invalidate timers
+    self.streamAvailabilyCheckTimer = nil;
+    self.channelUpdateTimer = nil;
+    self.startDateTimer = nil;
+    self.endDateTimer = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -264,36 +300,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
     
     @weakify(self)
-    self.streamAvailabilityPeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(streamAvailabilityCheckInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+    self.streamAvailabilyCheckTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        
-        [[self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-            if (error) {
-                return;
-            }
-            
-            // If the user location has changed, she might be in a location where the content is now blocked
-            SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-            if (blockingReason != SRGBlockingReasonNone) {
-                [self.mediaPlayerController stop];
-                
-                NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                     code:SRGLetterboxErrorCodeBlocked
-                                                 userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
-                [self reportError:error];
-                return;
-            }
-            
-            // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
-            NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
-            NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
-            if (! [currentResources isEqualToSet:fetchedResources]) {
-                [self stop];
-                
-                SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
-                [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate];
-            }
-        }] resume];
+        [self checkStreamAvailability];
     }];
 }
 
@@ -305,8 +314,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     @weakify(self)
-    self.channelUpdatePeriodicTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(channelUpdateInterval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-        @strongify(self)
+    self.channelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+       @strongify(self)
         
         [self updateChannel];
     }];
@@ -319,7 +328,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (SRGMedia *)subdivisionMedia
 {
-    return self.subdivision ? [self.mediaComposition mediaForSubdivision:self.subdivision] : nil;
+    return [self.mediaComposition mediaForSubdivision:self.subdivision];
 }
 
 - (BOOL)isContentURLOverridden
@@ -329,6 +338,30 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     
     return self.contentURLOverridingBlock && self.contentURLOverridingBlock(self.URN);
+}
+
+- (void)setStreamAvailabilyCheckTimer:(NSTimer *)streamAvailabilyCheckTimer
+{
+    [_streamAvailabilyCheckTimer invalidate];
+    _streamAvailabilyCheckTimer = streamAvailabilyCheckTimer;
+}
+
+- (void)setChannelUpdateTimer:(NSTimer *)channelUpdateTimer
+{
+    [_channelUpdateTimer invalidate];
+    _channelUpdateTimer = channelUpdateTimer;
+}
+
+- (void)setStartDateTimer:(NSTimer *)startDateTimer
+{
+    [_startDateTimer invalidate];
+    _startDateTimer = startDateTimer;
+}
+
+- (void)setEndDateTimer:(NSTimer *)endDateTimer
+{
+    [_endDateTimer invalidate];
+    _endDateTimer = endDateTimer;
 }
 
 #pragma mark Periodic time observers
@@ -371,7 +404,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     self.URN = URN;
     self.media = media;
     self.mediaComposition = mediaComposition;
-    self.subdivision = subdivision;
+    self.subdivision = subdivision ?: self.mediaComposition.mainChapter;
     self.channel = channel ?: media.channel;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
@@ -406,7 +439,71 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
     }
     
+    NSTimeInterval startTimeInterval = [media.startDate timeIntervalSinceNow];
+    if (startTimeInterval > 0.) {
+        @weakify(self)
+        self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            [self checkStreamAvailability];
+        }];
+    }
+    else {
+        self.startDateTimer = nil;
+    }
+    
+    NSTimeInterval endTimeInterval = [media.endDate timeIntervalSinceNow];
+    if (endTimeInterval > 0.) {
+        @weakify(self)
+        self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            [self checkStreamAvailability];
+        }];
+    }
+    else {
+        self.endDateTimer = nil;
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
+}
+
+- (void)checkStreamAvailability
+{
+    [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        // Update metadata if retrieved, otherwise perform a check with the metadata we already have
+        if (mediaComposition) {
+            [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
+        }
+        else {
+            mediaComposition = self.mediaComposition;
+        }
+        
+        if (! mediaComposition) {
+            return;
+        }
+        
+        // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+        if (blockingReasonError) {
+            [self stop];
+            [self reportError:blockingReasonError];
+            return;
+        }
+        
+        // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
+        NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
+        NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
+        if (! [currentResources isEqualToSet:fetchedResources]) {
+            [self stop];
+        }
+        
+        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+        if (self.resumesAfterRetry) {
+            [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        }
+        else {
+            [self prepareToPlayMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
+        }
+    }] resume];
 }
 
 - (void)updateChannel
@@ -435,17 +532,17 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 #pragma mark Playback
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN media:nil withPreferredQuality:quality startBitRate:startBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:URN media:nil withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:nil media:media withPreferredQuality:quality startBitRate:startBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:nil media:media withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -466,18 +563,29 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     [self resetWithURN:URN media:media];
     
-    // Save the quality settings for restarting after connection loss
+    // Save the settings for restarting after connection loss
     self.quality = quality;
     self.startBitRate = startBitRate;
+    self.chaptersOnly = chaptersOnly;
     
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
         @strongify(self)
         
         if (finished) {
-            [self reportError:error];
+            if (! error) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            }
+            else {
+                if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+                    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+                }
+                [self reportError:error];
+            }
         }
     }];
+    
+    self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
     
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
@@ -485,6 +593,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         if (contentURL) {
             // Media readily available. Done
             if (media) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 [self.mediaPlayerController playURL:contentURL];
             }
             // Retrieve the media
@@ -512,7 +621,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         }
     }
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         @strongify(self)
         
         if (error) {
@@ -524,12 +633,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         [self updateChannel];
         
         // Do not go further if the content is blocked
-        SRGBlockingReason blockingReason = mediaComposition.mainChapter.blockingReason;
-        if (blockingReason != SRGBlockingReasonNone) {
-            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                 code:SRGLetterboxErrorCodeBlocked
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(mediaComposition.mainChapter.blockingReason) }];
-            [self.requestQueue reportError:error];
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+        if (blockingReasonError) {
+            [self.requestQueue reportError:blockingReasonError];
             return;
         }
         
@@ -568,7 +674,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     // Build the media composition for the provided subdivision
     SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
     if (! mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is availble. Cannot switch to another subdivision");
+        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is available. Cannot switch to another subdivision");
         return NO;
     }
     
@@ -583,7 +689,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     }
     // Playing another segment from the same media. Seek
     else {
-        self.seekTargetTime = subdivision.srg_timeRange.start;
         [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
         }];
@@ -614,7 +719,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)retry
 {
-    void (^prepareCompletioHandler)(void) = ^{
+    void (^prepareToPlayCompletionHandler)(void) = ^{
         if (self.resumesAfterRetry) {
             [self play];
         }
@@ -622,10 +727,10 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:prepareCompletioHandler];
+        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareToPlayCompletionHandler];
     }
     else if (self.URN) {
-        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate completionHandler:prepareCompletioHandler];
+        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareToPlayCompletionHandler];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
@@ -652,17 +757,23 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         self.dataProvider = nil;
     }
     
-    // Update metadata first so that it is current when the player status is changed below
-    [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    [self.mediaPlayerController reset];
+    [self.requestQueue cancel];
     
     self.error = nil;
-    self.seekTargetTime = kCMTimeInvalid;
+    
+    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
     
-    [self.mediaPlayerController reset];
-    [self.requestQueue cancel];
+    // Update metadata first so that it is current when the player status is changed below
+    [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+}
+
+- (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
+{
+    [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
 - (void)reportError:(NSError *)error
@@ -695,44 +806,54 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 #pragma mark Playback (convenience)
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN withCompletionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media withCompletionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
+    [self prepareToPlayMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate
+- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
 {
     @weakify(self)
-    [self prepareToPlayURN:URN withPreferredQuality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayURN:URN withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
         
         [self play];
     }];
 }
 
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate
+- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
 {
     @weakify(self)
-    [self prepareToPlayMedia:media withPreferredQuality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayMedia:media withPreferredQuality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
         
         [self play];
     }];
 }
 
-- (void)playURN:(SRGMediaURN *)URN
+- (void)playURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly
 {
-    [self playURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self playURN:URN withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
 }
 
-- (void)playMedia:(SRGMedia *)media
+- (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly
 {
-    [self playMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self playMedia:media withPreferredQuality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
+}
+
+- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    [self seekToTime:time withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:completionHandler];
+}
+
+- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    [self seekToTime:time withToleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completionHandler];
 }
 
 #pragma mark Standard seeks
@@ -749,7 +870,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (BOOL)canSkipToLive
 {
-    return ((self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) && [self canSkipForward]);
+    return self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && [self canSkipForward];
 }
 
 - (void)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -766,12 +887,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (CMTime)seekStartTime
 {
-    return CMTIME_IS_VALID(self.seekTargetTime) ? self.seekTargetTime : self.mediaPlayerController.player.currentTime;
+    return CMTIME_IS_INDEFINITE(self.mediaPlayerController.seekTargetTime) ? self.mediaPlayerController.player.currentTime : self.mediaPlayerController.seekTargetTime;
 }
 
 - (BOOL)canSkipBackwardFromTime:(CMTime)time
 {
-    if (CMTIME_IS_INVALID(time)) {
+    if (CMTIME_IS_INDEFINITE(time)) {
         return NO;
     }
     
@@ -781,7 +902,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (BOOL)canSkipForwardFromTime:(CMTime)time
 {
-    if (CMTIME_IS_INVALID(time)) {
+    if (CMTIME_IS_INDEFINITE(time)) {
         return NO;
     }
     
@@ -797,8 +918,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         return;
     }
     
-    self.seekTargetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSkipInterval, NSEC_PER_SEC));
-    [self.mediaPlayerController seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
+    CMTime targetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSkipInterval, NSEC_PER_SEC));
+    [self seekToTime:targetTime withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
         if (finished) {
             [self.mediaPlayerController play];
         }
@@ -813,8 +934,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
         return;
     }
     
-    self.seekTargetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSkipInterval, NSEC_PER_SEC));
-    [self.mediaPlayerController seekEfficientlyToTime:self.seekTargetTime withCompletionHandler:^(BOOL finished) {
+    CMTime targetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSkipInterval, NSEC_PER_SEC));
+    [self seekToTime:targetTime withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
         if (finished) {
             [self.mediaPlayerController play];
         }
@@ -824,10 +945,8 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 - (void)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) {
-        CMTimeRange timeRange = self.mediaPlayerController.timeRange;
-        
-        [self.mediaPlayerController seekEfficientlyToTime:CMTimeRangeGetEnd(timeRange) withCompletionHandler:^(BOOL finished) {
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
+        [self seekToTime:CMTimeRangeGetEnd(self.mediaPlayerController.timeRange) withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
             if (finished) {
                 [self.mediaPlayerController play];
             }
@@ -860,10 +979,6 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     // Do not let pause live streams, stop playback
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self.mediaPlayerController stop];
-    }
-    
-    if (playbackState != SRGMediaPlayerPlaybackStateSeeking) {
-        self.seekTargetTime = kCMTimeInvalid;
     }
 }
 

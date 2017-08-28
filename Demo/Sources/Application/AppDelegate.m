@@ -21,6 +21,8 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
+    application.accessibilityLanguage = @"en";
+    
 #ifndef DEBUG
     
 #ifdef NIGHTLY
@@ -34,9 +36,13 @@
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
     
-    [[SRGAnalyticsTracker sharedTracker] startWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
-                                                     comScoreVirtualSite:@"app-test-v"
-                                                     netMetrixIdentifier:@"test"];
+    SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
+                                                                                                       container:10
+                                                                                             comScoreVirtualSite:@"rts-app-test-v"
+                                                                                             netMetrixIdentifier:@"test"];
+    configuration.centralized = YES;
+    
+    [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];

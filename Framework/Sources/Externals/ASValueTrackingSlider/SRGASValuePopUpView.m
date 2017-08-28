@@ -230,7 +230,7 @@ static NSString *const SliderFillColorAnim = @"fillColor";
     return CGSizeMake(w, h);
 }
 
-- (void)showAnimated:(BOOL)animated completionBlock:(void (^)())block
+- (void)showAnimated:(BOOL)animated completionBlock:(void (^)(void))block
 {
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
@@ -256,7 +256,7 @@ static NSString *const SliderFillColorAnim = @"fillColor";
         } [CATransaction commit];
 }
 
-- (void)hideAnimated:(BOOL)animated completionBlock:(void (^)())block
+- (void)hideAnimated:(BOOL)animated completionBlock:(void (^)(void))block
 {
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
