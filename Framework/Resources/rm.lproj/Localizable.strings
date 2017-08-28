@@ -2,7 +2,7 @@
 "A network issue has been encountered. Please check your Internet connection and network settings" = "Errur da colliaziun. Per plaschair controllar las colliaziuns da internet / rait";
 
 /* Label to explain that a content has expired */
-"Expired" = "Expired";
+"Expired" = "Spirà";
 
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "Live" = "Live";
