@@ -1,6 +1,9 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "È stato rilevato un problema di rete. Si prega di controllare le impostazioni di rete e la connessione Internet";
 
+/* Label to explain that a content has expired */
+"Expired" = "Non più disponibile";
+
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "Live" = "Live";
 

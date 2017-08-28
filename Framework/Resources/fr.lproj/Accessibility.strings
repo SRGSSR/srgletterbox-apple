@@ -19,11 +19,14 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Plein écran";
 
-/* Short media or segment cell hint */
+/* Segment or chapter cell hint */
 "Plays the content." = "Joue le contenu.";
 
 /* Stop button label */
 "Stop" = "Stop";
+
+/* Label to explain that a content will be available in X minutes / seconds. */
+"Available in %@" = "Disponible dans %@";
 
 /* The main area on the letterbox view, where the video or its thumbnail is displayed */
 "Video" = "Vidéo";

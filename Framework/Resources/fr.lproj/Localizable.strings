@@ -1,6 +1,9 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "Un souci de réseau est apparu. Merci de vérifier votre connexion Internet";
 
+/* Label to explain that a content has expired */
+"Expired" = "Expiré";
+
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "Live" = "En direct";
 
