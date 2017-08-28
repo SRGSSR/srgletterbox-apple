@@ -20,8 +20,6 @@
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 
-@property (nonatomic, weak) UIRefreshControl *refreshControl;
-
 @end
 
 @implementation MediaListViewController
