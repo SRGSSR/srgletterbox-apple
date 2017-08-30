@@ -10,7 +10,7 @@
 
 - (SRGMediaAvailability)srg_availability
 {
-    NSDate *nowDate = NSDate.date;
+    NSDate *nowDate = [NSDate date];
     if (self.startDate && [nowDate compare:self.startDate] == NSOrderedAscending) {
         return SRGMediaAvailabilityNotYet;
     }
