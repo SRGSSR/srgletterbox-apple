@@ -58,7 +58,7 @@
 {
     [super viewDidLoad];
     
-    self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+    self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
     [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
@@ -142,7 +142,7 @@
 
 - (IBAction)toggleMirrored:(id)sender
 {
-    [SRGLetterboxService sharedService].mirroredOnExternalScreen = ! [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+    ApplicationSettingSetMirroredOnExternalScreen(! ApplicationSettingIsMirroredOnExternalScreen());
 }
 
 @end

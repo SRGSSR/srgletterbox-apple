@@ -10,6 +10,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 
+OBJC_EXPORT BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
+OBJC_EXPORT void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);
+
 @interface SettingsViewController : UITableViewController
 
 @end

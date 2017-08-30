@@ -10,11 +10,25 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
+NSString * const LetterboxSRGSettingMirroredOnExternalScreen = @"LetterboxSRGSettingMirroredOnExternalScreen";
 
 NSURL *ApplicationSettingServiceURL(void)
 {
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
+}
+
+BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxSRGSettingMirroredOnExternalScreen];
+}
+
+void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen)
+{
+    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
 @interface ServerSetting : NSObject
@@ -157,13 +171,13 @@ NSURL *ApplicationSettingServiceURL(void)
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Mirrored screens state in settings view");
-                    cell.accessoryType = (! [SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = (! ApplicationSettingIsMirroredOnExternalScreen()) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
                     cell.textLabel.text = NSLocalizedString(@"Enabled", @"Mirrored screens state in settings view");
-                    cell.accessoryType = ([SRGLetterboxService sharedService].mirroredOnExternalScreen) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = (ApplicationSettingIsMirroredOnExternalScreen()) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -195,7 +209,7 @@ NSURL *ApplicationSettingServiceURL(void)
         }
             
         case 1: {
-            [SRGLetterboxService sharedService].mirroredOnExternalScreen = (indexPath.row == 1);
+            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
             break;
         }
             
