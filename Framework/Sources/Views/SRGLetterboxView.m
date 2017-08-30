@@ -1327,5 +1327,9 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     
+    if (@available(iOS 11.0, *)) {
+        self.accessibilityIgnoresInvertColors = YES;
+    }
+    
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
 }
