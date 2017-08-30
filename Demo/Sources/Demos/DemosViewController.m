@@ -10,6 +10,7 @@
 #import "MediaListViewController.h"
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
@@ -37,6 +38,8 @@
     [super viewDidLoad];
     
     self.title = [self pageTitle];
+    
+    self.settingsBarButtonItem.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Settings", @"Settings button label on main view");
 }
 
 #pragma mark Getters and setters
