@@ -143,6 +143,7 @@ static void commonInit(SRGLetterboxView *self);
     self.loadingImageView = loadingImageView;
     
     self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
+    self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
