@@ -62,9 +62,11 @@
     
     SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = s_businessUnitIdentifiers[@(self.mediaListType)];
     NSAssert(businessUnitIdentifier != nil, @"The business unit must be supported");
+
     NSURL *serviceURL = (self.mediaListType == MediaListMMFTopicList) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL businessUnitIdentifier:businessUnitIdentifier];
-    
+    self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
+        
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:refreshControl atIndex:0];

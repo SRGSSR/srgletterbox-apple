@@ -44,6 +44,8 @@
     
     self.letterboxController.serviceURL = ApplicationSettingServiceURL();
     self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
+    self.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
     self.progressView.hidden = YES;
 }

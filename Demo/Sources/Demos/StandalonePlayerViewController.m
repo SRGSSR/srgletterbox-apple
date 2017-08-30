@@ -40,9 +40,13 @@
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        
+        viewController.URN = URN;
+
         viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-        viewController.URN = URN;
+        viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+        
         return viewController;
     }
 }

@@ -145,6 +145,7 @@
 		6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */; };
 		6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
 		6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
+		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
 		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
@@ -389,6 +390,8 @@
 		6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-320.pdf"; sourceTree = "<group>"; };
 		6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGProgram+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGProgram+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6FCB995B1F56948D00790EAA /* ServerSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerSettings.h; sourceTree = "<group>"; };
+		6FCB995C1F56948D00790EAA /* ServerSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerSettings.m; sourceTree = "<group>"; };
 		6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlayerViewController.h; sourceTree = "<group>"; };
 		6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiPlayerViewController.m; sourceTree = "<group>"; };
 		6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MultiPlayerViewController.storyboard; sourceTree = "<group>"; };
@@ -590,6 +593,8 @@
 				6FB017991E975F87004CCAF8 /* ModalTransition.m */,
 				084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */,
 				6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */,
+				6FCB995B1F56948D00790EAA /* ServerSettings.h */,
+				6FCB995C1F56948D00790EAA /* ServerSettings.m */,
 				6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */,
 				6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */,
 			);
@@ -999,6 +1004,7 @@
 				6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */,
 				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */,
 				08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */,
+				6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

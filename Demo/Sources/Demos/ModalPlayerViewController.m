@@ -54,11 +54,15 @@
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-        viewController.favoritedSubdivisions = [NSMutableArray array];
-        viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
-        viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
+
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
+        viewController.favoritedSubdivisions = [NSMutableArray array];
+
+        viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
+        viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
+        viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+        
         return viewController;
     }
 }

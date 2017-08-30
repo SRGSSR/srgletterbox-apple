@@ -25,9 +25,13 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+
+    viewController.URN = URN;
+
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-    viewController.URN = URN;
+    viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    
     return viewController;
 }
 
