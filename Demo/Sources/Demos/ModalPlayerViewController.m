@@ -7,7 +7,6 @@
 #import "ModalPlayerViewController.h"
 
 #import "ModalTransition.h"
-#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
@@ -87,7 +86,7 @@
 {
     [super viewDidLoad];
     
-    self.closeButton.accessibilityLabel = SRGLetterboxDemoAccessibilityLocalizedString(@"Close", @"Close button label");
+    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
     // Use custom modal transition
     self.transitioningDelegate = self;
