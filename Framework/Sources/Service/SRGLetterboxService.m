@@ -34,7 +34,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @property (nonatomic) YYWebImageOperation *imageOperation;
 
 @property (nonatomic) NSURL *currentArtworkURL;
-@property (nonatomic) MPMediaItemArtwork *currentArtwork;
+@property (nonatomic) UIImage *currentArtworkImage;
 
 @end
 
@@ -323,7 +323,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     if (! media) {
         self.currentArtworkURL = nil;
-        self.currentArtwork = nil;
+        self.currentArtworkImage = nil;
         
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
         return;
@@ -381,14 +381,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         artworkURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
     }
     
-    if (! [artworkURL isEqual:self.currentArtworkURL] || ! self.currentArtwork) {
+    if (! [artworkURL isEqual:self.currentArtworkURL] || ! self.currentArtworkImage) {
         // SRGLetterboxImageURL might return file URLs for overridden images
         if (artworkURL.fileURL) {
             UIImage *image = [UIImage imageWithContentsOfFile:artworkURL.path];
             MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
             nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
             self.currentArtworkURL = artworkURL;
-            self.currentArtwork = artwork;
+            self.currentArtworkImage = image;
         }
         else {
             NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
@@ -407,7 +407,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                             [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
                             
                             self.currentArtworkURL = artworkURL;
-                            self.currentArtwork = artwork;
+                            self.currentArtworkImage = image;
                         }
                         else {
                             MPMediaItemArtwork *placeholderArtwork = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
@@ -415,25 +415,30 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                             [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
                             
                             self.currentArtworkURL = placeholderImageURL;
-                            self.currentArtwork = placeholderArtwork;
+                            self.currentArtworkImage = placeholderImage;
                         }
                     });
                 }];
                 
                 // Keep the current artwork during retrieval (even if it does not match) for smoother transitions
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = self.currentArtwork;
+                if (self.currentArtworkImage) {
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:self.currentArtworkImage];
+                }
+                else {
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+                }
             }
             else {
                 MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
                 
                 self.currentArtworkURL = placeholderImageURL;
-                self.currentArtwork = artwork;
+                self.currentArtworkImage = placeholderImage;
             }
         }
     }
     else {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = self.currentArtwork;
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:self.currentArtworkImage];
     }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
