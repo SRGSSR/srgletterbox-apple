@@ -7,6 +7,8 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <XCTest/XCTest.h>
 
+#import "NSNotificationCenter+Tests.h"
+
 // Imports required to test internals
 #import "SRGLetterboxController+Private.h"
 
@@ -444,6 +446,59 @@
     [self.controller playURN:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8297891"] withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
+ - (void)testcontentURLOverriding
+{
+    NSURL *overridingURL = [NSURL URLWithString:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+    self.controller.channelUpdateInterval = 10.f;
+    self.controller.streamAvailabilityCheckInterval = 10.f;
+    self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(SRGMediaURN * _Nonnull URN) {
+        return overridingURL;
+    };
+    
+    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:URN withChaptersOnly:NO];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertEqualObjects(self.controller.mediaPlayerController.contentURL, overridingURL);
+    
+    // Play for a while. No playback notifications must be received
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
+    }];
+    
+    [self expectationForElapsedTimeInterval:12. withHandler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    // Wait until the stream is pause
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    [self.controller pause];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Waiting for a while. No playback notifications must be received
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
+    }];
+    
+    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+    }];
 }
 
 @end

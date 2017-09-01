@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		080A6B161E8E79EF0084F484 /* SRGControlsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 080A6B141E8E79EF0084F484 /* SRGControlsView.h */; };
 		080A6B171E8E79EF0084F484 /* SRGControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 080A6B151E8E79EF0084F484 /* SRGControlsView.m */; };
+		0862A6AD1F596615002D6ACF /* NSNotificationCenter+Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0862A6AC1F596615002D6ACF /* NSNotificationCenter+Tests.m */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
@@ -298,6 +299,8 @@
 		080A6B151E8E79EF0084F484 /* SRGControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGControlsView.m; sourceTree = "<group>"; };
 		08152F2A1E9269290053AB34 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Localizable.strings; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
+		0862A6AB1F596615002D6ACF /* NSNotificationCenter+Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+Tests.h"; sourceTree = "<group>"; };
+		0862A6AC1F596615002D6ACF /* NSNotificationCenter+Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+Tests.m"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -750,6 +753,8 @@
 			isa = PBXGroup;
 			children = (
 				6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */,
+				0862A6AB1F596615002D6ACF /* NSNotificationCenter+Tests.h */,
+				0862A6AC1F596615002D6ACF /* NSNotificationCenter+Tests.m */,
 				6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */,
 			);
 			path = Helpers;
@@ -1007,6 +1012,7 @@
 			files = (
 				6FAB3B8F1E29066300CC2197 /* LetterboxControllerTestCase.m in Sources */,
 				6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */,
+				0862A6AD1F596615002D6ACF /* NSNotificationCenter+Tests.m in Sources */,
 				6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
