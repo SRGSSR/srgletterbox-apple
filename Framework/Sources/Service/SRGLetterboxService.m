@@ -455,7 +455,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:size];
             UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
             
+            @weakify(controller)
             self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:artworkURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                @strongify(controller)
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (image) {
                         self.currentArtworkURL = artworkURL;
