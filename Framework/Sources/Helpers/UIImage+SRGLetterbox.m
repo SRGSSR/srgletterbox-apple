@@ -43,7 +43,7 @@ NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-320" ofType:@"pdf"];
 }
 
-NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type)
+NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
 {
     if (! object) {
         return nil;
@@ -57,7 +57,7 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat wi
     return URL;
 }
 
-NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension)
+NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
 {
     if (! [object respondsToSelector:@selector(imageURL)]) {
         return nil;
