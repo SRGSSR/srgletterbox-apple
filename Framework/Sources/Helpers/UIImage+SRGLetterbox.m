@@ -70,6 +70,12 @@ NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGF
         return nil;
     }
     
+    // Use Cloudinary to create square artwork images if retrieved from an image service (SRG SSR images are 16:9).
+    if (! artworkURL.fileURL) {
+        NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, artworkURL.absoluteString];
+        artworkURL = [NSURL URLWithString:squareArtworkURLString];
+    }
+    
     return artworkURL;
 }
 

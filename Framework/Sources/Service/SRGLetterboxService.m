@@ -311,16 +311,19 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
 }
 
-- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
+- (SRGMedia *)nowPlayingMediaForController:(SRGLetterboxController *)controller
 {
-    SRGMedia *media = nil;
     if (controller.URN.mediaType == SRGMediaTypeVideo) {
-        media = controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
+        return controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
     }
     else {
-        media = controller.media;
+        return controller.media;
     }
-    
+}
+
+- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
+{
+    SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (! media) {
         self.currentArtworkURL = nil;
         self.currentArtworkImage = nil;
@@ -348,14 +351,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    NSURL *artworkURL = nil;
-    
-    CGFloat artworkDimension = 256.f * [UIScreen mainScreen].scale;
-    
-    // For livestreams, rely on channel information when available
-    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
-        SRGChannel *channel = controller.channel;
-        
+    // Display channel information when available
+    SRGChannel *channel = controller.channel;
+    if (channel) {
         // Display program information (if any) when the controller position is within the current program, otherwise channel
         // information.
         NSDate *playbackDate = controller.date;
@@ -363,82 +361,32 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             NSString *title = channel.currentProgram.title;
             nowPlayingInfo[MPMediaItemPropertyTitle] = title;
             nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
-            
-            artworkURL = SRGLetterboxArtworkImageURL(channel.currentProgram, artworkDimension);
-            if (! artworkURL) {
-                artworkURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
-            }
         }
         else {
             nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
-            
-            artworkURL = SRGLetterboxArtworkImageURL(channel, artworkDimension);
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-        artworkURL = SRGLetterboxArtworkImageURL(media, artworkDimension);
     }
     
-    if (! [artworkURL isEqual:self.currentArtworkURL] || ! self.currentArtworkImage) {
-        // SRGLetterboxImageURL might return file URLs for overridden images
-        if (artworkURL.fileURL) {
-            UIImage *image = [UIImage imageWithContentsOfFile:artworkURL.path];
-            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-            self.currentArtworkURL = artworkURL;
-            self.currentArtworkImage = image;
-        }
-        else {
-            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:CGSizeMake(artworkDimension, artworkDimension)];
-            UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
-            
-            if (artworkURL) {
-                // Use Cloudinary to create square artwork images (SRG SSR image services do not support such use cases).
-                // FIXME: This arbitrary resizing could be moved to the data provider library
-                NSString *URLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", artworkDimension, artworkDimension, artworkURL.absoluteString];
-                NSURL *cloudinaryURL = [NSURL URLWithString:URLString];
-                self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:cloudinaryURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (image) {
-                            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
-                            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-                            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-                            
-                            self.currentArtworkURL = artworkURL;
-                            self.currentArtworkImage = image;
-                        }
-                        else {
-                            MPMediaItemArtwork *placeholderArtwork = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
-                            nowPlayingInfo[MPMediaItemPropertyArtwork] = placeholderArtwork;
-                            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
-                            
-                            self.currentArtworkURL = placeholderImageURL;
-                            self.currentArtworkImage = placeholderImage;
-                        }
-                    });
-                }];
-                
-                // Keep the current artwork during retrieval (even if it does not match) for smoother transitions
-                if (self.currentArtworkImage) {
-                    nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:self.currentArtworkImage];
-                }
-                else {
-                    nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
-                }
-            }
-            else {
-                MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:placeholderImage];
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork;
-                
-                self.currentArtworkURL = placeholderImageURL;
-                self.currentArtworkImage = placeholderImage;
-            }
-        }
+    CGFloat artworkDimension = 256.f * [UIScreen mainScreen].scale;
+    CGSize maximumSize = CGSizeMake(artworkDimension, artworkDimension);
+    
+    // TODO: Remove when iOS 10 is the minimum supported version
+    if ([MPMediaItemArtwork instancesRespondToSelector:@selector(initWithBoundsSize:requestHandler:)]) {
+        // Home artwork retrieval works (because poorly documented):
+        // Images are retrieved when needed by the now playing info center by calling -[MPMediaItemArtwork imageWithSize:]`. Sizes
+        // larger than the bounds size specified at creation will be fixed to the maximum compatible value. The request block itself
+        // must be implemented to return an image of the size it receives as parameter, and is called on the main thread.
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
+            return [self artworkImageForController:controller withSize:size];
+        }];
     }
     else {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:self.currentArtworkImage];
+        UIImage *artworkImage = [self artworkImageForController:controller withSize:maximumSize];
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:artworkImage];
     }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -453,6 +401,76 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
     
     [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+}
+
+- (UIImage *)artworkImageForController:(SRGLetterboxController *)controller withSize:(CGSize)size
+{
+    CGFloat smallestDimension = fmin(size.width, size.height);
+    NSURL *artworkURL = nil;
+    
+    // For livestreams, rely on channel information when available
+    SRGChannel *channel = controller.channel;
+    if (channel) {
+        // Display program information (if any) when the controller position is within the current program, otherwise channel
+        // information.
+        NSDate *playbackDate = controller.date;
+        if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
+            artworkURL = SRGLetterboxArtworkImageURL(channel.currentProgram, smallestDimension);
+            if (! artworkURL) {
+                artworkURL = SRGLetterboxArtworkImageURL(channel, smallestDimension);
+            }
+        }
+        else {
+            artworkURL = SRGLetterboxArtworkImageURL(channel, smallestDimension);
+        }
+    }
+    else {
+        SRGMedia *media = [self nowPlayingMediaForController:controller];
+        artworkURL = SRGLetterboxArtworkImageURL(media, smallestDimension);
+    }
+    
+    if (! [artworkURL isEqual:self.currentArtworkURL] || ! self.currentArtworkImage) {
+        // SRGLetterboxImageURL might return file URLs for overridden images
+        if (artworkURL.fileURL) {
+            UIImage *image = [UIImage imageWithContentsOfFile:artworkURL.path];
+            self.currentArtworkURL = artworkURL;
+            self.currentArtworkImage = image;
+            return image;
+        }
+        else {
+            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:size];
+            UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
+            
+            if (artworkURL) {
+                self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:artworkURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (image) {
+                            self.currentArtworkURL = artworkURL;
+                            self.currentArtworkImage = image;
+                        }
+                        else {
+                            self.currentArtworkURL = placeholderImageURL;
+                            self.currentArtworkImage = placeholderImage;
+                        }
+                        
+                        // Force a control center update with the newly cached image information
+                        [self updateNowPlayingInformationWithController:controller];
+                    });
+                }];
+                
+                // Keep the current artwork during retrieval (even if it does not match) for smoother transitions
+                return self.currentArtworkImage;
+            }
+            else {
+                self.currentArtworkURL = placeholderImageURL;
+                self.currentArtworkImage = placeholderImage;
+                return placeholderImage;
+            }
+        }
+    }
+    else {
+        return self.currentArtworkImage;
+    }
 }
 
 - (void)play:(id)sender
