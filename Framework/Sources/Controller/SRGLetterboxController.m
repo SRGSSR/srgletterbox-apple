@@ -8,7 +8,6 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
-#import "SRGMedia+SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -68,12 +67,12 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     
     // Observe start and end dates first. If we are offline, the date range information is more reliable blocking reasons,
     // if retrieved easlier, might be outdated.
-    if (media.srg_availability == SRGMediaAvailabilityNotYet) {
+    if (media.availability == SRGMediaAvailabilityNotYet) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable
                                userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonStartDate) }];
     }
-    else if (media.srg_availability == SRGMediaAvailabilityExpired) {
+    else if (media.availability == SRGMediaAvailabilityExpired) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable
                                userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate) }];
