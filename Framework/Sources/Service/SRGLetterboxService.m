@@ -33,8 +33,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
 
-@property (nonatomic) NSURL *currentArtworkURL;
-@property (nonatomic) UIImage *currentArtworkImage;
+@property (nonatomic) NSURL *cachedArtworkURL;
+@property (nonatomic) UIImage *cachedArtworkImage;
 
 @end
 
@@ -325,9 +325,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (! media) {
-        self.currentArtworkURL = nil;
-        self.currentArtworkImage = nil;
-        
+        [self clearArtworkImageCache];
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
         return;
     }
@@ -382,11 +380,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         // larger than the bounds size specified at creation will be fixed to the maximum compatible value. The request block itself
         // must be implemented to return an image of the size it receives as parameter, and is called on the main thread.
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
-            return [self artworkImageForController:controller withSize:size];
+            return [self cachedArtworkImageForController:controller withSize:size];
         }];
     }
     else {
-        UIImage *artworkImage = [self artworkImageForController:controller withSize:maximumSize];
+        UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize];
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:artworkImage];
     }
     
@@ -440,15 +438,17 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     return artworkURL;
 }
 
-- (UIImage *)artworkImageForController:(SRGLetterboxController *)controller withSize:(CGSize)size
+// Return the best available image to display in the control center, performing an update only when an image is not
+// readily available from the cache
+- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withSize:(CGSize)size
 {
     NSURL *artworkURL = [self artworkURLForController:controller withSize:size];
-    if (! [artworkURL isEqual:self.currentArtworkURL] || ! self.currentArtworkImage) {
+    if (! [artworkURL isEqual:self.cachedArtworkURL] || ! self.cachedArtworkImage) {
         // SRGLetterboxImageURL might return file URLs for overridden images
         if (artworkURL.fileURL) {
             UIImage *image = [UIImage imageWithContentsOfFile:artworkURL.path];
-            self.currentArtworkURL = artworkURL;
-            self.currentArtworkImage = image;
+            self.cachedArtworkURL = artworkURL;
+            self.cachedArtworkImage = image;
             return image;
         }
         else {
@@ -461,12 +461,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (image) {
-                        self.currentArtworkURL = artworkURL;
-                        self.currentArtworkImage = image;
+                        self.cachedArtworkURL = artworkURL;
+                        self.cachedArtworkImage = image;
                     }
                     else {
-                        self.currentArtworkURL = placeholderImageURL;
-                        self.currentArtworkImage = placeholderImage;
+                        self.cachedArtworkURL = placeholderImageURL;
+                        self.cachedArtworkImage = placeholderImage;
                     }
                     
                     // Force a control center update with the newly cached image information
@@ -476,12 +476,18 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             
             // Keep the current artwork during retrieval (even if it does not match) for smoother transitions, or use
             // the placeholder when none
-            return self.currentArtworkImage ?: placeholderImage;
+            return self.cachedArtworkImage ?: placeholderImage;
         }
     }
     else {
-        return self.currentArtworkImage;
+        return self.cachedArtworkImage;
     }
+}
+
+- (void)clearArtworkImageCache
+{
+    self.cachedArtworkURL = nil;
+    self.cachedArtworkImage = nil;
 }
 
 - (void)play:(id)sender
