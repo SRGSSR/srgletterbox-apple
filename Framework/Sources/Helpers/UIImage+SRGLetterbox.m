@@ -43,7 +43,7 @@ NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
     return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-320" ofType:@"pdf"];
 }
 
-NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type)
+NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
 {
     if (! object) {
         return nil;
@@ -57,7 +57,7 @@ NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat wi
     return URL;
 }
 
-NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension)
+NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
 {
     if (! [object respondsToSelector:@selector(imageURL)]) {
         return nil;
@@ -68,6 +68,12 @@ NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGF
     NSURL *artworkURL = [imageURL srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:uid type:@"artwork"];
     if (! SRGLetterboxIsValidURL(artworkURL)) {
         return nil;
+    }
+    
+    // Use Cloudinary to create square artwork images if retrieved from an image service (SRG SSR images are 16:9).
+    if (! artworkURL.fileURL) {
+        NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, artworkURL.absoluteString];
+        artworkURL = [NSURL URLWithString:squareArtworkURLString];
     }
     
     return artworkURL;

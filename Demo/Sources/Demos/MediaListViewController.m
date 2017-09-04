@@ -7,6 +7,7 @@
 #import "MediaListViewController.h"
 
 #import "ModalPlayerViewController.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
@@ -84,11 +85,11 @@
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSString *> *s_titles;
     dispatch_once(&s_onceToken, ^{
-        s_titles = @{ @(MediaListLivecenterSRF) : @"SRF Live center",
-                      @(MediaListLivecenterRTS) : @"RTS Live center",
-                      @(MediaListLivecenterRSI) : @"RSI Live center" };
+        s_titles = @{ @(MediaListLivecenterSRF) : LetterboxDemoNonLocalizedString(@"SRF Live center"),
+                      @(MediaListLivecenterRTS) : LetterboxDemoNonLocalizedString(@"RTS Live center"),
+                      @(MediaListLivecenterRSI) : LetterboxDemoNonLocalizedString(@"RSI Live center") };
     });
-    return s_titles[@(self.mediaListType)] ?: @"Unknown";
+    return s_titles[@(self.mediaListType)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
 }
 
 #pragma mark Data

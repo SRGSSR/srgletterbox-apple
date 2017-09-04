@@ -9,8 +9,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Return an accessibility-oriented localized string from the main bundle.
+ *  Use to avoid user-facing text analyzer warnings.
+ *
+ *  See https://clang-analyzer.llvm.org/faq.html.
  */
-#define SRGLetterboxDemoAccessibilityLocalizedString(key, comment) [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:@"Accessibility"]
+__attribute__((annotate("returns_localized_nsstring")))
+OBJC_EXTERN NSString *LetterboxDemoNonLocalizedString(NSString *string);
 
 NS_ASSUME_NONNULL_END

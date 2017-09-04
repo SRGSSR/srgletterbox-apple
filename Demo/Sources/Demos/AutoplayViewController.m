@@ -7,6 +7,7 @@
 #import "AutoplayViewController.h"
 
 #import "AutoplayTableViewCell.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
@@ -56,22 +57,22 @@
     
     switch (autoplayList) {
         case AutoplayListRTSTrendingMedias: {
-            self.title = @"RTS trending videos";
+            self.title = LetterboxDemoNonLocalizedString(@"RTS trending videos");
             break;
         }
             
         case AutoplayListSRFLiveCenterVideos: {
-            self.title = @"SRF live center videos";
+            self.title = LetterboxDemoNonLocalizedString(@"SRF live center videos");
             break;
         }
             
         case AutoplayListRTSLiveCenterVideos: {
-            self.title = @"RTS live center videos";
+            self.title = LetterboxDemoNonLocalizedString(@"RTS live center videos");
             break;
         }
             
         case AutoplayListRSILiveCenterVideos: {
-            self.title = @"RSI live center videos";
+            self.title = LetterboxDemoNonLocalizedString(@"RSI live center videos");
             break;
         }
             
