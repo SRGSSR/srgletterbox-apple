@@ -612,12 +612,12 @@ static void commonInit(SRGLetterboxView *self);
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    if (media.availability == SRGMediaAvailabilityExpired) {
+    if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityExpired) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
         self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
         self.availabilityLabel.hidden = NO;
     }
-    else if (media.availability == SRGMediaAvailabilityNotYet) {
+    else if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotYetAvailable) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
         NSString *availabilityLabelText = nil;
@@ -741,7 +741,7 @@ static void commonInit(SRGLetterboxView *self);
         && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     BOOL userInterfaceHidden = self.userInterfaceHidden;
-    BOOL isMediaAvailable = (controller.media.availability == SRGMediaAvailabilityAvailable);
+    BOOL isMediaAvailable = (SRGDataProviderAvailabilityForMediaMetadata(controller.media) == SRGMediaAvailabilityAvailable);
     if (hasError || ! isMediaAvailable || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         userInterfaceHidden = YES;
     }

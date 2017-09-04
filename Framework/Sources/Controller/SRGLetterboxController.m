@@ -67,12 +67,12 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     
     // Observe start and end dates first. If we are offline, the date range information is more reliable blocking reasons,
     // if retrieved easlier, might be outdated.
-    if (media.availability == SRGMediaAvailabilityNotYet) {
+    if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotYetAvailable) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable
                                userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonStartDate) }];
     }
-    else if (media.availability == SRGMediaAvailabilityExpired) {
+    else if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityExpired) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable
                                userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate) }];
