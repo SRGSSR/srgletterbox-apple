@@ -7,6 +7,9 @@
 /* The main area on the letterbox view, where the audio or its thumbnail is displayed */
 "Audio" = "Audio";
 
+/* Label to explain that a content will be available in X minutes / seconds. */
+"Available in %@" = "Disponible dans %@";
+
 /* Back to live label */
 "Back to live" = "Retour au direct";
 
@@ -24,9 +27,6 @@
 
 /* Stop button label */
 "Stop" = "Stop";
-
-/* Label to explain that a content will be available in X minutes / seconds. */
-"Available in %@" = "Disponible dans %@";
 
 /* The main area on the letterbox view, where the video or its thumbnail is displayed */
 "Video" = "Vidéo";
