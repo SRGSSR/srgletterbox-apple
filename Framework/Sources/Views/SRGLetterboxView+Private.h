@@ -8,17 +8,30 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  User interface behavior
+ */
+typedef NS_ENUM(NSInteger, SRGLetterboxViewUserInterfaceBehavior) {
+    /**
+     *  Normal behavior.
+     */
+    SRGLetterboxViewUserInterfaceBehaviorNormal = 0,
+    /**
+     *  User interface forced to be visible.
+     */
+    SRGLetterboxViewUserInterfaceBehaviorForcedVisible,
+    /**
+     *  User interface forced to be hidden.
+     */
+    SRGLetterboxViewUserInterfaceBehaviorForcedHidden
+};
+
 @interface SRGLetterboxView (Private)
 
 /*
- *  Displayed error, if the error layer is displayed
+ *  User interface behavior.
  */
-- (nullable NSError *)error;
-
-/*
- *  Boolean return if the availabililty view is displayed or not
- */
-- (BOOL)isDislayingAvailabilityView;
+- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehavior;
 
 @end
 

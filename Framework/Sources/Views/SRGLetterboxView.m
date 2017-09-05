@@ -5,6 +5,7 @@
 //
 
 #import "SRGLetterboxView.h"
+#import "SRGLetterboxView+Private.h"
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
@@ -496,9 +497,9 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
-- (NSError *)error
+- (NSError *)errorForController:(SRGLetterboxController *)controller
 {
-    NSError *error = self.controller.error;
+    NSError *error = controller.error;
     if (error) {
         // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
         // displayed instead)
@@ -509,7 +510,7 @@ static void commonInit(SRGLetterboxView *self);
             return error;
         }
     }
-    else if (! self.controller.media && ! self.controller.URN) {
+    else if (! controller.media && ! controller.URN) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotFound
                                userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
@@ -519,9 +520,37 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (BOOL)isDislayingAvailabilityView
+- (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
 {
-    return (self.controller.media && (SRGDataProviderAvailabilityForMediaMetadata(self.controller.media) != SRGMediaAvailabilityAvailable));
+    return ! controller.media || SRGDataProviderAvailabilityForMediaMetadata(controller.media) == SRGMediaAvailabilityAvailable;
+}
+
+- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehavior
+{
+    return [self userInterfaceBehaviorForController:self.controller];
+}
+
+- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehaviorForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
+    // Controls and error overlay must never be displayed at the same time. This does not change the final expected
+    // control visbility state variable, only its visual result.
+    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
+    if (hasError || isAvailabilityViewVisible || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+        return SRGLetterboxViewUserInterfaceBehaviorForcedHidden;
+    }
+    else if (self.userInterfaceTogglable
+             && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
+        return SRGLetterboxViewUserInterfaceBehaviorForcedVisible;
+    }
+    else {
+        return SRGLetterboxViewUserInterfaceBehaviorNormal;
+    }
 }
 
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
@@ -607,7 +636,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    self.errorLabel.text = [self error].localizedDescription;
+    self.errorLabel.text = [self errorForController:controller].localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];
 }
@@ -735,20 +764,19 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
-    // Controls and error overlay must never be displayed at the same time. This does not change the final expected
-    // control visbility state variable, only its visual result.
-    BOOL hasError = ([self error] != nil);
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
-        && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    
-    BOOL userInterfaceHidden = self.userInterfaceHidden;
-    BOOL isDislayingAvailabilityView = [self isDislayingAvailabilityView];
-    if (hasError || isDislayingAvailabilityView || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-        userInterfaceHidden = YES;
-    }
-    else if (self.userInterfaceTogglable
-                && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
-        userInterfaceHidden = NO;
+    BOOL userInterfaceHidden = NO;
+    switch ([self userInterfaceBehaviorForController:controller]) {
+        case SRGLetterboxViewUserInterfaceBehaviorForcedHidden:
+            userInterfaceHidden = YES;
+            break;
+            
+        case SRGLetterboxViewUserInterfaceBehaviorForcedVisible:
+            userInterfaceHidden = NO;
+            break;
+            
+        default:
+            userInterfaceHidden = self.userInterfaceHidden;
+            break;
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
@@ -758,12 +786,15 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
-    // Only display error view if has an error and not displaying availability view
-    self.errorView.alpha = (hasError && !isDislayingAvailabilityView) ? 1.f : 0.f;
-    // Only display retry instructions if there is a media to retry with
-    self.errorInstructionsLabel.alpha = (hasError && !isDislayingAvailabilityView && controller.URN) ? 1.f : 0.f;
+    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     
-    self.availabilityView.alpha = isDislayingAvailabilityView ? 1.f : 0.f;
+    // Only display error view if has an error and not displaying availability view
+    self.errorView.alpha = (hasError && !isAvailabilityViewVisible) ? 1.f : 0.f;
+    // Only display retry instructions if there is a media to retry with
+    self.errorInstructionsLabel.alpha = (hasError && !isAvailabilityViewVisible && controller.URN) ? 1.f : 0.f;
+    
+    self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
