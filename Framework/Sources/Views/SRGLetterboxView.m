@@ -519,6 +519,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (BOOL)isDislayingAvailabilityView
+{
+    return (self.controller.media && (SRGDataProviderAvailabilityForMediaMetadata(self.controller.media) != SRGMediaAvailabilityAvailable));
+}
+
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
 {
     if (preferredTimelineHeight < 0.f) {
@@ -741,8 +746,8 @@ static void commonInit(SRGLetterboxView *self);
         && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     BOOL userInterfaceHidden = self.userInterfaceHidden;
-    BOOL isMediaAvailable = (SRGDataProviderAvailabilityForMediaMetadata(controller.media) == SRGMediaAvailabilityAvailable);
-    if (hasError || ! isMediaAvailable || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    BOOL isDislayingAvailabilityView = [self isDislayingAvailabilityView];
+    if (hasError || isDislayingAvailabilityView || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         userInterfaceHidden = YES;
     }
     else if (self.userInterfaceTogglable
@@ -757,11 +762,12 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
+    // Only display error view if has an error and not displaying availability view
+    self.errorView.alpha = (hasError && !isDislayingAvailabilityView) ? 1.f : 0.f;
     // Only display retry instructions if there is a media to retry with
-    self.errorView.alpha = hasError ? 1.f : 0.f;
-    self.errorInstructionsLabel.alpha = (hasError && controller.URN) ? 1.f : 0.f;
+    self.errorInstructionsLabel.alpha = (hasError && !isDislayingAvailabilityView && controller.URN) ? 1.f : 0.f;
     
-    self.availabilityView.alpha = isMediaAvailable ? 0.f : 1.f;
+    self.availabilityView.alpha = isDislayingAvailabilityView ? 1.f : 0.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)

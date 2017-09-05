@@ -7,6 +7,7 @@
 #import "SRGAccessibilityView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxView+Private.h"
 
 @implementation SRGAccessibilityView
 
@@ -19,12 +20,11 @@
 
 - (NSString *)accessibilityHint
 {
-    SRGLetterboxController *controller = self.letterboxView.controller;
-    if (! controller.error && SRGDataProviderAvailabilityForMediaMetadata(controller.media) == SRGMediaAvailabilityAvailable) {
-        return self.letterboxView.userInterfaceTogglable ? SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") : nil;
+    if ([self.letterboxView error] || [self.letterboxView isDislayingAvailabilityView]) {
+        return nil;
     }
     else {
-        return nil;
+        return self.letterboxView.userInterfaceTogglable ? SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") : nil;
     }
 }
 
