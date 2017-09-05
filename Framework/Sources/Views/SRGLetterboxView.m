@@ -313,7 +313,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (UIAccessibilityIsVoiceOverRunning()) {
         self.accessibilityView.alpha = 1.f;
-        [self toggleUserInterfaceHidden:NO animated:YES];
+        [self setUserInterfaceHidden:NO animated:YES];
     }
     else {
         self.accessibilityView.alpha = 0.f;
@@ -752,11 +752,6 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
-- (void)toggleUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
-}
-
 #pragma mark UI updates
 
 - (BOOL)updateLayoutForController:(SRGLetterboxController *)controller
@@ -980,7 +975,7 @@ static void commonInit(SRGLetterboxView *self);
             if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
                     || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
                     || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-                [self toggleUserInterfaceHidden:YES animated:YES];
+                [self setUserInterfaceHidden:YES animated:YES];
             }
         }];
     }
@@ -1075,14 +1070,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self toggleUserInterfaceHidden:NO animated:YES];
+    [self setUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
     // Defer execution to avoid conflicts with the activity gesture above
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self toggleUserInterfaceHidden:YES animated:YES];
+        [self setUserInterfaceHidden:YES animated:YES];
     });
 }
 
