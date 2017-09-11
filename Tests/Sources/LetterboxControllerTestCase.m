@@ -647,6 +647,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     }];
     
     [self.controller switchToSubdivision:self.controller.mediaComposition.mainChapter.segments[2]];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No playback notifications must be received
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
@@ -675,9 +676,10 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
+    
 }
 
-- (void)testUnexpectedlaybackStateDidChangeNotificationPlayingLive
+- (void)testUnexpectedlaybackStateDidChangeNotificationPlayingLiveAndStop
 {
     self.controller.channelUpdateInterval = 10.f;
     self.controller.streamAvailabilityCheckInterval = 10.f;
@@ -706,7 +708,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     
     // Waiting for a while. No playback notifications must be received
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when stoping playback, even if there is a channel update or stream availability check.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
