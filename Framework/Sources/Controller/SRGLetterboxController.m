@@ -301,7 +301,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     @weakify(self)
     self.streamAvailabilyCheckTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        [self checkStreamAvailability];
+        [self checkStreamAvailabilityWithCompletionBlock:nil];
     }];
 }
 
@@ -443,7 +443,9 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @weakify(self)
         self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self checkStreamAvailability];
+            [self checkStreamAvailabilityWithCompletionBlock:^{
+                [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+            }];
         }];
     }
     else {
@@ -455,7 +457,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self checkStreamAvailability];
+            [self checkStreamAvailabilityWithCompletionBlock:nil];
         }];
     }
     else {
@@ -465,7 +467,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
-- (void)checkStreamAvailability
+- (void)checkStreamAvailabilityWithCompletionBlock:(void (^)(void))completionBlock
 {
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
@@ -477,6 +479,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         }
         
         if (! mediaComposition) {
+            if (completionBlock) completionBlock();
             return;
         }
         
@@ -485,20 +488,32 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         if (blockingReasonError) {
             [self stop];
             [self reportError:blockingReasonError];
+            if (completionBlock) completionBlock();
             return;
         }
+        
+        BOOL prepareToPlay = (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle);
+        BOOL forceToPlay = NO;
         
         // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
         NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
         NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
         if (! [currentResources isEqualToSet:fetchedResources]) {
+            prepareToPlay = YES;
+            forceToPlay = (self.mediaPlayerController.playbackState == SRGPlaybackButtonStatePlay);
             [self stop];
         }
         
+        if (! prepareToPlay) {
+            if (completionBlock) completionBlock();
+            return;
+        }
+        
         void (^prepareToPlayCompletionHandler)(void) = ^{
-            if (self.resumesAfterRetry) {
+            if (self.resumesAfterRetry || forceToPlay) {
                 [self play];
             }
+            if (completionBlock) completionBlock();
         };
         
         // Use the current subdivision
