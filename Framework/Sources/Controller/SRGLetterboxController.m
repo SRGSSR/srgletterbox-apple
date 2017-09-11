@@ -495,13 +495,15 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
             [self stop];
         }
         
-        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
-        if (self.resumesAfterRetry) {
-            [self playMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
-        }
-        else {
-            [self prepareToPlayMedia:media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
-        }
+        void (^prepareToPlayCompletionHandler)(void) = ^{
+            if (self.resumesAfterRetry) {
+                [self play];
+            }
+        };
+        
+        // Use the current subdivision
+        [self prepareToPlayMedia:[mediaComposition mediaForSubdivision:self.subdivision] withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareToPlayCompletionHandler];
+    
     }] resume];
 }
 
