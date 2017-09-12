@@ -494,6 +494,11 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 {
     NSParameterAssert(completionBlock);
     
+    if (self.contentURLOverridden) {
+        completionBlock(nil, NO);
+        return;
+    }
+    
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         SRGMediaComposition *currentMediaComposition = self.mediaComposition;
         
