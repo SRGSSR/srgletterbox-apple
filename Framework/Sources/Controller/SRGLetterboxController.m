@@ -301,7 +301,17 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     @weakify(self)
     self.streamAvailabilyCheckTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        [self checkStreamAvailabilityWithCompletionBlock:nil];
+        [self updateMetadataWithCompletionBlock:^(NSError *error) {
+            if (error) {
+                SRGMediaPlayerPlaybackState previousPlaybackState = self.mediaPlayerController.playbackState;
+                if (error.code == 1012 && previousPlaybackState != SRGMediaPlayerPlaybackStateIdle && previousPlaybackState != SRGMediaPlayerPlaybackStateEnded) {
+                    [self retry];
+                }
+                else {
+                    [self stop];
+                }
+            }
+        }];
     }];
 }
 
@@ -443,8 +453,13 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @weakify(self)
         self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self checkStreamAvailabilityWithCompletionBlock:^{
-                [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+            [self updateMetadataWithCompletionBlock:^(NSError *error) {
+                if (error) {
+                    [self stop];
+                }
+                else {
+                    [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                }
             }];
         }];
     }
@@ -457,7 +472,9 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self checkStreamAvailabilityWithCompletionBlock:nil];
+            [self updateMetadataWithCompletionBlock:^(NSError *error) {
+                [self stop];
+            }];
         }];
     }
     else {
@@ -467,7 +484,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
-- (void)checkStreamAvailabilityWithCompletionBlock:(void (^)(void))completionBlock
+- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error))completionBlock
 {
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
@@ -478,47 +495,33 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
             mediaComposition = self.mediaComposition;
         }
         
+        void (^updateCompletionBlock)(NSError *) = ^(NSError *error) {
+            [self reportError:error];
+            completionBlock ? completionBlock(error) : nil;
+        };
+        
         if (! mediaComposition) {
-            if (completionBlock) completionBlock();
+            updateCompletionBlock(nil);
             return;
         }
         
         // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
         NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
         if (blockingReasonError) {
-            [self stop];
-            [self reportError:blockingReasonError];
-            if (completionBlock) completionBlock();
+            updateCompletionBlock(blockingReasonError);
             return;
         }
-        
-        BOOL prepareToPlay = (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle);
-        BOOL forceToPlay = NO;
         
         // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
         NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
         NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
         if (! [currentResources isEqualToSet:fetchedResources]) {
-            prepareToPlay = YES;
-            forceToPlay = (self.mediaPlayerController.playbackState == SRGPlaybackButtonStatePlay);
-            [self stop];
-        }
-        
-        if (! prepareToPlay) {
-            if (completionBlock) completionBlock();
+            NSError *error = [NSError errorWithDomain:@"TODO" code:1012 userInfo:nil];
+            updateCompletionBlock(error);
             return;
         }
         
-        void (^prepareToPlayCompletionHandler)(void) = ^{
-            if (self.resumesAfterRetry || forceToPlay) {
-                [self play];
-            }
-            if (completionBlock) completionBlock();
-        };
-        
-        // Use the current subdivision
-        [self prepareToPlayMedia:[mediaComposition mediaForSubdivision:self.subdivision] withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareToPlayCompletionHandler];
-    
+        updateCompletionBlock(nil);
     }] resume];
 }
 
@@ -730,7 +733,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 
 - (void)stop
 {
-    [self.mediaPlayerController stop];
+    [self.mediaPlayerController reset];
 }
 
 - (void)retry
