@@ -724,7 +724,15 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 
 - (void)play
 {
-    [self.mediaPlayerController play];
+    if (self.mediaPlayerController.contentURL) {
+        [self.mediaPlayerController play];
+    }
+    else if (self.media) {
+        [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+    }
+    else if (self.URN) {
+        [self playURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+    };
 }
 
 - (void)pause
@@ -734,7 +742,12 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
 
 - (void)togglePlayPause
 {
-    [self.mediaPlayerController togglePlayPause];
+    if (self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
+        [self pause];
+    }
+    else {
+        [self play];
+    }
 }
 
 - (void)stop
