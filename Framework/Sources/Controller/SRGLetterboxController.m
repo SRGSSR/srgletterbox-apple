@@ -303,12 +303,18 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @strongify(self)
         [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
             if (URLChanged) {
-                SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
-                if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded) {
-                    [self restart];
+                SRGMediaPlayerPlaybackState previousPlaybackState = self.mediaPlayerController.playbackState;
+                [self stop];
+                if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing || previousPlaybackState == SRGMediaPlayerPlaybackStatePaused) {
+                    if (self.media) {
+                        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
+                    }
+                    else if (self.URN) {
+                        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
+                    };
                 }
-                else {
-                    [self stop];
+                else if (previousPlaybackState != SRGMediaPlayerPlaybackStateIdle && previousPlaybackState != SRGMediaPlayerPlaybackStateEnded) {
+                    [self play];
                 }
             }
             else if (error) {
