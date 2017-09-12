@@ -472,10 +472,9 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
- - (void)testcontentURLOverriding
+ - (void)testContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    self.controller.channelUpdateInterval = 10.f;
     self.controller.streamAvailabilityCheckInterval = 10.f;
     self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(SRGMediaURN * _Nonnull URN) {
         return overridingURL;
@@ -525,9 +524,8 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     }];
 }
 
-- (void)testUnexpectedlaybackStateDidChangeNotificationStartingOnFullLengh
+- (void)testFullLengthUninterruptedOnDemandPlayback
 {
-    self.controller.channelUpdateInterval = 10.f;
     self.controller.streamAvailabilityCheckInterval = 10.f;
     
     SRGMediaURN *URN = OnDemandLongVideoURN();
@@ -554,7 +552,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
     
-    // Wait until the stream is pause
+    // Wait until the stream is paused
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
     }];
@@ -573,9 +571,8 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     }];
 }
 
-- (void)testUnexpectedlaybackStateDidChangeNotificationStartingOnSegment
+- (void)testSegmentUninterruptedOnDemandSegmentPlayback
 {
-    self.controller.channelUpdateInterval = 10.f;
     self.controller.streamAvailabilityCheckInterval = 10.f;
     
     SRGMediaURN *URN = OnDemandLongVideoSegmentURN();
@@ -603,7 +600,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
     
-    // Wait until the stream is pause
+    // Wait until the stream is paused
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
     }];
@@ -622,9 +619,8 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     }];
 }
 
-- (void)testUnexpectedlaybackStateDidChangeNotificationSelectingASegment
+- (void)testUninterruptedOnDemandPlaybackAfterSegmentSelection
 {
-    self.controller.channelUpdateInterval = 10.f;
     self.controller.streamAvailabilityCheckInterval = 10.f;
     
     SRGMediaURN *URN = OnDemandLongVideoURN();
@@ -659,7 +655,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
     
-    // Wait until the stream is pause
+    // Wait until the stream is paused
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
     }];
@@ -679,9 +675,8 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     
 }
 
-- (void)testUnexpectedlaybackStateDidChangeNotificationPlayingLiveAndStop
+- (void)testUninterruptedLivePlayback
 {
-    self.controller.channelUpdateInterval = 10.f;
     self.controller.streamAvailabilityCheckInterval = 10.f;
     
     SRGMediaURN *URN = LiveOnlyVideoURN();
@@ -698,7 +693,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
-    // Wait until the stream is stop
+    // Wait until the stream is stopped
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
