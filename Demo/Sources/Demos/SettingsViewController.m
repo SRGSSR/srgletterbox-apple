@@ -11,6 +11,7 @@
 
 NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
 NSString * const LetterboxSRGSettingMirroredOnExternalScreen = @"LetterboxSRGSettingMirroredOnExternalScreen";
+NSString * const LetterboxSRGSettingStreamAvailabilityCheckInterval = @"LetterboxSRGSettingStreamAvailabilityCheckInterval";
 
 NSURL *ApplicationSettingServiceURL(void)
 {
@@ -29,6 +30,13 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
+}
+
+NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
+{
+    // Set manually to default value, 5 minutes, if no setting.
+    NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] floatForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : 5. * 60.;
 }
 
 @interface ServerSetting : NSObject
@@ -96,7 +104,7 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -112,6 +120,11 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
             break;
         }
             
+        case 2: {
+            return NSLocalizedString(@"Stream availability check", @"Stream availability check header title in settings view");
+            break;
+        }
+            
         default: {
             break;
         }
@@ -121,8 +134,8 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (section == 1) {
-        return NSLocalizedString(@"This demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
+    if (section == 2) {
+        return NSLocalizedString(@"\nThis demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
     }
     else {
         return nil;
@@ -137,7 +150,8 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
             break;
         }
             
-        case 1: {
+        case 1:
+        case 2: {
             return 2;
             break;
         }
@@ -190,6 +204,29 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
             break;
         }
             
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Default, each 5 minutes", @"Default stream availability check interval in settings view");
+                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == 5. * 60.) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Short, each 10 seconds", @"Short stream availability check interval in settings view");
+                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == 10.) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
         default: {
             cell.textLabel.text = nil;
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -210,6 +247,17 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
             
         case 1: {
             ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
+            break;
+        }
+            
+        case 2: {
+            if (indexPath.row == 0) {
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+            }
+            else {
+                [[NSUserDefaults standardUserDefaults] setFloat:10. forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+            }
+            [[NSUserDefaults standardUserDefaults] synchronize];
             break;
         }
             

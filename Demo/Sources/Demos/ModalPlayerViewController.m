@@ -56,6 +56,7 @@
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
+        viewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
         return viewController;
