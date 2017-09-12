@@ -495,6 +495,8 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     NSParameterAssert(completionBlock);
     
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        SRGMediaComposition *currentMediaComposition = self.mediaComposition;
+        
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
         if (mediaComposition) {
             [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
@@ -512,7 +514,7 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
             }
             
             // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
-            NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
+            NSSet<SRGResource *> *currentResources = [NSSet setWithArray:currentMediaComposition.mainChapter.playableResources];
             NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
             if (! [currentResources isEqualToSet:fetchedResources]) {
                 completionBlock(nil, YES);
