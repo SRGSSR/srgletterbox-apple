@@ -369,8 +369,9 @@ static void commonInit(SRGLetterboxView *self);
     
     _controller = controller;
     
+    self.playbackButton.letterboxController = controller;
+    
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    self.playbackButton.mediaPlayerController = mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;

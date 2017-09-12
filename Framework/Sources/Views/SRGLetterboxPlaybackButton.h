@@ -6,6 +6,7 @@
 
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
+#import "SRGLetterboxController.h"
 #import "UIImage+SRGLetterbox.h"
 
 /**
@@ -22,5 +23,7 @@
  *  Switch the image set.
  */
 @property (nonatomic) SRGImageSet imageSet;
+
+@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *letterboxController;
 
 @end

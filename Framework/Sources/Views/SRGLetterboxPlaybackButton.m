@@ -7,9 +7,16 @@
 #import "SRGLetterboxPlaybackButton.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "UIImage+SRGLetterbox.h"
 
 static void commonInit(SRGLetterboxPlaybackButton *self);
+
+@interface SRGPlaybackButton (SRGLetterbox)
+
+- (void)togglePlayPause:(id)sender;
+
+@end
 
 @implementation SRGLetterboxPlaybackButton
 
@@ -49,6 +56,22 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     
     self.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
     self.pauseImage = (self.usesStopImage) ? [UIImage srg_letterboxStopImageInSet:imageSet] : [UIImage srg_letterboxPauseImageInSet:imageSet];
+}
+
+- (void)setLetterboxController:(SRGLetterboxController *)letterboxController
+{
+    _letterboxController = letterboxController;
+    self.mediaPlayerController = letterboxController.mediaPlayerController;
+}
+
+- (void)togglePlayPause:(id)sender
+{
+    if (self.mediaPlayerController.contentURL) {
+        [super togglePlayPause:sender];
+    }
+    else {
+        [self.letterboxController play];
+    }
 }
 
 #pragma mark Accessibility
