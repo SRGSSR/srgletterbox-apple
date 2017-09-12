@@ -301,15 +301,19 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     @weakify(self)
     self.streamAvailabilyCheckTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        [self updateMetadataWithCompletionBlock:^(NSError *error) {
-            if (error) {
-                SRGMediaPlayerPlaybackState previousPlaybackState = self.mediaPlayerController.playbackState;
-                if (error.code == 1012 && previousPlaybackState != SRGMediaPlayerPlaybackStateIdle && previousPlaybackState != SRGMediaPlayerPlaybackStateEnded) {
-                    [self retry];
+        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+            if (URLChanged) {
+                SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+                if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded) {
+                    [self restart];
                 }
                 else {
                     [self stop];
                 }
+            }
+            else if (error) {
+                [self reportError:error];
+                [self stop];
             }
         }];
     }];
@@ -453,8 +457,9 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @weakify(self)
         self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
                 if (error) {
+                    [self reportError:error];
                     [self stop];
                 }
                 else {
@@ -472,7 +477,8 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+                [self reportError:error];
                 [self stop];
             }];
         }];
@@ -484,8 +490,10 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
-- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error))completionBlock
+- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged))completionBlock
 {
+    NSParameterAssert(completionBlock);
+    
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
         if (mediaComposition) {
@@ -495,33 +503,24 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
             mediaComposition = self.mediaComposition;
         }
         
-        void (^updateCompletionBlock)(NSError *) = ^(NSError *error) {
-            [self reportError:error];
-            completionBlock ? completionBlock(error) : nil;
-        };
-        
-        if (! mediaComposition) {
-            updateCompletionBlock(nil);
-            return;
+        if (mediaComposition) {
+            // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+            if (blockingReasonError) {
+                completionBlock(blockingReasonError, NO);
+                return;
+            }
+            
+            // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
+            NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
+            NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
+            if (! [currentResources isEqualToSet:fetchedResources]) {
+                completionBlock(nil, YES);
+                return;
+            }
         }
         
-        // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
-        if (blockingReasonError) {
-            updateCompletionBlock(blockingReasonError);
-            return;
-        }
-        
-        // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
-        NSSet<SRGResource *> *currentResources = [NSSet setWithArray:self.mediaComposition.mainChapter.playableResources];
-        NSSet<SRGResource *> *fetchedResources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
-        if (! [currentResources isEqualToSet:fetchedResources]) {
-            NSError *error = [NSError errorWithDomain:@"TODO" code:1012 userInfo:nil];
-            updateCompletionBlock(error);
-            return;
-        }
-        
-        updateCompletionBlock(nil);
+        completionBlock(nil, NO);
     }] resume];
 }
 
