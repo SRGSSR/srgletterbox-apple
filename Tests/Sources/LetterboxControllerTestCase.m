@@ -408,6 +408,7 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     }];
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -644,11 +645,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     XCTAssertEqualObjects(self.controller.mediaPlayerController.contentURL, overridingURL);
     
     // Play for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:12. withHandler:nil];
+    
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:12. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
@@ -662,11 +664,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:10. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
@@ -691,11 +694,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
     // Play for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:12. withHandler:nil];
+
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a full length, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:12. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
@@ -709,11 +713,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a full length, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:10. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
@@ -739,11 +744,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     XCTAssertEqualObjects(self.controller.mediaComposition.mainSegment.URN, URN);
     
     // Play for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:12. withHandler:nil];
+    
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a segment, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:12. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
@@ -757,11 +763,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+    
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a segment, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:10. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
@@ -794,11 +801,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:12. withHandler:nil];
+
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:12. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
@@ -812,11 +820,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:10. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
@@ -850,11 +859,12 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:12. withHandler:nil];
+
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when stoping playback, even if there is a channel update or stream availability check.");
     }];
     
-    [self expectationForElapsedTimeInterval:12. withHandler:nil];
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
