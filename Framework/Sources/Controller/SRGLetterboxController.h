@@ -110,6 +110,11 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 /**
  *  The URL of the service data must be returned from. By default or if reset to `nil`, the production server is
  *  used. Official URL values can be found in `SRGDataProvider.h`.
+ *
+ *  @discussion Changing the service URL while playing is possible, but the change is not guaranteed to be applied
+ *              immediately, and playback might be interrupted if the new service is not available to provide data
+ *              for the media being played. In general, and a different service URL is required, you should therefore 
+ *              set it before starting playback.
  */
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
