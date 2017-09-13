@@ -332,6 +332,8 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         channelUpdateInterval = 10.;
     }
     
+    _channelUpdateInterval = channelUpdateInterval;
+    
     @weakify(self)
     self.channelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
        @strongify(self)
