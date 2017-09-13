@@ -712,7 +712,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)reloadImageForController:(SRGLetterboxController *)controller
 {
     // For livestreams, rely on channel information when available
-    SRGMedia *media = controller.media;
+    SRGMedia *media = controller.subdivisionMedia ?: controller.media;
     if (media.contentType == SRGContentTypeLivestream && controller.channel) {
         SRGChannel *channel = controller.channel;
         
