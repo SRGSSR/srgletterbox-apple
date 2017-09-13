@@ -12,18 +12,17 @@
 /**
  *  Playback button.
  */
-@interface SRGLetterboxPlaybackButton : SRGPlaybackButton
+IB_DESIGNABLE
+@interface SRGLetterboxPlaybackButton : UIButton
 
 /**
-*  Switch from Pause image to Stop image for the play / pause image.
-*/
-@property (nonatomic) BOOL usesStopImage;
+ *  The controller which the button is associated with.
+ */
+@property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
 /**
- *  Switch the image set.
+ *  The image set to use. Default is `SRGImageSetNormal`.
  */
 @property (nonatomic) SRGImageSet imageSet;
-
-@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *letterboxController;
 
 @end
