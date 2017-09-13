@@ -150,7 +150,9 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
          completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Ask the player to play. If the player has not been prepared, this method does nothing.
+ *  Ask the player to play. 
+ *
+ *  @discussion Start playback if a media is available and the player is idle.
  */
 - (void)play;
 
@@ -160,7 +162,9 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 - (void)pause;
 
 /**
- *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
+ *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in. 
+ *
+ *  @discussion Start playback if a media is available and the player is idle.
  */
 - (void)togglePlayPause;
 
@@ -178,7 +182,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 - (void)restart;
 
 /**
- *  Reset playback and reset all playback information.
+ *  Reset playback and all playback information.
  */
 - (void)reset;
 
