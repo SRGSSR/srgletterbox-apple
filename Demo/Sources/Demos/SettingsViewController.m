@@ -13,6 +13,8 @@ NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL
 NSString * const LetterboxSRGSettingMirroredOnExternalScreen = @"LetterboxSRGSettingMirroredOnExternalScreen";
 NSString * const LetterboxSRGSettingStreamAvailabilityCheckInterval = @"LetterboxSRGSettingStreamAvailabilityCheckInterval";
 
+NSTimeInterval const LetterboxSRGSettingStreamAvailabilityCheckIntervalShort = 10.;
+
 NSURL *ApplicationSettingServiceURL(void)
 {
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
@@ -36,7 +38,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
     NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
-    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : 5. * 60.;
+    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : SRGLetterboxStreamAvailabilityCheckIntervalDefault;
 }
 
 @interface ServerSetting : NSObject
@@ -205,16 +207,27 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
         }
             
         case 2: {
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond;
+                s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+                s_dateComponentsFormatter.maximumUnitCount = 1;
+            });
+            
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default, every 5 minutes", @"Default stream availability check interval in settings view");
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == 5. * 60.) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Short, every 10 seconds", @"Short stream availability check interval in settings view");
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == 10.) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = LetterboxSRGSettingStreamAvailabilityCheckIntervalShort;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -258,7 +271,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
             }
             else {
-                [[NSUserDefaults standardUserDefaults] setDouble:10. forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxSRGSettingStreamAvailabilityCheckIntervalShort forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             
