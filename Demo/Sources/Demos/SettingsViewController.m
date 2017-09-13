@@ -35,7 +35,7 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
 NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] floatForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+    NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
     return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : 5. * 60.;
 }
 
@@ -207,13 +207,13 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
         case 2: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default, each 5 minutes", @"Default stream availability check interval in settings view");
+                    cell.textLabel.text = NSLocalizedString(@"Default, every 5 minutes", @"Default stream availability check interval in settings view");
                     cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == 5. * 60.) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Short, each 10 seconds", @"Short stream availability check interval in settings view");
+                    cell.textLabel.text = NSLocalizedString(@"Short, every 10 seconds", @"Short stream availability check interval in settings view");
                     cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == 10.) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -255,7 +255,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
             }
             else {
-                [[NSUserDefaults standardUserDefaults] setFloat:10. forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] setDouble:10. forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             break;
