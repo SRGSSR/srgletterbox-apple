@@ -37,6 +37,16 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     return [SRGMediaURN mediaURNWithString:@"urn:rts:video:1967124"];
 }
 
+static SRGMediaURN *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
+}
+
+static NSURL *MMFServiceURL(void)
+{
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+}
+
 @interface LetterboxControllerTestCase : XCTestCase
 
 @property (nonatomic) SRGLetterboxController *controller;
@@ -868,6 +878,118 @@ static SRGMediaURN *LiveDVRVideoURN(void)
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
+}
+
+- (void)testScheduledMediaNotYetAvailable
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    // Media starts in 5 seconds and is available 5 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:5];
+    SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
+    
+    // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change when media is not available yet.");
+    }];
+    
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(@(self.controller.playbackState), @(SRGMediaPlayerPlaybackStateIdle));
+    XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityNotYetAvailable));
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    // Scheduled media start playing
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityAvailable));
+    
+    // Wait until the stream is stopped
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    // Scheduled media stop playing
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityNotAvailableAnymore));
+}
+
+- (void)testScheduledMediaAvailable
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    // Media started 5 seconds before and is available 10 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:10];
+    SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityAvailable));
+    
+    // Wait until the stream is stopped
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    // Scheduled media stop playing
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityNotAvailableAnymore));
+}
+
+- (void)testScheduledMediaNotAvailableAnymore
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    // Media started 10 seconds before and finished 5 seconds before
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-10];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:5];
+    SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
+    
+    // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change when media is not available anymore.");
+    }];
+    
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(@(self.controller.playbackState), @(SRGMediaPlayerPlaybackStateIdle));
+    XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityNotAvailableAnymore));
 }
 
 @end
