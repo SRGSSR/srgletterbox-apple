@@ -242,6 +242,9 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             NSURL *serverURL = self.serverSettings[indexPath.row].URL;
             [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
             [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            [[SRGLetterboxService sharedService].controller reset];
+            [SRGLetterboxService sharedService].controller.serviceURL = ApplicationSettingServiceURL();
             break;
         }
             
@@ -258,6 +261,8 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
                 [[NSUserDefaults standardUserDefaults] setDouble:10. forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            [SRGLetterboxService sharedService].controller.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
             break;
         }
             
