@@ -894,9 +894,9 @@ static NSURL *MMFServiceURL(void)
 {
     self.controller.serviceURL = MMFServiceURL();
     
-    // Media starts in 5 seconds and is available 5 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
-    NSDate *endDate = [startDate dateByAddingTimeInterval:5];
+    // Media starts in 7 seconds and is available 7 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     
     // Waiting for a while. No playback notifications must be received
@@ -957,9 +957,9 @@ static NSURL *MMFServiceURL(void)
 {
     self.controller.serviceURL = MMFServiceURL();
     
-    // Media started 7 seconds before and is available 10 seconds
+    // Media started 7 seconds before and is available 15 seconds
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-7];
-    NSDate *endDate = [startDate dateByAddingTimeInterval:10];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     
     // Wait until the stream is playing
@@ -991,9 +991,9 @@ static NSURL *MMFServiceURL(void)
 {
     self.controller.serviceURL = MMFServiceURL();
     
-    // Media started 10 seconds before and finished 5 seconds before
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-10];
-    NSDate *endDate = [startDate dateByAddingTimeInterval:5];
+    // Media started 15 seconds before and finished 7 after started, 8 seconds before
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-15];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     
     // Waiting for a while. No playback notifications must be received
@@ -1020,8 +1020,8 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     self.controller.streamAvailabilityCheckInterval = 10.;
     
-    // Media changes it resource URL after 5 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    // Media changes it resource URL after 7 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFURLChangedDVRURN(startDate, endDate);
     
@@ -1066,8 +1066,8 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     self.controller.streamAvailabilityCheckInterval = 10.;
     
-    // Media changes it resource URL after 5 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    // Media changes it resource URL after 7 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFURLChangedDVRURN(startDate, endDate);
     
@@ -1144,8 +1144,8 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     self.controller.streamAvailabilityCheckInterval = 10.;
     
-    // Media changes it resource URL after 5 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    // Media changes it resource URL after 7 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFURLChangedDVRURN(startDate, endDate);
     
@@ -1207,8 +1207,8 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     self.controller.streamAvailabilityCheckInterval = 10.;
     
-    // Media changes with a block reason after 5 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    // Media changes with a block reason after 7 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFGeoBlockChangedVideoURN(startDate, endDate);
     
