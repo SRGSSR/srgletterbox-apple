@@ -776,6 +776,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (void)stop
 {
+    // Reset the player, including the attached URL. We keep the Letterbox controller context so that playback can
+    // be restarted.
     [self.mediaPlayerController reset];
 }
 

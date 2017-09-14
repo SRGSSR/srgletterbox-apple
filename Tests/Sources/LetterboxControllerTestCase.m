@@ -1302,7 +1302,7 @@ static NSURL *MMFServiceURL(void)
     
     [self.controller playURN:URN withChaptersOnly:NO];
     
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
