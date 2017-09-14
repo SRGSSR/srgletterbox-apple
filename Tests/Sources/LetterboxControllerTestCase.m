@@ -938,14 +938,27 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqualObjects(@(SRGDataProviderAvailabilityForMediaMetadata(self.controller.media)), @(SRGMediaAvailabilityNotAvailableAnymore));
+    
+    // Waiting for a while. No playback notifications must be received
+    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change when a block reason is here.");
+    }];
+    
+    [self.controller play];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+    }];
 }
 
 - (void)testScheduledMediaAvailable
 {
     self.controller.serviceURL = MMFServiceURL();
     
-    // Media started 5 seconds before and is available 10 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-5];
+    // Media started 7 seconds before and is available 10 seconds
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:10];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     
