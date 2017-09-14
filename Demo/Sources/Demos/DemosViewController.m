@@ -161,7 +161,7 @@
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
-    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_staging_delay";
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
