@@ -22,6 +22,12 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Vollansicht starten";
 
+/* Pause button label */
+"Pause" = "Pause";
+
+/* Play button label */
+"Play" = "Abspielen";
+
 /* Segment or chapter cell hint */
 "Plays the content." = "Inhalt abspielen";
 

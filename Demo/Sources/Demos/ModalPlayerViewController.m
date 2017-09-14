@@ -42,7 +42,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL streamAvailabilityCheckInterval:(NSNumber *)streamAvailabilityCheckInterval
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -56,6 +56,7 @@
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
+        viewController.letterboxController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval ? streamAvailabilityCheckInterval.doubleValue : ApplicationSettingStreamAvailabilityCheckInterval();
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
         return viewController;

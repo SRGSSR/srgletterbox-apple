@@ -8,7 +8,7 @@
 "Audio" = "Audio";
 
 /* Label to explain that a content will be available in X minutes / seconds. */
-"Available in %@" = "Available in %@";
+"Available in %@" = "Da survegnir a %@";
 
 /* Back to live label */
 "Back to live" = "Enavos a live";
@@ -21,6 +21,12 @@
 
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Monitur entir";
+
+/* Pause button label */
+"Pause" = "Pausa";
+
+/* Play button label */
+"Play" = "Laschar ir";
 
 /* Segment or chapter cell hint */
 "Plays the content." = "Mussar cuntegn.";

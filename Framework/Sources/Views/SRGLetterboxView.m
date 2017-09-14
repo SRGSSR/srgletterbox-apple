@@ -369,8 +369,9 @@ static void commonInit(SRGLetterboxView *self);
     
     _controller = controller;
     
+    self.playbackButton.controller = controller;
+    
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    self.playbackButton.mediaPlayerController = mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
@@ -864,7 +865,6 @@ static void commonInit(SRGLetterboxView *self);
         
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
-        self.playbackButton.usesStopImage = NO;
     }
     else {
         self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
@@ -875,14 +875,12 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.usesStopImage = NO;
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.usesStopImage = YES;
                 break;
             }
                 
@@ -890,14 +888,12 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.usesStopImage = NO;
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.usesStopImage = NO;
                 break;
             }
         }
