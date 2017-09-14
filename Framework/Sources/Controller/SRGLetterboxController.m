@@ -236,7 +236,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (CMTime)currentTime
 {
-    return self.mediaPlayerController.player.currentTime;
+    return self.mediaPlayerController.currentTime;
 }
 
 - (NSDate *)date
@@ -951,7 +951,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (CMTime)seekStartTime
 {
-    return CMTIME_IS_INDEFINITE(self.mediaPlayerController.seekTargetTime) ? self.mediaPlayerController.player.currentTime : self.mediaPlayerController.seekTargetTime;
+    return CMTIME_IS_INDEFINITE(self.mediaPlayerController.seekTargetTime) ? self.mediaPlayerController.currentTime : self.mediaPlayerController.seekTargetTime;
 }
 
 - (BOOL)canSkipBackwardFromTime:(CMTime)time

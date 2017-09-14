@@ -389,7 +389,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.player.currentTime));
+    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(mediaPlayerController.currentTime));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(mediaPlayerController.timeRange.duration));
     
     // Available starting with iOS 10. Only used for non-DVR livestreams (since when this property is set to YES the
