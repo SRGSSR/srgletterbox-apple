@@ -42,6 +42,16 @@ static SRGMediaURN *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endD
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
 }
 
+static SRGMediaURN *MMFURLChangedDVRURN(NSDate *startDate, NSDate *endDate)
+{
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
+}
+
+static SRGMediaURN *MMFGeoBlockChangedVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_geoblocked_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
+}
+
 static NSURL *MMFServiceURL(void)
 {
     return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
@@ -998,8 +1008,9 @@ static NSURL *MMFServiceURL(void)
     self.controller.streamAvailabilityCheckInterval = 10.;
     
     // Media changes it resource URL after 5 seconds
-    // TODO: Set the good MMF URN
-    SRGMediaURN *URN = LiveDVRVideoURN();
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:60];
+    SRGMediaURN *URN = MMFURLChangedDVRURN(startDate, endDate);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1043,8 +1054,9 @@ static NSURL *MMFServiceURL(void)
     self.controller.streamAvailabilityCheckInterval = 10.;
     
     // Media changes it resource URL after 5 seconds
-    // TODO: Set the good MMF URN
-    SRGMediaURN *URN = LiveDVRVideoURN();
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:60];
+    SRGMediaURN *URN = MMFURLChangedDVRURN(startDate, endDate);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1109,8 +1121,9 @@ static NSURL *MMFServiceURL(void)
     self.controller.streamAvailabilityCheckInterval = 10.;
     
     // Media changes it resource URL after 5 seconds
-    // TODO: Set the good MMF URN
-    SRGMediaURN *URN = LiveDVRVideoURN();
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:60];
+    SRGMediaURN *URN = MMFURLChangedDVRURN(startDate, endDate);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1171,8 +1184,9 @@ static NSURL *MMFServiceURL(void)
     self.controller.streamAvailabilityCheckInterval = 10.;
     
     // Media changes with a block reason after 5 seconds
-    // TODO: Set the good MMF URN
-    SRGMediaURN *URN = LiveDVRVideoURN();
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:60];
+    SRGMediaURN *URN = MMFGeoBlockChangedVideoURN(startDate, endDate);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
