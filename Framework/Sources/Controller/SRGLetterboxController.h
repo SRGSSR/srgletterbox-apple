@@ -87,14 +87,14 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 };
 
 /**
- *  Time interval to check stream availability. Default is 5 minutes.
+ *  Time interval for stream availability checks. Default is 5 minutes.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxStreamAvailabilityCheckDefaultInterval;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateDefaultInterval;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -471,7 +471,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Time interval between stream availability checks.
  *
- *  Default is `SRGLetterboxStreamAvailabilityCheckDefaultInterval`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxStreamAvailabilityCheckIntervalDefault`, and minimum is 10 seconds.
  *
  *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
  *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
@@ -484,7 +484,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is `SRGLetterboxChannelUpdateDefaultInterval`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 

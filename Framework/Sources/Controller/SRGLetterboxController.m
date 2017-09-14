@@ -45,8 +45,8 @@ NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlayba
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
-NSTimeInterval const SRGLetterboxStreamAvailabilityCheckDefaultInterval = 5. * 60.;
-NSTimeInterval const SRGLetterboxChannelUpdateDefaultInterval = 30.;
+NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault = 5. * 60.;
+NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault = 30.;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -157,8 +157,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         };
         
         // Also register the associated periodic time observers
-        self.streamAvailabilityCheckInterval = SRGLetterboxStreamAvailabilityCheckDefaultInterval;
-        self.channelUpdateInterval = SRGLetterboxChannelUpdateDefaultInterval;
+        self.streamAvailabilityCheckInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+        self.channelUpdateInterval = SRGLetterboxChannelUpdateIntervalDefault;
         
         // Observe playback state changes
         [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
