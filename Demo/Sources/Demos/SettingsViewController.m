@@ -38,7 +38,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
     NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
-    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : SRGLetterboxStreamAvailabilityCheckDefaultInterval;
 }
 
 @interface ServerSetting : NSObject
@@ -218,7 +218,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             
             switch (indexPath.row) {
                 case 0: {
-                    NSTimeInterval timeInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+                    NSTimeInterval timeInterval = SRGLetterboxStreamAvailabilityCheckDefaultInterval;
                     cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
                     cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
