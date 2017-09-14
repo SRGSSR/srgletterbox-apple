@@ -62,11 +62,9 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
     return s_businessUnitIdentifiers[@(vendor)];
 }
 
-static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *mediaComposition)
+static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
-    SRGChapter *mainChapter = mediaComposition.mainChapter;
-    SRGMedia *media = [mediaComposition mediaForSubdivision:mainChapter];
-    SRGBlockingReason blockingReason = mainChapter.blockingReason;
+    SRGBlockingReason blockingReason = media.blockingReason;
     
     // Observe start and end dates first. If we are offline, the date range information is more reliable blocking reasons,
     // if retrieved easlier, might be outdated.
@@ -506,7 +504,8 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
     NSParameterAssert(completionBlock);
     
     if (self.contentURLOverridden) {
-        completionBlock(nil, NO);
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
+        completionBlock(blockingReasonError, NO);
         return;
     }
     
@@ -523,7 +522,8 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         
         if (mediaComposition) {
             // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
-            NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+            SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
             if (blockingReasonError) {
                 completionBlock(blockingReasonError, NO);
                 return;
@@ -630,7 +630,13 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
             // Media readily available. Done
             if (media) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-                [self.mediaPlayerController playURL:contentURL];
+                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
+                if (blockingReasonError) {
+                    [self reportError:blockingReasonError];
+                }
+                else {
+                    [self.mediaPlayerController playURL:contentURL];
+                }
             }
             // Retrieve the media
             else {
@@ -641,7 +647,13 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
                     }
                     
                     [self updateWithURN:nil media:medias.firstObject mediaComposition:nil subdivision:nil channel:nil];
-                    [self.mediaPlayerController playURL:contentURL];
+                    NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(medias.firstObject);
+                    if (blockingReasonError) {
+                        [self.requestQueue reportError:blockingReasonError];
+                    }
+                    else {
+                        [self.mediaPlayerController playURL:contentURL];
+                    }
                 };
                 
                 if (URN.mediaType == SRGMediaTypeVideo) {
@@ -669,7 +681,8 @@ static NSError *SRGBlockingReasonErrorForMediaComposition(SRGMediaComposition *m
         [self updateChannel];
         
         // Do not go further if the content is blocked
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMediaComposition(mediaComposition);
+        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
         if (blockingReasonError) {
             [self.requestQueue reportError:blockingReasonError];
             return;
