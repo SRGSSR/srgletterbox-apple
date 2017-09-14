@@ -37,6 +37,8 @@
     [super viewDidLoad];
     
     self.title = [self pageTitle];
+    
+    self.settingsBarButtonItem.accessibilityLabel = NSLocalizedString(@"Settings", @"Settings button label on main view");
 }
 
 #pragma mark Getters and setters
@@ -85,10 +87,7 @@
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL streamAvailabilityCheckInterval:(NSNumber *)streamAvailabilityCheckInterval
 {
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL];
-    if (streamAvailabilityCheckInterval) {
-        playerViewController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval.doubleValue;
-    }
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL streamAvailabilityCheckInterval:streamAvailabilityCheckInterval];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -159,7 +158,7 @@
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
-    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_staging_delay";
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     

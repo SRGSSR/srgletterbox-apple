@@ -26,6 +26,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+    viewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
     viewController.URN = URN;
     return viewController;
 }

@@ -87,6 +87,16 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 };
 
 /**
+ *  Time interval for stream availability checks. Default is 5 minutes.
+ */
+OBJC_EXPORT NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+
+/**
+ *  Time interval to check channel metadata. Default is 30 seconds.
+ */
+OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
+
+/**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
@@ -110,6 +120,11 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 /**
  *  The URL of the service data must be returned from. By default or if reset to `nil`, the production server is
  *  used. Official URL values can be found in `SRGDataProvider.h`.
+ *
+ *  @discussion Changing the service URL while playing is possible, but the change is not guaranteed to be applied
+ *              immediately, and playback might be interrupted if the new service is not available to provide data
+ *              for the media being played. In general, and a different service URL is required, you should therefore 
+ *              set it before starting playback.
  */
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
@@ -150,7 +165,9 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
          completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Ask the player to play. If the player has not been prepared, this method does nothing.
+ *  Ask the player to play. 
+ *
+ *  @discussion Start playback if a media is available and the player is idle.
  */
 - (void)play;
 
@@ -160,7 +177,9 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 - (void)pause;
 
 /**
- *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
+ *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in. 
+ *
+ *  @discussion Start playback if a media is available and the player is idle.
  */
 - (void)togglePlayPause;
 
@@ -178,7 +197,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 - (void)restart;
 
 /**
- *  Reset playback and reset all playback information.
+ *  Reset playback and all playback information.
  */
 - (void)reset;
 
@@ -452,7 +471,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Time interval between stream availability checks.
  *
- *  Default is 5 minutes, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxStreamAvailabilityCheckIntervalDefault`, and minimum is 10 seconds.
  *
  *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
  *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
@@ -465,7 +484,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is 30 seconds, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 

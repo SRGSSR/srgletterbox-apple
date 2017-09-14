@@ -41,6 +41,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+        viewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
         viewController.URN = URN;
         return viewController;
     }
@@ -58,7 +59,9 @@
 {
     [super viewDidLoad];
     
-    self.mirroredSwitch.on = [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
+    
+    self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
     [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
@@ -142,7 +145,7 @@
 
 - (IBAction)toggleMirrored:(id)sender
 {
-    [SRGLetterboxService sharedService].mirroredOnExternalScreen = ! [SRGLetterboxService sharedService].mirroredOnExternalScreen;
+    ApplicationSettingSetMirroredOnExternalScreen(! ApplicationSettingIsMirroredOnExternalScreen());
 }
 
 @end

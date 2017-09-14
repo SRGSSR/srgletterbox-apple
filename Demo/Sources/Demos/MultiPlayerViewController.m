@@ -56,6 +56,10 @@
     multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
     multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
     
+    multiPlayerViewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+    multiPlayerViewController.smallLetterboxController1.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+    multiPlayerViewController.smallLetterboxController2.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+    
     multiPlayerViewController.URN = URN;
     multiPlayerViewController.URN1 = URN1;
     multiPlayerViewController.URN2 = URN2;
@@ -74,6 +78,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     

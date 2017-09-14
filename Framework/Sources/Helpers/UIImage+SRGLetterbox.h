@@ -23,6 +23,9 @@ OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object
 
 /**
  *  Return the (square) artwork image URL for an object, with a given dimension.
+ *
+ *  @discussion If some images have been overridden by local versions (see SRGDataProvider NSURL+SRGDataProvider.h file),
+ *              the returned URL might be a file URL.
  */
 OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension);
 

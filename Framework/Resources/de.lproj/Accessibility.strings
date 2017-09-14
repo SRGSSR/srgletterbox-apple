@@ -7,6 +7,9 @@
 /* The main area on the letterbox view, where the audio or its thumbnail is displayed */
 "Audio" = "Audio";
 
+/* Label to explain that a content will be available in X minutes / seconds. */
+"Available in %@" = "Verfügbar in %@";
+
 /* Back to live label */
 "Back to live" = "Zurück zu live";
 
@@ -19,14 +22,17 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Vollansicht starten";
 
+/* Pause button label */
+"Pause" = "Pause";
+
+/* Play button label */
+"Play" = "Abspielen";
+
 /* Segment or chapter cell hint */
 "Plays the content." = "Inhalt abspielen";
 
 /* Stop button label */
 "Stop" = "Anhalten";
-
-/* Label to explain that a content will be available in X minutes / seconds. */
-"Available in %@" = "Verfügbar in %@";
 
 /* The main area on the letterbox view, where the video or its thumbnail is displayed */
 "Video" = "Video";

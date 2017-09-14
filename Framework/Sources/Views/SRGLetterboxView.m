@@ -5,6 +5,7 @@
 //
 
 #import "SRGLetterboxView.h"
+#import "SRGLetterboxView+Private.h"
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
@@ -18,7 +19,6 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
-#import "SRGMedia+SRGLetterbox.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
@@ -143,6 +143,7 @@ static void commonInit(SRGLetterboxView *self);
     self.loadingImageView = loadingImageView;
     
     self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
+    self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
@@ -312,7 +313,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (UIAccessibilityIsVoiceOverRunning()) {
         self.accessibilityView.alpha = 1.f;
-        [self toggleUserInterfaceHidden:NO animated:YES];
+        [self setTogglableUserInterfaceHidden:NO animated:YES];
     }
     else {
         self.accessibilityView.alpha = 0.f;
@@ -368,8 +369,9 @@ static void commonInit(SRGLetterboxView *self);
     
     _controller = controller;
     
+    self.playbackButton.controller = controller;
+    
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    self.playbackButton.mediaPlayerController = mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
@@ -496,9 +498,9 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
-- (NSError *)error
+- (NSError *)errorForController:(SRGLetterboxController *)controller
 {
-    NSError *error = self.controller.error;
+    NSError *error = controller.error;
     if (error) {
         // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
         // displayed instead)
@@ -509,13 +511,46 @@ static void commonInit(SRGLetterboxView *self);
             return error;
         }
     }
-    else if (! self.controller.media && ! self.controller.URN) {
+    else if (! controller.media && ! controller.URN) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotFound
                                userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
     }
     else {
         return nil;
+    }
+}
+
+- (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
+{
+    return ! controller.media || SRGDataProviderAvailabilityForMediaMetadata(controller.media) == SRGMediaAvailabilityAvailable;
+}
+
+- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehavior
+{
+    return [self userInterfaceBehaviorForController:self.controller];
+}
+
+- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehaviorForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
+    // Controls and error overlay must never be displayed at the same time. This does not change the final expected
+    // control visbility state variable, only its visual result.
+    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
+    if (hasError || isAvailabilityViewVisible || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+        return SRGLetterboxViewUserInterfaceBehaviorForcedHidden;
+    }
+    else if (self.userInterfaceTogglable
+             && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
+        return SRGLetterboxViewUserInterfaceBehaviorForcedVisible;
+    }
+    else {
+        return SRGLetterboxViewUserInterfaceBehaviorNormal;
     }
 }
 
@@ -602,7 +637,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    self.errorLabel.text = [self error].localizedDescription;
+    self.errorLabel.text = [self errorForController:controller].localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];
 }
@@ -612,11 +647,12 @@ static void commonInit(SRGLetterboxView *self);
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    if (media.srg_availability == SRGMediaAvailabilityExpired) {
+    if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotAvailableAnymore) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
+        self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
         self.availabilityLabel.hidden = NO;
     }
-    else if (media.srg_availability == SRGMediaAvailabilityNotYet) {
+    else if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotYetAvailable) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
         NSString *availabilityLabelText = nil;
@@ -677,7 +713,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)reloadImageForController:(SRGLetterboxController *)controller
 {
     // For livestreams, rely on channel information when available
-    SRGMedia *media = controller.media;
+    SRGMedia *media = controller.subdivisionMedia ?: controller.media;
     if (media.contentType == SRGContentTypeLivestream && controller.channel) {
         SRGChannel *channel = controller.channel;
         
@@ -717,7 +753,8 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
-- (void)toggleUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
+// Only alter user interface visibility if togglable
+- (void)setTogglableUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
     if (! self.userInterfaceTogglable) {
         return;
@@ -733,20 +770,22 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
-    // Controls and error overlay must never be displayed at the same time. This does not change the final expected
-    // control visbility state variable, only its visual result.
-    BOOL hasError = ([self error] != nil);
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive]
-        && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    
-    BOOL userInterfaceHidden = self.userInterfaceHidden;
-    BOOL isMediaAvailable = (controller.media.srg_availability == SRGMediaAvailabilityAvailable);
-    if (hasError || ! isMediaAvailable || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-        userInterfaceHidden = YES;
-    }
-    else if (self.userInterfaceTogglable
-                && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
-        userInterfaceHidden = NO;
+    BOOL userInterfaceHidden = NO;
+    switch ([self userInterfaceBehaviorForController:controller]) {
+        case SRGLetterboxViewUserInterfaceBehaviorForcedHidden: {
+            userInterfaceHidden = YES;
+            break;
+        }
+            
+        case SRGLetterboxViewUserInterfaceBehaviorForcedVisible: {
+            userInterfaceHidden = NO;
+            break;
+        }
+            
+        default: {
+            userInterfaceHidden = self.userInterfaceHidden;
+            break;
+        }
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
@@ -756,11 +795,15 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
-    // Only display retry instructions if there is a media to retry with
-    self.errorView.alpha = hasError ? 1.f : 0.f;
-    self.errorInstructionsLabel.alpha = (hasError && controller.URN) ? 1.f : 0.f;
+    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     
-    self.availabilityView.alpha = isMediaAvailable ? 0.f : 1.f;
+    // Only display error view if has an error and not displaying availability view
+    self.errorView.alpha = (hasError && !isAvailabilityViewVisible) ? 1.f : 0.f;
+    // Only display retry instructions if there is a media to retry with
+    self.errorInstructionsLabel.alpha = (hasError && !isAvailabilityViewVisible && controller.URN) ? 1.f : 0.f;
+    
+    self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
@@ -822,7 +865,6 @@ static void commonInit(SRGLetterboxView *self);
         
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
-        self.playbackButton.usesStopImage = NO;
     }
     else {
         self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
@@ -833,14 +875,12 @@ static void commonInit(SRGLetterboxView *self);
             case SRGMediaPlayerStreamTypeOnDemand: {
                 self.timeSlider.alpha = 1.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.usesStopImage = NO;
                 break;
             }
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = NO;
-                self.playbackButton.usesStopImage = YES;
                 break;
             }
                 
@@ -848,14 +888,12 @@ static void commonInit(SRGLetterboxView *self);
                 self.timeSlider.alpha = 1.f;
                 // Hide timeLeftValueLabel to give the width space to the timeSlider
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.usesStopImage = NO;
                 break;
             }
                 
             default: {
                 self.timeSlider.alpha = 0.f;
                 self.timeSlider.timeLeftValueLabel.hidden = YES;
-                self.playbackButton.usesStopImage = NO;
                 break;
             }
         }
@@ -946,7 +984,7 @@ static void commonInit(SRGLetterboxView *self);
             if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
                     || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
                     || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
-                [self toggleUserInterfaceHidden:YES animated:YES];
+                [self setTogglableUserInterfaceHidden:YES animated:YES];
             }
         }];
     }
@@ -1041,14 +1079,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
-    [self toggleUserInterfaceHidden:NO animated:YES];
+    [self setTogglableUserInterfaceHidden:NO animated:YES];
 }
 
 - (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
     // Defer execution to avoid conflicts with the activity gesture above
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self toggleUserInterfaceHidden:YES animated:YES];
+        [self setTogglableUserInterfaceHidden:YES animated:YES];
     });
 }
 
@@ -1324,6 +1362,12 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        self.accessibilityIgnoresInvertColors = YES;
+    }
+#endif
     
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
 }

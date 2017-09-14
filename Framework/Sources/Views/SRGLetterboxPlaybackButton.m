@@ -7,13 +7,21 @@
 #import "SRGLetterboxPlaybackButton.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "UIImage+SRGLetterbox.h"
+
+#import <libextobjc/libextobjc.h>
 
 static void commonInit(SRGLetterboxPlaybackButton *self);
 
+@interface SRGLetterboxPlaybackButton ()
+
+@property (weak) id periodicTimeObserver;
+
+@end
+
 @implementation SRGLetterboxPlaybackButton
 
-@synthesize usesStopImage = _usesStopImage;
 @synthesize imageSet = _imageSet;
 
 #pragma mark Object lifecycle
@@ -34,33 +42,87 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     return self;
 }
 
-#pragma mark Overrides
+#pragma mark Getters and setters
 
-- (void)setUsesStopImage:(BOOL)usesStopImage
+- (void)setController:(SRGLetterboxController *)controller
 {
-    _usesStopImage = usesStopImage;
+    if (_controller) {
+        [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxControllerPlaybackStateDidChangeNotification
+                                                      object:_controller];
+    }
     
-    self.pauseImage = (usesStopImage) ? [UIImage srg_letterboxStopImageInSet:self.imageSet] : [UIImage srg_letterboxPauseImageInSet:self.imageSet];
+    _controller = controller;
+    [self refreshButton];
+    
+    if (controller) {
+        @weakify(self)
+        self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            
+            [self refreshButton];
+        }];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackStateDidChange:)
+                                                     name:SRGLetterboxControllerPlaybackStateDidChangeNotification
+                                                   object:controller];
+    }
 }
 
 - (void)setImageSet:(SRGImageSet)imageSet
 {
     _imageSet = imageSet;
-    
-    self.playImage = [UIImage srg_letterboxPlayImageInSet:imageSet];
-    self.pauseImage = (self.usesStopImage) ? [UIImage srg_letterboxStopImageInSet:imageSet] : [UIImage srg_letterboxPauseImageInSet:imageSet];
+    [self refreshButton];
 }
 
-#pragma mark Accessibility
+#pragma mark Overrides
 
-- (NSString *)accessibilityLabel
+- (void)willMoveToWindow:(UIWindow *)newWindow
 {
-    if (self.playbackButtonState == SRGPlaybackButtonStatePause && self.usesStopImage) {
-        return SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label");
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [self refreshButton];
     }
-    else {
-        return [super accessibilityLabel];
+}
+
+#pragma mark UI
+
+- (void)refreshButton
+{
+    // Keep the most recent state when seeking
+    if (self.controller.playbackState != SRGMediaPlayerPlaybackStateSeeking) {
+        UIImage *buttonImage = nil;
+        NSString *accessibilityLabel = nil;
+        
+        if (self.controller.playbackState == SRGMediaPlayerPlaybackStatePlaying || self.controller.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+            BOOL isLiveOnly = (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
+            buttonImage = isLiveOnly ? [UIImage srg_letterboxStopImageInSet:self.imageSet] : [UIImage srg_letterboxPauseImageInSet:self.imageSet];
+            accessibilityLabel = isLiveOnly ? SRGLetterboxAccessibilityLocalizedString(@"Stop", @"Stop button label") : SRGLetterboxAccessibilityLocalizedString(@"Pause", @"Pause button label");
+        }
+        else {
+            buttonImage = [UIImage srg_letterboxPlayImageInSet:self.imageSet];
+            accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Play", @"Play button label");
+        }
+        
+        [self setImage:buttonImage forState:UIControlStateNormal];
+        self.accessibilityLabel = accessibilityLabel;
     }
+}
+
+#pragma mark Actions
+
+- (void)togglePlayPause:(id)sender
+{
+    [self.controller togglePlayPause];
+}
+
+#pragma mark Notifications
+
+- (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self refreshButton];
 }
 
 @end
@@ -70,4 +132,6 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
 static void commonInit(SRGLetterboxPlaybackButton *self)
 {
     self.imageSet = SRGImageSetNormal;
+    
+    [self addTarget:self action:@selector(togglePlayPause:) forControlEvents:UIControlEventTouchUpInside];
 }

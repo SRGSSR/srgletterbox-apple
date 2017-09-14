@@ -7,8 +7,10 @@
 #import "AppDelegate.h"
 
 #import "DemosViewController.h"
+#import "SettingsViewController.h"
 
 #import <SRGAnalytics/SRGAnalytics.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 #import <HockeySDK/HockeySDK.h>
 
 @implementation AppDelegate
@@ -43,6 +45,8 @@
     configuration.centralized = YES;
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
+    
+    [SRGLetterboxService sharedService].mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
