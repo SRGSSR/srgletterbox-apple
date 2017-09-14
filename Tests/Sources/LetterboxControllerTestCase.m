@@ -47,7 +47,7 @@ static SRGMediaURN *MMFURLChangedDVRURN(NSDate *startDate, NSDate *endDate)
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
 }
 
-static SRGMediaURN *MMFGeoBlockChangedVideoURN(NSDate *startDate, NSDate *endDate)
+static SRGMediaURN *MMFGeoblockChangedVideoURN(NSDate *startDate, NSDate *endDate)
 {
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_geoblocked_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
 }
@@ -695,7 +695,7 @@ static NSURL *MMFServiceURL(void)
     }];
 }
 
-- (void)testFullLengthUninterruptedOnDemandPlayback
+- (void)testUninterruptedOnDemandFullLengthPlayback
 {
     self.controller.streamAvailabilityCheckInterval = 10.f;
     
@@ -744,7 +744,7 @@ static NSURL *MMFServiceURL(void)
     }];
 }
 
-- (void)testSegmentUninterruptedOnDemandSegmentPlayback
+- (void)testUninterruptedOnDemandSegmentPlayback
 {
     self.controller.streamAvailabilityCheckInterval = 10.f;
     
@@ -1293,7 +1293,7 @@ static NSURL *MMFServiceURL(void)
     // Media changes with a block reason after 7 seconds
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
-    SRGMediaURN *URN = MMFGeoBlockChangedVideoURN(startDate, endDate);
+    SRGMediaURN *URN = MMFGeoblockChangedVideoURN(startDate, endDate);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
