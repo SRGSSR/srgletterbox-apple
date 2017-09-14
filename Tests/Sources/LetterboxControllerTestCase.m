@@ -1072,6 +1072,17 @@ static NSURL *MMFServiceURL(void)
     
     NSURL *firstURL = self.controller.mediaPlayerController.contentURL;
     
+    // TODO: remove when SRGMediaPlayer can pause a DVR directly after a play notification
+    [self expectationForElapsedTimeInterval:1. withHandler:nil];
+    
+    id eventObserver0 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player cannot be restarted with a play after a reset. No event expected");
+    }];
+    
+    [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver0];
+    }];
+
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
     }];
