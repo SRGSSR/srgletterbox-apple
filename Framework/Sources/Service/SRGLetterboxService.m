@@ -33,8 +33,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
 
-@property (nonatomic) NSURL *cachedArtworkURL;
-@property (nonatomic) UIImage *cachedArtworkImage;
+@property (atomic) NSURL *cachedArtworkURL;
+@property (atomic) UIImage *cachedArtworkImage;
 
 @end
 
@@ -378,8 +378,13 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         // Home artwork retrieval works (because poorly documented):
         // Images are retrieved when needed by the now playing info center by calling -[MPMediaItemArtwork imageWithSize:]`. Sizes
         // larger than the bounds size specified at creation will be fixed to the maximum compatible value. The request block itself
-        // must be implemented to return an image of the size it receives as parameter, and is called on the main thread.
+        // must be implemented to return an image of the size it receives as parameter, and is called on a background thread.
+        //
+        // Moreover, a subtle issue might arise if the controller is strongly captured by the block (successive now playing information
+        // center updates might deadlock).
+        @weakify(controller)
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
+            @strongify(controller);
             return [self cachedArtworkImageForController:controller withSize:size];
         }];
     }
@@ -455,23 +460,17 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxMediaArtworkPlaceholderFilePath() withSize:size];
             UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
             
-            @weakify(controller)
+            // Request the image when not available. Calling -cachedArtworkImageForController:withSize: will then return
+            // it when it has been downloaded.
             self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:artworkURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                @strongify(controller)
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (image) {
-                        self.cachedArtworkURL = artworkURL;
-                        self.cachedArtworkImage = image;
-                    }
-                    else {
-                        self.cachedArtworkURL = placeholderImageURL;
-                        self.cachedArtworkImage = placeholderImage;
-                    }
-                    
-                    // Force a control center update with the newly cached image information
-                    [self updateNowPlayingInformationWithController:controller];
-                });
+                if (image) {
+                    self.cachedArtworkURL = artworkURL;
+                    self.cachedArtworkImage = image;
+                }
+                else {
+                    self.cachedArtworkURL = placeholderImageURL;
+                    self.cachedArtworkImage = placeholderImage;
+                }
             }];
             
             // Keep the current artwork during retrieval (even if it does not match) for smoother transitions, or use
