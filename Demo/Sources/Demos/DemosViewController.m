@@ -159,6 +159,8 @@
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
     static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
+    static NSString * const kMMFTemporarilyGeoblockedURNString = @"urn:rts:video:_rts_info_geoblocked";
+    static NSString * const kMMFDVRKillSwitchURNString = @"urn:rts:video:_rts_info_killswitch";
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
@@ -325,21 +327,37 @@
                 }
                     
                 case 19: {
-                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                       streamAvailabilityCheckInterval:@15];
                     break;
                 }
                     
                 case 20: {
-                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                       streamAvailabilityCheckInterval:@15];
                     break;
                 }
                     
                 case 21: {
-                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 22: {
+                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
+                    break;
+                }
+                    
+                case 23: {
+                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    break;
+                }
+                    
+                case 24: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString chaptersOnly:NO];
