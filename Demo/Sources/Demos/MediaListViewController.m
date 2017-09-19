@@ -126,7 +126,22 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = self.medias[indexPath.row].title;
+    SRGMedia *media = self.medias[indexPath.row];
+    NSString *text = media.title;
+    if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotYetAvailable) {
+        text = [@"🔜 " stringByAppendingString:text];
+    }
+    else if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotAvailableAnymore) {
+        text = [@"🔚 " stringByAppendingString:text];
+    }
+    else if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
+        text = [@"⏺ " stringByAppendingString:text];
+    }
+    else {
+        text = [@"▶️ " stringByAppendingString:text];
+    }
+    
+    cell.textLabel.text = text;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
