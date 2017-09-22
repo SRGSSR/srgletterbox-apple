@@ -106,9 +106,9 @@
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
 {
-    SRGMediaURN *URN = (URNString) ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    SRGMediaURN *URN1 = (URNString1) ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
-    SRGMediaURN *URN2 = (URNString2) ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
+    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
+    SRGMediaURN *URN1 = URNString1 ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
+    SRGMediaURN *URN2 = URNString2 ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
     
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
     
