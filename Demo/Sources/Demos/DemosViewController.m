@@ -81,13 +81,13 @@
 
 - (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
 {
-    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil streamAvailabilityCheckInterval:nil];
+    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil updateInterval:nil];
 }
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL streamAvailabilityCheckInterval:(NSNumber *)streamAvailabilityCheckInterval
+- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL streamAvailabilityCheckInterval:streamAvailabilityCheckInterval];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL updateInterval:updateInterval];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -322,7 +322,7 @@
                     [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                       streamAvailabilityCheckInterval:@15];
+                       updateInterval:@15];
                     break;
                 }
                     
@@ -330,7 +330,7 @@
                     [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                       streamAvailabilityCheckInterval:@15];
+                       updateInterval:@15];
                     break;
                 }
                     
@@ -338,7 +338,7 @@
                     [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                       streamAvailabilityCheckInterval:@15];
+                       updateInterval:@15];
                     break;
                 }
                     

@@ -34,11 +34,11 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
     [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
-NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
+NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
-    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+    NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+    return (updateInterval > 0.) ? updateInterval : SRGLetterboxControllerUpdateIntervalDefault;
 }
 
 @interface ServerSetting : NSObject
@@ -123,7 +123,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
         }
             
         case 2: {
-            return NSLocalizedString(@"Stream availability check", @"Stream availability check header title in settings view");
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
             break;
         }
             
@@ -218,16 +218,16 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             
             switch (indexPath.row) {
                 case 0: {
-                    NSTimeInterval timeInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = SRGLetterboxControllerUpdateIntervalDefault;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
                     NSTimeInterval timeInterval = LetterboxSRGSettingStreamAvailabilityCheckIntervalShort;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Short update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -275,7 +275,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            [SRGLetterboxService sharedService].controller.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+            [SRGLetterboxService sharedService].controller.updateInterval = ApplicationSettingUpdateInterval();
             break;
         }
             

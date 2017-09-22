@@ -644,7 +644,7 @@ static NSURL *MMFServiceURL(void)
  - (void)testContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    self.controller.streamAvailabilityCheckInterval = 10.f;
+    self.controller.updateInterval = 10.f;
     self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(SRGMediaURN * _Nonnull URN) {
         return overridingURL;
     };
@@ -668,7 +668,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -687,7 +687,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
 
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change with an overriding url, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -697,7 +697,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandFullLengthPlayback
 {
-    self.controller.streamAvailabilityCheckInterval = 10.f;
+    self.controller.updateInterval = 10.f;
     
     SRGMediaURN *URN = OnDemandLongVideoURN();
     
@@ -717,7 +717,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
 
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when playing a full length, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when playing a full length, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -736,7 +736,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
 
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when playing a full length, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when playing a full length, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -746,7 +746,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandSegmentPlayback
 {
-    self.controller.streamAvailabilityCheckInterval = 10.f;
+    self.controller.updateInterval = 10.f;
     
     SRGMediaURN *URN = OnDemandLongVideoSegmentURN();
     
@@ -767,7 +767,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when playing a segment, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when playing a segment, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -786,7 +786,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when playing a segment, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when playing a segment, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -796,7 +796,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandPlaybackAfterSegmentSelection
 {
-    self.controller.streamAvailabilityCheckInterval = 10.f;
+    self.controller.updateInterval = 10.f;
     
     SRGMediaURN *URN = OnDemandLongVideoURN();
     
@@ -824,7 +824,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
 
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -843,7 +843,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
 
     id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -854,7 +854,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedLivePlayback
 {
-    self.controller.streamAvailabilityCheckInterval = 10.f;
+    self.controller.updateInterval = 10.f;
     
     SRGMediaURN *URN = LiveOnlyVideoURN();
     
@@ -882,7 +882,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
 
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback state must not change when stoping playback, even if there is a channel update or stream availability check.");
+        XCTFail(@"Playback state must not change when stoping playback, even if there is a channel update or controller update.");
     }];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -1101,7 +1101,7 @@ static NSURL *MMFServiceURL(void)
 - (void)testResourceChangedWhenPlaying
 {
     self.controller.serviceURL = MMFServiceURL();
-    self.controller.streamAvailabilityCheckInterval = 10.;
+    self.controller.updateInterval = 10.;
     
     // Media changes it resource URL after 7 seconds
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
@@ -1147,7 +1147,7 @@ static NSURL *MMFServiceURL(void)
 - (void)testResourceChangedWhenPaused
 {
     self.controller.serviceURL = MMFServiceURL();
-    self.controller.streamAvailabilityCheckInterval = 10.;
+    self.controller.updateInterval = 10.;
     
     // Media changes it resource URL after 7 seconds
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
@@ -1225,7 +1225,7 @@ static NSURL *MMFServiceURL(void)
 - (void)testResourceChangedWhenStopped
 {
     self.controller.serviceURL = MMFServiceURL();
-    self.controller.streamAvailabilityCheckInterval = 10.;
+    self.controller.updateInterval = 10.;
     
     // Media changes it resource URL after 7 seconds
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
@@ -1288,7 +1288,7 @@ static NSURL *MMFServiceURL(void)
 - (void)testNewBlockReason
 {
     self.controller.serviceURL = MMFServiceURL();
-    self.controller.streamAvailabilityCheckInterval = 10.;
+    self.controller.updateInterval = 10.;
     
     // Media changes with a block reason after 7 seconds
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];

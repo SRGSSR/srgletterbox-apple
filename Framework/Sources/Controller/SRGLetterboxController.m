@@ -45,8 +45,8 @@ NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlayba
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
-NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault = 5. * 60.;
-NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault = 30.;
+NSTimeInterval const SRGLetterboxControllerUpdateIntervalDefault = 30.;
+NSTimeInterval const SRGLetterboxControllerChannelUpdateIntervalDefault = 30.;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -101,7 +101,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 // Use timers (not time observers) so that updates are performed also when the controller is idle
-@property (nonatomic) NSTimer *streamAvailabilyCheckTimer;
+@property (nonatomic) NSTimer *updateTimer;
 @property (nonatomic) NSTimer *channelUpdateTimer;
 
 // Timers for single metadata updates at start and end times
@@ -111,7 +111,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
@@ -148,8 +148,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         };
         
         // Also register the associated periodic time observers
-        self.streamAvailabilityCheckInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
-        self.channelUpdateInterval = SRGLetterboxChannelUpdateIntervalDefault;
+        self.updateInterval = SRGLetterboxControllerUpdateIntervalDefault;
+        self.channelUpdateInterval = SRGLetterboxControllerChannelUpdateIntervalDefault;
         
         // Observe playback state changes
         [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
@@ -192,7 +192,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (void)dealloc
 {
     // Invalidate timers
-    self.streamAvailabilyCheckTimer = nil;
+    self.updateTimer = nil;
     self.channelUpdateTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
@@ -281,17 +281,17 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return self.mediaPlayerController.tracked;
 }
 
-- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+- (void)setUpdateInterval:(NSTimeInterval)updateInterval
 {
-    if (streamAvailabilityCheckInterval < 10.) {
-        SRGLetterboxLogWarning(@"controller", @"The mimimum stream availability check interval is 10 seconds. Fixed to 10 seconds.");
-        streamAvailabilityCheckInterval = 10.;
+    if (updateInterval < 10.) {
+        SRGLetterboxLogWarning(@"controller", @"The mimimum update interval is 10 seconds. Fixed to 10 seconds.");
+        updateInterval = 10.;
     }
     
-    _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
+    _updateInterval = updateInterval;
     
     @weakify(self)
-    self.streamAvailabilyCheckTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
             if (URLChanged) {
@@ -353,10 +353,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return self.contentURLOverridingBlock && self.contentURLOverridingBlock(self.URN);
 }
 
-- (void)setStreamAvailabilyCheckTimer:(NSTimer *)streamAvailabilyCheckTimer
+- (void)setUpdateTimer:(NSTimer *)updateTimer
 {
-    [_streamAvailabilyCheckTimer invalidate];
-    _streamAvailabilyCheckTimer = streamAvailabilyCheckTimer;
+    [_updateTimer invalidate];
+    _updateTimer = updateTimer;
 }
 
 - (void)setChannelUpdateTimer:(NSTimer *)channelUpdateTimer

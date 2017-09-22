@@ -42,7 +42,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL streamAvailabilityCheckInterval:(NSNumber *)streamAvailabilityCheckInterval
+- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -56,7 +56,7 @@
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         viewController.favoritedSubdivisions = [NSMutableArray array];
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
-        viewController.letterboxController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval ? streamAvailabilityCheckInterval.doubleValue : ApplicationSettingStreamAvailabilityCheckInterval();
+        viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
         viewController.URN = URN;
         viewController.chaptersOnly = chaptersOnly;
         return viewController;
@@ -71,14 +71,14 @@
 
 #pragma mark Getters and setters
 
-- (NSTimeInterval)streamAvailabilityCheckInterval
+- (NSTimeInterval)updateInterval
 {
-    return self.letterboxController.streamAvailabilityCheckInterval;
+    return self.letterboxController.updateInterval;
 }
 
-- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+- (void)setUpdateInterval:(NSTimeInterval)updateInterval
 {
-    self.letterboxController.streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
+    self.letterboxController.updateInterval = updateInterval;
 }
 
 #pragma mark View lifecycle

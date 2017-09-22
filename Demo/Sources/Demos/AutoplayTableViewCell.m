@@ -43,7 +43,7 @@
     [super awakeFromNib];
     
     self.letterboxController.serviceURL = ApplicationSettingServiceURL();
-    self.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+    self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
     self.progressView.hidden = YES;
 }

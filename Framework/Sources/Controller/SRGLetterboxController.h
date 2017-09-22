@@ -87,14 +87,14 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 };
 
 /**
- *  Time interval for stream availability checks. Default is 5 minutes.
+ *  Time interval for stream availability checks. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxControllerUpdateIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxControllerChannelUpdateIntervalDefault;
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -469,22 +469,25 @@ withToleranceBefore:(CMTime)toleranceBefore
 @interface SRGLetterboxController (PeriodicUpdates)
 
 /**
- *  Time interval between stream availability checks.
+ *  Time interval to update metadatas and check stream availability.
  *
- *  Default is `SRGLetterboxStreamAvailabilityCheckIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxControllerUpdateIntervalDefault`, and minimum is 10 seconds.
  *
  *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
  *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
  *              location). If a stream is changed, the new one is automatically played, otherwise playback stops with an 
- *              error. Some streams might also only be available within a specific date range.
+ *              error.
+ *              Some streams might also only be available within a specific date range.
+ *              Live streams or scheduled live streams (live only or DVR) might also have update in the chapter list or 
+ *              the segment list.
  */
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval updateInterval;
 
 /**
  *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxControllerChannelUpdateIntervalDefault`, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
