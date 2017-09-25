@@ -161,6 +161,10 @@
     static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
     static NSString * const kMMFTemporarilyGeoblockedURNString = @"urn:rts:video:_rts_info_geoblocked";
     static NSString * const kMMFDVRKillSwitchURNString = @"urn:rts:video:_rts_info_killswitch";
+    static NSString * const kMMFSwissTxtFullDVRstreamURNString = @"urn:rts:video:_rts_info_fulldvr";
+    static NSString * const kMMFSwissTxtLimitedDVRstreamURNString = @"urn:rts:video:_rts_info_liveonly_limiteddvr";
+    static NSString * const kMMFSwissTxtLiveOnlystreamURNString = @"urn:rts:video:_rts_info_liveonly_delay";
+
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
@@ -319,45 +323,16 @@
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString
-                                          chaptersOnly:NO
-                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                       updateInterval:@15];
-                    break;
-                }
-                    
-                case 19: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
-                                          chaptersOnly:NO
-                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                       updateInterval:@15];
-                    break;
-                }
-                    
-                case 20: {
-                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
-                                          chaptersOnly:NO
-                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
-                       updateInterval:@15];
-                    break;
-                }
-                    
-                case 21: {
-                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
-                    break;
-                }
-                    
-                case 22: {
                     [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
                     break;
                 }
                     
-                case 23: {
+                case 19: {
                     [self openModalPlayerWithURNString:nil chaptersOnly:NO];
                     break;
                 }
                     
-                case 24: {
+                case 20: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString chaptersOnly:NO];
@@ -398,8 +373,70 @@
             }
             break;
         }
-        
+            
         case 4: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                case 3: {
+                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                case 4: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRstreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                case 5: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRstreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                case 6: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlystreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
+        
+        case 5: {
             switch (indexPath.row) {
                 case 0: {
                     [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:@"urn:rts:video:1967124"];
@@ -423,7 +460,7 @@
             break;
         }
         
-        case 5: {
+        case 6: {
             AutoplayList autoplayList = AutoplayListUnknown;
             switch (indexPath.row) {
                 case 0: {
