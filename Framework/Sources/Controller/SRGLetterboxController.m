@@ -736,9 +736,20 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
     // Playing another segment from the same media. Seek
     else {
-        [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
-            [self.mediaPlayerController play];
-        }];
+        if ([self.mediaPlayerController.segments containsObject:subdivision]) {
+            [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
+                [self.mediaPlayerController play];
+            }];
+        }
+        else {
+            CMTime seekTime = subdivision.srg_timeRange.start;
+            [self.mediaPlayerController seekPreciselyToTime:seekTime withCompletionHandler:^(BOOL finished) {
+                // TODO: Remove the condition when SRGMediaPlayer don't seek to live for a DVR stream
+                if (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying) {
+                    [self.mediaPlayerController play];
+                }
+            }];
+        }
     }
     
     return YES;
