@@ -652,7 +652,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Advanced player (special cases)" footerTitle="Same features as the advanced player, but to show special cases." id="ccO-1f-6Nt">
+                            <tableViewSection headerTitle="Advanced player (special cases)" footerTitle="Same features as the advanced player, but in special cases." id="ccO-1f-6Nt">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="yWg-Sm-Ou8">
                                         <rect key="frame" x="0.0" y="1717.5" width="375" height="44"/>
