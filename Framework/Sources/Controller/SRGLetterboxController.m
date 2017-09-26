@@ -711,7 +711,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return NO;
     }
     
-    // Build the media composition for the provided subdivision
+    // Build the media composition for the provided subdivision. Return `NO` if the subdivision is not related to the
+    // media composition.
     SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
     if (! mediaComposition) {
         SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is available. Cannot switch to another subdivision");
