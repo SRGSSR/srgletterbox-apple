@@ -9,26 +9,26 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
-NSString * const LetterboxSRGSettingMirroredOnExternalScreen = @"LetterboxSRGSettingMirroredOnExternalScreen";
-NSString * const LetterboxSRGSettingStreamAvailabilityCheckInterval = @"LetterboxSRGSettingStreamAvailabilityCheckInterval";
+NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
+NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
+NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 
-NSTimeInterval const LetterboxSRGSettingStreamAvailabilityCheckIntervalShort = 10.;
+NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
 NSURL *ApplicationSettingServiceURL(void)
 {
-    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
+    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
 BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingMirroredOnExternalScreen];
 }
 
 void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen)
 {
-    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxDemoSettingMirroredOnExternalScreen];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
@@ -37,7 +37,7 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
 NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+    NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxDemoSettingUpdateInterval];
     return (updateInterval > 0.) ? updateInterval : SRGLetterboxControllerUpdateIntervalDefault;
 }
 
@@ -225,7 +225,7 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
                 };
                     
                 case 1: {
-                    NSTimeInterval timeInterval = LetterboxSRGSettingStreamAvailabilityCheckIntervalShort;
+                    NSTimeInterval timeInterval = LetterboxDemoSettingUpdateIntervalShort;
                     cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Short update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
                     cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
@@ -253,7 +253,7 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
     switch (indexPath.section) {
         case 0: {
             NSURL *serverURL = self.serverSettings[indexPath.row].URL;
-            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
+            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxDemoSettingServiceURL];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             [[SRGLetterboxService sharedService].controller reset];
@@ -268,10 +268,10 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
             
         case 2: {
             if (indexPath.row == 0) {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
             else {
-                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxSRGSettingStreamAvailabilityCheckIntervalShort forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxDemoSettingUpdateIntervalShort forKey:LetterboxDemoSettingUpdateInterval];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             
