@@ -1121,7 +1121,7 @@ static NSURL *MMFServiceURL(void)
     
     // A URL change occurs.
     
-    [self waitForExpectationsWithTimeout:20 handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1177,23 +1177,26 @@ static NSURL *MMFServiceURL(void)
     
     [self.controller pause];
     
-    [self waitForExpectationsWithTimeout:20 handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // URL changes while paused must restart playback in the paused state, with the new URL.
+    __block BOOL idleEventReceived = NO;
+    __block BOOL pausedEventReceived = NO;
     
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle){
+            idleEventReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused) {
+            pausedEventReceived = YES;
+        }
+        
+        return idleEventReceived && pausedEventReceived;
     }];
     
     // A URL change occurs.
     
-    [self waitForExpectationsWithTimeout:20 handler:nil];
-    
-    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
-    }];
-    
-    // Playback starts again with the new URL, in the paused state.
-    
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
@@ -1241,9 +1244,9 @@ static NSURL *MMFServiceURL(void)
     
     [self.controller stop];
     
-    [self waitForExpectationsWithTimeout:20 handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    // Waiting for a while. No playback notifications must be received
+    // URL changes while idle must not lead to playback state changes.
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForLetterboxControllerPlaybackStateDidChangeNotificationUsingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when stopped.");
     }];
@@ -1266,7 +1269,7 @@ static NSURL *MMFServiceURL(void)
     
     [self.controller play];
     
-    [self waitForExpectationsWithTimeout:20 handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
@@ -1295,6 +1298,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     
+    // A blocking reason appearing while playing must stop playback
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
