@@ -1192,6 +1192,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.timelineView.selectedIndex = [timelineView.subdivisions indexOfObject:subdivision];
     self.timelineView.time = subdivision.srg_timeRange.start;
+    [self.timelineView scrollToSelectedIndexAnimated:YES];
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSubdivision:)]) {
         [self.delegate letterboxView:self didSelectSubdivision:subdivision];
