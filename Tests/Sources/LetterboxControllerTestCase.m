@@ -37,17 +37,17 @@ static SRGMediaURN *LiveDVRVideoURN(void)
 
 static SRGMediaURN *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
 {
-    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
 }
 
 static SRGMediaURN *MMFURLChangedDVRURN(NSDate *startDate, NSDate *endDate)
 {
-    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
 }
 
 static SRGMediaURN *MMFGeoblockChangedVideoURN(NSDate *startDate, NSDate *endDate)
 {
-    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_geoblocked_%d_%d", (int)startDate.timeIntervalSince1970, (int)endDate.timeIntervalSince1970]];
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_geoblocked_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
 }
 
 static NSURL *MMFServiceURL(void)
