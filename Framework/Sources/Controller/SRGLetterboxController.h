@@ -497,7 +497,10 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion When a URL has been overridden, the player will only work with the media, not the full playback
  *              context (since the context is tightly related to the original content URL, this would open the
- *              door to several inconsistencies, most notably with segments)
+ *              door to several inconsistencies, most notably with segments).
+ *
+ *              The overridden URL should be of the same type as the original one (e.g. a livestream URL should
+ *              only be overridden with another livestream URL), otherwise the behhavior is undefined.
  */
 @property (nonatomic, copy, nullable) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
