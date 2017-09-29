@@ -302,6 +302,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     @weakify(self)
     self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
+        
+        // Only perform periodic updates for livestreams. This means that changes periodically detected for livestreams
+        // (e.g. geoblocking changes or stream URL changes) will not be detected for on-demand streams. This behavior
+        // is consistent with Android and web player implementations.
+        SRGContentType contentType = self.media.contentType;
+        if (contentType != SRGContentTypeLivestream && contentType != SRGContentTypeScheduledLivestream) {
+            return;
+        }
+        
         [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
             if (URLChanged) {
                 SRGMediaPlayerPlaybackState previousPlaybackState = self.mediaPlayerController.playbackState;
