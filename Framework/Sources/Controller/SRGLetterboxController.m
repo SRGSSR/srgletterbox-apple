@@ -306,7 +306,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         // Only perform periodic updates for livestreams. This means that changes periodically detected for livestreams
         // (e.g. geoblocking changes or stream URL changes) will not be detected for on-demand streams. This behavior
         // is consistent with Android and web player implementations.
-        SRGContentType contentType = self.media.contentType;
+        SRGContentType contentType = self.mediaComposition ? self.mediaComposition.mainChapter.contentType : self.media.contentType;
         if (contentType != SRGContentTypeLivestream && contentType != SRGContentTypeScheduledLivestream) {
             return;
         }
