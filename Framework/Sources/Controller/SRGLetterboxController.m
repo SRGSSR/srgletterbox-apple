@@ -504,8 +504,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     NSParameterAssert(completionBlock);
     
     if (self.contentURLOverridden) {
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
-        completionBlock(blockingReasonError, NO);
+        [[self.dataProvider mediaWithURN:self.URN completionBlock:^(SRGMedia * _Nullable media, NSError * _Nullable error) {
+            if (media) {
+                [self updateWithURN:nil media:media mediaComposition:nil subdivision:self.subdivision channel:self.channel];
+            }
+            
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
+            completionBlock(blockingReasonError, NO);
+        }] resume];
         return;
     }
     
