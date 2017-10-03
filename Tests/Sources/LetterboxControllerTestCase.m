@@ -1335,16 +1335,13 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    // No periodic updates are performed for on-demand streams
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Periodic updates are not expected for on-demand streams.");
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
     }];
     
-    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    // An update must occur automatically
     
-    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
-    }];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
 @end
