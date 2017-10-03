@@ -64,21 +64,12 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
-    SRGBlockingReason blockingReason = media.blockingReason;
-    
-    // Observe start and end dates first. If we are offline, the date range information is more reliable blocking reasons,
-    // if retrieved easlier, might be outdated.
-    if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotYetAvailable) {
+    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(media);
+    if (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonStartDate) }];
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
     }
-    else if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotAvailableAnymore) {
-        return [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                   code:SRGLetterboxErrorCodeNotAvailable
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(SRGBlockingReasonEndDate) }];
-    }
-    // Date blocking has been dealt with more reliably above
     else if (blockingReason != SRGBlockingReasonNone) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeBlocked

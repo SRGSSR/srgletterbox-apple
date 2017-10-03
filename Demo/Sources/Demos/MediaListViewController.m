@@ -128,10 +128,10 @@
 {
     SRGMedia *media = self.medias[indexPath.row];
     NSString *text = media.title;
-    if (media.blockingReason == SRGBlockingReasonStartDate) {
+    if (SRGBlockingReasonForMediaMetadata(media) == SRGBlockingReasonStartDate) {
         text = [@"🔜 " stringByAppendingString:text];
     }
-    else if (media.blockingReason == SRGBlockingReasonEndDate) {
+    else if (SRGBlockingReasonForMediaMetadata(media) == SRGBlockingReasonEndDate) {
         text = [@"🔚 " stringByAppendingString:text];
     }
     else if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {

@@ -523,7 +523,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
 {
-    SRGBlockingReason blockingReason = controller.media.blockingReason;
+    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(controller.media);
     return ! controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
 }
 
@@ -648,7 +648,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    SRGBlockingReason blockingReason = media.blockingReason;
+    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(media);
     if (blockingReason == SRGBlockingReasonEndDate) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
         self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
@@ -810,10 +810,10 @@ static void commonInit(SRGLetterboxView *self);
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
     SRGMedia *media = controller.media;
-    BOOL playerViewVisible = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
+    BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
         && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
-    self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
-    mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
+    self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
+    mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
     
     return userInterfaceHidden;
 }
@@ -1303,7 +1303,8 @@ static void commonInit(SRGLetterboxView *self);
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
-    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(subdivision.blockingReason);
+    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(subdivision);
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(blockingReason);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 

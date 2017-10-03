@@ -84,7 +84,8 @@
         self.durationLabel.text = nil;
     }
     
-    self.disabledView.alpha = (subdivision.blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
+    self.disabledView.alpha = (SRGBlockingReasonForMediaMetadata(subdivision) != SRGBlockingReasonNone) ? 0.5f : 0.f;
+    
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
 }
 
