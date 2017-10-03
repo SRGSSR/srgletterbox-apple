@@ -64,7 +64,7 @@ static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor
 
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
-    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(media);
+    SRGBlockingReason blockingReason = media.blockingReason;
     if (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable

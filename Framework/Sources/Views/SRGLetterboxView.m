@@ -523,7 +523,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
 {
-    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(controller.media);
+    SRGBlockingReason blockingReason = controller.media.blockingReason;
     return ! controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
 }
 
@@ -648,7 +648,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(media);
+    SRGBlockingReason blockingReason = media.blockingReason;
     if (blockingReason == SRGBlockingReasonEndDate) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
         self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
@@ -1303,8 +1303,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
-    SRGBlockingReason blockingReason = SRGBlockingReasonForMediaMetadata(subdivision);
-    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(blockingReason);
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(subdivision.blockingReason);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 
