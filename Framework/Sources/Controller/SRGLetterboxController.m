@@ -509,6 +509,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
         if (mediaComposition) {
+            self.mediaComposition = mediaComposition;
             [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
         }
         else {
