@@ -17,12 +17,12 @@ static SRGMediaURN *OnDemandVideoURN(void)
 
 static SRGMediaURN *OnDemandLongVideoURN(void)
 {
-    return [SRGMediaURN mediaURNWithString:@"urn:srf:video:be82935d-2a13-4d67-a546-2e7400821b54"];
+    return [SRGMediaURN mediaURNWithString:@"urn:srf:video:2c685129-bad8-4ea0-93f5-0d6cff8cb156"];
 }
 
 static SRGMediaURN *OnDemandLongVideoSegmentURN(void)
 {
-    return [SRGMediaURN mediaURNWithString:@"urn:srf:video:bfa39399-01f8-4fca-bb48-46365eb15426"];
+    return [SRGMediaURN mediaURNWithString:@"urn:srf:video:5fe1618a-b710-42aa-ac8a-cb9eabf42426"];
 }
 
 static SRGMediaURN *LiveOnlyVideoURN(void)
