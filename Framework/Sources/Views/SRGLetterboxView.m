@@ -523,7 +523,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
 {
-    return ! controller.media || SRGDataProviderAvailabilityForMediaMetadata(controller.media) == SRGMediaAvailabilityAvailable;
+    SRGBlockingReason blockingReason = controller.media.blockingReason;
+    return ! controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
 }
 
 - (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehavior
@@ -647,12 +648,13 @@ static void commonInit(SRGLetterboxView *self);
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotAvailableAnymore) {
+    SRGBlockingReason blockingReason = media.blockingReason;
+    if (blockingReason == SRGBlockingReasonEndDate) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
         self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
         self.availabilityLabel.hidden = NO;
     }
-    else if (SRGDataProviderAvailabilityForMediaMetadata(media) == SRGMediaAvailabilityNotYetAvailable) {
+    else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
         NSString *availabilityLabelText = nil;
