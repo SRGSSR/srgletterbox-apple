@@ -294,13 +294,17 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
-        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
             if (URLChanged) {
                 [self stop];
             }
             else if (error) {
                 [self reportError:error];
                 [self stop];
+            }
+            // Start the player if the blocking reason changed from an not available state to an available one
+            else if (previousError.code == SRGLetterboxErrorCodeNotAvailable) {
+                [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
             }
         }];
     }];
@@ -446,7 +450,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @weakify(self)
         self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
                 if (error) {
                     [self reportError:error];
                     [self stop];
@@ -466,7 +470,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
                 [self reportError:error];
                 [self stop];
             }];
@@ -479,18 +483,21 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
-- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged))completionBlock
+- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged, NSError *previousError))completionBlock
 {
     NSParameterAssert(completionBlock);
     
     if (self.contentURLOverridden) {
         [[self.dataProvider mediaWithURN:self.URN completionBlock:^(SRGMedia * _Nullable media, NSError * _Nullable error) {
+            SRGMedia *previousMedia = self.media;
+            
             if (media) {
                 [self updateWithURN:nil media:media mediaComposition:nil subdivision:self.subdivision channel:self.channel];
             }
             
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
-            completionBlock(blockingReasonError, NO);
+            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
+            completionBlock(blockingReasonError, NO, previousBlockingReasonError);
         }] resume];
         return;
     }
@@ -510,8 +517,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
             SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
+            SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
+            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
             if (blockingReasonError) {
-                completionBlock(blockingReasonError, NO);
+                completionBlock(blockingReasonError, NO, previousBlockingReasonError);
                 return;
             }
             
@@ -519,12 +528,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
             NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
             if (! [previousResources isEqualToSet:resources]) {
-                completionBlock(nil, YES);
+                completionBlock(nil, YES, previousBlockingReasonError);
                 return;
             }
         }
         
-        completionBlock(nil, NO);
+        completionBlock(nil, NO, nil);
     }] resume];
 }
 
