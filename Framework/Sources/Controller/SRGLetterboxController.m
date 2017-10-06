@@ -504,6 +504,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         SRGMediaComposition *previousMediaComposition = self.mediaComposition;
+        SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
+        NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
         
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
         if (mediaComposition) {
@@ -517,8 +519,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
             SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
-            SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
-            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
             if (blockingReasonError) {
                 completionBlock(blockingReasonError, NO, previousBlockingReasonError);
                 return;
@@ -533,7 +533,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             }
         }
         
-        completionBlock(nil, NO, nil);
+        completionBlock(nil, NO, previousBlockingReasonError);
     }] resume];
 }
 
