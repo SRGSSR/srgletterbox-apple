@@ -668,7 +668,7 @@ static void commonInit(SRGLetterboxView *self);
             });
             availabilityLabelText = [s_longDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
         }
-        else {
+        else if (timeIntervalBeforeStart >= 0) {
             static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -677,6 +677,9 @@ static void commonInit(SRGLetterboxView *self);
                 s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
             });
             availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+        }
+        else {
+            availabilityLabelText = SRGLetterboxLocalizedString(@"Content will begin shortly", @"Message display when the count down is over and Letterbox can't already play the content.");
         }
         
         if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
@@ -694,6 +697,7 @@ static void commonInit(SRGLetterboxView *self);
             self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
         }
         
+        if (timeIntervalBeforeStart >= 0) {
         static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
         static dispatch_once_t s_onceToken;
         dispatch_once(&s_onceToken, ^{
@@ -703,6 +707,10 @@ static void commonInit(SRGLetterboxView *self);
             s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
         });
         self.availabilityLabel.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
+        }
+        else {
+            self.availabilityLabel.accessibilityLabel = availabilityLabelText;
+        }
         self.availabilityLabel.hidden = NO;
     }
     else {
