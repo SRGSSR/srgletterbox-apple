@@ -724,8 +724,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     if ([subdivision isKindOfClass:[SRGChapter class]]
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:nil];
-        [self.requestQueue addRequest:request resume:YES];
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
+        if (blockingReasonError) {
+            [self reportError:blockingReasonError];
+            [self stop];
+        }
+        else {
+            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:nil];
+            [self.requestQueue addRequest:request resume:YES];
+        }
     }
     // Playing another segment from the same media. Seek
     else {
