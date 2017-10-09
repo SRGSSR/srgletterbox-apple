@@ -303,7 +303,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 [self stop];
             }
             // Start the player if the blocking reason changed from an not available state to an available one
-            else if (previousError.code == SRGLetterboxErrorCodeNotAvailable) {
+            else if ([previousError.domain isEqualToString:SRGLetterboxErrorDomain] && previousError.code == SRGLetterboxErrorCodeNotAvailable) {
                 [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
             }
         }];
