@@ -87,7 +87,7 @@
         self.durationLabel.attributedText = attributedText.copy;
         self.durationLabel.hidden = NO;
     }
-    else if (subdivision.duration != 0.f) {
+    else if (subdivision.duration != 0.) {
         static NSDateComponentsFormatter *s_dateComponentsFormatter;
         static dispatch_once_t s_onceToken;
         dispatch_once(&s_onceToken, ^{
