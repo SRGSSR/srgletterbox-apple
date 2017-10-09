@@ -159,6 +159,7 @@
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
     static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
+    static NSString * const kMMFCachedScheduledLivestreamURNString = @"urn:rts:video:_rts_info_cacheddelay";
     static NSString * const kMMFTemporarilyGeoblockedURNString = @"urn:rts:video:_rts_info_geoblocked";
     static NSString * const kMMFDVRKillSwitchURNString = @"urn:rts:video:_rts_info_killswitch";
     static NSString * const kMMFSwissTxtFullDVRStreamURNString = @"urn:rts:video:_rts_info_fulldvr";
@@ -389,7 +390,7 @@
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
+                    [self openModalPlayerWithURNString:kMMFCachedScheduledLivestreamURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
                                         updateInterval:@15];
@@ -397,7 +398,7 @@
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
+                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
                                         updateInterval:@15];
@@ -405,7 +406,7 @@
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
+                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
                                         updateInterval:@15];
@@ -413,7 +414,7 @@
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
                                         updateInterval:@15];
@@ -421,6 +422,14 @@
                 }
                     
                 case 6: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
+                                        updateInterval:@15];
+                    break;
+                }
+                    
+                case 7: {
                     [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]
