@@ -62,7 +62,7 @@
                             <constraint firstAttribute="width" secondItem="8GI-9a-x72" secondAttribute="height" multiplier="1:1" id="Tmo-Lb-mkd"/>
                         </constraints>
                     </imageView>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQJ-qV-v59" userLabel="DisableView">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQJ-qV-v59" userLabel="Disabled View">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="130"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
@@ -92,7 +92,7 @@
             </constraints>
             <size key="customSize" width="189" height="123"/>
             <connections>
-                <outlet property="disableView" destination="fQJ-qV-v59" id="OQo-v8-ClO"/>
+                <outlet property="disabledView" destination="fQJ-qV-v59" id="WWn-xU-TtP"/>
                 <outlet property="durationLabel" destination="xPG-fm-CkX" id="gVN-ef-Ab2"/>
                 <outlet property="favoriteImageView" destination="8GI-9a-x72" id="8f9-5B-4dU"/>
                 <outlet property="imageView" destination="Fjo-Dj-oWj" id="Gsp-lI-bg3"/>

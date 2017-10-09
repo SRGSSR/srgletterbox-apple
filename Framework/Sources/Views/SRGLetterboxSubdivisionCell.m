@@ -18,7 +18,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
-@property (nonatomic, weak) IBOutlet UIView *disableView;
+@property (nonatomic, weak) IBOutlet UIView *disabledView;
 
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -44,7 +44,7 @@
     self.favoriteImageView.image = nil;
     self.favoriteImageView.image = favoriteImage;
     
-    self.disableView.alpha = 0.f;
+    self.disabledView.alpha = 0.f;
 }
 
 - (void)prepareForReuse
@@ -84,7 +84,7 @@
         self.durationLabel.text = nil;
     }
     
-    self.disableView.alpha = (subdivision.blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
+    self.disabledView.alpha = (subdivision.blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
 }
 
