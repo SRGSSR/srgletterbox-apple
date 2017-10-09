@@ -40,6 +40,11 @@ static SRGMediaURN *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endD
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
 }
 
+static SRGMediaURN *MMFCachedScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_cacheddelay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
+}
+
 static SRGMediaURN *MMFURLChangeVideoURN(NSDate *startDate, NSDate *endDate)
 {
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
@@ -993,6 +998,59 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+}
+
+- (void)testMediaAvailableButWithserverCache
+{
+    self.controller.updateInterval = 10.f;
+    self.controller.serviceURL = MMFServiceURL();
+    
+    // Waiting for a while. No playback notifications must be received
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change when media is not available yet.");
+    }];
+    
+    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    
+    // Media started 1 second before and is available 20 seconds, but the server don't remove the blocking reason
+    // STARTDATE on time.
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-1];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:20];
+    SRGMediaURN *URN = MMFCachedScheduledOnDemandVideoURN(startDate, endDate);
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
+    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        SRGMediaComposition *mediaComposition = notification.userInfo[SRGLetterboxMediaCompositionKey];
+        if (mediaComposition && mediaComposition.mainChapter.blockingReason == SRGBlockingReasonNone) {
+            return YES;
+        }
+        else {
+            return NO;
+        }
+    }];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+
+    // Media starts playing after a metadata udpate
+
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+
+    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
 }
 
 - (void)testMediaWithOverriddenURLNotYetAvailable
