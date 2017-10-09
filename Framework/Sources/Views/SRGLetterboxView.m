@@ -43,10 +43,10 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
+@property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSeekToLiveConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
 @property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
@@ -147,7 +147,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
-    self.seekToLiveButton.alpha = 0.f;
+    self.skipToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
@@ -205,7 +205,7 @@ static void commonInit(SRGLetterboxView *self);
                                                   [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
-    self.seekToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
+    self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
         
     [self reloadData];
 }
@@ -616,7 +616,6 @@ static void commonInit(SRGLetterboxView *self);
     NSMutableArray<SRGSubdivision *> *subdivisions = [NSMutableArray array];
     for (SRGChapter *chapter in visibleChapters) {
         if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
-            
             NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
             [subdivisions addObjectsFromArray:visibleSegments];
         }
@@ -871,7 +870,7 @@ static void commonInit(SRGLetterboxView *self);
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
-        self.seekToLiveButton.alpha = 0.f;
+        self.skipToLiveButton.alpha = 0.f;
         
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
@@ -879,7 +878,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
         self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
-        self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
         
         switch (mediaPlayerController.streamType) {
             case SRGMediaPlayerStreamTypeOnDemand: {
@@ -1181,13 +1180,13 @@ static void commonInit(SRGLetterboxView *self);
     
     self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
     self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingForwardToSkipToLiveConstraint.constant = horizontalSpacing;
     
     self.playbackButton.imageSet = imageSet;
     
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol

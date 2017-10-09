@@ -65,7 +65,7 @@ OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 
 + (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet;
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet;
-+ (UIImage *)srg_letterboxSeekToLiveImageInSet:(SRGImageSet)imageSet;
++ (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet;
 
 @end
 
