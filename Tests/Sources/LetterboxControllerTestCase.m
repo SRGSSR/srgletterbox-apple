@@ -1591,4 +1591,36 @@ static NSURL *MMFServiceURL(void)
     }];
 }
 
+- (void)testSwitchToSubdivisionForSegment
+{
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandLongVideoSegmentURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking;
+    }];
+    [self expectationForNotification:SRGMediaPlayerSegmentDidStartNotification object:self.controller.mediaPlayerController handler:nil];
+    
+    NSArray<SRGSegment *> *segments = self.controller.mediaComposition.mainChapter.segments;
+    XCTAssertTrue(segments.count >= 3);
+    [self.controller switchToSubdivision:segments[2]];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+}
+
+- (void)testSwitchToSubdivisionForChapter
+{
+    
+}
+
+- (void)testSwitchToUnrelatedSubdivision
+{
+    
+}
+
 @end
