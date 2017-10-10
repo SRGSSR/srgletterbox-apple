@@ -1513,7 +1513,7 @@ static NSURL *MMFServiceURL(void)
     
     // Wait until the stream is playing a highlight
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertEqual(self.controller.media.contentType, SRGContentTypeEpisode);
+        XCTAssertEqual(self.controller.media.contentType, SRGContentTypeClip);
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
