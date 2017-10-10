@@ -735,17 +735,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
     // Playing another segment from the same media. Seek
     else {
-        if ([self.mediaPlayerController.segments containsObject:subdivision]) {
-            [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
-                [self.mediaPlayerController play];
-            }];
-        }
-        else {
-            CMTime seekTime = subdivision.srg_timeRange.start;
-            [self.mediaPlayerController seekPreciselyToTime:seekTime withCompletionHandler:^(BOOL finished) {
-                [self.mediaPlayerController play];
-            }];
-        }
+        [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
+            [self.mediaPlayerController play];
+        }];
     }
     
     return YES;
