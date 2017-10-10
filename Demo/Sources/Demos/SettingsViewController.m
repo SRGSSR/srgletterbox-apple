@@ -15,6 +15,11 @@ NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpda
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
+NSURL *LetterboxDemoMMFServiceURL(void)
+{
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+}
+
 NSURL *ApplicationSettingServiceURL(void)
 {
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxDemoSettingServiceURL];
@@ -87,7 +92,7 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
     viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
                                       [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
                                       [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]]];
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL()]];
     return viewController;
 }
 
