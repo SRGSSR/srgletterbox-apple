@@ -1608,7 +1608,8 @@ static NSURL *MMFServiceURL(void)
     
     NSArray<SRGSegment *> *segments = self.controller.mediaComposition.mainChapter.segments;
     XCTAssertTrue(segments.count >= 3);
-    [self.controller switchToSubdivision:segments[2]];
+    BOOL switchToSubdivision = [self.controller switchToSubdivision:segments[2]];
+    XCTAssertTrue(switchToSubdivision);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
 }
@@ -1634,7 +1635,8 @@ static NSURL *MMFServiceURL(void)
     
     NSArray<SRGChapter *> *chapters = self.controller.mediaComposition.chapters;
     XCTAssertTrue(chapters.count >= 3);
-    [self.controller switchToSubdivision:chapters[2]];
+    BOOL switchToSubdivision = [self.controller switchToSubdivision:chapters[2]];
+    XCTAssertTrue(switchToSubdivision);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:segmentStartObserver];
@@ -1669,7 +1671,8 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    [self.controller switchToSubdivision:fetchedMediaComposition.mainChapter];
+    BOOL switchToSubdivision = [self.controller switchToSubdivision:fetchedMediaComposition.mainChapter];
+    XCTAssertFalse(switchToSubdivision);
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventStateObserver];
