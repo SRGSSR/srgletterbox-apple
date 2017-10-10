@@ -1015,7 +1015,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
 }
 
-- (void)testMediaAvailableButWithserverCache
+- (void)testMediaAvailableWithServerCacheInconsistency
 {
     self.controller.updateInterval = 10.f;
     self.controller.serviceURL = MMFServiceURL();
@@ -1027,7 +1027,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    // Media started 1 second before and is available 20 seconds, but the server don't remove the blocking reason
+    // Media started 1 second before and is available 20 seconds, but the server doesn't remove the blocking reason
     // STARTDATE on time.
     NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-1];
     NSDate *endDate = [startDate dateByAddingTimeInterval:20];
@@ -1043,20 +1043,12 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
     
-    // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMediaComposition *mediaComposition = notification.userInfo[SRGLetterboxMediaCompositionKey];
-        if (mediaComposition && mediaComposition.mainChapter.blockingReason == SRGBlockingReasonNone) {
-            return YES;
-        }
-        else {
-            return NO;
-        }
+        return mediaComposition && mediaComposition.mainChapter.blockingReason == SRGBlockingReasonNone;
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
-
     
-    // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -1504,8 +1496,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
-    XCTAssertNotEqual(self.controller.mediaComposition.chapters.count, 1);
-
+    XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
@@ -1520,8 +1511,9 @@ static NSURL *MMFServiceURL(void)
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
     }];
     
-    // Wait until the stream is playing an highlight
+    // Wait until the stream is playing a highlight
     [self expectationForNotification:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertEqual(self.controller.media.contentType, SRGContentTypeEpisode);
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
@@ -1584,7 +1576,6 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
-    
     
     // Attempt to play again and wait for a while. No playback notifications must be received
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxControllerPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
