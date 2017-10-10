@@ -490,13 +490,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     if (self.contentURLOverridden) {
         [[self.dataProvider mediaWithURN:self.URN completionBlock:^(SRGMedia * _Nullable media, NSError * _Nullable error) {
             SRGMedia *previousMedia = self.media;
+            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
             
             if (media) {
                 [self updateWithURN:nil media:media mediaComposition:nil subdivision:self.subdivision channel:self.channel];
             }
+            else {
+                media = previousMedia;
+            }
             
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
-            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
             completionBlock(blockingReasonError, NO, previousBlockingReasonError);
         }] resume];
         return;
