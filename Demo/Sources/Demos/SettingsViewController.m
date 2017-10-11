@@ -9,36 +9,41 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
-NSString * const LetterboxSRGSettingMirroredOnExternalScreen = @"LetterboxSRGSettingMirroredOnExternalScreen";
-NSString * const LetterboxSRGSettingStreamAvailabilityCheckInterval = @"LetterboxSRGSettingStreamAvailabilityCheckInterval";
+NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
+NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
+NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 
-NSTimeInterval const LetterboxSRGSettingStreamAvailabilityCheckIntervalShort = 10.;
+NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
+
+NSURL *LetterboxDemoMMFServiceURL(void)
+{
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+}
 
 NSURL *ApplicationSettingServiceURL(void)
 {
-    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
+    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
 BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingMirroredOnExternalScreen];
 }
 
 void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen)
 {
-    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxDemoSettingMirroredOnExternalScreen];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
-NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
+NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
-    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+    NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxDemoSettingUpdateInterval];
+    return (updateInterval > 0.) ? updateInterval : SRGLetterboxControllerUpdateIntervalDefault;
 }
 
 @interface ServerSetting : NSObject
@@ -87,7 +92,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
     viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
                                       [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
                                       [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]]];
+                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL()]];
     return viewController;
 }
 
@@ -123,7 +128,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
         }
             
         case 2: {
-            return NSLocalizedString(@"Stream availability check", @"Stream availability check header title in settings view");
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
             break;
         }
             
@@ -218,16 +223,16 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             
             switch (indexPath.row) {
                 case 0: {
-                    NSTimeInterval timeInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = SRGLetterboxControllerUpdateIntervalDefault;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    NSTimeInterval timeInterval = LetterboxSRGSettingStreamAvailabilityCheckIntervalShort;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = LetterboxDemoSettingUpdateIntervalShort;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Short update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -253,7 +258,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
     switch (indexPath.section) {
         case 0: {
             NSURL *serverURL = self.serverSettings[indexPath.row].URL;
-            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
+            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxDemoSettingServiceURL];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             [[SRGLetterboxService sharedService].controller reset];
@@ -268,14 +273,14 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             
         case 2: {
             if (indexPath.row == 0) {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
             else {
-                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxSRGSettingStreamAvailabilityCheckIntervalShort forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxDemoSettingUpdateIntervalShort forKey:LetterboxDemoSettingUpdateInterval];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            [SRGLetterboxService sharedService].controller.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+            [SRGLetterboxService sharedService].controller.updateInterval = ApplicationSettingUpdateInterval();
             break;
         }
             

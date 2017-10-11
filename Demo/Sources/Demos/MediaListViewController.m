@@ -15,6 +15,7 @@
 @interface MediaListViewController ()
 
 @property (nonatomic) MediaListType mediaListType;
+@property (nonatomic, nullable) NSString *uid;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
@@ -27,11 +28,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMediaListType:(MediaListType)mediaListType
+- (instancetype)initWithMediaListType:(MediaListType)mediaListType uid:(NSString *)uid
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     MediaListViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.mediaListType = mediaListType;
+    viewController.uid = uid;
     return viewController;
 }
 
@@ -54,12 +56,14 @@
     dispatch_once(&s_onceToken, ^{
         s_businessUnitIdentifiers = @{ @(MediaListLivecenterSRF) : SRGDataProviderBusinessUnitIdentifierSRF,
                                        @(MediaListLivecenterRTS) : SRGDataProviderBusinessUnitIdentifierRTS,
-                                       @(MediaListLivecenterRSI) : SRGDataProviderBusinessUnitIdentifierRSI };
+                                       @(MediaListLivecenterRSI) : SRGDataProviderBusinessUnitIdentifierRSI,
+                                       @(MediaListMMFTopicList) : SRGDataProviderBusinessUnitIdentifierRTS };
     });
     
     SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = s_businessUnitIdentifiers[@(self.mediaListType)];
     NSAssert(businessUnitIdentifier != nil, @"The business unit must be supported");
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
+    NSURL *serviceURL = (self.mediaListType == MediaListMMFTopicList) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL businessUnitIdentifier:businessUnitIdentifier];
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
@@ -87,7 +91,8 @@
     dispatch_once(&s_onceToken, ^{
         s_titles = @{ @(MediaListLivecenterSRF) : LetterboxDemoNonLocalizedString(@"SRF Live center"),
                       @(MediaListLivecenterRTS) : LetterboxDemoNonLocalizedString(@"RTS Live center"),
-                      @(MediaListLivecenterRSI) : LetterboxDemoNonLocalizedString(@"RSI Live center") };
+                      @(MediaListLivecenterRSI) : LetterboxDemoNonLocalizedString(@"RSI Live center"),
+                      @(MediaListMMFTopicList) : LetterboxDemoNonLocalizedString(@"MMF topic list") };
     });
     return s_titles[@(self.mediaListType)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
 }
@@ -98,14 +103,24 @@
 {
     [self.request cancel];
     
-    SRGRequest *request =  [self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    SRGRequest *request = nil;
+    
+    void (^completionBlock)(NSArray<SRGMedia *> * _Nullable, SRGPage *, SRGPage * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage *page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         if (self.refreshControl.refreshing) {
             [self.refreshControl endRefreshing];
         }
         
         self.medias = medias;
         [self.tableView reloadData];
-    }];
+    };
+    
+    if (self.mediaListType == MediaListMMFTopicList) {
+        request = [self.dataProvider tvLatestMediasForTopicWithUid:self.uid completionBlock:completionBlock];
+    }
+    else {
+        request =  [self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock];
+    }
+    
     [request resume];
     self.request = request;
 }
@@ -147,7 +162,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:self.medias[indexPath.row].URN.URNString];
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:NO serviceURL:nil streamAvailabilityCheckInterval:nil];
+    NSURL *serviceURL = (self.mediaListType == MediaListMMFTopicList) ? LetterboxDemoMMFServiceURL() : nil;
+    NSNumber *updateIntervalNumber = (self.mediaListType == MediaListMMFTopicList) ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:NO serviceURL:serviceURL updateInterval:updateIntervalNumber];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)

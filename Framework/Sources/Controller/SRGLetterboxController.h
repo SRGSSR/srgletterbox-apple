@@ -19,7 +19,7 @@ typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
  *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
  *  notification `userInfo` dictionary.
  */
-OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;
+OBJC_EXTERN NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -87,14 +87,14 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 };
 
 /**
- *  Time interval for stream availability checks. Default is 5 minutes.
+ *  Time interval for stream availability checks. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxControllerUpdateIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxControllerChannelUpdateIntervalDefault;
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -469,22 +469,17 @@ withToleranceBefore:(CMTime)toleranceBefore
 @interface SRGLetterboxController (PeriodicUpdates)
 
 /**
- *  Time interval between stream availability checks.
+ *  Time interval for controller automatic updates.
  *
- *  Default is `SRGLetterboxStreamAvailabilityCheckIntervalDefault`, and minimum is 10 seconds.
- *
- *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
- *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
- *              location). If a stream is changed, the new one is automatically played, otherwise playback stops with an 
- *              error. Some streams might also only be available within a specific date range.
+ *  Default is `SRGLetterboxControllerUpdateIntervalDefault`, and minimum is 10 seconds.
  */
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval updateInterval;
 
 /**
- *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
+ *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxControllerChannelUpdateIntervalDefault`, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
@@ -502,7 +497,10 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion When a URL has been overridden, the player will only work with the media, not the full playback
  *              context (since the context is tightly related to the original content URL, this would open the
- *              door to several inconsistencies, most notably with segments)
+ *              door to several inconsistencies, most notably with segments).
+ *
+ *              The overridden URL should be of the same type as the original one (e.g. a livestream URL should
+ *              only be overridden with another livestream URL), otherwise the behhavior is undefined.
  */
 @property (nonatomic, copy, nullable) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 

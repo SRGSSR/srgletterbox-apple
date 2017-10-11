@@ -24,7 +24,7 @@ const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 const NSInteger SRGLetterboxBackwardSkipInterval = 10.;
 const NSInteger SRGLetterboxForwardSkipInterval = 30.;
 
-NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";
+NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -45,8 +45,8 @@ NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlayba
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
-NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault = 5. * 60.;
-NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault = 30.;
+NSTimeInterval const SRGLetterboxControllerUpdateIntervalDefault = 30.;
+NSTimeInterval const SRGLetterboxControllerChannelUpdateIntervalDefault = 30.;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -101,7 +101,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 // Use timers (not time observers) so that updates are performed also when the controller is idle
-@property (nonatomic) NSTimer *streamAvailabilyCheckTimer;
+@property (nonatomic) NSTimer *updateTimer;
 @property (nonatomic) NSTimer *channelUpdateTimer;
 
 // Timers for single metadata updates at start and end times
@@ -111,7 +111,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
@@ -148,8 +148,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         };
         
         // Also register the associated periodic time observers
-        self.streamAvailabilityCheckInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
-        self.channelUpdateInterval = SRGLetterboxChannelUpdateIntervalDefault;
+        self.updateInterval = SRGLetterboxControllerUpdateIntervalDefault;
+        self.channelUpdateInterval = SRGLetterboxControllerChannelUpdateIntervalDefault;
         
         // Observe playback state changes
         [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
@@ -192,7 +192,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (void)dealloc
 {
     // Invalidate timers
-    self.streamAvailabilyCheckTimer = nil;
+    self.updateTimer = nil;
     self.channelUpdateTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
@@ -215,7 +215,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
                                                         object:self
                                                       userInfo:userInfo];
 }
@@ -281,37 +281,30 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return self.mediaPlayerController.tracked;
 }
 
-- (void)setStreamAvailabilityCheckInterval:(NSTimeInterval)streamAvailabilityCheckInterval
+- (void)setUpdateInterval:(NSTimeInterval)updateInterval
 {
-    if (streamAvailabilityCheckInterval < 10.) {
-        SRGLetterboxLogWarning(@"controller", @"The mimimum stream availability check interval is 10 seconds. Fixed to 10 seconds.");
-        streamAvailabilityCheckInterval = 10.;
+    if (updateInterval < 10.) {
+        SRGLetterboxLogWarning(@"controller", @"The mimimum update interval is 10 seconds. Fixed to 10 seconds.");
+        updateInterval = 10.;
     }
     
-    _streamAvailabilityCheckInterval = streamAvailabilityCheckInterval;
+    _updateInterval = updateInterval;
     
     @weakify(self)
-    self.streamAvailabilyCheckTimer = [NSTimer srg_scheduledTimerWithTimeInterval:streamAvailabilityCheckInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+        
+        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
             if (URLChanged) {
-                SRGMediaPlayerPlaybackState previousPlaybackState = self.mediaPlayerController.playbackState;
                 [self stop];
-                if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing || previousPlaybackState == SRGMediaPlayerPlaybackStatePaused) {
-                    if (self.media) {
-                        [self prepareToPlayMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
-                    }
-                    else if (self.URN) {
-                        [self prepareToPlayURN:self.URN withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:nil];
-                    };
-                }
-                else if (previousPlaybackState != SRGMediaPlayerPlaybackStateIdle && previousPlaybackState != SRGMediaPlayerPlaybackStateEnded) {
-                    [self play];
-                }
             }
             else if (error) {
                 [self reportError:error];
                 [self stop];
+            }
+            // Start the player if the blocking reason changed from an not available state to an available one
+            else if ([previousError.domain isEqualToString:SRGLetterboxErrorDomain] && previousError.code == SRGLetterboxErrorCodeNotAvailable) {
+                [self playMedia:self.media withPreferredQuality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
             }
         }];
     }];
@@ -353,10 +346,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return self.contentURLOverridingBlock && self.contentURLOverridingBlock(self.URN);
 }
 
-- (void)setStreamAvailabilyCheckTimer:(NSTimer *)streamAvailabilyCheckTimer
+- (void)setUpdateTimer:(NSTimer *)updateTimer
 {
-    [_streamAvailabilyCheckTimer invalidate];
-    _streamAvailabilyCheckTimer = streamAvailabilyCheckTimer;
+    [_updateTimer invalidate];
+    _updateTimer = updateTimer;
 }
 
 - (void)setChannelUpdateTimer:(NSTimer *)channelUpdateTimer
@@ -457,7 +450,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @weakify(self)
         self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
                 if (error) {
                     [self reportError:error];
                     [self stop];
@@ -477,7 +470,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
                 [self reportError:error];
                 [self stop];
             }];
@@ -490,21 +483,36 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
-- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged))completionBlock
+- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged, NSError *previousError))completionBlock
 {
     NSParameterAssert(completionBlock);
     
     if (self.contentURLOverridden) {
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
-        completionBlock(blockingReasonError, NO);
+        [[self.dataProvider mediaWithURN:self.URN completionBlock:^(SRGMedia * _Nullable media, NSError * _Nullable error) {
+            SRGMedia *previousMedia = self.media;
+            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
+            
+            if (media) {
+                [self updateWithURN:nil media:media mediaComposition:nil subdivision:self.subdivision channel:self.channel];
+            }
+            else {
+                media = previousMedia;
+            }
+            
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
+            completionBlock(blockingReasonError, NO, previousBlockingReasonError);
+        }] resume];
         return;
     }
     
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         SRGMediaComposition *previousMediaComposition = self.mediaComposition;
+        SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
+        NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
         
         // Update metadata if retrieved, otherwise perform a check with the metadata we already have
         if (mediaComposition) {
+            self.mediaPlayerController.mediaComposition = mediaComposition;
             [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
         }
         else {
@@ -516,7 +524,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
             if (blockingReasonError) {
-                completionBlock(blockingReasonError, NO);
+                completionBlock(blockingReasonError, NO, previousBlockingReasonError);
                 return;
             }
             
@@ -524,12 +532,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
             NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
             if (! [previousResources isEqualToSet:resources]) {
-                completionBlock(nil, YES);
+                completionBlock(nil, YES, previousBlockingReasonError);
                 return;
             }
         }
         
-        completionBlock(nil, NO);
+        completionBlock(nil, NO, previousBlockingReasonError);
     }] resume];
 }
 
@@ -711,7 +719,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return NO;
     }
     
-    // Build the media composition for the provided subdivision
+    // Build the media composition for the provided subdivision. Return `NO` if the subdivision is not related to the
+    // media composition.
     SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
     if (! mediaComposition) {
         SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is available. Cannot switch to another subdivision");

@@ -8,12 +8,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+OBJC_EXPORT NSURL *LetterboxDemoMMFServiceURL(void);
+
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 
 OBJC_EXPORT BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
 OBJC_EXPORT void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);
 
-OBJC_EXPORT NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void);
+OBJC_EXPORT NSTimeInterval ApplicationSettingUpdateInterval(void);
+
+OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 
 @interface SettingsViewController : UITableViewController
 

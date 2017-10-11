@@ -43,10 +43,10 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *seekToLiveButton;
+@property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSeekToLiveConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
 @property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
@@ -147,7 +147,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
-    self.seekToLiveButton.alpha = 0.f;
+    self.skipToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.errorView.alpha = 0.f;
@@ -205,7 +205,7 @@ static void commonInit(SRGLetterboxView *self);
                                                   [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
-    self.seekToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
+    self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
         
     [self reloadData];
 }
@@ -616,7 +616,6 @@ static void commonInit(SRGLetterboxView *self);
     NSMutableArray<SRGSubdivision *> *subdivisions = [NSMutableArray array];
     for (SRGChapter *chapter in visibleChapters) {
         if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
-            
             NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
             [subdivisions addObjectsFromArray:visibleSegments];
         }
@@ -668,7 +667,7 @@ static void commonInit(SRGLetterboxView *self);
             });
             availabilityLabelText = [s_longDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
         }
-        else {
+        else if (timeIntervalBeforeStart >= 0) {
             static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -677,6 +676,9 @@ static void commonInit(SRGLetterboxView *self);
                 s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
             });
             availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+        }
+        else {
+            availabilityLabelText = SRGLetterboxLocalizedString(@"Content will begin shortly", @"Message display when the count down is over and Letterbox can't already play the content.");
         }
         
         if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
@@ -694,15 +696,20 @@ static void commonInit(SRGLetterboxView *self);
             self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
         }
         
-        static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
-        static dispatch_once_t s_onceToken;
-        dispatch_once(&s_onceToken, ^{
-            s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-            s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
-            s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
-            s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-        });
-        self.availabilityLabel.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
+        if (timeIntervalBeforeStart >= 0) {
+            static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+                s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+                s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+            });
+            self.availabilityLabel.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
+        }
+        else {
+            self.availabilityLabel.accessibilityLabel = availabilityLabelText;
+        }
         self.availabilityLabel.hidden = NO;
     }
     else {
@@ -810,10 +817,10 @@ static void commonInit(SRGLetterboxView *self);
     // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
     SRGMedia *media = controller.media;
-    BOOL playerViewVisible = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
+    BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
         && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
-    self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
-    mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
+    self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
+    mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
     
     return userInterfaceHidden;
 }
@@ -863,7 +870,7 @@ static void commonInit(SRGLetterboxView *self);
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
-        self.seekToLiveButton.alpha = 0.f;
+        self.skipToLiveButton.alpha = 0.f;
         
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
@@ -871,7 +878,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
         self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
-        self.seekToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
         
         switch (mediaPlayerController.streamType) {
             case SRGMediaPlayerStreamTypeOnDemand: {
@@ -1173,13 +1180,13 @@ static void commonInit(SRGLetterboxView *self);
     
     self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
     self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingForwardToSeekToLiveConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingForwardToSkipToLiveConstraint.constant = horizontalSpacing;
     
     self.playbackButton.imageSet = imageSet;
     
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.seekToLiveButton setImage:[UIImage srg_letterboxSeekToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
@@ -1192,6 +1199,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.timelineView.selectedIndex = [timelineView.subdivisions indexOfObject:subdivision];
     self.timelineView.time = subdivision.srg_timeRange.start;
+    [self.timelineView scrollToSelectedIndexAnimated:YES];
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSubdivision:)]) {
         [self.delegate letterboxView:self didSelectSubdivision:subdivision];

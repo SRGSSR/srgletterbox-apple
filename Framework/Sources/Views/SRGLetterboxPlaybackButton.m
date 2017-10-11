@@ -49,7 +49,7 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     if (_controller) {
         [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxControllerPlaybackStateDidChangeNotification
+                                                        name:SRGLetterboxPlaybackStateDidChangeNotification
                                                       object:_controller];
     }
     
@@ -65,7 +65,7 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
         }];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
-                                                     name:SRGLetterboxControllerPlaybackStateDidChangeNotification
+                                                     name:SRGLetterboxPlaybackStateDidChangeNotification
                                                    object:controller];
     }
 }
