@@ -19,7 +19,7 @@ typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
  *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
  *  notification `userInfo` dictionary.
  */
-OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;
+OBJC_EXTERN NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).

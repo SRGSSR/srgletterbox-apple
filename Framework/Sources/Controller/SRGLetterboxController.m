@@ -24,7 +24,7 @@ const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 const NSInteger SRGLetterboxBackwardSkipInterval = 10.;
 const NSInteger SRGLetterboxForwardSkipInterval = 30.;
 
-NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification = @"SRGLetterboxControllerPlaybackStateDidChangeNotification";
+NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -215,7 +215,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxControllerPlaybackStateDidChangeNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
                                                         object:self
                                                       userInfo:userInfo];
 }
