@@ -43,7 +43,7 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
     NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxDemoSettingUpdateInterval];
-    return (updateInterval > 0.) ? updateInterval : SRGLetterboxControllerUpdateIntervalDefault;
+    return (updateInterval > 0.) ? updateInterval : SRGLetterboxUpdateIntervalDefault;
 }
 
 @interface ServerSetting : NSObject
@@ -223,7 +223,7 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
             
             switch (indexPath.row) {
                 case 0: {
-                    NSTimeInterval timeInterval = SRGLetterboxControllerUpdateIntervalDefault;
+                    NSTimeInterval timeInterval = SRGLetterboxUpdateIntervalDefault;
                     cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
                     cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;

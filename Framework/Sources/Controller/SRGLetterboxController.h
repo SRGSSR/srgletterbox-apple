@@ -89,12 +89,12 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 /**
  *  Time interval for stream availability checks. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxControllerUpdateIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxUpdateIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxControllerChannelUpdateIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -471,7 +471,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Time interval for controller automatic updates.
  *
- *  Default is `SRGLetterboxControllerUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxUpdateIntervalDefault`, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval updateInterval;
 
@@ -479,7 +479,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is `SRGLetterboxControllerChannelUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
