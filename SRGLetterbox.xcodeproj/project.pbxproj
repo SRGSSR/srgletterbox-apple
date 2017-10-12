@@ -1169,6 +1169,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CUSTOM_BUNDLE_NAME = "Letterbox 🌙";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1202,6 +1203,7 @@
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
 				CUSTOM_BUNDLE_NAME = "Letterbox 🛠";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1220,6 +1222,7 @@
 				BUNDLE_IDENTIFIER_SUFFIX = "";
 				CUSTOM_BUNDLE_NAME = Letterbox;
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
