@@ -13,7 +13,7 @@ default_platform :ios
 
 platform :ios do
   before_all do
-    # ensure_git_status_clean
+    ensure_git_status_clean
     carthage(
       command: "bootstrap",
       platform: "iOS",
@@ -140,7 +140,7 @@ platform :ios do
   end
 
   after_all do |lane|
-    # reset_git_repo
+    reset_git_repo
 
     # slack(
     #   message: "Successfully deployed new App Update."
@@ -148,7 +148,7 @@ platform :ios do
   end
 
   error do |lane, exception|
-    # reset_git_repo
+    reset_git_repo
     # slack(
     #   message: exception.message,
     #   success: false
