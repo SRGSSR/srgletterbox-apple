@@ -592,7 +592,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
     
     // If already playing the media, does nothing
-    if (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && [self.media.URN isEqual:URN]) {
+    if (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && [self.URN isEqual:URN]) {
         return;
     }
     
