@@ -528,12 +528,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 return;
             }
             
-            // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
-            NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
-            NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
-            if (! [previousResources isEqualToSet:resources]) {
-                completionBlock(nil, YES, previousBlockingReasonError);
-                return;
+            if (previousMediaComposition) {
+                // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
+                NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
+                NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
+                if (! [previousResources isEqualToSet:resources]) {
+                    completionBlock(nil, YES, previousBlockingReasonError);
+                    return;
+                }
             }
         }
         
