@@ -527,31 +527,51 @@ static void commonInit(SRGLetterboxView *self);
     return ! controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
 }
 
-- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehavior
+- (SRGLetterboxViewBehavior)userInterfaceBehavior
 {
     return [self userInterfaceBehaviorForController:self.controller];
 }
 
-- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehaviorForController:(SRGLetterboxController *)controller
+- (SRGLetterboxViewBehavior)userInterfaceBehaviorForController:(SRGLetterboxController *)controller
 {
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
-    // Controls and error overlay must never be displayed at the same time. This does not change the final expected
+    // Controls and error overlays must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
     BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     if (hasError || isAvailabilityViewVisible || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-        return SRGLetterboxViewUserInterfaceBehaviorForcedHidden;
+        return SRGLetterboxViewBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
              && (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
-        return SRGLetterboxViewUserInterfaceBehaviorForcedVisible;
+        return SRGLetterboxViewBehaviorForcedVisible;
     }
     else {
-        return SRGLetterboxViewUserInterfaceBehaviorNormal;
+        return SRGLetterboxViewBehaviorNormal;
+    }
+}
+
+- (SRGLetterboxViewBehavior)timelineBehaviorForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
+    // Timeline and error overlays must be displayed at the same time.
+    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    
+    if (! [self isTimelineAlwaysHidden]
+        && (hasError || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
+            || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
+            return SRGLetterboxViewBehaviorForcedVisible;
+        }
+    else {
+        return SRGLetterboxViewBehaviorNormal;
     }
 }
 
@@ -572,7 +592,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isTimelineAlwaysHidden
 {
-    return self.preferredTimelineHeight != 0;
+    return self.preferredTimelineHeight == 0;
 }
 
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
@@ -781,12 +801,12 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL userInterfaceHidden = NO;
     switch ([self userInterfaceBehaviorForController:controller]) {
-        case SRGLetterboxViewUserInterfaceBehaviorForcedHidden: {
+        case SRGLetterboxViewBehaviorForcedHidden: {
             userInterfaceHidden = YES;
             break;
         }
             
-        case SRGLetterboxViewUserInterfaceBehaviorForcedVisible: {
+        case SRGLetterboxViewBehaviorForcedVisible: {
             userInterfaceHidden = NO;
             break;
         }
@@ -828,7 +848,8 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:controller.mediaComposition];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
+    SRGLetterboxViewBehavior timelineBehavior = [self timelineBehaviorForController:controller];
+    CGFloat timelineHeight = (subdivisions.count != 0 && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || (timelineBehavior == SRGLetterboxViewBehaviorForcedVisible))) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
     BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
