@@ -547,7 +547,7 @@ static void commonInit(SRGLetterboxView *self);
         return SRGLetterboxViewUserInterfaceBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
-             && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
+             && (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
         return SRGLetterboxViewUserInterfaceBehaviorForcedVisible;
     }
     else {
