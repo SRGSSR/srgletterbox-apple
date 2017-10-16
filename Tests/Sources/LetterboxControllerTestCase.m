@@ -920,6 +920,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertNotNil(self.controller.error);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -931,6 +932,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream stops
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -942,6 +944,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
@@ -976,6 +979,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream stops
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -987,6 +991,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertNotNil(self.controller.error);
 }
 
 - (void)testMediaNotAvailableAnymore
@@ -1013,6 +1018,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertNotNil(self.controller.error);
 }
 
 - (void)testMediaAvailableWithServerCacheInconsistency
@@ -1042,6 +1048,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertNotNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMediaComposition *mediaComposition = notification.userInfo[SRGLetterboxMediaCompositionKey];
@@ -1058,6 +1065,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
 
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
 }
 
 - (void)testMediaWithOverriddenURLNotYetAvailable
@@ -1102,6 +1110,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertNotNil(self.controller.error);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1113,6 +1122,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream is stopped
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1124,6 +1134,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertNotNil(self.controller.error);
     
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason has been received.");
@@ -1288,7 +1299,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotEqualObjects(self.controller.mediaPlayerController.contentURL, firstURL);
 }
 
-- (void)testBlockingReasonChange
+- (void)testBlockingReasonAppeared
 {
     self.controller.serviceURL = MMFServiceURL();
     self.controller.updateInterval = 10.;
@@ -1307,6 +1318,8 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertNil(self.controller.error);
     
     // A blocking reason appearing while playing must stop playback
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1321,6 +1334,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertNotEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertNotNil(self.controller.error);
     
     // Waiting for a while. No playback notifications must be received
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
@@ -1334,6 +1348,50 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
+}
+
+- (void)testBlockingReasonDesappeared
+{
+    self.controller.serviceURL = MMFServiceURL();
+    self.controller.updateInterval = 10.;
+    
+    // Wait until gets the media compostion
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-5];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:10];
+    SRGMediaURN *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertNotEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertNotNil(self.controller.error);
+    
+    // The blocking reason desappear
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertNil(self.controller.error);
+    
+    // Wait until the stream is playing
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller play];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
 - (void)testPeriodicUpdatesForLivestream
@@ -1405,6 +1463,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
+    XCTAssertNotNil(self.controller.error);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1418,6 +1477,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream stops
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1431,6 +1491,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream is playing the VOD
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1470,6 +1531,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
+    XCTAssertNotNil(self.controller.error);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1483,6 +1545,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream stops
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1497,6 +1560,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
+    XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
@@ -1549,6 +1613,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
+    XCTAssertNotNil(self.controller.error);
     
     // Wait until the stream is playing
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1562,6 +1627,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
+    XCTAssertNil(self.controller.error);
     
     // Wait until the stream stops
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1576,6 +1642,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
+    XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {

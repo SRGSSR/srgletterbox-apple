@@ -295,11 +295,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @strongify(self)
         
         [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
-            if (URLChanged) {
-                [self stop];
-            }
-            else if (error) {
-                [self reportError:error];
+            [self reportError:error];
+            if (URLChanged || error) {
                 [self stop];
             }
             // Start the player if the blocking reason changed from an not available state to an available one
@@ -451,8 +448,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
+                [self reportError:error];
                 if (error) {
-                    [self reportError:error];
                     [self stop];
                 }
                 else {
@@ -852,6 +849,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (void)reportError:(NSError *)error
 {
     if (! error) {
+        self.error = nil;
         return;
     }
     
