@@ -8,6 +8,7 @@
 
 #import "ServerSettings.h"
 
+#import <HockeySDK/HockeySDK.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
@@ -89,11 +90,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
     [self.tableView reloadData];
 }
 
+#pragma mark Getters
+
+- (BOOL)isDisplayingApplicationSection {
+    return ([BITHockeyManager sharedHockeyManager].updateManager != nil);
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return [self isDisplayingApplicationSection] ? 4 : 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -114,6 +121,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
+        case 3: {
+            return NSLocalizedString(@"Application", @"Application header title in settings view");
+            break;
+        }
+            
         default: {
             break;
         }
@@ -123,8 +135,9 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (section == 2) {
-        return NSLocalizedString(@"\nThis demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
+    if (section == [self numberOfSectionsInTableView:tableView] - 1) {
+        NSString *firstCharacter = [self isDisplayingApplicationSection] ? @"" : @"\n";
+        return [firstCharacter stringByAppendingString:NSLocalizedString(@"This demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view")];
     }
     else {
         return nil;
@@ -145,6 +158,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
+        case 3: {
+            return 1;
+            break;
+        }
+            
         default: {
             return 0;
             break;
@@ -161,6 +179,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    cell.textLabel.textAlignment = NSTextAlignmentLeft;
+    
     switch (indexPath.section) {
         case 0: {
             cell.textLabel.text = self.serverSettings[indexPath.row].name;
@@ -227,6 +247,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
+        case 3: {
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            break;
+        }
+            
         default: {
             cell.textLabel.text = nil;
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -237,6 +264,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    void (^completionBlock)() = nil;
+    
     switch (indexPath.section) {
         case 0: {
             ServerSettings *serverSettings = self.serverSettings[indexPath.row];
@@ -267,6 +296,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
+        case 3: {
+            completionBlock = ^() {
+                [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
+            };
+            break;
+        }
+            
         default: {
             break;
         }
@@ -276,7 +312,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
     
     [self.tableView reloadData];
     
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:completionBlock];
 }
 
 @end
