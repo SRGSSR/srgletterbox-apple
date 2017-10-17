@@ -612,16 +612,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @strongify(self)
         
         if (finished) {
-            [self updateWithError:error];
-            
             if (! error) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             }
-            else {
-                if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-                    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-                }
+            else if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             }
+            [self updateWithError:error];
         }
     }];
     
