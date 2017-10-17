@@ -278,6 +278,11 @@ IB_DESIGNABLE
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
+ *  The subdivisions currently visible in the timeline (in their display order).
+ */
+@property (nonatomic, readonly) NSArray<SRGSubdivision *> *subdivisions;
+
+/**
  *  Call to schedule an update request for subdivision favorites.
  *
  *  For more information, @see `SRGLetterboxViewDelegate`.

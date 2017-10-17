@@ -227,6 +227,24 @@ withToleranceBefore:(CMTime)toleranceBefore
  completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
+ *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
+ *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur. Switching
+ *  to the currently playing URN restarts playback at its beginning.
+ *
+ *  @return `YES` iff switching occurred successfully.
+ */
+- (BOOL)switchToURN:(SRGMediaURN *)URN;
+
+/**
+ *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
+ *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
+ *  Switching to the currently playing subdivision restarts playback at its beginning.
+ *
+ *  @return `YES` iff switching occurred successfully.
+ */
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision;
+
+/**
  *  Return the current data availability. KVO-observable.
  *
  *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods
@@ -418,7 +436,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) SRGMedia *subdivisionMedia;
 
 /**
- *  The current full-length information .
+ *  The current full-length information.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 

@@ -716,48 +716,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
-- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision
-{
-    if (! self.mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No original media composition information is available. Cannot switch to another subdivision");
-        return NO;
-    }
-    
-    // Build the media composition for the provided subdivision. Return `NO` if the subdivision is not related to the
-    // media composition.
-    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
-    if (! mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No subdivision media composition information is available. Cannot switch to another subdivision");
-        return NO;
-    }
-    
-    [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
-    
-    // If playing another media or if the player is not playing, restart
-    if ([subdivision isKindOfClass:[SRGChapter class]]
-            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
-        [self updateWithError:blockingReasonError];
-        
-        if (blockingReasonError) {
-            [self stop];
-        }
-        else {
-            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:nil];
-            [self.requestQueue addRequest:request resume:YES];
-        }
-    }
-    // Playing another segment from the same media. Seek
-    else {
-        [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
-            [self.mediaPlayerController play];
-        }];
-    }
-    
-    return YES;
-}
-
 - (void)play
 {
     if (self.mediaPlayerController.contentURL) {
@@ -851,6 +809,66 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
 {
     [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+}
+
+- (BOOL)switchToURN:(SRGMediaURN *)URN
+{
+    for (SRGChapter *chapter in self.mediaComposition.chapters) {
+        if ([chapter.URN isEqual:URN]) {
+            return [self switchToSubdivision:chapter];
+        }
+        
+        for (SRGSegment *segment in chapter.segments) {
+            if ([segment.URN isEqual:URN]) {
+                return [self switchToSubdivision:segment];
+            }
+        }
+    }
+    
+    SRGLetterboxLogInfo(@"controller", @"The specified URN is not related to the current context. No switch will occur.");
+    return NO;
+}
+
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision
+{
+    if (! self.mediaComposition) {
+        SRGLetterboxLogInfo(@"controller", @"No context is available. No switch will occur.");
+        return NO;
+    }
+    
+    // Build the media composition for the provided subdivision. Return `NO` if the subdivision is not related to the
+    // media composition.
+    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
+    if (! mediaComposition) {
+        SRGLetterboxLogInfo(@"controller", @"The subdivision is not related to the current context. No switch will occur.");
+        return NO;
+    }
+    
+    [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
+    
+    // If playing another media or if the player is not playing, restart
+    if ([subdivision isKindOfClass:[SRGChapter class]]
+        || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+        || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
+        [self updateWithError:blockingReasonError];
+        
+        if (blockingReasonError) {
+            [self stop];
+        }
+        else {
+            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:nil];
+            [self.requestQueue addRequest:request resume:YES];
+        }
+    }
+    // Playing another segment from the same media. Seek
+    else {
+        [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
+            [self.mediaPlayerController play];
+        }];
+    }
+    
+    return YES;
 }
 
 - (void)updateWithError:(NSError *)error
