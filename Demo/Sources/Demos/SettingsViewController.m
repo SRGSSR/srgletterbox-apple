@@ -68,9 +68,9 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
-    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🇨🇭 %@", NSLocalizedString(@"Production", @"Server setting")] URL:SRGIntegrationLayerProductionServiceURL() globalHeaders:nil],
-                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🇨🇭 %@", NSLocalizedString(@"Stage", @"Server setting")] URL:SRGIntegrationLayerStagingServiceURL() globalHeaders:nil],
-                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🇨🇭 %@", NSLocalizedString(@"Test", @"Server setting")] URL:SRGIntegrationLayerTestServiceURL() globalHeaders:nil],
+    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL() globalHeaders:nil],
                                       [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🌏 %@", NSLocalizedString(@"Production", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.production.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
                                       [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🌏 %@", NSLocalizedString(@"Stage", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.stage.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
                                       [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🌏 %@", NSLocalizedString(@"Test", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.test.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
