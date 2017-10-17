@@ -605,6 +605,11 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineHeightConstraint.constant;
 }
 
+- (NSArray<SRGSubdivision *> *)subdivisions
+{
+    return self.timelineView.subdivisions;
+}
+
 - (CMTime)time
 {
     return self.timeSlider.time;
