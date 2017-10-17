@@ -437,6 +437,9 @@ withToleranceBefore:(CMTime)toleranceBefore
  */
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
+/**
+ *  Optional global headers which will added to all requests performed by the controller when retrieving data.
+ */
 @property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalHeaders;
 
 @end
