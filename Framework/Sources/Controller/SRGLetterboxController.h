@@ -235,6 +235,14 @@ withToleranceBefore:(CMTime)toleranceBefore
 - (BOOL)switchToURN:(SRGMediaURN *)URN;
 
 /**
+ *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
+ *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
+ *
+ *  @return `YES` iff switching occurred successfully.
+ */
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision;
+
+/**
  *  Return the current data availability. KVO-observable.
  *
  *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods

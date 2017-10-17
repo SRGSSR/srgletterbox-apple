@@ -30,14 +30,6 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
 /**
- *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
- *  current playback context, otherwise no switching will occur.
- *
- *  @return `YES` iff switching occurred successfully.
- */
-- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision;
-
-/**
  *  Return `YES` iff the player can skip backward from a standard amount of seconds.
  *
  *  @discussion Always possible for on-demand and DVR streams.
