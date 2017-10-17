@@ -1653,9 +1653,16 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
+    __block BOOL idleReceived = NO;
+    __block BOOL playingReceived = NO;
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        XCTAssertNotEqual([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue], SRGMediaPlayerPlaybackStateSeeking);
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle) {
+            idleReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            playingReceived = YES;
+        }
+        return idleReceived && playingReceived;
     }];
     
     id segmentStartObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerSegmentDidStartNotification object:self.controller.mediaPlayerController queue:nil usingBlock:^(NSNotification * _Nonnull note) {
