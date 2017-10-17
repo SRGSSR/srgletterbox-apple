@@ -228,7 +228,8 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 /**
  *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
- *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur.
+ *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur. Switching
+ *  to the currently playing URN restarts playback at its beginning.
  *
  *  @return `YES` iff switching occurred successfully.
  */
@@ -237,6 +238,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
  *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
+ *  Switching to the currently playing subdivision restarts playback at its beginning.
  *
  *  @return `YES` iff switching occurred successfully.
  */
