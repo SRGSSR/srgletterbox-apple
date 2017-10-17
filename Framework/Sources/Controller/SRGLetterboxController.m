@@ -609,6 +609,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @strongify(self)
         
         if (finished) {
+            [self updateWithError:error];
+            
             if (! error) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             }
@@ -616,7 +618,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
                     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
                 }
-                [self updateWithError:error];
             }
         }
     }];
@@ -631,10 +632,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             if (media) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
-                if (blockingReasonError) {
-                    [self updateWithError:blockingReasonError];
-                }
-                else {
+                [self updateWithError:blockingReasonError];
+                
+                if (! blockingReasonError) {
                     [self.mediaPlayerController playURL:contentURL];
                 }
             }
@@ -736,6 +736,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
         [self updateWithError:blockingReasonError];
+        
         if (blockingReasonError) {
             [self stop];
         }
