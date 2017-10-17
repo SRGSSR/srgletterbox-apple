@@ -122,6 +122,7 @@
     
     if (businessUnitIdentifier) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
+        self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
         
         SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
             self.medias = medias;

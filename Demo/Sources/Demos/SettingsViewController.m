@@ -6,12 +6,15 @@
 
 #import "SettingsViewController.h"
 
+#import "ServerSettings.h"
+
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
+NSString * const LetterboxDemoSettingGlobalHeaders = @"LetterboxDemoSettingGlobalHeaders";
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
@@ -46,37 +49,14 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
     return (updateInterval > 0.) ? updateInterval : SRGLetterboxUpdateIntervalDefault;
 }
 
-@interface ServerSetting : NSObject
-
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL;
-
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSURL *URL;
-
-@end
-
-@implementation ServerSetting
-
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL
+NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 {
-    if (self = [super init]) {
-        _name = name;
-        _URL = URL;
-    }
-    return self;
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:LetterboxDemoSettingGlobalHeaders];
 }
-
-- (instancetype)init
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-@end
 
 @interface SettingsViewController ()
 
-@property (nonatomic) NSArray<ServerSetting *> *serverSettings;
+@property (nonatomic) NSArray<ServerSettings *> *serverSettings;
 
 @end
 
@@ -87,12 +67,14 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
 - (instancetype)init
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    SettingsViewController *viewController = [storyboard instantiateInitialViewController];
-    
-    viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL()]];
+    SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
+    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🌏 %@", NSLocalizedString(@"Production", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.production.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
+                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🌏 %@", NSLocalizedString(@"Stage", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.stage.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
+                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"🌏 %@", NSLocalizedString(@"Test", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.test.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"] globalHeaders:nil]];
     return viewController;
 }
 
@@ -257,8 +239,9 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     switch (indexPath.section) {
         case 0: {
-            NSURL *serverURL = self.serverSettings[indexPath.row].URL;
-            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxDemoSettingServiceURL];
+            ServerSettings *serverSettings = self.serverSettings[indexPath.row];
+            [[NSUserDefaults standardUserDefaults] setObject:serverSettings.URL.absoluteString forKey:LetterboxDemoSettingServiceURL];
+            [[NSUserDefaults standardUserDefaults] setObject:serverSettings.globalHeaders forKey:LetterboxDemoSettingGlobalHeaders];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             [[SRGLetterboxService sharedService].controller reset];

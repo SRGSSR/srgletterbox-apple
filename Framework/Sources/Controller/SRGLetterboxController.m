@@ -84,6 +84,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
 
+@property (nonatomic) NSDictionary<NSString *, NSString *> *globalHeaders;
+
 @property (nonatomic) SRGMediaURN *URN;
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
@@ -121,6 +123,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @implementation SRGLetterboxController
 
 @synthesize serviceURL = _serviceURL;
+@synthesize globalHeaders = _globalHeaders;
 
 #pragma mark Object lifecycle
 
@@ -825,6 +828,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     if (URN) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
                                                  businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
+        self.dataProvider.globalHeaders = self.globalHeaders;
     }
     else {
         self.dataProvider = nil;

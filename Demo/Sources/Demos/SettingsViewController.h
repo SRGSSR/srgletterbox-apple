@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXPORT NSURL *LetterboxDemoMMFServiceURL(void);
 
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
+OBJC_EXPORT NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void);
 
 OBJC_EXPORT BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
 OBJC_EXPORT void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);

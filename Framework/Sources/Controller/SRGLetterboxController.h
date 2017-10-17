@@ -429,6 +429,21 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 @end
 
+@interface SRGLetterboxController (ServerSettings)
+
+/**
+ *  The URL of the service data must be returned from. By default or if reset to `nil`, the production server is
+ *  used. Official URL values can be found in `SRGDataProvider.h`.
+ */
+@property (nonatomic, null_resettable) NSURL *serviceURL;
+
+/**
+ *  Optional global headers which will added to all requests performed by the controller when retrieving data.
+ */
+@property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalHeaders;
+
+@end
+
 /**
  *  Services information. Use `SRGLetterboxService` to start application-wide services for a Letterbox controller.
  */
