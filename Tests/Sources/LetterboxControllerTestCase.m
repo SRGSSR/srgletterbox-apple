@@ -212,7 +212,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
-- (void)testPlayUnknowURN
+- (void)testPlayUnknownURN
 {
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
