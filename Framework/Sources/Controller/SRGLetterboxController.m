@@ -616,7 +616,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             }
             else if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-                self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+                if (self.media) {
+                    self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+                }
+                else {
+                   self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+                }
             }
             [self updateWithError:error];
         }
