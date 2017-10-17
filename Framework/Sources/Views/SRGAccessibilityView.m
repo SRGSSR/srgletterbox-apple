@@ -20,7 +20,7 @@
 
 - (NSString *)accessibilityHint
 {
-    if ([self.letterboxView userInterfaceBehavior] == SRGLetterboxViewUserInterfaceBehaviorNormal) {
+    if ([self.letterboxView userInterfaceBehavior] == SRGLetterboxViewBehaviorNormal) {
         return self.letterboxView.userInterfaceTogglable ? SRGLetterboxAccessibilityLocalizedString(@"Double tap to display or hide player controls.", @"Hint for the letterbox view") : nil;
     }
     else {

@@ -9,21 +9,21 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  User interface behavior
+ *  Override behaviors for interfaces
  */
-typedef NS_ENUM(NSInteger, SRGLetterboxViewUserInterfaceBehavior) {
+typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
     /**
      *  Normal behavior.
      */
-    SRGLetterboxViewUserInterfaceBehaviorNormal = 0,
+    SRGLetterboxViewBehaviorNormal = 0,
     /**
-     *  User interface forced to be visible.
+     *  Interface forced to be visible.
      */
-    SRGLetterboxViewUserInterfaceBehaviorForcedVisible,
+    SRGLetterboxViewBehaviorForcedVisible,
     /**
-     *  User interface forced to be hidden.
+     *  Interface forced to be hidden.
      */
-    SRGLetterboxViewUserInterfaceBehaviorForcedHidden
+    SRGLetterboxViewBehaviorForcedHidden
 };
 
 @interface SRGLetterboxView (Private)
@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewUserInterfaceBehavior) {
 /*
  *  User interface behavior.
  */
-- (SRGLetterboxViewUserInterfaceBehavior)userInterfaceBehavior;
+- (SRGLetterboxViewBehavior)userInterfaceBehavior;
 
 @end
 
