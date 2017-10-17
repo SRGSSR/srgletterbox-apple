@@ -853,6 +853,22 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
+- (BOOL)switchToURN:(SRGMediaURN *)URN
+{
+    for (SRGChapter *chapter in self.mediaComposition.chapters) {
+        if ([chapter.URN isEqual:URN]) {
+            return [self switchToSubdivision:chapter];
+        }
+        
+        for (SRGSegment *segment in chapter.segments) {
+            if ([segment.URN isEqual:URN]) {
+                return [self switchToSubdivision:segment];
+            }
+        }
+    }
+    return NO;
+}
+
 - (void)updateWithError:(NSError *)error
 {
     if (! error) {

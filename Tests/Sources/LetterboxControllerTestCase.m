@@ -1620,7 +1620,7 @@ static NSURL *MMFServiceURL(void)
     }];
 }
 
-- (void)testSwitchToSubdivisionForSegment
+- (void)testSwitchToSegmentURN
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1637,13 +1637,13 @@ static NSURL *MMFServiceURL(void)
     
     NSArray<SRGSegment *> *segments = self.controller.mediaComposition.mainChapter.segments;
     XCTAssertTrue(segments.count >= 3);
-    BOOL switchToSubdivision = [self.controller switchToSubdivision:segments[2]];
-    XCTAssertTrue(switchToSubdivision);
+    BOOL switched = [self.controller switchToURN:segments[2].URN];
+    XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
 }
 
-- (void)testSwitchToSubdivisionForChapter
+- (void)testSwitchToChapterURN
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1664,15 +1664,15 @@ static NSURL *MMFServiceURL(void)
     
     NSArray<SRGChapter *> *chapters = self.controller.mediaComposition.chapters;
     XCTAssertTrue(chapters.count >= 3);
-    BOOL switchToSubdivision = [self.controller switchToSubdivision:chapters[2]];
-    XCTAssertTrue(switchToSubdivision);
+    BOOL switched = [self.controller switchToURN:chapters[2].URN];
+    XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:segmentStartObserver];
     }];
 }
 
-- (void)testSwitchToUnrelatedSubdivision
+- (void)testSwitchToUnrelatedURN
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1700,8 +1700,8 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    BOOL switchToSubdivision = [self.controller switchToSubdivision:fetchedMediaComposition.mainChapter];
-    XCTAssertFalse(switchToSubdivision);
+    BOOL switched = [self.controller switchToURN:fetchedMediaComposition.mainChapter.URN];
+    XCTAssertFalse(switched);
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventStateObserver];
