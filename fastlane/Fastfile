@@ -53,8 +53,10 @@ platform :ios do
 
     clean_build_artifacts
 
-    saveLastNightliesSuccessGitCommitHash
+    merakiPushApps
 
+    saveLastNightliesSuccessGitCommitHash
+    
   end
 
   desc "Build for a scheme and a configuration"
@@ -137,6 +139,14 @@ platform :ios do
     file.close
     puts lastNightliesSuccessGitCommitHash
     lastNightliesSuccessGitCommitHash
+  end
+
+  desc "Try to push new apps on registered devices with Meraki"
+  private_lane :merakiPushApps do
+    file = File.open("scripts/merakiPushApps.sh", "r")
+    merakiPushApps = file.read
+    file.close
+    sh merakiPushApps
   end
 
   after_all do |lane|
