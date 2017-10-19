@@ -52,26 +52,32 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
 /**
  *  Skip backward from a standard amount of seconds.
  *
- *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
- *              finished set to `NO`.
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is attempted, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
  */
-- (void)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (BOOL)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Skip forward from a standard amount of seconds.
  *
- *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
- *              finished set to `NO`.
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is attempted, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
  */
-- (void)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (BOOL)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Skip forward to live conditions.
  *
- *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
- *              finished set to `NO`.
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is attempted, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
  */
-- (void)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (BOOL)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Optional block which gets called right after player creation, when the player changes, or when the configuration is

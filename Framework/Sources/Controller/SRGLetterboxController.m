@@ -813,16 +813,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
-- (BOOL)switchToURN:(SRGMediaURN *)URN
+- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(void (^)(BOOL))completionHandler
 {
     for (SRGChapter *chapter in self.mediaComposition.chapters) {
         if ([chapter.URN isEqual:URN]) {
-            return [self switchToSubdivision:chapter];
+            return [self switchToSubdivision:chapter withCompletionHandler:completionHandler];
         }
         
         for (SRGSegment *segment in chapter.segments) {
             if ([segment.URN isEqual:URN]) {
-                return [self switchToSubdivision:segment];
+                return [self switchToSubdivision:segment withCompletionHandler:completionHandler];
             }
         }
     }
@@ -831,7 +831,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return NO;
 }
 
-- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(void (^)(BOOL))completionHandler
 {
     if (! self.mediaComposition) {
         SRGLetterboxLogInfo(@"controller", @"No context is available. No switch will occur.");
@@ -857,7 +857,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
-            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:nil];
+            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nullable error) {
+                BOOL finished = (error == nil);
+                completionHandler ? completionHandler(finished) : nil;
+            }];
             [self.requestQueue addRequest:request resume:YES];
         }
     }
@@ -866,6 +869,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
+            completionHandler ? completionHandler(finished) : nil;
         }];
     }
     
@@ -971,9 +975,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return [self canSkipForward];
     }
     
-    if (self.media.contentType != SRGContentTypeLivestream && self.media.contentType != SRGContentTypeScheduledLivestream) {
-        SRGMedia *fullLengthMedia = self.fullLengthMedia;
-        return (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) && fullLengthMedia.blockingReason != SRGBlockingReasonEndDate;
+    SRGMedia *fullLengthMedia = self.fullLengthMedia;
+    if (! [fullLengthMedia isEqual:self.media] && (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream)) {
+        return fullLengthMedia.blockingReason != SRGBlockingReasonEndDate;
     }
     else {
         return NO;
@@ -1018,11 +1022,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
 }
 
-- (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (! [self canSkipBackwardFromTime:time]) {
-        completionHandler ? completionHandler(NO) : nil;
-        return;
+        return NO;
     }
     
     CMTime targetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSkipInterval, NSEC_PER_SEC));
@@ -1032,13 +1035,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         }
         completionHandler ? completionHandler(finished) : nil;
     }];
+    return YES;
 }
 
-- (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (! [self canSkipForwardFromTime:time]) {
-        completionHandler ? completionHandler(NO) : nil;
-        return;
+        return NO;
     }
     
     CMTime targetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSkipInterval, NSEC_PER_SEC));
@@ -1048,13 +1051,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         }
         completionHandler ? completionHandler(finished) : nil;
     }];
+    return YES;
 }
 
-- (void)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (! [self canSkipToLive]) {
-        completionHandler ? completionHandler(NO) : nil;
-        return;
+        return NO;
     }
     
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
@@ -1064,16 +1067,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             }
             completionHandler ? completionHandler(finished) : nil;
         }];
-        return;
-    }
-    
-    SRGMedia *fullLengthMedia = self.fullLengthMedia;
-    if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
-        BOOL switched = [self switchToURN:fullLengthMedia.URN];
-        completionHandler ? completionHandler(switched) : nil;
+        return YES;
     }
     else {
-        completionHandler ? completionHandler(NO) : nil;
+        SRGMedia *fullLengthMedia = self.fullLengthMedia;
+        if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
+            return [self switchToURN:fullLengthMedia.URN withCompletionHandler:completionHandler];
+        }
+        else {
+            return NO;
+        }
     }
 }
 

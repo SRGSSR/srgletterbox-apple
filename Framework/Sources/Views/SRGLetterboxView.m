@@ -1219,7 +1219,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision
 {
-    if (! [self.controller switchToSubdivision:subdivision]) {
+    if (! [self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
         return;
     }
     

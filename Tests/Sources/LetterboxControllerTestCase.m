@@ -841,7 +841,11 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller switchToSubdivision:self.controller.mediaComposition.mainChapter.segments[2]];
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    [self.controller switchToSubdivision:self.controller.mediaComposition.mainChapter.segments[2] withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No playback notifications must be received
@@ -1591,7 +1595,12 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller switchToSubdivision:self.controller.mediaComposition.chapters[1]];
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToSubdivision:self.controller.mediaComposition.chapters[1] withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
 }
@@ -1683,7 +1692,12 @@ static NSURL *MMFServiceURL(void)
     
     NSArray<SRGSegment *> *segments = self.controller.mediaComposition.mainChapter.segments;
     XCTAssertTrue(segments.count >= 3);
-    BOOL switched = [self.controller switchToURN:segments[2].URN];
+    
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:segments[2].URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
     XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
@@ -1717,7 +1731,12 @@ static NSURL *MMFServiceURL(void)
     
     NSArray<SRGChapter *> *chapters = self.controller.mediaComposition.chapters;
     XCTAssertTrue(chapters.count >= 3);
-    BOOL switched = [self.controller switchToURN:chapters[2].URN];
+    
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:chapters[2].URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
     XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
@@ -1753,7 +1772,9 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    BOOL switched = [self.controller switchToURN:fetchedMediaComposition.mainChapter.URN];
+    BOOL switched = [self.controller switchToURN:fetchedMediaComposition.mainChapter.URN withCompletionHandler:^(BOOL finished) {
+        XCTFail(@"The completion handler must only be called when switching occurs");
+    }];
     XCTAssertFalse(switched);
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
@@ -1781,7 +1802,12 @@ static NSURL *MMFServiceURL(void)
         return YES;
     }];
     
-    [self.controller switchToURN:URN];
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
 }
@@ -1809,7 +1835,12 @@ static NSURL *MMFServiceURL(void)
         return idleReceived && playingReceived;
     }];
     
-    [self.controller switchToURN:URN];
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
 }

@@ -213,7 +213,7 @@ OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
  *                           requirements.
  *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
  *                           requirements.
- *  @param completionHandler The completion block called when the seek ends. If the seek has been interrupted by
+ *  @param completionHandler The completion handler called when the seek ends. If the seek has been interrupted by
  *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
  *                           with `finished` set to `YES`.
  *
@@ -231,18 +231,25 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur. Switching
  *  to the currently playing URN restarts playback at its beginning.
  *
+ *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
+ *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
+ *                           resume afterwards.
+ *
  *  @return `YES` iff switching occurred successfully.
  */
-- (BOOL)switchToURN:(SRGMediaURN *)URN;
+- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
  *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
  *  Switching to the currently playing subdivision restarts playback at its beginning.
  *
+ *  @param The completion handler called once switching finishes. The block will only be called when switching is performed,
+ *         and with `finished` set to `YES` iff playback could successfully resume afterwards.
+ *
  *  @return `YES` iff switching occurred successfully.
  */
-- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision;
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Return the current data availability. KVO-observable.
