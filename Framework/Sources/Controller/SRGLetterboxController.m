@@ -968,7 +968,17 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (BOOL)canSkipToLive
 {
-    return self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && [self canSkipForward];
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
+        return [self canSkipForward];
+    }
+    
+    SRGMedia *fullLengthMedia = self.fullLengthMedia;
+    if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
+        return ! [self.media isEqual:fullLengthMedia] && fullLengthMedia.blockingReason != SRGBlockingReasonEndDate;
+    }
+    else {
+        return NO;
+    }
 }
 
 - (void)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -1011,7 +1021,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (void)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (![self canSkipBackwardFromTime:time]) {
+    if (! [self canSkipBackwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
         return;
     }
@@ -1027,7 +1037,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (void)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    if (![self canSkipForwardFromTime:time]) {
+    if (! [self canSkipForwardFromTime:time]) {
         completionHandler ? completionHandler(NO) : nil;
         return;
     }
@@ -1049,6 +1059,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 [self.mediaPlayerController play];
             }
             completionHandler ? completionHandler(finished) : nil;
+        }];
+        return;
+    }
+    
+    SRGMedia *fullLengthMedia = self.fullLengthMedia;
+    if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
+        [self prepareToPlayMedia:fullLengthMedia withChaptersOnly:self.chaptersOnly completionHandler:^{
+            [self play];
+            completionHandler ? completionHandler(YES) : nil;
         }];
     }
     else {
