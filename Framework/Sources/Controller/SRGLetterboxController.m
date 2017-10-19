@@ -972,9 +972,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return [self canSkipForward];
     }
     
-    SRGMedia *fullLengthMedia = self.fullLengthMedia;
-    if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
-        return ! [self.media isEqual:fullLengthMedia] && fullLengthMedia.blockingReason != SRGBlockingReasonEndDate;
+    if (self.media.contentType != SRGContentTypeLivestream && self.media.contentType != SRGContentTypeScheduledLivestream) {
+        SRGMedia *fullLengthMedia = self.fullLengthMedia;
+        return (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) && fullLengthMedia.blockingReason != SRGBlockingReasonEndDate;
     }
     else {
         return NO;
@@ -1053,6 +1053,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (void)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
+    if (! [self canSkipToLive]) {
+        completionHandler ? completionHandler(NO) : nil;
+        return;
+    }
+    
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         [self seekToTime:CMTimeRangeGetEnd(self.mediaPlayerController.timeRange) withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
             if (finished) {
@@ -1065,10 +1070,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     
     SRGMedia *fullLengthMedia = self.fullLengthMedia;
     if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
-        [self prepareToPlayMedia:fullLengthMedia withChaptersOnly:self.chaptersOnly completionHandler:^{
-            [self play];
-            completionHandler ? completionHandler(YES) : nil;
-        }];
+        BOOL switched = [self switchToURN:fullLengthMedia.URN];
+        completionHandler ? completionHandler(switched) : nil;
     }
     else {
         completionHandler ? completionHandler(NO) : nil;
