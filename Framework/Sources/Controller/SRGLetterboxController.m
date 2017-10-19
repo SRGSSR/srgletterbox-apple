@@ -846,25 +846,24 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return NO;
     }
     
-    [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
-    
     // If playing another media or if the player is not playing, restart
     if ([subdivision isKindOfClass:[SRGChapter class]]
-        || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-        || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
         [self updateWithError:blockingReasonError];
         
-        if (blockingReasonError) {
-            [self stop];
-        }
-        else {
+        [self stop];
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
+        
+        if (! blockingReasonError) {
             SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:nil];
             [self.requestQueue addRequest:request resume:YES];
         }
     }
     // Playing another segment from the same media. Seek
     else {
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
         }];
