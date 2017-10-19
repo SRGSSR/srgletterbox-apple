@@ -483,11 +483,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged, NSError *previousError))completionBlock
 {
-    NSParameterAssert(completionBlock);
-    
     void (^updateCompletionBlock)(NSError * _Nullable, BOOL, NSError * _Nullable) = ^(NSError * _Nullable error, BOOL URLChanged, NSError * _Nullable previousError) {
         [self updateWithError:error];
-        completionBlock(error, URLChanged, previousError);
+        completionBlock ? completionBlock(error, URLChanged, previousError) : nil;
     };
     
     if (self.contentURLOverridden) {
