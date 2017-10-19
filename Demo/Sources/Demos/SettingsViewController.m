@@ -92,7 +92,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 #pragma mark Getters
 
-- (BOOL)isDisplayingApplicationSection {
+- (BOOL)isDisplayingApplicationSection
+{
     return ([BITHockeyManager sharedHockeyManager].updateManager != nil);
 }
 
@@ -297,7 +298,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 3: {
-            completionBlock = ^() {
+            completionBlock = ^{
                 [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
             };
             break;
