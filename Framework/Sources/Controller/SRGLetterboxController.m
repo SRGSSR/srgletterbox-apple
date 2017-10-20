@@ -470,6 +470,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
+            [self updateWithError:blockingReasonError];
             [self stop];
             [self updateMetadataWithCompletionBlock:nil];
         }];
