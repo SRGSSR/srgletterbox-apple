@@ -43,6 +43,8 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlaybackDidRetryNotification";
 
+NSString * const SRGLetterboxLiveIsFinishedNotification = @"SRGLetterboxLiveIsFinishedNotification";
+
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 NSTimeInterval const SRGLetterboxUpdateIntervalDefault = 30.;
@@ -95,6 +97,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @property (nonatomic) NSInteger startBitRate;
 @property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
+
+@property (nonatomic) NSError *liveError;
 
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
@@ -331,6 +335,28 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return self.mediaComposition.fullLengthMedia;
 }
 
+- (SRGMedia *)liveMedia
+{
+    if (self.media.contentType == SRGContentTypeLivestream || self.media.contentType == SRGContentTypeScheduledLivestream) {
+        return self.media;
+    }
+    else {
+        SRGMedia *mainChapterMedia = [self.mediaComposition mediaForSubdivision:self.mediaComposition.mainChapter];
+        if (mainChapterMedia.contentType == SRGContentTypeLivestream || mainChapterMedia.contentType == SRGContentTypeScheduledLivestream) {
+            return mainChapterMedia;
+        }
+        else {
+            SRGMedia *fullLengthMedia = self.fullLengthMedia;
+            if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
+                return fullLengthMedia;
+            }
+            else {
+                return nil;
+            }
+        }
+    }
+}
+
 - (SRGMedia *)subdivisionMedia
 {
     return [self.mediaComposition mediaForSubdivision:self.subdivision];
@@ -472,6 +498,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             @strongify(self)
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
             [self updateWithError:blockingReasonError];
+            [self updateLiveErrorWithLiveMedia:[self liveMedia]];
             [self stop];
             [self updateMetadataWithCompletionBlock:nil];
         }];
@@ -487,6 +514,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
     void (^updateCompletionBlock)(NSError * _Nullable, BOOL, NSError * _Nullable) = ^(NSError * _Nullable error, BOOL URLChanged, NSError * _Nullable previousError) {
         [self updateWithError:error];
+        [self updateLiveErrorWithLiveMedia:[self liveMedia]];
         completionBlock ? completionBlock(error, URLChanged, previousError) : nil;
     };
     
@@ -570,6 +598,49 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
 }
 
+- (void)updateWithError:(NSError *)error
+{
+    if (! error) {
+        self.error = nil;
+        return;
+    }
+    
+    // Forward Letterbox friendly errors
+    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        self.error = error;
+    }
+    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
+    else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
+        self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                         code:SRGLetterboxErrorCodeNetwork
+                                     userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
+                                                 NSUnderlyingErrorKey : error }];
+    }
+    // Use a friendly error message for all other reasons
+    else {
+        self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                         code:SRGLetterboxErrorCodeNotPlayable
+                                     userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
+                                                 NSUnderlyingErrorKey : error }];
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
+}
+
+- (void)updateLiveErrorWithLiveMedia:(SRGMedia *)media
+{
+    if (media.contentType == SRGContentTypeScheduledLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
+        NSError *liveError = SRGBlockingReasonErrorForMedia(media);
+        
+        if ([liveError.domain isEqualToString:SRGLetterboxErrorDomain] && liveError.code == SRGLetterboxErrorCodeNotAvailable && media.blockingReason == SRGBlockingReasonEndDate) {
+            if (! self.liveError) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLiveIsFinishedNotification object:self userInfo:@{ SRGLetterboxMediaKey : media }];
+            }
+            self.liveError = liveError;
+        }
+    }
+}
+
 #pragma mark Playback
 
 - (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
@@ -625,6 +696,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 }
             }
             [self updateWithError:error];
+            [self updateLiveErrorWithLiveMedia:[self liveMedia]];
         }
     }];
     
@@ -639,6 +711,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
                 [self updateWithError:blockingReasonError];
+                [self updateLiveErrorWithLiveMedia:media];
                 
                 if (! blockingReasonError) {
                     [self.mediaPlayerController playURL:contentURL];
@@ -799,6 +872,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [self.requestQueue cancel];
     
     self.error = nil;
+    self.liveError = nil;
     
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
@@ -853,6 +927,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
         [self updateWithError:blockingReasonError];
+        [self updateLiveErrorWithLiveMedia:[self liveMedia]];
         
         [self stop];
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
@@ -875,35 +950,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
     
     return YES;
-}
-
-- (void)updateWithError:(NSError *)error
-{
-    if (! error) {
-        self.error = nil;
-        return;
-    }
-    
-    // Forward Letterbox friendly errors
-    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
-        self.error = error;
-    }
-    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
-    else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
-        self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                         code:SRGLetterboxErrorCodeNetwork
-                                     userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
-                                                 NSUnderlyingErrorKey : error }];
-    }
-    // Use a friendly error message for all other reasons
-    else {
-        self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                         code:SRGLetterboxErrorCodeNotPlayable
-                                     userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
-                                                 NSUnderlyingErrorKey : error }];
-    }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
 
 #pragma mark Playback (convenience)

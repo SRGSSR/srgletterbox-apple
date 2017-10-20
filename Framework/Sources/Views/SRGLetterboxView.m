@@ -345,6 +345,9 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxPlaybackDidRetryNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxLiveIsFinishedNotification
+                                                      object:_controller];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -406,6 +409,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackDidRetry:)
                                                      name:SRGLetterboxPlaybackDidRetryNotification
+                                                   object:controller];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(liveIsFinished:)
+                                                     name:SRGLetterboxLiveIsFinishedNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -1296,6 +1303,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackDidRetry:(NSNotification *)notification
 {
     [self updateUserInterfaceAnimated:YES];
+}
+
+- (void)liveIsFinished:(NSNotification *)notification
+{
+    [self showNotificationMessage:SRGLetterboxLocalizedString(@"The live is finished.", @"Notification message when the scheduled live is finished") animated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification

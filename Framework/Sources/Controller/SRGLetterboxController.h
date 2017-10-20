@@ -64,6 +64,11 @@ OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
 OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRetryNotification;
 
 /**
+ *  Notification sent when a live in the media composition is finish. Use `SRGLetterboxMediaKey` to have the live media.
+ */
+OBJC_EXTERN NSString * const SRGLetterboxLiveIsFinishedNotification;
+
+/**
  *  The default start bit rate to start (800 kbps).
  */
 OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
