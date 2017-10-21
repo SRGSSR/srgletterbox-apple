@@ -345,7 +345,7 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxPlaybackDidRetryNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxLiveIsFinishedNotification
+                                                        name:SRGLetterboxPlaybackLiveStreamIsOverNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
@@ -411,8 +411,8 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:SRGLetterboxPlaybackDidRetryNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(liveIsFinished:)
-                                                     name:SRGLetterboxLiveIsFinishedNotification
+                                                 selector:@selector(playbackLiveStreamIsOver:)
+                                                     name:SRGLetterboxPlaybackLiveStreamIsOverNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -1305,9 +1305,9 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceAnimated:YES];
 }
 
-- (void)liveIsFinished:(NSNotification *)notification
+- (void)playbackLiveStreamIsOver:(NSNotification *)notification
 {
-    [self showNotificationMessage:SRGLetterboxLocalizedString(@"The live is finished.", @"Notification message when the scheduled live is finished") animated:YES];
+    [self showNotificationMessage:SRGLetterboxLocalizedString(@"The live is over.", @"Notification message when the scheduled live stream is over.") animated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
