@@ -973,8 +973,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         if (self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+                || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+                || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
             return NO;
         }
         else {
