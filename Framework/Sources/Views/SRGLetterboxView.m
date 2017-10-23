@@ -896,7 +896,7 @@ static void commonInit(SRGLetterboxView *self);
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
-        self.skipToLiveButton.alpha = 0.f;
+        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
         
         self.timeSlider.alpha = 0.f;
         self.timeSlider.timeLeftValueLabel.hidden = YES;
@@ -1219,7 +1219,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision
 {
-    if (! [self.controller switchToSubdivision:subdivision]) {
+    if (! [self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
         return;
     }
     
