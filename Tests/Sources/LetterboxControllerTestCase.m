@@ -1154,7 +1154,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
     // Media starts in 7 seconds and is available 7 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1218,7 +1218,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1257,7 +1257,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
 
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-15];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-15];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1288,7 +1288,7 @@ static NSURL *MMFServiceURL(void)
     
     // Media started 1 second before and is available 20 seconds, but the server doesn't remove the blocking reason
     // STARTDATE on time.
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-1];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-1];
     NSDate *endDate = [startDate dateByAddingTimeInterval:20];
     SRGMediaURN *URN = MMFCachedScheduledOnDemandVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1329,7 +1329,7 @@ static NSURL *MMFServiceURL(void)
         return [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     };
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     
@@ -1411,7 +1411,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFURLChangeVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1454,7 +1454,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
     }];
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFURLChangeVideoURN(startDate, endDate);
     [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
@@ -1497,7 +1497,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFURLChangeVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1556,7 +1556,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     SRGMediaURN *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1607,7 +1607,7 @@ static NSURL *MMFServiceURL(void)
         return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
     
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:-5];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-5];
     NSDate *endDate = [startDate dateByAddingTimeInterval:10];
     SRGMediaURN *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1696,7 +1696,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
     // Media starts in 7 seconds and is available 7 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
@@ -1845,7 +1845,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
     // Media starts in 7 seconds and is available 7 seconds
-    NSDate *startDate = [[NSDate date] dateByAddingTimeInterval:7];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     SRGMediaURN *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
