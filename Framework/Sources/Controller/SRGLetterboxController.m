@@ -113,6 +113,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 // Timers for single metadata updates at start and end times
 @property (nonatomic) NSTimer *startDateTimer;
 @property (nonatomic) NSTimer *endDateTimer;
+@property (nonatomic) NSTimer *liveStreamEndDateTimer;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
@@ -203,6 +204,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     self.channelUpdateTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
+    self.liveStreamEndDateTimer = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -378,6 +380,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     _endDateTimer = endDateTimer;
 }
 
+- (void)setLiveStreamEndDateTimer:(NSTimer *)liveStreamEndDateTimer
+{
+    [_liveStreamEndDateTimer invalidate];
+    _liveStreamEndDateTimer = liveStreamEndDateTimer;
+}
+
 #pragma mark Periodic time observers
 
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
@@ -488,6 +496,21 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
     else {
         self.endDateTimer = nil;
+    }
+    
+    if (mediaComposition.liveMedia && ! [mediaComposition.liveMedia isEqual:media]) {
+        NSTimeInterval endTimeInterval = [mediaComposition.liveMedia.endDate timeIntervalSinceNow];
+        if (endTimeInterval > 0.) {
+            @weakify(self)
+            self.liveStreamEndDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+                @strongify(self)
+                [self updateLivestreamEndDateErrorWithMedia:self.mediaComposition.liveMedia];
+                [self updateMetadataWithCompletionBlock:nil];
+            }];
+        }
+        else {
+            self.liveStreamEndDateTimer = nil;
+        }
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
