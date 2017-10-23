@@ -1792,7 +1792,7 @@ static NSURL *MMFServiceURL(void)
     }];
 }
 
-- (void)testBlockingReasonDesappeared
+- (void)testBlockingReasonDisappearance
 {
     self.controller.serviceURL = MMFServiceURL();
     self.controller.updateInterval = 10.;
