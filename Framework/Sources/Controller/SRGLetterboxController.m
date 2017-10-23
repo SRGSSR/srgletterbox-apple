@@ -991,14 +991,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     }
 }
 
-- (void)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    [self seekBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+    return [self seekBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
 
-- (void)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    [self seekForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+    return [self seekForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
 
 #pragma mark Helpers
