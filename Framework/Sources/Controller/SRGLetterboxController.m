@@ -972,14 +972,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (BOOL)canSkipToLive
 {
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
-        if (self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-                || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-                || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
-            return NO;
-        }
-        else {
-            return [self canSkipForward];
-        }
+        return [self canSkipForward];
     }
     
     SRGMedia *fullLengthMedia = self.fullLengthMedia;
