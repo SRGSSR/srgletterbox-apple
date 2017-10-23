@@ -47,15 +47,14 @@
 - (NSString *)pageTitle
 {
     NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    NSString *bundleVersion = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
     
 #ifdef DEBUG
-    versionString = [@"🛠 " stringByAppendingString:versionString];
+    versionString = [versionString stringByAppendingString:@" 🛠"];
 #elif NIGHTLY
-    versionString = [@"🌙 " stringByAppendingString:versionString];
+    versionString = [versionString stringByAppendingString:@" 🌙"];
 #endif
     
-    return [NSString stringWithFormat:@"Letterbox %@ (build %@)", versionString, bundleVersion];
+    return [NSString stringWithFormat:@"Letterbox %@", versionString];
 }
 
 #pragma mark Players

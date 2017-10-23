@@ -92,7 +92,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 #pragma mark Getters
 
-- (BOOL)isDisplayingApplicationSection
+- (BOOL)isCheckForUpdateButtonEnabled
 {
     return ([BITHockeyManager sharedHockeyManager].updateManager != nil);
 }
@@ -101,7 +101,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [self isDisplayingApplicationSection] ? 4 : 3;
+    return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -123,7 +123,16 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 3: {
-            return NSLocalizedString(@"Application", @"Application header title in settings view");
+            NSString *versionString = [@"(" stringByAppendingString:[[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+            versionString = [versionString stringByAppendingFormat:@" - %@)", [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"]];
+            
+#ifdef DEBUG
+            versionString = [versionString stringByAppendingString:@" 🛠"];
+#elif NIGHTLY
+            versionString = [versionString stringByAppendingString:@" 🌙"];
+#endif
+            
+            return [NSString stringWithFormat:NSLocalizedString(@"Application %@", @"Application header title in settings view"), versionString];
             break;
         }
             
@@ -137,8 +146,16 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
-        NSString *firstCharacter = [self isDisplayingApplicationSection] ? @"" : @"\n";
-        return [firstCharacter stringByAppendingString:NSLocalizedString(@"This demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view")];
+        NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        
+#ifdef DEBUG
+        versionString = [versionString stringByAppendingString:@"-debug"];
+#elif NIGHTLY
+        versionString = [versionString stringByAppendingString:@"-nightly"];
+#endif
+        
+        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (v.%@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
+                versionString];
     }
     else {
         return nil;
@@ -181,6 +198,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     cell.textLabel.textAlignment = NSTextAlignmentLeft;
+    cell.userInteractionEnabled = YES;
+    cell.textLabel.textColor = UIColor.blackColor;
     
     switch (indexPath.section) {
         case 0: {
@@ -252,6 +271,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.userInteractionEnabled = [self isCheckForUpdateButtonEnabled];
+            cell.textLabel.textColor = [self isCheckForUpdateButtonEnabled] ? UIColor.blackColor : UIColor.lightGrayColor;
             break;
         }
             
