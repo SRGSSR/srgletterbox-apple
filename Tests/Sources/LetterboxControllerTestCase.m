@@ -642,11 +642,161 @@ static NSURL *MMFServiceURL(void)
     XCTAssertTrue([self.controller canSkipBackward]);
 }
 
-- (void)testSkipsWhileIdle
+- (void)testSkipAbilitiesDuringOnDemandStreamPlaybackLifecycle
 {
-    XCTAssertFalse([self.controller skipForwardWithCompletionHandler:nil]);
-    XCTAssertFalse([self.controller skipBackwardWithCompletionHandler:nil]);
-    XCTAssertFalse([self.controller skipToLiveWithCompletionHandler:nil]);
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+    
+    __block BOOL preparingReceived = NO;
+    __block BOOL playingReceived = NO;
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing) {
+            XCTAssertFalse([self.controller canSkipForward]);
+            XCTAssertFalse([self.controller canSkipBackward]);
+            XCTAssertFalse([self.controller canSkipToLive]);
+            
+            preparingReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            XCTAssertTrue([self.controller canSkipForward]);
+            XCTAssertTrue([self.controller canSkipBackward]);
+            XCTAssertFalse([self.controller canSkipToLive]);
+            
+            playingReceived = YES;
+        }
+        return preparingReceived && playingReceived;
+    }];
+    
+    [self.controller playURN:OnDemandLongVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekEfficientlyToTime:CMTimeMakeWithSeconds(80., NSEC_PER_SEC) withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertTrue([self.controller canSkipForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller stop];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+}
+
+- (void)testSkipAbilitiesDuringDVRLivestreamPlaybackLifecycle
+{
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+    
+    __block BOOL preparingReceived = NO;
+    __block BOOL playingReceived = NO;
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing) {
+            XCTAssertFalse([self.controller canSkipForward]);
+            XCTAssertFalse([self.controller canSkipBackward]);
+            XCTAssertFalse([self.controller canSkipToLive]);
+            
+            preparingReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            XCTAssertFalse([self.controller canSkipForward]);
+            XCTAssertTrue([self.controller canSkipBackward]);
+            XCTAssertFalse([self.controller canSkipToLive]);
+            
+            playingReceived = YES;
+        }
+        return preparingReceived && playingReceived;
+    }];
+    
+    [self.controller playURN:LiveDVRVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller seekEfficientlyToTime:CMTimeMakeWithSeconds(200., NSEC_PER_SEC) withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertTrue([self.controller canSkipForward]);
+    XCTAssertTrue([self.controller canSkipBackward]);
+    XCTAssertTrue([self.controller canSkipToLive]);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller stop];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+}
+
+- (void)testSkipAbilitiesDuringLiveOnlyStreamPlaybackLifecycle
+{
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+    
+    __block BOOL preparingReceived = NO;
+    __block BOOL playingReceived = NO;
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing) {
+            XCTAssertFalse([self.controller canSkipForward]);
+            XCTAssertFalse([self.controller canSkipBackward]);
+            XCTAssertFalse([self.controller canSkipToLive]);
+            
+            preparingReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            XCTAssertFalse([self.controller canSkipForward]);
+            XCTAssertFalse([self.controller canSkipBackward]);
+            XCTAssertFalse([self.controller canSkipToLive]);
+            
+            playingReceived = YES;
+        }
+        return preparingReceived && playingReceived;
+    }];
+    
+    [self.controller playURN:LiveOnlyVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller stop];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertFalse([self.controller canSkipForward]);
+    XCTAssertFalse([self.controller canSkipBackward]);
+    XCTAssertFalse([self.controller canSkipToLive]);
 }
 
 - (void)testSkipToLiveForSwissTXTLimitedDVRStream
@@ -725,7 +875,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeMakeWithSeconds(30., NSEC_PER_SEC) withCompletionHandler:nil];
+    [self.controller seekEfficientlyToTime:CMTimeMakeWithSeconds(30., NSEC_PER_SEC) withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
