@@ -42,10 +42,6 @@
 {
     [super awakeFromNib];
     
-    self.letterboxController.serviceURL = ApplicationSettingServiceURL();
-    self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-    self.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
-    
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
     self.progressView.hidden = YES;
 }
@@ -63,6 +59,9 @@
     
     if (newWindow) {
         self.letterboxController = [[SRGLetterboxController alloc] init];
+        self.letterboxController.serviceURL = ApplicationSettingServiceURL();
+        self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
+        self.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
         self.letterboxController.muted = YES;
         self.letterboxController.resumesAfterRouteBecomesUnavailable = YES;
         self.letterboxView.controller = self.letterboxController;
