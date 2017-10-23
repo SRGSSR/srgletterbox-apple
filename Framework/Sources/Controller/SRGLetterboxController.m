@@ -512,6 +512,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             self.liveStreamEndDateTimer = nil;
         }
     }
+    else {
+        self.liveStreamEndDateTimer = nil;
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
