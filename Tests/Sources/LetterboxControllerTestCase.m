@@ -541,12 +541,15 @@ static NSURL *MMFServiceURL(void)
     XCTAssertFalse([self.controller canSkipForward]);
     
     // Cannot skip
-    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
-        XCTAssertFalse(finished);
+    BOOL skipped1 = [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
+        XCTFail(@"Must not be called");
     }];
-    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
-        XCTAssertFalse(finished);
+    XCTAssertFalse(skipped1);
+    
+    BOOL skipped2 = [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
+        XCTFail(@"Must not be called");
     }];
+    XCTAssertFalse(skipped2);
 }
 
 - (void)testDVRStreamSkips
@@ -624,12 +627,15 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
+    BOOL skipped1 = [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertFalse(finished);
     }];
-    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
+    XCTAssertTrue(skipped1);
+    
+    BOOL skipped2 = [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
+    XCTAssertTrue(skipped2);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
