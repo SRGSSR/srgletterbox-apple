@@ -1948,6 +1948,12 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
+    XCTAssertEqual(self.controller.media.contentType, SRGContentTypeEpisode);
+    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
+    XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
+    XCTAssertNil(self.controller.error);
+    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertEqual(self.controller.media.contentType, SRGContentTypeEpisode);
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1956,11 +1962,6 @@ static NSURL *MMFServiceURL(void)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
-    
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
-    XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
-    XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
-    XCTAssertNil(self.controller.error);
 }
 
 - (void)testSwissTXTLimitedDVRNotYetAvailable
