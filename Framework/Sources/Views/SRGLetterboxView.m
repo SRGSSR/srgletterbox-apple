@@ -81,6 +81,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
+
 @property (nonatomic) NSTimer *inactivityTimer;
 
 @property (nonatomic, copy) NSString *notificationMessage;
@@ -1143,6 +1145,18 @@ static void commonInit(SRGLetterboxView *self);
     });
 }
 
+- (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
+{
+    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+    
+    if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+        playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+    else {
+        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+    }
+}
+
 #pragma mark Actions
 
 - (IBAction)skipBackward:(id)sender
@@ -1292,6 +1306,16 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
+        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
+    }
+    else {
+        return NO;
+    }
 }
 
 #pragma mark Notifications

@@ -49,6 +49,7 @@
                 <outlet property="timelineHeightConstraint" destination="eCB-ci-0lC" id="njb-Zh-WZp"/>
                 <outlet property="timelineView" destination="ysx-Uc-uEb" id="lXX-to-q8R"/>
                 <outlet property="tracksButton" destination="iRM-He-GD6" id="2px-vG-6gU"/>
+                <outlet property="videoGravityTapChangeGestureRecognizer" destination="y7P-pN-sI4" id="hpI-dX-KNQ"/>
                 <outletCollection property="fullScreenButtons" destination="WT7-v6-7uh" id="TH2-pa-Rqx"/>
                 <outletCollection property="fullScreenButtons" destination="Ess-8e-PUx" id="KTs-lZ-QxB"/>
                 <outletCollection property="fullScreenButtons" destination="uEB-dd-8By" id="DTu-JR-O7y"/>
@@ -73,6 +74,10 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hl-p0-Y81">
                             <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="y7P-pN-sI4" appends="YES" id="plc-Vq-UjV"/>
+                            </connections>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-Ix-YZ1" userLabel="Background Interaction View">
                             <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
@@ -402,16 +407,25 @@
         <tapGestureRecognizer id="cSD-No-gUM">
             <connections>
                 <action selector="hideUserInterface:" destination="-1" id="f6i-7M-9sG"/>
+                <outlet property="delegate" destination="-1" id="GbY-Yp-emM"/>
             </connections>
         </tapGestureRecognizer>
         <tapGestureRecognizer id="iXq-HC-lOl">
             <connections>
                 <action selector="retry:" destination="-1" id="6N3-uz-ppc"/>
+                <outlet property="delegate" destination="-1" id="S92-MV-U07"/>
             </connections>
         </tapGestureRecognizer>
         <tapGestureRecognizer id="Si8-HF-UEx">
             <connections>
                 <action selector="hideUserInterface:" destination="-1" id="Z5Z-gf-ZmY"/>
+                <outlet property="delegate" destination="-1" id="ilI-Sn-pcO"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer numberOfTapsRequired="2" id="y7P-pN-sI4">
+            <connections>
+                <action selector="changeVideoGravity:" destination="-1" id="eWx-YJ-0Ea"/>
+                <outlet property="delegate" destination="-1" id="YG4-5y-gOC"/>
             </connections>
         </tapGestureRecognizer>
     </objects>
