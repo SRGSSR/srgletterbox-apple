@@ -142,6 +142,13 @@
     } completion:nil];
 }
 
+#pragma mark Home indicator
+
+- (BOOL)prefersHomeIndicatorAutoHidden
+{
+    return self.letterboxView.userInterfaceHidden;
+}
+
 #pragma mark Data
 
 - (void)reloadData
@@ -208,7 +215,11 @@
         self.letterboxAspectRatioConstraint.constant = heightOffset;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
-    } completion:nil];
+    } completion:^(BOOL finished) {
+        if (@available(iOS 11, *)) {
+            [self setNeedsUpdateOfHomeIndicatorAutoHidden];
+        }
+    }];
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive
