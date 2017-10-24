@@ -1961,7 +1961,7 @@ static NSURL *MMFServiceURL(void)
     
     [self.controller play];
     
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
 - (void)testSwissTXTLimitedDVRNotYetAvailable
