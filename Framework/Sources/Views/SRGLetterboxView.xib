@@ -24,6 +24,8 @@
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
                 <outlet property="backgroundInteractionView" destination="oRJ-Ix-YZ1" id="u2b-IQ-H0e"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
+                <outlet property="bottomTimelineToSafeAreaConstraint" destination="09f-4l-H9m" id="zMt-Ax-07u"/>
+                <outlet property="bottomTimelineToSuperviewConstraint" destination="1Bk-M6-RGm" id="2yL-jZ-n1p"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
                 <outlet property="errorLabel" destination="XI7-JZ-ASc" id="Sga-SH-mVB"/>
@@ -362,7 +364,8 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <gestureRecognizers/>
             <constraints>
-                <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="bottom" id="09f-4l-H9m"/>
+                <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="bottom" priority="950" id="09f-4l-H9m"/>
+                <constraint firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="bottom" priority="850" id="1Bk-M6-RGm"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="trailing" secondItem="WT7-v6-7uh" secondAttribute="trailing" id="48t-P6-nxr"/>
                 <constraint firstAttribute="trailing" secondItem="aun-4y-dBi" secondAttribute="trailing" id="5Cg-FC-gXE"/>
                 <constraint firstItem="diO-OC-keM" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="66N-1p-69l"/>

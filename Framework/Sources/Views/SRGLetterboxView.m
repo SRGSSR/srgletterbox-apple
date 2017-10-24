@@ -39,6 +39,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *bottomTimelineToSafeAreaConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *bottomTimelineToSuperviewConstraint;
+
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
@@ -864,12 +867,20 @@ static void commonInit(SRGLetterboxView *self);
     CGFloat timelineHeight = (subdivisions.count != 0 && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
-    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
+    BOOL isTimelineVisible = (timelineHeight != 0.f);
+    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && isTimelineVisible);
     self.timelineHeightConstraint.constant = timelineHeight;
     
     if (shouldFocus) {
         [self.timelineView scrollToSelectedIndexAnimated:NO];
     }
+    
+    // Ensure the timeline is always contained within the safe area when displayed
+    static const CGFloat TimelineConstraintGreaterPriority = 950.f;
+    static const CGFloat TimelineConstraintLesserPriority = 850.f;
+    
+    self.bottomTimelineToSafeAreaConstraint.priority = isTimelineVisible ? TimelineConstraintGreaterPriority : TimelineConstraintLesserPriority;
+    self.bottomTimelineToSuperviewConstraint.priority = isTimelineVisible ? TimelineConstraintLesserPriority : TimelineConstraintGreaterPriority;
     
     return timelineHeight;
 }
