@@ -20,6 +20,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGProgram+SRGLetterbox.h"
+#import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -81,7 +82,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
-@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
+@property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 
@@ -190,6 +191,8 @@ static void commonInit(SRGLetterboxView *self);
                                                                                                             action:@selector(resetInactivityTimer:)];
     activityGestureRecognizer.delegate = self;
     [self.mainView addGestureRecognizer:activityGestureRecognizer];
+    
+    self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.2;
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {

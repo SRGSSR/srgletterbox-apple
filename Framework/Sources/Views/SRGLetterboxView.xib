@@ -407,22 +407,19 @@
         <tapGestureRecognizer id="cSD-No-gUM">
             <connections>
                 <action selector="hideUserInterface:" destination="-1" id="f6i-7M-9sG"/>
-                <outlet property="delegate" destination="-1" id="GbY-Yp-emM"/>
             </connections>
         </tapGestureRecognizer>
         <tapGestureRecognizer id="iXq-HC-lOl">
             <connections>
                 <action selector="retry:" destination="-1" id="6N3-uz-ppc"/>
-                <outlet property="delegate" destination="-1" id="S92-MV-U07"/>
             </connections>
         </tapGestureRecognizer>
         <tapGestureRecognizer id="Si8-HF-UEx">
             <connections>
                 <action selector="hideUserInterface:" destination="-1" id="Z5Z-gf-ZmY"/>
-                <outlet property="delegate" destination="-1" id="ilI-Sn-pcO"/>
             </connections>
         </tapGestureRecognizer>
-        <tapGestureRecognizer numberOfTapsRequired="2" id="y7P-pN-sI4">
+        <tapGestureRecognizer numberOfTapsRequired="2" id="y7P-pN-sI4" customClass="SRGTapGestureRecognizer">
             <connections>
                 <action selector="changeVideoGravity:" destination="-1" id="eWx-YJ-0Ea"/>
                 <outlet property="delegate" destination="-1" id="YG4-5y-gOC"/>
