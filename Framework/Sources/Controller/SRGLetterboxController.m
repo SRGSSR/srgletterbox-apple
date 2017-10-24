@@ -338,11 +338,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     return self.mediaComposition.fullLengthMedia;
 }
 
-- (SRGMedia *)liveMedia
-{
-    return self.mediaComposition.liveMedia;
-}
-
 - (SRGMedia *)subdivisionMedia
 {
     return [self.mediaComposition mediaForSubdivision:self.subdivision];
@@ -1032,8 +1027,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return [self canSkipForward];
     }
     
-    if (self.liveMedia && ! [self.liveMedia isEqual:self.media]) {
-        return self.liveMedia.blockingReason != SRGBlockingReasonEndDate;
+    if (self.mediaComposition.liveMedia && ! [self.mediaComposition.liveMedia isEqual:self.media]) {
+        return self.mediaComposition.liveMedia.blockingReason != SRGBlockingReasonEndDate;
     }
     else {
         return NO;
@@ -1125,14 +1120,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         }];
         return YES;
     }
+    else if (self.mediaComposition.liveMedia) {
+        return [self switchToURN:self.mediaComposition.liveMedia.URN withCompletionHandler:completionHandler];
+    }
     else {
-        SRGMedia *fullLengthMedia = self.fullLengthMedia;
-        if (fullLengthMedia.contentType == SRGContentTypeLivestream || fullLengthMedia.contentType == SRGContentTypeScheduledLivestream) {
-            return [self switchToURN:fullLengthMedia.URN withCompletionHandler:completionHandler];
-        }
-        else {
-            return NO;
-        }
+        return NO;
     }
 }
 

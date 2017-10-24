@@ -448,11 +448,6 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 
 /**
- *  The current live information.
- */
-@property (nonatomic, readonly, nullable) SRGMedia *liveMedia;
-
-/**
  *  Error (if any has been encountered).
  */
 @property (nonatomic, readonly, nullable) NSError *error;
