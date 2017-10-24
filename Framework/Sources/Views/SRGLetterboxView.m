@@ -103,6 +103,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
+@property (nonatomic, copy) AVLayerVideoGravity videoGravity;
+
 @end
 
 @implementation SRGLetterboxView {
@@ -1008,11 +1010,13 @@ static void commonInit(SRGLetterboxView *self);
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         
+        AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
+        playerLayer.videoGravity = self.videoGravity;
+        
         static const CGFloat ControlsFillLesserPriority = 850.f;
         static const CGFloat ControlsFillGreaterPriority = 950.f;
         
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+        if ([self.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
             self.controlsAspectRatioConstraint.priority = ControlsFillGreaterPriority;
             self.controlsToSuperviewTopConstraint.priority = ControlsFillLesserPriority;
             self.controlsToSuperviewBottomConstraint.priority = ControlsFillLesserPriority;
@@ -1171,12 +1175,16 @@ static void commonInit(SRGLetterboxView *self);
 {
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
     
+    // Set the desired content gravity, based on the current layer state. The result is applied with UI updates,
+    // ensuring all updates are animated at the same time.
     if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-        playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        self.videoGravity = AVLayerVideoGravityResizeAspectFill;
     }
     else {
-        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        self.videoGravity = AVLayerVideoGravityResizeAspect;
     }
+    
+    [self updateUserInterfaceAnimated:YES];
 }
 
 #pragma mark Actions
