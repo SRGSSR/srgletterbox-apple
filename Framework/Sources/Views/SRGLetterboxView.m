@@ -43,13 +43,13 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSuperviewBottomConstraint;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsToSafeAreaBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsToSuperviewBottomConstraint;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsStackToSafeAreaEdgeConstraints;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsStackToSuperviewEdgeConstraints;
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
+
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsToSuperviewEdgeConstraints;
-
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
@@ -845,13 +845,24 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
+    static const CGFloat kControlsStackConstraintGreaterPriority = 950.f;
+    static const CGFloat kControlsStackConstraintLesserPriority = 850.f;
+    
     if (userInterfaceHidden) {
-        self.controlsToSafeAreaBottomConstraint.priority = 850.f;
-        self.controlsToSuperviewBottomConstraint.priority = 950.f;
+        [self.controlsStackToSafeAreaEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintLesserPriority;
+        }];
+        [self.controlsStackToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintGreaterPriority;
+        }];
     }
     else {
-        self.controlsToSafeAreaBottomConstraint.priority = 950.f;
-        self.controlsToSuperviewBottomConstraint.priority = 850.f;
+        [self.controlsStackToSafeAreaEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintGreaterPriority;
+        }];
+        [self.controlsStackToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintLesserPriority;
+        }];
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;

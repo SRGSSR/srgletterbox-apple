@@ -58,6 +58,12 @@
                 <outletCollection property="controlsToSuperviewEdgeConstraints" destination="cWG-po-VLf" id="wmB-ab-VcL"/>
                 <outletCollection property="controlsToSuperviewEdgeConstraints" destination="nrV-bx-oHk" id="qtZ-vL-gsV"/>
                 <outletCollection property="controlsToSuperviewEdgeConstraints" destination="ozK-nJ-IQ2" id="PgK-lF-ScF"/>
+                <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="6SK-x6-Wug" id="2HX-bM-bpa"/>
+                <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="Qw7-jT-MLe" id="eWb-7p-O6k"/>
+                <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="t4f-BY-Z05" id="JOS-ts-cCB"/>
+                <outletCollection property="controlsStackToSuperviewEdgeConstraints" destination="1df-li-DMF" id="fBz-R8-z0p"/>
+                <outletCollection property="controlsStackToSuperviewEdgeConstraints" destination="jYc-mo-h52" id="5jM-Nu-OTi"/>
+                <outletCollection property="controlsStackToSuperviewEdgeConstraints" destination="z6A-op-3gV" id="qTl-dt-tUY"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -228,11 +234,11 @@
                                 <constraint firstItem="cih-8k-dqC" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="cIZ-zB-LSb"/>
                                 <constraint firstItem="KlV-OH-iUB" firstAttribute="leading" secondItem="Suw-jc-FuV" secondAttribute="trailing" id="gyT-pT-X3e"/>
                                 <constraint firstAttribute="width" secondItem="mae-cR-Ydf" secondAttribute="height" multiplier="16:9" priority="950" id="ibL-43-dpF"/>
-                                <constraint firstAttribute="trailing" secondItem="tuV-Cd-a2U" secondAttribute="trailing" constant="8" id="jYc-mo-h52"/>
+                                <constraint firstAttribute="trailing" secondItem="tuV-Cd-a2U" secondAttribute="trailing" priority="850" constant="8" id="jYc-mo-h52"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerY" secondItem="mae-cR-Ydf" secondAttribute="centerY" id="kIV-4o-g6R"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="mKD-PG-ES5"/>
                                 <constraint firstItem="KlV-OH-iUB" firstAttribute="centerY" secondItem="Suw-jc-FuV" secondAttribute="centerY" id="s3p-71-303"/>
-                                <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" constant="8" id="z6A-op-3gV"/>
+                                <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" priority="850" constant="8" id="z6A-op-3gV"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -382,6 +388,7 @@
                 <constraint firstAttribute="trailing" secondItem="aun-4y-dBi" secondAttribute="trailing" id="5Cg-FC-gXE"/>
                 <constraint firstItem="diO-OC-keM" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="66N-1p-69l"/>
                 <constraint firstAttribute="trailing" secondItem="Ipy-eN-bUs" secondAttribute="trailing" id="6Pn-Mg-kwX"/>
+                <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="tuV-Cd-a2U" secondAttribute="trailing" priority="950" id="6SK-x6-Wug"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" secondItem="erX-bp-o7I" secondAttribute="trailing" constant="8" id="9dG-oM-VjP"/>
                 <constraint firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="D0i-tF-POP"/>
@@ -404,6 +411,7 @@
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="trailing" secondItem="WT7-v6-7uh" secondAttribute="trailing" id="mv3-Au-iMn"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="leading" secondItem="WT7-v6-7uh" secondAttribute="leading" id="qiI-Ei-EYS"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="top" secondItem="aWQ-IF-YZO" secondAttribute="bottom" id="sSH-Tf-zdR"/>
+                <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Feb-b9-W6K" secondAttribute="leading" priority="950" id="t4f-BY-Z05"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="bottom" secondItem="WT7-v6-7uh" secondAttribute="bottom" id="wta-y6-9er"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="yqg-fs-HwK"/>
             </constraints>
