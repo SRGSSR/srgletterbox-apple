@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+#import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <XCTest/XCTest.h>
 
@@ -879,7 +880,8 @@ static NSURL *MMFServiceURL(void)
     }];
     
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
-    SRGChapter *highlightChapter = self.controller.mediaComposition.chapters.lastObject;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeClip)];
+    SRGChapter *highlightChapter = [self.controller.mediaComposition.chapters filteredArrayUsingPredicate:predicate].lastObject;
     [self.controller switchToSubdivision:highlightChapter withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
@@ -2051,13 +2053,17 @@ static NSURL *MMFServiceURL(void)
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver3];
     }];
     
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeClip)];
+    NSArray <SRGChapter *> *highlightChapters = [self.controller.mediaComposition.chapters filteredArrayUsingPredicate:predicate];
+    XCTAssertNotEqual(highlightChapters.count, 0);
+    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertEqual(self.controller.media.contentType, SRGContentTypeClip);
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
     XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
-    BOOL switched = [self.controller switchToSubdivision:self.controller.mediaComposition.chapters[1] withCompletionHandler:^(BOOL finished) {
+    BOOL switched = [self.controller switchToSubdivision:highlightChapters.firstObject withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
         [completionHandlerExpectation fulfill];
     }];
