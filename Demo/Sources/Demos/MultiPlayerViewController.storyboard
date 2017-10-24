@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -81,7 +81,7 @@
                             <constraint firstItem="c1j-HG-eIf" firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="jgA-f8-0kU"/>
                             <constraint firstItem="Y0W-Wa-7Cb" firstAttribute="trailing" secondItem="1bb-qO-DK7" secondAttribute="trailing" id="jyS-a3-NEU"/>
                             <constraint firstItem="1bb-qO-DK7" firstAttribute="leading" secondItem="Y0W-Wa-7Cb" secondAttribute="leading" id="kDE-YM-s3S"/>
-                            <constraint firstItem="mnt-gM-iQ3" firstAttribute="leading" secondItem="1bb-qO-DK7" secondAttribute="leading" id="pBI-TA-KIY"/>
+                            <constraint firstItem="mnt-gM-iQ3" firstAttribute="leading" secondItem="Y0W-Wa-7Cb" secondAttribute="leading" id="pBI-TA-KIY"/>
                             <constraint firstItem="Udg-mi-has" firstAttribute="top" secondItem="1bb-qO-DK7" secondAttribute="bottom" constant="20" id="suW-fL-3Rn"/>
                             <constraint firstItem="c1j-HG-eIf" firstAttribute="centerX" secondItem="Udg-mi-has" secondAttribute="centerX" id="yMv-XR-Psr"/>
                             <constraint firstItem="1bb-qO-DK7" firstAttribute="top" secondItem="Y0W-Wa-7Cb" secondAttribute="top" id="z88-in-Ldl"/>
