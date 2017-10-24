@@ -218,7 +218,7 @@
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="leading" secondItem="cih-8k-dqC" secondAttribute="trailing" id="1MA-ls-Rsr"/>
-                                <constraint firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" constant="10" id="1df-li-DMF"/>
+                                <constraint firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="850" constant="10" id="1df-li-DMF"/>
                                 <constraint firstAttribute="trailing" secondItem="d5q-RH-Wvg" secondAttribute="trailing" id="40U-6f-Z7v"/>
                                 <constraint firstItem="d5q-RH-Wvg" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="CNS-6S-nVb"/>
                                 <constraint firstItem="Suw-jc-FuV" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="DdS-Ik-n8V"/>
@@ -391,6 +391,7 @@
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="M4t-wq-3kY"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="NM1-s7-J0O"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="Q1D-uB-3Zk"/>
+                <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="950" id="Qw7-jT-MLe"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="QwU-xA-Yyr"/>
                 <constraint firstItem="0Mg-fI-Oss" firstAttribute="leading" secondItem="Feb-b9-W6K" secondAttribute="leading" constant="4" id="YcY-Dg-Lwt"/>
                 <constraint firstAttribute="trailing" secondItem="aWQ-IF-YZO" secondAttribute="trailing" id="ZeG-gx-2Ja"/>
