@@ -26,6 +26,9 @@
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="bottomTimelineToSafeAreaConstraint" destination="09f-4l-H9m" id="zMt-Ax-07u"/>
                 <outlet property="bottomTimelineToSuperviewConstraint" destination="1Bk-M6-RGm" id="2yL-jZ-n1p"/>
+                <outlet property="controlsAspectRatioConstraint" destination="ibL-43-dpF" id="GJF-bG-rYC"/>
+                <outlet property="controlsToSuperviewBottomConstraint" destination="ozK-nJ-IQ2" id="wHG-AD-nbG"/>
+                <outlet property="controlsToSuperviewTopConstraint" destination="cWG-po-VLf" id="vBr-dM-EXq"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
                 <outlet property="errorLabel" destination="XI7-JZ-ASc" id="Sga-SH-mVB"/>
@@ -222,7 +225,7 @@
                                 <constraint firstItem="tuV-Cd-a2U" firstAttribute="top" secondItem="d5q-RH-Wvg" secondAttribute="bottom" id="Xmy-uP-q7K"/>
                                 <constraint firstItem="cih-8k-dqC" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="cIZ-zB-LSb"/>
                                 <constraint firstItem="KlV-OH-iUB" firstAttribute="leading" secondItem="Suw-jc-FuV" secondAttribute="trailing" id="gyT-pT-X3e"/>
-                                <constraint firstAttribute="width" secondItem="mae-cR-Ydf" secondAttribute="height" multiplier="16:9" id="ibL-43-dpF"/>
+                                <constraint firstAttribute="width" secondItem="mae-cR-Ydf" secondAttribute="height" multiplier="16:9" priority="950" id="ibL-43-dpF"/>
                                 <constraint firstAttribute="trailing" secondItem="tuV-Cd-a2U" secondAttribute="trailing" constant="8" id="jYc-mo-h52"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerY" secondItem="mae-cR-Ydf" secondAttribute="centerY" id="kIV-4o-g6R"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="mKD-PG-ES5"/>
@@ -244,12 +247,14 @@
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="width" secondItem="diO-OC-keM" secondAttribute="width" priority="750" id="Qaz-ey-eiw"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="RLX-vo-5ks"/>
                         <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
+                        <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" priority="850" id="cWG-po-VLf"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="g8w-El-eYt"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="mzr-JP-j7C"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="750" id="nnM-C9-eos"/>
+                        <constraint firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" priority="850" id="ozK-nJ-IQ2"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="qOR-YG-spO"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="height" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="height" id="tr5-Uh-yfq"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="whS-M5-Csh"/>

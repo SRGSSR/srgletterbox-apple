@@ -44,6 +44,10 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *bottomTimelineToSuperviewConstraint;
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsToSuperviewTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsToSuperviewBottomConstraint;
+
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
@@ -1003,6 +1007,21 @@ static void commonInit(SRGLetterboxView *self);
         [self updateControlsLayoutForController:controller];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
+        
+        static const CGFloat ControlsFillLesserPriority = 850.f;
+        static const CGFloat ControlsFillGreaterPriority = 950.f;
+        
+        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+            self.controlsAspectRatioConstraint.priority = ControlsFillGreaterPriority;
+            self.controlsToSuperviewTopConstraint.priority = ControlsFillLesserPriority;
+            self.controlsToSuperviewBottomConstraint.priority = ControlsFillLesserPriority;
+        }
+        else {
+            self.controlsAspectRatioConstraint.priority = ControlsFillLesserPriority;
+            self.controlsToSuperviewTopConstraint.priority = ControlsFillGreaterPriority;
+            self.controlsToSuperviewBottomConstraint.priority = ControlsFillGreaterPriority;
+        }
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
