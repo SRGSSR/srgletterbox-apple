@@ -703,7 +703,7 @@ static void commonInit(SRGLetterboxView *self);
             availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
         }
         else {
-            availabilityLabelText = SRGLetterboxLocalizedString(@"Content will begin shortly", @"Message display when the count down is over and Letterbox can't already play the content.");
+            availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
         }
         
         if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
