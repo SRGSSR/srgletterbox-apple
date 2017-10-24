@@ -45,8 +45,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsToSuperviewTopConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsToSuperviewBottomConstraint;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsToSuperviewEdgeConstraints;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
@@ -1017,20 +1016,24 @@ static void commonInit(SRGLetterboxView *self);
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         
         AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
-        playerLayer.videoGravity = self.videoGravity;
+        playerLayer.videoGravity = self.videoGravity ?: AVLayerVideoGravityResizeAspect;
         
         static const CGFloat kControlsFillLesserPriority = 850.f;
         static const CGFloat kControlsFillGreaterPriority = 950.f;
         
-        if ([self.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
             self.controlsAspectRatioConstraint.priority = kControlsFillGreaterPriority;
-            self.controlsToSuperviewTopConstraint.priority = kControlsFillLesserPriority;
-            self.controlsToSuperviewBottomConstraint.priority = kControlsFillLesserPriority;
+            
+            [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+                constraint.priority = kControlsFillLesserPriority;
+            }];
         }
         else {
             self.controlsAspectRatioConstraint.priority = kControlsFillLesserPriority;
-            self.controlsToSuperviewTopConstraint.priority = kControlsFillGreaterPriority;
-            self.controlsToSuperviewBottomConstraint.priority = kControlsFillGreaterPriority;
+            
+            [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+                constraint.priority = kControlsFillGreaterPriority;
+            }];
         }
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
