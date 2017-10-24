@@ -102,7 +102,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
-@property (nonatomic, copy) AVLayerVideoGravity videoGravity;
+@property (nonatomic, copy) AVLayerVideoGravity targetVideoGravity;
 
 @end
 
@@ -1016,7 +1016,10 @@ static void commonInit(SRGLetterboxView *self);
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         
         AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
-        playerLayer.videoGravity = self.videoGravity ?: AVLayerVideoGravityResizeAspect;
+        if (self.targetVideoGravity) {
+            playerLayer.videoGravity = self.targetVideoGravity;
+            self.targetVideoGravity = nil;
+        }
         
         static const CGFloat kControlsFillLesserPriority = 850.f;
         static const CGFloat kControlsFillGreaterPriority = 950.f;
@@ -1187,10 +1190,10 @@ static void commonInit(SRGLetterboxView *self);
     // Set the desired content gravity, based on the current layer state. The result is applied with UI updates,
     // ensuring all updates are animated at the same time.
     if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-        self.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        self.targetVideoGravity = AVLayerVideoGravityResizeAspectFill;
     }
     else {
-        self.videoGravity = AVLayerVideoGravityResizeAspect;
+        self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
     }
     
     [self updateUserInterfaceAnimated:YES];
