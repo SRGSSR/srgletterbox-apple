@@ -388,7 +388,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition subdivision:(SRGSubdivision *)subdivision channel:(SRGChannel *)channel
 {
     if (mediaComposition) {
-        media = [mediaComposition mediaForSubdivision:mediaComposition.mainSegment ?: mediaComposition.mainChapter];
+        SRGSubdivision *mainSubdivision = subdivision ?: mediaComposition.mainChapter;
+        media = [mediaComposition mediaForSubdivision:mainSubdivision];
+        mediaComposition = [mediaComposition mediaCompositionForSubdivision:mainSubdivision];
     }
     
     if (media) {
