@@ -1316,22 +1316,28 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback live is over notification must not fire for a stop from the user.");
+    }];
+    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
     [self.controller stop];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when stoping playback, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
 }
 
@@ -1924,6 +1930,10 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
+    [self expectationForNotification:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
+    }];
+    
     // Media stops playing
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -1997,6 +2007,10 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
     }];
     
     // Media stops playing
@@ -2081,6 +2095,10 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
     }];
     
     // Media stops playing
