@@ -165,6 +165,7 @@
     static NSString * const kMMFSwissTxtFullDVRStreamURNString = @"urn:rts:video:_rts_info_fulldvr";
     static NSString * const kMMFSwissTxtLimitedDVRStreamURNString = @"urn:rts:video:_rts_info_liveonly_limiteddvr";
     static NSString * const kMMFSwissTxtLiveOnlyStreamURNString = @"urn:rts:video:_rts_info_liveonly_delay";
+    static NSString * const kMMFTemporarilyNotFoundURNString = @"urn:rts:video:_rts_info_notfound";
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
@@ -426,6 +427,14 @@
                     
                 case 7: {
                     [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 8: {
+                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
