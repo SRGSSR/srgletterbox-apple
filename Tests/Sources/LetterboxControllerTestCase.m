@@ -1934,7 +1934,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.error);
     
     // Wait the new media composition a few seconds
-    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    [self expectationForElapsedTimeInterval:5. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1965,9 +1965,9 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    // Media starts in 7 seconds and is available 7 seconds
+    // Media starts in 7 seconds and is available 14 seconds
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
-    NSDate *endDate = [startDate dateByAddingTimeInterval:7];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:14];
     SRGMediaURN *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
     
@@ -2001,7 +2001,7 @@ static NSURL *MMFServiceURL(void)
     
     // Media stops playing
     
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
