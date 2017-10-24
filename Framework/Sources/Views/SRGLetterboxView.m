@@ -40,8 +40,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *bottomTimelineToSafeAreaConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *bottomTimelineToSuperviewConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSuperviewBottomConstraint;
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
@@ -887,11 +887,17 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     // Ensure the timeline is always contained within the safe area when displayed
-    static const CGFloat TimelineConstraintGreaterPriority = 950.f;
-    static const CGFloat TimelineConstraintLesserPriority = 850.f;
+    static const CGFloat kTimelineConstraintGreaterPriority = 950.f;
+    static const CGFloat kTimelineConstraintLesserPriority = 850.f;
     
-    self.bottomTimelineToSafeAreaConstraint.priority = isTimelineVisible ? TimelineConstraintGreaterPriority : TimelineConstraintLesserPriority;
-    self.bottomTimelineToSuperviewConstraint.priority = isTimelineVisible ? TimelineConstraintLesserPriority : TimelineConstraintGreaterPriority;
+    if (isTimelineVisible) {
+        self.timelineToSafeAreaBottomConstraint.priority = kTimelineConstraintGreaterPriority;
+        self.timelineToSuperviewBottomConstraint.priority = kTimelineConstraintLesserPriority;
+    }
+    else {
+        self.timelineToSafeAreaBottomConstraint.priority = kTimelineConstraintLesserPriority;
+        self.timelineToSuperviewBottomConstraint.priority = kTimelineConstraintGreaterPriority;
+    }
     
     return timelineHeight;
 }
@@ -1013,18 +1019,18 @@ static void commonInit(SRGLetterboxView *self);
         AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
         playerLayer.videoGravity = self.videoGravity;
         
-        static const CGFloat ControlsFillLesserPriority = 850.f;
-        static const CGFloat ControlsFillGreaterPriority = 950.f;
+        static const CGFloat kControlsFillLesserPriority = 850.f;
+        static const CGFloat kControlsFillGreaterPriority = 950.f;
         
         if ([self.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-            self.controlsAspectRatioConstraint.priority = ControlsFillGreaterPriority;
-            self.controlsToSuperviewTopConstraint.priority = ControlsFillLesserPriority;
-            self.controlsToSuperviewBottomConstraint.priority = ControlsFillLesserPriority;
+            self.controlsAspectRatioConstraint.priority = kControlsFillGreaterPriority;
+            self.controlsToSuperviewTopConstraint.priority = kControlsFillLesserPriority;
+            self.controlsToSuperviewBottomConstraint.priority = kControlsFillLesserPriority;
         }
         else {
-            self.controlsAspectRatioConstraint.priority = ControlsFillLesserPriority;
-            self.controlsToSuperviewTopConstraint.priority = ControlsFillGreaterPriority;
-            self.controlsToSuperviewBottomConstraint.priority = ControlsFillGreaterPriority;
+            self.controlsAspectRatioConstraint.priority = kControlsFillLesserPriority;
+            self.controlsToSuperviewTopConstraint.priority = kControlsFillGreaterPriority;
+            self.controlsToSuperviewBottomConstraint.priority = kControlsFillGreaterPriority;
         }
     };
     void (^completion)(BOOL) = ^(BOOL finished) {

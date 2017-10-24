@@ -24,8 +24,6 @@
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
                 <outlet property="backgroundInteractionView" destination="oRJ-Ix-YZ1" id="u2b-IQ-H0e"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
-                <outlet property="bottomTimelineToSafeAreaConstraint" destination="09f-4l-H9m" id="zMt-Ax-07u"/>
-                <outlet property="bottomTimelineToSuperviewConstraint" destination="1Bk-M6-RGm" id="2yL-jZ-n1p"/>
                 <outlet property="controlsAspectRatioConstraint" destination="ibL-43-dpF" id="GJF-bG-rYC"/>
                 <outlet property="controlsToSuperviewBottomConstraint" destination="ozK-nJ-IQ2" id="wHG-AD-nbG"/>
                 <outlet property="controlsToSuperviewTopConstraint" destination="cWG-po-VLf" id="vBr-dM-EXq"/>
@@ -50,6 +48,8 @@
                 <outlet property="skipToLiveButton" destination="KlV-OH-iUB" id="PRq-ZY-EeZ"/>
                 <outlet property="timeSlider" destination="TJI-j4-mRH" id="UyF-pF-Rg5"/>
                 <outlet property="timelineHeightConstraint" destination="eCB-ci-0lC" id="njb-Zh-WZp"/>
+                <outlet property="timelineToSafeAreaBottomConstraint" destination="09f-4l-H9m" id="B5O-5z-9LC"/>
+                <outlet property="timelineToSuperviewBottomConstraint" destination="1Bk-M6-RGm" id="RdQ-h1-ZcR"/>
                 <outlet property="timelineView" destination="ysx-Uc-uEb" id="lXX-to-q8R"/>
                 <outlet property="tracksButton" destination="iRM-He-GD6" id="2px-vG-6gU"/>
                 <outlet property="videoGravityTapChangeGestureRecognizer" destination="y7P-pN-sI4" id="hpI-dX-KNQ"/>
