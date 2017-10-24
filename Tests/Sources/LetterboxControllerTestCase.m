@@ -2240,6 +2240,8 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     XCTAssertNotEqualObjects(self.controller.URN, secondHighlightSegment.URN);
     XCTAssertNotEqualObjects(self.controller.media.URN, secondHighlightSegment.URN);
+    XCTAssertNotNil(self.controller.URN);
+    XCTAssertNotNil(self.controller.media.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
@@ -2309,6 +2311,8 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     XCTAssertNotEqualObjects(self.controller.URN, secondHighlightChapter.URN);
     XCTAssertNotEqualObjects(self.controller.media.URN, secondHighlightChapter.URN);
+    XCTAssertNotNil(self.controller.URN);
+    XCTAssertNotNil(self.controller.media.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
