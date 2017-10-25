@@ -635,13 +635,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 - (void)updateLivestreamEndDateErrorWithMedia:(SRGMedia *)media
 {
     if (media.contentType == SRGContentTypeScheduledLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
-        NSError *livestreamError = SRGBlockingReasonErrorForMedia(media);
-        
-        if ([livestreamError.domain isEqualToString:SRGLetterboxErrorDomain] && livestreamError.code == SRGLetterboxErrorCodeNotAvailable && media.blockingReason == SRGBlockingReasonEndDate) {
+        if (media.blockingReason == SRGBlockingReasonEndDate) {
             if (! self.livestreamEndDateError) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification object:self userInfo:@{ SRGLetterboxMediaKey : media }];
             }
-            self.livestreamEndDateError = livestreamError;
+            self.livestreamEndDateError = SRGBlockingReasonErrorForMedia(media);
         }
     }
 }
