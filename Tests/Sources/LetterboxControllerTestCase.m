@@ -1325,7 +1325,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Playback live is over notification must not fire for a stop from the user.");
+        XCTFail(@"Livestream did finish notification must not fire for a stop from the user.");
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1458,8 +1458,11 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     
     // Wait for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available anymore.");
+    }];
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Livestream did finish notification must not fire for a not available anymore On Demand media.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
@@ -1472,7 +1475,8 @@ static NSURL *MMFServiceURL(void)
     [self.controller playURN:URN withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1898,8 +1902,11 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
+    }];
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Livestream did finish notification must not fire for a not yet available live media.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
@@ -1911,7 +1918,8 @@ static NSURL *MMFServiceURL(void)
     [self.controller playURN:URN withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1975,8 +1983,11 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
+    }];
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Livestream did finish notification must not fire for a not yet available live media.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
@@ -1988,7 +1999,8 @@ static NSURL *MMFServiceURL(void)
     [self.controller playURN:URN withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -2027,7 +2039,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver3 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason is here.");
     }];
     
@@ -2036,7 +2048,7 @@ static NSURL *MMFServiceURL(void)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver3];
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -2060,8 +2072,11 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
+    }];
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Livestream did finish notification must not fire for a not yet available live media.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
@@ -2073,7 +2088,8 @@ static NSURL *MMFServiceURL(void)
     [self.controller playURN:URN withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -2112,7 +2128,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver3 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason is here.");
     }];
     
@@ -2121,8 +2137,41 @@ static NSURL *MMFServiceURL(void)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver3];
     }];
+}
+
+- (void)testSwissTXTLiveOnlyNotAvailableAnymore
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    // Wait for a while. No playback notifications must be received
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Playback state must not change when media is not available anymore.");
+    }];
+    
+    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:nil];
+    
+    // Media started 10 seconds before and is available 5 seconds
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-10];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:5];
+    SRGMediaURN *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
+    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
 
 - (void)testSwitchToSegmentURN
