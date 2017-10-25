@@ -1929,10 +1929,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
-    
-    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return YES;
-    }];
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:nil];
     
     // Media stops playing
     
@@ -2009,10 +2006,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
-    
-    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return YES;
-    }];
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:nil];
     
     // Media stops playing
     
@@ -2097,10 +2091,7 @@ static NSURL *MMFServiceURL(void)
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
-    
-    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return YES;
-    }];
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:nil];
     
     // Media stops playing
     

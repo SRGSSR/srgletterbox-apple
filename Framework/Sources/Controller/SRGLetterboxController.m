@@ -120,6 +120,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
+@property (nonatomic) NSDate *lastUpdateDate;
+
 @property (nonatomic, getter=isTracked) BOOL tracked;
 
 @end
@@ -483,10 +485,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @weakify(self)
         self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
-            [self updateWithError:blockingReasonError];
-            [self stop];
-            [self updateMetadataWithCompletionBlock:nil];
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
+                [self stop];
+            }];
         }];
     }
     else {
@@ -518,29 +519,29 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
     void (^updateCompletionBlock)(NSError * _Nullable, BOOL, NSError * _Nullable) = ^(NSError * _Nullable error, BOOL URLChanged, NSError * _Nullable previousError) {
         [self updateWithError:error];
+        self.lastUpdateDate = [NSDate date];
+        
         completionBlock ? completionBlock(error, URLChanged, previousError) : nil;
     };
     
     void (^checkLivestreamEnd)(SRGMedia * _Nullable, SRGMedia * _Nullable) = ^(SRGMedia * _Nullable media, SRGMedia * _Nullable previousMedia) {
-        if (! [media isEqual:previousMedia]) {
+        if (previousMedia.contentType != SRGContentTypeLivestream && previousMedia.contentType != SRGContentTypeScheduledLivestream) {
             return;
         }
         
-        if (media.contentType != SRGContentTypeLivestream && media.contentType != SRGContentTypeScheduledLivestream) {
-            return;
-        }
+        SRGBlockingReason blockingReason = media.blockingReason;
+        SRGBlockingReason previousBlockingReason = [previousMedia blockingReasonAtDate:self.lastUpdateDate];
         
-        if (media.blockingReason == SRGBlockingReasonEndDate && previousMedia.blockingReason != SRGBlockingReasonEndDate) {
+        if (! [previousMedia isEqual:media] || (blockingReason == SRGBlockingReasonEndDate && previousBlockingReason != SRGBlockingReasonEndDate)) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
                                                                 object:self
-                                                              userInfo:@{ SRGLetterboxMediaKey : media }];
+                                                              userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
         }
     };
     
     if (self.contentURLOverridden) {
         [[self.dataProvider mediaWithURN:self.URN completionBlock:^(SRGMedia * _Nullable media, NSError * _Nullable error) {
             SRGMedia *previousMedia = self.media;
-            checkLivestreamEnd(media, previousMedia);
             
             if (media) {
                 [self updateWithURN:nil media:media mediaComposition:nil subdivision:self.subdivision channel:self.channel];
@@ -549,6 +550,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 media = previousMedia;
             }
             
+            checkLivestreamEnd(media, previousMedia);
             updateCompletionBlock(SRGBlockingReasonErrorForMedia(media), NO, SRGBlockingReasonErrorForMedia(previousMedia));
         }] resume];
         return;
@@ -556,7 +558,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     
     [[self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         SRGMediaComposition *previousMediaComposition = self.mediaComposition;
-        checkLivestreamEnd(mediaComposition.srgletterbox_liveMedia, previousMediaComposition.srgletterbox_liveMedia);
         
         SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
         NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia);
@@ -571,6 +572,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         }
         
         if (mediaComposition) {
+            checkLivestreamEnd(mediaComposition.srgletterbox_liveMedia, previousMediaComposition.srgletterbox_liveMedia);
+            
             // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
             SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
@@ -876,6 +879,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [self.requestQueue cancel];
     
     self.error = nil;
+    
+    self.lastUpdateDate = nil;
     
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
