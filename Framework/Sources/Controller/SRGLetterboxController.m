@@ -540,8 +540,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 
 - (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged, NSError *previousError))completionBlock
 {
-    void (^updateCompletionBlock)(NSError * _Nullable, BOOL, NSError * _Nullable) = ^(NSError * _Nullable error, BOOL URLChanged, NSError * _Nullable previousError) {
+    void (^updateCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error, BOOL URLChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
         [self updateWithError:error];
+        [self checkLivestreamEndWithMedia:media previousMedia:previousMedia];
+        
         self.lastUpdateDate = [NSDate date];
         
         completionBlock ? completionBlock(error, URLChanged, previousError) : nil;
@@ -558,8 +560,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 media = previousMedia;
             }
             
-            [self checkLivestreamEndWithMedia:media previousMedia:previousMedia];
-            updateCompletionBlock(SRGBlockingReasonErrorForMedia(media), NO, SRGBlockingReasonErrorForMedia(previousMedia));
+            updateCompletionBlock(media, SRGBlockingReasonErrorForMedia(media), NO, previousMedia, SRGBlockingReasonErrorForMedia(previousMedia));
         }] resume];
         return;
     }
@@ -580,13 +581,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         }
         
         if (mediaComposition) {
-            [self checkLivestreamEndWithMedia:mediaComposition.srgletterbox_liveMedia previousMedia:previousMediaComposition.srgletterbox_liveMedia];
-            
             // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
             SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
             if (blockingReasonError) {
-                updateCompletionBlock(blockingReasonError, NO, previousBlockingReasonError);
+                updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, blockingReasonError, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                 return;
             }
             
@@ -595,13 +594,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
                 NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
                 if (! [previousResources isEqualToSet:resources]) {
-                    updateCompletionBlock(nil, YES, previousBlockingReasonError);
+                    updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                     return;
                 }
             }
         }
         
-        updateCompletionBlock(nil, NO, previousBlockingReasonError);
+        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
     }] resume];
 }
 
