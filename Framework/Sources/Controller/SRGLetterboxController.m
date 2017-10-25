@@ -485,7 +485,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             @strongify(self)
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(self.media);
             [self updateWithError:blockingReasonError];
-            [self updateLivestreamEndDateErrorWithMedia:self.mediaComposition.liveMedia];
+            [self updateLivestreamEndDateErrorWithMedia:self.mediaComposition.srgletterbox_liveMedia];
             [self stop];
             [self updateMetadataWithCompletionBlock:nil];
         }];
@@ -494,13 +494,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         self.endDateTimer = nil;
     }
     
-    if (mediaComposition.liveMedia && ! [mediaComposition.liveMedia isEqual:media]) {
-        NSTimeInterval endTimeInterval = [mediaComposition.liveMedia.endDate timeIntervalSinceNow];
+    if (mediaComposition.srgletterbox_liveMedia && ! [mediaComposition.srgletterbox_liveMedia isEqual:media]) {
+        NSTimeInterval endTimeInterval = [mediaComposition.srgletterbox_liveMedia.endDate timeIntervalSinceNow];
         if (endTimeInterval > 0.) {
             @weakify(self)
             self.liveStreamEndDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
                 @strongify(self)
-                [self updateLivestreamEndDateErrorWithMedia:self.mediaComposition.liveMedia];
+                [self updateLivestreamEndDateErrorWithMedia:self.mediaComposition.srgletterbox_liveMedia];
                 [self updateMetadataWithCompletionBlock:nil];
             }];
         }
@@ -560,7 +560,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
             NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
             if (blockingReasonError) {
-                updateCompletionBlock(blockingReasonError, NO, previousBlockingReasonError, mediaComposition.liveMedia);
+                updateCompletionBlock(blockingReasonError, NO, previousBlockingReasonError, mediaComposition.srgletterbox_liveMedia);
                 return;
             }
             
@@ -569,13 +569,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
                 NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
                 if (! [previousResources isEqualToSet:resources]) {
-                    updateCompletionBlock(nil, YES, previousBlockingReasonError, mediaComposition.liveMedia);
+                    updateCompletionBlock(nil, YES, previousBlockingReasonError, mediaComposition.srgletterbox_liveMedia);
                     return;
                 }
             }
         }
         
-        updateCompletionBlock(nil, NO, previousBlockingReasonError, mediaComposition.liveMedia);
+        updateCompletionBlock(nil, NO, previousBlockingReasonError, mediaComposition.srgletterbox_liveMedia);
     }] resume];
 }
 
@@ -932,7 +932,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
         [self updateWithError:blockingReasonError];
-        [self updateLivestreamEndDateErrorWithMedia:mediaComposition.liveMedia];
+        [self updateLivestreamEndDateErrorWithMedia:mediaComposition.srgletterbox_liveMedia];
         
         [self stop];
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
@@ -1027,8 +1027,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         return [self canSkipForward];
     }
     
-    if (self.mediaComposition.liveMedia && ! [self.mediaComposition.liveMedia isEqual:self.media]) {
-        return self.mediaComposition.liveMedia.blockingReason != SRGBlockingReasonEndDate;
+    if (self.mediaComposition.srgletterbox_liveMedia && ! [self.mediaComposition.srgletterbox_liveMedia isEqual:self.media]) {
+        return self.mediaComposition.srgletterbox_liveMedia.blockingReason != SRGBlockingReasonEndDate;
     }
     else {
         return NO;
@@ -1120,8 +1120,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         }];
         return YES;
     }
-    else if (self.mediaComposition.liveMedia) {
-        return [self switchToURN:self.mediaComposition.liveMedia.URN withCompletionHandler:completionHandler];
+    else if (self.mediaComposition.srgletterbox_liveMedia) {
+        return [self switchToURN:self.mediaComposition.srgletterbox_liveMedia.URN withCompletionHandler:completionHandler];
     }
     else {
         return NO;

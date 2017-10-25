@@ -11,11 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGMediaComposition (SRGLetterbox)
 
 /**
- *  Return the media object corresponding to the live (or scheduled live) media in the media composition.
- *
- *  @param Media from the mainChapter, the full-length chapter or the first live (or scheduled live) stream chapter found.
+ *  Returns the media object corresponding to the live (or scheduled live) media in the media composition.
  */
-@property (nonatomic, readonly, nullable) SRGMedia *liveMedia;
+@property (nonatomic, readonly, nullable) SRGMedia *srgletterbox_liveMedia;
 
 @end
 

@@ -10,9 +10,7 @@
 
 @implementation SRGMediaComposition (SRGLetterbox)
 
-#pragma mark Class methods
-
-- (SRGMedia *)liveMedia
+- (SRGMedia *)srgletterbox_liveMedia
 {
     if (self.mainChapter.contentType == SRGContentTypeLivestream || self.mainChapter.contentType == SRGContentTypeScheduledLivestream) {
         return [self mediaForSubdivision:self.mainChapter];
