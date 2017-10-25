@@ -487,7 +487,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             @strongify(self)
             
             [self updateWithError:SRGBlockingReasonErrorForMedia(self.media)];
-            [self checkLivestreamEndWithMedia:self.media previousMedia:nil];
+            [self checkLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:nil];
             [self stop];
             
             [self updateMetadataWithCompletionBlock:nil];
@@ -504,6 +504,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             @weakify(self)
             self.liveStreamEndDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
                 @strongify(self)
+                
+                [self checkLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:nil];
                 [self updateMetadataWithCompletionBlock:nil];
             }];
         }
@@ -942,6 +944,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
         [self updateWithError:blockingReasonError];
+        [self checkLivestreamEndWithMedia:mediaComposition.srgletterbox_liveMedia previousMedia:nil];
         
         [self stop];
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
