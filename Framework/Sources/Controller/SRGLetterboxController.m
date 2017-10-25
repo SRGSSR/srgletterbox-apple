@@ -702,17 +702,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @strongify(self)
         
         if (finished) {
-            if (! error) {
-                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-            }
-            else if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-                if (self.media) {
-                    self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-                }
-                else {
-                   self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-                }
-            }
             [self updateWithError:error];
         }
     }];
@@ -737,9 +726,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             else {
                 void (^mediasCompletionBlock)(NSArray<SRGMedia *> * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
                     if (error) {
+                        self.dataAvailability = SRGLetterboxDataAvailabilityNone;
                         [self.requestQueue reportError:error];
                         return;
                     }
+                    
+                    self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                     
                     [self updateWithURN:nil media:medias.firstObject mediaComposition:nil subdivision:nil channel:nil];
                     NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(medias.firstObject);
@@ -768,9 +760,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         @strongify(self)
         
         if (error) {
+            self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self.requestQueue reportError:error];
             return;
         }
+        
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
         [self updateChannel];
