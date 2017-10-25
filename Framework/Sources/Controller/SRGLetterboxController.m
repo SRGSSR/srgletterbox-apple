@@ -487,7 +487,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             @strongify(self)
             
             [self updateWithError:SRGBlockingReasonErrorForMedia(self.media)];
-            [self checkLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:nil];
+            [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
             [self stop];
             
             [self updateMetadataWithCompletionBlock:nil];
@@ -505,7 +505,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             self.liveStreamEndDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
                 @strongify(self)
                 
-                [self checkLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:nil];
+                [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
                 [self updateMetadataWithCompletionBlock:nil];
             }];
         }
@@ -520,23 +520,37 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
-- (void)checkLivestreamEndWithMedia:(SRGMedia *)media previousMedia:(SRGMedia *)previousMedia
+- (void)notifyLivestreamEndWithMedia:(SRGMedia *)media previousMedia:(SRGMedia *)previousMedia
 {
-    if (! previousMedia) {
-        previousMedia = media;
-    }
-    
-    if (previousMedia.contentType != SRGContentTypeLivestream && previousMedia.contentType != SRGContentTypeScheduledLivestream) {
+    if (! media || (previousMedia && ! [media isEqual:previousMedia])) {
         return;
     }
     
-    SRGBlockingReason blockingReason = media.blockingReason;
-    SRGBlockingReason previousBlockingReason = [previousMedia blockingReasonAtDate:self.lastUpdateDate];
-    
-    if (! [previousMedia isEqual:media] || (blockingReason == SRGBlockingReasonEndDate && previousBlockingReason != SRGBlockingReasonEndDate)) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
-                                                            object:self
-                                                          userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
+    if (previousMedia) {
+        if (previousMedia.contentType != SRGContentTypeLivestream && previousMedia.contentType != SRGContentTypeScheduledLivestream) {
+            return;
+        }
+        
+        if ([previousMedia blockingReasonAtDate:self.lastUpdateDate] == SRGBlockingReasonEndDate) {
+            return;
+        }
+        
+        if ((media.contentType != SRGContentTypeLivestream && media.contentType != SRGContentTypeScheduledLivestream)
+            || ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
+                && media.blockingReason == SRGBlockingReasonEndDate)) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
+                                                                    object:self
+                                                                  userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
+        }
+    }
+    else {
+        if ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
+            && media.blockingReason == SRGBlockingReasonEndDate) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
+                                                                object:self
+                                                              userInfo:@{ SRGLetterboxMediaKey : media }];
+        }
+        
     }
 }
 
@@ -544,7 +558,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
 {
     void (^updateCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error, BOOL URLChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
         [self updateWithError:error];
-        [self checkLivestreamEndWithMedia:media previousMedia:previousMedia];
+        [self notifyLivestreamEndWithMedia:media previousMedia:previousMedia];
         
         self.lastUpdateDate = [NSDate date];
         
@@ -703,6 +717,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         
         if (finished) {
             [self updateWithError:error];
+            
+            if (self.mediaComposition) {
+                [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:nil];
+            }
+            else if (self.contentURLOverridden) {
+                [self notifyLivestreamEndWithMedia:self.media previousMedia:nil];
+            }
         }
     }];
     
@@ -717,6 +738,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media);
                 [self updateWithError:blockingReasonError];
+                [self notifyLivestreamEndWithMedia:media previousMedia:nil];
                 
                 if (! blockingReasonError) {
                     [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
@@ -939,7 +961,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter]);
         [self updateWithError:blockingReasonError];
-        [self checkLivestreamEndWithMedia:mediaComposition.srgletterbox_liveMedia previousMedia:nil];
         
         [self stop];
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
