@@ -345,7 +345,7 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxPlaybackDidRetryNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxPlaybackLiveStreamIsOverNotification
+                                                        name:SRGLetterboxLivestreamDidFinishNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
@@ -411,8 +411,8 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:SRGLetterboxPlaybackDidRetryNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackLiveStreamIsOver:)
-                                                     name:SRGLetterboxPlaybackLiveStreamIsOverNotification
+                                                 selector:@selector(livestreamDidFinish:)
+                                                     name:SRGLetterboxLivestreamDidFinishNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -1305,7 +1305,7 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceAnimated:YES];
 }
 
-- (void)playbackLiveStreamIsOver:(NSNotification *)notification
+- (void)livestreamDidFinish:(NSNotification *)notification
 {
     [self showNotificationMessage:SRGLetterboxLocalizedString(@"The live is over.", @"Notification message when the scheduled live stream is over.") animated:YES];
 }

@@ -17,9 +17,10 @@ OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;
 OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
 
 /**
- *  Notification sent when a live stream in the media composition is over. Use `SRGLetterboxMediaKey` to have the concerned media.
+ *  Notification sent when the livestream associated with the current playback context just finished. The corresponding
+ *  media can be retrieved under the `SRGLetterboxMediaKey` user information key.
  */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackLiveStreamIsOverNotification;
+OBJC_EXTERN NSString * const SRGLetterboxLivestreamDidFinishNotification;
 
 /**
  *  Interface for internal use.

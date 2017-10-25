@@ -8,10 +8,10 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
-#import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
+#import "SRGMediaComposition+SRGLetterbox.h"
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
@@ -44,7 +44,7 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlaybackDidRetryNotification";
 
-NSString * const SRGLetterboxPlaybackLiveStreamIsOverNotification = @"SRGLetterboxPlaybackLiveStreamIsOverNotification";
+NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLivestreamDidFinishNotification";
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
@@ -639,7 +639,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         
         if ([livestreamError.domain isEqualToString:SRGLetterboxErrorDomain] && livestreamError.code == SRGLetterboxErrorCodeNotAvailable && media.blockingReason == SRGBlockingReasonEndDate) {
             if (! self.livestreamEndDateError) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self userInfo:@{ SRGLetterboxMediaKey : media }];
+                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification object:self userInfo:@{ SRGLetterboxMediaKey : media }];
             }
             self.livestreamEndDateError = livestreamError;
         }

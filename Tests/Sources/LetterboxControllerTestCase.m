@@ -1316,7 +1316,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback live is over notification must not fire for a stop from the user.");
     }];
     
@@ -1930,7 +1930,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
-    [self expectationForNotification:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
     }];
     
@@ -2010,7 +2010,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
-    [self expectationForNotification:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
     }];
     
@@ -2098,7 +2098,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
-    [self expectationForNotification:SRGLetterboxPlaybackLiveStreamIsOverNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxLivestreamDidFinishNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
     }];
     
