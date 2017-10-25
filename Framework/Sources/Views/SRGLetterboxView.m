@@ -1307,7 +1307,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)livestreamDidFinish:(NSNotification *)notification
 {
-    [self showNotificationMessage:SRGLetterboxLocalizedString(@"The live is over.", @"Notification message when the scheduled live stream is over.") animated:YES];
+    [self showNotificationMessage:SRGLetterboxLocalizedString(@"Live broadcast ended.", @"Notification message displayed when a live broadcast has finished.") animated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
