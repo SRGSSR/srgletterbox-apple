@@ -6,8 +6,6 @@
 
 #import "SRGMediaComposition+SRGLetterbox.h"
 
-#import <libextobjc/libextobjc.h>
-
 @implementation SRGMediaComposition (SRGLetterbox)
 
 - (SRGMedia *)srgletterbox_liveMedia
@@ -21,7 +19,9 @@
             return fullLengthMedia;
         }
         else {
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@ || %K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeLivestream), @keypath(SRGChapter.new, contentType), @(SRGContentTypeScheduledLivestream)];
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGChapter * _Nullable chapter, NSDictionary<NSString *, id> * _Nullable bindings) {
+                return chapter.contentType == SRGContentTypeLivestream || chapter.contentType == SRGContentTypeScheduledLivestream;
+            }];
             SRGChapter *liveChapter = [self.chapters filteredArrayUsingPredicate:predicate].firstObject;
             return liveChapter ? [self mediaForSubdivision:liveChapter] : nil;
         }
