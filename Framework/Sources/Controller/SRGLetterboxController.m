@@ -459,6 +459,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
     }
     
+    // Schedule an update when the media starts
     NSTimeInterval startTimeInterval = [media.startDate timeIntervalSinceNow];
     if (startTimeInterval > 0.) {
         @weakify(self)
@@ -478,6 +479,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         self.startDateTimer = nil;
     }
     
+    // Schedule an update when the media ends
     NSTimeInterval endTimeInterval = [media.endDate timeIntervalSinceNow];
     if (endTimeInterval > 0.) {
         @weakify(self)
@@ -494,6 +496,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         self.endDateTimer = nil;
     }
     
+    // Schedule an update when the associated livestream ends (if not the media itself)
     if (mediaComposition.srgletterbox_liveMedia && ! [mediaComposition.srgletterbox_liveMedia isEqual:media]) {
         NSTimeInterval endTimeInterval = [mediaComposition.srgletterbox_liveMedia.endDate timeIntervalSinceNow];
         if (endTimeInterval > 0.) {
