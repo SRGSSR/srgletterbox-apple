@@ -717,13 +717,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         
         if (finished) {
             [self updateWithError:error];
-            
-            if (self.mediaComposition) {
-                [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:nil];
-            }
-            else if (self.contentURLOverridden) {
-                [self notifyLivestreamEndWithMedia:self.media previousMedia:nil];
-            }
         }
     }];
     
@@ -756,6 +749,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                     self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                     
                     [self updateWithURN:nil media:medias.firstObject mediaComposition:nil subdivision:nil channel:nil];
+                    [self notifyLivestreamEndWithMedia:media previousMedia:nil];
+                    
                     NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(medias.firstObject);
                     if (blockingReasonError) {
                         [self.requestQueue reportError:blockingReasonError];
@@ -791,6 +786,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
         [self updateChannel];
+        [self notifyLivestreamEndWithMedia:mediaComposition.srgletterbox_liveMedia previousMedia:nil];
         
         // Do not go further if the content is blocked
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
