@@ -729,7 +729,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                 [self updateWithError:blockingReasonError];
                 
                 if (! blockingReasonError) {
-                    [self.mediaPlayerController playURL:contentURL];
+                    [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
                 }
             }
             // Retrieve the media
@@ -746,7 +746,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media)
                         [self.requestQueue reportError:blockingReasonError];
                     }
                     else {
-                        [self.mediaPlayerController playURL:contentURL];
+                        [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
                     }
                 };
                 
