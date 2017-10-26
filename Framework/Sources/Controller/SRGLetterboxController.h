@@ -97,6 +97,12 @@ OBJC_EXPORT NSTimeInterval const SRGLetterboxUpdateIntervalDefault;
 OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
 
 /**
+ *  Standard skip intervals.
+ */
+OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 seconds
+OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
+
+/**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
@@ -403,6 +409,60 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
  */
 - (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+@end
+
+/**
+ *  Standard skips.
+ */
+@interface SRGLetterboxController (Skips)
+
+/**
+ *  Return `YES` iff the player can skip backward from `SRGLetterboxBackwardSkipInterval` seconds.
+ */
+- (BOOL)canSkipBackward;
+
+/**
+ *  Return `YES` iff the player can skip forward from `SRGLetterboxForwardSkipInterval` seconds.
+ */
+- (BOOL)canSkipForward;
+
+/**
+ *  Return `YES` iff the player can skip to live conditions.
+ *
+ *  @discussion Always returns `NO` for on-demand streams.
+ */
+- (BOOL)canSkipToLive;
+
+/**
+ *  Skip backward from a `SRGLetterboxBackwardSkipInterval` seconds.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
+ */
+- (BOOL)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Skip forward from a `SRGLetterboxForwardSkipInterval` seconds.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
+ */
+- (BOOL)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Skip forward to live conditions.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible. Always returns `NO` for on-demand streams.
+ */
+- (BOOL)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 @end
 
