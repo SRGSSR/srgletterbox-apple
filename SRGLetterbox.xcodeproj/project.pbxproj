@@ -34,6 +34,8 @@
 		08EB66A91F34C76D00E9D7CA /* TCSDK.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
 		08EB66AA1F34C77F00E9D7CA /* TCCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */; };
+		08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */; };
 		08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -320,6 +322,8 @@
 		08E0BF641EE05BDA002D4012 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08EB669E1F34C6B000E9D7CA /* TCCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCCore.framework; path = Carthage/Build/iOS/TCCore.framework; sourceTree = "<group>"; };
 		08EB669F1F34C6B000E9D7CA /* TCSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCSDK.framework; path = Carthage/Build/iOS/TCSDK.framework; sourceTree = "<group>"; };
+		08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGMediaComposition+SRGLetterbox.m"; sourceTree = "<group>"; };
+		08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGMediaComposition+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CA81E2E325F000C94EF /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -561,6 +565,8 @@
 				6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */,
 				6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */,
 				08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */,
+				08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */,
+				08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */,
 				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
 				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
 				6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */,
@@ -817,6 +823,7 @@
 				6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */,
 				6FE844F01E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
+				08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
 				6FDF33B01F012D7500BA1D6E /* SRGAccessibilityView.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
@@ -1037,6 +1044,7 @@
 				08BDD8731EE5C876006A2704 /* SRGLetterboxPlaybackButton.m in Sources */,
 				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
+				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6FE844F11E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FF0D89B1F4DABF200B3C1EB /* SRGTimerTarget.m in Sources */,

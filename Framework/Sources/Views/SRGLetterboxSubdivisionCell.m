@@ -67,11 +67,12 @@
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    if (subdivision.blockingReason == SRGBlockingReasonStartDate) {
+    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:[NSDate date]];
+    if (blockingReason == SRGBlockingReasonStartDate) {
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString];
         self.durationLabel.hidden = NO;
     }
-    else if (subdivision.blockingReason == SRGBlockingReasonEndDate) {
+    else if (blockingReason == SRGBlockingReasonEndDate) {
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Short label identifying content which has expired.").uppercaseString];
         self.durationLabel.hidden = NO;
     }
@@ -105,7 +106,7 @@
         self.durationLabel.hidden = YES;
     }
     
-    self.disabledView.alpha = (subdivision.blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
+    self.disabledView.alpha = (blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
     
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
 }

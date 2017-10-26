@@ -345,6 +345,9 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxPlaybackDidRetryNotification
                                                       object:_controller];
         [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxLivestreamDidFinishNotification
+                                                      object:_controller];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -406,6 +409,10 @@ static void commonInit(SRGLetterboxView *self);
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackDidRetry:)
                                                      name:SRGLetterboxPlaybackDidRetryNotification
+                                                   object:controller];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(livestreamDidFinish:)
+                                                     name:SRGLetterboxLivestreamDidFinishNotification
                                                    object:controller];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -523,7 +530,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
 {
-    SRGBlockingReason blockingReason = controller.media.blockingReason;
+    SRGBlockingReason blockingReason = [controller.media blockingReasonAtDate:[NSDate date]];
     return ! controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
 }
 
@@ -672,7 +679,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    SRGBlockingReason blockingReason = media.blockingReason;
+    SRGBlockingReason blockingReason = [media blockingReasonAtDate:[NSDate date]];
     if (blockingReason == SRGBlockingReasonEndDate) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
         self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
@@ -1298,6 +1305,11 @@ static void commonInit(SRGLetterboxView *self);
     [self updateUserInterfaceAnimated:YES];
 }
 
+- (void)livestreamDidFinish:(NSNotification *)notification
+{
+    [self showNotificationMessage:SRGLetterboxLocalizedString(@"Live broadcast ended.", @"Notification message displayed when a live broadcast has finished.") animated:YES];
+}
+
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateUserInterfaceAnimated:YES];
@@ -1336,7 +1348,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
-    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason(subdivision.blockingReason);
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason([subdivision blockingReasonAtDate:[NSDate date]]);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 
