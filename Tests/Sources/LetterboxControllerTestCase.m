@@ -2281,18 +2281,20 @@ static NSURL *MMFServiceURL(void)
     SRGChapter *secondHighlightChapter = highlightChapters[1];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
     }];
     
     // Switch to second highlight
     
-    [self.controller switchToSubdivision:secondHighlightChapter withCompletionHandler:nil];
+    [self.controller switchToSubdivision:secondHighlightChapter withCompletionHandler:^(BOOL finished) {
+        [self.controller pause];
+    }];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, secondHighlightChapter.URN);
     XCTAssertEqualObjects(self.controller.media.URN, secondHighlightChapter.URN);
-    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
     XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertTrue([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
@@ -2306,13 +2308,11 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
-    // Media stops playing (end of the stream or doesn't exist anymore
+    // Media stops playing because of a kill switch to the full lengh media
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
-    XCTAssertNotEqualObjects(self.controller.URN, secondHighlightChapter.URN);
-    XCTAssertNotEqualObjects(self.controller.media.URN, secondHighlightChapter.URN);
-    XCTAssertNotNil(self.controller.URN);
-    XCTAssertNotNil(self.controller.media.URN);
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
     XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
