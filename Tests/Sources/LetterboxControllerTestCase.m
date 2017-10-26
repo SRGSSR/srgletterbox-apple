@@ -2200,7 +2200,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
@@ -2222,7 +2222,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, secondHighlightSegment.URN);
     XCTAssertEqualObjects(self.controller.media.URN, secondHighlightSegment.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertTrue([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
     
@@ -2243,7 +2243,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.URN);
     XCTAssertNotNil(self.controller.media.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertFalse([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
@@ -2269,7 +2269,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 4);
@@ -2293,7 +2293,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, secondHighlightChapter.URN);
     XCTAssertEqualObjects(self.controller.media.URN, secondHighlightChapter.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertTrue([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
     
@@ -2314,7 +2314,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.URN);
     XCTAssertNotNil(self.controller.media.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertFalse([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
     XCTAssertNotEqual(self.controller.mediaComposition.chapters.count, 4);
