@@ -109,7 +109,7 @@
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="152.5" y="83" width="48" height="72"/>
+                                    <rect key="frame" x="152.5" y="82.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="backward-32"/>
@@ -123,7 +123,7 @@
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="220.5" y="83" width="48" height="72"/>
+                                    <rect key="frame" x="220.5" y="82.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="forward-32"/>
@@ -132,7 +132,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="268.5" y="83" width="48" height="72"/>
+                                    <rect key="frame" x="268.5" y="82.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="back_live-32"/>
@@ -294,9 +294,11 @@
                     <color key="backgroundColor" red="0.18431372549019609" green="0.47058823529411764" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="erX-bp-o7I" secondAttribute="bottom" id="3RX-Pg-fxA"/>
+                        <constraint firstItem="0Mg-fI-Oss" firstAttribute="leading" secondItem="aun-4y-dBi" secondAttribute="leading" priority="850" constant="4" id="A7e-6G-rd2"/>
                         <constraint firstItem="0Mg-fI-Oss" firstAttribute="centerY" secondItem="aun-4y-dBi" secondAttribute="centerY" id="Jjk-6j-7pW"/>
                         <constraint firstItem="erX-bp-o7I" firstAttribute="top" secondItem="aun-4y-dBi" secondAttribute="top" id="c2l-pr-BAi"/>
                         <constraint firstItem="erX-bp-o7I" firstAttribute="leading" secondItem="0Mg-fI-Oss" secondAttribute="trailing" constant="8" id="jjx-fQ-EO9"/>
+                        <constraint firstAttribute="trailing" secondItem="erX-bp-o7I" secondAttribute="trailing" priority="850" constant="8" id="ybF-TN-8kY"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-Uc-uEb" customClass="SRGLetterboxTimelineView">
@@ -390,7 +392,7 @@
                 <constraint firstAttribute="trailing" secondItem="Ipy-eN-bUs" secondAttribute="trailing" id="6Pn-Mg-kwX"/>
                 <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="tuV-Cd-a2U" secondAttribute="trailing" priority="950" id="6SK-x6-Wug"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
-                <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" secondItem="erX-bp-o7I" secondAttribute="trailing" constant="8" id="9dG-oM-VjP"/>
+                <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="erX-bp-o7I" secondAttribute="trailing" priority="950" id="9dG-oM-VjP"/>
                 <constraint firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="D0i-tF-POP"/>
                 <constraint firstAttribute="trailing" secondItem="ysx-Uc-uEb" secondAttribute="trailing" id="D8a-X2-bbV"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="top" id="IMZ-f5-OZQ"/>
@@ -400,7 +402,7 @@
                 <constraint firstItem="uEB-dd-8By" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="Q1D-uB-3Zk"/>
                 <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="950" id="Qw7-jT-MLe"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="QwU-xA-Yyr"/>
-                <constraint firstItem="0Mg-fI-Oss" firstAttribute="leading" secondItem="Feb-b9-W6K" secondAttribute="leading" constant="4" id="YcY-Dg-Lwt"/>
+                <constraint firstItem="0Mg-fI-Oss" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Feb-b9-W6K" secondAttribute="leading" priority="950" id="YcY-Dg-Lwt"/>
                 <constraint firstAttribute="trailing" secondItem="aWQ-IF-YZO" secondAttribute="trailing" id="ZeG-gx-2Ja"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="top" secondItem="Ipy-eN-bUs" secondAttribute="bottom" id="aYR-Nt-ZXz"/>
