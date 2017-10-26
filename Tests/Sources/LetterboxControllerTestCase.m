@@ -1375,7 +1375,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
@@ -1387,7 +1387,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
@@ -1399,7 +1399,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
@@ -1436,7 +1436,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
@@ -1448,7 +1448,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
@@ -1482,7 +1482,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
@@ -1513,12 +1513,12 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
     XCTAssertNotNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMediaComposition *mediaComposition = notification.userInfo[SRGLetterboxMediaCompositionKey];
-        return mediaComposition && mediaComposition.mainChapter.blockingReason == SRGBlockingReasonNone;
+        return mediaComposition && [mediaComposition.mainChapter blockingReasonAtDate:[NSDate date]] == SRGBlockingReasonNone;
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -1530,7 +1530,7 @@ static NSURL *MMFServiceURL(void)
 
     [self waitForExpectationsWithTimeout:30. handler:nil];
 
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
 }
 
@@ -1575,7 +1575,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
     XCTAssertNotNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1586,7 +1586,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1597,7 +1597,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     
     id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
@@ -1778,7 +1778,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertEqual(@([self.controller.media blockingReasonAtDate:[NSDate date]]), @(SRGBlockingReasonNone));
     XCTAssertNil(self.controller.error);
     
     // A blocking reason appearing while playing must stop playback
@@ -1793,7 +1793,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.URN, URN);
-    XCTAssertNotEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertNotEqual(@([self.controller.media blockingReasonAtDate:[NSDate date]]), @(SRGBlockingReasonNone));
     XCTAssertNotNil(self.controller.error);
     
     // Waiting for a while. No playback notifications must be received
@@ -1829,7 +1829,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertNotEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertNotEqual(@([self.controller.media blockingReasonAtDate:[NSDate date]]), @(SRGBlockingReasonNone));
     XCTAssertNotNil(self.controller.error);
     
     // The blocking reason desappear
@@ -1841,7 +1841,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual(@(self.controller.media.blockingReason), @(SRGBlockingReasonNone));
+    XCTAssertEqual(@([self.controller.media blockingReasonAtDate:[NSDate date]]), @(SRGBlockingReasonNone));
     XCTAssertNil(self.controller.error);
     
     // Wait until the stream is playing
@@ -1925,7 +1925,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNotNil(self.controller.error);
     
@@ -1937,7 +1937,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -1951,7 +1951,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNotNil(self.controller.error);
@@ -1962,7 +1962,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeEpisode);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2006,7 +2006,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNotNil(self.controller.error);
     
@@ -2018,7 +2018,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2032,7 +2032,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
@@ -2095,7 +2095,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNotNil(self.controller.error);
     
@@ -2107,7 +2107,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2121,7 +2121,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
@@ -2169,7 +2169,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual(self.controller.media.blockingReason, SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
