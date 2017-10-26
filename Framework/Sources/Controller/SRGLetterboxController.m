@@ -117,6 +117,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *startDateTimer;
 @property (nonatomic) NSTimer *endDateTimer;
 @property (nonatomic) NSTimer *liveStreamEndDateTimer;
+@property (nonatomic) NSTimer *mediaStatisticTimer;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
@@ -210,6 +211,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.startDateTimer = nil;
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
+    self.mediaStatisticTimer = nil;
 }
 
 #pragma mark Getters and setters
@@ -382,6 +384,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
     [_liveStreamEndDateTimer invalidate];
     _liveStreamEndDateTimer = liveStreamEndDateTimer;
+}
+
+- (void)setMediaStatisticTimer:(NSTimer *)mediaStatisticTimer
+{
+    [_mediaStatisticTimer invalidate];
+    _mediaStatisticTimer = mediaStatisticTimer;
 }
 
 #pragma mark Periodic time observers
@@ -823,6 +831,23 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             @strongify(self)
             
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            
+            NSTimeInterval scheduledTimerInterval = 10.f;
+            if (mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.duration < 10.f) {
+                scheduledTimerInterval = mediaComposition.mainChapter.duration * .8f;
+            }
+            @weakify(self)
+            @weakify(mediaComposition)
+            self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:scheduledTimerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+                @strongify(self)
+                @strongify(mediaComposition)
+                
+                SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
+                                                                   mediaComposition:mediaComposition
+                                                                withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
+                                                                }];
+                [self.requestQueue addRequest:request resume:YES];
+            }];
             
             if (error) {
                 [self updateWithError:error];
