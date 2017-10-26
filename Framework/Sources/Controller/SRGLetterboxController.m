@@ -401,7 +401,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition subdivision:(SRGSubdivision *)subdivision channel:(SRGChannel *)channel
 {
     if (mediaComposition) {
-        SRGSubdivision *mainSubdivision = subdivision ?: mediaComposition.mainChapter;
+        SRGSubdivision *mainSubdivision = (subdivision && [mediaComposition mediaForSubdivision:subdivision]) ? subdivision : mediaComposition.mainChapter;
         media = [mediaComposition mediaForSubdivision:mainSubdivision];
         mediaComposition = [mediaComposition mediaCompositionForSubdivision:mainSubdivision];
     }
@@ -584,41 +584,55 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     
     SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
-        SRGMediaComposition *previousMediaComposition = self.mediaComposition;
         
-        SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
-        NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate);
-        
-        // Update metadata if retrieved, otherwise perform a check with the metadata we already have
-        if (mediaComposition) {
-            self.mediaPlayerController.mediaComposition = mediaComposition;
-            [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
-        }
-        else {
-            mediaComposition = previousMediaComposition;
-        }
-        
-        if (mediaComposition) {
-            // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
-            SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
-            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
-            if (blockingReasonError) {
-                updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, blockingReasonError, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
-                return;
+        SRGMediaCompositionCompletionBlock mediaCompositionCompletionBlock = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+            SRGMediaComposition *previousMediaComposition = self.mediaComposition;
+            
+            SRGMedia *previousMedia = [previousMediaComposition mediaForSubdivision:previousMediaComposition.mainChapter];
+            NSError *previousBlockingReasonError = SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate);
+            
+            // Update metadata if retrieved, otherwise perform a check with the metadata we already have
+            if (mediaComposition) {
+                self.mediaPlayerController.mediaComposition = mediaComposition;
+                [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:self.subdivision channel:self.channel];
+            }
+            else {
+                mediaComposition = previousMediaComposition;
             }
             
-            if (previousMediaComposition) {
-                // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
-                NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
-                NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
-                if (! [previousResources isEqualToSet:resources]) {
-                    updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+            if (mediaComposition) {
+                // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
+                SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+                if (blockingReasonError) {
+                    updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, blockingReasonError, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                     return;
                 }
+                
+                if (previousMediaComposition) {
+                    // Update the URL if resources change (also cover DVR to live change or conversely, aka DVR "kill switch")
+                    NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
+                    NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
+                    if (! [previousResources isEqualToSet:resources]) {
+                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+                        return;
+                    }
+                }
             }
-        }
+            
+            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+        };
         
-        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+        if (error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404
+                && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+            SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.mediaComposition.fullLengthMedia.URN
+                                                                                          chaptersOnly:self.chaptersOnly
+                                                                                       completionBlock:mediaCompositionCompletionBlock];
+            [self.requestQueue addRequest:fullLengthMediaCompositionRequest resume:YES];
+        }
+        else {
+            mediaCompositionCompletionBlock(mediaComposition, error);
+        }
     }];
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }

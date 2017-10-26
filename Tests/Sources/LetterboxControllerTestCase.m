@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+#import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <XCTest/XCTest.h>
 
@@ -879,7 +880,8 @@ static NSURL *MMFServiceURL(void)
     }];
     
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
-    SRGChapter *highlightChapter = self.controller.mediaComposition.chapters.lastObject;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeClip)];
+    SRGChapter *highlightChapter = [self.controller.mediaComposition.chapters filteredArrayUsingPredicate:predicate].lastObject;
     [self.controller switchToSubdivision:highlightChapter withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
@@ -2051,13 +2053,17 @@ static NSURL *MMFServiceURL(void)
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver3];
     }];
     
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeClip)];
+    NSArray <SRGChapter *> *highlightChapters = [self.controller.mediaComposition.chapters filteredArrayUsingPredicate:predicate];
+    XCTAssertNotEqual(highlightChapters.count, 0);
+    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertEqual(self.controller.media.contentType, SRGContentTypeClip);
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
     XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
-    BOOL switched = [self.controller switchToSubdivision:self.controller.mediaComposition.chapters[1] withCompletionHandler:^(BOOL finished) {
+    BOOL switched = [self.controller switchToSubdivision:highlightChapters.firstObject withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
         [completionHandlerExpectation fulfill];
     }];
@@ -2172,6 +2178,147 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+}
+
+- (void)testSwissTXTFullDVRWithHighlightRemoved
+{
+    self.controller.updateInterval = 10.f;
+    self.controller.serviceURL = MMFServiceURL();
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    // Media started 16 seconds ago and is available 40 seconds // Second higlight will be removed
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:40];
+    SRGMediaURN *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
+    
+    SRGSegment *secondHighlightSegment = self.controller.mediaComposition.mainChapter.segments[1];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    // Switch to second highlight
+    
+    [self.controller switchToSubdivision:secondHighlightSegment withCompletionHandler:^(BOOL finished) {
+        [self.controller pause];
+    }];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, secondHighlightSegment.URN);
+    XCTAssertEqualObjects(self.controller.media.URN, secondHighlightSegment.URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
+    XCTAssertTrue([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
+    
+    id eventStateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"No playback state change is expected");
+    }];
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertFalse([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
+        return YES;
+    }];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForElapsedTimeInterval:5. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventStateObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
+    XCTAssertFalse([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
+    XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
+}
+
+- (void)testSwissTXTLimitedDVRWithHighlightRemoved
+{
+    self.controller.updateInterval = 10.f;
+    self.controller.serviceURL = MMFServiceURL();
+    
+    // Media started 16 seconds ago and is available 28 seconds // Second higlight will be removed
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:28];
+    SRGMediaURN *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.mediaComposition.chapters.count, 4);
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeClip)];
+    NSArray <SRGChapter *> *highlightChapters = [self.controller.mediaComposition.chapters filteredArrayUsingPredicate:predicate];
+    XCTAssertNotEqual(highlightChapters.count, 0);
+    
+    SRGChapter *secondHighlightChapter = highlightChapters[1];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    // Switch to second highlight
+    
+    [self.controller switchToSubdivision:secondHighlightChapter withCompletionHandler:^(BOOL finished) {
+        [self.controller pause];
+    }];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, secondHighlightChapter.URN);
+    XCTAssertEqualObjects(self.controller.media.URN, secondHighlightChapter.URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
+    XCTAssertTrue([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertFalse([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
+        return YES;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:nil];
+    
+    // Media stops playing because of a kill switch to the full lengh media
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertNil(self.controller.error);
+    XCTAssertFalse([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
+    XCTAssertNotEqual(self.controller.mediaComposition.chapters.count, 4);
 }
 
 - (void)testSwitchToSegmentURN
