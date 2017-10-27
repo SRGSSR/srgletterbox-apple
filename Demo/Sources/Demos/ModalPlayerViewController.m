@@ -111,7 +111,7 @@
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    self.letterboxController.contentURLOverridingBlock = ^NSURL * _Nullable(SRGMediaURN * _Nonnull URN) {
+    self.letterboxController.contentURLOverridingBlock = ^(SRGMediaURN * _Nonnull URN) {
         return [URN isEqual:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8806790"]] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
     [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
@@ -140,6 +140,13 @@
         BOOL isLandscape = (size.width > size.height);
         [self.letterboxView setFullScreen:isLandscape animated:NO];
     } completion:nil];
+}
+
+#pragma mark Home indicator
+
+- (BOOL)prefersHomeIndicatorAutoHidden
+{
+    return self.letterboxView.userInterfaceHidden;
 }
 
 #pragma mark Data
@@ -208,7 +215,11 @@
         self.letterboxAspectRatioConstraint.constant = heightOffset;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
-    } completion:nil];
+    } completion:^(BOOL finished) {
+        if (@available(iOS 11, *)) {
+            [self setNeedsUpdateOfHomeIndicatorAutoHidden];
+        }
+    }];
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive
@@ -221,17 +232,17 @@
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
 {
-    static const UILayoutPriority LetterboxViewConstraintLessPriority = 850;
-    static const UILayoutPriority LetterboxViewConstraintMorePriority = 950;
+    static const UILayoutPriority LetterboxViewConstraintLowerPriority = 850;
+    static const UILayoutPriority LetterboxViewConstraintGreaterPriority = 950;
     
     void (^animations)(void) = ^{
         if (fullScreen) {
-            self.letterboxBottomConstraint.priority = LetterboxViewConstraintMorePriority;
-            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLessPriority;
+            self.letterboxBottomConstraint.priority = LetterboxViewConstraintGreaterPriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLowerPriority;
         }
         else {
-            self.letterboxBottomConstraint.priority = LetterboxViewConstraintLessPriority;
-            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintMorePriority;
+            self.letterboxBottomConstraint.priority = LetterboxViewConstraintLowerPriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintGreaterPriority;
         }
     };
     

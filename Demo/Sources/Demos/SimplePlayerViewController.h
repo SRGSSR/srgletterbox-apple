@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SimplePlayerViewController : UIViewController <SRGLetterboxViewDelegate>
+@interface SimplePlayerViewController : UIViewController
 
 - (instancetype)initWithURN:(nullable SRGMediaURN *)URN;
 

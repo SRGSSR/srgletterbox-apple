@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="A6A-Ps-0a8">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="A6A-Ps-0a8">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,10 +15,6 @@
         <scene sceneID="sIH-jk-ROp">
             <objects>
                 <viewController id="A6A-Ps-0a8" customClass="StandalonePlayerViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="qG1-n2-WwX"/>
-                        <viewControllerLayoutGuide type="bottom" id="tQY-ak-0yd"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Xul-ZD-b56">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -73,20 +71,21 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="z05-5d-RZc" firstAttribute="leading" secondItem="LJc-Y6-KTE" secondAttribute="leading" id="45V-sy-zvJ"/>
+                            <constraint firstItem="z05-5d-RZc" firstAttribute="leading" secondItem="QiQ-Iq-6zS" secondAttribute="leading" id="45V-sy-zvJ"/>
                             <constraint firstItem="dQI-Mf-xN9" firstAttribute="centerX" secondItem="yet-cP-iNZ" secondAttribute="centerX" id="4T7-cj-gPI"/>
-                            <constraint firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="4dc-bt-t41"/>
-                            <constraint firstItem="E7m-CS-gyh" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" constant="16" id="A2K-sl-Dof"/>
+                            <constraint firstItem="QiQ-Iq-6zS" firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="4dc-bt-t41"/>
+                            <constraint firstItem="E7m-CS-gyh" firstAttribute="leading" secondItem="QiQ-Iq-6zS" secondAttribute="leading" constant="16" id="A2K-sl-Dof"/>
                             <constraint firstItem="g2T-7b-725" firstAttribute="centerY" secondItem="E7m-CS-gyh" secondAttribute="centerY" id="B0K-sH-Ysn"/>
                             <constraint firstItem="yet-cP-iNZ" firstAttribute="centerX" secondItem="LJc-Y6-KTE" secondAttribute="centerX" id="Bir-gl-czD"/>
                             <constraint firstItem="z05-5d-RZc" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="top" id="Gi8-j3-PRm"/>
-                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" id="TcN-pN-toD"/>
-                            <constraint firstItem="tQY-ak-0yd" firstAttribute="top" secondItem="E7m-CS-gyh" secondAttribute="bottom" constant="20" id="YTX-Tp-axW"/>
-                            <constraint firstAttribute="trailing" secondItem="g2T-7b-725" secondAttribute="trailing" constant="16" id="cxb-37-zeH"/>
-                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="qG1-n2-WwX" secondAttribute="bottom" id="noq-yb-HDt"/>
+                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="QiQ-Iq-6zS" secondAttribute="leading" id="TcN-pN-toD"/>
+                            <constraint firstItem="QiQ-Iq-6zS" firstAttribute="bottom" secondItem="E7m-CS-gyh" secondAttribute="bottom" constant="20" id="YTX-Tp-axW"/>
+                            <constraint firstItem="QiQ-Iq-6zS" firstAttribute="trailing" secondItem="g2T-7b-725" secondAttribute="trailing" constant="16" id="cxb-37-zeH"/>
+                            <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="QiQ-Iq-6zS" secondAttribute="top" id="noq-yb-HDt"/>
                             <constraint firstItem="yet-cP-iNZ" firstAttribute="top" secondItem="LJc-Y6-KTE" secondAttribute="bottom" constant="41.5" id="vqs-Dr-KwK"/>
                             <constraint firstItem="dQI-Mf-xN9" firstAttribute="top" secondItem="yet-cP-iNZ" secondAttribute="bottom" constant="8" id="xdh-Ia-RKW"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="QiQ-Iq-6zS"/>
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="z05-5d-RZc" id="bJF-Qz-es8"/>

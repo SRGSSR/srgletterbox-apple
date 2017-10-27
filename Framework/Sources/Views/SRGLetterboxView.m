@@ -20,6 +20,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGProgram+SRGLetterbox.h"
+#import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -39,7 +40,16 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSuperviewBottomConstraint;
+
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsStackToSafeAreaEdgeConstraints;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsStackToSuperviewEdgeConstraints;
+
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
+
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsToSuperviewEdgeConstraints;
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
@@ -78,6 +88,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
+@property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
+
 @property (nonatomic) NSTimer *inactivityTimer;
 
 @property (nonatomic, copy) NSString *notificationMessage;
@@ -92,6 +104,8 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
+
+@property (nonatomic, copy) AVLayerVideoGravity targetVideoGravity;
 
 @end
 
@@ -185,6 +199,8 @@ static void commonInit(SRGLetterboxView *self);
                                                                                                             action:@selector(resetInactivityTimer:)];
     activityGestureRecognizer.delegate = self;
     [self.mainView addGestureRecognizer:activityGestureRecognizer];
+    
+    self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.2;
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -829,6 +845,26 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
+    static const CGFloat kControlsStackConstraintGreaterPriority = 950.f;
+    static const CGFloat kControlsStackConstraintLesserPriority = 850.f;
+    
+    if (userInterfaceHidden) {
+        [self.controlsStackToSafeAreaEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintLesserPriority;
+        }];
+        [self.controlsStackToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintGreaterPriority;
+        }];
+    }
+    else {
+        [self.controlsStackToSafeAreaEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintGreaterPriority;
+        }];
+        [self.controlsStackToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+            constraint.priority = kControlsStackConstraintLesserPriority;
+        }];
+    }
+    
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
     self.backgroundInteractionView.alpha = userInterfaceHidden ? 0.f : 1.f;
     
@@ -864,11 +900,25 @@ static void commonInit(SRGLetterboxView *self);
     CGFloat timelineHeight = (subdivisions.count != 0 && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
-    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && timelineHeight != 0.f);
+    BOOL isTimelineVisible = (timelineHeight != 0.f);
+    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && isTimelineVisible);
     self.timelineHeightConstraint.constant = timelineHeight;
     
     if (shouldFocus) {
         [self.timelineView scrollToSelectedIndexAnimated:NO];
+    }
+    
+    // Ensure the timeline is always contained within the safe area when displayed
+    static const CGFloat kTimelineConstraintGreaterPriority = 950.f;
+    static const CGFloat kTimelineConstraintLesserPriority = 850.f;
+    
+    if (isTimelineVisible) {
+        self.timelineToSafeAreaBottomConstraint.priority = kTimelineConstraintGreaterPriority;
+        self.timelineToSuperviewBottomConstraint.priority = kTimelineConstraintLesserPriority;
+    }
+    else {
+        self.timelineToSafeAreaBottomConstraint.priority = kTimelineConstraintLesserPriority;
+        self.timelineToSuperviewBottomConstraint.priority = kTimelineConstraintGreaterPriority;
     }
     
     return timelineHeight;
@@ -987,6 +1037,30 @@ static void commonInit(SRGLetterboxView *self);
         [self updateControlsLayoutForController:controller];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
+        
+        AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
+        if (self.targetVideoGravity) {
+            playerLayer.videoGravity = self.targetVideoGravity;
+            self.targetVideoGravity = nil;
+        }
+        
+        static const CGFloat kControlsFillLesserPriority = 850.f;
+        static const CGFloat kControlsFillGreaterPriority = 950.f;
+        
+        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+            self.controlsAspectRatioConstraint.priority = kControlsFillGreaterPriority;
+            
+            [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+                constraint.priority = kControlsFillLesserPriority;
+            }];
+        }
+        else {
+            self.controlsAspectRatioConstraint.priority = kControlsFillLesserPriority;
+            
+            [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+                constraint.priority = kControlsFillGreaterPriority;
+            }];
+        }
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -1130,6 +1204,22 @@ static void commonInit(SRGLetterboxView *self);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self setTogglableUserInterfaceHidden:YES animated:YES];
     });
+}
+
+- (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
+{
+    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+    
+    // Set the desired content gravity, based on the current layer state. The result is applied with UI updates,
+    // ensuring all updates are animated at the same time.
+    if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+        self.targetVideoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+    else {
+        self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
+    }
+    
+    [self updateUserInterfaceAnimated:YES];
 }
 
 #pragma mark Actions
@@ -1281,6 +1371,16 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
+        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
+    }
+    else {
+        return NO;
+    }
 }
 
 #pragma mark Notifications
