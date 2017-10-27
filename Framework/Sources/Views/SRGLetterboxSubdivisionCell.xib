@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -61,15 +62,21 @@
                             <constraint firstAttribute="width" secondItem="8GI-9a-x72" secondAttribute="height" multiplier="1:1" id="Tmo-Lb-mkd"/>
                         </constraints>
                     </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQJ-qV-v59" userLabel="Disabled View">
+                        <rect key="frame" x="0.0" y="0.0" width="160" height="130"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
                 </subviews>
             </view>
             <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
             <constraints>
+                <constraint firstItem="fQJ-qV-v59" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="3xx-RP-mGF"/>
                 <constraint firstItem="8GI-9a-x72" firstAttribute="centerY" secondItem="xPG-fm-CkX" secondAttribute="centerY" id="5AP-UD-Ifs"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="top" secondItem="xPG-fm-CkX" secondAttribute="bottom" constant="5" id="LG0-iI-zSJ"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="bottom" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="MvM-qU-lYE"/>
                 <constraint firstAttribute="bottom" secondItem="XEC-ZT-Ya9" secondAttribute="bottom" constant="6" id="Ncu-eS-rX3"/>
                 <constraint firstItem="Fjo-Dj-oWj" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" id="Q24-IG-JI6"/>
+                <constraint firstItem="fQJ-qV-v59" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" id="S3y-t0-wam"/>
                 <constraint firstItem="XEC-ZT-Ya9" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" constant="5" id="Vjh-L6-19n"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" id="WGt-Ou-MS6"/>
                 <constraint firstItem="XEC-ZT-Ya9" firstAttribute="top" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="a17-0y-Bs7"/>
@@ -78,11 +85,14 @@
                 <constraint firstItem="xPG-fm-CkX" firstAttribute="leading" secondItem="8GI-9a-x72" secondAttribute="trailing" id="iP6-L1-3DM"/>
                 <constraint firstItem="xPG-fm-CkX" firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" constant="-5" id="iwD-qB-I9o"/>
                 <constraint firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" id="kYp-Sb-Yv6"/>
+                <constraint firstAttribute="trailing" secondItem="fQJ-qV-v59" secondAttribute="trailing" id="pGe-NN-iw8"/>
                 <constraint firstItem="Fjo-Dj-oWj" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="sYb-Om-2SE"/>
+                <constraint firstAttribute="bottom" secondItem="fQJ-qV-v59" secondAttribute="bottom" id="tT1-1M-G6l"/>
                 <constraint firstItem="8GI-9a-x72" firstAttribute="height" secondItem="xPG-fm-CkX" secondAttribute="height" id="yRn-96-k6M"/>
             </constraints>
             <size key="customSize" width="189" height="123"/>
             <connections>
+                <outlet property="disabledView" destination="fQJ-qV-v59" id="WWn-xU-TtP"/>
                 <outlet property="durationLabel" destination="xPG-fm-CkX" id="gVN-ef-Ab2"/>
                 <outlet property="favoriteImageView" destination="8GI-9a-x72" id="8f9-5B-4dU"/>
                 <outlet property="imageView" destination="Fjo-Dj-oWj" id="Gsp-lI-bg3"/>

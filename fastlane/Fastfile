@@ -53,8 +53,10 @@ platform :ios do
 
     clean_build_artifacts
 
-    saveLastNightliesSuccessGitCommitHash
+    merakiPushApps
 
+    saveLastNightliesSuccessGitCommitHash
+    
   end
 
   desc "Build for a scheme and a configuration"
@@ -66,7 +68,9 @@ platform :ios do
       scheme: scheme,
       silent: true,
       clean: true,
-      export_method: "enterprise"
+      xcargs: "ENABLE_BITCODE=NO",
+      export_method: "enterprise",
+      include_bitcode: false
     )
   end
 
@@ -137,8 +141,16 @@ platform :ios do
     lastNightliesSuccessGitCommitHash
   end
 
+  desc "Try to push new apps on registered devices with Meraki"
+  private_lane :merakiPushApps do
+    file = File.open("scripts/merakiPushApps.sh", "r")
+    merakiPushApps = file.read
+    file.close
+    sh merakiPushApps
+  end
+
   after_all do |lane|
-    reset_git_repo
+    reset_git_repo(skip_clean: true)
 
     # slack(
     #   message: "Successfully deployed new App Update."
@@ -146,7 +158,8 @@ platform :ios do
   end
 
   error do |lane, exception|
-    reset_git_repo
+    clean_build_artifacts
+    reset_git_repo(skip_clean: true)
     # slack(
     #   message: exception.message,
     #   success: false

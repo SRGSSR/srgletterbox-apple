@@ -18,6 +18,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
+@property (nonatomic, weak) IBOutlet UIView *disabledView;
 
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -42,6 +43,8 @@
     UIImage *favoriteImage = self.favoriteImageView.image;
     self.favoriteImageView.image = nil;
     self.favoriteImageView.image = favoriteImage;
+    
+    self.disabledView.alpha = 0.f;
 }
 
 - (void)prepareForReuse
@@ -62,26 +65,49 @@
     
     [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
-    static NSDateComponentsFormatter *s_dateComponentsFormatter;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-        s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-    });
-    
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
-    self.durationLabel.hidden = (subdivision.duration == 0.f);
     
-    if (! self.durationLabel.hidden) {
+    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:[NSDate date]];
+    if (blockingReason == SRGBlockingReasonStartDate) {
+        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString];
+        self.durationLabel.hidden = NO;
+    }
+    else if (blockingReason == SRGBlockingReasonEndDate) {
+        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Short label identifying content which has expired.").uppercaseString];
+        self.durationLabel.hidden = NO;
+    }
+    else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", NSLocalizedString(@"Live", @"Short label identifying a livestream.")].uppercaseString
+                                                                                           attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
+                                                                                                         NSForegroundColorAttributeName : [UIColor whiteColor] }];
+        
+        [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"●  ")
+                                                                               attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
+                                                                                             NSForegroundColorAttributeName : [UIColor redColor] }]];
+        
+        self.durationLabel.attributedText = attributedText.copy;
+        self.durationLabel.hidden = NO;
+    }
+    else if (subdivision.duration != 0.) {
+        static NSDateComponentsFormatter *s_dateComponentsFormatter;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+            s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+        });
+        
         NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", durationString];
+        self.durationLabel.hidden = NO;
     }
     else {
         self.durationLabel.text = nil;
+        self.durationLabel.hidden = YES;
     }
     
-    self.alpha = (subdivision.blockingReason != SRGBlockingReasonNone) ? 0.5f : 1.f;
+    self.disabledView.alpha = (blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
+    
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
 }
 

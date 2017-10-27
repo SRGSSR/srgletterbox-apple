@@ -11,10 +11,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Standard skip intervals.
+ *  Notification sent when the livestream associated with the current playback context just finished. The corresponding
+ *  media can be retrieved under the `SRGLetterboxMediaKey` user information key.
  */
-OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;
-OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
+OBJC_EXTERN NSString * const SRGLetterboxLivestreamDidFinishNotification;
 
 /**
  *  Interface for internal use.
@@ -28,59 +28,6 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;
  *              in a readonly way or to register observers.
  */
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
-
-/**
- *  Switch to the specified subdivision (segment or chapter) of the current media. Does nothing if no media composition 
- *  is available yet, or if the subdivision is not related to the media composition. Playback is automatically resumed if 
- *  necessary.
- *
- *  Return `YES` iff switching is possible.
- */
-- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision;
-
-/**
- *  Return YES iff the player can skip backward from a standard amount of seconds.
- *
- *  @discussion Always possible for on-demand and DVR streams.
- */
-- (BOOL)canSkipBackward;
-
-/**
- *  Return YES iff the player can skip forward from a standard amount of seconds.
- *
- *  @discussion For on-demand and streams, only possible if seeking wouldn't jump past the end. For DVR streams,
- *              possible until the stream is played live.
- */
-- (BOOL)canSkipForward;
-
-/**
- *  Return YES iff the player can skip to live conditions.
- */
-- (BOOL)canSkipToLive;
-
-/**
- *  Skip backward from a standard amount of seconds.
- *
- *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
- *              finished set to `NO`.
- */
-- (void)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
-
-/**
- *  Skip forward from a standard amount of seconds.
- *
- *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
- *              finished set to `NO`.
- */
-- (void)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
-
-/**
- *  Skip forward to live conditions.
- *
- *  @discussion If skipping is not possible or if a skip is interrupted, the completion handler will be called with
- *              finished set to `NO`.
- */
-- (void)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Optional block which gets called right after player creation, when the player changes, or when the configuration is

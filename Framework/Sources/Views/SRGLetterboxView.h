@@ -122,6 +122,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  the timeline being moved, either interactively or during normal playback.
  *
  *  If you don't need it, you can also entirely hide the timeline from view by calling `-setTimelineAlwaysHidden:animated:`.
+ *
+ *  ## Layout
+ *
+ *  The Letterbox view ensures that controls and timeline are displayed properly based on safe area layout guides. No
+ *  additional works is required from the client application. On an iPhone X, though, your application is still responsible
+ *  of managing the home indicator visibility appropriately.
+ *
+ *  Content gravity can be changed by double tapping a video twice. Video controls are moved accordingly.
  *  
  *  ## Long press on subdivisions and favorites
  *
@@ -276,6 +284,11 @@ IB_DESIGNABLE
  *              the timeline behavior change will not be observed until controls are displayed again.
  */
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
+
+/**
+ *  The subdivisions currently visible in the timeline (in their display order).
+ */
+@property (nonatomic, readonly) NSArray<SRGSubdivision *> *subdivisions;
 
 /**
  *  Call to schedule an update request for subdivision favorites.

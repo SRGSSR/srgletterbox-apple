@@ -40,9 +40,13 @@
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
-        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
-        viewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+        
         viewController.URN = URN;
+
+        viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+        viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
+        viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+        
         return viewController;
     }
 }
@@ -75,6 +79,13 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
+}
+
+#pragma mark Rotation
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

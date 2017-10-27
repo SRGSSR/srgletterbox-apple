@@ -29,14 +29,20 @@ typedef NS_ENUM(NSInteger, MediaListType) {
     /**
      *  Livecenter RSI
      */
-    MediaListLivecenterRSI
+    MediaListLivecenterRSI,
+    /**
+     *  MMF Topic list
+     */
+    MediaListMMFTopicList
 };
 
 @interface MediaListViewController : UITableViewController
 
-- (instancetype)initWithMediaListType:(MediaListType)mediaListType;
+- (instancetype)initWithMediaListType:(MediaListType)mediaListType uid:(nullable NSString *)uid;
 
 @property (nonatomic, readonly) MediaListType mediaListType;
+
+@property (nonatomic, readonly, nullable) NSString *uid;
 
 @end
 

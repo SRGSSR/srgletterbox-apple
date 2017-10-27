@@ -53,12 +53,17 @@
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
     
     multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
-    multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
-    multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
     
-    multiPlayerViewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
-    multiPlayerViewController.smallLetterboxController1.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
-    multiPlayerViewController.smallLetterboxController2.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+    multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.smallLetterboxController1.globalHeaders = ApplicationSettingGlobalHeaders();
+    
+    multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
+    multiPlayerViewController.smallLetterboxController2.globalHeaders = ApplicationSettingGlobalHeaders();
+    
+    multiPlayerViewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
+    multiPlayerViewController.smallLetterboxController1.updateInterval = ApplicationSettingUpdateInterval();
+    multiPlayerViewController.smallLetterboxController2.updateInterval = ApplicationSettingUpdateInterval();
     
     multiPlayerViewController.URN = URN;
     multiPlayerViewController.URN1 = URN1;
@@ -121,6 +126,13 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
+}
+
+#pragma mark Rotation
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

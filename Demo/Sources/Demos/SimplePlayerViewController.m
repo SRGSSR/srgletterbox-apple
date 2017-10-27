@@ -12,8 +12,8 @@
 
 @property (nonatomic) SRGMediaURN *URN;
 
+@property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @end
 
@@ -25,9 +25,13 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
-    viewController.letterboxController.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+
     viewController.URN = URN;
+
+    viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
+    viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
+    viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    
     return viewController;
 }
 
@@ -62,15 +66,24 @@
     }
 }
 
+#pragma mark Home indicator
+
+- (BOOL)prefersHomeIndicatorAutoHidden
+{
+    return self.letterboxView.userInterfaceHidden;
+}
+
 #pragma mark SRGLetterboxViewDelegate protocol
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.letterboxAspectRatioConstraint.constant = heightOffset;
-        [self.view layoutIfNeeded];
-    } completion:nil];
+        self.navigationController.navigationBarHidden = hidden;
+    } completion:^(BOOL finished) {
+        if (@available(iOS 11, *)) {
+            [self setNeedsUpdateOfHomeIndicatorAutoHidden];
+        }
+    }];
 }
 
 @end

@@ -6,72 +6,58 @@
 
 #import "SettingsViewController.h"
 
+#import "ServerSettings.h"
+
+#import <HockeySDK/HockeySDK.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-NSString * const LetterboxSRGSettingServiceURL = @"LetterboxSRGSettingServiceURL";
-NSString * const LetterboxSRGSettingMirroredOnExternalScreen = @"LetterboxSRGSettingMirroredOnExternalScreen";
-NSString * const LetterboxSRGSettingStreamAvailabilityCheckInterval = @"LetterboxSRGSettingStreamAvailabilityCheckInterval";
+NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
+NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
+NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
+NSString * const LetterboxDemoSettingGlobalHeaders = @"LetterboxDemoSettingGlobalHeaders";
 
-NSTimeInterval const LetterboxSRGSettingStreamAvailabilityCheckIntervalShort = 10.;
+NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
+
+NSURL *LetterboxDemoMMFServiceURL(void)
+{
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+}
 
 NSURL *ApplicationSettingServiceURL(void)
 {
-    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxSRGSettingServiceURL];
+    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
 BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingMirroredOnExternalScreen];
 }
 
 void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen)
 {
-    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxSRGSettingMirroredOnExternalScreen];
+    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxDemoSettingMirroredOnExternalScreen];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
-NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
+NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval streamAvailabilityCheckInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
-    return (streamAvailabilityCheckInterval > 0.) ? streamAvailabilityCheckInterval : SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+    NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxDemoSettingUpdateInterval];
+    return (updateInterval > 0.) ? updateInterval : SRGLetterboxUpdateIntervalDefault;
 }
 
-@interface ServerSetting : NSObject
-
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL;
-
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSURL *URL;
-
-@end
-
-@implementation ServerSetting
-
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL
+NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 {
-    if (self = [super init]) {
-        _name = name;
-        _URL = URL;
-    }
-    return self;
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:LetterboxDemoSettingGlobalHeaders];
 }
-
-- (instancetype)init
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-@end
 
 @interface SettingsViewController ()
 
-@property (nonatomic) NSArray<ServerSetting *> *serverSettings;
+@property (nonatomic) NSArray<ServerSettings *> *serverSettings;
 
 @end
 
@@ -82,12 +68,14 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 - (instancetype)init
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
-    SettingsViewController *viewController = [storyboard instantiateInitialViewController];
-    
-    viewController.serverSettings = @[[[ServerSetting alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
-                                      [[ServerSetting alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"]]];
+    SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
+    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL() globalHeaders:nil],
+                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Production", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.production.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
+                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Stage", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.stage.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
+                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Test", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.test.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"] globalHeaders:nil]];
     return viewController;
 }
 
@@ -102,11 +90,18 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
     [self.tableView reloadData];
 }
 
+#pragma mark Getters
+
+- (BOOL)isCheckForUpdateButtonEnabled
+{
+    return ([BITHockeyManager sharedHockeyManager].updateManager != nil);
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -123,7 +118,21 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
         }
             
         case 2: {
-            return NSLocalizedString(@"Stream availability check", @"Stream availability check header title in settings view");
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            break;
+        }
+            
+        case 3: {
+            NSString *versionString = [@"(" stringByAppendingString:[[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+            versionString = [versionString stringByAppendingFormat:@" - %@)", [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"]];
+            
+#ifdef DEBUG
+            versionString = [versionString stringByAppendingString:@" 🛠"];
+#elif NIGHTLY
+            versionString = [versionString stringByAppendingString:@" 🌙"];
+#endif
+            
+            return [NSString stringWithFormat:NSLocalizedString(@"Application %@", @"Application header title in settings view"), versionString];
             break;
         }
             
@@ -136,8 +145,17 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (section == 2) {
-        return NSLocalizedString(@"\nThis demo application presents SRG Letterbox features.\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view");
+    if (section == [self numberOfSectionsInTableView:tableView] - 1) {
+        NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        
+#ifdef DEBUG
+        versionString = [versionString stringByAppendingString:@"-debug"];
+#elif NIGHTLY
+        versionString = [versionString stringByAppendingString:@"-nightly"];
+#endif
+        
+        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (v.%@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
+                versionString];
     }
     else {
         return nil;
@@ -158,6 +176,11 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             break;
         }
             
+        case 3: {
+            return 1;
+            break;
+        }
+            
         default: {
             return 0;
             break;
@@ -174,6 +197,10 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    cell.textLabel.textAlignment = NSTextAlignmentLeft;
+    cell.userInteractionEnabled = YES;
+    cell.textLabel.textColor = UIColor.blackColor;
+    
     switch (indexPath.section) {
         case 0: {
             cell.textLabel.text = self.serverSettings[indexPath.row].name;
@@ -218,16 +245,16 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             
             switch (indexPath.row) {
                 case 0: {
-                    NSTimeInterval timeInterval = SRGLetterboxStreamAvailabilityCheckIntervalDefault;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = SRGLetterboxUpdateIntervalDefault;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    NSTimeInterval timeInterval = LetterboxSRGSettingStreamAvailabilityCheckIntervalShort;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Default stream availability check interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
-                    cell.accessoryType = (ApplicationSettingStreamAvailabilityCheckInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    NSTimeInterval timeInterval = LetterboxDemoSettingUpdateIntervalShort;
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Short update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -237,6 +264,15 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
                     break;
                 };
             }
+            break;
+        }
+            
+        case 3: {
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.userInteractionEnabled = [self isCheckForUpdateButtonEnabled];
+            cell.textLabel.textColor = [self isCheckForUpdateButtonEnabled] ? UIColor.blackColor : UIColor.lightGrayColor;
             break;
         }
             
@@ -250,10 +286,13 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    void (^completionBlock)() = nil;
+    
     switch (indexPath.section) {
         case 0: {
-            NSURL *serverURL = self.serverSettings[indexPath.row].URL;
-            [[NSUserDefaults standardUserDefaults] setObject:serverURL.absoluteString forKey:LetterboxSRGSettingServiceURL];
+            ServerSettings *serverSettings = self.serverSettings[indexPath.row];
+            [[NSUserDefaults standardUserDefaults] setObject:serverSettings.URL.absoluteString forKey:LetterboxDemoSettingServiceURL];
+            [[NSUserDefaults standardUserDefaults] setObject:serverSettings.globalHeaders forKey:LetterboxDemoSettingGlobalHeaders];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             [[SRGLetterboxService sharedService].controller reset];
@@ -268,14 +307,21 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
             
         case 2: {
             if (indexPath.row == 0) {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
             else {
-                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxSRGSettingStreamAvailabilityCheckIntervalShort forKey:LetterboxSRGSettingStreamAvailabilityCheckInterval];
+                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxDemoSettingUpdateIntervalShort forKey:LetterboxDemoSettingUpdateInterval];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            [SRGLetterboxService sharedService].controller.streamAvailabilityCheckInterval = ApplicationSettingStreamAvailabilityCheckInterval();
+            [SRGLetterboxService sharedService].controller.updateInterval = ApplicationSettingUpdateInterval();
+            break;
+        }
+            
+        case 3: {
+            completionBlock = ^{
+                [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
+            };
             break;
         }
             
@@ -288,7 +334,7 @@ NSTimeInterval ApplicationSettingStreamAvailabilityCheckInterval(void)
     
     [self.tableView reloadData];
     
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:completionBlock];
 }
 
 @end

@@ -19,7 +19,7 @@ typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
  *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
  *  notification `userInfo` dictionary.
  */
-OBJC_EXTERN NSString * const SRGLetterboxControllerPlaybackStateDidChangeNotification;
+OBJC_EXTERN NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -87,14 +87,20 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 };
 
 /**
- *  Time interval for stream availability checks. Default is 5 minutes.
+ *  Time interval for stream availability checks. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxStreamAvailabilityCheckIntervalDefault;
+OBJC_EXPORT NSTimeInterval const SRGLetterboxUpdateIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
 OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
+
+/**
+ *  Standard skip intervals.
+ */
+OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 seconds
+OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -213,7 +219,7 @@ OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
  *                           requirements.
  *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
  *                           requirements.
- *  @param completionHandler The completion block called when the seek ends. If the seek has been interrupted by
+ *  @param completionHandler The completion handler called when the seek ends. If the seek has been interrupted by
  *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
  *                           with `finished` set to `YES`.
  *
@@ -225,6 +231,31 @@ OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
 withToleranceBefore:(CMTime)toleranceBefore
     toleranceAfter:(CMTime)toleranceAfter
  completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
+ *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur. Switching
+ *  to the currently playing URN restarts playback at its beginning.
+ *
+ *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
+ *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
+ *                           resume afterwards.
+ *
+ *  @return `YES` iff switching occurred successfully.
+ */
+- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
+ *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
+ *  Switching to the currently playing subdivision restarts playback at its beginning.
+ *
+ *  @param The completion handler called once switching finishes. The block will only be called when switching is performed,
+ *         and with `finished` set to `YES` iff playback could successfully resume afterwards.
+ *
+ *  @return `YES` iff switching occurred successfully.
+ */
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Return the current data availability. KVO-observable.
@@ -382,6 +413,60 @@ withToleranceBefore:(CMTime)toleranceBefore
 @end
 
 /**
+ *  Standard skips.
+ */
+@interface SRGLetterboxController (Skips)
+
+/**
+ *  Return `YES` iff the player can skip backward from `SRGLetterboxBackwardSkipInterval` seconds.
+ */
+- (BOOL)canSkipBackward;
+
+/**
+ *  Return `YES` iff the player can skip forward from `SRGLetterboxForwardSkipInterval` seconds.
+ */
+- (BOOL)canSkipForward;
+
+/**
+ *  Return `YES` iff the player can skip to live conditions.
+ *
+ *  @discussion Always returns `NO` for on-demand streams.
+ */
+- (BOOL)canSkipToLive;
+
+/**
+ *  Skip backward from a `SRGLetterboxBackwardSkipInterval` seconds.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
+ */
+- (BOOL)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Skip forward from a `SRGLetterboxForwardSkipInterval` seconds.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
+ */
+- (BOOL)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Skip forward to live conditions.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible. Always returns `NO` for on-demand streams.
+ */
+- (BOOL)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+@end
+
+/**
  *  Playback information. Changes are notified through `SRGLetterboxMetadataDidChangeNotification` and
  *  `SRGLetterboxPlaybackDidFailNotification`.
  */
@@ -418,7 +503,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) SRGMedia *subdivisionMedia;
 
 /**
- *  The current full-length information .
+ *  The current full-length information.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 
@@ -426,6 +511,21 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Error (if any has been encountered).
  */
 @property (nonatomic, readonly, nullable) NSError *error;
+
+@end
+
+@interface SRGLetterboxController (ServerSettings)
+
+/**
+ *  The URL of the service data must be returned from. By default or if reset to `nil`, the production server is
+ *  used. Official URL values can be found in `SRGDataProvider.h`.
+ */
+@property (nonatomic, null_resettable) NSURL *serviceURL;
+
+/**
+ *  Optional global headers which will added to all requests performed by the controller when retrieving data.
+ */
+@property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalHeaders;
 
 @end
 
@@ -469,19 +569,14 @@ withToleranceBefore:(CMTime)toleranceBefore
 @interface SRGLetterboxController (PeriodicUpdates)
 
 /**
- *  Time interval between stream availability checks.
+ *  Time interval for controller automatic updates.
  *
- *  Default is `SRGLetterboxStreamAvailabilityCheckIntervalDefault`, and minimum is 10 seconds.
- *
- *  @discussion Live streams might change (e.g. if a stream is toggled between DVR and live-only versions) or may not be
- *              available anymore (e.g. if the location of the user changes and the stream is not available for the new 
- *              location). If a stream is changed, the new one is automatically played, otherwise playback stops with an 
- *              error. Some streams might also only be available within a specific date range.
+ *  Default is `SRGLetterboxUpdateIntervalDefault`, and minimum is 10 seconds.
  */
-@property (nonatomic) NSTimeInterval streamAvailabilityCheckInterval;
+@property (nonatomic) NSTimeInterval updateInterval;
 
 /**
- *  Time interval between now and next information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
+ *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
  *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
@@ -502,7 +597,10 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion When a URL has been overridden, the player will only work with the media, not the full playback
  *              context (since the context is tightly related to the original content URL, this would open the
- *              door to several inconsistencies, most notably with segments)
+ *              door to several inconsistencies, most notably with segments).
+ *
+ *              The overridden URL should be of the same type as the original one (e.g. a livestream URL should
+ *              only be overridden with another livestream URL), otherwise the behhavior is undefined.
  */
 @property (nonatomic, copy, nullable) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 

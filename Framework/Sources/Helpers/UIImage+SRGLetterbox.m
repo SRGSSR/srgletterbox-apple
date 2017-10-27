@@ -255,7 +255,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-32"] : [UIImage srg_letterboxImageNamed:@"backward-52"];
 }
 
-+ (UIImage *)srg_letterboxSeekToLiveImageInSet:(SRGImageSet)imageSet
++ (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
 }
