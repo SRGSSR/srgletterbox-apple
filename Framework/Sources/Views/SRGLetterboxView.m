@@ -1263,7 +1263,7 @@ static void commonInit(SRGLetterboxView *self);
         
         NSString *string = nil;
         if (slider.live) {
-            string = SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live");
+            string = SRGLetterboxLocalizedString(@"In Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live");
         }
         else if (date) {
             static dispatch_once_t s_onceToken;
