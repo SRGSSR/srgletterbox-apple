@@ -22,6 +22,9 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Vollansicht starten";
 
+/* Short label identifying a livestream. */
+"Live" = "Live";
+
 /* Pause button label */
 "Pause" = "Pause";
 
