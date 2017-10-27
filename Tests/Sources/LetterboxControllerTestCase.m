@@ -1994,9 +1994,9 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    // Media starts in 7 seconds and is available 14 seconds
+    // Media starts in 7 seconds and is available 15 seconds
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
-    NSDate *endDate = [startDate dateByAddingTimeInterval:14];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     SRGMediaURN *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
     [self.controller playURN:URN withChaptersOnly:NO];
     
