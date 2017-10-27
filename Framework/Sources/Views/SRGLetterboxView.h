@@ -128,6 +128,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  The Letterbox view ensures that controls and timeline are displayed properly based on safe area layout guides. No
  *  additional works is required from the client application. On an iPhone X, though, your application is still responsible
  *  of managing the home indicator visibility appropriately.
+ *
+ *  Content gravity can be changed by double tapping a video twice. Video controls are moved accordingly.
  *  
  *  ## Long press on subdivisions and favorites
  *
