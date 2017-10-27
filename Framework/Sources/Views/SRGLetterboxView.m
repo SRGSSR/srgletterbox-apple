@@ -200,7 +200,7 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self.mainView addGestureRecognizer:activityGestureRecognizer];
     
-    self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.2;
+    self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
