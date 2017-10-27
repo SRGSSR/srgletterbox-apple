@@ -122,6 +122,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  the timeline being moved, either interactively or during normal playback.
  *
  *  If you don't need it, you can also entirely hide the timeline from view by calling `-setTimelineAlwaysHidden:animated:`.
+ *
+ *  ## Layout
+ *
+ *  The Letterbox view ensures that controls and timeline are displayed properly based on safe area layout guides. No
+ *  additional works is required from the client application. On an iPhone X, though, your application is still responsible
+ *  of managing the home indicator visibility appropriately.
  *  
  *  ## Long press on subdivisions and favorites
  *
