@@ -424,17 +424,17 @@
             <viewLayoutGuide key="safeArea" id="Feb-b9-W6K"/>
             <point key="canvasLocation" x="85" y="76.5"/>
         </view>
-        <tapGestureRecognizer id="cSD-No-gUM">
+        <tapGestureRecognizer id="cSD-No-gUM" userLabel="Hide user interface Tap Gesture Recognizer">
             <connections>
                 <action selector="hideUserInterface:" destination="-1" id="f6i-7M-9sG"/>
             </connections>
         </tapGestureRecognizer>
-        <tapGestureRecognizer id="iXq-HC-lOl">
+        <tapGestureRecognizer id="iXq-HC-lOl" userLabel="Retry Tap Gesture Recognizer">
             <connections>
                 <action selector="retry:" destination="-1" id="6N3-uz-ppc"/>
             </connections>
         </tapGestureRecognizer>
-        <tapGestureRecognizer id="Si8-HF-UEx">
+        <tapGestureRecognizer id="Si8-HF-UEx" userLabel="Hide User interface Tap Gesture Recognizer">
             <connections>
                 <action selector="hideUserInterface:" destination="-1" id="Z5Z-gf-ZmY"/>
             </connections>
