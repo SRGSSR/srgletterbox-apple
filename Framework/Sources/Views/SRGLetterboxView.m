@@ -309,6 +309,9 @@ static void commonInit(SRGLetterboxView *self);
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
     }];
+    
+    BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
 }
 
 #pragma mark Fonts
@@ -511,7 +514,8 @@ static void commonInit(SRGLetterboxView *self);
             
             _fullScreen = fullScreen;
             
-            self.videoGravityTapChangeGestureRecognizer.enabled = fullScreen;
+            BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+            self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
         }
         self.fullScreenAnimationRunning = NO;
     }];
@@ -1210,7 +1214,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (! self.fullScreen) {
+    BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+    if (! (self.fullScreen || isFrameFullScreen)) {
         return;
     }
     
@@ -1516,7 +1521,9 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
-    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen;
+    
+    BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
