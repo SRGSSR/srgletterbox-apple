@@ -129,8 +129,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  additional works is required from the client application. On an iPhone X, though, your application is still responsible
  *  of managing the home indicator visibility appropriately.
  *
- *  When setting fullScreen to YES or setting the frame to the window bounds, content gravity can be changed by double
- *  tapping a video twice. Video controls are moved accordingly.
+ *  When setting `fullScreen` to `YES` or if the view frame covers the whole window, content gravity can be changed by
+ *  double tapping a video. Video controls are moved accordingly.
  *  
  *  ## Long press on subdivisions and favorites
  *
