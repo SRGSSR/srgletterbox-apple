@@ -516,6 +516,7 @@ static void commonInit(SRGLetterboxView *self);
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
             self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+            [self updateUserInterfaceAnimated:animated];
         }
         self.fullScreenAnimationRunning = NO;
     }];
