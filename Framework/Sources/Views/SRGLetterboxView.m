@@ -510,6 +510,8 @@ static void commonInit(SRGLetterboxView *self);
             }];
             
             _fullScreen = fullScreen;
+            
+            self.videoGravityTapChangeGestureRecognizer.enabled = fullScreen;
         }
         self.fullScreenAnimationRunning = NO;
     }];
@@ -1208,6 +1210,10 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
+    if (! self.fullScreen) {
+        return;
+    }
+    
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
     
     // Set the desired content gravity, based on the current layer state. The result is applied with UI updates,
@@ -1510,6 +1516,7 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
+    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen;
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
