@@ -312,6 +312,7 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+    [self resetVideoGravityIfNeed];
 }
 
 #pragma mark Fonts
@@ -516,6 +517,7 @@ static void commonInit(SRGLetterboxView *self);
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
             self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+            [self resetVideoGravityIfNeed];
         }
         self.fullScreenAnimationRunning = NO;
     }];
@@ -1147,6 +1149,15 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)resetVideoGravityIfNeed
+{
+    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+    if (! self.videoGravityTapChangeGestureRecognizer.enabled && [playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspectFill]) {
+        self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
+        [self updateUserInterfaceAnimated:YES];
+    }
+}
+
 #pragma mark Letterbox notification banners
 
 - (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
@@ -1524,6 +1535,7 @@ static void commonInit(SRGLetterboxView *self)
     
     BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+    [self resetVideoGravityIfNeed];
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
