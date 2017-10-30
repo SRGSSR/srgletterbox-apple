@@ -1152,14 +1152,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)resetVideoGravityIfNeed
-{
-    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-    if (! self.videoGravityTapChangeGestureRecognizer.enabled && [playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspectFill]) {
-        self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
-    }
-}
-
 #pragma mark Letterbox notification banners
 
 - (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
