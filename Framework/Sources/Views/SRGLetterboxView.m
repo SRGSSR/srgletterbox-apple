@@ -312,7 +312,6 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-    [self resetVideoGravityIfNeed];
 }
 
 #pragma mark Fonts
@@ -517,7 +516,6 @@ static void commonInit(SRGLetterboxView *self);
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
             self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-            [self resetVideoGravityIfNeed];
         }
         self.fullScreenAnimationRunning = NO;
     }];
@@ -1046,6 +1044,11 @@ static void commonInit(SRGLetterboxView *self);
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         
+        BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+        if (! (self.fullScreen || isFrameFullScreen)) {
+            self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
+        }
+        
         AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
         if (self.targetVideoGravity) {
             playerLayer.videoGravity = self.targetVideoGravity;
@@ -1154,7 +1157,6 @@ static void commonInit(SRGLetterboxView *self);
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
     if (! self.videoGravityTapChangeGestureRecognizer.enabled && [playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspectFill]) {
         self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
-        [self updateUserInterfaceAnimated:YES];
     }
 }
 
@@ -1225,11 +1227,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
-    BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-    if (! (self.fullScreen || isFrameFullScreen)) {
-        return;
-    }
-    
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
     
     // Set the desired content gravity, based on the current layer state. The result is applied with UI updates,
@@ -1535,7 +1532,6 @@ static void commonInit(SRGLetterboxView *self)
     
     BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-    [self resetVideoGravityIfNeed];
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
