@@ -1187,7 +1187,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     
     // Do not let pause live streams, stop playback
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
-        [self.mediaPlayerController stop];
+        [self stop];
     }
 }
 

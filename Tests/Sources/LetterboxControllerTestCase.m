@@ -287,6 +287,41 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
+- (void)testPlayLiveOnlyAfterATogglePauseAnd35Seconds
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:LiveOnlyVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForElapsedTimeInterval:40. withHandler:nil];
+
+    [self waitForExpectationsWithTimeout:45. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller togglePlayPause];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForElapsedTimeInterval:1. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:2. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller play];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
 - (void)testPlayAfterReset
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
