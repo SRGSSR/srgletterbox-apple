@@ -1204,6 +1204,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)playbackDidFail:(NSNotification *)notification
 {
+    if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+    }
     [self updateWithError:notification.userInfo[SRGMediaPlayerErrorKey]];
 }
 
