@@ -827,6 +827,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             [self.requestQueue addRequest:playRequest resume:YES];
         }
         else {
+            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            
             NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                                  code:SRGLetterboxErrorCodeNotFound
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
