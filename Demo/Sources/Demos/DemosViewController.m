@@ -476,22 +476,17 @@
             AutoplayList autoplayList = AutoplayListUnknown;
             switch (indexPath.row) {
                 case 0: {
-                    autoplayList = AutoplayListRTSTrendingMedias;
+                    autoplayList = AutoplayListSRFTrendingMedias;
                     break;
                 }
                     
                 case 1: {
-                    autoplayList = AutoplayListSRFLiveCenterVideos;
+                    autoplayList = AutoplayListRTSTrendingMedias;
                     break;
                 }
                     
                 case 2: {
-                    autoplayList = AutoplayListRTSLiveCenterVideos;
-                    break;
-                }
-                    
-                case 3: {
-                    autoplayList = AutoplayListRSILiveCenterVideos;
+                    autoplayList = AutoplayListRSITrendingMedias;
                     break;
                 }
                     
