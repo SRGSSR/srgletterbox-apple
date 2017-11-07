@@ -123,16 +123,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 3: {
-            NSString *versionString = [@"(" stringByAppendingString:[[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"]];
-            versionString = [versionString stringByAppendingFormat:@" - %@)", [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"]];
-            
-#ifdef DEBUG
-            versionString = [versionString stringByAppendingString:@" 🛠"];
-#elif NIGHTLY
-            versionString = [versionString stringByAppendingString:@" 🌙"];
-#endif
-            
-            return [NSString stringWithFormat:NSLocalizedString(@"Application %@", @"Application header title in settings view"), versionString];
+            NSString *buildNumberString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
+            return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
         }
             
@@ -146,15 +138,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
-        NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        
-#ifdef DEBUG
-        versionString = [versionString stringByAppendingString:@"-debug"];
-#elif NIGHTLY
-        versionString = [versionString stringByAppendingString:@"-nightly"];
-#endif
-        
-        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (v.%@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
+        NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];        
+        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
                 versionString];
     }
     else {
