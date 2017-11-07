@@ -287,7 +287,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
-- (void)testPlayLiveOnlyAfterATogglePauseAnd35Seconds
+- (void)testRestartLiveOnlyAfterTokenExpiration
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -297,6 +297,7 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
+    // The token expires after 30 seconds. Wait a little bit more to be sure it has expired
     [self expectationForElapsedTimeInterval:40. withHandler:nil];
 
     [self waitForExpectationsWithTimeout:45. handler:nil];
@@ -308,10 +309,6 @@ static NSURL *MMFServiceURL(void)
     [self.controller togglePlayPause];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
-    
-    [self expectationForElapsedTimeInterval:1. withHandler:nil];
-    
-    [self waitForExpectationsWithTimeout:2. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
