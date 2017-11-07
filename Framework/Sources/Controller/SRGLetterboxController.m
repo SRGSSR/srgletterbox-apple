@@ -557,7 +557,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged, NSError *previousError))completionBlock
 {
     void (^updateCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error, BOOL URLChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
-        [self updateWithError:error];
+        // Update error if new error or no old error, but don't override playback error with nil
+        if (error || ! self.error || self.error.code != SRGLetterboxErrorCodeNotPlayable) {
+            [self updateWithError:error];
+        }
+    
         [self notifyLivestreamEndWithMedia:media previousMedia:previousMedia];
         
         self.lastUpdateDate = [NSDate date];
@@ -830,7 +834,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                 code:SRGLetterboxErrorCodeNotFound
+                                                 code:SRGLetterboxErrorCodeNotPlayable
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self updateWithError:error];
         }

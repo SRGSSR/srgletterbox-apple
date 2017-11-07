@@ -219,6 +219,8 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testPlayUnknownURN
 {
+    self.controller.updateInterval = 10.f;
+    
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
         XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
@@ -236,10 +238,21 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertNotNil(self.controller.error);
+    
+    // Update metadata must not erase playback error
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNotNil(self.controller.error);
 }
 
 - (void)testPlayUnplayableResource
 {
+    self.controller.updateInterval = 10.f;
+    self.controller.serviceURL = MMFServiceURL();
+    
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
         XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
@@ -250,7 +263,6 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:playlist500"];
-    self.controller.serviceURL = MMFServiceURL();
     [self.controller playURN:URN withChaptersOnly:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
@@ -258,10 +270,21 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:60. handler:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertNotNil(self.controller.error);
+    
+    // Update metadata must not erase playback error
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNotNil(self.controller.error);
 }
 
 - (void)testPlayOnlyHDSResource
 {
+    self.controller.updateInterval = 10.f;
+    self.controller.serviceURL = MMFServiceURL();
+    
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
         XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
@@ -272,7 +295,6 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:onlyHDS"];
-    self.controller.serviceURL = MMFServiceURL();
     [self.controller playURN:URN withChaptersOnly:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
@@ -280,6 +302,13 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:60. handler:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    
+    // Update metadata must not erase playback error
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNotNil(self.controller.error);
 }
 
 - (void)testPlayAfterStop
