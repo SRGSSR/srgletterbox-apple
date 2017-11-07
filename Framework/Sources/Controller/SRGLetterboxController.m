@@ -618,17 +618,17 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
                     NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
                     if (! [previousResources isEqualToSet:resources]) {
-                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, (self.error) ? error : nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                         return;
                     }
                 }
             }
             
-            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, (self.error) ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
         };
         
         if (error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404
-                && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+                && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.mediaComposition.fullLengthMedia.URN
                                                                                           chaptersOnly:self.chaptersOnly
                                                                                        completionBlock:mediaCompositionCompletionBlock];
@@ -688,8 +688,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     // Use a friendly error message for all other reasons
     else {
+        NSInteger code = (self.dataAvailability == SRGLetterboxDataAvailabilityNone) ? SRGLetterboxErrorCodeNotFound : SRGLetterboxErrorCodeNotPlayable;
+        if ([error.domain isEqualToString:SRGDataProviderErrorDomain] && error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404) {
+            code = SRGLetterboxErrorCodeNotFound;
+        }
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                         code:SRGLetterboxErrorCodeNotPlayable
+                                         code:code
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
                                                  NSUnderlyingErrorKey : error }];
     }
@@ -833,9 +837,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         else {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
-            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                                 code:SRGLetterboxErrorCodeNotPlayable
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
+            NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
+                                                 code:SRGDataProviderErrorCodeInvalidData
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
             [self updateWithError:error];
         }
     }];

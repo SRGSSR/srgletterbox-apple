@@ -223,6 +223,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
+        XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotFound);
         XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
         XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
         return YES;
@@ -239,6 +240,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotFound);
     
     // Update metadata must not erase playback error
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
@@ -246,6 +248,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotFound);
 }
 
 - (void)testPlayUnplayableResource
@@ -255,6 +258,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
+        XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
         XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
         XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
         return YES;
@@ -271,6 +275,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
     
     // Update metadata must not erase playback error
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
@@ -278,6 +283,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
 }
 
 - (void)testPlayOnlyHDSResource
@@ -287,6 +293,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
+        XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
         XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
         XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
         return YES;
@@ -302,6 +309,8 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:60. handler:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
     
     // Update metadata must not erase playback error
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
@@ -309,6 +318,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertNotNil(self.controller.error);
+    XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
 }
 
 - (void)testPlayAfterStop
