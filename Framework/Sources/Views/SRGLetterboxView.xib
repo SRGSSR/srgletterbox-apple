@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -26,6 +26,7 @@
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="controlsAspectRatioConstraint" destination="ibL-43-dpF" id="GJF-bG-rYC"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
+                <outlet property="errorImageView" destination="ARZ-Ln-tEm" id="ffy-PG-wdF"/>
                 <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
                 <outlet property="errorLabel" destination="XI7-JZ-ASc" id="Sga-SH-mVB"/>
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="tY8-JW-edg"/>
@@ -354,6 +355,10 @@
                                 <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="vDC-gY-Ev3"/>
                             </connections>
                         </button>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="ARZ-Ln-tEm">
+                            <rect key="frame" x="224.5" y="82.5" width="25" height="25"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
                             <rect key="frame" x="8" y="117.5" width="458" height="20.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -371,10 +376,12 @@
                     <gestureRecognizers/>
                     <constraints>
                         <constraint firstItem="xxd-Ee-gAS" firstAttribute="centerX" secondItem="XI7-JZ-ASc" secondAttribute="centerX" id="HYI-4Y-L4f"/>
+                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="top" secondItem="ARZ-Ln-tEm" secondAttribute="bottom" constant="10" id="Ik8-JG-glG"/>
                         <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" constant="8" id="Q9l-Dk-scM"/>
                         <constraint firstItem="xxd-Ee-gAS" firstAttribute="top" secondItem="XI7-JZ-ASc" secondAttribute="bottom" constant="10" id="RsP-on-yJf"/>
                         <constraint firstItem="XI7-JZ-ASc" firstAttribute="centerY" secondItem="aWQ-IF-YZO" secondAttribute="centerY" id="a15-8Q-jES"/>
                         <constraint firstItem="XI7-JZ-ASc" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" constant="8" id="dqq-qF-WEd"/>
+                        <constraint firstItem="ARZ-Ln-tEm" firstAttribute="centerX" secondItem="XI7-JZ-ASc" secondAttribute="centerX" id="llK-vZ-IRN"/>
                     </constraints>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="iXq-HC-lOl" appends="YES" id="hjv-LW-Cek"/>
@@ -453,6 +460,7 @@
         <image name="cancel_fullscreen-22" width="22" height="22"/>
         <image name="forward-32" width="32" height="32"/>
         <image name="fullscreen-22" width="22" height="22"/>
+        <image name="geoblocked-25" width="25" height="25"/>
         <image name="notification-16" width="16" height="16"/>
         <image name="picture_in_picture_start-22" width="22" height="22"/>
         <image name="picture_in_picture_stop-22" width="22" height="22"/>

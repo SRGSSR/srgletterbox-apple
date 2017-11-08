@@ -64,6 +64,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
 @property (nonatomic, weak) IBOutlet UIView *errorView;
+@property (nonatomic, weak) IBOutlet UIImageView *errorImageView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
@@ -156,6 +157,7 @@ static void commonInit(SRGLetterboxView *self);
     }];
     self.loadingImageView = loadingImageView;
     
+    self.errorImageView.image = nil;
     self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
     self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
@@ -692,6 +694,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
+    self.errorImageView.image = [UIImage srg_letterbox_imageForError:[self errorForController:controller] media:controller.media];
     self.errorLabel.text = [self errorForController:controller].localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];
