@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSInteger, SRGLetterboxErrorCode) {
     /**
-     *  The data or object was not found.
+     *  The data or object was not found (available as underlying error).
      */
     SRGLetterboxErrorCodeNotFound,
     /**

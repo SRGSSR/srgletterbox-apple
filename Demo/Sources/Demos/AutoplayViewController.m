@@ -56,23 +56,18 @@
     _autoplayList = autoplayList;
     
     switch (autoplayList) {
+        case AutoplayListSRFTrendingMedias: {
+            self.title = LetterboxDemoNonLocalizedString(@"SRF trending videos");
+            break;
+        }
+            
         case AutoplayListRTSTrendingMedias: {
             self.title = LetterboxDemoNonLocalizedString(@"RTS trending videos");
             break;
         }
             
-        case AutoplayListSRFLiveCenterVideos: {
-            self.title = LetterboxDemoNonLocalizedString(@"SRF live center videos");
-            break;
-        }
-            
-        case AutoplayListRTSLiveCenterVideos: {
-            self.title = LetterboxDemoNonLocalizedString(@"RTS live center videos");
-            break;
-        }
-            
-        case AutoplayListRSILiveCenterVideos: {
-            self.title = LetterboxDemoNonLocalizedString(@"RSI live center videos");
+        case AutoplayListRSITrendingMedias: {
+            self.title = LetterboxDemoNonLocalizedString(@"RSI trending videos");
             break;
         }
             
@@ -99,18 +94,17 @@
     
     SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = nil;
     switch (self.autoplayList) {
-        case AutoplayListRTSTrendingMedias:
-        case AutoplayListRTSLiveCenterVideos: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
-            break;
-        }
-            
-        case AutoplayListSRFLiveCenterVideos: {
+        case AutoplayListSRFTrendingMedias: {
             businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
             break;
         }
             
-        case AutoplayListRSILiveCenterVideos: {
+        case AutoplayListRTSTrendingMedias: {
+            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
+            break;
+        }
+            
+        case AutoplayListRSITrendingMedias: {
             businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
             break;
         }
@@ -129,27 +123,7 @@
             [self.tableView reloadData];
         };
         
-        SRGRequest *request = nil;
-        switch (self.autoplayList) {
-            case AutoplayListRTSTrendingMedias: {
-                request = [self.dataProvider tvTrendingMediasWithLimit:@50 completionBlock:completionBlock];
-                break;
-            }
-                
-            case AutoplayListSRFLiveCenterVideos:
-            case AutoplayListRTSLiveCenterVideos:
-            case AutoplayListRSILiveCenterVideos: {
-                request = [[self.dataProvider liveCenterVideosWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
-                    completionBlock(medias, error);
-                }] requestWithPageSize:50];
-                break;
-            }
-                
-            default: {
-                break;
-            }
-        }
-        
+        SRGRequest *request = [self.dataProvider tvTrendingMediasWithLimit:@50 completionBlock:completionBlock];
         [request resume];
         self.request = request;
     }

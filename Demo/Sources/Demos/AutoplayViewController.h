@@ -17,21 +17,17 @@ typedef NS_ENUM(NSInteger, AutoplayList) {
      */
     AutoplayListUnknown = 0,
     /**
+     *  SRF trending videos.
+     */
+    AutoplayListSRFTrendingMedias,
+    /**
      *  RTS trending videos.
      */
     AutoplayListRTSTrendingMedias,
     /**
-     *  SRF live center videos.
+     *  RSI trending videos.
      */
-    AutoplayListSRFLiveCenterVideos,
-    /**
-     *  RTS live center videos.
-     */
-    AutoplayListRTSLiveCenterVideos,
-    /**
-     *  SRF live center videos.
-     */
-    AutoplayListRSILiveCenterVideos
+    AutoplayListRSITrendingMedias
 };
 
 @interface AutoplayViewController : UITableViewController
