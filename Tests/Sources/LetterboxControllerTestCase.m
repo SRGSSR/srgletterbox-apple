@@ -242,7 +242,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotFound);
     
-    // Update metadata must not erase playback error
+    // Metadata updates must not erase playback errors
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
@@ -277,7 +277,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
     
-    // Update metadata must not erase playback error
+    // Metadata updates must not erase playback errors
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
@@ -286,7 +286,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
 }
 
-- (void)testPlayOnlyHDSResource
+- (void)testPlayHDSOnlyResource
 {
     self.controller.updateInterval = 10.f;
     self.controller.serviceURL = MMFServiceURL();
@@ -312,7 +312,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
     
-    // Update metadata must not erase playback error
+    // Metadata updates must not erase playback errors
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
@@ -1932,7 +1932,6 @@ static NSURL *MMFServiceURL(void)
     self.controller.serviceURL = MMFServiceURL();
     self.controller.updateInterval = 10.;
     
-    // Wait until gets the media compostion
     [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
@@ -1949,7 +1948,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNotEqual(@([self.controller.media blockingReasonAtDate:[NSDate date]]), @(SRGBlockingReasonNone));
     XCTAssertNotNil(self.controller.error);
     
-    // The blocking reason desappear
+    // The blocking reason disappears
     [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
     }];
