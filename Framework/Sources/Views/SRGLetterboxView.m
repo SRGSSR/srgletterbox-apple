@@ -694,7 +694,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    self.errorImageView.image = [UIImage srg_letterbox_imageForError:[self errorForController:controller] media:controller.media];
+    self.errorImageView.image = [UIImage srg_letterboxImageForError:[self errorForController:controller] media:controller.media];
     self.errorLabel.text = [self errorForController:controller].localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];

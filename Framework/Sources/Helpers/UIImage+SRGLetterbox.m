@@ -6,8 +6,8 @@
 
 #import "UIImage+SRGLetterbox.h"
 
-#import "SRGLetterboxError.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxError.h"
 
 // ** Private SRGDataProvider fixes for Play. See NSURL+SRGDataProvider.h for more information
 
@@ -261,7 +261,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
 }
 
-+ (nullable UIImage *)srg_letterbox_imageForError:(NSError *)error media:(SRGMedia *)media
++ (nullable UIImage *)srg_letterboxImageForError:(NSError *)error media:(SRGMedia *)media
 {
     if (! error || ! [error.domain isEqualToString:SRGLetterboxErrorDomain]) {
         return nil;
@@ -277,7 +277,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
                         break;
                     }
                         
-                        // TODO: Other block reasons
+                    // TODO: Other blocking reasons
                         
                     default: {
                         break;
@@ -287,7 +287,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             break;
         }
             
-            // TODO: Other error codes
+        // TODO: Other error codes
             
         default: {
             break;
