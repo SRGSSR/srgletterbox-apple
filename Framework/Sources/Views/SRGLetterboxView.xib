@@ -355,33 +355,44 @@
                                 <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="vDC-gY-Ev3"/>
                             </connections>
                         </button>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="ARZ-Ln-tEm">
-                            <rect key="frame" x="224.5" y="82.5" width="25" height="25"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
-                            <rect key="frame" x="8" y="117.5" width="458" height="20.5"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to retry" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxd-Ee-gAS">
-                            <rect key="frame" x="202" y="148" width="70" height="16"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="VY4-hF-aHm">
+                            <rect key="frame" x="0.0" y="89" width="474" height="77.5"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="ARZ-Ln-tEm">
+                                    <rect key="frame" x="224.5" y="0.0" width="25" height="25"/>
+                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="25" id="u4W-Dk-zIa"/>
+                                        <constraint firstAttribute="width" constant="25" id="zBP-QN-nBl"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
+                                    <rect key="frame" x="0.0" y="33" width="474" height="20.5"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to retry" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxd-Ee-gAS">
+                                    <rect key="frame" x="0.0" y="61.5" width="474" height="16"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" id="FGn-mH-4jQ"/>
+                                <constraint firstAttribute="trailing" secondItem="xxd-Ee-gAS" secondAttribute="trailing" id="SN9-er-QH5"/>
+                                <constraint firstItem="xxd-Ee-gAS" firstAttribute="leading" secondItem="VY4-hF-aHm" secondAttribute="leading" id="dwl-oc-Wcg"/>
+                                <constraint firstItem="XI7-JZ-ASc" firstAttribute="leading" secondItem="VY4-hF-aHm" secondAttribute="leading" id="nW2-qN-xVy"/>
+                            </constraints>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstItem="xxd-Ee-gAS" firstAttribute="centerX" secondItem="XI7-JZ-ASc" secondAttribute="centerX" id="HYI-4Y-L4f"/>
-                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="top" secondItem="ARZ-Ln-tEm" secondAttribute="bottom" constant="10" id="Ik8-JG-glG"/>
-                        <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" constant="8" id="Q9l-Dk-scM"/>
-                        <constraint firstItem="xxd-Ee-gAS" firstAttribute="top" secondItem="XI7-JZ-ASc" secondAttribute="bottom" constant="10" id="RsP-on-yJf"/>
-                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="centerY" secondItem="aWQ-IF-YZO" secondAttribute="centerY" id="a15-8Q-jES"/>
-                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" constant="8" id="dqq-qF-WEd"/>
-                        <constraint firstItem="ARZ-Ln-tEm" firstAttribute="centerX" secondItem="XI7-JZ-ASc" secondAttribute="centerX" id="llK-vZ-IRN"/>
+                        <constraint firstAttribute="trailing" secondItem="VY4-hF-aHm" secondAttribute="trailing" id="Be7-pk-kPl"/>
+                        <constraint firstItem="VY4-hF-aHm" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" id="ebM-aN-7Y4"/>
+                        <constraint firstItem="VY4-hF-aHm" firstAttribute="centerY" secondItem="aWQ-IF-YZO" secondAttribute="centerY" id="pCs-fo-M4P"/>
                     </constraints>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="iXq-HC-lOl" appends="YES" id="hjv-LW-Cek"/>

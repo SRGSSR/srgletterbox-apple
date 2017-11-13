@@ -158,6 +158,8 @@ static void commonInit(SRGLetterboxView *self);
     self.loadingImageView = loadingImageView;
     
     self.errorImageView.image = nil;
+    self.errorImageView.hidden = YES;
+    
     self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
     self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
@@ -694,7 +696,10 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    self.errorImageView.image = [UIImage srg_letterboxImageForError:[self errorForController:controller] media:controller.media];
+    UIImage *image = [UIImage srg_letterboxImageForError:[self errorForController:controller] media:controller.media];
+    self.errorImageView.image = image;
+    self.errorImageView.hidden = (image == nil);            // Hidden so that the stack view wrapper can adjust its layout properly
+    
     self.errorLabel.text = [self errorForController:controller].localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];
