@@ -261,7 +261,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
 }
 
-+ (nullable UIImage *)srg_letterboxImageForError:(NSError *)error media:(SRGMedia *)media
++ (UIImage *)srg_letterboxImageForError:(NSError *)error media:(SRGMedia *)media
 {
     if (! error || ! [error.domain isEqualToString:SRGLetterboxErrorDomain]) {
         return nil;
@@ -271,7 +271,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     switch (error.code) {
         case SRGLetterboxErrorCodeBlocked: {
             if (media) {
-                switch ([media  blockingReasonAtDate:[NSDate date]]) {
+                switch ([media blockingReasonAtDate:[NSDate date]]) {
                     case SRGBlockingReasonGeoblocking: {
                         image = [UIImage srg_letterboxImageNamed:@"geoblocked-25"];
                         break;
