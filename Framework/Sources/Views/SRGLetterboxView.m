@@ -895,7 +895,7 @@ static void commonInit(SRGLetterboxView *self);
     // Only display error view if has an error and not displaying availability view
     self.errorView.alpha = (hasError && !isAvailabilityViewVisible) ? 1.f : 0.f;
     // Only display retry instructions if there is a media to retry with
-    self.errorInstructionsLabel.alpha = (hasError && !isAvailabilityViewVisible && controller.URN) ? 1.f : 0.f;
+    self.errorInstructionsLabel.hidden = ! hasError || isAvailabilityViewVisible || ! controller.URN;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     
