@@ -696,11 +696,13 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    UIImage *image = [UIImage srg_letterboxImageForError:[self errorForController:controller] media:controller.media];
+    NSError *error = [self errorForController:controller];
+    
+    UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.errorImageView.image = image;
     self.errorImageView.hidden = (image == nil);            // Hidden so that the stack view wrapper can adjust its layout properly
     
-    self.errorLabel.text = [self errorForController:controller].localizedDescription;
+    self.errorLabel.text = error.localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];
 }

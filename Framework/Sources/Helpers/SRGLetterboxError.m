@@ -7,3 +7,5 @@
 #import "SRGLetterboxError.h"
 
 NSString * const SRGLetterboxErrorDomain = @"ch.srgssr.letterbox";
+
+NSString * const SRGLetterboxBlockingReasonKey = @"SRGLetterboxBlockingReasonKey";
