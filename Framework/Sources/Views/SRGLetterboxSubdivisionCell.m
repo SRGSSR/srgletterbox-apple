@@ -18,7 +18,9 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
-@property (nonatomic, weak) IBOutlet UIView *disabledView;
+
+@property (nonatomic, weak) IBOutlet UIView *blockingOverlayView;
+@property (nonatomic, weak) IBOutlet UIImageView *blockingReasonImageView;
 
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -44,12 +46,20 @@
     self.favoriteImageView.image = nil;
     self.favoriteImageView.image = favoriteImage;
     
-    self.disabledView.alpha = 0.f;
+    self.favoriteImageView.backgroundColor = [UIColor srg_redColor];
+    self.favoriteImageView.hidden = YES;
+    
+    self.blockingOverlayView.hidden = YES;
 }
 
 - (void)prepareForReuse
 {
     [super prepareForReuse];
+    
+    self.favoriteImageView.hidden = YES;
+    self.blockingOverlayView.hidden = YES;
+    
+    self.blockingReasonImageView.image = nil;
     
     [self.imageView srg_resetImage];
 }
@@ -106,7 +116,18 @@
         self.durationLabel.hidden = YES;
     }
     
-    self.disabledView.alpha = (blockingReason != SRGBlockingReasonNone) ? 0.5f : 0.f;
+    if (blockingReason == SRGBlockingReasonNone || blockingReason == SRGBlockingReasonStartDate) {
+        self.blockingOverlayView.hidden = YES;
+        self.blockingReasonImageView.image = nil;
+        
+        self.titleLabel.textColor = [UIColor whiteColor];
+    }
+    else {
+        self.blockingOverlayView.hidden = NO;
+        self.blockingReasonImageView.image = [UIImage srg_letterboxForBlockingReason:blockingReason];
+        
+        self.titleLabel.textColor = [UIColor colorWithWhite:170./255.f alpha:1.f];
+    }
     
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
 }
@@ -118,6 +139,7 @@
 
 - (void)setCurrent:(BOOL)current
 {
+    _current = current;
     self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
 }
 
