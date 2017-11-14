@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxErrorCode) {
      */
     SRGLetterboxErrorCodeBlocked,
     /**
-     *  The media is not available for playback.
+     *  The media is not available for playback. The reason itself can be retrieved under the `SRGLetterboxBlockingReasonKey` and `SRGLetterboxTimeAvailabilityKey`.
      */
     SRGLetterboxErrorCodeNotAvailable
 };
@@ -43,5 +43,6 @@ OBJC_EXPORT NSString * const SRGLetterboxErrorDomain;
  *  User info dictionary keys.
  */
 OBJC_EXPORT NSString * const SRGLetterboxBlockingReasonKey;                // Key to an `NSNumber` wrapping an `SRGBlockingReason`, providing the blocking reason information.
+OBJC_EXPORT NSString * const SRGLetterboxTimeAvailabilityKey;              // Key to an `NSNumber` wrapping an `SRGTimeAvailability`, providing the time availability information.
 
 NS_ASSUME_NONNULL_END
