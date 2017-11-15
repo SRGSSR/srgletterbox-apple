@@ -67,6 +67,16 @@ OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet;
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet;
 
+/**
+ *  Return the standard image to be used for a given letterbox error.
+ */
++ (nullable UIImage *)srg_letterboxImageForError:(NSError *)error;
+
+/**
+ *  Return the standard image to be used for a given blocking reason.
+ */
++ (nullable UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason;
+
 @end
 
 NS_ASSUME_NONNULL_END

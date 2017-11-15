@@ -43,6 +43,8 @@
     [super awakeFromNib];
     
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
+    [self.letterboxView setTimelineAlwaysHidden:YES animated:NO];
+    
     self.progressView.hidden = YES;
 }
 

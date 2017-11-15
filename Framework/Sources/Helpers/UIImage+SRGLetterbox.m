@@ -7,6 +7,7 @@
 #import "UIImage+SRGLetterbox.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxError.h"
 
 // ** Private SRGDataProvider fixes for Play. See NSURL+SRGDataProvider.h for more information
 
@@ -258,6 +259,47 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
+}
+
++ (UIImage *)srg_letterboxImageForError:(NSError *)error
+{
+    if (! error || ! [error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        return nil;
+    }
+    
+    UIImage *image = nil;
+    switch (error.code) {
+        case SRGLetterboxErrorCodeBlocked: {
+            SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
+            image = [self srg_letterboxImageForBlockingReason:blockingReason];
+            break;
+        }
+            
+        // TODO: Other error codes
+            
+        default: {
+            break;
+        }
+    }
+    
+    return image;
+}
+
++ (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
+{
+    switch (blockingReason) {
+        case SRGBlockingReasonGeoblocking: {
+            return [UIImage srg_letterboxImageNamed:@"geoblocked-25"];
+            break;
+        }
+            
+        // TODO: Other blocking reasons
+            
+        default: {
+            return  nil;
+            break;
+        }
+    }
 }
 
 @end

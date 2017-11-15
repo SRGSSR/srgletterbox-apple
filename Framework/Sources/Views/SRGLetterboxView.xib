@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -26,6 +26,7 @@
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="controlsAspectRatioConstraint" destination="ibL-43-dpF" id="GJF-bG-rYC"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
+                <outlet property="errorImageView" destination="ARZ-Ln-tEm" id="ffy-PG-wdF"/>
                 <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
                 <outlet property="errorLabel" destination="XI7-JZ-ASc" id="Sga-SH-mVB"/>
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="tY8-JW-edg"/>
@@ -308,7 +309,7 @@
                         <constraint firstAttribute="height" id="eCB-ci-0lC"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Avaibility View">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Availability View">
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
@@ -354,27 +355,44 @@
                                 <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="vDC-gY-Ev3"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
-                            <rect key="frame" x="8" y="117.5" width="458" height="20.5"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to retry" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxd-Ee-gAS">
-                            <rect key="frame" x="202" y="148" width="70" height="16"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="VY4-hF-aHm">
+                            <rect key="frame" x="8" y="89" width="458" height="77.5"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="ARZ-Ln-tEm">
+                                    <rect key="frame" x="216.5" y="0.0" width="25" height="25"/>
+                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="25" id="u4W-Dk-zIa"/>
+                                        <constraint firstAttribute="width" constant="25" id="zBP-QN-nBl"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
+                                    <rect key="frame" x="0.0" y="33" width="458" height="20.5"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to retry" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxd-Ee-gAS">
+                                    <rect key="frame" x="0.0" y="61.5" width="458" height="16"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" id="FGn-mH-4jQ"/>
+                                <constraint firstAttribute="trailing" secondItem="xxd-Ee-gAS" secondAttribute="trailing" id="SN9-er-QH5"/>
+                                <constraint firstItem="xxd-Ee-gAS" firstAttribute="leading" secondItem="VY4-hF-aHm" secondAttribute="leading" id="dwl-oc-Wcg"/>
+                                <constraint firstItem="XI7-JZ-ASc" firstAttribute="leading" secondItem="VY4-hF-aHm" secondAttribute="leading" id="nW2-qN-xVy"/>
+                            </constraints>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstItem="xxd-Ee-gAS" firstAttribute="centerX" secondItem="XI7-JZ-ASc" secondAttribute="centerX" id="HYI-4Y-L4f"/>
-                        <constraint firstAttribute="trailing" secondItem="XI7-JZ-ASc" secondAttribute="trailing" constant="8" id="Q9l-Dk-scM"/>
-                        <constraint firstItem="xxd-Ee-gAS" firstAttribute="top" secondItem="XI7-JZ-ASc" secondAttribute="bottom" constant="10" id="RsP-on-yJf"/>
-                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="centerY" secondItem="aWQ-IF-YZO" secondAttribute="centerY" id="a15-8Q-jES"/>
-                        <constraint firstItem="XI7-JZ-ASc" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" constant="8" id="dqq-qF-WEd"/>
+                        <constraint firstAttribute="trailing" secondItem="VY4-hF-aHm" secondAttribute="trailing" constant="8" id="Be7-pk-kPl"/>
+                        <constraint firstItem="VY4-hF-aHm" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" constant="8" id="ebM-aN-7Y4"/>
+                        <constraint firstItem="VY4-hF-aHm" firstAttribute="centerY" secondItem="aWQ-IF-YZO" secondAttribute="centerY" id="pCs-fo-M4P"/>
                     </constraints>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="iXq-HC-lOl" appends="YES" id="hjv-LW-Cek"/>
@@ -453,6 +471,7 @@
         <image name="cancel_fullscreen-22" width="22" height="22"/>
         <image name="forward-32" width="32" height="32"/>
         <image name="fullscreen-22" width="22" height="22"/>
+        <image name="geoblocked-25" width="25" height="25"/>
         <image name="notification-16" width="16" height="16"/>
         <image name="picture_in_picture_start-22" width="22" height="22"/>
         <image name="picture_in_picture_stop-22" width="22" height="22"/>

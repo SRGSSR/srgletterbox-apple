@@ -71,12 +71,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     if (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeNotAvailable
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason),
+                                           SRGLetterboxBlockingReasonKey : @(blockingReason),
+                                           SRGLetterboxTimeAvailabilityKey : @([media timeAvailabilityAtDate:date]) }];
     }
     else if (blockingReason != SRGBlockingReasonNone) {
         return [NSError errorWithDomain:SRGLetterboxErrorDomain
                                    code:SRGLetterboxErrorCodeBlocked
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason) }];
+                               userInfo:@{ NSLocalizedDescriptionKey : SRGMessageForBlockedMediaWithBlockingReason(blockingReason),
+                                           SRGLetterboxBlockingReasonKey : @(blockingReason) }];
     }
     else {
         return nil;
