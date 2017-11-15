@@ -124,7 +124,7 @@
     }
     else {
         self.blockingOverlayView.hidden = NO;
-        self.blockingReasonImageView.image = [UIImage srg_letterboxForBlockingReason:blockingReason];
+        self.blockingReasonImageView.image = [UIImage srg_letterboxImageForBlockingReason:blockingReason];
         
         self.titleLabel.textColor = [UIColor colorWithWhite:170./255.f alpha:1.f];
     }

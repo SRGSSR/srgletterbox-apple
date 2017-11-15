@@ -271,7 +271,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     switch (error.code) {
         case SRGLetterboxErrorCodeBlocked: {
             SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
-            image = [self srg_letterboxForBlockingReason:blockingReason];
+            image = [self srg_letterboxImageForBlockingReason:blockingReason];
             break;
         }
             
@@ -285,7 +285,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return image;
 }
 
-+ (UIImage *)srg_letterboxForBlockingReason:(SRGBlockingReason)blockingReason
++ (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
 {
     switch (blockingReason) {
         case SRGBlockingReasonGeoblocking: {
