@@ -126,7 +126,7 @@
         self.blockingOverlayView.hidden = NO;
         self.blockingReasonImageView.image = [UIImage srg_letterboxImageForBlockingReason:blockingReason];
         
-        self.titleLabel.textColor = [UIColor colorWithWhite:170./255.f alpha:1.f];
+        self.titleLabel.textColor = [UIColor lightGrayColor];
     }
     
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
