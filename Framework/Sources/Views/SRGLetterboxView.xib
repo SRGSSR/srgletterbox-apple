@@ -309,7 +309,7 @@
                         <constraint firstAttribute="height" id="eCB-ci-0lC"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Avaibility View">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Availability View">
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
@@ -356,10 +356,10 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="VY4-hF-aHm">
-                            <rect key="frame" x="0.0" y="89" width="474" height="77.5"/>
+                            <rect key="frame" x="8" y="89" width="458" height="77.5"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="ARZ-Ln-tEm">
-                                    <rect key="frame" x="224.5" y="0.0" width="25" height="25"/>
+                                    <rect key="frame" x="216.5" y="0.0" width="25" height="25"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="25" id="u4W-Dk-zIa"/>
@@ -367,13 +367,13 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XI7-JZ-ASc">
-                                    <rect key="frame" x="0.0" y="33" width="474" height="20.5"/>
+                                    <rect key="frame" x="0.0" y="33" width="458" height="20.5"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to retry" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxd-Ee-gAS">
-                                    <rect key="frame" x="0.0" y="61.5" width="474" height="16"/>
+                                    <rect key="frame" x="0.0" y="61.5" width="458" height="16"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -390,8 +390,8 @@
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="VY4-hF-aHm" secondAttribute="trailing" id="Be7-pk-kPl"/>
-                        <constraint firstItem="VY4-hF-aHm" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" id="ebM-aN-7Y4"/>
+                        <constraint firstAttribute="trailing" secondItem="VY4-hF-aHm" secondAttribute="trailing" constant="8" id="Be7-pk-kPl"/>
+                        <constraint firstItem="VY4-hF-aHm" firstAttribute="leading" secondItem="aWQ-IF-YZO" secondAttribute="leading" constant="8" id="ebM-aN-7Y4"/>
                         <constraint firstItem="VY4-hF-aHm" firstAttribute="centerY" secondItem="aWQ-IF-YZO" secondAttribute="centerY" id="pCs-fo-M4P"/>
                     </constraints>
                     <connections>
