@@ -41,11 +41,6 @@
     return nil;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 #pragma mark View lifecycle
 
 - (void)viewDidLoad

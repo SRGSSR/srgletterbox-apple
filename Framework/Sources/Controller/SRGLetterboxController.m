@@ -209,8 +209,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.startDateTimer = nil;
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Getters and setters
