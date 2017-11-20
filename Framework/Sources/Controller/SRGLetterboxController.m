@@ -103,6 +103,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
+// Save the URN sent to media statisitc service, to not send it twice
+@property (nonatomic) SRGMediaURN *mediaStatisticURN;
+
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
@@ -832,23 +835,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
-            NSTimeInterval scheduledTimerInterval = 10.f;
-            if (mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.duration < 10.f) {
-                scheduledTimerInterval = mediaComposition.mainChapter.duration * .8f;
-            }
-            @weakify(self)
-            @weakify(mediaComposition)
-            self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:scheduledTimerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
-                @strongify(self)
-                @strongify(mediaComposition)
-                
-                SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
-                                                                   mediaComposition:mediaComposition
-                                                                withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
-                                                                }];
-                [self.requestQueue addRequest:request resume:YES];
-            }];
-            
             if (error) {
                 [self updateWithError:error];
                 return;
@@ -963,6 +949,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    
+    if (! URN) {
+        self.mediaStatisticURN = nil;
+        self.mediaStatisticTimer = nil;
+    }
 }
 
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
@@ -1225,6 +1216,26 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     // Do not let pause live streams, stop playback
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self stop];
+    }
+    
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && self.URN && ! [self.URN isEqual:self.mediaStatisticURN] && ! self.mediaStatisticTimer) {
+        __block SRGMediaComposition *mediaComposition = self.mediaComposition;
+        
+        NSTimeInterval scheduledTimerInterval = 10.f;
+        if (mediaComposition.mainChapter.contentType != SRGContentTypeLivestream && mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.duration < 10.f) {
+            scheduledTimerInterval = mediaComposition.mainChapter.duration * .8f;
+        }
+        @weakify(self)
+        self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:scheduledTimerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)            
+            SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
+                                                               mediaComposition:mediaComposition
+                                                            withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
+                                                                self.mediaStatisticURN = socialCountOverview.URN;
+                                                                self.mediaStatisticTimer = nil;
+                                                            }];
+            [self.requestQueue addRequest:request resume:YES];
+        }];
     }
 }
 
