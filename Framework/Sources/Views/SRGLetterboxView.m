@@ -64,6 +64,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
 @property (nonatomic, weak) IBOutlet UIView *errorView;
+@property (nonatomic, weak) IBOutlet UIImageView *errorImageView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
@@ -155,6 +156,9 @@ static void commonInit(SRGLetterboxView *self);
         make.centerY.equalTo(self.playbackButton.mas_centerY);
     }];
     self.loadingImageView = loadingImageView;
+    
+    self.errorImageView.image = nil;
+    self.errorImageView.hidden = YES;
     
     self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
     self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
@@ -692,7 +696,13 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    self.errorLabel.text = [self errorForController:controller].localizedDescription;
+    NSError *error = [self errorForController:controller];
+    
+    UIImage *image = [UIImage srg_letterboxImageForError:error];
+    self.errorImageView.image = image;
+    self.errorImageView.hidden = (image == nil);            // Hidden so that the stack view wrapper can adjust its layout properly
+    
+    self.errorLabel.text = error.localizedDescription;
     
     [self updateAvailabilityLabelForController:controller];
 }
@@ -882,10 +892,12 @@ static void commonInit(SRGLetterboxView *self);
     BOOL hasError = ([self errorForController:controller] != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     
-    // Only display error view if has an error and not displaying availability view
-    self.errorView.alpha = (hasError && !isAvailabilityViewVisible) ? 1.f : 0.f;
-    // Only display retry instructions if there is a media to retry with
-    self.errorInstructionsLabel.alpha = (hasError && !isAvailabilityViewVisible && controller.URN) ? 1.f : 0.f;
+    // Only display error view if there is an error and we are not displaying the availability view
+    self.errorView.alpha = (hasError && ! isAvailabilityViewVisible) ? 1.f : 0.f;
+    
+    // Only display retry instructions if there is a media to retry with (set the `hidden` property so that the wrapping
+    // error stack view layout is properly adjusted)
+    self.errorInstructionsLabel.hidden = ! controller.URN;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     
