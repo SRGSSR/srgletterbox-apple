@@ -947,13 +947,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
     
-    // Update metadata first so that it is current when the player status is changed below
-    [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
-    
-    if (! URN) {
+    if (! URN || ! [URN isEqual:self.URN]) {
         self.mediaStatisticURN = nil;
         self.mediaStatisticTimer = nil;
     }
+    
+    // Update metadata first so that it is current when the player status is changed below
+    [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
 }
 
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
