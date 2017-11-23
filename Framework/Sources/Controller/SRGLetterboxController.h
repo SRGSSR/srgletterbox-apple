@@ -146,7 +146,7 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 se
  *                           quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
  *                           ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
  *  @param chaptersOnly      If set to `YES`, only chapters will be played, otherwise a possible mixture of chapters and
- *                           segments. U
+ *                           segments.
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
