@@ -263,26 +263,19 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error
 {
-    if (! error || ! [error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+    if (! error) {
         return nil;
     }
     
-    UIImage *image = nil;
-    switch (error.code) {
-        case SRGLetterboxErrorCodeBlocked: {
-            SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
-            image = [self srg_letterboxImageForBlockingReason:blockingReason];
-            break;
-        }
-            
-        // TODO: Other error codes
-            
-        default: {
-            break;
-        }
+    // TODO: No network error
+    if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeBlocked) {
+        SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
+        return [self srg_letterboxImageForBlockingReason:blockingReason];
     }
-    
-    return image;
+    else {
+        // TODO: Maybe error icon? (exclamationm mark)
+        return [UIImage srg_letterboxImageNamed:@"no_media-25"];
+    }
 }
 
 + (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
@@ -293,10 +286,23 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             break;
         }
             
-        // TODO: Other blocking reasons
+        case SRGBlockingReasonLegal: {
+            return [UIImage srg_letterboxImageNamed:@"legal-25"];
+            break;
+        }
+            
+        case SRGBlockingReasonAgeRating12: {
+            return [UIImage srg_letterboxImageNamed:@"rating_12-25"];
+            break;
+        }
+            
+        case SRGBlockingReasonAgeRating18: {
+            return [UIImage srg_letterboxImageNamed:@"rating_18-25"];
+            break;
+        }
             
         default: {
-            return  nil;
+            return [UIImage srg_letterboxImageNamed:@"no_media-25"];
             break;
         }
     }
