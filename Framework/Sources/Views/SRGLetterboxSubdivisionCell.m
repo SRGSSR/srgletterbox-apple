@@ -50,6 +50,12 @@
     self.favoriteImageView.hidden = YES;
     
     self.blockingOverlayView.hidden = YES;
+    
+    // Workaround UIImage view tint color bug
+    // See http://stackoverflow.com/a/26042893/760435
+    UIImage *blockingReasonImage = self.blockingReasonImageView.image;
+    self.blockingReasonImageView.image = nil;
+    self.blockingReasonImageView.image = blockingReasonImage;
 }
 
 - (void)prepareForReuse
