@@ -573,11 +573,6 @@ static void commonInit(SRGLetterboxView *self);
             return error;
         }
     }
-    else if (! controller.media && ! controller.URN) {
-        return [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                   code:SRGLetterboxErrorCodeNotFound
-                               userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"No media", @"Text displayed when no media is available for playback") }];
-    }
     else {
         return nil;
     }
@@ -602,10 +597,11 @@ static void commonInit(SRGLetterboxView *self);
     // Controls and error overlays must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
     BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL hasMedia = controller.media || controller.URN;
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
-    if (hasError || isAvailabilityViewVisible || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    if (hasError || ! hasMedia || isAvailabilityViewVisible || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
@@ -624,11 +620,12 @@ static void commonInit(SRGLetterboxView *self);
     
     // Timeline and error overlays must be displayed at the same time.
     BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL hasMedia = controller.media || controller.URN;
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     if (! [self isTimelineAlwaysHidden]
-        && (hasError || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
+        && (hasError || ! hasMedia || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
                 || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
@@ -932,12 +929,13 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
     BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL hasMedia = controller.media || controller.URN;
     BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller] && ! isContinuousPlaybackViewVisible;
     
     self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
-    self.errorView.hidden = ! (hasError && ! isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible);
+    self.errorView.hidden = (! hasError && hasMedia) || isAvailabilityViewVisible || isContinuousPlaybackViewVisible;
     self.errorInstructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
