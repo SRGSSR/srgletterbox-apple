@@ -112,15 +112,44 @@ static NSURL *MMFServiceURL(void)
 
 #pragma mark Tests
 
-- (void)testDeallocation
+- (void)testDeallocationWhileIdle
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-unsafe-retained-assign"
-    __weak SRGLetterboxController *letterboxController;
+    __weak SRGLetterboxController *weakController = self.controller;
+    
+    // Do not retain the controller anymore, and force an autorelease pool collection. The weak reference must be nilled
+    // automatically if the controller is correctly deallocated
     @autoreleasepool {
-        letterboxController = [[SRGLetterboxController alloc] init];
+        self.controller = nil;
     }
-    XCTAssertNil(letterboxController);
+    
+    XCTAssertNil(weakController);
+#pragma clang diagnostic pop
+}
+
+- (void)testDeallocationWhilePlaying
+{
+    // If the player controller is not retained, its player and all associated resources must be automatically discarded
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-unsafe-retained-assign"
+    // When no reference retains the player, playback must gracefully stop. Deallocation will occur right afterwards.
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    __weak SRGLetterboxController *weakController = self.controller;
+    [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
+    
+    // Do not retain the controller anymore, and force an autorelease pool collection. The weak reference must be nilled
+    // automatically if the controller is correctly deallocated
+    @autoreleasepool {
+        self.controller = nil;
+    }
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertNil(weakController);
 #pragma clang diagnostic pop
 }
 
