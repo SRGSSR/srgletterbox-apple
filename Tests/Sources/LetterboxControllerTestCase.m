@@ -112,6 +112,8 @@ static NSURL *MMFServiceURL(void)
 
 #pragma mark Tests
 
+// FIXME: The test does not pass: Setting the LB controller to nil does not release the underlying media player controller,
+//        the idle state is not reached and the LB controller does not get deallocated
 - (void)testDeallocationWhileIdle
 {
 #pragma clang diagnostic push
