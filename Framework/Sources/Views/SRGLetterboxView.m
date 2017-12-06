@@ -73,6 +73,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 
+@property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
@@ -402,6 +403,8 @@ static void commonInit(SRGLetterboxView *self);
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
+    
+    self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.
