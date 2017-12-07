@@ -90,6 +90,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
@@ -1229,6 +1230,10 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
+}
+
+- (IBAction)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
+{
     [self setTogglableUserInterfaceHidden:NO animated:YES];
 }
 
@@ -1410,7 +1415,7 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
-        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
+        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]] || otherGestureRecognizer == self.showUserInterfaceGestureRecognizer;
     }
     else {
         return NO;
