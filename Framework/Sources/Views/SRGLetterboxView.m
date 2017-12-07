@@ -143,6 +143,13 @@ static void commonInit(SRGLetterboxView *self);
     self.controller = nil;                   // Unregister everything
 }
 
+#pragma mark Class methods
+
++ (void)setMotionManager:(CMMotionManager *)motionManager
+{
+    [SRGMediaPlayerView setMotionManager:motionManager];
+}
+
 #pragma mark View lifecycle
 
 - (void)awakeFromNib
