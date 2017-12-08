@@ -90,7 +90,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
-@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceGestureRecognizer;
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
@@ -115,6 +115,13 @@ static void commonInit(SRGLetterboxView *self);
 @implementation SRGLetterboxView {
 @private
     BOOL _inWillAnimateUserInterface;
+}
+
+#pragma mark Class methods
+
++ (void)setMotionManager:(CMMotionManager *)motionManager
+{
+    [SRGMediaPlayerView setMotionManager:motionManager];
 }
 
 #pragma mark Object lifecycle
@@ -142,13 +149,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)dealloc
 {
     self.controller = nil;                   // Unregister everything
-}
-
-#pragma mark Class methods
-
-+ (void)setMotionManager:(CMMotionManager *)motionManager
-{
-    [SRGMediaPlayerView setMotionManager:motionManager];
 }
 
 #pragma mark View lifecycle
@@ -1415,7 +1415,7 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
-        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]] || otherGestureRecognizer == self.showUserInterfaceGestureRecognizer;
+        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]] || otherGestureRecognizer == self.showUserInterfaceTapGestureRecognizer;
     }
     else {
         return NO;

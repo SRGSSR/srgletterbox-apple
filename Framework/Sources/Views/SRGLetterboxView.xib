@@ -44,7 +44,7 @@
                 <outlet property="pictureInPictureButton" destination="83c-T2-D7p" id="82z-fW-6X3"/>
                 <outlet property="playbackButton" destination="yE6-Vv-zcn" id="fUC-nh-edo"/>
                 <outlet property="playerView" destination="4hl-p0-Y81" id="BIn-Ji-pKN"/>
-                <outlet property="showUserInterfaceGestureRecognizer" destination="MQv-Za-8Ye" id="kQb-jX-UeC"/>
+                <outlet property="showUserInterfaceTapGestureRecognizer" destination="MQv-Za-8Ye" id="kQb-jX-UeC"/>
                 <outlet property="skipToLiveButton" destination="KlV-OH-iUB" id="PRq-ZY-EeZ"/>
                 <outlet property="timeSlider" destination="TJI-j4-mRH" id="UyF-pF-Rg5"/>
                 <outlet property="timelineHeightConstraint" destination="eCB-ci-0lC" id="njb-Zh-WZp"/>
@@ -148,7 +148,7 @@
                                     <rect key="frame" x="8" y="205" width="406" height="22"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" userLabel="View mode Button" customClass="SRGViewModeButton">
-                                            <rect key="frame" x="0.0" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -159,7 +159,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lr5-be-k4j" customClass="SRGAirplayButton">
-                                            <rect key="frame" x="38" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="58" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -170,7 +170,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="83c-T2-D7p" customClass="SRGPictureInPictureButton">
-                                            <rect key="frame" x="76" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="96" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -182,7 +182,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGASValueTrackingSlider">
-                                            <rect key="frame" x="112" y="0.0" width="168" height="23"/>
+                                            <rect key="frame" x="132" y="0.0" width="168" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                             <userDefinedRuntimeAttributes>
@@ -199,13 +199,13 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="286" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="306" y="0.0" width="0.0" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="320" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="340" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
