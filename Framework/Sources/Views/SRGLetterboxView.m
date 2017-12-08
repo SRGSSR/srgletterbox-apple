@@ -73,6 +73,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 
+@property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
@@ -89,6 +90,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
@@ -113,6 +115,13 @@ static void commonInit(SRGLetterboxView *self);
 @implementation SRGLetterboxView {
 @private
     BOOL _inWillAnimateUserInterface;
+}
+
+#pragma mark Class methods
+
++ (void)setMotionManager:(CMMotionManager *)motionManager
+{
+    [SRGMediaPlayerView setMotionManager:motionManager];
 }
 
 #pragma mark Object lifecycle
@@ -402,6 +411,8 @@ static void commonInit(SRGLetterboxView *self);
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
+    
+    self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.
@@ -1219,6 +1230,10 @@ static void commonInit(SRGLetterboxView *self);
 - (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self resetInactivityTimer];
+}
+
+- (IBAction)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
+{
     [self setTogglableUserInterfaceHidden:NO animated:YES];
 }
 
@@ -1400,7 +1415,7 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
-        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
+        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]] || otherGestureRecognizer == self.showUserInterfaceTapGestureRecognizer;
     }
     else {
         return NO;
