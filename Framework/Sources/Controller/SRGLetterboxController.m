@@ -947,10 +947,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
     
-    if (! URN || ! [URN isEqual:self.URN]) {
-        self.mediaStatisticURN = nil;
-        self.mediaStatisticTimer = nil;
-    }
+    self.mediaStatisticURN = nil;
+    self.mediaStatisticTimer = nil;
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1002,6 +1000,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self updateWithError:blockingReasonError];
         
         [self stop];
+        self.mediaStatisticURN = nil;
+        self.mediaStatisticTimer = nil;
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
@@ -1218,19 +1218,19 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self stop];
     }
     
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.URN isEqual:self.mediaStatisticURN] && ! self.mediaStatisticTimer) {
-        __block SRGMediaComposition *mediaComposition = self.mediaComposition;
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.mediaStatisticURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.mediaStatisticTimer) {
+        __block SRGSubdivision *subdivision = self.mediaComposition.mainChapter;
         
         static const NSTimeInterval defaultTimerInterval = 10.;
         NSTimeInterval timerInterval = defaultTimerInterval;
-        if (mediaComposition.mainChapter.contentType != SRGContentTypeLivestream && mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.duration < defaultTimerInterval) {
-            timerInterval = mediaComposition.mainChapter.duration * .8;
+        if (subdivision.contentType != SRGContentTypeLivestream && subdivision.contentType != SRGContentTypeScheduledLivestream && subdivision.duration < defaultTimerInterval) {
+            timerInterval = subdivision.duration * .8;
         }
         @weakify(self)
         self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)            
+            @strongify(self)
             SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
-                                                               mediaComposition:mediaComposition
+                                                                    subdivision:subdivision
                                                             withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
                                                                 self.mediaStatisticURN = socialCountOverview.URN;
                                                                 self.mediaStatisticTimer = nil;
