@@ -1218,15 +1218,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self stop];
     }
     
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && self.URN && ! [self.URN isEqual:self.mediaStatisticURN] && ! self.mediaStatisticTimer) {
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.URN isEqual:self.mediaStatisticURN] && ! self.mediaStatisticTimer) {
         __block SRGMediaComposition *mediaComposition = self.mediaComposition;
         
-        NSTimeInterval scheduledTimerInterval = 10.f;
-        if (mediaComposition.mainChapter.contentType != SRGContentTypeLivestream && mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.duration < 10.f) {
-            scheduledTimerInterval = mediaComposition.mainChapter.duration * .8f;
+        static const NSTimeInterval defaultTimerInterval = 10.;
+        NSTimeInterval timerInterval = defaultTimerInterval;
+        if (mediaComposition.mainChapter.contentType != SRGContentTypeLivestream && mediaComposition.mainChapter.contentType != SRGContentTypeScheduledLivestream && mediaComposition.mainChapter.duration < defaultTimerInterval) {
+            timerInterval = mediaComposition.mainChapter.duration * .8;
         }
         @weakify(self)
-        self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:scheduledTimerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)            
             SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
                                                                mediaComposition:mediaComposition
