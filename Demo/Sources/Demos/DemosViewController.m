@@ -471,7 +471,7 @@
                 }
                     
                 case 1: {
-                    [self openMultiPlayerWithURNString:kVideoOnDemandURNString URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
+                    [self openMultiPlayerWithURNString:@"urn:rts:video:8414077" URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
                     break;
                 }
                     
