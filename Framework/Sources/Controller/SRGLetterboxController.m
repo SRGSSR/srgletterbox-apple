@@ -103,8 +103,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) BOOL chaptersOnly;
 @property (nonatomic) NSError *error;
 
-// Save the URN sent to media statisitc service, to not send it twice
-@property (nonatomic) SRGMediaURN *mediaStatisticURN;
+// Save the URN sent to the social count view service, to not send it twice
+@property (nonatomic) SRGMediaURN *socialCountViewURN;
 
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
@@ -120,7 +120,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *startDateTimer;
 @property (nonatomic) NSTimer *endDateTimer;
 @property (nonatomic) NSTimer *liveStreamEndDateTimer;
-@property (nonatomic) NSTimer *mediaStatisticTimer;
+@property (nonatomic) NSTimer *socialCountViewTimer;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
@@ -214,7 +214,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.startDateTimer = nil;
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
-    self.mediaStatisticTimer = nil;
+    self.socialCountViewTimer = nil;
 }
 
 #pragma mark Getters and setters
@@ -389,10 +389,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _liveStreamEndDateTimer = liveStreamEndDateTimer;
 }
 
-- (void)setMediaStatisticTimer:(NSTimer *)mediaStatisticTimer
+- (void)setSocialCountViewTimer:(NSTimer *)socialCountViewTimer
 {
-    [_mediaStatisticTimer invalidate];
-    _mediaStatisticTimer = mediaStatisticTimer;
+    [_socialCountViewTimer invalidate];
+    _socialCountViewTimer = socialCountViewTimer;
 }
 
 #pragma mark Periodic time observers
@@ -947,8 +947,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
     
-    self.mediaStatisticURN = nil;
-    self.mediaStatisticTimer = nil;
+    self.socialCountViewURN = nil;
+    self.socialCountViewTimer = nil;
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1000,8 +1000,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self updateWithError:blockingReasonError];
         
         [self stop];
-        self.mediaStatisticURN = nil;
-        self.mediaStatisticTimer = nil;
+        self.socialCountViewURN = nil;
+        self.socialCountViewTimer = nil;
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
@@ -1218,7 +1218,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self stop];
     }
     
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.mediaStatisticURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.mediaStatisticTimer) {
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
         __block SRGSubdivision *subdivision = self.mediaComposition.mainChapter;
         
         static const NSTimeInterval defaultTimerInterval = 10.;
@@ -1227,13 +1227,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             timerInterval = subdivision.duration * .8;
         }
         @weakify(self)
-        self.mediaStatisticTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.socialCountViewTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
                                                                     subdivision:subdivision
                                                             withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
-                                                                self.mediaStatisticURN = socialCountOverview.URN;
-                                                                self.mediaStatisticTimer = nil;
+                                                                self.socialCountViewURN = socialCountOverview.URN;
+                                                                self.socialCountViewTimer = nil;
                                                             }];
             [self.requestQueue addRequest:request resume:YES];
         }];
