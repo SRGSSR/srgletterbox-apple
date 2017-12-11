@@ -466,12 +466,12 @@
         case 5: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:@"urn:rts:video:1967124"];
+                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:kVideoDVRURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openMultiPlayerWithURNString:@"urn:rts:video:8414077" URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
+                    [self openMultiPlayerWithURNString:kVideoOnDemand360URNString URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
                     break;
                 }
                     
