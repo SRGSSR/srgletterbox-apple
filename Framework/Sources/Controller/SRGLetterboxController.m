@@ -46,6 +46,8 @@ NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlayba
 
 NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLivestreamDidFinishNotification";
 
+NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLetterboxSocialCountViewWillIncreaseNotification";
+
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
 NSTimeInterval const SRGLetterboxUpdateIntervalDefault = 30.;
@@ -1235,6 +1237,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                                                                 self.socialCountViewURN = socialCountOverview.URN;
                                                                 self.socialCountViewTimer = nil;
                                                             }];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
+                                                                object:self
+                                                              userInfo:@{ SRGLetterboxSubdivisionKey : subdivision }];
             [self.requestQueue addRequest:request resume:YES];
         }];
     }
