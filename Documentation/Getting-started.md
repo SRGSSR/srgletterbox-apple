@@ -4,9 +4,9 @@ Getting started
 
 The SRG Letterbox library is made of three core components:
 
-* `SRGLetterboxController`: A controller to play medias. The controller automatically retrieves metadata associated with the playback (media information, and channel information for DVR and livestreams). It also manages errors and restarts playback after a network loss.
+* `SRGLetterboxController`: A controller to play medias. The controller automatically retrieves metadata associated with the playback (media information, as well as channel information for DVR and livestreams). It also manages errors and restarts playback after a network loss.
 * `SRGLetterboxView`: A player view reflecting what an associated controller is currently playing, and providing controls to manage playback. The controller of a Letterbox view can be changed at any time.
-* `SRGLetterboxService`: A service to enable application-wide features like AirPla, picture in picture or control center integration.
+* `SRGLetterboxService`: A service to enable application-wide features like AirPlay, picture in picture or control center integration.
 
 The following guide describes how these components can be easily combined to add advanced media playback capabilities to your application.
 
@@ -18,7 +18,7 @@ To play a media, instantiate and retain a Letterbox controller somewhere:
 self.controller = [[SRGLetterboxController alloc] init];
 ```
 
-then call one of the play methods on it:
+then call one of the play methods on it, passing it a valid media URN (unique identifier of the media):
 
 ```objective-c
 SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
@@ -29,19 +29,21 @@ if (URN) {
 
 You can also instantiate controllers directly in your xibs or storyboards if you prefer.
 
-A Letterbox controller can play any media from any SRG SSR business unit, simply starting from its URN. You can play an `SRGMedia` directly if you have one, for example if you already loaded some media list from the `SRGDataProvider` library:
+A Letterbox controller can play any media URN from any SRG SSR business unit. You can also play an `SRGMedia` if you have one already, for example if you retrieved some media list from the `SRGDataProvider` library:
 
 ```objective-c
 [self.controller playMedia:media withChaptersOnly:NO];
 ```
 
-The controller immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must bind a Letterbox view to your controller. 
+The controller immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must bind a Letterbox view to your controller (see below).
 
 To stop playback for a controller, simply call the `-reset` method on it.
 
 ### Metadata and errors
 
-Each controller broadcasts metadata updates and errors through `SRGLetterboxMetadataDidChangeNotification` and `SRGLetterboxPlaybackDidFailNotification` notifications, respectively. You can use the information provided with these notifications to build a richer view around the player, e.g. by displaying more playback information (title or description of what is currently be played). For most use cases, your application should not need to perform additional requests in its player view: All standard information should readily be available from the controller itself (which provides properties to retrieve the currently available information).
+Letterbox controller broadcasts metadata updates and errors through `SRGLetterboxMetadataDidChangeNotification` and `SRGLetterboxPlaybackDidFailNotification` notifications, respectively. You can use the information provided with these notifications to display playback-related information, like the title or description of what is currently be played. Letterbox controller also provides properties to access the current metadata at any time.
+
+In most cases, applications should not need to perform additional requests for playback metadata: All standard information should readily be available from the controller itself.
 
 ### Simultaneous playback
 

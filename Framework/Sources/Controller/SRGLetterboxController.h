@@ -140,13 +140,15 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 se
  *  preparation, call `-play` from the completion handler.
  *
  *  @param URN               The URN to prepare.
+ *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
+ *                           type is used.
  *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
  *  @param startBitRate      The bit rate the media should start playing with, in kbps. This parameter is a recommendation
  *                           with no result guarantee, though it should in general be applied. The nearest available
  *                           quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
  *                           ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
  *  @param chaptersOnly      If set to `YES`, only chapters will be played, otherwise a possible mixture of chapters and
- *                           segments. U
+ *                           segments.
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
@@ -154,18 +156,20 @@ OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 se
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(SRGMediaURN *)URN
-    withPreferredQuality:(SRGQuality)quality
+ withPreferredStreamType:(SRGStreamType)streamType
+                 quality:(SRGQuality)quality
             startBitRate:(NSInteger)startBitRate
             chaptersOnly:(BOOL)chaptersOnly
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Same as `-prepareToPlayURN:withPreferredQuality:startBitRate:completionHandler`, but for a media.
+ *  Same as `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler`, but for a media.
  *
  *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
-      withPreferredQuality:(SRGQuality)quality
+   withPreferredStreamType:(SRGStreamType)streamType
+                   quality:(SRGQuality)quality
               startBitRate:(NSInteger)startBitRate
               chaptersOnly:(BOOL)chaptersOnly
          completionHandler:(nullable void (^)(void))completionHandler;
@@ -365,34 +369,34 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:withPreferredQuality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler:.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(SRGMediaURN *)URN withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
+- (void)playURN:(SRGMediaURN *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified media.
  *
- *  For more information, @see `-prepareToPlayMedia:withPreferredQuality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayMedia:withPreferredStreamType:quality:startBitRate:completionHandler:.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media withPreferredQuality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
+- (void)playMedia:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
+ *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
+ *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified media.
  *
- *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
+ *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
+ *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly;
 

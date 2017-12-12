@@ -31,7 +31,7 @@ static void lockComplete(CFNotificationCenterRef center, void *observer, CFStrin
 
 #pragma mark Functions
 
-__attribute__((constructor)) static void UIDevicePlayUtilsInit(void)
+__attribute__((constructor)) static void SRGLetterboxUIDeviceInit(void)
 {
     // Differentiate between device lock and application sent to the background
     // See http://stackoverflow.com/a/9058038/760435

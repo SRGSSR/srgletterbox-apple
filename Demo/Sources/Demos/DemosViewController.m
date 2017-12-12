@@ -150,6 +150,7 @@
     static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
     static NSString * const kVideoOnDemandBlockedSegmentOverlapURNString = @"urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1";
     static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:audio:8581974";
+    static NSString * const kVideoOnDemand360URNString = @"urn:rts:video:8414077";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
     
     static NSString * const kVideoOnDemandChaptersOnlyFullLengthURNString = @"urn:srf:video:dc4a4f8c-e83e-46b3-a5e3-ebfde3a29b88";
@@ -275,51 +276,56 @@
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kVideoOnDemand360URNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kVideoDVRURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kVideoLiveURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kVideoDVRURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kVideoLiveURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:kAudioDVRURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kAudioDVRURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
                     break;
                 }
                     
                 case 17: {
+                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    break;
+                }
+                    
+                case 18: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURNString:URNString chaptersOnly:NO];
@@ -460,12 +466,12 @@
         case 5: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:@"urn:rts:video:1967124"];
+                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:kVideoDVRURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openMultiPlayerWithURNString:kVideoOnDemandURNString URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
+                    [self openMultiPlayerWithURNString:kVideoOnDemand360URNString URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
                     break;
                 }
                     

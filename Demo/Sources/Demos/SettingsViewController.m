@@ -75,7 +75,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
                                       [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Production", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.production.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
                                       [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Stage", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.stage.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
                                       [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Test", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.test.srf.ch"] globalHeaders:@{ @"X-Location" : @"WW" }],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:[NSURL URLWithString:@"https://play-mmf.herokuapp.com"] globalHeaders:nil]];
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL() globalHeaders:nil]];
     return viewController;
 }
 
