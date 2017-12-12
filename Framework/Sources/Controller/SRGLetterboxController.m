@@ -1223,23 +1223,23 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
         __block SRGSubdivision *subdivision = self.mediaComposition.mainChapter;
         
-        static const NSTimeInterval defaultTimerInterval = 10.;
-        NSTimeInterval timerInterval = defaultTimerInterval;
-        if (subdivision.contentType != SRGContentTypeLivestream && subdivision.contentType != SRGContentTypeScheduledLivestream && subdivision.duration < defaultTimerInterval) {
+        static const NSTimeInterval kDefaultTimerInterval = 10.;
+        NSTimeInterval timerInterval = kDefaultTimerInterval;
+        if (subdivision.contentType != SRGContentTypeLivestream && subdivision.contentType != SRGContentTypeScheduledLivestream && subdivision.duration < kDefaultTimerInterval) {
             timerInterval = subdivision.duration * .8;
         }
         @weakify(self)
-        self.socialCountViewTimer =  [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.socialCountViewTimer = [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView
-                                                                    subdivision:subdivision
-                                                            withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
-                                                                self.socialCountViewURN = socialCountOverview.URN;
-                                                                self.socialCountViewTimer = nil;
-                                                            }];
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
                                                                 object:self
                                                               userInfo:@{ SRGLetterboxSubdivisionKey : subdivision }];
+            
+            SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView subdivision:subdivision withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSError * _Nullable error) {
+                self.socialCountViewURN = socialCountOverview.URN;
+                self.socialCountViewTimer = nil;
+            }];
             [self.requestQueue addRequest:request resume:YES];
         }];
     }

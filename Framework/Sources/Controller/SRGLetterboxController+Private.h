@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXTERN NSString * const SRGLetterboxLivestreamDidFinishNotification;
 
 /**
- *  Notification sent when a request to the social count view service will be fire. The corresponding media subdivision
+ *  Notification sent when a request to the social count view service will be fired. The corresponding media subdivision
  *  can be retrieved under the `SRGLetterboxSubdivisionKey` user information key.
  */
 OBJC_EXTERN NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification;
