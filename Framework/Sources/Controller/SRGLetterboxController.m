@@ -1243,6 +1243,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             [self.requestQueue addRequest:request resume:YES];
         }];
     }
+    
+    if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
+        self.socialCountViewTimer = nil;
+    }
 }
 
 - (void)segmentDidStart:(NSNotification *)notification

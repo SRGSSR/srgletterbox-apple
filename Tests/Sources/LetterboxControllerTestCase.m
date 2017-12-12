@@ -2703,15 +2703,17 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    [self.controller pause];
-    
-    [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
-        XCTAssertEqualObjects(subdivision.URN, URN);
-        return YES;
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player doesn't have to send Social count view after a stop. No event expected");
     }];
     
-    [self waitForExpectationsWithTimeout:15. handler:nil];
+    [self.controller stop];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
 }
 
 - (void)testSocialCountViewPlayResetOnChapter
