@@ -2765,6 +2765,45 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
+- (void)testSocialCountViewPrepareToPlay
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    SRGMediaURN *URN = OnDemandVideoURN();
+    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must not send Social count views when only prepared. No event expected");
+    }];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller play];
+    
+    [self waitForExpectationsWithTimeout:15. handler:nil];
+    
+    // After playback has started we expect a social view count increase
+    [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
+        XCTAssertEqualObjects(subdivision.URN, URN);
+        return YES;
+    }];
+    
+    [self waitForExpectationsWithTimeout:15. handler:nil];
+}
+
 - (void)testSocialCountViewPlayResetOnChapter
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
