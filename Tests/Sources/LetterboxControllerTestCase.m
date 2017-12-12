@@ -2681,7 +2681,13 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
     [self.controller pause];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
@@ -2703,11 +2709,17 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        XCTFail(@"The player doesn't have to send Social count view after a stop. No event expected");
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
     [self.controller stop];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must not send Social count views after a stop. No event expected");
+    }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
@@ -2735,11 +2747,15 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:15. handler:nil];
     
-    [self.controller stop];
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
     
-    [self.controller play];
+    [self.controller restart];
     
-    // With the current "lack of speficication", we expect to have a second social count view
+    [self waitForExpectationsWithTimeout:15. handler:nil];
+    
+    // With the current "lack of specification", we expect to have a second social count view
     [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
         XCTAssertEqualObjects(subdivision.URN, URN);
@@ -2760,11 +2776,17 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        XCTFail(@"The player doesn't have to send Social count view after a reset. No event expected");
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
     
     [self.controller reset];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must not send Social count views after a reset. No event expected");
+    }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
@@ -2784,7 +2806,13 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
     [self.controller pause];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
@@ -2794,11 +2822,17 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:15. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        XCTFail(@"The player doesn't have to send twice the same social count view. No event expected");
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
     [self.controller play];
+    
+    [self waitForExpectationsWithTimeout:15. handler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must not send the same social count view twice. No event expected");
+    }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
@@ -2839,8 +2873,14 @@ static NSURL *MMFServiceURL(void)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
     SRGMediaURN *URN2 = OnDemandLongVideoURN();
     [self.controller playURN:URN2 withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
