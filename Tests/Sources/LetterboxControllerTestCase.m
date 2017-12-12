@@ -2692,7 +2692,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
-- (void)testSocialCountViewPlayStopOnChapter
+- (void)testSocialCountViewPlayStopQuicklyOnChapter
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -2714,6 +2714,39 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
     }];
+}
+
+- (void)testSocialCountViewPlayStopOnChapter
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    SRGMediaURN *URN = OnDemandVideoURN();
+    [self.controller playURN:URN withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
+        XCTAssertEqualObjects(subdivision.URN, URN);
+        return YES;
+    }];
+    
+    [self waitForExpectationsWithTimeout:15. handler:nil];
+    
+    [self.controller stop];
+    
+    [self.controller play];
+    
+    // With the current "lack of speficication", we expect to have a second social count view
+    [self expectationForNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];
+        XCTAssertEqualObjects(subdivision.URN, URN);
+        return YES;
+    }];
+    
+    [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
 - (void)testSocialCountViewPlayResetOnChapter
