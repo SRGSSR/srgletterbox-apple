@@ -767,6 +767,18 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     if (self.contentURLOverridingBlock) {
         NSURL *contentURL = self.contentURLOverridingBlock(URN);
         if (contentURL) {
+            void (^prepareToPlay)(NSURL *) = ^(NSURL *contentURL) {
+                if (media.presentation == SRGPresentation360) {
+                    if (self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeMonoscopic && self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeStereoscopic) {
+                        self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
+                    }
+                }
+                else {
+                    self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
+                }
+                [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+            };
+            
             // Media readily available. Done
             if (media) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
@@ -775,7 +787,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 [self notifyLivestreamEndWithMedia:media previousMedia:nil];
                 
                 if (! blockingReasonError) {
-                    [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+                    prepareToPlay(contentURL);
                 }
             }
             // Retrieve the media
@@ -797,7 +809,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                         [self updateWithError:blockingReasonError];
                     }
                     else {
-                        [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+                        prepareToPlay(contentURL);
                     }
                 };
                 
