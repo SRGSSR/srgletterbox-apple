@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <SRGMediaPlayer/SRGMediaPlayer.h>
-
 #import "SRGLetterboxController.h"
 #import "UIImage+SRGLetterbox.h"
 
