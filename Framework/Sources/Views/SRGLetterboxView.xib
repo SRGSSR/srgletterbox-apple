@@ -154,9 +154,6 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="30" id="krz-KZ-6xI"/>
                                             </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="image" keyPath="image" value="airplay-22"/>
-                                            </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lr5-be-k4j" customClass="SRGAirplayButton">
                                             <rect key="frame" x="58" y="0.0" width="30" height="22"/>
