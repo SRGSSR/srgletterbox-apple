@@ -44,6 +44,12 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark Getters and setters
 
+- (void)setFullLengthURN:(SRGMediaURN *)fullLengthURN
+{
+    _fullLengthURN = fullLengthURN;
+    [self updateCellAppearance];
+}
+
 - (void)setSubdivisions:(NSArray<SRGSubdivision *> *)subdivisions
 {
     _subdivisions = subdivisions;
@@ -136,8 +142,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
     NSUInteger index = [self.subdivisions indexOfObject:subdivision];
     cell.current = (index == self.selectedIndex);
     
-    // Do not display progress for chapters
-    if (! [subdivision isKindOfClass:[SRGChapter class]]) {
+    if (self.fullLengthURN &&
+        (([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.fullLengthURN])
+        || ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.fullLengthURN]))) {
         // Clamp progress so that past subdivisions have progress = 1 and future ones have progress = 0
         float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, subdivision.srg_timeRange.start)) / CMTimeGetSeconds(subdivision.srg_timeRange.duration);
         cell.progress = fminf(1.f, fmaxf(0.f, progress));

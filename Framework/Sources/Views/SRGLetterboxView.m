@@ -702,6 +702,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
     SRGSubdivision *subdivision = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
+    self.timelineView.fullLengthURN = mediaComposition.fullLengthMedia.URN;
     self.timelineView.subdivisions = [self subdivisionsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = subdivision ? [self.timelineView.subdivisions indexOfObject:subdivision] : NSNotFound;
     
@@ -1359,6 +1360,9 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
+    if ([subdivision isKindOfClass:[SRGChapter class]]) {
+        self.timelineView.fullLengthURN = subdivision.URN;
+    }
     self.timelineView.selectedIndex = [timelineView.subdivisions indexOfObject:subdivision];
     self.timelineView.time = subdivision.srg_timeRange.start;
     [self.timelineView scrollToSelectedIndexAnimated:YES];
