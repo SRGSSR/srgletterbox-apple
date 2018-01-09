@@ -142,16 +142,18 @@ static void commonInit(SRGLetterboxTimelineView *self);
     NSUInteger index = [self.subdivisions indexOfObject:subdivision];
     cell.current = (index == self.selectedIndex);
     
-    if (self.fullLengthURN &&
-        (([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.fullLengthURN])
-        || ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.fullLengthURN]))) {
-        // Clamp progress so that past subdivisions have progress = 1 and future ones have progress = 0
-        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, subdivision.srg_timeRange.start)) / CMTimeGetSeconds(subdivision.srg_timeRange.duration);
-        cell.progress = fminf(1.f, fmaxf(0.f, progress));
+    float progress = 0.f;
+    
+    if (self.fullLengthURN) {
+        if ([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.fullLengthURN]) {
+            progress = 1000. * CMTimeGetSeconds(self.time) / subdivision.duration;
+        }
+        else if ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.fullLengthURN]) {
+            SRGSegment *segment = (SRGSegment *)subdivision;
+            progress = (1000. * CMTimeGetSeconds(self.time) - segment.markIn) / segment.duration;
+        }
     }
-    else {
-        cell.progress = 0.f;
-    }
+    cell.progress = fminf(1.f, fmaxf(0.f, progress));
 }
 
 #pragma mark Scrolling
