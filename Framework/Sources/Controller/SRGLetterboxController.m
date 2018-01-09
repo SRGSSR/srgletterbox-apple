@@ -1015,12 +1015,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         }
     }
     // Playing another segment from the same media. Seek
-    else {
+    else if ([subdivision isKindOfClass:[SRGSegment class]]) {
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
-        [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
+        [self.mediaPlayerController seekToSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
             completionHandler ? completionHandler(finished) : nil;
         }];
+    }
+    else {
+        return NO;
     }
     
     return YES;
