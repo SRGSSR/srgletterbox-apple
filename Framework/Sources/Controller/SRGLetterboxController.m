@@ -1022,6 +1022,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             completionHandler ? completionHandler(finished) : nil;
         }];
     }
+    else {
+        return NO;
+    }
     
     return YES;
 }
