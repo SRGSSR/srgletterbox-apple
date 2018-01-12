@@ -166,6 +166,7 @@
     static NSString * const kMMFSwissTxtFullDVRStreamURNString = @"urn:rts:video:_rts_info_fulldvr";
     static NSString * const kMMFSwissTxtLimitedDVRStreamURNString = @"urn:rts:video:_rts_info_liveonly_limiteddvr";
     static NSString * const kMMFSwissTxtLiveOnlyStreamURNString = @"urn:rts:video:_rts_info_liveonly_delay";
+    static NSString * const kMMFSwissTxtFullDVRStartDateChangeStreamURNString = @"urn:rts:video:_rts_info_fulldvrstartdate";
     static NSString * const kMMFTemporarilyNotFoundURNString = @"urn:rts:video:_rts_info_notfound";
     static NSString * const kMMFRTSMultipleAudiosURNString = @"urn:rts:video:_rtsvo_multipleaudios_staging";
     
@@ -441,7 +442,7 @@
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -449,6 +450,14 @@
                 }
                     
                 case 9: {
+                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 10: {
                     [self openModalPlayerWithURNString:kMMFRTSMultipleAudiosURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
