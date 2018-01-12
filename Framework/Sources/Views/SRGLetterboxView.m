@@ -248,6 +248,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateAccessibility];
         [self updateFonts];
         [self reloadData];
+        [self registerUserInterfaceUpdateTimers];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -288,7 +289,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         // Invalidate timers
         self.inactivityTimer = nil;
-        self.userInterfaceUpdateTimer = nil;
+        [self unregisterUserInterfaceUpdateTimers];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -363,8 +364,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     if (_controller) {
-        self.userInterfaceUpdateTimer = nil;
-        
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -422,15 +421,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        
-        @weakify(self)
-        @weakify(controller)
-        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            @strongify(controller)
-            [self updateUserInterfaceForController:controller animated:YES];
-            [self updateAvailabilityLabelForController:controller];
-        }];
+        [self registerUserInterfaceUpdateTimersForController:controller];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(metadataDidChange:)
@@ -478,6 +469,10 @@ static void commonInit(SRGLetterboxView *self);
         
         [self.playerView layoutIfNeeded];
     }
+    else {
+        [self unregisterUserInterfaceUpdateTimers];
+    }
+    
     [self updateUserInterfaceForController:controller animated:NO];
 }
 
@@ -1127,6 +1122,28 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     [self updateUserInterfaceForController:self.controller animated:animated];
+}
+
+- (void)registerUserInterfaceUpdateTimersForController:(SRGLetterboxController *)controller
+{
+    @weakify(self)
+    @weakify(controller)
+    self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        @strongify(self)
+        @strongify(controller)
+        [self updateUserInterfaceForController:controller animated:YES];
+        [self updateAvailabilityLabelForController:controller];
+    }];
+}
+
+- (void)registerUserInterfaceUpdateTimers
+{
+    return [self registerUserInterfaceUpdateTimersForController:self.controller];
+}
+
+- (void)unregisterUserInterfaceUpdateTimers
+{
+    self.userInterfaceUpdateTimer = nil;
 }
 
 - (void)resetInactivityTimer
