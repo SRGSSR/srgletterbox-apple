@@ -180,6 +180,15 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 - (void)disable;
 
 /**
+ *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
+ *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
+ *  them to precisely control how it is made.
+ *
+ *  Default is `YES`.
+ */
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
+
+/**
  *  The controller for which application-wide services are enabled, if any.
  */
 @property (nonatomic, readonly, nullable) SRGLetterboxController *controller;

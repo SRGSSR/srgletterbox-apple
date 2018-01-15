@@ -57,6 +57,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (instancetype)init
 {
     if (self = [super init]) {
+        self.nowPlayingInfoAndCommandsEnabled = YES;
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
                                                      name:UIApplicationDidEnterBackgroundNotification
@@ -65,8 +67,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                  selector:@selector(applicationDidBecomeActive:)
                                                      name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
-        
-        [self setupRemoteCommandCenter];
         
         _restoreUserInterface = YES;
         _playbackStopped = YES;
@@ -77,9 +77,23 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (void)dealloc
 {
     self.controller = nil;
+    self.nowPlayingInfoAndCommandsEnabled = NO;
 }
 
 #pragma mark Getters and setters
+
+- (void)setNowPlayingInfoAndCommandsEnabled:(BOOL)nowPlayingInfoAndCommandsEnabled
+{
+    _nowPlayingInfoAndCommandsEnabled = nowPlayingInfoAndCommandsEnabled;
+    
+    if (nowPlayingInfoAndCommandsEnabled) {
+        [self setupRemoteCommandCenter];
+    }
+    else {
+        [self resetRemoteCommandCenter];
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+    }
+}
 
 - (void)setController:(SRGLetterboxController *)controller
 {
@@ -270,8 +284,46 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [nextTrackCommand addTarget:self action:@selector(nextTrack:)];
 }
 
+- (void)resetRemoteCommandCenter
+{
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    
+    MPRemoteCommand *playCommand = commandCenter.playCommand;
+    [playCommand removeTarget:self];
+    
+    MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
+    [pauseCommand removeTarget:self];
+    
+    MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
+    [togglePlayPauseCommand removeTarget:self];
+    
+    MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
+    skipForwardIntervalCommand.preferredIntervals = @[];
+    [skipForwardIntervalCommand removeTarget:self];
+    
+    MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
+    skipBackwardIntervalCommand.preferredIntervals = @[];
+    [skipBackwardIntervalCommand removeTarget:self];
+    
+    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
+    [seekForwardCommand removeTarget:self];
+    
+    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
+    [seekBackwardCommand removeTarget:self];
+    
+    MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+    [previousTrackCommand removeTarget:self];
+    
+    MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+    [nextTrackCommand removeTarget:self];
+}
+
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
 {
+    if (! self.nowPlayingInfoAndCommandsEnabled) {
+        return;
+    }
+    
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
@@ -321,6 +373,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
+    if (! self.nowPlayingInfoAndCommandsEnabled) {
+        return;
+    }
+    
     SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (! media) {
         [self clearArtworkImageCache];
