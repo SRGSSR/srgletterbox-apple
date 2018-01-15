@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -96,18 +96,18 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xXK-rE-ke9">
-                                <rect key="frame" x="204.5" y="414" width="161.5" height="31"/>
+                                <rect key="frame" x="230" y="414" width="111" height="31"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Disable timeline " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NfO-XD-8ic">
-                                        <rect key="frame" x="0.0" y="0.0" width="112.5" height="31"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timeline " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NfO-XD-8ic" userLabel="Timeline">
+                                        <rect key="frame" x="0.0" y="0.0" width="62" height="31"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jec-Hp-ASJ">
-                                        <rect key="frame" x="112.5" y="0.0" width="51" height="31"/>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jec-Hp-ASJ">
+                                        <rect key="frame" x="62" y="0.0" width="51" height="31"/>
                                         <connections>
-                                            <action selector="toggleAlwaysHideTimeline:" destination="FcC-Qn-oGg" eventType="valueChanged" id="yKO-PR-pAv"/>
+                                            <action selector="toggleTimeline:" destination="FcC-Qn-oGg" eventType="valueChanged" id="Mog-wV-DR3"/>
                                         </connections>
                                     </switch>
                                 </subviews>
@@ -163,6 +163,7 @@
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
                         <outlet property="nextLabel" destination="XDA-ee-aQO" id="rwp-mh-ICO"/>
                         <outlet property="nowLabel" destination="oxw-uk-Eue" id="fue-hN-kxF"/>
+                        <outlet property="timelineSwitch" destination="jec-Hp-ASJ" id="hlN-FI-Qgr"/>
                         <outlet property="titleLabel" destination="fbH-pV-VxN" id="h1M-zQ-aaa"/>
                     </connections>
                 </viewController>
