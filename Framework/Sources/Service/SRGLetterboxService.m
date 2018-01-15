@@ -282,7 +282,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                                                                             || [AVAudioSession srg_isAirplayActive]
                                                                                                             || [UIDevice srg_isLocked])) {
         SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
-        if (self.commandDelegate) {
+        if ([self.commandDelegate respondsToSelector:@selector(letterboxAvailableCommands)]) {
             availableCommands = [self.commandDelegate letterboxAvailableCommands];
         }
         

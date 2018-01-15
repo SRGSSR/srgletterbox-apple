@@ -93,6 +93,8 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  */
 @protocol SRGLetterboxCommandDelegate <NSObject>
 
+@optional
+
 /**
  *  Return the set of commands which should be available during playback. If not implemented, the seek and skip commands
  *  will be available.
@@ -101,8 +103,6 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  *              you can therefore alter the availability of the commands during playback as well.
  */
 - (SRGLetterboxCommands)letterboxAvailableCommands;
-
-@optional
 
 /**
  *  Called when the previous track must be played.
