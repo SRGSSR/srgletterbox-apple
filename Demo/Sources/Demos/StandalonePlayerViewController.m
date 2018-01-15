@@ -19,6 +19,7 @@
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 @property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
+@property (nonatomic, weak) IBOutlet UISwitch *nowPlayingInfoAndCommandsEnabled;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
@@ -66,6 +67,7 @@
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
     self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
+    self.nowPlayingInfoAndCommandsEnabled.on = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
     
     [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
@@ -157,6 +159,11 @@
 - (IBAction)toggleMirrored:(id)sender
 {
     ApplicationSettingSetMirroredOnExternalScreen(! ApplicationSettingIsMirroredOnExternalScreen());
+}
+
+- (IBAction)toggleNowPlayingInfoAndCommands:(id)sender
+{
+    [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = ! [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
 }
 
 @end
