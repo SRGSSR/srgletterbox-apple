@@ -93,6 +93,8 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  */
 @protocol SRGLetterboxCommandDelegate <NSObject>
 
+@optional
+
 /**
  *  Return the set of commands which should be available during playback. If not implemented, the seek and skip commands
  *  will be available.
@@ -101,8 +103,6 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  *              you can therefore alter the availability of the commands during playback as well.
  */
 - (SRGLetterboxCommands)letterboxAvailableCommands;
-
-@optional
 
 /**
  *  Called when the previous track must be played.
@@ -178,6 +178,15 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  *  Disable application-wide services (any playback using one of those services will be stopped).
  */
 - (void)disable;
+
+/**
+ *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
+ *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
+ *  them to precisely control how it is made.
+ *
+ *  Default is `YES`.
+ */
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
 
 /**
  *  The controller for which application-wide services are enabled, if any.

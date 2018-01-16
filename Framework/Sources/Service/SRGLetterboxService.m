@@ -57,6 +57,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (instancetype)init
 {
     if (self = [super init]) {
+        self.nowPlayingInfoAndCommandsEnabled = YES;
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
                                                      name:UIApplicationDidEnterBackgroundNotification
@@ -65,8 +67,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                  selector:@selector(applicationDidBecomeActive:)
                                                      name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
-        
-        [self setupRemoteCommandCenter];
         
         _restoreUserInterface = YES;
         _playbackStopped = YES;
@@ -77,9 +77,23 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (void)dealloc
 {
     self.controller = nil;
+    self.nowPlayingInfoAndCommandsEnabled = NO;
 }
 
 #pragma mark Getters and setters
+
+- (void)setNowPlayingInfoAndCommandsEnabled:(BOOL)nowPlayingInfoAndCommandsEnabled
+{
+    _nowPlayingInfoAndCommandsEnabled = nowPlayingInfoAndCommandsEnabled;
+    
+    if (nowPlayingInfoAndCommandsEnabled) {
+        [self setupRemoteCommandCenter];
+    }
+    else {
+        [self resetRemoteCommandCenter];
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+    }
+}
 
 - (void)setController:(SRGLetterboxController *)controller
 {
@@ -241,37 +255,105 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
     MPRemoteCommand *playCommand = commandCenter.playCommand;
+    playCommand.enabled = NO;
     [playCommand addTarget:self action:@selector(play:)];
     
     MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
+    pauseCommand.enabled = NO;
     [pauseCommand addTarget:self action:@selector(pause:)];
     
     MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
+    togglePlayPauseCommand.enabled = NO;
     [togglePlayPauseCommand addTarget:self action:@selector(togglePlayPause:)];
     
     MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
+    skipForwardIntervalCommand.enabled = NO;
     skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxForwardSkipInterval)];
     [skipForwardIntervalCommand addTarget:self action:@selector(skipForward:)];
     
     MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
+    skipBackwardIntervalCommand.enabled = NO;
     skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
     [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackward:)];
     
     MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
+    seekForwardCommand.enabled = NO;
     [seekForwardCommand addTarget:self action:@selector(seekForward:)];
     
     MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
+    seekBackwardCommand.enabled = NO;
     [seekBackwardCommand addTarget:self action:@selector(seekBackward:)];
     
     MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+    previousTrackCommand.enabled = NO;
     [previousTrackCommand addTarget:self action:@selector(previousTrack:)];
     
     MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+    nextTrackCommand.enabled = NO;
     [nextTrackCommand addTarget:self action:@selector(nextTrack:)];
+}
+
+- (void)resetRemoteCommandCenter
+{
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    
+    // For some unknown reason, at least an action (even dummy) must be bound to a command for `enabled` to have an effect,
+    // see https://stackoverflow.com/questions/38993801/how-to-disable-all-the-mpremotecommand-objects-from-mpremotecommandcenter
+    
+    MPRemoteCommand *playCommand = commandCenter.playCommand;
+    playCommand.enabled = NO;
+    [playCommand removeTarget:self];
+    [playCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
+    pauseCommand.enabled = NO;
+    [pauseCommand removeTarget:self];
+    [pauseCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
+    togglePlayPauseCommand.enabled = NO;
+    [togglePlayPauseCommand removeTarget:self];
+    [togglePlayPauseCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
+    skipForwardIntervalCommand.enabled = NO;
+    skipForwardIntervalCommand.preferredIntervals = @[];
+    [skipForwardIntervalCommand removeTarget:self];
+    [skipForwardIntervalCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
+    skipBackwardIntervalCommand.enabled = NO;
+    skipBackwardIntervalCommand.preferredIntervals = @[];
+    [skipBackwardIntervalCommand removeTarget:self];
+    [skipBackwardIntervalCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
+    seekForwardCommand.enabled = NO;
+    [seekForwardCommand removeTarget:self];
+    [seekForwardCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
+    seekBackwardCommand.enabled = NO;
+    [seekBackwardCommand removeTarget:self];
+    [seekBackwardCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+    previousTrackCommand.enabled = NO;
+    [previousTrackCommand removeTarget:self];
+    [previousTrackCommand addTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+    nextTrackCommand.enabled = NO;
+    [nextTrackCommand removeTarget:self];
+    [nextTrackCommand addTarget:self action:@selector(doNothing:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
 {
+    if (! self.nowPlayingInfoAndCommandsEnabled) {
+        return;
+    }
+    
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
@@ -282,7 +364,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                                                                             || [AVAudioSession srg_isAirplayActive]
                                                                                                             || [UIDevice srg_isLocked])) {
         SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
-        if (self.commandDelegate) {
+        if ([self.commandDelegate respondsToSelector:@selector(letterboxAvailableCommands)]) {
             availableCommands = [self.commandDelegate letterboxAvailableCommands];
         }
         
@@ -321,6 +403,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
+    if (! self.nowPlayingInfoAndCommandsEnabled) {
+        return;
+    }
+    
     SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (! media) {
         [self clearArtworkImageCache];
@@ -539,6 +625,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [self.commandDelegate letterboxWillSkipToNextTrack];
     }
 }
+
+- (void)doNothing:(id)sender
+{}
 
 #pragma mark Picture in picture
 
