@@ -342,14 +342,19 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }];
 }
 
+- (SRGMedia *)subdivisionMedia
+{
+    return [self.mediaComposition mediaForSubdivision:self.subdivision];
+}
+
 - (SRGMedia *)fullLengthMedia
 {
     return self.mediaComposition.fullLengthMedia;
 }
 
-- (SRGMedia *)subdivisionMedia
+- (SRGResource *)resource
 {
-    return [self.mediaComposition mediaForSubdivision:self.subdivision];
+    return self.mediaPlayerController.resource;
 }
 
 - (BOOL)isContentURLOverridden
@@ -637,7 +642,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 }
             }
             
-            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, (self.error) ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
         };
         
         if (error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404
