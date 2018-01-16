@@ -18,8 +18,9 @@
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
-@property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
+@property (nonatomic, weak) IBOutlet UISwitch *serviceEnabled;
 @property (nonatomic, weak) IBOutlet UISwitch *nowPlayingInfoAndCommandsEnabled;
+@property (nonatomic, weak) IBOutlet UISwitch *mirroredSwitch;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
@@ -66,8 +67,9 @@
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
-    self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
+    self.serviceEnabled.on = [[SRGLetterboxService sharedService].controller isEqual:self.letterboxController];
     self.nowPlayingInfoAndCommandsEnabled.on = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
+    self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
     [self.letterboxController playURN:self.URN withChaptersOnly:NO];
 }
@@ -146,24 +148,24 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)useForService:(id)sender
+- (IBAction)toggleServiceEnabled:(id)sender
 {
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
-}
-
-- (IBAction)resetService:(id)sender
-{
-    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
-}
-
-- (IBAction)toggleMirrored:(id)sender
-{
-    ApplicationSettingSetMirroredOnExternalScreen(! ApplicationSettingIsMirroredOnExternalScreen());
+    if ([[SRGLetterboxService sharedService].controller isEqual:self.letterboxController]) {
+        [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    }
+    else {
+        [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    }
 }
 
 - (IBAction)toggleNowPlayingInfoAndCommands:(id)sender
 {
     [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = ! [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
+}
+
+- (IBAction)toggleMirrored:(id)sender
+{
+    ApplicationSettingSetMirroredOnExternalScreen(! ApplicationSettingIsMirroredOnExternalScreen());
 }
 
 @end
