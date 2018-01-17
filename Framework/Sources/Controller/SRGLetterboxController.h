@@ -517,6 +517,11 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) SRGResource *resource;
 
 /**
+ *  The URL of the content being played.
+ */
+@property (nonatomic, readonly, nullable) NSURL *contentURL;
+
+/**
  *  Error (if any has been encountered).
  */
 @property (nonatomic, readonly, nullable) NSError *error;
