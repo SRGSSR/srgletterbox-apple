@@ -512,6 +512,11 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) SRGMedia *fullLengthMedia;
 
 /**
+ *  The resource which is being played.
+ */
+@property (nonatomic, readonly, nullable) SRGResource *resource;
+
+/**
  *  Error (if any has been encountered).
  */
 @property (nonatomic, readonly, nullable) NSError *error;
