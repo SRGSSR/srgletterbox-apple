@@ -357,11 +357,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     return self.mediaPlayerController.resource;
 }
 
-- (NSURL *)contentURL
-{
-    return self.mediaPlayerController.contentURL;
-}
-
 - (BOOL)isContentURLOverridden
 {
     if (! self.URN) {
