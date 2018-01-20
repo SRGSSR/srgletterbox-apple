@@ -50,9 +50,9 @@ IB_DESIGNABLE
 @property (nonatomic, weak, nullable) id<SRGLetterboxTimelineViewDelegate> delegate;
 
 /**
- *  The full length URN currently played.
+ *  The chapter URN currently played.
  */
-@property (nonatomic, nullable) SRGMediaURN *fullLengthURN;
+@property (nonatomic, nullable) SRGMediaURN *chapterURN;
 
 /**
  *  The subdivisions (segments or chapters) displayed by the timeline.

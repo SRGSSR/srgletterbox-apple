@@ -44,9 +44,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark Getters and setters
 
-- (void)setFullLengthURN:(SRGMediaURN *)fullLengthURN
+- (void)setChapterURN:(SRGMediaURN *)chapterURN
 {
-    _fullLengthURN = fullLengthURN;
+    _chapterURN = chapterURN;
     [self updateCellAppearance];
 }
 
@@ -144,11 +144,11 @@ static void commonInit(SRGLetterboxTimelineView *self);
     
     float progress = 0.f;
     
-    if (self.fullLengthURN) {
-        if ([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.fullLengthURN]) {
+    if (self.chapterURN) {
+        if ([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.chapterURN]) {
             progress = 1000. * CMTimeGetSeconds(self.time) / subdivision.duration;
         }
-        else if ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.fullLengthURN]) {
+        else if ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.chapterURN]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
             progress = (1000. * CMTimeGetSeconds(self.time) - segment.markIn) / segment.duration;
         }
