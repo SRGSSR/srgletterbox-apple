@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -45,6 +45,10 @@
                             <constraint firstItem="aDw-g0-vQ2" firstAttribute="centerX" secondItem="FIC-tI-Av6" secondAttribute="centerX" id="qqK-Bc-byq"/>
                         </constraints>
                     </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="360_media-25" translatesAutoresizingMaskIntoConstraints="NO" id="644-JY-sxq">
+                        <rect key="frame" x="5" y="60" width="25" height="25"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" 00:00 " textAlignment="natural" lineBreakMode="wordWrap" minimumFontSize="10" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="xPG-fm-CkX" userLabel="Duration Label">
                         <rect key="frame" x="121" y="65" width="34" height="18"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -80,6 +84,7 @@
             </view>
             <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
             <constraints>
+                <constraint firstItem="644-JY-sxq" firstAttribute="bottom" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" constant="-5" id="1Ny-cB-iEO"/>
                 <constraint firstItem="8GI-9a-x72" firstAttribute="centerY" secondItem="xPG-fm-CkX" secondAttribute="centerY" id="5AP-UD-Ifs"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="top" secondItem="xPG-fm-CkX" secondAttribute="bottom" constant="5" id="LG0-iI-zSJ"/>
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="bottom" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="MvM-qU-lYE"/>
@@ -98,6 +103,7 @@
                 <constraint firstItem="xPG-fm-CkX" firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" constant="-5" id="iwD-qB-I9o"/>
                 <constraint firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" id="kYp-Sb-Yv6"/>
                 <constraint firstItem="Fjo-Dj-oWj" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="sYb-Om-2SE"/>
+                <constraint firstItem="644-JY-sxq" firstAttribute="leading" secondItem="Fjo-Dj-oWj" secondAttribute="leading" constant="5" id="vCm-Sw-lG3"/>
                 <constraint firstItem="8GI-9a-x72" firstAttribute="height" secondItem="xPG-fm-CkX" secondAttribute="height" id="yRn-96-k6M"/>
             </constraints>
             <size key="customSize" width="189" height="123"/>
@@ -107,6 +113,7 @@
                 <outlet property="durationLabel" destination="xPG-fm-CkX" id="gVN-ef-Ab2"/>
                 <outlet property="favoriteImageView" destination="8GI-9a-x72" id="8f9-5B-4dU"/>
                 <outlet property="imageView" destination="Fjo-Dj-oWj" id="Gsp-lI-bg3"/>
+                <outlet property="media360ImageView" destination="644-JY-sxq" id="emb-iM-Jfc"/>
                 <outlet property="progressView" destination="cFP-OY-NIp" id="9Ef-Ur-EEb"/>
                 <outlet property="titleLabel" destination="XEC-ZT-Ya9" id="Fyq-fQ-Qcv"/>
             </connections>
@@ -114,6 +121,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="360_media-25" width="25" height="25"/>
         <image name="favorite_full-18" width="18" height="18"/>
         <image name="geoblocked-25" width="25" height="25"/>
     </resources>

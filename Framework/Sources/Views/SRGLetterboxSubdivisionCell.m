@@ -18,6 +18,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *media360ImageView;
 
 @property (nonatomic, weak) IBOutlet UIView *blockingOverlayView;
 @property (nonatomic, weak) IBOutlet UIImageView *blockingReasonImageView;
@@ -42,6 +43,10 @@
     
     // Workaround UIImage view tint color bug
     // See http://stackoverflow.com/a/26042893/760435
+    UIImage *media360Image = self.media360ImageView.image;
+    self.media360ImageView.image = nil;
+    self.media360ImageView.image = media360Image;
+    
     UIImage *favoriteImage = self.favoriteImageView.image;
     self.favoriteImageView.image = nil;
     self.favoriteImageView.image = favoriteImage;
@@ -136,6 +141,12 @@
     }
     
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
+    
+    SRGPresentation presentation = SRGPresentationDefault;
+    if ([subdivision isKindOfClass:SRGChapter.class]) {
+        presentation = ((SRGChapter *)subdivision).presentation;
+    }
+    self.media360ImageView.hidden = (presentation != SRGPresentation360);
 }
 
 - (void)setProgress:(float)progress
