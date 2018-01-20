@@ -565,8 +565,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGBlockingReason blockingReason = [controller.media blockingReasonAtDate:[NSDate date]];
     return ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain]
-            && ((controller.error.code == SRGLetterboxErrorCodeNotAvailable && (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate))
-                || (controller.error.code == SRGLetterboxErrorCodeNotFound)));
+            && (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate || controller.error.code == SRGLetterboxErrorCodeNotFound));
 }
 
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
@@ -718,7 +717,12 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateAvailabilityLabelForController:(SRGLetterboxController *)controller
 {
-    if ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain] && controller.error.code == SRGLetterboxErrorCodeNotAvailable) {
+    if ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain] && controller.error.code == SRGLetterboxErrorCodeNotFound) {
+        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content doesn't exist anymore").uppercaseString];
+        self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
+        self.availabilityLabel.hidden = NO;
+    }
+    else {
         SRGMedia *media = controller.media;
         self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
         
@@ -792,16 +796,6 @@ static void commonInit(SRGLetterboxView *self);
             self.availabilityLabel.accessibilityLabel = nil;
             self.availabilityLabel.hidden = YES;
         }
-    }
-    else if ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain] && controller.error.code == SRGLetterboxErrorCodeNotFound) {
-        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content doesn't exist anymore").uppercaseString];
-        self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
-        self.availabilityLabel.hidden = NO;
-    }
-    else {
-        self.availabilityLabel.text = nil;
-        self.availabilityLabel.accessibilityLabel = nil;
-        self.availabilityLabel.hidden = YES;
     }
 }
 
