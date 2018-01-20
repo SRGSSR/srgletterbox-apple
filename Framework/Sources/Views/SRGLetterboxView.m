@@ -542,9 +542,9 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSError *error = controller.error;
     if (error) {
-        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
+        // Do not display unavailability or not found controller errors as errors within the view (pre- and post-roll UI will be
         // displayed instead)
-        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && (error.code == SRGLetterboxErrorCodeNotAvailable || error.code == SRGLetterboxErrorCodeNotFound)) {
             return nil;
         }
         else {
@@ -564,7 +564,9 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isAvailabilityViewVisibleForController:(SRGLetterboxController *)controller
 {
     SRGBlockingReason blockingReason = [controller.media blockingReasonAtDate:[NSDate date]];
-    return ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain] && controller.error.code == SRGLetterboxErrorCodeNotAvailable) && (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate);
+    return ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain]
+            && ((controller.error.code == SRGLetterboxErrorCodeNotAvailable && (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate))
+                || (controller.error.code == SRGLetterboxErrorCodeNotFound)));
 }
 
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
@@ -790,6 +792,11 @@ static void commonInit(SRGLetterboxView *self);
             self.availabilityLabel.accessibilityLabel = nil;
             self.availabilityLabel.hidden = YES;
         }
+    }
+    else if ([controller.error.domain isEqualToString:SRGLetterboxErrorDomain] && controller.error.code == SRGLetterboxErrorCodeNotFound) {
+        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content doesn't exist anymore").uppercaseString];
+        self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
+        self.availabilityLabel.hidden = NO;
     }
     else {
         self.availabilityLabel.text = nil;
