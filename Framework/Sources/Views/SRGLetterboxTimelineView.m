@@ -44,6 +44,12 @@ static void commonInit(SRGLetterboxTimelineView *self);
 
 #pragma mark Getters and setters
 
+- (void)setChapterURN:(SRGMediaURN *)chapterURN
+{
+    _chapterURN = chapterURN;
+    [self updateCellAppearance];
+}
+
 - (void)setSubdivisions:(NSArray<SRGSubdivision *> *)subdivisions
 {
     _subdivisions = subdivisions;
@@ -136,15 +142,18 @@ static void commonInit(SRGLetterboxTimelineView *self);
     NSUInteger index = [self.subdivisions indexOfObject:subdivision];
     cell.current = (index == self.selectedIndex);
     
-    // Do not display progress for chapters
-    if (! [subdivision isKindOfClass:[SRGChapter class]]) {
-        // Clamp progress so that past subdivisions have progress = 1 and future ones have progress = 0
-        float progress = CMTimeGetSeconds(CMTimeSubtract(self.time, subdivision.srg_timeRange.start)) / CMTimeGetSeconds(subdivision.srg_timeRange.duration);
-        cell.progress = fminf(1.f, fmaxf(0.f, progress));
+    float progress = 0.f;
+    
+    if (self.chapterURN) {
+        if ([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.chapterURN]) {
+            progress = 1000. * CMTimeGetSeconds(self.time) / subdivision.duration;
+        }
+        else if ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.chapterURN]) {
+            SRGSegment *segment = (SRGSegment *)subdivision;
+            progress = (1000. * CMTimeGetSeconds(self.time) - segment.markIn) / segment.duration;
+        }
     }
-    else {
-        cell.progress = 0.f;
-    }
+    cell.progress = fminf(1.f, fmaxf(0.f, progress));
 }
 
 #pragma mark Scrolling

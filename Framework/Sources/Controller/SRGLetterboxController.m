@@ -342,14 +342,19 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }];
 }
 
+- (SRGMedia *)subdivisionMedia
+{
+    return [self.mediaComposition mediaForSubdivision:self.subdivision];
+}
+
 - (SRGMedia *)fullLengthMedia
 {
     return self.mediaComposition.fullLengthMedia;
 }
 
-- (SRGMedia *)subdivisionMedia
+- (SRGResource *)resource
 {
-    return [self.mediaComposition mediaForSubdivision:self.subdivision];
+    return self.mediaPlayerController.resource;
 }
 
 - (BOOL)isContentURLOverridden
@@ -637,7 +642,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 }
             }
             
-            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, (self.error) ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
         };
         
         if (error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404
@@ -762,6 +767,18 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     if (self.contentURLOverridingBlock) {
         NSURL *contentURL = self.contentURLOverridingBlock(URN);
         if (contentURL) {
+            void (^prepareToPlay)(NSURL *) = ^(NSURL *contentURL) {
+                if (media.presentation == SRGPresentation360) {
+                    if (self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeMonoscopic && self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeStereoscopic) {
+                        self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
+                    }
+                }
+                else {
+                    self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
+                }
+                [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+            };
+            
             // Media readily available. Done
             if (media) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
@@ -770,7 +787,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 [self notifyLivestreamEndWithMedia:media previousMedia:nil];
                 
                 if (! blockingReasonError) {
-                    [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+                    prepareToPlay(contentURL);
                 }
             }
             // Retrieve the media
@@ -792,7 +809,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                         [self updateWithError:blockingReasonError];
                     }
                     else {
-                        [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+                        prepareToPlay(contentURL);
                     }
                 };
                 
@@ -1015,12 +1032,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         }
     }
     // Playing another segment from the same media. Seek
-    else {
+    else if ([subdivision isKindOfClass:[SRGSegment class]]) {
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
-        [self.mediaPlayerController seekToSegment:subdivision withCompletionHandler:^(BOOL finished) {
+        [self.mediaPlayerController seekToSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
             completionHandler ? completionHandler(finished) : nil;
         }];
+    }
+    else {
+        return NO;
     }
     
     return YES;

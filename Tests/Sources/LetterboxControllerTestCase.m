@@ -16,6 +16,11 @@ static SRGMediaURN *OnDemandVideoURN(void)
     return [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
 }
 
+static SRGMediaURN *OnDemand360VideoURN(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:8414077"];
+}
+
 static SRGMediaURN *OnDemandLongVideoURN(void)
 {
     return [SRGMediaURN mediaURNWithString:@"urn:srf:video:2c685129-bad8-4ea0-93f5-0d6cff8cb156"];
@@ -1304,6 +1309,47 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
+}
+
+- (void)test360ContentURLOverriding
+{
+    NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+    self.controller.updateInterval = 10.f;
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(SRGMediaURN * _Nonnull URN) {
+        return overridingURL;
+    };
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Request succeeded"];
+    
+    __block SRGMedia *media = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.controller.serviceURL businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+    [[dataProvider mediaCompositionWithURN:OnDemand360VideoURN() chaptersOnly:NO completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+        XCTAssertNotNil(mediaComposition);
+        media = mediaComposition.fullLengthMedia;
+        
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playMedia:media withChaptersOnly:NO];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, media.URN);
+    XCTAssertEqualObjects(self.controller.media, media);
+    XCTAssertNil(self.controller.mediaComposition);
+    XCTAssertEqualObjects(self.controller.mediaPlayerController.contentURL, overridingURL);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertEqual(self.controller.mediaPlayerController.view.viewMode, SRGMediaPlayerViewModeMonoscopic);
 }
 
 - (void)testUninterruptedOnDemandFullLengthPlayback

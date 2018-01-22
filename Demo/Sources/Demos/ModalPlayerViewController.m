@@ -26,6 +26,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *nowLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nextLabel;
 
+@property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
+
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
@@ -92,6 +94,8 @@
     [super viewDidLoad];
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
+    
+    self.timelineSwitch.enabled = ! self.letterboxView.timelineAlwaysHidden;
     
     // Use custom modal transition
     self.transitioningDelegate = self;
@@ -348,9 +352,9 @@
     [self.letterboxView setFullScreen:YES animated:YES];
 }
 
-- (IBAction)toggleAlwaysHideTimeline:(UISwitch *)sender
+- (IBAction)toggleTimeline:(UISwitch *)sender
 {
-    [self.letterboxView setTimelineAlwaysHidden:sender.on animated:YES];
+    [self.letterboxView setTimelineAlwaysHidden:! sender.on animated:YES];
 }
 
 - (IBAction)pullDown:(UIPanGestureRecognizer *)panGestureRecognizer

@@ -248,6 +248,7 @@ static void commonInit(SRGLetterboxView *self);
         [self updateAccessibility];
         [self updateFonts];
         [self reloadData];
+        [self registerUserInterfaceUpdateTimers];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -288,7 +289,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         // Invalidate timers
         self.inactivityTimer = nil;
-        self.userInterfaceUpdateTimer = nil;
+        [self unregisterUserInterfaceUpdateTimers];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -363,8 +364,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     if (_controller) {
-        self.userInterfaceUpdateTimer = nil;
-        
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -422,15 +421,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        
-        @weakify(self)
-        @weakify(controller)
-        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            @strongify(controller)
-            [self updateUserInterfaceForController:controller animated:YES];
-            [self updateAvailabilityLabelForController:controller];
-        }];
+        [self registerUserInterfaceUpdateTimersForController:controller];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(metadataDidChange:)
@@ -478,6 +469,10 @@ static void commonInit(SRGLetterboxView *self);
         
         [self.playerView layoutIfNeeded];
     }
+    else {
+        [self unregisterUserInterfaceUpdateTimers];
+    }
+    
     [self updateUserInterfaceForController:controller animated:NO];
 }
 
@@ -702,6 +697,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaComposition *mediaComposition = controller.mediaComposition;
     SRGSubdivision *subdivision = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
+    self.timelineView.chapterURN = mediaComposition.mainChapter.URN;
     self.timelineView.subdivisions = [self subdivisionsForMediaComposition:mediaComposition];
     self.timelineView.selectedIndex = subdivision ? [self.timelineView.subdivisions indexOfObject:subdivision] : NSNotFound;
     
@@ -912,13 +908,19 @@ static void commonInit(SRGLetterboxView *self);
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     
-    // Hide video view if a video in AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
+    // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
     SRGMedia *media = controller.media;
-    BOOL playerViewHidden = (media.mediaType == SRGMediaTypeVideo) && ! mediaPlayerController.externalNonMirroredPlaybackActive
-        && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
-    self.imageView.alpha = playerViewHidden ? 0.f : 1.f;
-    mediaPlayerController.view.alpha = playerViewHidden ? 1.f : 0.f;
+    BOOL playerViewVisible = (media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
+                              && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+    if (@available(iOS 11, *)) {
+        if ([UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirplayActive]) {
+            playerViewVisible = NO;
+        }
+    }
+    
+    self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
+    mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
     
     return userInterfaceHidden;
 }
@@ -1120,6 +1122,28 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     [self updateUserInterfaceForController:self.controller animated:animated];
+}
+
+- (void)registerUserInterfaceUpdateTimersForController:(SRGLetterboxController *)controller
+{
+    @weakify(self)
+    @weakify(controller)
+    self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        @strongify(self)
+        @strongify(controller)
+        [self updateUserInterfaceForController:controller animated:YES];
+        [self updateAvailabilityLabelForController:controller];
+    }];
+}
+
+- (void)registerUserInterfaceUpdateTimers
+{
+    return [self registerUserInterfaceUpdateTimersForController:self.controller];
+}
+
+- (void)unregisterUserInterfaceUpdateTimers
+{
+    self.userInterfaceUpdateTimer = nil;
 }
 
 - (void)resetInactivityTimer
@@ -1359,8 +1383,15 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
+    if ([subdivision isKindOfClass:[SRGSegment class]]) {
+        SRGSegment *segment = (SRGSegment *)subdivision;
+        self.timelineView.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+    }
+    else {
+        self.timelineView.chapterURN = subdivision.URN;
+        self.timelineView.time = kCMTimeZero;
+    }
     self.timelineView.selectedIndex = [timelineView.subdivisions indexOfObject:subdivision];
-    self.timelineView.time = subdivision.srg_timeRange.start;
     [self.timelineView scrollToSelectedIndexAnimated:YES];
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSubdivision:)]) {

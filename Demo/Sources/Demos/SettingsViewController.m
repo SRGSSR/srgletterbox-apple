@@ -118,11 +118,16 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 2: {
-            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
             break;
         }
             
         case 3: {
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            break;
+        }
+            
+        case 4: {
             NSString *buildNumberString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
@@ -156,12 +161,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 1:
-        case 2: {
+        case 2:
+        case 3: {
             return 2;
             break;
         }
             
-        case 3: {
+        case 4: {
             return 1;
             break;
         }
@@ -198,14 +204,14 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Mirrored screens state in settings view");
-                    cell.accessoryType = (! ApplicationSettingIsMirroredOnExternalScreen()) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.accessoryType = ! ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Mirrored screens state in settings view");
-                    cell.accessoryType = (ApplicationSettingIsMirroredOnExternalScreen()) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.accessoryType = ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -219,11 +225,34 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 2: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.accessoryType = ! [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.accessoryType = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case 3: {
             static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
                 s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond;
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
                 s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
                 s_dateComponentsFormatter.maximumUnitCount = 1;
             });
@@ -252,7 +281,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 3: {
+        case 4: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -291,6 +320,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 2: {
+            [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            break;
+        }
+            
+        case 3: {
             if (indexPath.row == 0) {
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
@@ -303,7 +337,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 3: {
+        case 4: {
             completionBlock = ^{
                 [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
             };
