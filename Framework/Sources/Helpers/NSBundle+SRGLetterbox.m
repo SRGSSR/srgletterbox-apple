@@ -27,4 +27,19 @@ NSString *SRGLetterboxNonLocalizedString(NSString *string)
     return bundle;
 }
 
++ (BOOL)srg_letterbox_isProductionVersion
+{
+    // Check SIMULATOR_DEVICE_NAME for iOS 9 and above, device name below
+    if ([NSProcessInfo processInfo].environment[@"SIMULATOR_DEVICE_NAME"]
+            || [[UIDevice currentDevice].name.lowercaseString containsString:@"simulator"]) {
+        return NO;
+    }
+    
+    if ([[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"]) {
+        return NO;
+    }
+    
+    return ([NSBundle mainBundle].appStoreReceiptURL != nil);
+}
+
 @end
