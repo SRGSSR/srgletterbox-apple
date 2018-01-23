@@ -33,6 +33,11 @@ OBJC_EXTERN NSString *SRGLetterboxNonLocalizedString(NSString *string);
  */
 + (NSBundle *)srg_letterboxBundle;
 
+/**
+ *  Return `YES` iff the application bundle corresponds to an AppStore or TestFlight release.
+ */
++ (BOOL)srg_letterbox_isProductionVersion;
+
 @end
 
 NS_ASSUME_NONNULL_END
