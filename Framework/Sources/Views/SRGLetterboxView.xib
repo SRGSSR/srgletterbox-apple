@@ -24,7 +24,6 @@
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
                 <outlet property="backgroundInteractionView" destination="oRJ-Ix-YZ1" id="u2b-IQ-H0e"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
-                <outlet property="controlsAspectRatioConstraint" destination="ibL-43-dpF" id="GJF-bG-rYC"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorImageView" destination="ARZ-Ln-tEm" id="ffy-PG-wdF"/>
                 <outlet property="errorInstructionsLabel" destination="xxd-Ee-gAS" id="Dr5-8B-UHg"/>
@@ -57,10 +56,6 @@
                 <outletCollection property="fullScreenButtons" destination="WT7-v6-7uh" id="TH2-pa-Rqx"/>
                 <outletCollection property="fullScreenButtons" destination="Ess-8e-PUx" id="KTs-lZ-QxB"/>
                 <outletCollection property="fullScreenButtons" destination="uEB-dd-8By" id="DTu-JR-O7y"/>
-                <outletCollection property="controlsToSuperviewEdgeConstraints" destination="GMC-ww-bih" id="fio-fl-eQ0"/>
-                <outletCollection property="controlsToSuperviewEdgeConstraints" destination="cWG-po-VLf" id="wmB-ab-VcL"/>
-                <outletCollection property="controlsToSuperviewEdgeConstraints" destination="nrV-bx-oHk" id="qtZ-vL-gsV"/>
-                <outletCollection property="controlsToSuperviewEdgeConstraints" destination="ozK-nJ-IQ2" id="PgK-lF-ScF"/>
                 <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="6SK-x6-Wug" id="2HX-bM-bpa"/>
                 <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="Qw7-jT-MLe" id="eWb-7p-O6k"/>
                 <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="t4f-BY-Z05" id="JOS-ts-cCB"/>
@@ -78,7 +73,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
-                            <rect key="frame" x="26" y="0.0" width="422" height="237"/>
+                            <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                         </view>
@@ -103,17 +98,17 @@
                             </connections>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
-                            <rect key="frame" x="26" y="0.0" width="422" height="237"/>
+                            <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5q-RH-Wvg" userLabel="User Interface Toggle Active View">
-                                    <rect key="frame" x="0.0" y="0.0" width="422" height="205"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="474" height="205"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <connections>
                                         <outletCollection property="gestureRecognizers" destination="cSD-No-gUM" appends="YES" id="Llk-zp-Ezc"/>
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="153" y="82.5" width="48" height="72"/>
+                                    <rect key="frame" x="179" y="82.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="backward-32"/>
@@ -122,12 +117,12 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                                    <rect key="frame" x="201" y="87.5" width="20" height="62"/>
+                                    <rect key="frame" x="227" y="87.5" width="20" height="62"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="221" y="82.5" width="48" height="72"/>
+                                    <rect key="frame" x="247" y="82.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="forward-32"/>
@@ -136,7 +131,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="269" y="82.5" width="48" height="72"/>
+                                    <rect key="frame" x="295" y="82.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="back_live-32"/>
@@ -145,10 +140,10 @@
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                                    <rect key="frame" x="8" y="205" width="406" height="22"/>
+                                    <rect key="frame" x="8" y="205" width="458" height="22"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" userLabel="View mode Button" customClass="SRGViewModeButton">
-                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -156,7 +151,7 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lr5-be-k4j" customClass="SRGAirplayButton">
-                                            <rect key="frame" x="58" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="38" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -167,7 +162,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="83c-T2-D7p" customClass="SRGPictureInPictureButton">
-                                            <rect key="frame" x="96" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="76" y="0.0" width="0.0" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -179,7 +174,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGASValueTrackingSlider">
-                                            <rect key="frame" x="132" y="0.0" width="168" height="23"/>
+                                            <rect key="frame" x="132" y="0.0" width="218" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                             <userDefinedRuntimeAttributes>
@@ -196,13 +191,13 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="306" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="356" y="0.0" width="0.0" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="340" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="390" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -214,7 +209,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
-                                            <rect key="frame" x="378" y="0.0" width="28" height="22"/>
+                                            <rect key="frame" x="428" y="0.0" width="0.0" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="30" id="wp2-4M-YHh"/>
@@ -245,7 +240,6 @@
                                 <constraint firstItem="tuV-Cd-a2U" firstAttribute="top" secondItem="d5q-RH-Wvg" secondAttribute="bottom" id="Xmy-uP-q7K"/>
                                 <constraint firstItem="cih-8k-dqC" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="cIZ-zB-LSb"/>
                                 <constraint firstItem="KlV-OH-iUB" firstAttribute="leading" secondItem="Suw-jc-FuV" secondAttribute="trailing" id="gyT-pT-X3e"/>
-                                <constraint firstAttribute="width" secondItem="mae-cR-Ydf" secondAttribute="height" multiplier="16:9" priority="950" id="ibL-43-dpF"/>
                                 <constraint firstAttribute="trailing" secondItem="tuV-Cd-a2U" secondAttribute="trailing" priority="850" constant="8" id="jYc-mo-h52"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerY" secondItem="mae-cR-Ydf" secondAttribute="centerY" id="kIV-4o-g6R"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="mKD-PG-ES5"/>
@@ -261,26 +255,20 @@
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="1mJ-0L-8o5"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="top" id="A0E-Ua-e5P"/>
                         <constraint firstAttribute="bottom" secondItem="oRJ-Ix-YZ1" secondAttribute="bottom" id="CXx-a0-lSb"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="centerX" secondItem="diO-OC-keM" secondAttribute="centerX" id="Cdj-6N-AdJ"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" priority="850" id="GMC-ww-bih"/>
                         <constraint firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="IXZ-Sg-JH0"/>
+                        <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="Kc6-6s-fk8"/>
+                        <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Nyk-7v-Uqn"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="OJp-xR-jDn"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="width" secondItem="diO-OC-keM" secondAttribute="width" priority="750" id="Qaz-ey-eiw"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="RLX-vo-5ks"/>
                         <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" priority="850" id="cWG-po-VLf"/>
+                        <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="RiK-yH-vt4"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="width" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="width" id="g8w-El-eYt"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="mzr-JP-j7C"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="height" secondItem="diO-OC-keM" secondAttribute="height" priority="750" id="nnM-C9-eos"/>
-                        <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" priority="850" id="nrV-bx-oHk"/>
-                        <constraint firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" priority="850" id="ozK-nJ-IQ2"/>
+                        <constraint firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="nue-G5-Faa"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="qOR-YG-spO"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="height" relation="lessThanOrEqual" secondItem="diO-OC-keM" secondAttribute="height" id="tr5-Uh-yfq"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="whS-M5-Csh"/>
-                        <constraint firstItem="mae-cR-Ydf" firstAttribute="centerY" secondItem="diO-OC-keM" secondAttribute="centerY" id="x8P-ey-nJs"/>
                         <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="yt8-Kl-aFS"/>
                     </constraints>
                 </view>
@@ -324,7 +312,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="412" y="205" width="28" height="22"/>
+                            <rect key="frame" x="436" y="205" width="0.0" height="22"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="28" id="vbq-6i-PaK"/>
@@ -337,7 +325,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr">
-                            <rect key="frame" x="329" y="209" width="75" height="14.5"/>
+                            <rect key="frame" x="353" y="209" width="75" height="14.5"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -354,7 +342,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ess-8e-PUx" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="412" y="205" width="28" height="22"/>
+                            <rect key="frame" x="436" y="205" width="0.0" height="22"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="28" id="HBf-Xn-XW4"/>
