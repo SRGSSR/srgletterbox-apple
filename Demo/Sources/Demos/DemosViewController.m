@@ -491,6 +491,11 @@
                 }
                     
                 case 2: {
+                    [self openMultiPlayerWithURNString:@"urn:swi:video:43767184" URNString1:@"urn:swi:video:43767258" URNString2:@"urn:swi:video:43845942"];
+                    break;
+                }
+
+                case 3: {
                     [self openMultiPlayerWithURNString:@"urn:rts:video:3608517" URNString1:nil URNString2:@"urn:rts:video:1234567"];
                     break;
                 }
