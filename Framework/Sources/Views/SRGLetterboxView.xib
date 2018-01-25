@@ -22,7 +22,6 @@
                 <outlet property="airplayButton" destination="lr5-be-k4j" id="4p4-NX-C1t"/>
                 <outlet property="availabilityLabel" destination="gY1-0w-vfr" id="5Gf-M7-FVx"/>
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
-                <outlet property="backgroundInteractionView" destination="oRJ-Ix-YZ1" id="u2b-IQ-H0e"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorImageView" destination="ARZ-Ln-tEm" id="ffy-PG-wdF"/>
@@ -87,14 +86,6 @@
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="y7P-pN-sI4" appends="YES" id="plc-Vq-UjV"/>
                                 <outletCollection property="gestureRecognizers" destination="MQv-Za-8Ye" appends="YES" id="VX3-uq-zyv"/>
-                            </connections>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-Ix-YZ1" userLabel="Background Interaction View">
-                            <rect key="frame" x="0.0" y="0.0" width="474" height="237"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <gestureRecognizers/>
-                            <connections>
-                                <outletCollection property="gestureRecognizers" destination="Si8-HF-UEx" appends="YES" id="5yN-rq-d5c"/>
                             </connections>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
@@ -162,7 +153,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="83c-T2-D7p" customClass="SRGPictureInPictureButton">
-                                            <rect key="frame" x="76" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="76" y="0.0" width="30" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -174,7 +165,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGASValueTrackingSlider">
-                                            <rect key="frame" x="132" y="0.0" width="218" height="23"/>
+                                            <rect key="frame" x="112" y="0.0" width="220" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                             <userDefinedRuntimeAttributes>
@@ -191,13 +182,13 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="356" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="338" y="0.0" width="0.0" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="390" y="0.0" width="30" height="22"/>
+                                            <rect key="frame" x="372" y="0.0" width="0.0" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -209,7 +200,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
-                                            <rect key="frame" x="428" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="430" y="0.0" width="28" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="30" id="wp2-4M-YHh"/>
@@ -254,22 +245,18 @@
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="0uM-Gz-1H6"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="4hl-p0-Y81" secondAttribute="top" id="1mJ-0L-8o5"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="top" id="A0E-Ua-e5P"/>
-                        <constraint firstAttribute="bottom" secondItem="oRJ-Ix-YZ1" secondAttribute="bottom" id="CXx-a0-lSb"/>
                         <constraint firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="IXZ-Sg-JH0"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="Kc6-6s-fk8"/>
                         <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Nyk-7v-Uqn"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="OJp-xR-jDn"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="RLX-vo-5ks"/>
-                        <constraint firstAttribute="trailing" secondItem="oRJ-Ix-YZ1" secondAttribute="trailing" id="Rev-HK-MAT"/>
                         <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="RiK-yH-vt4"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="4hl-p0-Y81" secondAttribute="trailing" id="cY5-KW-GKl"/>
-                        <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="gQ2-0x-sTd"/>
                         <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="4hl-p0-Y81" secondAttribute="leading" id="ks0-w0-Zfb"/>
                         <constraint firstAttribute="bottom" secondItem="4hl-p0-Y81" secondAttribute="bottom" id="mzr-JP-j7C"/>
                         <constraint firstAttribute="bottom" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="nue-G5-Faa"/>
                         <constraint firstItem="4hl-p0-Y81" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="qOR-YG-spO"/>
                         <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="whS-M5-Csh"/>
-                        <constraint firstItem="oRJ-Ix-YZ1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="yt8-Kl-aFS"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View">
@@ -312,7 +299,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="436" y="205" width="0.0" height="22"/>
+                            <rect key="frame" x="438" y="205" width="28" height="22"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="28" id="vbq-6i-PaK"/>
@@ -325,7 +312,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr">
-                            <rect key="frame" x="353" y="209" width="75" height="14.5"/>
+                            <rect key="frame" x="355" y="209" width="75" height="14.5"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -342,7 +329,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ess-8e-PUx" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="436" y="205" width="0.0" height="22"/>
+                            <rect key="frame" x="438" y="205" width="28" height="22"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="28" id="HBf-Xn-XW4"/>
