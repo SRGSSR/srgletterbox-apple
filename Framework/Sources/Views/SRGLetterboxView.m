@@ -58,7 +58,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
-@property (nonatomic, weak) IBOutlet UIView *backgroundInteractionView;
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
@@ -890,7 +889,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
-    self.backgroundInteractionView.alpha = userInterfaceHidden ? 0.f : 1.f;
     
     self.notificationImageView.hidden = (self.notificationMessage == nil);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
