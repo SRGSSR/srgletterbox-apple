@@ -278,8 +278,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         }
     }
     
-    // TODO: Maybe error icon? (exclamationm mark)
-    return [UIImage srg_letterboxImageNamed:@"no_media-25"];
+    return [UIImage srg_letterboxImageNamed:@"error-25"];
 }
 
 + (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
