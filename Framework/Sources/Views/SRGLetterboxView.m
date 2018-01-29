@@ -163,7 +163,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super awakeFromNib];
     
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageView35WithTintColor:[UIColor whiteColor]];
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
     [self.mainView insertSubview:loadingImageView aboveSubview:self.playbackButton];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
