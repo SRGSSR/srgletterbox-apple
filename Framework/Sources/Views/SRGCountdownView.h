@@ -8,6 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+IB_DESIGNABLE
 @interface SRGCountdownView : UIView
 
 @property (nonatomic) NSTimeInterval remainingTimeInterval;
