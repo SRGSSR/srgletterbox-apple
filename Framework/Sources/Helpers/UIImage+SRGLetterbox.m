@@ -267,18 +267,25 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         return nil;
     }
     
-    NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
     if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
         if (error.code == SRGLetterboxErrorCodeBlocked) {
             SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
             return [self srg_letterboxImageForBlockingReason:blockingReason];
         }
-        else if ([underlyingError.domain isEqualToString:NSURLErrorDomain] && underlyingError.code == NSURLErrorNotConnectedToInternet) {
-            return [UIImage srg_letterboxImageNamed:@"no_network-25"];
+        else if (underlyingError) {
+            return [self srg_letterboxImageForError:underlyingError];
+        }
+        else {
+            return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
         }
     }
-    
-    return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
+    else if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
+        return [UIImage srg_letterboxImageNamed:@"no_network-25"];
+    }
+    else {
+        return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
+    }
 }
 
 + (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
