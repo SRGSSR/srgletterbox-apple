@@ -278,7 +278,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         }
     }
     
-    return [UIImage srg_letterboxImageNamed:@"error-25"];
+    return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
 }
 
 + (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
@@ -305,7 +305,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         }
             
         default: {
-            return [UIImage srg_letterboxImageNamed:@"no_media-25"];
+            return [UIImage srg_letterboxImageNamed:@"generic_blocked-25"];
             break;
         }
     }
