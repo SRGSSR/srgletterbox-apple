@@ -31,6 +31,8 @@ static void commonInit(SRGCountdownView *self);
 @property (nonatomic, weak) IBOutlet UILabel *seconds0Label;
 @property (nonatomic, weak) IBOutlet UILabel *secondsTitleLabel;
 
+@property (nonatomic) IBOutletCollection(UILabel) NSArray *colonLabels;
+
 @end
 
 @implementation SRGCountdownView
@@ -111,15 +113,23 @@ static void commonInit(SRGCountdownView *self);
 {
     self.days1Label.font = [UIFont srg_boldFontWithSize:self.days1Label.font.pointSize];
     self.days0Label.font = [UIFont srg_boldFontWithSize:self.days0Label.font.pointSize];
+    self.daysTitleLabel.font = [UIFont srg_boldFontWithSize:self.daysTitleLabel.font.pointSize];
     
     self.hours1Label.font = [UIFont srg_boldFontWithSize:self.hours1Label.font.pointSize];
     self.hours0Label.font = [UIFont srg_boldFontWithSize:self.hours0Label.font.pointSize];
+    self.hoursTitleLabel.font = [UIFont srg_boldFontWithSize:self.hoursTitleLabel.font.pointSize];
     
     self.minutes1Label.font = [UIFont srg_boldFontWithSize:self.minutes1Label.font.pointSize];
     self.minutes0Label.font = [UIFont srg_boldFontWithSize:self.minutes0Label.font.pointSize];
+    self.minutesTitleLabel.font = [UIFont srg_boldFontWithSize:self.minutesTitleLabel.font.pointSize];
     
     self.seconds1Label.font = [UIFont srg_boldFontWithSize:self.seconds1Label.font.pointSize];
     self.seconds0Label.font = [UIFont srg_boldFontWithSize:self.seconds0Label.font.pointSize];
+    self.secondsTitleLabel.font = [UIFont srg_boldFontWithSize:self.secondsTitleLabel.font.pointSize];
+    
+    [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
+        label.font = [UIFont srg_boldFontWithSize:self.seconds0Label.font.pointSize];
+    }];
 }
 
 @end
@@ -129,6 +139,7 @@ static void commonInit(SRGCountdownView *self)
     // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
     // an SRGCountdownView to avoid infinite recursion
     UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
+    view.backgroundColor = [UIColor clearColor];
     [self addSubview:view];
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);

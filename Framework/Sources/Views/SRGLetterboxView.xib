@@ -301,7 +301,7 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kqh-PW-yvN" customClass="SRGCountdownView">
                             <rect key="frame" x="0.0" y="0.0" width="474" height="255"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
                             <rect key="frame" x="438" y="205" width="28" height="22"/>
