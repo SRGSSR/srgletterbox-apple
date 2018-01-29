@@ -59,14 +59,53 @@ static void commonInit(SRGCountdownView *self);
 
 #pragma mark Overrides
 
-- (void)awakeFromNib
+- (void)willMoveToWindow:(UIWindow *)newWindow
 {
-    [super awakeFromNib];
+    [super willMoveToWindow:newWindow];
     
-    [self updateFonts];
+    if (newWindow) {
+        [self updateFonts];
+        [self reloadData];
+    }
 }
 
-#pragma mark Fonts
+#pragma mark Getters and setters
+
+- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval
+{
+    _remainingTimeInterval = remainingTimeInterval;
+    
+    [self reloadData];
+}
+
+#pragma mark UI
+
+- (void)reloadData
+{
+    NSDate *nowDate = NSDate.date;
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
+                                                                       fromDate:nowDate
+                                                                         toDate:[NSDate dateWithTimeInterval:self.remainingTimeInterval sinceDate:nowDate]
+                                                                        options:0];
+    
+    // TODO: What to do if > 99 days? < 0?
+    
+    NSInteger day1 = dateComponents.day / 10;
+    self.days1Label.text = @(day1).stringValue;
+    self.days0Label.text = @(dateComponents.day - 10 * day1).stringValue;
+    
+    NSInteger hours1 = dateComponents.hour / 10;
+    self.hours1Label.text = @(hours1).stringValue;
+    self.hours0Label.text = @(dateComponents.hour - hours1 * 10).stringValue;
+    
+    NSInteger minutes1 = dateComponents.minute / 10;
+    self.minutes1Label.text = @(minutes1).stringValue;
+    self.minutes0Label.text = @(dateComponents.minute - minutes1 * 10).stringValue;
+    
+    NSInteger seconds1 = dateComponents.second / 10;
+    self.seconds1Label.text = @(seconds1).stringValue;
+    self.seconds0Label.text = @(dateComponents.second - seconds1 * 10).stringValue;
+}
 
 - (void)updateFonts
 {

@@ -10,6 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SRGCountdownView : UIView
 
+@property (nonatomic) NSTimeInterval remainingTimeInterval;
+
 @end
 
 NS_ASSUME_NONNULL_END

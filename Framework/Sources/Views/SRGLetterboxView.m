@@ -12,6 +12,7 @@
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
 #import "SRGControlsView.h"
+#import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -68,6 +69,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
+@property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
@@ -726,6 +728,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
+        self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
         
         NSString *availabilityLabelText = nil;
         if (timeIntervalBeforeStart > 60. * 60.) {
