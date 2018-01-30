@@ -225,6 +225,11 @@ static void commonInit(SRGCountdownView *self);
     return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:self.remainingTimeInterval]];
 }
 
+- (UIAccessibilityTraits)accessibilityTraits
+{
+    return (self.remainingTimeInterval > 0) ? UIAccessibilityTraitUpdatesFrequently : UIAccessibilityTraitStaticText;
+}
+
 - (CGRect)accessibilityFrame
 {
     return UIAccessibilityConvertFrameToScreenCoordinates(self.accessibilityFrameView.frame, self);
