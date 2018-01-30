@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGCountdownView">
             <connections>
+                <outlet property="accessibilityFrameView" destination="6Gq-SM-dmY" id="fZz-G3-DP3"/>
                 <outlet property="days0Label" destination="GF6-UY-eDj" id="3Lv-vT-lNK"/>
                 <outlet property="days1Label" destination="t9F-Rg-YqQ" id="UP7-l7-GOV"/>
                 <outlet property="daysTitleLabel" destination="yn1-N0-Nuz" id="CPf-qF-wHJ"/>
@@ -40,6 +41,10 @@
             <rect key="frame" x="0.0" y="0.0" width="598" height="272"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Gq-SM-dmY" userLabel="Accessibility Frame View">
+                    <rect key="frame" x="156.5" y="98.5" width="285" height="75"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="NK9-AD-19i">
                     <rect key="frame" x="0.0" y="0.0" width="598" height="272"/>
                     <subviews>
@@ -310,10 +315,14 @@
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="6Gq-SM-dmY" firstAttribute="top" secondItem="JLS-Yu-wna" secondAttribute="bottom" id="7M1-8S-OtX"/>
+                <constraint firstItem="6Gq-SM-dmY" firstAttribute="trailing" secondItem="Fmy-kA-oqE" secondAttribute="leading" id="OPO-c6-SyU"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="OaL-Hm-cWS"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="U9a-05-urL"/>
+                <constraint firstItem="6Gq-SM-dmY" firstAttribute="leading" secondItem="c9e-kh-DKu" secondAttribute="trailing" id="YJZ-xv-EGo"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Zej-Nh-SDJ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="NK9-AD-19i" secondAttribute="bottom" id="Zhr-Y2-MI8"/>
+                <constraint firstItem="6Gq-SM-dmY" firstAttribute="bottom" secondItem="osw-XW-h57" secondAttribute="top" id="mzC-ha-VGG"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

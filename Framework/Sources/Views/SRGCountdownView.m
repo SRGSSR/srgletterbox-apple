@@ -38,7 +38,7 @@ static void commonInit(SRGCountdownView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *heightConstraint;
 
-@property (nonatomic, weak) IBOutlet UIView *countdownFrameView;
+@property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
 @end
 
@@ -227,7 +227,7 @@ static void commonInit(SRGCountdownView *self);
 
 - (CGRect)accessibilityFrame
 {
-    return UIAccessibilityConvertFrameToScreenCoordinates(self.countdownFrameView.frame, self);
+    return UIAccessibilityConvertFrameToScreenCoordinates(self.accessibilityFrameView.frame, self);
 }
 
 @end
