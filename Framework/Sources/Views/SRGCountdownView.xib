@@ -257,7 +257,7 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="L0A-Px-igp" firstAttribute="width" secondItem="IDl-Qo-Wpg" secondAttribute="width" id="61Y-1B-7xB"/>
-                                        <constraint firstAttribute="height" constant="45" id="LFO-6W-ibg"/>
+                                        <constraint firstAttribute="height" priority="999" constant="45" id="LFO-6W-ibg"/>
                                     </constraints>
                                 </stackView>
                                 <view contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5l1-np-hwT">
@@ -284,7 +284,7 @@
                             </subviews>
                             <constraints>
                                 <constraint firstItem="FEU-4E-XMw" firstAttribute="leading" secondItem="L0A-Px-igp" secondAttribute="leading" id="NqD-Rd-f9W"/>
-                                <constraint firstAttribute="width" constant="70" id="go0-a4-5sC"/>
+                                <constraint firstAttribute="width" priority="999" constant="70" id="go0-a4-5sC"/>
                                 <constraint firstItem="osw-XW-h57" firstAttribute="height" secondItem="JLS-Yu-wna" secondAttribute="height" id="qCb-mY-ZRu"/>
                                 <constraint firstItem="FEU-4E-XMw" firstAttribute="trailing" secondItem="IDl-Qo-Wpg" secondAttribute="trailing" id="wWW-YR-GEl"/>
                             </constraints>
@@ -295,13 +295,13 @@
                         </view>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="AoN-XB-M9f" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" id="1Bm-Y0-xac"/>
-                        <constraint firstItem="Zxm-0X-24a" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" constant="-10" id="Mt4-qT-3Wb"/>
-                        <constraint firstItem="oDM-Kw-s8f" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" id="ho8-Jz-Qzd"/>
-                        <constraint firstItem="2FG-lj-osJ" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" id="mAL-7Z-ldI"/>
+                        <constraint firstItem="AoN-XB-M9f" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" priority="999" id="1Bm-Y0-xac"/>
+                        <constraint firstItem="Zxm-0X-24a" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" priority="999" constant="-10" id="Mt4-qT-3Wb"/>
+                        <constraint firstItem="oDM-Kw-s8f" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" priority="999" id="ho8-Jz-Qzd"/>
+                        <constraint firstItem="2FG-lj-osJ" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" priority="999" id="mAL-7Z-ldI"/>
                         <constraint firstItem="Fmy-kA-oqE" firstAttribute="width" secondItem="c9e-kh-DKu" secondAttribute="width" id="sqt-D4-YZ3"/>
-                        <constraint firstItem="gSf-Ma-6s2" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" id="x5d-F0-UJr"/>
-                        <constraint firstItem="zq8-8p-3Uj" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" id="yx7-mH-l3U"/>
+                        <constraint firstItem="gSf-Ma-6s2" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" priority="999" id="x5d-F0-UJr"/>
+                        <constraint firstItem="zq8-8p-3Uj" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" priority="999" id="yx7-mH-l3U"/>
                     </constraints>
                 </stackView>
             </subviews>
