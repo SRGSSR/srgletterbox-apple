@@ -12,9 +12,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGCountdownView">
             <connections>
+                <outlet property="counterStackView" destination="NK9-AD-19i" id="Of6-vL-f0D"/>
                 <outlet property="days0Label" destination="GF6-UY-eDj" id="3Lv-vT-lNK"/>
                 <outlet property="days1Label" destination="t9F-Rg-YqQ" id="UP7-l7-GOV"/>
                 <outlet property="daysTitleLabel" destination="yn1-N0-Nuz" id="CPf-qF-wHJ"/>
+                <outlet property="heightConstraint" destination="LFO-6W-ibg" id="KHN-79-zPS"/>
                 <outlet property="hours0Label" destination="SyX-WL-Dxo" id="kbX-cZ-qcJ"/>
                 <outlet property="hours1Label" destination="7yQ-Hf-2hs" id="dEf-K6-YeX"/>
                 <outlet property="hoursTitleLabel" destination="LCX-0E-ukx" id="Cuk-nU-Mdi"/>
@@ -24,6 +26,7 @@
                 <outlet property="seconds0Label" destination="IDl-Qo-Wpg" id="IK7-Qc-jly"/>
                 <outlet property="seconds1Label" destination="L0A-Px-igp" id="o8d-DI-rUw"/>
                 <outlet property="secondsTitleLabel" destination="FEU-4E-XMw" id="j66-Md-uzn"/>
+                <outlet property="widthConstraint" destination="go0-a4-5sC" id="dbt-8d-R2I"/>
                 <outletCollection property="colonLabels" destination="jrH-7h-zuB" id="QeN-Oe-Rr5"/>
                 <outletCollection property="colonLabels" destination="nAF-2g-IvX" id="ciL-aW-agI"/>
                 <outletCollection property="colonLabels" destination="FUp-zZ-A0h" id="Xup-Op-cFm"/>
@@ -66,9 +69,6 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="50" id="CBe-Kn-1yN"/>
-                                    </constraints>
                                 </stackView>
                                 <view contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="faA-SH-PID">
                                     <rect key="frame" x="0.0" y="146" width="60" height="30"/>
@@ -93,7 +93,6 @@
                                 </view>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="width" constant="60" id="1Gu-LD-I1Q"/>
                                 <constraint firstItem="yn1-N0-Nuz" firstAttribute="leading" secondItem="t9F-Rg-YqQ" secondAttribute="leading" id="G71-f9-8aD"/>
                                 <constraint firstItem="2ZR-ut-6Y3" firstAttribute="height" secondItem="spa-IH-I8s" secondAttribute="height" id="L5M-OX-37r"/>
                                 <constraint firstItem="yn1-N0-Nuz" firstAttribute="trailing" secondItem="GF6-UY-eDj" secondAttribute="trailing" id="RQK-4G-915"/>
@@ -135,7 +134,6 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="7yQ-Hf-2hs" firstAttribute="width" secondItem="SyX-WL-Dxo" secondAttribute="width" id="FmG-qS-hTl"/>
-                                        <constraint firstAttribute="height" constant="50" id="luv-q0-CBg"/>
                                     </constraints>
                                 </stackView>
                                 <view contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Dbw-VE-Krf">
@@ -161,7 +159,6 @@
                                 </view>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="width" constant="70" id="Bcv-YW-Eyi"/>
                                 <constraint firstItem="XtJ-DX-EFY" firstAttribute="height" secondItem="pg9-Ou-dJh" secondAttribute="height" id="OLp-dL-z15"/>
                                 <constraint firstItem="LCX-0E-ukx" firstAttribute="leading" secondItem="7yQ-Hf-2hs" secondAttribute="leading" id="gF2-00-gV0"/>
                                 <constraint firstItem="LCX-0E-ukx" firstAttribute="trailing" secondItem="SyX-WL-Dxo" secondAttribute="trailing" id="tEN-p1-qU8"/>
@@ -203,7 +200,6 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="OhW-3B-N0F" firstAttribute="width" secondItem="du1-JC-vKi" secondAttribute="width" id="6oa-pk-pSC"/>
-                                        <constraint firstAttribute="height" constant="50" id="yh0-XV-xQd"/>
                                     </constraints>
                                 </stackView>
                                 <view contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yJd-tv-cGl">
@@ -229,7 +225,6 @@
                                 </view>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="width" constant="70" id="3yx-vm-FNq"/>
                                 <constraint firstItem="FAb-Ov-9r3" firstAttribute="trailing" secondItem="du1-JC-vKi" secondAttribute="trailing" id="VqP-3L-1z8"/>
                                 <constraint firstItem="FAb-Ov-9r3" firstAttribute="leading" secondItem="OhW-3B-N0F" secondAttribute="leading" id="uez-PY-rba"/>
                                 <constraint firstItem="9BV-hz-qqo" firstAttribute="height" secondItem="zuV-CB-y4H" secondAttribute="height" id="upx-96-h6R"/>
@@ -309,7 +304,13 @@
                         </view>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="AoN-XB-M9f" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" id="1Bm-Y0-xac"/>
+                        <constraint firstItem="Zxm-0X-24a" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" constant="-10" id="Mt4-qT-3Wb"/>
+                        <constraint firstItem="oDM-Kw-s8f" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" id="ho8-Jz-Qzd"/>
+                        <constraint firstItem="2FG-lj-osJ" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" id="mAL-7Z-ldI"/>
                         <constraint firstItem="Fmy-kA-oqE" firstAttribute="width" secondItem="c9e-kh-DKu" secondAttribute="width" id="sqt-D4-YZ3"/>
+                        <constraint firstItem="gSf-Ma-6s2" firstAttribute="width" secondItem="PVb-dG-Ogc" secondAttribute="width" id="x5d-F0-UJr"/>
+                        <constraint firstItem="zq8-8p-3Uj" firstAttribute="height" secondItem="GxD-oi-IQl" secondAttribute="height" id="yx7-mH-l3U"/>
                     </constraints>
                 </stackView>
             </subviews>
