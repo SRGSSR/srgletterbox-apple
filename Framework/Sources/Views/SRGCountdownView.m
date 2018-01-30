@@ -15,8 +15,6 @@ static void commonInit(SRGCountdownView *self);
 
 @interface SRGCountdownView ()
 
-@property (nonatomic, weak) IBOutlet UIStackView *counterStackView;
-
 @property (nonatomic, weak) IBOutlet UILabel *days1Label;
 @property (nonatomic, weak) IBOutlet UILabel *days0Label;
 @property (nonatomic, weak) IBOutlet UILabel *daysTitleLabel;
@@ -96,25 +94,11 @@ static void commonInit(SRGCountdownView *self);
 {
     [super layoutSubviews];
     
-    static CGFloat kLargeWidth = 668.f;
-    static CGFloat kSmallWidth = 300.f;
+    BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
+
+    self.widthConstraint.constant = isLarge ? 140.f : 70.f;
+    self.heightConstraint.constant = isLarge ? 90.f : 45.f;
     
-    CGFloat width = CGRectGetWidth(self.frame);
-    if (width >= kLargeWidth) {
-        self.counterStackView.hidden = NO;
-        self.widthConstraint.constant = 120.f;
-        self.heightConstraint.constant = 90.f;
-    }
-    else if (width >= kSmallWidth) {
-        self.counterStackView.hidden = NO;
-        self.widthConstraint.constant = 70.f;
-        self.heightConstraint.constant = 45.f;
-    }
-    else {
-        self.counterStackView.hidden = YES;
-    }
-    
-    BOOL isLarge = (width >= kLargeWidth);
     CGFloat digitSize = isLarge ? 72.f : 36.f;
     CGFloat titleSize = isLarge ? 26.f : 13.f;
     

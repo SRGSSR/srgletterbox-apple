@@ -12,7 +12,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGCountdownView">
             <connections>
-                <outlet property="counterStackView" destination="NK9-AD-19i" id="Of6-vL-f0D"/>
                 <outlet property="days0Label" destination="GF6-UY-eDj" id="3Lv-vT-lNK"/>
                 <outlet property="days1Label" destination="t9F-Rg-YqQ" id="UP7-l7-GOV"/>
                 <outlet property="daysTitleLabel" destination="yn1-N0-Nuz" id="CPf-qF-wHJ"/>
