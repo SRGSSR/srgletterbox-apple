@@ -8,9 +8,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  A simple view displaying a remaining time (in seconds) as a fancy countdown.
+ */
 IB_DESIGNABLE
 @interface SRGCountdownView : UIView
 
+/**
+ *  The remaining time to be displayed (in seconds).
+ */
 @property (nonatomic) NSTimeInterval remainingTimeInterval;
 
 @end
