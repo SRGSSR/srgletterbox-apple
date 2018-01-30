@@ -71,11 +71,27 @@ static void commonInit(SRGCountdownView *self);
     }
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGFloat width = CGRectGetWidth(self.frame);
+    if (width >= 668.f) {
+        
+    }
+    else if (width >= 300.f) {
+        
+    }
+    else {
+        
+    }
+}
+
 #pragma mark Getters and setters
 
 - (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval
 {
-    _remainingTimeInterval = remainingTimeInterval;
+    _remainingTimeInterval = MAX(remainingTimeInterval, 0);
     
     [self reloadData];
 }
@@ -93,19 +109,19 @@ static void commonInit(SRGCountdownView *self);
     NSInteger day1 = dateComponents.day / 10;
     if (day1 < 10) {
         self.days1Label.text = @(day1).stringValue;
-        self.days0Label.text = @(MAX(dateComponents.day - 10 * day1, 0)).stringValue;
+        self.days0Label.text = @(dateComponents.day - 10 * day1).stringValue;
         
         NSInteger hours1 = dateComponents.hour / 10;
         self.hours1Label.text = @(hours1).stringValue;
-        self.hours0Label.text = @(MAX(dateComponents.hour - hours1 * 10, 0)).stringValue;
+        self.hours0Label.text = @(dateComponents.hour - hours1 * 10).stringValue;
         
         NSInteger minutes1 = dateComponents.minute / 10;
         self.minutes1Label.text = @(minutes1).stringValue;
-        self.minutes0Label.text = @(MAX(dateComponents.minute - minutes1 * 10, 0)).stringValue;
+        self.minutes0Label.text = @(dateComponents.minute - minutes1 * 10).stringValue;
         
         NSInteger seconds1 = dateComponents.second / 10;
         self.seconds1Label.text = @(seconds1).stringValue;
-        self.seconds0Label.text = @(MAX(dateComponents.second - seconds1 * 10, 0)).stringValue;
+        self.seconds0Label.text = @(dateComponents.second - seconds1 * 10).stringValue;
     }
     else {
         self.days1Label.text = @"9";
