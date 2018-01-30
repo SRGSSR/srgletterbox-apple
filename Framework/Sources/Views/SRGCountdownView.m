@@ -66,6 +66,23 @@ static void commonInit(SRGCountdownView *self);
 
 #pragma mark Overrides
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.days1Label.layer.masksToBounds = YES;
+    self.days0Label.layer.masksToBounds = YES;
+    
+    self.hours1Label.layer.masksToBounds = YES;
+    self.hours0Label.layer.masksToBounds = YES;
+    
+    self.minutes1Label.layer.masksToBounds = YES;
+    self.minutes0Label.layer.masksToBounds = YES;
+    
+    self.seconds1Label.layer.masksToBounds = YES;
+    self.seconds0Label.layer.masksToBounds = YES;
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     [super willMoveToWindow:newWindow];
@@ -97,8 +114,9 @@ static void commonInit(SRGCountdownView *self);
         self.counterStackView.hidden = YES;
     }
     
-    CGFloat digitSize = (width >= kLargeWidth) ? 72.f : 36.f;
-    CGFloat titleSize = (width >= kLargeWidth) ? 26.f : 13.f;
+    BOOL isLarge = (width >= kLargeWidth);
+    CGFloat digitSize = isLarge ? 72.f : 36.f;
+    CGFloat titleSize = isLarge ? 26.f : 13.f;
     
     self.days1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
     self.days0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
@@ -119,6 +137,20 @@ static void commonInit(SRGCountdownView *self);
     [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
         label.font = [UIFont srg_mediumFontWithSize:digitSize];
     }];
+    
+    CGFloat digitCornerRadius = isLarge ? 4.f : 2.f;
+    
+    self.days1Label.layer.cornerRadius = digitCornerRadius;
+    self.days0Label.layer.cornerRadius = digitCornerRadius;
+    
+    self.hours1Label.layer.cornerRadius = digitCornerRadius;
+    self.hours0Label.layer.cornerRadius = digitCornerRadius;
+    
+    self.minutes1Label.layer.cornerRadius = digitCornerRadius;
+    self.minutes0Label.layer.cornerRadius = digitCornerRadius;
+    
+    self.seconds1Label.layer.cornerRadius = digitCornerRadius;
+    self.seconds0Label.layer.cornerRadius = digitCornerRadius;
 }
 
 #pragma mark Getters and setters
