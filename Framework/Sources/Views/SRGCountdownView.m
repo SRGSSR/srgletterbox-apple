@@ -73,14 +73,22 @@ static void commonInit(SRGCountdownView *self);
     self.days1Label.layer.masksToBounds = YES;
     self.days0Label.layer.masksToBounds = YES;
     
+    self.daysTitleLabel.text = SRGLetterboxLocalizedString(@"Days", @"Short label for countdown display");
+    
     self.hours1Label.layer.masksToBounds = YES;
     self.hours0Label.layer.masksToBounds = YES;
+    
+    self.hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Hours", @"Short label for countdown display");
     
     self.minutes1Label.layer.masksToBounds = YES;
     self.minutes0Label.layer.masksToBounds = YES;
     
+    self.hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
+    
     self.seconds1Label.layer.masksToBounds = YES;
     self.seconds0Label.layer.masksToBounds = YES;
+    
+    self.hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
