@@ -38,6 +38,8 @@ static void commonInit(SRGCountdownView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *heightConstraint;
 
+@property (nonatomic, weak) IBOutlet UIView *countdownFrameView;
+
 @end
 
 @implementation SRGCountdownView
@@ -200,6 +202,32 @@ static void commonInit(SRGCountdownView *self);
         self.seconds1Label.text = @"5";
         self.seconds0Label.text = @"9";
     }
+}
+
+#pragma mark Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+    return YES;
+}
+
+- (NSString *)accessibilityLabel
+{
+    static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+        s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+        s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+    });
+    
+    return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:self.remainingTimeInterval]];
+}
+
+- (CGRect)accessibilityFrame
+{
+    return UIAccessibilityConvertFrameToScreenCoordinates(self.countdownFrameView.frame, self);
 }
 
 @end
