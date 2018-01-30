@@ -71,7 +71,6 @@ static void commonInit(SRGCountdownView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateFonts];
         [self reloadData];
     }
 }
@@ -80,20 +79,46 @@ static void commonInit(SRGCountdownView *self);
 {
     [super layoutSubviews];
     
+    static CGFloat kLargeWidth = 668.f;
+    static CGFloat kSmallWidth = 300.f;
+    
     CGFloat width = CGRectGetWidth(self.frame);
-    if (width >= 668.f) {
+    if (width >= kLargeWidth) {
         self.counterStackView.hidden = NO;
         self.widthConstraint.constant = 120.f;
-        self.heightConstraint.constant = 100.f;
+        self.heightConstraint.constant = 90.f;
     }
-    else if (width >= 300.f) {
+    else if (width >= kSmallWidth) {
         self.counterStackView.hidden = NO;
         self.widthConstraint.constant = 70.f;
-        self.heightConstraint.constant = 50.f;
+        self.heightConstraint.constant = 45.f;
     }
     else {
         self.counterStackView.hidden = YES;
     }
+    
+    CGFloat digitSize = (width >= kLargeWidth) ? 72.f : 36.f;
+    CGFloat titleSize = (width >= kLargeWidth) ? 26.f : 13.f;
+    
+    self.days1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.days0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.daysTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    
+    self.hours1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.hours0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.hoursTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    
+    self.minutes1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.minutes0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.minutesTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    
+    self.seconds1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.seconds0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    self.secondsTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    
+    [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
+        label.font = [UIFont srg_mediumFontWithSize:digitSize];
+    }];
 }
 
 #pragma mark Getters and setters
@@ -145,29 +170,6 @@ static void commonInit(SRGCountdownView *self);
         self.seconds1Label.text = @"5";
         self.seconds0Label.text = @"9";
     }
-}
-
-- (void)updateFonts
-{
-    self.days1Label.font = [UIFont srg_boldFontWithSize:self.days1Label.font.pointSize];
-    self.days0Label.font = [UIFont srg_boldFontWithSize:self.days0Label.font.pointSize];
-    self.daysTitleLabel.font = [UIFont srg_boldFontWithSize:self.daysTitleLabel.font.pointSize];
-    
-    self.hours1Label.font = [UIFont srg_boldFontWithSize:self.hours1Label.font.pointSize];
-    self.hours0Label.font = [UIFont srg_boldFontWithSize:self.hours0Label.font.pointSize];
-    self.hoursTitleLabel.font = [UIFont srg_boldFontWithSize:self.hoursTitleLabel.font.pointSize];
-    
-    self.minutes1Label.font = [UIFont srg_boldFontWithSize:self.minutes1Label.font.pointSize];
-    self.minutes0Label.font = [UIFont srg_boldFontWithSize:self.minutes0Label.font.pointSize];
-    self.minutesTitleLabel.font = [UIFont srg_boldFontWithSize:self.minutesTitleLabel.font.pointSize];
-    
-    self.seconds1Label.font = [UIFont srg_boldFontWithSize:self.seconds1Label.font.pointSize];
-    self.seconds0Label.font = [UIFont srg_boldFontWithSize:self.seconds0Label.font.pointSize];
-    self.secondsTitleLabel.font = [UIFont srg_boldFontWithSize:self.secondsTitleLabel.font.pointSize];
-    
-    [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
-        label.font = [UIFont srg_boldFontWithSize:self.seconds0Label.font.pointSize];
-    }];
 }
 
 @end
