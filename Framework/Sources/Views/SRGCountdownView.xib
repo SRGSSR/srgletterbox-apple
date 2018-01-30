@@ -29,6 +29,10 @@
                 <outletCollection property="colonLabels" destination="jrH-7h-zuB" id="QeN-Oe-Rr5"/>
                 <outletCollection property="colonLabels" destination="nAF-2g-IvX" id="ciL-aW-agI"/>
                 <outletCollection property="colonLabels" destination="FUp-zZ-A0h" id="Xup-Op-cFm"/>
+                <outletCollection property="digitStackViews" destination="AoN-XB-M9f" id="Tic-2W-cS4"/>
+                <outletCollection property="digitStackViews" destination="zq8-8p-3Uj" id="lyP-Hg-NOZ"/>
+                <outletCollection property="digitStackViews" destination="oDM-Kw-s8f" id="bNe-l1-IpJ"/>
+                <outletCollection property="digitStackViews" destination="GxD-oi-IQl" id="Ojm-Q5-4T5"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

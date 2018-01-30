@@ -15,6 +15,8 @@ static void commonInit(SRGCountdownView *self);
 
 @interface SRGCountdownView ()
 
+@property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
+
 @property (nonatomic, weak) IBOutlet UILabel *days1Label;
 @property (nonatomic, weak) IBOutlet UILabel *days0Label;
 @property (nonatomic, weak) IBOutlet UILabel *daysTitleLabel;
@@ -135,6 +137,10 @@ static void commonInit(SRGCountdownView *self);
     
     self.seconds1Label.layer.cornerRadius = digitCornerRadius;
     self.seconds0Label.layer.cornerRadius = digitCornerRadius;
+    
+    [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
+        stackView.spacing = isLarge ? 4.f : 2.f;
+    }];
 }
 
 #pragma mark Getters and setters
