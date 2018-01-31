@@ -21,6 +21,7 @@
                 <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
                 <outlet property="airplayButton" destination="lr5-be-k4j" id="4p4-NX-C1t"/>
                 <outlet property="availabilityLabel" destination="gY1-0w-vfr" id="5Gf-M7-FVx"/>
+                <outlet property="availabilityLabelBackgroundView" destination="itD-sp-6vZ" id="fGv-b8-aOY"/>
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
@@ -100,7 +101,7 @@
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="234.5" y="115.5" width="48" height="72"/>
+                                    <rect key="frame" x="250.5" y="115.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="backward-32"/>
@@ -109,12 +110,12 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                                    <rect key="frame" x="282.5" y="115.5" width="52" height="72"/>
+                                    <rect key="frame" x="298.5" y="120.5" width="20" height="62"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="334.5" y="115.5" width="48" height="72"/>
+                                    <rect key="frame" x="318.5" y="115.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="forward-32"/>
@@ -123,7 +124,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="382.5" y="115.5" width="48" height="72"/>
+                                    <rect key="frame" x="366.5" y="115.5" width="48" height="72"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="back_live-32"/>
@@ -166,7 +167,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGASValueTrackingSlider">
-                                            <rect key="frame" x="112" y="0.0" width="381.5" height="23"/>
+                                            <rect key="frame" x="112" y="0.0" width="383" height="23"/>
                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="maximumTrackTintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                             <userDefinedRuntimeAttributes>
@@ -183,7 +184,7 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Remaining Time Label">
-                                            <rect key="frame" x="499.5" y="0.0" width="0.0" height="22"/>
+                                            <rect key="frame" x="501" y="0.0" width="0.0" height="22"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -316,9 +317,12 @@
                                 <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="ZC0-pL-q9N"/>
                             </connections>
                         </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="itD-sp-6vZ" userLabel="Availability Label Background View">
+                            <rect key="frame" x="269" y="142.5" width="79" height="18.5"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr">
                             <rect key="frame" x="271" y="144.5" width="75" height="14.5"/>
-                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -327,8 +331,12 @@
                     <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                     <constraints>
+                        <constraint firstItem="itD-sp-6vZ" firstAttribute="bottom" secondItem="gY1-0w-vfr" secondAttribute="bottom" constant="2" id="76N-Q1-ZEK"/>
+                        <constraint firstItem="itD-sp-6vZ" firstAttribute="trailing" secondItem="gY1-0w-vfr" secondAttribute="trailing" constant="2" id="9Ut-a5-n3J"/>
                         <constraint firstAttribute="trailing" secondItem="Kqh-PW-yvN" secondAttribute="trailing" id="Ddh-VH-Pq4"/>
+                        <constraint firstItem="itD-sp-6vZ" firstAttribute="top" secondItem="gY1-0w-vfr" secondAttribute="top" constant="-2" id="Fme-Qq-nno"/>
                         <constraint firstAttribute="bottom" secondItem="Kqh-PW-yvN" secondAttribute="bottom" id="G3P-p8-vDd"/>
+                        <constraint firstItem="itD-sp-6vZ" firstAttribute="leading" secondItem="gY1-0w-vfr" secondAttribute="leading" constant="-2" id="RIs-hE-ujL"/>
                         <constraint firstItem="Kqh-PW-yvN" firstAttribute="top" secondItem="Ipy-eN-bUs" secondAttribute="top" id="ZhS-ef-hcS"/>
                         <constraint firstItem="Kqh-PW-yvN" firstAttribute="leading" secondItem="Ipy-eN-bUs" secondAttribute="leading" id="c2O-js-ZSU"/>
                         <constraint firstItem="gY1-0w-vfr" firstAttribute="centerX" secondItem="Ipy-eN-bUs" secondAttribute="centerX" id="mAD-3q-vfI"/>

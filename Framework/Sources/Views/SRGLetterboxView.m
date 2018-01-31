@@ -70,6 +70,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
+@property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
@@ -236,7 +237,9 @@ static void commonInit(SRGLetterboxView *self);
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
-        
+    
+    self.availabilityLabelBackgroundView.layer.cornerRadius = 4.f;
+    
     [self reloadData];
 }
 
@@ -724,6 +727,7 @@ static void commonInit(SRGLetterboxView *self);
     if (blockingReason == SRGBlockingReasonEndDate) {
         self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
         self.availabilityLabel.hidden = NO;
+        self.availabilityLabelBackgroundView.hidden = NO;
         
         self.countdownView.hidden = YES;
     }
@@ -731,6 +735,7 @@ static void commonInit(SRGLetterboxView *self);
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         if (timeIntervalBeforeStart < 100 * 24 * 60 * 60) {
             self.availabilityLabel.hidden = YES;
+            self.availabilityLabelBackgroundView.hidden = YES;
             
             self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
             self.countdownView.hidden = NO;
@@ -746,12 +751,14 @@ static void commonInit(SRGLetterboxView *self);
 
             self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
             self.availabilityLabel.hidden = NO;
+            self.availabilityLabelBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
     }
     else {
         self.availabilityLabel.hidden = YES;
+        self.availabilityLabelBackgroundView.hidden = YES;
     }
 }
 

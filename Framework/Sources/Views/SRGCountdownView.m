@@ -44,6 +44,7 @@ static void commonInit(SRGCountdownView *self);
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *widthConstraints;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *heightConstraints;
 
+@property (nonatomic, weak) IBOutlet UIView *messageLabelBackgroundView;
 @property (nonatomic, weak) IBOutlet UILabel *messageLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
@@ -161,6 +162,8 @@ static void commonInit(SRGCountdownView *self);
     self.seconds1Label.layer.cornerRadius = digitCornerRadius;
     self.seconds0Label.layer.cornerRadius = digitCornerRadius;
     
+    self.messageLabelBackgroundView.layer.cornerRadius = digitCornerRadius;
+    
     [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
         stackView.spacing = isLarge ? 4.f : 2.f;
     }];
@@ -241,9 +244,11 @@ static void commonInit(SRGCountdownView *self);
     }
     
     if (self.remainingTimeInterval == 0) {
+        self.messageLabelBackgroundView.hidden = NO;
         self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.")];
     }
     else {
+        self.messageLabelBackgroundView.hidden = YES;
         self.messageLabel.text = nil;
     }
 }
