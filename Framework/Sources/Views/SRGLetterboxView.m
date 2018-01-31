@@ -729,11 +729,27 @@ static void commonInit(SRGLetterboxView *self);
         self.countdownView.hidden = YES;
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
-        self.availabilityLabel.hidden = YES;
-        
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
-        self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
-        self.countdownView.hidden = NO;
+        if (timeIntervalBeforeStart < 100 * 24 * 60 * 60) {
+            self.availabilityLabel.hidden = YES;
+            
+            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
+            self.countdownView.hidden = NO;
+        }
+        else {
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
+                s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+            });
+
+            self.availabilityLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
+            self.availabilityLabel.hidden = NO;
+            
+            self.countdownView.hidden = YES;
+        }
     }
     else {
         self.availabilityLabel.hidden = YES;
