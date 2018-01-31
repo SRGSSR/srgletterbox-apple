@@ -17,14 +17,20 @@ static void commonInit(SRGCountdownView *self);
 
 @property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
 
+@property (nonatomic, weak) IBOutlet UIStackView *daysStackView;
+
 @property (nonatomic, weak) IBOutlet UILabel *days1Label;
 @property (nonatomic, weak) IBOutlet UILabel *days0Label;
 @property (nonatomic, weak) IBOutlet UILabel *daysTitleLabel;
 
+@property (nonatomic, weak) IBOutlet UIStackView *hoursStackView;
+
+@property (nonatomic, weak) IBOutlet UILabel *hoursColonLabel;
 @property (nonatomic, weak) IBOutlet UILabel *hours1Label;
 @property (nonatomic, weak) IBOutlet UILabel *hours0Label;
 @property (nonatomic, weak) IBOutlet UILabel *hoursTitleLabel;
 
+@property (nonatomic, weak) IBOutlet UILabel *minutesColonLabel;
 @property (nonatomic, weak) IBOutlet UILabel *minutes1Label;
 @property (nonatomic, weak) IBOutlet UILabel *minutes0Label;
 @property (nonatomic, weak) IBOutlet UILabel *minutesTitleLabel;
@@ -35,8 +41,8 @@ static void commonInit(SRGCountdownView *self);
 
 @property (nonatomic) IBOutletCollection(UILabel) NSArray *colonLabels;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *widthConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *heightConstraint;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *widthConstraints;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *heightConstraints;
 
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
@@ -85,12 +91,12 @@ static void commonInit(SRGCountdownView *self);
     self.minutes1Label.layer.masksToBounds = YES;
     self.minutes0Label.layer.masksToBounds = YES;
     
-    self.hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
+    self.minutesTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
     
     self.seconds1Label.layer.masksToBounds = YES;
     self.seconds0Label.layer.masksToBounds = YES;
     
-    self.hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
+    self.secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -108,8 +114,13 @@ static void commonInit(SRGCountdownView *self);
     
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
 
-    self.widthConstraint.constant = isLarge ? 140.f : 70.f;
-    self.heightConstraint.constant = isLarge ? 90.f : 45.f;
+    [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+        constraint.constant = isLarge ? 140.f : 70.f;
+    }];
+    
+    [self.heightConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+        constraint.constant = isLarge ? 90.f : 45.f;
+    }];
     
     CGFloat digitSize = isLarge ? 72.f : 36.f;
     CGFloat titleSize = isLarge ? 26.f : 13.f;
@@ -175,7 +186,7 @@ static void commonInit(SRGCountdownView *self);
     NSInteger day1 = dateComponents.day / 10;
     if (day1 < 10) {
         self.days1Label.text = @(day1).stringValue;
-        self.days0Label.text = @(dateComponents.day - 10 * day1).stringValue;
+        self.days0Label.text = @(dateComponents.day - day1 * 10).stringValue;
         
         NSInteger hours1 = dateComponents.hour / 10;
         self.hours1Label.text = @(hours1).stringValue;
@@ -201,6 +212,28 @@ static void commonInit(SRGCountdownView *self);
         
         self.seconds1Label.text = @"5";
         self.seconds0Label.text = @"9";
+    }
+    
+    // Hide days / hours when not needed
+    if (dateComponents.day == 0) {
+        self.daysStackView.hidden = YES;
+        self.hoursColonLabel.hidden = YES;
+        
+        if (dateComponents.hour == 0) {
+            self.hoursStackView.hidden = YES;
+            self.minutesColonLabel.hidden = YES;
+        }
+        else {
+            self.hoursStackView.hidden = NO;
+            self.minutesColonLabel.hidden = NO;
+        }
+    }
+    else {
+        self.daysStackView.hidden = NO;
+        self.hoursColonLabel.hidden = NO;
+        
+        self.hoursStackView.hidden = NO;
+        self.minutesColonLabel.hidden = NO;
     }
 }
 
