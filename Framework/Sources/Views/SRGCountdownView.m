@@ -271,12 +271,17 @@ static void commonInit(SRGCountdownView *self);
         s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
     });
     
-    return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:self.remainingTimeInterval]];
+    if (self.remainingTimeInterval > 0) {
+        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:self.remainingTimeInterval]];
+    }
+    else {
+        return SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+    }
 }
 
 - (UIAccessibilityTraits)accessibilityTraits
 {
-    return (self.remainingTimeInterval > 0) ? UIAccessibilityTraitUpdatesFrequently : UIAccessibilityTraitStaticText;
+    return UIAccessibilityTraitUpdatesFrequently;
 }
 
 - (CGRect)accessibilityFrame
