@@ -732,14 +732,6 @@ static void commonInit(SRGLetterboxView *self);
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
         self.countdownView.hidden = NO;
-        
-        if (timeIntervalBeforeStart >= 0) {
-            self.availabilityLabel.hidden = YES;
-        }
-        else {
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.")];
-            self.availabilityLabel.hidden = NO;
-        }
     }
     else {
         self.availabilityLabel.hidden = YES;

@@ -44,6 +44,8 @@ static void commonInit(SRGCountdownView *self);
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *widthConstraints;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *heightConstraints;
 
+@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
+
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
 @end
@@ -162,6 +164,8 @@ static void commonInit(SRGCountdownView *self);
     [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
         stackView.spacing = isLarge ? 4.f : 2.f;
     }];
+    
+    self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
 }
 
 #pragma mark Getters and setters
@@ -234,6 +238,13 @@ static void commonInit(SRGCountdownView *self);
         
         self.hoursStackView.hidden = NO;
         self.minutesColonLabel.hidden = NO;
+    }
+    
+    if (self.remainingTimeInterval == 0) {
+        self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.")];
+    }
+    else {
+        self.messageLabel.text = nil;
     }
 }
 
