@@ -729,6 +729,8 @@ static void commonInit(SRGLetterboxView *self);
         self.countdownView.hidden = YES;
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
+        self.availabilityLabel.hidden = YES;
+        
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
         self.countdownView.hidden = NO;
