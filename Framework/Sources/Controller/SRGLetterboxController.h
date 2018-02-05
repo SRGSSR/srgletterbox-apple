@@ -10,6 +10,24 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Controller data availability.
+ */
+typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
+    /**
+     *  No data is available.
+     */
+    SRGLetterboxDataAvailabilityNone,
+    /**
+     *  Data is being loaded.
+     */
+    SRGLetterboxDataAvailabilityLoading,
+    /**
+     *  Data has been loaded once.
+     */
+    SRGLetterboxDataAvailabilityLoaded
+};
+
+/**
  *  Types.
  */
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
@@ -67,24 +85,6 @@ OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
  *  The default start bit rate to start (800 kbps).
  */
 OBJC_EXPORT const NSInteger SRGLetterboxDefaultStartBitRate;
-
-/**
- *  Controller data availability.
- */
-typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
-    /**
-     *  No data is available.
-     */
-    SRGLetterboxDataAvailabilityNone,
-    /**
-     *  Data is being loaded.
-     */
-    SRGLetterboxDataAvailabilityLoading,
-    /**
-     *  Data has been loaded once.
-     */
-    SRGLetterboxDataAvailabilityLoaded
-};
 
 /**
  *  Time interval for stream availability checks. Default is 30 seconds.
