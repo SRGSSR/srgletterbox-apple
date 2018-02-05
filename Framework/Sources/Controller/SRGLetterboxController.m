@@ -418,22 +418,58 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 #pragma mark Playlists
 
-- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+- (SRGMedia *)nextMedia
 {
     if ([self.playlistDataSource respondsToSelector:@selector(nextMediaForController:)]) {
-        SRGMedia *media = [self.playlistDataSource nextMediaForController:self];
-        if (media) {
-            [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
-            return YES;
-        }
+        return [self.playlistDataSource nextMediaForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (SRGMediaURN *)nextURN
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(nextURNForController:)]) {
+        return[self.playlistDataSource nextURNForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (SRGMedia *)previousMedia
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
+        return [self.playlistDataSource previousMediaForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (SRGMediaURN *)previousURN
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(previousURNForController:)]) {
+        return[self.playlistDataSource previousURNForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    SRGMedia *media = self.nextMedia;
+    if (media) {
+        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        return YES;
     }
     
-    if ([self.playlistDataSource respondsToSelector:@selector(nextURNForController:)]) {
-        SRGMediaURN *URN = [self.playlistDataSource nextURNForController:self];
-        if (URN) {
-            [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
-            return YES;
-        }
+    SRGMediaURN *URN = self.nextURN;
+    if (URN) {
+        [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        return YES;
     }
     
     return NO;
@@ -441,20 +477,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
-    if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
-        SRGMedia *media = [self.playlistDataSource previousMediaForController:self];
-        if (media) {
-            [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
-            return YES;
-        }
+    SRGMedia *media = self.previousMedia;
+    if (media) {
+        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        return YES;
     }
     
-    if ([self.playlistDataSource respondsToSelector:@selector(previousURNForController:)]) {
-        SRGMediaURN *URN = [self.playlistDataSource previousURNForController:self];
-        if (URN) {
-            [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
-            return YES;
-        }
+    SRGMediaURN *URN = self.previousURN;
+    if (URN) {
+        [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        return YES;
     }
     
     return NO;

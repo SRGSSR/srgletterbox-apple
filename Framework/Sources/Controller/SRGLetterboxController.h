@@ -364,6 +364,12 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 @property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
+- (SRGMedia *)nextMedia;
+- (SRGMediaURN *)nextURN;
+
+- (SRGMedia *)previousMedia;
+- (SRGMediaURN *)previousURN;
+
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 
