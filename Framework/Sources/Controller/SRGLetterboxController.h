@@ -103,6 +103,25 @@ OBJC_EXPORT const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 se
 OBJC_EXPORT const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
 
 /**
+ *  Forward declarations.
+ */
+@class SRGLetterboxController;
+
+@protocol SRGLetterboxControllerPlaylistDataSource <NSObject>
+
+- (nullable SRGMediaURN *)nextURNForController:(SRGLetterboxController *)controller;
+- (nullable SRGMediaURN *)previousURNForController:(SRGLetterboxController *)controller;
+
+@optional
+
+- (nullable SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller;
+- (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
+
+- (NSTimeInterval)delayBeforeNextMediaForController:(SRGLetterboxController *)controller;
+
+@end
+
+/**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
@@ -338,6 +357,18 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Remove a time observer (does nothing if the observer is not registered).
  */
 - (void)removePeriodicTimeObserver:(nullable id)observer;
+
+@end
+
+@interface SRGLetterboxController (Playlists)
+
+@property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+
+- (void)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+- (void)prepareToPlayPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+
+- (void)playNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+- (void)playPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 
 @end
 
