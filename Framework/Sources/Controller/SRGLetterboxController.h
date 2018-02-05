@@ -19,7 +19,7 @@ typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
  *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
  *  notification `userInfo` dictionary.
  */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -28,45 +28,45 @@ OBJC_EXTERN NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
  *              actually occurred. Nevertheless, your implementation should not be concerned about such details and
  *              still respond to change notifications accordingly (e.g. by updating user interface elements).
  */
-OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
+OBJC_EXPORT NSString * const SRGLetterboxMetadataDidChangeNotification;
 
 /**
  *  Current metadata.
  */
-OBJC_EXTERN NSString * const SRGLetterboxURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxSubdivisionKey;
-OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
+OBJC_EXPORT NSString * const SRGLetterboxURNKey;
+OBJC_EXPORT NSString * const SRGLetterboxMediaKey;
+OBJC_EXPORT NSString * const SRGLetterboxMediaCompositionKey;
+OBJC_EXPORT NSString * const SRGLetterboxSubdivisionKey;
+OBJC_EXPORT NSString * const SRGLetterboxChannelKey;
 
 /**
  *  Previous metadata.
  */
-OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousSubdivisionKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousURNKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaCompositionKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousSubdivisionKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousChannelKey;
 
 /**
  *  Notification sent when an error has been encountered.
  */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidFailNotification;
 
 /**
  *  Error information.
  */
-OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
+OBJC_EXPORT NSString * const SRGLetterboxErrorKey;
 
 /**
  *  Notification sent when playback has been retried (might be automatic when network is reachable again).
  */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRetryNotification;
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
 
 /**
  *  The default start bit rate to start (800 kbps).
  */
-OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
+OBJC_EXPORT const NSInteger SRGLetterboxDefaultStartBitRate;
 
 /**
  *  Controller data availability.
@@ -99,8 +99,8 @@ OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
 /**
  *  Standard skip intervals.
  */
-OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 seconds
-OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
+OBJC_EXPORT const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 seconds
+OBJC_EXPORT const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 

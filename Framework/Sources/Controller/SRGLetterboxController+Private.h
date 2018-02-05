@@ -14,13 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  Notification sent when the livestream associated with the current playback context just finished. The corresponding
  *  media can be retrieved under the `SRGLetterboxMediaKey` user information key.
  */
-OBJC_EXTERN NSString * const SRGLetterboxLivestreamDidFinishNotification;
+OBJC_EXPORT NSString * const SRGLetterboxLivestreamDidFinishNotification;
 
 /**
  *  Notification sent when a request to the social count view service will be fired. The corresponding media subdivision
  *  can be retrieved under the `SRGLetterboxSubdivisionKey` user information key.
  */
-OBJC_EXTERN NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification;
+OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification;
 
 /**
  *  Interface for internal use.
