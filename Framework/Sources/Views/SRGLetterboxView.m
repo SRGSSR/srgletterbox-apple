@@ -12,6 +12,7 @@
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
 #import "SRGControlsView.h"
+#import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -68,6 +69,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
+@property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
+@property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
@@ -234,7 +237,9 @@ static void commonInit(SRGLetterboxView *self);
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
-        
+    
+    self.availabilityLabelBackgroundView.layer.cornerRadius = 4.f;
+    
     [self reloadData];
 }
 
@@ -716,77 +721,44 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateAvailabilityLabelForController:(SRGLetterboxController *)controller
 {
     SRGMedia *media = controller.media;
-    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:[NSDate date]];
     if (blockingReason == SRGBlockingReasonEndDate) {
-        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString];
-        self.availabilityLabel.accessibilityLabel = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
+        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
         self.availabilityLabel.hidden = NO;
+        self.availabilityLabelBackgroundView.hidden = NO;
+        
+        self.countdownView.hidden = YES;
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
-        
-        NSString *availabilityLabelText = nil;
-        if (timeIntervalBeforeStart > 60. * 60.) {
-            static NSDateComponentsFormatter *s_longDateComponentsFormatter;
-            static dispatch_once_t s_onceToken;
-            dispatch_once(&s_onceToken, ^{
-                s_longDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_longDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
-                s_longDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
-            });
-            availabilityLabelText = [s_longDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
-        }
-        else if (timeIntervalBeforeStart >= 0) {
-            static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
-            static dispatch_once_t s_onceToken;
-            dispatch_once(&s_onceToken, ^{
-                s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
-                s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-            });
-            availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
-        }
-        else {
-            availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
-        }
-        
-        if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
-            NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", availabilityLabelText]
-                                                                                               attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle],
-                                                                                                             NSForegroundColorAttributeName : [UIColor whiteColor] }];
+        if (timeIntervalBeforeStart < 100 * 24 * 60 * 60) {
+            self.availabilityLabel.hidden = YES;
+            self.availabilityLabelBackgroundView.hidden = YES;
             
-            [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"●  ")
-                                                                                   attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle],
-                                                                                                 NSForegroundColorAttributeName : [UIColor whiteColor] }]];
-            
-            self.availabilityLabel.attributedText = [attributedText copy];
+            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
+            self.countdownView.hidden = NO;
         }
         else {
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
-        }
-        
-        if (timeIntervalBeforeStart >= 0) {
-            static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
-                s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
-                s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
-                s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
+                s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
             });
-            self.availabilityLabel.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
+
+            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
+            self.availabilityLabel.hidden = NO;
+            self.availabilityLabelBackgroundView.hidden = NO;
+            
+            self.countdownView.hidden = YES;
         }
-        else {
-            self.availabilityLabel.accessibilityLabel = availabilityLabelText;
-        }
-        self.availabilityLabel.hidden = NO;
     }
     else {
-        self.availabilityLabel.text = nil;
-        self.availabilityLabel.accessibilityLabel = nil;
         self.availabilityLabel.hidden = YES;
+        self.availabilityLabelBackgroundView.hidden = YES;
     }
 }
 

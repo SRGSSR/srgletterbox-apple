@@ -133,6 +133,9 @@
 		6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB017981E975F87004CCAF8 /* ModalTransition.h */; };
+		6FB4422C201F1FB900FA5AF8 /* SRGCountdownView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB4422A201F1FB900FA5AF8 /* SRGCountdownView.h */; };
+		6FB4422D201F1FB900FA5AF8 /* SRGCountdownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB4422B201F1FB900FA5AF8 /* SRGCountdownView.m */; };
+		6FB4422F201F1FC600FA5AF8 /* SRGCountdownView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FB4422E201F1FC600FA5AF8 /* SRGCountdownView.xib */; };
 		6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */; };
 		6FB696541F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */; };
 		6FB6BB031EC2E103006672EC /* ModalTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB017991E975F87004CCAF8 /* ModalTransition.m */; };
@@ -387,6 +390,9 @@
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
 		6FB017981E975F87004CCAF8 /* ModalTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalTransition.h; sourceTree = "<group>"; };
 		6FB017991E975F87004CCAF8 /* ModalTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalTransition.m; sourceTree = "<group>"; };
+		6FB4422A201F1FB900FA5AF8 /* SRGCountdownView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGCountdownView.h; sourceTree = "<group>"; };
+		6FB4422B201F1FB900FA5AF8 /* SRGCountdownView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGCountdownView.m; sourceTree = "<group>"; };
+		6FB4422E201F1FC600FA5AF8 /* SRGCountdownView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SRGCountdownView.xib; sourceTree = "<group>"; };
 		6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGTapGestureRecognizer.h; sourceTree = "<group>"; };
 		6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGTapGestureRecognizer.m; sourceTree = "<group>"; };
 		6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandalonePlayerViewController.h; sourceTree = "<group>"; };
@@ -620,6 +626,9 @@
 				6FDF33AF1F012D7500BA1D6E /* SRGAccessibilityView.m */,
 				080A6B141E8E79EF0084F484 /* SRGControlsView.h */,
 				080A6B151E8E79EF0084F484 /* SRGControlsView.m */,
+				6FB4422A201F1FB900FA5AF8 /* SRGCountdownView.h */,
+				6FB4422B201F1FB900FA5AF8 /* SRGCountdownView.m */,
+				6FB4422E201F1FC600FA5AF8 /* SRGCountdownView.xib */,
 				6FDF33B21F012DA200BA1D6E /* SRGFullScreenButton.h */,
 				6FDF33B31F012DA200BA1D6E /* SRGFullScreenButton.m */,
 				08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */,
@@ -815,6 +824,7 @@
 				6FF0D89A1F4DABF200B3C1EB /* SRGTimerTarget.h in Headers */,
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
+				6FB4422C201F1FB900FA5AF8 /* SRGCountdownView.h in Headers */,
 				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				6FDF33B41F012DA200BA1D6E /* SRGFullScreenButton.h in Headers */,
@@ -994,6 +1004,7 @@
 				6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 				08E0BF601EE05BCD002D4012 /* Accessibility.strings in Resources */,
+				6FB4422F201F1FC600FA5AF8 /* SRGCountdownView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1057,6 +1068,7 @@
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FF0D89B1F4DABF200B3C1EB /* SRGTimerTarget.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
+				6FB4422D201F1FB900FA5AF8 /* SRGCountdownView.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 				6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */,
