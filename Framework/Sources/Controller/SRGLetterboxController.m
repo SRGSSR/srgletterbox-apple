@@ -127,6 +127,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
+@property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
@@ -412,6 +414,68 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (void)removePeriodicTimeObserver:(id)observer
 {
     [self.mediaPlayerController removePeriodicTimeObserver:observer];
+}
+
+#pragma mark Playlists
+
+- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(nextMediaForController:)]) {
+        SRGMedia *media = [self.playlistDataSource nextMediaForController:self];
+        if (media) {
+            [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+            return YES;
+        }
+    }
+    
+    if ([self.playlistDataSource respondsToSelector:@selector(nextURNForController:)]) {
+        SRGMediaURN *URN = [self.playlistDataSource nextURNForController:self];
+        if (URN) {
+            [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
+        SRGMedia *media = [self.playlistDataSource previousMediaForController:self];
+        if (media) {
+            [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+            return YES;
+        }
+    }
+    
+    if ([self.playlistDataSource respondsToSelector:@selector(previousURNForController:)]) {
+        SRGMediaURN *URN = [self.playlistDataSource previousURNForController:self];
+        if (URN) {
+            [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (BOOL)playNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    @weakify(self)
+    return [self prepareToPlayNextMediaWithCompletionHandler:^{
+        @strongify(self)
+        [self play];
+    }];
+}
+
+- (BOOL)playPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    @weakify(self)
+    return [self prepareToPlayPreviousMediaWithCompletionHandler:^{
+        @strongify(self)
+        [self play];
+    }];
 }
 
 #pragma mark Data
@@ -1063,7 +1127,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     @weakify(self)
     [self prepareToPlayURN:URN withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
-        
         [self play];
     }];
 }
@@ -1073,7 +1136,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     @weakify(self)
     [self prepareToPlayMedia:media withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
-        
         [self play];
     }];
 }
