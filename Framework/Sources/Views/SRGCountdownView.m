@@ -184,12 +184,7 @@ static void commonInit(SRGCountdownView *self);
 
 - (void)reloadData
 {
-    NSDate *nowDate = NSDate.date;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
-                                                                       fromDate:nowDate
-                                                                         toDate:[NSDate dateWithTimeInterval:self.remainingTimeInterval sinceDate:nowDate]
-                                                                        options:0];
-    
+    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
     NSInteger day1 = dateComponents.day / 10;
     if (day1 < 10) {
         self.days1Label.text = @(day1).stringValue;
@@ -301,4 +296,13 @@ static void commonInit(SRGCountdownView *self)
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+}
+
+NSDateComponents *SRGDateComponentsForTimeIntervalSinceNow(NSTimeInterval timeInterval)
+{
+    NSDate *nowDate = NSDate.date;
+    return [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
+                                           fromDate:nowDate
+                                             toDate:[NSDate dateWithTimeInterval:timeInterval sinceDate:nowDate]
+                                            options:0];
 }

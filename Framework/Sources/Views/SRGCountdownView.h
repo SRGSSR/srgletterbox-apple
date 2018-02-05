@@ -9,6 +9,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Return date components corresponding to a given time interval since the current date.
+ */
+OBJC_EXPORT NSDateComponents *SRGDateComponentsForTimeIntervalSinceNow(NSTimeInterval timeInterval);
+
+/**
  *  A simple view displaying a remaining time (in seconds) as a fancy countdown.
  */
 IB_DESIGNABLE
