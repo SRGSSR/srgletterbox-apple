@@ -11,6 +11,8 @@
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
+NSInteger SRGCountdownViewDaysLimit = 100;
+
 static void commonInit(SRGCountdownView *self);
 
 @interface SRGCountdownView ()
@@ -186,7 +188,7 @@ static void commonInit(SRGCountdownView *self);
 {
     NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
     NSInteger day1 = dateComponents.day / 10;
-    if (day1 < 10) {
+    if (day1 < SRGCountdownViewDaysLimit / 10) {
         self.days1Label.text = @(day1).stringValue;
         self.days0Label.text = @(dateComponents.day - day1 * 10).stringValue;
         

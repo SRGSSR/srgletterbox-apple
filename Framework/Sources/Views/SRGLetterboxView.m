@@ -734,7 +734,7 @@ static void commonInit(SRGLetterboxView *self);
     else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
-        if (dateComponents.day < 100) {
+        if (dateComponents.day < SRGCountdownViewDaysLimit) {
             self.availabilityLabel.hidden = YES;
             self.availabilityLabelBackgroundView.hidden = YES;
             
