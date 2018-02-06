@@ -26,6 +26,11 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 };
 
 /**
+ *  Default set of commands. Seeks and skips are available.
+ */
+OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
+
+/**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
  *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
@@ -82,10 +87,12 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 @end
 
 /**
- *  Delegate protocol for playback command customization.
+ *  Now playing information and command customization. Commands are available both from the control center as well
+ *  as on remotes (e.g. headset remote or Apple Watch).
  *
- *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which 
- *              button will be available. Other commands remain available when using a remote, though:
+ *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which
+ *              button will be available. Other commands remain available when using a remote, though. A headset button,
+ *              for example, allows you to:
  *                - Tap twice to play the next track.
  *                - Tap three times to play the previous track.
  *                - Tap twice and hold to seek forward.
@@ -96,11 +103,11 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 @optional
 
 /**
- *  Return the set of commands which should be available during playback. If not implemented, the seek and skip commands
- *  will be available.
+ *  Return the set of commands which should be available during playback. If not implemented, the default `SRGLetterboxCommandsDefault`
+ *  is applied.
  *
  *  @discussion The play / pause command cannot be customized. This method is called continuously during playback,
- *              you can therefore alter the availability of the commands during playback as well.
+ *              you can therefore alter the availability of the commands at any time.
  */
 - (SRGLetterboxCommands)letterboxAvailableCommands;
 
@@ -109,10 +116,10 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 /**
  *  The Letterbox service is a singleton, which can provide the following application-wide features for one Letterbox 
  *  controller at a time:
- *    - AirPlay
- *    - Picture in picture (for devices supporting it)
- *    - Control center and lock screen media information
- *    - Remote playback controls
+ *    - AirPlay.
+ *    - Picture in picture (for devices supporting it).
+ *    - Control center and lock screen media information.
+ *    - Remote playback controls.
  *
  *  These features namely only make sense for one controller at a time, which explains why a Letterbox controller
  *  does not offert them by default. At any time, calling the `-enableWithController:pictureInPictureDelegate:`

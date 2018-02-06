@@ -18,6 +18,8 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
+SRGLetterboxCommands SRGLetterboxCommandsDefault = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
+
 NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterboxServiceSettingsDidChangeNotification";
 
 @interface SRGLetterboxService () {
@@ -363,7 +365,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || [AVAudioSession srg_isAirplayActive]
                                                                                                             || [UIDevice srg_isLocked])) {
-        SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
+        SRGLetterboxCommands availableCommands = SRGLetterboxCommandsDefault;
         if ([self.commandDelegate respondsToSelector:@selector(letterboxAvailableCommands)]) {
             availableCommands = [self.commandDelegate letterboxAvailableCommands];
         }
