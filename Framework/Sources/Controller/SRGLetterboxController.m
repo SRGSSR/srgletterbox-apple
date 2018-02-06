@@ -428,30 +428,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
-- (SRGMediaURN *)nextURN
-{
-    if ([self.playlistDataSource respondsToSelector:@selector(nextURNForController:)]) {
-        return[self.playlistDataSource nextURNForController:self];
-    }
-    else {
-        return nil;
-    }
-}
-
 - (SRGMedia *)previousMedia
 {
     if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
         return [self.playlistDataSource previousMediaForController:self];
-    }
-    else {
-        return nil;
-    }
-}
-
-- (SRGMediaURN *)previousURN
-{
-    if ([self.playlistDataSource respondsToSelector:@selector(previousURNForController:)]) {
-        return[self.playlistDataSource previousURNForController:self];
     }
     else {
         return nil;
@@ -465,14 +445,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
         return YES;
     }
-    
-    SRGMediaURN *URN = self.nextURN;
-    if (URN) {
-        [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
-        return YES;
+    else {
+        return NO;
     }
-    
-    return NO;
 }
 
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
@@ -482,14 +457,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
         return YES;
     }
-    
-    SRGMediaURN *URN = self.previousURN;
-    if (URN) {
-        [self prepareToPlayURN:URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
-        return YES;
+    else {
+        return NO;
     }
-    
-    return NO;
 }
 
 - (BOOL)playNextMediaWithCompletionHandler:(void (^)(void))completionHandler

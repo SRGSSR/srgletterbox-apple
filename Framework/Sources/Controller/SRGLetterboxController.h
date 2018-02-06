@@ -111,13 +111,10 @@ OBJC_EXPORT const NSInteger SRGLetterboxForwardSkipInterval;            // 30 se
 
 @optional
 
-- (nullable SRGMediaURN *)nextURNForController:(SRGLetterboxController *)controller;
-- (nullable SRGMediaURN *)previousURNForController:(SRGLetterboxController *)controller;
-
 - (nullable SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller;
 - (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
 
-- (NSTimeInterval)delayBeforeNextMediaForController:(SRGLetterboxController *)controller;
+- (NSTimeInterval)continuousPlaybackDelayForController:(SRGLetterboxController *)controller;
 
 @end
 
@@ -364,11 +361,8 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 @property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
-- (SRGMedia *)nextMedia;
-- (SRGMediaURN *)nextURN;
-
-- (SRGMedia *)previousMedia;
-- (SRGMediaURN *)previousURN;
+@property (nonatomic, readonly, nullable) SRGMedia *nextMedia;
+@property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
 
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
