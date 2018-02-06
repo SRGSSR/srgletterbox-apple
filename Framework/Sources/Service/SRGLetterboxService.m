@@ -614,16 +614,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)previousTrack:(id)sender
 {
-    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToPreviousTrack)]) {
-        [self.commandDelegate letterboxWillSkipToPreviousTrack];
-    }
+    [self.controller playPreviousMediaWithCompletionHandler:nil];
 }
 
 - (void)nextTrack:(id)sender
 {
-    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToNextTrack)]) {
-        [self.commandDelegate letterboxWillSkipToNextTrack];
-    }
+    [self.controller playNextMediaWithCompletionHandler:nil];
 }
 
 - (void)doNothing:(id)sender

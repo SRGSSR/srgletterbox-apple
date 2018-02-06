@@ -104,16 +104,6 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
  */
 - (SRGLetterboxCommands)letterboxAvailableCommands;
 
-/**
- *  Called when the previous track must be played.
- */
-- (void)letterboxWillSkipToPreviousTrack;
-
-/**
- *  Called when the next track mjust be played.
- */
-- (void)letterboxWillSkipToNextTrack;
-
 @end
 
 /**
