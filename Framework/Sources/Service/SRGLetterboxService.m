@@ -32,6 +32,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @property (nonatomic) SRGLetterboxController *controller;
 @property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
+@property (nonatomic) SRGLetterboxCommands allowedCommands;
+
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
 
@@ -60,6 +63,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     if (self = [super init]) {
         self.nowPlayingInfoAndCommandsEnabled = YES;
+        self.allowedCommands = SRGLetterboxCommandsDefault;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
@@ -95,6 +99,13 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [self resetRemoteCommandCenter];
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
     }
+}
+
+- (void)setAllowedCommands:(SRGLetterboxCommands)allowedCommands
+{
+    _allowedCommands = allowedCommands;
+    
+    [self updateRemoteCommandCenterWithController:self.controller];
 }
 
 - (void)setController:(SRGLetterboxController *)controller
@@ -365,20 +376,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || [AVAudioSession srg_isAirplayActive]
                                                                                                             || [UIDevice srg_isLocked])) {
-        SRGLetterboxCommands availableCommands = SRGLetterboxCommandsDefault;
-        if ([self.commandDelegate respondsToSelector:@selector(letterboxAvailableCommands)]) {
-            availableCommands = [self.commandDelegate letterboxAvailableCommands];
-        }
-        
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
-        commandCenter.skipBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
-        commandCenter.seekForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekForward);
-        commandCenter.seekBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekBackward);
-        commandCenter.nextTrackCommand.enabled = (availableCommands & SRGLetterboxCommandNextTrack);
-        commandCenter.previousTrackCommand.enabled = (availableCommands & SRGLetterboxCommandPreviousTrack);
+        commandCenter.skipForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
+        commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
+        commandCenter.seekForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekForward);
+        commandCenter.seekBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekBackward);
+        commandCenter.nextTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandNextTrack && controller.nextMedia != nil);
+        commandCenter.previousTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandPreviousTrack && controller.previousMedia != nil);
     }
     else {
         commandCenter.playCommand.enabled = NO;

@@ -87,33 +87,6 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
 @end
 
 /**
- *  Now playing information and command customization. Commands are available both from the control center as well
- *  as on remotes (e.g. headset remote or Apple Watch).
- *
- *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which
- *              button will be available. Other commands remain available when using a remote, though. A headset button,
- *              for example, allows you to:
- *                - Tap twice to play the next track.
- *                - Tap three times to play the previous track.
- *                - Tap twice and hold to seek forward.
- *                - Tap three times and hold to see backward.
- */
-@protocol SRGLetterboxCommandDelegate <NSObject>
-
-@optional
-
-/**
- *  Return the set of commands which should be available during playback. If not implemented, the default `SRGLetterboxCommandsDefault`
- *  is applied.
- *
- *  @discussion The play / pause command cannot be customized. This method is called continuously during playback,
- *              you can therefore alter the availability of the commands at any time.
- */
-- (SRGLetterboxCommands)letterboxAvailableCommands;
-
-@end
-
-/**
  *  The Letterbox service is a singleton, which can provide the following application-wide features for one Letterbox 
  *  controller at a time:
  *    - AirPlay.
@@ -177,15 +150,6 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
 - (void)disable;
 
 /**
- *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
- *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
- *  them to precisely control how it is made.
- *
- *  Default is `YES`.
- */
-@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
-
-/**
  *  The controller for which application-wide services are enabled, if any.
  */
 @property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
@@ -198,18 +162,45 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
 @property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
- *  The playback command delegate, if any has been set. Use it to customize commands available in the control center
- *  and on the lock screen, as well as with remotes (e.g. headsets).
- */
-@property (nonatomic, weak, nullable) id<SRGLetterboxCommandDelegate> commandDelegate;
-
-/**
  *  If set to `YES`, playback never switches to full-screen playback on an external screen. This is especially handy 
  *  when you need to mirror your application for presentation purposes.
  *
  *  Default is `NO`.
  */
 @property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
+
+@end
+
+/**
+ *  Now playing information and command customization. Commands are available both from the control center as well
+ *  as on remotes (e.g. headset remote or Apple Watch).
+ *
+ *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which
+ *              button will be available. Other commands remain available when using a remote, though. A headset button,
+ *              for example, allows you to:
+ *                - Tap twice to play the next track.
+ *                - Tap three times to play the previous track.
+ *                - Tap twice and hold to seek forward.
+ *                - Tap three times and hold to see backward.
+ */
+@interface SRGLetterboxService (NowPlayingInfoAndCommands)
+
+/**
+ *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
+ *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
+ *  them to precisely control how it is made.
+ *
+ *  Default is `YES`.
+ */
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
+
+/**
+ *  Return the set of commands which might be available during playback. Whether or not a command is available or not
+ *  ultimately depends on the media being played (e.g. seeks methods are not available if the media is not seekable).
+ *
+ *  The default value is `SRGLetterboxCommandsDefault`.
+ */
+@property (nonatomic) SRGLetterboxCommands allowedCommands;
 
 @end
 
