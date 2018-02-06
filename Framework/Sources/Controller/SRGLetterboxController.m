@@ -20,11 +20,6 @@
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
-const NSInteger SRGLetterboxDefaultStartBitRate = 800;
-
-const NSInteger SRGLetterboxBackwardSkipInterval = 10.;
-const NSInteger SRGLetterboxForwardSkipInterval = 30.;
-
 NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
@@ -50,8 +45,17 @@ NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLett
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
-NSTimeInterval const SRGLetterboxUpdateIntervalDefault = 30.;
-NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault = 30.;
+const NSInteger SRGLetterboxDefaultStartBitRate = 800;
+
+const NSTimeInterval SRGLetterboxUpdateIntervalDefault = 30.;
+const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
+
+const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+
+const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDefault = 5;
+const NSTimeInterval SRGLetterboxContinuousPlaybackDelayImmediate = 0;
+const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDisabled = DBL_MAX;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -128,6 +132,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+@property (nonatomic) NSTimeInterval continuousPlaybackDelay;
 
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
@@ -181,6 +186,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
+        
+        self.continuousPlaybackDelay = SRGLetterboxContinuousPlaybackDelayDefault;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -418,26 +425,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 #pragma mark Playlists
 
-- (SRGMedia *)nextMedia
-{
-    if ([self.playlistDataSource respondsToSelector:@selector(nextMediaForController:)]) {
-        return [self.playlistDataSource nextMediaForController:self];
-    }
-    else {
-        return nil;
-    }
-}
-
-- (SRGMedia *)previousMedia
-{
-    if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
-        return [self.playlistDataSource previousMediaForController:self];
-    }
-    else {
-        return nil;
-    }
-}
-
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
     SRGMedia *media = self.nextMedia;
@@ -462,7 +449,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
-- (BOOL)playNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+- (BOOL)playNextMedia
 {
     @weakify(self)
     return [self prepareToPlayNextMediaWithCompletionHandler:^{
@@ -471,13 +458,33 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }];
 }
 
-- (BOOL)playPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
+- (BOOL)playPreviousMedia
 {
     @weakify(self)
     return [self prepareToPlayPreviousMediaWithCompletionHandler:^{
         @strongify(self)
         [self play];
     }];
+}
+
+- (SRGMedia *)nextMedia
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(nextMediaForController:)]) {
+        return [self.playlistDataSource nextMediaForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (SRGMedia *)previousMedia
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
+        return [self.playlistDataSource previousMediaForController:self];
+    }
+    else {
+        return nil;
+    }
 }
 
 #pragma mark Data

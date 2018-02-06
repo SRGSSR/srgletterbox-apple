@@ -89,32 +89,45 @@ OBJC_EXPORT const NSInteger SRGLetterboxDefaultStartBitRate;
 /**
  *  Time interval for stream availability checks. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxUpdateIntervalDefault;
+OBJC_EXPORT const NSTimeInterval SRGLetterboxUpdateIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
+OBJC_EXPORT const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault;
 
 /**
  *  Standard skip intervals.
  */
-OBJC_EXPORT const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 seconds
-OBJC_EXPORT const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
+OBJC_EXPORT const NSTimeInterval SRGLetterboxBackwardSkipInterval;           // 10 seconds
+OBJC_EXPORT const NSTimeInterval SRGLetterboxForwardSkipInterval;            // 30 seconds
+
+/**
+ *  Standard intervals before automatically playing the next item in a playlist.
+ */
+OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDefault;           // 5 seconds
+OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackDelayImmediate;         // 0 seconds
+OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDisabled;          // Disable continuous playback
 
 /**
  *  Forward declarations.
  */
 @class SRGLetterboxController;
 
+/**
+ *  A playlist data source provides next and previous medias to be played by a controller.
+ */
 @protocol SRGLetterboxControllerPlaylistDataSource <NSObject>
 
-@optional
-
+/**
+ *  The next media to be played.
+ */
 - (nullable SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller;
-- (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
 
-- (NSTimeInterval)continuousPlaybackDelayForController:(SRGLetterboxController *)controller;
+/**
+ *  The previous media to be played.
+ */
+- (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
 
 @end
 
@@ -357,18 +370,65 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 @end
 
+/**
+ *  Playlist support. Provide a data source supplying previous and next medias to be played.
+ */
 @interface SRGLetterboxController (Playlists)
 
+/**
+ *  The playlist data source.
+ */
 @property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
-@property (nonatomic, readonly, nullable) SRGMedia *nextMedia;
-@property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
+/**
+ *  The delay before playback automatically continues with the next media.
+ *
+ *  The default value is `SRGLetterboxContinuousPlaybackDelayDefault`. Use `SRGLetterboxContinuousPlaybackDelayDisabled` to
+ *  disable continuous playback.
+ *
+ *  @discussion Values smaller than 0 will be fixed to 0.
+ */
+@property (nonatomic) NSTimeInterval continuousPlaybackDelay;
 
+/**
+ *  Prepare to play the next media in the playlist. If you want playback to start right after preparation, call `-play`
+ *  from the completion handler.
+ *
+ *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
+ *                           block will only be called if the media could be successfully prepared.
+ *
+ *  @return `YES` iff a next media was available.
+ */
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+
+/**
+ *  Same as `-prepareToPlayNextMediaWithCompletionHandler:`, but with the previous madia in the playlist.
+ */
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 
-- (BOOL)playNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
-- (BOOL)playPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+/**
+ *  Play the next media in the playlist.
+ *
+ *  @return `YES` iff a next media was available.
+ */
+- (BOOL)playNextMedia;
+
+/**
+ *  Play the previous media in the playlist.
+ *
+ *  @return `YES` iff a previous media was available.
+ */
+- (BOOL)playPreviousMedia;
+
+/**
+ *  The next available media in the playlist.
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *nextMedia;
+
+/**
+ *  The previous available media in the playlist.
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
 
 @end
 

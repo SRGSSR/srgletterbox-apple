@@ -622,12 +622,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)previousTrack:(id)sender
 {
-    [self.controller playPreviousMediaWithCompletionHandler:nil];
+    [self.controller playPreviousMedia];
 }
 
 - (void)nextTrack:(id)sender
 {
-    [self.controller playNextMediaWithCompletionHandler:nil];
+    [self.controller playNextMedia];
 }
 
 - (void)doNothing:(id)sender
