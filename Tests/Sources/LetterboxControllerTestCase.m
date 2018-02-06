@@ -224,6 +224,30 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
 
+- (void)testPlayRightAfterPrepare
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    SRGMediaURN *URN = OnDemandVideoURN();
+    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
+    [self.controller play];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+}
+
 - (void)testReset
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
