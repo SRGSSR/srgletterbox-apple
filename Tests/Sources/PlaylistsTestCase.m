@@ -164,6 +164,16 @@ static SRGMediaURN *InvalidURN(void)
     
     XCTAssertNil(self.controller.previousMedia);
     XCTAssertNil(self.controller.nextMedia);
+    
+    XCTAssertFalse([self.controller playNextMedia]);
+    XCTAssertFalse([self.controller playPreviousMedia]);
+    
+    XCTAssertFalse([self.controller prepareToPlayNextMediaWithCompletionHandler:^{
+        XCTFail(@"Must not be called");
+    }]);
+    XCTAssertFalse([self.controller prepareToPlayPreviousMediaWithCompletionHandler:^{
+        XCTFail(@"Must not be called");
+    }]);
 }
 
 - (void)testPlaylistFromSegments
@@ -189,11 +199,120 @@ static SRGMediaURN *InvalidURN(void)
     
     XCTAssertEqualObjects(self.controller.URN, MediaSegmentURN1());
     
+    __block BOOL seekReceived = NO;
+    __block BOOL playReceived = NO;
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking;
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking) {
+            seekReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            playReceived = YES;
+        }
+        return seekReceived && playReceived;
     }];
     
     BOOL success2 = [self.controller playNextMedia];
+    XCTAssertTrue(success2);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaSegmentURN2());
+}
+
+- (void)testPrepareToPlay
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
+    
+    [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertNil(self.controller.URN);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    XCTestExpectation *completionExpectation1 = [self expectationWithDescription:@"Completion handler"];
+    
+    BOOL success1 = [self.controller prepareToPlayNextMediaWithCompletionHandler:^{
+        [completionExpectation1 fulfill];
+    }];
+    XCTAssertTrue(success1);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaURN1());
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    XCTestExpectation *completionExpectation2 = [self expectationWithDescription:@"Completion handler"];
+    
+    BOOL success2 = [self.controller prepareToPlayNextMediaWithCompletionHandler:^{
+        [completionExpectation2 fulfill];
+    }];
+    XCTAssertTrue(success2);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaURN2());
+    
+    BOOL success3 = [self.controller prepareToPlayNextMediaWithCompletionHandler:^{
+        XCTFail(@"Must not be called");
+    }];
+    XCTAssertFalse(success3);
+}
+
+- (void)testPrepareToPlayRelatedSegment
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
+    
+    [[self.dataProvider mediasWithURNs:@[MediaSegmentURN1(), MediaSegmentURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    
+    XCTestExpectation *completionExpectation1 = [self expectationWithDescription:@"Completion handler"];
+    
+    BOOL success1 = [self.controller prepareToPlayNextMediaWithCompletionHandler:^{
+        [completionExpectation1 fulfill];
+    }];
+    XCTAssertTrue(success1);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaSegmentURN1());
+    
+    __block BOOL seekReceived = NO;
+    __block BOOL pauseReceived = NO;
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking) {
+            seekReceived = YES;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused) {
+            pauseReceived = YES;
+        }
+        return seekReceived && pauseReceived;
+    }];
+    
+    XCTestExpectation *completionExpectation2 = [self expectationWithDescription:@"Completion handler"];
+    
+    BOOL success2 = [self.controller prepareToPlayNextMediaWithCompletionHandler:^{
+        [completionExpectation2 fulfill];
+    }];
     XCTAssertTrue(success2);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -227,6 +346,11 @@ static SRGMediaURN *InvalidURN(void)
 }
 
 - (void)testContinuousPlaybackWithScheduledLivestream
+{
+    
+}
+
+- (void)testContinuousPlaybackCancellation
 {
     
 }
