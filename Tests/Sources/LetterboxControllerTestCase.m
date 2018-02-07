@@ -208,7 +208,47 @@ static NSURL *MMFServiceURL(void)
     // Media information must now be available
     XCTAssertEqualObjects(self.controller.URN, media.URN);
     XCTAssertEqualObjects(self.controller.media, media);
+    XCTAssertEqualObjects(self.controller.fullLengthMedia, media);
     XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, media.URN);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+}
+
+- (void)testPlayMediaSegment
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
+    
+    __block SRGMedia *media = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
+    [[dataProvider videosWithUids:@[OnDemandLongVideoSegmentURN().uid] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        media = medias.firstObject;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNotNil(media);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    [self.controller playMedia:media withChaptersOnly:NO];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, media.URN);
+    XCTAssertEqualObjects(self.controller.media, media);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, OnDemandLongVideoURN());
+    XCTAssertEqualObjects(self.controller.fullLengthMedia.URN, OnDemandLongVideoURN());
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
