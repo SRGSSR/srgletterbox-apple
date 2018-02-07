@@ -19,6 +19,21 @@ static SRGMediaURN *MediaURN2(void)
     return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314051"];
 }
 
+static SRGMediaURN *MediaSegmentURN1(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314065"];
+}
+
+static SRGMediaURN *MediaSegmentURN2(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314069"];
+}
+
+static SRGMediaURN *InvalidURN(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:123456"];
+}
+
 @interface PlaylistsTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -51,7 +66,6 @@ static SRGMediaURN *MediaURN2(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        XCTAssertEqual(medias.count, 2);
         self.playlist = [[Playlist alloc] initWithMedias:medias];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -98,7 +112,6 @@ static SRGMediaURN *MediaURN2(void)
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        XCTAssertEqual(medias.count, 2);
         self.playlist = [[Playlist alloc] initWithMedias:medias];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -153,19 +166,39 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.nextMedia);
 }
 
-- (void)testPlaylistWithRepeatedMedia
-{
-    
-}
-
-- (void)testPlaylistWithInvalidMedia
-{
-    
-}
-
 - (void)testPlaylistFromSegments
 {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
+    [[self.dataProvider mediasWithURNs:@[MediaSegmentURN1(), MediaSegmentURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    BOOL success1 = [self.controller playNextMedia];
+    XCTAssertTrue(success1);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaSegmentURN1());
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking;
+    }];
+    
+    BOOL success2 = [self.controller playNextMedia];
+    XCTAssertTrue(success2);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaSegmentURN2());
 }
 
 - (void)testPlaylistsFromChapters
@@ -173,12 +206,7 @@ static SRGMediaURN *MediaURN2(void)
     
 }
 
-- (void)testPlaylistWithScheduledLivestream
-{
-    
-}
-
-- (void)testContinuousPlayback
+- (void)testDefaultContinuousPlayback
 {
     
 }
@@ -193,7 +221,17 @@ static SRGMediaURN *MediaURN2(void)
     
 }
 
-- (void)testPlaybackSettings
+- (void)testContinuousPlaybackWithInvalidMedia
+{
+    
+}
+
+- (void)testContinuousPlaybackWithScheduledLivestream
+{
+    
+}
+
+- (void)testPlaybackSettingsReuse
 {
     
 }
