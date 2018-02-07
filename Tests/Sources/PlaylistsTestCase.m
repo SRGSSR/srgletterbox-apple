@@ -320,11 +320,6 @@ static SRGMediaURN *InvalidURN(void)
     XCTAssertEqualObjects(self.controller.URN, MediaSegmentURN2());
 }
 
-- (void)testPlaylistsFromChapters
-{
-    
-}
-
 - (void)testDefaultContinuousPlayback
 {
     

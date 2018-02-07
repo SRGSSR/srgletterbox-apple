@@ -128,11 +128,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *liveStreamEndDateTimer;
 @property (nonatomic) NSTimer *socialCountViewTimer;
 
+// Timer for continuous playback
+@property (nonatomic) NSTimer *resumptionTimer;
+
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
+@property (nonatomic) NSDate *continuousPlaybackResumptionDate;
 
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
@@ -226,6 +230,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
     self.socialCountViewTimer = nil;
+    self.resumptionTimer = nil;
 }
 
 #pragma mark Getters and setters
@@ -411,6 +416,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _socialCountViewTimer = socialCountViewTimer;
 }
 
+- (void)setResumptionTimer:(NSTimer *)resumptionTimer
+{
+    [_resumptionTimer invalidate];
+    _resumptionTimer = resumptionTimer;
+}
+
 #pragma mark Periodic time observers
 
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
@@ -505,15 +516,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
-- (NSDate *)continuousPlaybackResumptionDate
-{
-    // TODO: Implement
-    return nil;
-}
-
 - (void)cancelContinuousPlayback
 {
-    // TODO: Implement
+    self.resumptionTimer = nil;
+    self.continuousPlaybackResumptionDate = nil;
 }
 
 #pragma mark Data
@@ -1071,6 +1077,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
+    self.continuousPlaybackResumptionDate = nil;
+    self.resumptionTimer = nil;
+    
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
 }
@@ -1382,9 +1391,22 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             [self.requestQueue addRequest:request resume:YES];
         }];
     }
-    
-    if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
+    else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         self.socialCountViewTimer = nil;
+    }
+    else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        if (self.nextMedia) {
+            @weakify(self)
+            self.continuousPlaybackResumptionDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
+            self.resumptionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
+                @strongify(self)
+                
+                self.continuousPlaybackResumptionDate = nil;
+                self.resumptionTimer = nil;
+                
+                [self playNextMedia];
+            }];
+        }
     }
 }
 

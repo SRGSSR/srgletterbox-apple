@@ -120,6 +120,10 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDisabled;   
  *  @discussion Since a controller can play any content at any time, there is no way for an implementation to guess
  *              where it must resume if the content appears more than once. For this reason, playlist implementations
  *              should contain a given media at most once (otherwise the playlist behavior will likely be undefined).
+ *
+ *              If continuous playback is enabled (default behavior), implementations should not alter the playlist
+ *              next item while playback is about to resume with the next item (see `continuousPlaybackDelay`), otherwise
+ *              the behavior is undefined.
  */
 @protocol SRGLetterboxControllerPlaylistDataSource <NSObject>
 
@@ -423,6 +427,13 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  The previous available media in the playlist.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
+
+@end
+
+/**
+ *  Continuous playback support. Requires a playlist data source supplying next item information.
+ */
+@interface SRGLetterboxController (ContinuousPlayback)
 
 /**
  *  The delay before playback automatically continues with the next media.
