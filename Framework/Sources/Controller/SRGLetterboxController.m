@@ -429,7 +429,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
     SRGMedia *media = self.nextMedia;
     if (media) {
-        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        if (! [self switchToURN:media.URN playing:NO withCompletionHandler:^(BOOL finished) {
+            completionHandler ? completionHandler() : nil;
+        }]) {
+            [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        }
         return YES;
     }
     else {
@@ -441,7 +445,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
     SRGMedia *media = self.previousMedia;
     if (media) {
-        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        if (! [self switchToURN:media.URN playing:NO withCompletionHandler:^(BOOL finished) {
+            completionHandler ? completionHandler() : nil;
+        }]) {
+            [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        }
         return YES;
     }
     else {
@@ -451,20 +459,30 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)playNextMedia
 {
-    @weakify(self)
-    return [self prepareToPlayNextMediaWithCompletionHandler:^{
-        @strongify(self)
-        [self play];
-    }];
+    SRGMedia *media = self.nextMedia;
+    if (media) {
+        if (! [self switchToURN:media.URN playing:YES withCompletionHandler:nil]) {
+            [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        }
+        return YES;
+    }
+    else {
+        return NO;
+    }
 }
 
 - (BOOL)playPreviousMedia
 {
-    @weakify(self)
-    return [self prepareToPlayPreviousMediaWithCompletionHandler:^{
-        @strongify(self)
-        [self play];
-    }];
+    SRGMedia *media = self.previousMedia;
+    if (media) {
+        if (! [self switchToURN:media.URN playing:YES withCompletionHandler:nil]) {
+            [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        }
+        return YES;
+    }
+    else {
+        return NO;
+    }
 }
 
 - (SRGMedia *)nextMedia
@@ -1051,16 +1069,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
-- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(void (^)(BOOL))completionHandler
+- (BOOL)switchToURN:(SRGMediaURN *)URN playing:(BOOL)playing withCompletionHandler:(void (^)(BOOL))completionHandler
 {
     for (SRGChapter *chapter in self.mediaComposition.chapters) {
         if ([chapter.URN isEqual:URN]) {
-            return [self switchToSubdivision:chapter withCompletionHandler:completionHandler];
+            return [self switchToSubdivision:chapter playing:playing withCompletionHandler:completionHandler];
         }
         
         for (SRGSegment *segment in chapter.segments) {
             if ([segment.URN isEqual:URN]) {
-                return [self switchToSubdivision:segment withCompletionHandler:completionHandler];
+                return [self switchToSubdivision:segment playing:playing withCompletionHandler:completionHandler];
             }
         }
     }
@@ -1069,7 +1087,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     return NO;
 }
 
-- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(void (^)(BOOL))completionHandler
+- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    return [self switchToURN:URN playing:YES withCompletionHandler:completionHandler];
+}
+
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision playing:(BOOL)playing withCompletionHandler:(void (^)(BOOL))completionHandler
 {
     if (! self.mediaComposition) {
         SRGLetterboxLogInfo(@"controller", @"No context is available. No switch will occur.");
@@ -1097,7 +1120,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
-            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nullable error) {
+            SRGRequest *request = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nullable error) {
+                if (playing) {
+                    [self.mediaPlayerController play];
+                }
+                
                 BOOL finished = (error == nil);
                 completionHandler ? completionHandler(finished) : nil;
             }];
@@ -1108,7 +1135,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     else if ([subdivision isKindOfClass:[SRGSegment class]]) {
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         [self.mediaPlayerController seekToSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
-            [self.mediaPlayerController play];
+            if (playing) {
+                [self.mediaPlayerController play];
+            }
+            else {
+                [self.mediaPlayerController pause];
+            }
             completionHandler ? completionHandler(finished) : nil;
         }];
     }
@@ -1117,6 +1149,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     
     return YES;
+}
+
+- (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    return [self switchToSubdivision:subdivision playing:YES withCompletionHandler:completionHandler];
 }
 
 #pragma mark Playback (convenience)
