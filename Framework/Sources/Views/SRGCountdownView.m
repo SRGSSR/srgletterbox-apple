@@ -120,15 +120,15 @@ static void commonInit(SRGCountdownView *self);
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
 
     [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        constraint.constant = isLarge ? 140.f : 70.f;
+        constraint.constant = isLarge ? 88.f : 70.f;
     }];
     
     [self.heightConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        constraint.constant = isLarge ? 90.f : 45.f;
+        constraint.constant = isLarge ? 57.f : 45.f;
     }];
     
-    CGFloat digitSize = isLarge ? 72.f : 36.f;
-    CGFloat titleSize = isLarge ? 26.f : 13.f;
+    CGFloat digitSize = isLarge ? 45.f : 36.f;
+    CGFloat titleSize = isLarge ? 17.f : 13.f;
     
     self.days1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
     self.days0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
@@ -150,7 +150,7 @@ static void commonInit(SRGCountdownView *self);
         label.font = [UIFont srg_mediumFontWithSize:digitSize];
     }];
     
-    CGFloat digitCornerRadius = isLarge ? 4.f : 2.f;
+    CGFloat digitCornerRadius = isLarge ? 3.f : 2.f;
     
     self.days1Label.layer.cornerRadius = digitCornerRadius;
     self.days0Label.layer.cornerRadius = digitCornerRadius;
@@ -167,7 +167,7 @@ static void commonInit(SRGCountdownView *self);
     self.messageLabelBackgroundView.layer.cornerRadius = digitCornerRadius;
     
     [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
-        stackView.spacing = isLarge ? 4.f : 2.f;
+        stackView.spacing = isLarge ? 3.f : 2.f;
     }];
     
     self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
