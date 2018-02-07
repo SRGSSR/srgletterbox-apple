@@ -505,6 +505,17 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
+- (NSDate *)continuousPlaybackResumptionDate
+{
+    // TODO: Implement
+    return nil;
+}
+
+- (void)cancelContinuousPlayback
+{
+    // TODO: Implement
+}
+
 #pragma mark Data
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive

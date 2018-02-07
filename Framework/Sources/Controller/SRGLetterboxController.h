@@ -385,16 +385,6 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
 /**
- *  The delay before playback automatically continues with the next media.
- *
- *  The default value is `SRGLetterboxContinuousPlaybackDelayDefault`. Use `SRGLetterboxContinuousPlaybackDelayDisabled` to
- *  disable continuous playback.
- *
- *  @discussion Values smaller than 0 will be fixed to 0.
- */
-@property (nonatomic) NSTimeInterval continuousPlaybackDelay;
-
-/**
  *  Prepare to play the next media in the playlist. If you want playback to start right after preparation, call `-play`
  *  from the completion handler.
  *
@@ -433,6 +423,32 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  The previous available media in the playlist.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
+
+/**
+ *  The delay before playback automatically continues with the next media.
+ *
+ *  The default value is `SRGLetterboxContinuousPlaybackDelayDefault`. Use `SRGLetterboxContinuousPlaybackDelayDisabled` to
+ *  disable continuous playback.
+ *
+ *  @discussion Values smaller than 0 will be fixed to 0.
+ */
+@property (nonatomic) NSTimeInterval continuousPlaybackDelay;
+
+/**
+ *  The time at which continuous playback will resume with the next media.
+ *
+ *  @discussion The start date is `nil` if there is no next media, or if playback of the previous item has not ended
+ *              yet. Once a start date has been determined, changing `continuousPlaybackDelay` will not alter it (only
+ *              the next
+ */
+@property (nonatomic, readonly, nullable) NSDate *continuousPlaybackResumptionDate;
+
+/**
+ *  While continuous playback is waiting for resumption, cancel automatic playback of the next item.
+ *
+ *  @dicussion This method has no effect when no resumption date has been determined.
+ */
+- (void)cancelContinuousPlayback;
 
 @end
 
