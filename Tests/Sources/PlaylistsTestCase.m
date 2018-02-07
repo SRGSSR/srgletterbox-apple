@@ -9,6 +9,16 @@
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
+static SRGMediaURN *MediaURN1(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9309820"];
+}
+
+static SRGMediaURN *MediaURN2(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314051"];
+}
+
 @interface PlaylistsTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -23,7 +33,7 @@
 
 - (void)setUp
 {
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
     self.controller = [[SRGLetterboxController alloc] init];
 }
 
@@ -40,12 +50,12 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    [[[self.dataProvider tvSoonExpiringMediasWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         XCTAssertEqual(medias.count, 2);
         self.playlist = [[Playlist alloc] initWithMedias:medias];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
-    }] requestWithPageSize:2] resume];
+    }] resume];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -87,12 +97,12 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    [[[self.dataProvider tvSoonExpiringMediasWithCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         XCTAssertEqual(medias.count, 2);
         self.playlist = [[Playlist alloc] initWithMedias:medias];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
-    }] requestWithPageSize:2] resume];
+    }] resume];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -129,14 +139,18 @@
     XCTAssertFalse(success3);
 }
 
-- (void)testEmptyPlaylist
-{
-    
-}
-
 - (void)testNoPlaylist
 {
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
     
+    [self.controller playURN:MediaURN1() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertNil(self.controller.previousMedia);
+    XCTAssertNil(self.controller.nextMedia);
 }
 
 - (void)testPlaylistWithRepeatedMedia
