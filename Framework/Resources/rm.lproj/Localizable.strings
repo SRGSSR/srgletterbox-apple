@@ -1,9 +1,15 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "Errur da colliaziun. Per plaschair controllar las colliaziuns da internet / rait";
 
+/* Short label for countdown display */
+"Days" = "Dìs";
+
 /* Label to explain that a content has expired
    Short label identifying content which has expired. */
 "Expired" = "Expirà";
+
+/* Short label for countdown display */
+"Hours" = "Uras";
 
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "In Live" = "Live";
@@ -14,6 +20,9 @@
 /* Notification message displayed when a live broadcast has finished. */
 "Live broadcast ended" = "Emissiun live è a fin";
 
+/* Short label for countdown display */
+"Minutes" = "Minutas";
+
 /* Text displayed when no media is available for playback */
 "No media" = "Naginas medias";
 
@@ -22,6 +31,9 @@
 
 /* Message displayed to inform that playback should start soon. */
 "Playback will begin shortly" = "Playback entschaiva gist";
+
+/* Short label for countdown display */
+"Seconds" = "Secundas";
 
 /* Short label identifying content which will be available soon. */
 "Soon" = "Proximamain";

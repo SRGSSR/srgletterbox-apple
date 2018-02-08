@@ -1,9 +1,15 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "Ein Netzwerkproblem ist aufgetreten. Bitte überprüfen Sie Ihre Internet-Anbindung und Ihre Netzwerk-Einstellungen.";
 
+/* Short label for countdown display */
+"Days" = "Tage";
+
 /* Label to explain that a content has expired
    Short label identifying content which has expired. */
 "Expired" = "Abgelaufen";
+
+/* Short label for countdown display */
+"Hours" = "Stunden";
 
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "In Live" = "Live";
@@ -14,6 +20,9 @@
 /* Notification message displayed when a live broadcast has finished. */
 "Live broadcast ended" = "Live-Übertragung beendet";
 
+/* Short label for countdown display */
+"Minutes" = "Minuten";
+
 /* Text displayed when no media is available for playback */
 "No media" = "Kein File vorhanden";
 
@@ -22,6 +31,9 @@
 
 /* Message displayed to inform that playback should start soon. */
 "Playback will begin shortly" = "Die Wiedergabe beginnt in Kürze.";
+
+/* Short label for countdown display */
+"Seconds" = "Sekunden";
 
 /* Short label identifying content which will be available soon. */
 "Soon" = "In Kürze";
