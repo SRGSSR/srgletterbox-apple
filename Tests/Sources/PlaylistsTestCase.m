@@ -474,7 +474,61 @@ static SRGMediaURN *InvalidURN(void)
 
 - (void)testContinuousPlaybackCancellation
 {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
+    [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // No effect, no pending continuation
+    [self.controller cancelContinuousPlayback];
+    
+    // Start with the first item in the playlist
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    BOOL success1 = [self.controller playNextMedia];
+    XCTAssertTrue(success1);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    
+    // No effect, no pending continuation
+    [self.controller cancelContinuousPlayback];
+    
+    // Seek near the end
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
+    }];
+    
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Cancel pending continuation. The second media will not be played automatically
+    XCTAssertNotNil(self.controller.continuousPlaybackResumptionDate);
+    [self.controller cancelContinuousPlayback];
+    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    
+    // Wait some time. We don't expect playback to automatically continue with the next item
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must remain in ended state");
+    }];
+    
+    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, MediaURN1());
+    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
 }
 
 - (void)testContinuousPlaybackFromInvalidMedia
