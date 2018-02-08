@@ -108,7 +108,7 @@
 - (void)openPlaylistForShowWithURNString:(NSString *)URNString
 {
     PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithShowURNString:URNString];
-    [self presentViewController:playlistViewController animated:YES completion:nil];
+    [self.navigationController pushViewController:playlistViewController animated:YES];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
