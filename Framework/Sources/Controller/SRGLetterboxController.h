@@ -450,7 +450,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion The start date is `nil` if there is no next media, or if playback of the previous item has not ended
  *              yet. Once a start date has been determined, changing `continuousPlaybackDelay` will not alter it (only
- *              the next
+ *              the next. The date is `nil` if the playback delay has been set to immediate.
  */
 @property (nonatomic, readonly, nullable) NSDate *continuousPlaybackResumptionDate;
 
