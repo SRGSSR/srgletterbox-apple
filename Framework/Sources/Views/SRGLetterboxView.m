@@ -11,6 +11,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
+#import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
@@ -72,6 +73,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
+
+@property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 
@@ -411,6 +414,7 @@ static void commonInit(SRGLetterboxView *self);
     _controller = controller;
     
     self.playbackButton.controller = controller;
+    self.continuousPlaybackView.controller = controller;
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;

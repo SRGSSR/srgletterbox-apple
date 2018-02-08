@@ -8,12 +8,15 @@
 
 #import "NSBundle+SRGLetterbox.h"
 
+#import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 static void commonInit(SRGContinuousPlaybackView *self);
 
 @interface SRGContinuousPlaybackView ()
+
+@property (weak) id periodicTimeObserver;
 
 @end
 
@@ -41,6 +44,34 @@ static void commonInit(SRGContinuousPlaybackView *self);
     return self;
 }
 
+#pragma mark Getters and setters
+
+- (void)setController:(SRGLetterboxController *)controller
+{
+    if (_controller) {
+        [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxPlaybackStateDidChangeNotification
+                                                      object:_controller];
+    }
+    
+    _controller = controller;
+    [self refreshView];
+    
+    if (controller) {
+        @weakify(self)
+        self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            
+            [self refreshView];
+        }];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playbackStateDidChange:)
+                                                     name:SRGLetterboxPlaybackStateDidChangeNotification
+                                                   object:controller];
+    }
+}
+
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -48,6 +79,34 @@ static void commonInit(SRGContinuousPlaybackView *self);
     [super awakeFromNib];
     
     // TODO:
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [self refreshView];
+    }
+}
+
+#pragma mark UI
+
+- (void)refreshView
+{
+    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        self.hidden = NO;
+    }
+    else {
+        self.hidden = YES;
+    }
+}
+
+#pragma mark Notifications
+
+- (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self refreshView];
 }
 
 @end
@@ -62,4 +121,6 @@ static void commonInit(SRGContinuousPlaybackView *self)
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+    
+    self.hidden = YES;
 }

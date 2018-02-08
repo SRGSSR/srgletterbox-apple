@@ -4,12 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <UIKit/UIKit.h>
+#import "SRGLetterboxController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 IB_DESIGNABLE
 @interface SRGContinuousPlaybackView : UIView
+
+/**
+ *  The controller which the vuew is associated with.
+ */
+@property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
 @end
 
