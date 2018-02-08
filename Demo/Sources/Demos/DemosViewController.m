@@ -588,7 +588,7 @@
         case 8: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:6368115"];
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:105233"];
                     break;
                 }
                     
