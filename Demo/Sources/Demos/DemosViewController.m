@@ -11,6 +11,7 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "PlaylistViewController.h"
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
@@ -102,6 +103,12 @@
 {
     MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType uid:uid];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
+}
+
+- (void)openPlaylistForShowWithURNString:(NSString *)URNString
+{
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithShowURNString:URNString];
+    [self presentViewController:playlistViewController animated:YES completion:nil];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
@@ -581,7 +588,7 @@
         case 8: {
             switch (indexPath.row) {
                 case 0: {
-                    
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:6368115"];
                     break;
                 }
                     
