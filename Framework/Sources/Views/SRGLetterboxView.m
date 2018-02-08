@@ -344,7 +344,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    [self updateAvailabilityLabelForController:self.controller];
+    [self updateAvailabilityForController:self.controller];
 }
 
 #pragma mark Accessibility
@@ -405,7 +405,7 @@ static void commonInit(SRGLetterboxView *self);
             [previousMediaPlayerController.view removeFromSuperview];
         }
         
-        [self updateAvailabilityLabelForController:controller];
+        [self updateAvailabilityForController:controller];
     }
     
     _controller = controller;
@@ -718,10 +718,10 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorLabel.text = error.localizedDescription;
     
-    [self updateAvailabilityLabelForController:controller];
+    [self updateAvailabilityForController:controller];
 }
 
-- (void)updateAvailabilityLabelForController:(SRGLetterboxController *)controller
+- (void)updateAvailabilityForController:(SRGLetterboxController *)controller
 {
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
@@ -1154,7 +1154,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
-        [self updateAvailabilityLabelForController:controller];
+        [self updateAvailabilityForController:controller];
     }];
 }
 
