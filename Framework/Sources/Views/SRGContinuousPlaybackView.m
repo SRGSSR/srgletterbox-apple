@@ -7,6 +7,7 @@
 #import "SRGContinuousPlaybackView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
@@ -15,6 +16,10 @@
 static void commonInit(SRGContinuousPlaybackView *self);
 
 @interface SRGContinuousPlaybackView ()
+
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
 @property (weak) id periodicTimeObserver;
 
@@ -74,19 +79,23 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 #pragma mark Overrides
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    // TODO:
-}
-
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contentSizeCategoryDidChange:)
+                                                     name:UIContentSizeCategoryDidChangeNotification
+                                                   object:nil];
+        
         [self refreshView];
+        [self updateFonts];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIContentSizeCategoryDidChangeNotification
+                                                      object:nil];
     }
 }
 
@@ -94,7 +103,12 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (void)refreshView
 {
-    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateEnded && self.controller.nextMedia) {
+        SRGMedia *nextMedia = self.controller.nextMedia;
+        self.titleLabel.text = nextMedia.title;
+        self.subtitleLabel.text = nextMedia.lead;
+        [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+        
         self.hidden = NO;
     }
     else {
@@ -102,11 +116,24 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
 }
 
+#pragma mark Fonts
+
+- (void)updateFonts
+{
+    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+}
+
 #pragma mark Notifications
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self refreshView];
+}
+
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification
+{
+    [self updateFonts];
 }
 
 @end
