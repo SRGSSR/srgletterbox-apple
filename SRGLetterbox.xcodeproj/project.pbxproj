@@ -203,6 +203,9 @@
 		6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */; };
 		6FF0D89A1F4DABF200B3C1EB /* SRGTimerTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */; };
 		6FF0D89B1F4DABF200B3C1EB /* SRGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */; };
+		6FFAD135202C514500FDAA6C /* SRGContinuousPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */; };
+		6FFAD136202C514500FDAA6C /* SRGContinuousPlaybackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */; };
+		6FFAD137202C514500FDAA6C /* SRGContinuousPlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -447,6 +450,9 @@
 		6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValueTrackingSlider.m; sourceTree = "<group>"; };
 		6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGTimerTarget.h; sourceTree = "<group>"; };
 		6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGTimerTarget.m; sourceTree = "<group>"; };
+		6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGContinuousPlaybackView.m; sourceTree = "<group>"; };
+		6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGContinuousPlaybackView.h; sourceTree = "<group>"; };
+		6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGContinuousPlaybackView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -566,9 +572,9 @@
 				6F48559D1E3A311C00B0141C /* Externals */,
 				6F042D281E28F70500CFD89B /* Helpers */,
 				6FB97FC91E49D7240014C4C2 /* Service */,
+				6FAB3AFF1E28F76800CC2197 /* Views */,
 				6F042D251E28E2D100CFD89B /* SRGLetterbox.h */,
 				6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */,
-				6FAB3AFF1E28F76800CC2197 /* Views */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -637,6 +643,9 @@
 				6FB4422A201F1FB900FA5AF8 /* SRGCountdownView.h */,
 				6FB4422B201F1FB900FA5AF8 /* SRGCountdownView.m */,
 				6FB4422E201F1FC600FA5AF8 /* SRGCountdownView.xib */,
+				6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */,
+				6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */,
+				6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */,
 				6FDF33B21F012DA200BA1D6E /* SRGFullScreenButton.h */,
 				6FDF33B31F012DA200BA1D6E /* SRGFullScreenButton.m */,
 				08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */,
@@ -843,6 +852,7 @@
 				6FDF33B41F012DA200BA1D6E /* SRGFullScreenButton.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
+				6FFAD136202C514500FDAA6C /* SRGContinuousPlaybackView.h in Headers */,
 				6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */,
 				6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */,
 				08BDD8721EE5C876006A2704 /* SRGLetterboxPlaybackButton.h in Headers */,
@@ -1017,6 +1027,7 @@
 				6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 				08E0BF601EE05BCD002D4012 /* Accessibility.strings in Resources */,
+				6FFAD137202C514500FDAA6C /* SRGContinuousPlaybackView.xib in Resources */,
 				6FB4422F201F1FC600FA5AF8 /* SRGCountdownView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1076,6 +1087,7 @@
 				6FDF33B11F012D7500BA1D6E /* SRGAccessibilityView.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
 				6FB696541F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m in Sources */,
+				6FFAD135202C514500FDAA6C /* SRGContinuousPlaybackView.m in Sources */,
 				08BDD8731EE5C876006A2704 /* SRGLetterboxPlaybackButton.m in Sources */,
 				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
