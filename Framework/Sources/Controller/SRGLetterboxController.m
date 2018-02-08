@@ -1395,7 +1395,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.socialCountViewTimer = nil;
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        if (self.nextMedia) {
+        if (self.nextMedia && self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
             @weakify(self)
             self.continuousPlaybackResumptionDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
             self.resumptionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
