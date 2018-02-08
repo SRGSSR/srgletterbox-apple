@@ -578,6 +578,19 @@
             break;
         }
             
+        case 8: {
+            switch (indexPath.row) {
+                case 0: {
+                    
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+        }
+            
         default: {
             break;
         }

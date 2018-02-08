@@ -1175,6 +1175,32 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Playlists" footerTitle="This section opens a media in the context of a playlist" id="nX7-ck-2ms">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="amb-Ni-GhC">
+                                        <rect key="frame" x="0.0" y="3095.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="amb-Ni-GhC" id="sW6-V2-V12">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="26 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOe-FF-4Tt">
+                                                    <rect key="frame" x="8" y="8" width="359" height="27.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="pOe-FF-4Tt" firstAttribute="top" secondItem="sW6-V2-V12" secondAttribute="top" constant="8" id="6pS-3c-aQY"/>
+                                                <constraint firstItem="pOe-FF-4Tt" firstAttribute="leading" secondItem="sW6-V2-V12" secondAttribute="leading" constant="8" id="FZj-fY-RZK"/>
+                                                <constraint firstAttribute="bottom" secondItem="pOe-FF-4Tt" secondAttribute="bottom" constant="8" id="SPt-mn-jPG"/>
+                                                <constraint firstAttribute="trailing" secondItem="pOe-FF-4Tt" secondAttribute="trailing" constant="8" id="x9a-fu-IOI"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="4wm-Z9-GrR" id="cxG-zz-Sk0"/>
