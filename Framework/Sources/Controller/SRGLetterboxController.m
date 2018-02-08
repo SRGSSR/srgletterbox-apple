@@ -273,6 +273,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     return self.mediaPlayerController.timeRange;
 }
 
+- (void)setContinuousPlaybackDelay:(NSTimeInterval)continuousPlaybackDelay
+{
+    if (continuousPlaybackDelay < 0) {
+        continuousPlaybackDelay = SRGLetterboxContinuousPlaybackDelayImmediate;
+    }
+    _continuousPlaybackDelay = continuousPlaybackDelay;
+}
+
 - (void)setMuted:(BOOL)muted
 {
     _muted = muted;
