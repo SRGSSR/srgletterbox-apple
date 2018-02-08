@@ -29,11 +29,6 @@ static SRGMediaURN *MediaSegmentURN2(void)
     return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314069"];
 }
 
-static SRGMediaURN *InvalidURN(void)
-{
-    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:123456"];
-}
-
 @interface PlaylistsTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -408,7 +403,7 @@ static SRGMediaURN *InvalidURN(void)
     
     // Wait some time. We don't expect playback to automatically continue with the next item
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        XCTFail(@"The player must remain in ended state");
+        XCTFail(@"The player must remain in the current state");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
@@ -518,7 +513,7 @@ static SRGMediaURN *InvalidURN(void)
     
     // Wait some time. We don't expect playback to automatically continue with the next item
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        XCTFail(@"The player must remain in ended state");
+        XCTFail(@"The player must remain in the current state");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
@@ -529,16 +524,6 @@ static SRGMediaURN *InvalidURN(void)
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1());
     XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
-}
-
-- (void)testContinuousPlaybackFromInvalidMedia
-{
-    
-}
-
-- (void)testPlaybackSettingsReuse
-{
-    
 }
 
 @end
