@@ -1199,6 +1199,28 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Lsh-Xl-QYX">
+                                        <rect key="frame" x="0.0" y="3139.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Lsh-Xl-QYX" id="DCO-nX-FXQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="19h30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zyt-D6-Fox">
+                                                    <rect key="frame" x="8" y="8" width="359" height="27.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Zyt-D6-Fox" firstAttribute="leading" secondItem="DCO-nX-FXQ" secondAttribute="leading" constant="8" id="DBo-km-3FA"/>
+                                                <constraint firstAttribute="trailing" secondItem="Zyt-D6-Fox" secondAttribute="trailing" constant="8" id="SG2-uZ-gwb"/>
+                                                <constraint firstItem="Zyt-D6-Fox" firstAttribute="top" secondItem="DCO-nX-FXQ" secondAttribute="top" constant="8" id="YQ2-2f-Cxk"/>
+                                                <constraint firstAttribute="bottom" secondItem="Zyt-D6-Fox" secondAttribute="bottom" constant="8" id="v5s-PQ-UKi"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>

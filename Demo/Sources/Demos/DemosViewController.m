@@ -592,6 +592,11 @@
                     break;
                 }
                     
+                case 1: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:6454706"];
+                    break;
+                }
+                    
                 default: {
                     break;
                 }
