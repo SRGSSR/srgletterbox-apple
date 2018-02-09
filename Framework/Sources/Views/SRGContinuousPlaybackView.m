@@ -18,9 +18,12 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 @interface SRGContinuousPlaybackView ()
 
+@property (nonatomic, weak) IBOutlet UILabel *introLabel;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
 @end
 
@@ -70,6 +73,14 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 #pragma mark Overrides
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
+    [self.cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     [super willMoveToWindow:newWindow];
@@ -97,7 +108,8 @@ static void commonInit(SRGContinuousPlaybackView *self);
     if (self.controller.continuousPlaybackResumptionDate) {
         SRGMedia *nextMedia = self.controller.nextMedia;
         self.titleLabel.text = nextMedia.title;
-        self.subtitleLabel.text = nextMedia.lead;
+        self.subtitleLabel.text = nextMedia.lead ?: nextMedia.summary;
+        self.durationLabel.text = nil;      // TODO:
         [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
         
         self.hidden = NO;
@@ -111,8 +123,11 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (void)updateFonts
 {
-    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.introLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.titleLabel.font = [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
 #pragma mark Actions
