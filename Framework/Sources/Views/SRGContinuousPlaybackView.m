@@ -62,13 +62,13 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
     
     _controller = controller;
-    [self refreshView];
+    [self refreshViewAnimated:NO];
     
     if (controller) {
         @weakify(self)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackResumptionDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
             @strongify(self)
-            [self refreshView];
+            [self refreshViewAnimated:YES];
         }];
     }
 }
@@ -93,7 +93,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
                                                      name:UIContentSizeCategoryDidChangeNotification
                                                    object:nil];
         
-        [self refreshView];
+        [self refreshViewAnimated:NO];
         [self updateFonts];
     }
     else {
@@ -105,8 +105,9 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 #pragma mark UI
 
-- (void)refreshView
+- (void)refreshViewAnimated:(BOOL)animated
 {
+    CGFloat alpha = 0.f;
     if (self.controller.continuousPlaybackResumptionDate) {
         SRGMedia *nextMedia = self.controller.nextMedia;
         self.titleLabel.text = nextMedia.title;
@@ -116,10 +117,22 @@ static void commonInit(SRGContinuousPlaybackView *self);
         
         NSTimeInterval remainingTime = [self.controller.continuousPlaybackResumptionDate timeIntervalSinceNow];
         [self.remainingTimeButton resetWithRemainingTime:remainingTime];
-        self.hidden = NO;
+        
+        alpha = 1.f;
     }
     else {
-        self.hidden = YES;
+        alpha = 0.f;
+    }
+    
+    void (^animations)(void) = ^{
+        self.alpha = alpha;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
+    }
+    else {
+        animations();
     }
 }
 
@@ -165,6 +178,4 @@ static void commonInit(SRGContinuousPlaybackView *self)
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
-    
-    self.hidden = YES;
 }
