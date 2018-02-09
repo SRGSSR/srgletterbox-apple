@@ -446,7 +446,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
 
 /**
- *  The time at which continuous playback will resume with the next media.
+ *  The time at which continuous playback will resume with the next media. KVO-observable.
  *
  *  @discussion The start date is `nil` if there is no next media, or if playback of the previous item has not ended
  *              yet. Once a start date has been determined, changing `continuousPlaybackDelay` will not alter it (only

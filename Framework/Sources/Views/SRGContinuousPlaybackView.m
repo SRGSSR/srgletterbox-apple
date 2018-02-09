@@ -10,6 +10,7 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
@@ -20,8 +21,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-
-@property (weak) id periodicTimeObserver;
 
 @end
 
@@ -54,10 +53,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxPlaybackStateDidChangeNotification
-                                                      object:_controller];
+        [_controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackResumptionDate)];
     }
     
     _controller = controller;
@@ -65,15 +61,10 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     if (controller) {
         @weakify(self)
-        self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackResumptionDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
             @strongify(self)
-            
             [self refreshView];
         }];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGLetterboxPlaybackStateDidChangeNotification
-                                                   object:controller];
     }
 }
 
@@ -125,11 +116,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
 }
 
 #pragma mark Notifications
-
-- (void)playbackStateDidChange:(NSNotification *)notification
-{
-    [self refreshView];
-}
 
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification
 {
