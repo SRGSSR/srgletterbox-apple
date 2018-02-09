@@ -6,8 +6,6 @@
 
 #import "SRGRemainingTimeButton.h"
 
-#import <SRGAppearance/SRGAppearance.h>
-
 @implementation SRGRemainingTimeButton
 
 - (void)resetWithRemainingTime:(NSTimeInterval)timeInterval
@@ -15,14 +13,14 @@
     CGFloat side = fmin(CGRectGetWidth(self.frame), CGRectGetWidth(self.frame));
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
-    UIBezierPath *backgroundCirclePath = [UIBezierPath bezierPathWithArcCenter:center radius:side / 2.f startAngle:-M_PI_2 endAngle:3 * M_PI_2 clockwise:YES];
-    CAShapeLayer *backgroundCircleLayer = [[CAShapeLayer alloc] init];
-    backgroundCircleLayer.path = backgroundCirclePath.CGPath;
-    backgroundCircleLayer.strokeColor = [UIColor srg_redColor].CGColor;
-    backgroundCircleLayer.lineWidth = 2.f;
-    backgroundCircleLayer.fillColor = [UIColor clearColor].CGColor;
-    backgroundCircleLayer.strokeEnd = 1.f;
-    [self.layer addSublayer:backgroundCircleLayer];
+    UIBezierPath *trackCirclePath = [UIBezierPath bezierPathWithArcCenter:center radius:side / 2.f startAngle:-M_PI_2 endAngle:3 * M_PI_2 clockwise:YES];
+    CAShapeLayer *trackCircleLayer = [[CAShapeLayer alloc] init];
+    trackCircleLayer.path = trackCirclePath.CGPath;
+    trackCircleLayer.strokeColor = [UIColor redColor].CGColor;
+    trackCircleLayer.lineWidth = 2.f;
+    trackCircleLayer.fillColor = [UIColor clearColor].CGColor;
+    trackCircleLayer.strokeEnd = 1.f;
+    [self.layer addSublayer:trackCircleLayer];
     
     UIBezierPath *progressCirclePath = [UIBezierPath bezierPathWithArcCenter:center radius:side / 2.f startAngle:-M_PI_2 endAngle:3 * M_PI_2 clockwise:YES];
     CAShapeLayer *progressCircleLayer = [[CAShapeLayer alloc] init];
