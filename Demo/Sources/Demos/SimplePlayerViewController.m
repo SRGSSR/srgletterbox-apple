@@ -72,9 +72,7 @@
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.navigationController.navigationBarHidden = hidden;
-    } completion:^(BOOL finished) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:nil completion:^(BOOL finished) {
         if (@available(iOS 11, *)) {
             [self setNeedsUpdateOfHomeIndicatorAutoHidden];
         }
