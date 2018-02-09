@@ -618,7 +618,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (! [self isTimelineAlwaysHidden]
         && (hasError || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
-            || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
+                || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
     else {
@@ -955,7 +955,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:controller.mediaComposition];
     SRGLetterboxViewBehavior timelineBehavior = [self timelineBehaviorForController:controller];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! controller.continuousPlaybackResumptionDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
     BOOL isTimelineVisible = (timelineHeight != 0.f);
