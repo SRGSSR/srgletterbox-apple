@@ -103,7 +103,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (void)refreshView
 {
-    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateEnded && self.controller.nextMedia) {
+    if (self.controller.continuousPlaybackResumptionDate) {
         SRGMedia *nextMedia = self.controller.nextMedia;
         self.titleLabel.text = nextMedia.title;
         self.subtitleLabel.text = nextMedia.lead;
