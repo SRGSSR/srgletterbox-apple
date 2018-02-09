@@ -26,12 +26,30 @@
                                     <outlet property="delegate" destination="A6A-Ps-0a8" id="7cG-Zu-kLu"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="djZ-PN-OWu">
+                                <rect key="frame" x="20" y="40" width="59" height="30"/>
+                                <state key="normal" title="Previous"/>
+                                <connections>
+                                    <action selector="playPreviousMedia:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="IF3-ms-ABq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q3P-3R-lgf">
+                                <rect key="frame" x="716" y="40" width="32" height="30"/>
+                                <state key="normal" title="Next"/>
+                                <connections>
+                                    <action selector="playNextMedia:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="Ey2-Jm-EfS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="LJc-Y6-KTE" secondAttribute="bottom" id="73t-LL-4gD"/>
+                            <constraint firstItem="q3P-3R-lgf" firstAttribute="top" secondItem="P37-7j-pII" secondAttribute="top" constant="20" id="A8H-CD-CAd"/>
                             <constraint firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="SbW-p2-gjh"/>
+                            <constraint firstItem="P37-7j-pII" firstAttribute="trailing" secondItem="q3P-3R-lgf" secondAttribute="trailing" constant="20" id="ViS-MZ-kKV"/>
+                            <constraint firstItem="djZ-PN-OWu" firstAttribute="leading" secondItem="P37-7j-pII" secondAttribute="leading" constant="20" id="VkA-Ib-UcY"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" id="fSX-ZH-AMq"/>
+                            <constraint firstItem="djZ-PN-OWu" firstAttribute="top" secondItem="P37-7j-pII" secondAttribute="top" constant="20" id="kMz-4R-9Xf"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="Xul-ZD-b56" secondAttribute="top" id="t2r-8H-YQE"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="P37-7j-pII"/>

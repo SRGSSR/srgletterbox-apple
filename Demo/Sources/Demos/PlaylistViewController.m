@@ -109,4 +109,16 @@
     }];
 }
 
+#pragma mark Actions
+
+- (IBAction)playPreviousMedia:(id)sender
+{
+    [self.letterboxController playPreviousMedia];
+}
+
+- (IBAction)playNextMedia:(id)sender
+{
+    [self.letterboxController playNextMedia];
+}
+
 @end
