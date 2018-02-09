@@ -80,8 +80,8 @@
 		6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */; };
 		6F6EA9051F4DA2D900844199 /* NSTimer+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
-		6F919BD4202DA48E000DD351 /* SRGContinuationButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F919BD2202DA48E000DD351 /* SRGContinuationButton.h */; };
-		6F919BD5202DA48E000DD351 /* SRGContinuationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F919BD3202DA48E000DD351 /* SRGContinuationButton.m */; };
+		6F919BD4202DA48E000DD351 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */; };
+		6F919BD5202DA48E000DD351 /* SRGRemainingTimeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
 		6FA562CE1E9BABE400A1344F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FA562CD1E9BABE400A1344F /* HockeySDK.framework */; };
 		6FA562CF1E9BABE400A1344F /* HockeySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FA562CD1E9BABE400A1344F /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -377,8 +377,8 @@
 		6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxController+Private.h"; sourceTree = "<group>"; };
 		6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+LetterboxDemo.h"; sourceTree = "<group>"; };
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
-		6F919BD2202DA48E000DD351 /* SRGContinuationButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGContinuationButton.h; sourceTree = "<group>"; };
-		6F919BD3202DA48E000DD351 /* SRGContinuationButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGContinuationButton.m; sourceTree = "<group>"; };
+		6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGRemainingTimeButton.h; sourceTree = "<group>"; };
+		6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGRemainingTimeButton.m; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
@@ -652,8 +652,8 @@
 			children = (
 				6FDF33AE1F012D7500BA1D6E /* SRGAccessibilityView.h */,
 				6FDF33AF1F012D7500BA1D6E /* SRGAccessibilityView.m */,
-				6F919BD2202DA48E000DD351 /* SRGContinuationButton.h */,
-				6F919BD3202DA48E000DD351 /* SRGContinuationButton.m */,
+				6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */,
+				6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */,
 				6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */,
 				6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */,
 				6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */,
@@ -865,7 +865,7 @@
 				6FF0D89A1F4DABF200B3C1EB /* SRGTimerTarget.h in Headers */,
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
-				6F919BD4202DA48E000DD351 /* SRGContinuationButton.h in Headers */,
+				6F919BD4202DA48E000DD351 /* SRGRemainingTimeButton.h in Headers */,
 				6FB4422C201F1FB900FA5AF8 /* SRGCountdownView.h in Headers */,
 				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
@@ -1119,7 +1119,7 @@
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				6FF0D89B1F4DABF200B3C1EB /* SRGTimerTarget.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
-				6F919BD5202DA48E000DD351 /* SRGContinuationButton.m in Sources */,
+				6F919BD5202DA48E000DD351 /* SRGRemainingTimeButton.m in Sources */,
 				6FB4422D201F1FB900FA5AF8 /* SRGCountdownView.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,

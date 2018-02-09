@@ -13,10 +13,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGContinuousPlaybackView">
             <connections>
                 <outlet property="cancelButton" destination="HYZ-hG-mSG" id="VMb-qi-PHj"/>
-                <outlet property="continuationButton" destination="NDI-pF-dbh" id="R1y-pE-HZZ"/>
                 <outlet property="durationLabel" destination="YVL-1C-aFu" id="S2C-II-4ku"/>
                 <outlet property="imageView" destination="Pla-Fb-TkJ" id="S6x-1R-YTR"/>
                 <outlet property="introLabel" destination="2nS-d4-yiq" id="1J5-xd-klh"/>
+                <outlet property="remainingTimeButton" destination="NDI-pF-dbh" id="jtw-8W-3HR"/>
                 <outlet property="subtitleLabel" destination="sbN-rw-Dcz" id="p9b-C1-dMK"/>
                 <outlet property="titleLabel" destination="CDg-yd-0lJ" id="PXB-TN-QPl"/>
             </connections>
@@ -70,7 +70,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="266" height="75"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NDI-pF-dbh" userLabel="Play Button" customClass="SRGContinuationButton">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NDI-pF-dbh" userLabel="Play Button" customClass="SRGRemainingTimeButton">
                                             <rect key="frame" x="266" y="0.0" width="75" height="75"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="75" id="U8v-Oj-QUJ"/>
@@ -78,6 +78,9 @@
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="play-32"/>
+                                            <connections>
+                                                <action selector="playNextMedia:" destination="-1" eventType="touchUpInside" id="Hmy-Fw-vvm"/>
+                                            </connections>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ov5-2a-xCM" userLabel="Spacer View">
                                             <rect key="frame" x="341" y="0.0" width="266" height="75"/>

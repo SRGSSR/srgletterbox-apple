@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGContinuationButton.h"
+#import "SRGRemainingTimeButton.h"
 
 #import <SRGAppearance/SRGAppearance.h>
 
-@implementation SRGContinuationButton
+@implementation SRGRemainingTimeButton
 
 - (void)resetWithRemainingTime:(NSTimeInterval)timeInterval
 {

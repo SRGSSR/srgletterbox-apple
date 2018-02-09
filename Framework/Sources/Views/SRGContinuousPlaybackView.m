@@ -7,7 +7,7 @@
 #import "SRGContinuousPlaybackView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGContinuationButton.h"
+#import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
@@ -24,7 +24,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet SRGContinuationButton *continuationButton;
+@property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
 @end
@@ -114,8 +114,8 @@ static void commonInit(SRGContinuousPlaybackView *self);
         self.durationLabel.text = nil;      // TODO:
         [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
         
-        [self.continuationButton resetWithRemainingTime:[self.controller.continuousPlaybackResumptionDate timeIntervalSinceNow]];
-        
+        NSTimeInterval remainingTime = [self.controller.continuousPlaybackResumptionDate timeIntervalSinceNow];
+        [self.remainingTimeButton resetWithRemainingTime:remainingTime];
         self.hidden = NO;
     }
     else {
@@ -139,6 +139,11 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (IBAction)cancelContinuousPlayback:(id)sender
 {
     [self.controller cancelContinuousPlayback];
+}
+
+- (IBAction)playNextMedia:(id)sender
+{
+    [self.controller playNextMedia];
 }
 
 #pragma mark Notifications

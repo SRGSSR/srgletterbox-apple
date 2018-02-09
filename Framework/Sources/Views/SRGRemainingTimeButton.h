@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SRGContinuationButton : UIButton
+@interface SRGRemainingTimeButton : UIButton
 
 - (void)resetWithRemainingTime:(NSTimeInterval)timeInterval;
 
