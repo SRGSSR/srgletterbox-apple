@@ -115,6 +115,13 @@ static void commonInit(SRGContinuousPlaybackView *self);
     self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
+#pragma mark Actions
+
+- (IBAction)cancelContinuousPlayback:(id)sender
+{
+    [self.controller cancelContinuousPlayback];
+}
+
 #pragma mark Notifications
 
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification
