@@ -112,7 +112,18 @@ static void commonInit(SRGContinuousPlaybackView *self);
         SRGMedia *nextMedia = self.controller.nextMedia;
         self.titleLabel.text = nextMedia.title;
         self.subtitleLabel.text = nextMedia.lead ?: nextMedia.summary;
-        self.durationLabel.text = nil;      // TODO:
+        
+        static NSDateComponentsFormatter *s_dateComponentsFormatter;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+            s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+        });
+        
+        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:nextMedia.duration / 1000.];
+        self.durationLabel.text = [NSString stringWithFormat:@"Duration:  %@  ", durationString];
+        
         [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
         
         NSTimeInterval remainingTime = [self.controller.continuousPlaybackResumptionDate timeIntervalSinceNow];
