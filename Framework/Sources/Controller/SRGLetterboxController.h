@@ -461,7 +461,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) NSDate *continuousPlaybackTransitionEndDate;
 
 /**
- *  The upcoming media while undergoing a continuous playback transition.
+ *  The upcoming media while undergoing a continuous playback transition. KVO-observable.
  *
  *  @discussion The end date is `nil` if there no active transition. Once an end date has been determined,
  *              changing `continuousPlaybackDelay` will not alter it.

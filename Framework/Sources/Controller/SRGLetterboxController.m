@@ -136,6 +136,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
+
+// Do not use a parent context class so that all properties are KVO-observable.
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
 @property (nonatomic) NSDate *continuousPlaybackTransitionEndDate;
 @property (nonatomic) SRGMedia *continuousPlaybackUpcomingMedia;

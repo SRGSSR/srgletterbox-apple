@@ -7,6 +7,7 @@
 #import "LetterboxBaseTestCase.h"
 #import "Playlist.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 static SRGMediaURN *MediaURN1(void)
@@ -464,6 +465,63 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
     XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - SRGLetterboxContinuousPlaybackDelayDefault < 1);
+}
+
+- (void)testContinuousPlaybackTransitionKeyValueObserving
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
+    
+    [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Start with the first item in the playlist
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    BOOL success1 = [self.controller playNextMedia];
+    XCTAssertTrue(success1);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Seek near the end end wait for the transition to start
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
+    }];
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackTransitionStartDate) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
+        return controller.continuousPlaybackTransitionStartDate != nil;
+    }];
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackTransitionEndDate) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
+        return controller.continuousPlaybackTransitionEndDate != nil;
+    }];
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackUpcomingMedia) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
+        return [controller.continuousPlaybackUpcomingMedia.URN isEqual:MediaURN2()];
+    }];
+    
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Wait for the transition to end
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
+    }];
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackTransitionStartDate) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
+        return controller.continuousPlaybackTransitionStartDate == nil;
+    }];
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackTransitionEndDate) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
+        return controller.continuousPlaybackTransitionEndDate == nil;
+    }];
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackUpcomingMedia) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
+        return controller.continuousPlaybackUpcomingMedia.URN == nil;
+    }];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
 @end
