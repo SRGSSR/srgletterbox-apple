@@ -60,7 +60,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        [_controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate)];
         [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
@@ -69,10 +68,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     if (controller) {
         @weakify(self)
-        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
-            @strongify(self)
-            [self refreshViewAnimated:YES];
-        }];
         [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             [self refreshViewAnimated:YES];
@@ -114,45 +109,26 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (void)refreshViewAnimated:(BOOL)animated
 {
-    CGFloat alpha = 0.f;
-    if (self.controller.continuousPlaybackTransitionEndDate) {
-        SRGMedia *nextMedia = self.controller.nextMedia;
-        self.titleLabel.text = nextMedia.title;
-        self.subtitleLabel.text = nextMedia.lead ?: nextMedia.summary;
-        
-        static NSDateComponentsFormatter *s_dateComponentsFormatter;
-        static dispatch_once_t s_onceToken;
-        dispatch_once(&s_onceToken, ^{
-            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-            s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-        });
-        
-        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:nextMedia.duration / 1000.];
-        self.durationLabel.text = [NSString stringWithFormat:@"Duration:  %@  ", durationString];
-        
-        [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
-        
-        NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
-        float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
-        [self.remainingTimeButton setProgress:progress withDuration:duration];
-        
-        alpha = 1.f;
-    }
-    else {
-        alpha = 0.f;
-    }
+    SRGMedia *nextMedia = self.controller.nextMedia;
+    self.titleLabel.text = nextMedia.title;
+    self.subtitleLabel.text = nextMedia.lead ?: nextMedia.summary;
     
-    void (^animations)(void) = ^{
-        self.alpha = alpha;
-    };
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+        s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+    });
     
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:animations];
-    }
-    else {
-        animations();
-    }
+    NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:nextMedia.duration / 1000.];
+    self.durationLabel.text = [NSString stringWithFormat:@"Duration:  %@  ", durationString];
+    
+    [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    
+    NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
+    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
+    [self.remainingTimeButton setProgress:progress withDuration:duration];
 }
 
 #pragma mark Fonts

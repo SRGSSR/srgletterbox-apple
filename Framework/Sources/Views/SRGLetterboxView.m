@@ -27,6 +27,7 @@
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAppearance/SRGAppearance.h>
 #import <libextobjc/libextobjc.h>
@@ -404,6 +405,8 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         
+        [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackTransitionEndDate)];
+        
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
         }
@@ -470,6 +473,14 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(externalPlaybackStateDidChange:)
                                                      name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                    object:mediaPlayerController];
+        
+        @weakify(self)
+        @weakify(controller)
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+            @strongify(self)
+            @strongify(controller)
+            [self updateLayoutForController:controller];
+        }];
         
         [self.playerView addSubview:mediaPlayerController.view];
         
@@ -924,6 +935,7 @@ static void commonInit(SRGLetterboxView *self);
 
     BOOL hasError = ([self errorForController:controller] != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
+    BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
     
     // Only display error view if there is an error and we are not displaying the availability view
     self.errorView.alpha = (hasError && ! isAvailabilityViewVisible) ? 1.f : 0.f;
@@ -933,12 +945,14 @@ static void commonInit(SRGLetterboxView *self);
     self.errorInstructionsLabel.hidden = ! controller.URN;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
+    self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
     SRGMedia *media = controller.media;
     BOOL playerViewVisible = (media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
-                              && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+                              && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded
+                              && ! isContinuousPlaybackViewVisible);
     if (@available(iOS 11, *)) {
         if ([NSBundle srg_letterbox_isProductionVersion] && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirplayActive]) {
             playerViewVisible = NO;
