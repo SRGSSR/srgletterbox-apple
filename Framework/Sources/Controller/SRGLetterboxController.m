@@ -128,14 +128,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *liveStreamEndDateTimer;
 @property (nonatomic) NSTimer *socialCountViewTimer;
 
-// Timer for continuous playback
-@property (nonatomic) NSTimer *transitionTimer;
-
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
+
+// Timer for continuous playback
+@property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
 
 // Do not use a parent context class so that all properties are KVO-observable.
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
@@ -234,7 +235,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
     self.socialCountViewTimer = nil;
-    self.transitionTimer = nil;
+    self.continuousPlaybackTransitionTimer = nil;
 }
 
 #pragma mark Getters and setters
@@ -428,10 +429,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _socialCountViewTimer = socialCountViewTimer;
 }
 
-- (void)setTransitionTimer:(NSTimer *)transitionTimer
+- (void)setContinuousPlaybackTransitionTimer:(NSTimer *)continuousPlaybackTransitionTimer
 {
-    [_transitionTimer invalidate];
-    _transitionTimer = transitionTimer;
+    [_continuousPlaybackTransitionTimer invalidate];
+    _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
 }
 
 #pragma mark Periodic time observers
@@ -518,7 +519,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)cancelContinuousPlayback
 {
-    self.transitionTimer = nil;
+    self.continuousPlaybackTransitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
     self.continuousPlaybackTransitionEndDate = nil;
     self.continuousPlaybackUpcomingMedia = nil;
@@ -1079,7 +1080,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    self.transitionTimer = nil;
+    self.continuousPlaybackTransitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
     self.continuousPlaybackTransitionEndDate = nil;
     self.continuousPlaybackUpcomingMedia = nil;
@@ -1388,12 +1389,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 self.continuousPlaybackUpcomingMedia = nextMedia;
                 
                 @weakify(self)
-                self.transitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
+                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
                     [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
                     
-                    self.transitionTimer = nil;
+                    self.continuousPlaybackTransitionTimer = nil;
                     self.continuousPlaybackTransitionStartDate = nil;
                     self.continuousPlaybackTransitionEndDate = nil;
                     self.continuousPlaybackUpcomingMedia = nil;
