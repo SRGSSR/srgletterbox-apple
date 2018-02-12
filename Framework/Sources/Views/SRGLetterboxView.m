@@ -927,8 +927,6 @@ static void commonInit(SRGLetterboxView *self);
         }];
     }
     
-    self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
-    
     self.notificationImageView.hidden = (self.notificationMessage == nil);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
@@ -937,14 +935,16 @@ static void commonInit(SRGLetterboxView *self);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
     
+    self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
+    
     // Only display error view if there is an error and we are not displaying the availability view
-    self.errorView.alpha = (hasError && ! isAvailabilityViewVisible) ? 1.f : 0.f;
+    self.errorView.alpha = (hasError && ! isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
     // Only display retry instructions if there is a media to retry with (set the `hidden` property so that the wrapping
     // error stack view layout is properly adjusted)
     self.errorInstructionsLabel.hidden = ! controller.URN;
     
-    self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
+    self.availabilityView.alpha = (isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
