@@ -105,6 +105,41 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGFloat height = CGRectGetHeight(self.frame);
+    if (height < 100.f) {
+        self.introLabel.hidden = YES;
+        self.titleLabel.hidden = YES;
+        self.subtitleLabel.hidden = YES;
+        self.durationLabel.hidden = YES;
+        self.cancelButton.hidden = YES;
+    }
+    else if (height < 150.f) {
+        self.introLabel.hidden = YES;
+        self.titleLabel.hidden = NO;
+        self.subtitleLabel.hidden = YES;
+        self.durationLabel.hidden = YES;
+        self.cancelButton.hidden = YES;
+    }
+    else if (height < 200.f) {
+        self.introLabel.hidden = YES;
+        self.titleLabel.hidden = NO;
+        self.subtitleLabel.hidden = YES;
+        self.durationLabel.hidden = YES;
+        self.cancelButton.hidden = NO;
+    }
+    else {
+        self.introLabel.hidden = NO;
+        self.titleLabel.hidden = NO;
+        self.subtitleLabel.hidden = NO;
+        self.durationLabel.hidden = NO;
+        self.cancelButton.hidden = NO;
+    }
+}
+
 #pragma mark UI
 
 - (void)refreshViewAnimated:(BOOL)animated

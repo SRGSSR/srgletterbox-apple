@@ -19,6 +19,8 @@
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *marginConstraints;
+
 @end
 
 @implementation PlaylistViewController
@@ -146,6 +148,13 @@
 - (IBAction)close:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)changeMargins:(UISlider *)slider
+{
+    [self.marginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+        constraint.constant = slider.value;
+    }];
 }
 
 @end
