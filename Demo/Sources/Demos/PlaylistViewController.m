@@ -39,6 +39,7 @@
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    viewController.letterboxController.continuousPlaybackDelay = 10.;
     
     return viewController;
 }
@@ -54,6 +55,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.letterboxView.controller = self.letterboxController;
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
@@ -147,6 +150,16 @@
 - (IBAction)playNextMedia:(id)sender
 {
     [self.letterboxController playNextMedia];
+}
+
+- (IBAction)toggleView:(id)sender
+{
+    if (self.letterboxView.controller) {
+        self.letterboxView.controller = nil;
+    }
+    else {
+        self.letterboxView.controller = self.letterboxController;
+    }
 }
 
 - (IBAction)close:(id)sender
