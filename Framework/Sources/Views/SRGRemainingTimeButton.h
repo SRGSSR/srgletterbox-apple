@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SRGRemainingTimeButton : UIButton
 
-- (void)resetWithRemainingTime:(NSTimeInterval)timeInterval;
+- (void)setProgress:(float)progress withDuration:(NSTimeInterval)duration;
 
 @end
 

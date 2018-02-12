@@ -126,8 +126,9 @@ static void commonInit(SRGContinuousPlaybackView *self);
         
         [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
         
-        NSTimeInterval remainingTime = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceNow];
-        [self.remainingTimeButton resetWithRemainingTime:remainingTime];
+        NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
+        float progress = ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration;
+        [self.remainingTimeButton setProgress:progress withDuration:duration];
         
         alpha = 1.f;
     }

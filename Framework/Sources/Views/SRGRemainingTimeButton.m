@@ -8,8 +8,12 @@
 
 @implementation SRGRemainingTimeButton
 
-- (void)resetWithRemainingTime:(NSTimeInterval)timeInterval
+- (void)setProgress:(float)progress withDuration:(NSTimeInterval)duration
 {
+    // Sanitize values
+    progress = fmaxf(fminf(progress, 1.f), 0.f);
+    duration = fmax(duration, 0.);
+    
     CGFloat side = fmin(CGRectGetWidth(self.frame), CGRectGetWidth(self.frame));
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
@@ -32,9 +36,9 @@
     [self.layer addSublayer:progressCircleLayer];
     
     CABasicAnimation *progressAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    progressAnimation.fromValue = (id)[NSNumber numberWithFloat:0.1f];
-    progressAnimation.toValue = (id)[NSNumber numberWithFloat:1.f];
-    progressAnimation.duration = timeInterval;
+    progressAnimation.fromValue = @(progress);
+    progressAnimation.toValue = @1.f;
+    progressAnimation.duration = (1.f - progress) * duration;
     progressAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     [progressCircleLayer addAnimation:progressAnimation forKey:@"drawRectStroke"];
 }
