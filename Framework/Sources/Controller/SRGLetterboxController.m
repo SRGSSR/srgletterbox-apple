@@ -129,14 +129,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *socialCountViewTimer;
 
 // Timer for continuous playback
-@property (nonatomic) NSTimer *resumptionTimer;
+@property (nonatomic) NSTimer *transitionTimer;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
-@property (nonatomic) NSDate *continuousPlaybackResumptionDate;
+@property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
+@property (nonatomic) NSDate *continuousPlaybackTransitionEndDate;
 
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
@@ -230,7 +231,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
     self.socialCountViewTimer = nil;
-    self.resumptionTimer = nil;
+    self.transitionTimer = nil;
 }
 
 #pragma mark Getters and setters
@@ -424,10 +425,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _socialCountViewTimer = socialCountViewTimer;
 }
 
-- (void)setResumptionTimer:(NSTimer *)resumptionTimer
+- (void)setTransitionTimer:(NSTimer *)transitionTimer
 {
-    [_resumptionTimer invalidate];
-    _resumptionTimer = resumptionTimer;
+    [_transitionTimer invalidate];
+    _transitionTimer = transitionTimer;
 }
 
 #pragma mark Periodic time observers
@@ -514,8 +515,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)cancelContinuousPlayback
 {
-    self.resumptionTimer = nil;
-    self.continuousPlaybackResumptionDate = nil;
+    self.transitionTimer = nil;
+    self.continuousPlaybackTransitionStartDate = nil;
+    self.continuousPlaybackTransitionEndDate = nil;
 }
 
 #pragma mark Data
@@ -1073,8 +1075,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    self.continuousPlaybackResumptionDate = nil;
-    self.resumptionTimer = nil;
+    self.transitionTimer = nil;
+    self.continuousPlaybackTransitionStartDate = nil;
+    self.continuousPlaybackTransitionEndDate = nil;
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1374,14 +1377,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         if (self.nextMedia && self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
             if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayImmediate) {
-                self.continuousPlaybackResumptionDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
+                self.continuousPlaybackTransitionStartDate = NSDate.date;
+                self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
                 
                 @weakify(self)
-                self.resumptionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
+                self.transitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
-                    self.continuousPlaybackResumptionDate = nil;
-                    self.resumptionTimer = nil;
+                    self.transitionTimer = nil;
+                    self.continuousPlaybackTransitionStartDate = nil;
+                    self.continuousPlaybackTransitionEndDate = nil;
                     
                     [self playNextMedia];
                 }];

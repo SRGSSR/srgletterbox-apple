@@ -19,16 +19,6 @@ static SRGMediaURN *MediaURN2(void)
     return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314051"];
 }
 
-static SRGMediaURN *MediaSegmentURN1(void)
-{
-    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314065"];
-}
-
-static SRGMediaURN *MediaSegmentURN2(void)
-{
-    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:9314069"];
-}
-
 @interface PlaylistsTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -193,7 +183,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Seek near the end
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -204,9 +195,10 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    NSDate *playbackEndDate = NSDate.date;
+    NSDate *playbackEndDate1 = NSDate.date;
     
-    XCTAssertNotNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNotNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNotNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Wait until the next media is played automatically
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -216,8 +208,11 @@ static SRGMediaURN *MediaSegmentURN2(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN2());
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
-    XCTAssertTrue(fabs([NSDate.date timeIntervalSinceDate:playbackEndDate] - SRGLetterboxContinuousPlaybackDelayDefault) < 1);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
+    
+    XCTAssertTrue(fabs([self.controller.continuousPlaybackTransitionStartDate timeIntervalSinceDate:playbackEndDate1]) < 0.1);
+    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - SRGLetterboxContinuousPlaybackDelayDefault < 1);
 }
 
 - (void)testDisabledContinuousPlayback
@@ -244,7 +239,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Seek near the end
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -255,7 +251,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Wait some time. We don't expect playback to automatically continue with the next item
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
@@ -269,7 +266,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     }];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1());
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
 }
 
 - (void)testImmediateContinuousPlayback
@@ -296,7 +294,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Seek near the end
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -307,9 +306,10 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    NSDate *playbackEndDate = NSDate.date;
+    NSDate *playbackEndDate1 = NSDate.date;
     
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Wait until the next media is played automatically
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -319,8 +319,11 @@ static SRGMediaURN *MediaSegmentURN2(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN2());
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
-    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate] < 1);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
+    
+    XCTAssertTrue(fabs([self.controller.continuousPlaybackTransitionStartDate timeIntervalSinceDate:playbackEndDate1]) < 0.1);
+    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] < 1);
 }
 
 - (void)testContinuousPlaybackCancellation
@@ -348,7 +351,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // No effect, no pending continuation
     [self.controller cancelContinuousPlayback];
@@ -363,9 +367,11 @@ static SRGMediaURN *MediaSegmentURN2(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Cancel pending continuation. The second media will not be played automatically
-    XCTAssertNotNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNotNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNotNil(self.controller.continuousPlaybackTransitionEndDate);
     [self.controller cancelContinuousPlayback];
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     
     // Wait some time. We don't expect playback to automatically continue with the next item
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
@@ -379,7 +385,8 @@ static SRGMediaURN *MediaSegmentURN2(void)
     }];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1());
-    XCTAssertNil(self.controller.continuousPlaybackResumptionDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionStartDate);
+    XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
 }
 
 @end

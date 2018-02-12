@@ -58,7 +58,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        [_controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackResumptionDate)];
+        [_controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate)];
     }
     
     _controller = controller;
@@ -66,7 +66,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     if (controller) {
         @weakify(self)
-        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackResumptionDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
             @strongify(self)
             [self refreshViewAnimated:YES];
         }];
@@ -108,7 +108,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (void)refreshViewAnimated:(BOOL)animated
 {
     CGFloat alpha = 0.f;
-    if (self.controller.continuousPlaybackResumptionDate) {
+    if (self.controller.continuousPlaybackTransitionEndDate) {
         SRGMedia *nextMedia = self.controller.nextMedia;
         self.titleLabel.text = nextMedia.title;
         self.subtitleLabel.text = nextMedia.lead ?: nextMedia.summary;
@@ -126,7 +126,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
         
         [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
         
-        NSTimeInterval remainingTime = [self.controller.continuousPlaybackResumptionDate timeIntervalSinceNow];
+        NSTimeInterval remainingTime = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceNow];
         [self.remainingTimeButton resetWithRemainingTime:remainingTime];
         
         alpha = 1.f;
