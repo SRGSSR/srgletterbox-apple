@@ -1372,24 +1372,22 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.socialCountViewTimer = nil;
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        if (self.nextMedia) {
-            if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
-                if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayImmediate) {
-                    self.continuousPlaybackResumptionDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
+        if (self.nextMedia && self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
+            if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayImmediate) {
+                self.continuousPlaybackResumptionDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
+                
+                @weakify(self)
+                self.resumptionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
+                    @strongify(self)
                     
-                    @weakify(self)
-                    self.resumptionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
-                        @strongify(self)
-                        
-                        self.continuousPlaybackResumptionDate = nil;
-                        self.resumptionTimer = nil;
-                        
-                        [self playNextMedia];
-                    }];
-                }
-                else {
+                    self.continuousPlaybackResumptionDate = nil;
+                    self.resumptionTimer = nil;
+                    
                     [self playNextMedia];
-                }
+                }];
+            }
+            else {
+                [self playNextMedia];
             }
         }
     }
