@@ -932,8 +932,8 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
     BOOL hasError = ([self errorForController:controller] != nil);
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller] && ! isContinuousPlaybackViewVisible;
     
     self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
@@ -944,7 +944,7 @@ static void commonInit(SRGLetterboxView *self);
     // error stack view layout is properly adjusted)
     self.errorInstructionsLabel.hidden = ! controller.URN;
     
-    self.availabilityView.alpha = (isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
+    self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
