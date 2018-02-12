@@ -32,7 +32,6 @@
 
     viewController.playlist = [[Playlist alloc] initWithMedias:medias];
 
-    viewController.letterboxController.playlistDataSource = viewController.playlist;
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
