@@ -8,11 +8,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  View displayed during a continuous playback transition.
+ */
 IB_DESIGNABLE
 @interface SRGContinuousPlaybackView : UIView
 
 /**
- *  The controller which the vuew is associated with.
+ *  The controller which the view is associated with.
  */
 @property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 

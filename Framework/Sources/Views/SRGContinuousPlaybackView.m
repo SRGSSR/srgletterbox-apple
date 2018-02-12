@@ -11,7 +11,6 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
-#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
@@ -64,7 +63,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
     
     _controller = controller;
-    [self refreshViewAnimated:NO];
     
     if (controller) {
         @weakify(self)
@@ -73,6 +71,8 @@ static void commonInit(SRGContinuousPlaybackView *self);
             [self refreshViewAnimated:YES];
         }];
     }
+    
+    [self refreshViewAnimated:NO];
 }
 
 #pragma mark Overrides
