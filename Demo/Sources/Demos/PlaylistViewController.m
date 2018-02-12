@@ -19,7 +19,7 @@
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
-@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *marginConstraints;
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
 @end
 
@@ -152,7 +152,7 @@
 
 - (IBAction)changeMargins:(UISlider *)slider
 {
-    [self.marginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = slider.value;
     }];
 }

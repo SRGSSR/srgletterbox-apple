@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIt-9C-yD1" customClass="SRGLetterboxView">
-                                <rect key="frame" x="0.0" y="19.999999999999986" width="414" height="233.66666666666663"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="233"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" secondItem="iIt-9C-yD1" secondAttribute="width" multiplier="9:16" id="rIM-b5-m4d"/>
@@ -42,20 +42,20 @@
                                     <action selector="close:" destination="FfM-Po-XJn" eventType="touchUpInside" id="c30-eY-iax"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Margins" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDD-aQ-cwQ">
-                                <rect key="frame" x="20.000000000000004" y="648.66666666666663" width="61.333333333333343" height="20.333333333333371"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDD-aQ-cwQ">
+                                <rect key="frame" x="20.000000000000004" y="648.66666666666663" width="32.333333333333343" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="AAy-53-dvS">
-                                <rect key="frame" x="116" y="644" width="278" height="31"/>
+                                <rect key="frame" x="86.666666666666657" y="644" width="307.33333333333337" height="31"/>
                                 <connections>
                                     <action selector="changeMargins:" destination="FfM-Po-XJn" eventType="valueChanged" id="3jk-JO-CGT"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View attached to the controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W1r-zh-z9N">
-                                <rect key="frame" x="20.000000000000014" y="695" width="235.33333333333337" height="21"/>
+                                <rect key="frame" x="19.999999999999986" y="695" width="235.66666666666663" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -67,14 +67,14 @@
                                 </connections>
                             </switch>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5th-Sz-JvA" userLabel="Previous Button">
-                                <rect key="frame" x="40" y="283.66666666666669" width="59" height="30"/>
+                                <rect key="frame" x="40" y="283" width="59" height="30"/>
                                 <state key="normal" title="Previous"/>
                                 <connections>
                                     <action selector="playPreviousMedia:" destination="FfM-Po-XJn" eventType="touchUpInside" id="aCC-jN-69c"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jkW-E3-Muc" userLabel="Next Button">
-                                <rect key="frame" x="342" y="283.66666666666669" width="32" height="30"/>
+                                <rect key="frame" x="342" y="283" width="32" height="30"/>
                                 <state key="normal" title="Next"/>
                                 <connections>
                                     <action selector="playNextMedia:" destination="FfM-Po-XJn" eventType="touchUpInside" id="DiN-vz-S7a"/>
@@ -112,8 +112,8 @@
                         <outlet property="letterboxAspectRatioConstraint" destination="rIM-b5-m4d" id="fjX-qn-XM7"/>
                         <outlet property="letterboxController" destination="SHG-hd-icm" id="Ryw-aI-vXh"/>
                         <outlet property="letterboxView" destination="iIt-9C-yD1" id="Lfp-dY-iYL"/>
-                        <outletCollection property="marginConstraints" destination="SFL-SD-jgG" id="iIt-v5-eyy"/>
-                        <outletCollection property="marginConstraints" destination="Uxg-gk-Tsg" id="MZc-Jo-QeP"/>
+                        <outletCollection property="letterboxMarginConstraints" destination="SFL-SD-jgG" id="iIt-v5-eyy"/>
+                        <outletCollection property="letterboxMarginConstraints" destination="Uxg-gk-Tsg" id="MZc-Jo-QeP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hw8-sF-xik" userLabel="First Responder" sceneMemberID="firstResponder"/>
