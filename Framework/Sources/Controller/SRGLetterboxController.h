@@ -405,26 +405,26 @@ withToleranceBefore:(CMTime)toleranceBefore
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Play the next media in the playlist.
+ *  Play the next media currently available from the playlist.
  *
  *  @return `YES` iff a next media was available.
  */
 - (BOOL)playNextMedia;
 
 /**
- *  Play the previous media in the playlist.
+ *  Play the previous media currently available from the playlist.
  *
  *  @return `YES` iff a previous media was available.
  */
 - (BOOL)playPreviousMedia;
 
 /**
- *  The next available media in the playlist.
+ *  The next media currently available from the playlist.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *nextMedia;
 
 /**
- *  The previous available media in the playlist.
+ *  The previous media currently available from the playlist.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
 
