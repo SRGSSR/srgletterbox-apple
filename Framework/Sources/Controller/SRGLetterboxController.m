@@ -128,15 +128,15 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *liveStreamEndDateTimer;
 @property (nonatomic) NSTimer *socialCountViewTimer;
 
+// Timer for continuous playback
+@property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
+
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
-
-// Timer for continuous playback
-@property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
 
 // Do not use a parent context class so that all properties are KVO-observable.
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
@@ -451,6 +451,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
     SRGMedia *media = self.nextMedia;
     if (media) {
         [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
@@ -463,6 +467,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
     SRGMedia *media = self.previousMedia;
     if (media) {
         [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
@@ -475,6 +483,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)playNextMedia
 {
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
     SRGMedia *media = self.nextMedia;
     if (media) {
         [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
@@ -487,6 +499,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)playPreviousMedia
 {
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
     SRGMedia *media = self.previousMedia;
     if (media) {
         [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];

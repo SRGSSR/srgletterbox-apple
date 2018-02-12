@@ -380,6 +380,8 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 /**
  *  Playlist support. Provide a data source supplying previous and next medias to be played.
+ *
+ *  @discussion Playlist controls are not available when picture in picture is active.
  */
 @interface SRGLetterboxController (Playlists)
 
@@ -395,7 +397,9 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @return `YES` iff a next media was available.
+ *  @return
+ *
+ *  @discussion `YES` iff successful. Returns `NO` when picture in picture is active.
  */
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 
@@ -407,14 +411,14 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Play the next media currently available from the playlist.
  *
- *  @return `YES` iff a next media was available.
+ *  @discussion `YES` iff successful. Returns `NO` when picture in picture is active.
+ *
+ *  @discussion Not available when picture in picture is active.
  */
 - (BOOL)playNextMedia;
 
 /**
- *  Play the previous media currently available from the playlist.
- *
- *  @return `YES` iff a previous media was available.
+ *  Same as `-playNextMedia`, but with the previous media in the playlist.
  */
 - (BOOL)playPreviousMedia;
 
@@ -434,7 +438,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Continuous playback support, i.e. automatically playing the next media in a playlist when a media playback ends.
  *  Requires a playlist data source supplying next item information.
  *
- *  @discussion Continuous playback is not available when picture in picture is active.
+ *  Remark: Continuous playback is not enabled when picture in picture is active.
  */
 @interface SRGLetterboxController (ContinuousPlayback)
 
