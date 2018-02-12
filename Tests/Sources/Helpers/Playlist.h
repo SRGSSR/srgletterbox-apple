@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Playlist : NSObject <SRGLetterboxControllerPlaylistDataSource>
 
-- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias;
+- (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias;
 
 @property (nonatomic, readonly) NSArray<SRGMedia *> *medias;
 

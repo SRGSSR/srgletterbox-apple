@@ -16,9 +16,13 @@
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
+#import <libextobjc/libextobjc.h>
+
 @interface DemosViewController ()
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsBarButtonItem;
+
+@property (nonatomic) SRGDataProvider *dataProvider;
 
 @end
 
@@ -108,7 +112,34 @@
 - (void)openPlaylistForShowWithURNString:(NSString *)URNString
 {
     SRGShowURN *showURN = [SRGShowURN showURNWithString:URNString];
-    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithShowURN:showURN];
+    if (! showURN) {
+        return;
+    }
+    
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+    [[self.dataProvider latestEpisodesForShowWithURN:showURN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        if (error) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+            return;
+        }
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGMedia.new, contentType), @(SRGContentTypeEpisode)];
+        
+        NSMutableArray *medias = [NSMutableArray array];
+        for (SRGEpisode *episode in episodeComposition.episodes) {
+            NSArray *mediasForEpisode = [episode.medias filteredArrayUsingPredicate:predicate];
+            [medias addObjectsFromArray:mediasForEpisode];
+        }
+        
+        [self openPlaylistWithMedias:[medias copy]];
+    }] resume];
+}
+
+- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias
+{
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)

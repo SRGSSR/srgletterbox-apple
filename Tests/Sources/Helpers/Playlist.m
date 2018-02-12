@@ -19,7 +19,7 @@
 - (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias
 {
     if (self = [super init]) {
-        self.mediasSet = [NSOrderedSet orderedSetWithArray:medias];
+        self.mediasSet = medias ? [NSOrderedSet orderedSetWithArray:medias] : [NSOrderedSet set];
     }
     return self;
 }

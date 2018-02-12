@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PlaylistViewController : UIViewController <SRGLetterboxPictureInPictureDelegate>
 
-- (instancetype)initWithShowURN:(nullable SRGShowURN *)showURN;
+- (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias;
 
 @end
 
