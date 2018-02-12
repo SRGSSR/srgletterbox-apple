@@ -8,12 +8,13 @@
 
 #import "Playlist.h"
 #import "SettingsViewController.h"
+#import "UIWindow+LetterboxDemo.h"
 
 #import <libextobjc/libextobjc.h>
 
 @interface PlaylistViewController ()
 
-@property (nonatomic, copy) NSString *showURNString;
+@property (nonatomic) SRGShowURN *showURN;
 @property (nonatomic) Playlist *playlist;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -27,12 +28,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithShowURNString:(NSString *)showURNString
+- (instancetype)initWithShowURN:(SRGShowURN *)showURN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     PlaylistViewController *viewController = [storyboard instantiateInitialViewController];
 
-    viewController.showURNString = showURNString;
+    viewController.showURN = showURN;
 
     viewController.letterboxController.playlistDataSource = viewController.playlist;
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
@@ -54,10 +55,10 @@
 {
     [super viewDidLoad];
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
-    [[self.dataProvider latestEpisodesForShowWithURN:[SRGShowURN showURNWithString:self.showURNString] maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    [[self.dataProvider latestEpisodesForShowWithURN:self.showURN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         if (error) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
             [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleDefault handler:nil]];
@@ -85,7 +86,9 @@
     [super viewDidDisappear:animated];
     
     if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+        if (! self.letterboxController.pictureInPictureActive) {
+            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+        }
     }
 }
 
@@ -94,6 +97,33 @@
 - (BOOL)prefersHomeIndicatorAutoHidden
 {
     return self.letterboxView.userInterfaceHidden;
+}
+
+#pragma mark SRGLetterboxPictureInPictureDelegate protocol
+
+- (BOOL)letterboxDismissUserInterfaceForPictureInPicture
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
+- (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
+{
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    return topViewController != self;
+}
+
+- (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    [topViewController presentViewController:self animated:YES completion:^{
+        completionHandler(YES);
+    }];
+}
+
+- (void)letterboxDidStopPlaybackFromPictureInPicture
+{
+    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
@@ -117,6 +147,11 @@
 - (IBAction)playNextMedia:(id)sender
 {
     [self.letterboxController playNextMedia];
+}
+
+- (IBAction)close:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

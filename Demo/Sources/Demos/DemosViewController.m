@@ -107,8 +107,16 @@
 
 - (void)openPlaylistForShowWithURNString:(NSString *)URNString
 {
-    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithShowURNString:URNString];
-    [self.navigationController pushViewController:playlistViewController animated:YES];
+    SRGShowURN *showURN = [SRGShowURN showURNWithString:URNString];
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithShowURN:showURN];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playlistViewController.presentingViewController) {
+        return;
+    }
+    
+    [self presentViewController:playlistViewController animated:YES completion:nil];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2

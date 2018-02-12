@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PlaylistViewController : UIViewController
+@interface PlaylistViewController : UIViewController <SRGLetterboxPictureInPictureDelegate>
 
-- (instancetype)initWithShowURNString:(NSString *)showURNString;
+- (instancetype)initWithShowURN:(SRGShowURN *)showURN;
 
 @end
 

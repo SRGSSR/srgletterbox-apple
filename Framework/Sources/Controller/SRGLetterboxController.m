@@ -1373,7 +1373,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         if (self.nextMedia) {
-            
             if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
                 if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayImmediate) {
                     self.continuousPlaybackResumptionDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];

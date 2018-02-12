@@ -26,15 +26,27 @@
                                     <outlet property="delegate" destination="A6A-Ps-0a8" id="7cG-Zu-kLu"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e0p-hE-SVV" userLabel="Close Button">
+                                <rect key="frame" x="0.0" y="20" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="Npa-aV-9G8"/>
+                                    <constraint firstAttribute="height" constant="40" id="XIF-kw-612"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="close-22"/>
+                                <connections>
+                                    <action selector="close:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="7wM-dK-Tkb"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="djZ-PN-OWu">
-                                <rect key="frame" x="20" y="40" width="59" height="30"/>
+                                <rect key="frame" x="80" y="25" width="59" height="30"/>
                                 <state key="normal" title="Previous"/>
                                 <connections>
                                     <action selector="playPreviousMedia:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="IF3-ms-ABq"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q3P-3R-lgf">
-                                <rect key="frame" x="716" y="40" width="32" height="30"/>
+                                <rect key="frame" x="716" y="25" width="32" height="30"/>
                                 <state key="normal" title="Next"/>
                                 <connections>
                                     <action selector="playNextMedia:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="Ey2-Jm-EfS"/>
@@ -44,13 +56,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="LJc-Y6-KTE" secondAttribute="bottom" id="73t-LL-4gD"/>
-                            <constraint firstItem="q3P-3R-lgf" firstAttribute="top" secondItem="P37-7j-pII" secondAttribute="top" constant="20" id="A8H-CD-CAd"/>
+                            <constraint firstItem="q3P-3R-lgf" firstAttribute="centerY" secondItem="e0p-hE-SVV" secondAttribute="centerY" id="8RR-Sc-gb2"/>
+                            <constraint firstItem="djZ-PN-OWu" firstAttribute="centerY" secondItem="e0p-hE-SVV" secondAttribute="centerY" id="LDn-el-lCV"/>
+                            <constraint firstItem="djZ-PN-OWu" firstAttribute="leading" secondItem="e0p-hE-SVV" secondAttribute="trailing" constant="40" id="PmC-Yx-z4k"/>
                             <constraint firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="SbW-p2-gjh"/>
                             <constraint firstItem="P37-7j-pII" firstAttribute="trailing" secondItem="q3P-3R-lgf" secondAttribute="trailing" constant="20" id="ViS-MZ-kKV"/>
-                            <constraint firstItem="djZ-PN-OWu" firstAttribute="leading" secondItem="P37-7j-pII" secondAttribute="leading" constant="20" id="VkA-Ib-UcY"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="leading" secondItem="Xul-ZD-b56" secondAttribute="leading" id="fSX-ZH-AMq"/>
-                            <constraint firstItem="djZ-PN-OWu" firstAttribute="top" secondItem="P37-7j-pII" secondAttribute="top" constant="20" id="kMz-4R-9Xf"/>
+                            <constraint firstItem="e0p-hE-SVV" firstAttribute="leading" secondItem="P37-7j-pII" secondAttribute="leading" id="s0A-S6-hUv"/>
                             <constraint firstItem="LJc-Y6-KTE" firstAttribute="top" secondItem="Xul-ZD-b56" secondAttribute="top" id="t2r-8H-YQE"/>
+                            <constraint firstItem="e0p-hE-SVV" firstAttribute="top" secondItem="P37-7j-pII" secondAttribute="top" id="zlS-6n-E4c"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="P37-7j-pII"/>
                     </view>
@@ -65,4 +79,7 @@
             <point key="canvasLocation" x="45.600000000000001" y="97.601199400299862"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="close-22" width="22" height="22"/>
+    </resources>
 </document>
