@@ -111,6 +111,8 @@
 
 - (void)openPlaylistForShowWithURNString:(NSString *)URNString
 {
+    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+    
     SRGShowURN *showURN = [SRGShowURN showURNWithString:URNString];
     if (! showURN) {
         return;
