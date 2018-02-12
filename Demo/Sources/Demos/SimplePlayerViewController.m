@@ -49,7 +49,9 @@
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
-    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated

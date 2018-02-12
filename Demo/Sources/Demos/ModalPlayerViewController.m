@@ -122,7 +122,10 @@
     self.letterboxController.contentURLOverridingBlock = ^(SRGMediaURN * _Nonnull URN) {
         return [URN isEqual:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8806790"]] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
-    [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
+    
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
+    }
     
     [self reloadData];
 }
