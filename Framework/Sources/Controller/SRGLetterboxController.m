@@ -138,6 +138,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimeInterval continuousPlaybackDelay;
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
 @property (nonatomic) NSDate *continuousPlaybackTransitionEndDate;
+@property (nonatomic) SRGMedia *continuousPlaybackUpcomingMedia;
 
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
@@ -518,6 +519,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.transitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
     self.continuousPlaybackTransitionEndDate = nil;
+    self.continuousPlaybackUpcomingMedia = nil;
 }
 
 #pragma mark Data
@@ -1078,6 +1080,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.transitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
     self.continuousPlaybackTransitionEndDate = nil;
+    self.continuousPlaybackUpcomingMedia = nil;
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1375,24 +1378,27 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.socialCountViewTimer = nil;
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        if (self.nextMedia && self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
+        SRGMedia *nextMedia = self.nextMedia;
+        if (nextMedia && self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled) {
             if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayImmediate) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
                 self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
+                self.continuousPlaybackUpcomingMedia = nextMedia;
                 
                 @weakify(self)
                 self.transitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
+                    [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                    
                     self.transitionTimer = nil;
                     self.continuousPlaybackTransitionStartDate = nil;
                     self.continuousPlaybackTransitionEndDate = nil;
-                    
-                    [self playNextMedia];
+                    self.continuousPlaybackUpcomingMedia = nil;
                 }];
             }
             else {
-                [self playNextMedia];
+                [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
             }
         }
     }

@@ -461,6 +461,14 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) NSDate *continuousPlaybackTransitionEndDate;
 
 /**
+ *  The upcoming media while undergoing a continuous playback transition.
+ *
+ *  @discussion The end date is `nil` if there no active transition. Once an end date has been determined,
+ *              changing `continuousPlaybackDelay` will not alter it.
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *continuousPlaybackUpcomingMedia;
+
+/**
  *  While continuous playback is waiting for resumption, cancel automatic playback of the next item.
  *
  *  @dicussion This method has no effect when no resumption date has been determined.

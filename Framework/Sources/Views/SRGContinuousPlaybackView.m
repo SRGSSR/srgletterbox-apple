@@ -27,6 +27,8 @@ static void commonInit(SRGContinuousPlaybackView *self);
 @property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
+@property (nonatomic, weak) id periodicTimeObserver;
+
 @end
 
 @implementation SRGContinuousPlaybackView
@@ -59,6 +61,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
 {
     if (_controller) {
         [_controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate)];
+        [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
     _controller = controller;
@@ -67,6 +70,10 @@ static void commonInit(SRGContinuousPlaybackView *self);
     if (controller) {
         @weakify(self)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self refreshViewAnimated:YES];
+        }];
+        [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             [self refreshViewAnimated:YES];
         }];
