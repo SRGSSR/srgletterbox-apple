@@ -124,12 +124,12 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDisabled;   
 @protocol SRGLetterboxControllerPlaylistDataSource <NSObject>
 
 /**
- *  The next media to be played.
+ *  The next media to be played for the specified controller.
  */
 - (nullable SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller;
 
 /**
- *  The previous media to be played.
+ *  The previous media to be played for the specified controller.
  */
 - (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
 
@@ -375,9 +375,9 @@ withToleranceBefore:(CMTime)toleranceBefore
 @end
 
 /**
- *  Playlist support. Provide a data source supplying previous and next medias to be played.
+ *  Playlist support. To use playlists, assign a data source which will supply previous and next medias to be played.
  *
- *  @discussion Playlist controls are not available when picture in picture is active.
+ *  @discussion Playlist navigation is not available when picture in picture is active.
  */
 @interface SRGLetterboxController (Playlists)
 
@@ -391,11 +391,9 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  from the completion handler.
  *
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
- *                           block will only be called if the media could be successfully prepared.
+ *                           block will only be called if the media could successfully be prepared.
  *
- *  @return
- *
- *  @discussion `YES` iff successful. Returns `NO` when picture in picture is active.
+ *  @return `YES` iff successful. Note that the method returns `NO` when picture in picture is active.
  */
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
 
@@ -407,9 +405,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Play the next media currently available from the playlist.
  *
- *  @discussion `YES` iff successful. Returns `NO` when picture in picture is active.
- *
- *  @discussion Not available when picture in picture is active.
+ *  @return `YES` iff successful. Note that the method returns `NO` when picture in picture is active.
  */
 - (BOOL)playNextMedia;
 
@@ -434,7 +430,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Continuous playback support, i.e. automatically playing the next media in a playlist when a media playback ends.
  *  Requires a playlist data source supplying next item information.
  *
- *  Remark: Continuous playback is not enabled when picture in picture is active.
+ *  Remark: Continuous playback is not active when picture in picture is active.
  */
 @interface SRGLetterboxController (ContinuousPlayback)
 
@@ -451,30 +447,30 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  The date at which the continuous playback transition to the next media started. KVO-observable.
  *
- *  @discussion The start date is `nil` if there is no active transition.
+ *  @discussion Returns `nil` if there is no active transition.
  */
 @property (nonatomic, readonly, nullable) NSDate *continuousPlaybackTransitionStartDate;
 
 /**
- *  The date at which continuous playback will resume with the next media. KVO-observable.
+ *  The date at which continuous playback will automatically resume with the next media. KVO-observable.
  *
- *  @discussion The end date is `nil` if there no active transition. Once an end date has been determined,
- *              changing `continuousPlaybackDelay` will not alter it.
+ *  @discussion Returns `nil` if there no active transition. Stays constant during the transition, even if
+ *              continuous playback settings change.
  */
 @property (nonatomic, readonly, nullable) NSDate *continuousPlaybackTransitionEndDate;
 
 /**
  *  The upcoming media while undergoing a continuous playback transition. KVO-observable.
  *
- *  @discussion The end date is `nil` if there no active transition. Once an end date has been determined,
- *              changing `continuousPlaybackDelay` will not alter it.
+ *  @discussion Returns `nil` if there no active transition. Stays constant during the transition, even if
+ *              the playlist changes.
  */
 @property (nonatomic, readonly, nullable) SRGMedia *continuousPlaybackUpcomingMedia;
 
 /**
- *  While continuous playback is waiting for resumption, cancel automatic playback of the next item.
+ *  Within a continuous playback transition, call this method to cancel automatic playback of the next item.
  *
- *  @dicussion This method has no effect when no resumption date has been determined.
+ *  @dicussion This method has no effect outside a transition.
  */
 - (void)cancelContinuousPlayback;
 

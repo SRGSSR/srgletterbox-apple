@@ -181,14 +181,14 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *                - Tap twice to play the next track.
  *                - Tap three times to play the previous track.
  *                - Tap twice and hold to seek forward.
- *                - Tap three times and hold to see backward.
+ *                - Tap three times and hold to seek backward.
  */
 @interface SRGLetterboxService (NowPlayingInfoAndCommands)
 
 /**
  *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
  *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
- *  them to precisely control how it is made.
+ *  them to precisely control which information is displayed.
  *
  *  Default is `YES`.
  */
