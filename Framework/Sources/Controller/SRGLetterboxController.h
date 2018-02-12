@@ -382,6 +382,16 @@ withToleranceBefore:(CMTime)toleranceBefore
 @interface SRGLetterboxController (Playlists)
 
 /**
+ *  Return `YES` iff the next media can be played (or prepared to be played).
+ */
+- (BOOL)canPlayNextMedia;
+
+/**
+ *  Return `YES` iff the next media can be played (or prepared to be played).
+ */
+- (BOOL)canPlayPreviousMedia;
+
+/**
  *  The playlist data source.
  */
 @property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;

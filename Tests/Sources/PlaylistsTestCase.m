@@ -67,8 +67,8 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller canPlayNextMedia]);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -80,8 +80,8 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success2 = [self.controller playNextMedia];
-    XCTAssertTrue(success2);
+    XCTAssertTrue([self.controller canPlayNextMedia]);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -89,8 +89,8 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertEqualObjects(self.controller.media, self.playlist.medias.lastObject);
     XCTAssertNil(self.controller.nextMedia);
     
-    BOOL success3 = [self.controller playNextMedia];
-    XCTAssertFalse(success3);
+    XCTAssertFalse([self.controller canPlayNextMedia]);
+    XCTAssertFalse([self.controller playNextMedia]);
 }
 
 - (void)testReversePlaylistPlaythrough
@@ -125,8 +125,8 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playPreviousMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller canPlayPreviousMedia]);
+    XCTAssertTrue([self.controller playPreviousMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -134,8 +134,8 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertEqualObjects(self.controller.media, self.playlist.medias.firstObject);
     XCTAssertEqualObjects(self.controller.nextMedia, self.playlist.medias.lastObject);
     
-    BOOL success3 = [self.controller playPreviousMedia];
-    XCTAssertFalse(success3);
+    XCTAssertFalse([self.controller canPlayPreviousMedia]);
+    XCTAssertFalse([self.controller playPreviousMedia]);
 }
 
 - (void)testNoPlaylist
@@ -151,7 +151,10 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.previousMedia);
     XCTAssertNil(self.controller.nextMedia);
     
+    XCTAssertFalse([self.controller canPlayNextMedia]);
     XCTAssertFalse([self.controller playNextMedia]);
+    
+    XCTAssertFalse([self.controller canPlayPreviousMedia]);
     XCTAssertFalse([self.controller playPreviousMedia]);
     
     XCTAssertFalse([self.controller prepareToPlayNextMediaWithCompletionHandler:^{
@@ -179,8 +182,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -237,8 +239,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -295,8 +296,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -354,8 +354,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -420,8 +419,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -484,8 +482,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    BOOL success1 = [self.controller playNextMedia];
-    XCTAssertTrue(success1);
+    XCTAssertTrue([self.controller playNextMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

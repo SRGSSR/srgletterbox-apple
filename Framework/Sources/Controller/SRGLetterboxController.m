@@ -449,9 +449,27 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 #pragma mark Playlists
 
-- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+- (BOOL)canPlayNextMedia
 {
     if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
+    return self.nextMedia != nil;
+}
+
+- (BOOL)canPlayPreviousMedia
+{
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
+    return self.previousMedia != nil;
+}
+
+- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    if (! [self canPlayNextMedia]) {
         return NO;
     }
     
@@ -467,7 +485,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
-    if (self.pictureInPictureActive) {
+    if (! [self canPlayPreviousMedia]) {
         return NO;
     }
     
@@ -483,7 +501,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)playNextMedia
 {
-    if (self.pictureInPictureActive) {
+    if (! [self canPlayNextMedia]) {
         return NO;
     }
     
@@ -499,7 +517,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)playPreviousMedia
 {
-    if (self.pictureInPictureActive) {
+    if (! [self canPlayPreviousMedia]) {
         return NO;
     }
     

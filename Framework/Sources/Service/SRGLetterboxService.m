@@ -383,8 +383,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
         commandCenter.seekForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekForward);
         commandCenter.seekBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekBackward);
-        commandCenter.nextTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandNextTrack && controller.nextMedia != nil && ! controller.pictureInPictureActive);
-        commandCenter.previousTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandPreviousTrack && controller.previousMedia != nil && ! controller.pictureInPictureActive);
+        commandCenter.nextTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandNextTrack && [controller canPlayNextMedia]);
+        commandCenter.previousTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandPreviousTrack && [controller canPlayPreviousMedia]);
     }
     else {
         commandCenter.playCommand.enabled = NO;
