@@ -431,7 +431,10 @@ withToleranceBefore:(CMTime)toleranceBefore
 @end
 
 /**
- *  Continuous playback support. Requires a playlist data source supplying next item information.
+ *  Continuous playback support, i.e. automatically playing the next media in a playlist when a media playback ends.
+ *  Requires a playlist data source supplying next item information.
+ *
+ *  @discussion Continuous playback is not available when picture in picture is active.
  */
 @interface SRGLetterboxController (ContinuousPlayback)
 
