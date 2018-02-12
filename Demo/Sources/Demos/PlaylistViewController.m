@@ -83,13 +83,6 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-#pragma mark Home indicator
-
-- (BOOL)prefersHomeIndicatorAutoHidden
-{
-    return self.letterboxView.userInterfaceHidden;
-}
-
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture
@@ -125,11 +118,7 @@
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         self.letterboxAspectRatioConstraint.constant = heightOffset;
         [self.view layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        if (@available(iOS 11, *)) {
-            [self setNeedsUpdateOfHomeIndicatorAutoHidden];
-        }
-    }];
+    } completion:nil];
 }
 
 #pragma mark Actions
