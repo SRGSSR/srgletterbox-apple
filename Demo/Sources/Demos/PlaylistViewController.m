@@ -104,6 +104,13 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
+#pragma mark Status bar
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 #pragma mark Home indicator
 
 - (BOOL)prefersHomeIndicatorAutoHidden
@@ -145,6 +152,7 @@
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         self.letterboxAspectRatioConstraint.constant = heightOffset;
+        [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         if (@available(iOS 11, *)) {
             [self setNeedsUpdateOfHomeIndicatorAutoHidden];
