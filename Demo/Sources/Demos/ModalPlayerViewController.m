@@ -164,7 +164,7 @@
 
 - (BOOL)prefersHomeIndicatorAutoHidden
 {
-    return self.letterboxView.userInterfaceHidden;
+    return self.letterboxView.fullScreen && self.letterboxView.userInterfaceHidden;
 }
 
 #pragma mark Data
