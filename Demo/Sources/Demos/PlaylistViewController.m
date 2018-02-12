@@ -54,8 +54,6 @@
     
     self.letterboxController.playlistDataSource = self.playlist;
     
-    [SRGLetterboxService sharedService].allowedCommands = SRGLetterboxCommandPreviousTrack | SRGLetterboxCommandNextTrack;
-    
     self.letterboxView.controller = self.letterboxController;
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
