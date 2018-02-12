@@ -20,6 +20,8 @@
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
+
 @property (nonatomic) SRGDataProvider *dataProvider;
 
 @end
@@ -95,6 +97,13 @@
     }
 }
 
+#pragma mark Rotation
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 #pragma mark Home indicator
 
 - (BOOL)prefersHomeIndicatorAutoHidden
@@ -133,7 +142,10 @@
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:nil completion:^(BOOL finished) {
+    [self.view layoutIfNeeded];
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+        self.letterboxAspectRatioConstraint.constant = heightOffset;
+    } completion:^(BOOL finished) {
         if (@available(iOS 11, *)) {
             [self setNeedsUpdateOfHomeIndicatorAutoHidden];
         }
