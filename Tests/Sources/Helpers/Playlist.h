@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias;
 
-@property (nonatomic, readonly) NSArray<SRGMedia *> *medias;
+@property (nonatomic, readonly, nullable) NSArray<SRGMedia *> *medias;
 
 @end
 
