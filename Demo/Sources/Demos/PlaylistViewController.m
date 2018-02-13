@@ -17,6 +17,10 @@
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 
+@property (nonatomic, weak) IBOutlet UIView *settingsView;
+
+// Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
@@ -121,6 +125,37 @@
         self.letterboxAspectRatioConstraint.constant = heightOffset;
         [self.view layoutIfNeeded];
     } completion:nil];
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView toggleFullScreen:(BOOL)fullScreen animated:(BOOL)animated withCompletionHandler:(nonnull void (^)(BOOL))completionHandler
+{
+    static const UILayoutPriority LetterboxViewConstraintLowerPriority = 850;
+    static const UILayoutPriority LetterboxViewConstraintGreaterPriority = 950;
+    
+    void (^animations)(void) = ^{
+        if (fullScreen) {
+            self.letterboxBottomConstraint.priority = LetterboxViewConstraintGreaterPriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLowerPriority;
+            self.settingsView.alpha = 0.f;
+        }
+        else {
+            self.letterboxBottomConstraint.priority = LetterboxViewConstraintLowerPriority;
+            self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintGreaterPriority;
+            self.settingsView.alpha = 1.f;
+        }
+    };
+    
+    if (animated) {
+        [self.view layoutIfNeeded];
+        [UIView animateWithDuration:0.2 animations:^{
+            animations();
+            [self.view layoutIfNeeded];
+        } completion:completionHandler];
+    }
+    else {
+        animations();
+        completionHandler(YES);
+    }
 }
 
 #pragma mark Actions
