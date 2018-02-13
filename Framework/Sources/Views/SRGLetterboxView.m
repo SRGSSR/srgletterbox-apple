@@ -330,6 +330,9 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+    
+    // The availability component layout depends on the view size. Update appearance
+    [self updateAvailabilityLabelForController:self.controller];
 }
 
 #pragma mark Fonts
@@ -733,28 +736,64 @@ static void commonInit(SRGLetterboxView *self);
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
-        NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
-        if (dateComponents.day < SRGCountdownViewDaysLimit) {
-            self.availabilityLabel.hidden = YES;
-            self.availabilityLabelBackgroundView.hidden = YES;
+        
+        // Tiny layout
+        if (CGRectGetHeight(self.frame) < 160.f) {
+            NSString *availabilityLabelText = nil;
+            if (timeIntervalBeforeStart > 60. * 60.) {
+                static NSDateComponentsFormatter *s_longDateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_longDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_longDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+                    s_longDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+                });
+                availabilityLabelText = [s_longDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+            }
+            else if (timeIntervalBeforeStart >= 0) {
+                static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+                });
+                availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+            }
+            else {
+                availabilityLabelText = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.")];
+            }
             
-            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
-            self.countdownView.hidden = NO;
-        }
-        else {
-            static NSDateComponentsFormatter *s_dateComponentsFormatter;
-            static dispatch_once_t s_onceToken;
-            dispatch_once(&s_onceToken, ^{
-                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
-                s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-            });
-
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
             self.availabilityLabel.hidden = NO;
-            self.availabilityLabelBackgroundView.hidden = NO;
+            self.availabilityLabel.text = availabilityLabelText;
             
             self.countdownView.hidden = YES;
+        }
+        // Standard layout
+        else {
+            NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
+            if (dateComponents.day < SRGCountdownViewDaysLimit) {
+                self.availabilityLabel.hidden = YES;
+                self.availabilityLabelBackgroundView.hidden = YES;
+                
+                self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
+                self.countdownView.hidden = NO;
+            }
+            else {
+                static NSDateComponentsFormatter *s_dateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
+                    s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+                });
+                
+                self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
+                self.availabilityLabel.hidden = NO;
+                self.availabilityLabelBackgroundView.hidden = NO;
+                
+                self.countdownView.hidden = YES;
+            }
         }
     }
     else {
