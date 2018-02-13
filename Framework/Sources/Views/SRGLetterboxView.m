@@ -33,6 +33,8 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
+const CGFloat SRGLetterboxCountdownViewMinimumWidth = 290.f;
+
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
@@ -755,7 +757,7 @@ static void commonInit(SRGLetterboxView *self);
             self.countdownView.hidden = YES;
         }
         // Tiny layout
-        else if (CGRectGetWidth(self.frame) < 290.f) {
+        else if (CGRectGetWidth(self.frame) < SRGLetterboxCountdownViewMinimumWidth) {
             NSString *availabilityLabelText = nil;
             if (dateComponents.day > 0) {
                 static NSDateComponentsFormatter *s_longDateComponentsFormatter;
