@@ -141,13 +141,6 @@
     }
 }
 
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    
-    self.sizeView.hidden = (CGRectGetWidth(self.view.frame) > CGRectGetHeight(self.view.frame));
-}
-
 #pragma mark Rotation
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -257,10 +250,12 @@
         if (fullScreen) {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintGreaterPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLowerPriority;
+            self.sizeView.alpha = 0.f;
         }
         else {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLowerPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintGreaterPriority;
+            self.sizeView.alpha = 1.f;
         }
     };
     
