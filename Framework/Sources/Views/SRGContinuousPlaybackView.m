@@ -21,7 +21,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
 @property (nonatomic, weak) IBOutlet UILabel *introLabel;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
@@ -114,28 +113,24 @@ static void commonInit(SRGContinuousPlaybackView *self);
         self.introLabel.hidden = YES;
         self.titleLabel.hidden = YES;
         self.subtitleLabel.hidden = YES;
-        self.durationLabel.hidden = YES;
         self.cancelButton.hidden = YES;
     }
     else if (height < 150.f) {
         self.introLabel.hidden = YES;
         self.titleLabel.hidden = NO;
         self.subtitleLabel.hidden = YES;
-        self.durationLabel.hidden = YES;
         self.cancelButton.hidden = YES;
     }
     else if (height < 200.f) {
         self.introLabel.hidden = YES;
         self.titleLabel.hidden = NO;
         self.subtitleLabel.hidden = YES;
-        self.durationLabel.hidden = YES;
         self.cancelButton.hidden = NO;
     }
     else {
         self.introLabel.hidden = NO;
         self.titleLabel.hidden = NO;
         self.subtitleLabel.hidden = NO;
-        self.durationLabel.hidden = NO;
         self.cancelButton.hidden = NO;
     }
 }
@@ -156,9 +151,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
     });
     
-    NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:nextMedia.duration / 1000.];
-    self.durationLabel.text = [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Duration:  %@", @"Introductory label for a duration"), durationString];
-    
     [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     
     NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
@@ -173,7 +165,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     self.introLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.titleLabel.font = [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
