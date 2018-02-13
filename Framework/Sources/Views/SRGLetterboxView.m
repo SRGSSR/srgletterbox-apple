@@ -75,6 +75,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
+@property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
@@ -945,7 +946,7 @@ static void commonInit(SRGLetterboxView *self);
     self.errorInstructionsLabel.hidden = ! controller.URN;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
-    self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
+    self.continuousPlaybackWrapperView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
