@@ -738,7 +738,7 @@ static void commonInit(SRGLetterboxView *self);
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         
         // Tiny layout
-        if (CGRectGetHeight(self.frame) < 160.f) {
+        if (CGRectGetWidth(self.frame) < 290.f) {
             NSString *availabilityLabelText = nil;
             if (timeIntervalBeforeStart > 60. * 60.) {
                 static NSDateComponentsFormatter *s_longDateComponentsFormatter;
