@@ -28,9 +28,13 @@
 
 @property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
 
+@property (nonatomic, weak) IBOutlet UIView *sizeView;
+
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
+
+@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
 @property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
 
@@ -132,6 +136,13 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
+}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+    self.sizeView.hidden = (CGRectGetWidth(self.view.frame) > CGRectGetHeight(self.view.frame));
 }
 
 #pragma mark Rotation
@@ -405,6 +416,13 @@
             break;
         }
     }
+}
+
+- (IBAction)changeMargins:(UISlider *)slider
+{
+    [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
+        constraint.constant = slider.value;
+    }];
 }
 
 #pragma mark Notifications

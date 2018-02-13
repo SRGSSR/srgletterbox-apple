@@ -33,6 +33,8 @@
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
+const CGFloat SRGLetterboxCountdownViewMinimumWidth = 290.f;
+
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
@@ -330,6 +332,9 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+    
+    // The availability component layout depends on the view size. Update appearance
+    [self updateAvailabilityLabelForController:self.controller];
 }
 
 #pragma mark Fonts
@@ -734,14 +739,9 @@ static void commonInit(SRGLetterboxView *self);
     else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
-        if (dateComponents.day < SRGCountdownViewDaysLimit) {
-            self.availabilityLabel.hidden = YES;
-            self.availabilityLabelBackgroundView.hidden = YES;
-            
-            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
-            self.countdownView.hidden = NO;
-        }
-        else {
+        
+        // Large number of days. Label only
+        if (dateComponents.day >= SRGCountdownViewDaysLimit) {
             static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -749,17 +749,70 @@ static void commonInit(SRGLetterboxView *self);
                 s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
                 s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
             });
-
+            
             self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
             self.availabilityLabel.hidden = NO;
             self.availabilityLabelBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
+        // Tiny layout
+        else if (CGRectGetWidth(self.frame) < SRGLetterboxCountdownViewMinimumWidth) {
+            NSString *availabilityLabelText = nil;
+            if (dateComponents.day > 0) {
+                static NSDateComponentsFormatter *s_longDateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_longDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_longDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+                    s_longDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+                });
+                availabilityLabelText = [s_longDateComponentsFormatter stringFromDateComponents:dateComponents];
+            }
+            else if (timeIntervalBeforeStart >= 60. * 60.) {
+                static NSDateComponentsFormatter *s_mediumDateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_mediumDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_mediumDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                    s_mediumDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+                });
+                availabilityLabelText = [s_mediumDateComponentsFormatter stringFromDateComponents:dateComponents];
+            }
+            else if (timeIntervalBeforeStart >= 0) {
+                static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+                });
+                availabilityLabelText = [s_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
+            }
+            else {
+                availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+            }
+            
+            self.availabilityLabel.hidden = NO;
+            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
+            self.availabilityLabelBackgroundView.hidden = NO;
+            
+            self.countdownView.hidden = YES;
+        }
+        // Large layout
+        else {
+            self.availabilityLabel.hidden = YES;
+            self.availabilityLabelBackgroundView.hidden = YES;
+            
+            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
+            self.countdownView.hidden = NO;
+        }
     }
     else {
         self.availabilityLabel.hidden = YES;
         self.availabilityLabelBackgroundView.hidden = YES;
+        
+        self.countdownView.hidden = YES;
     }
 }
 

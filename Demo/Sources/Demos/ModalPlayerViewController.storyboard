@@ -112,6 +112,32 @@
                                     </switch>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BkI-ST-6lq">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi">
+                                        <rect key="frame" x="20" y="15" width="32.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p">
+                                        <rect key="frame" x="70.5" y="10.5" width="286.5" height="31"/>
+                                        <connections>
+                                            <action selector="changeMargins:" destination="FcC-Qn-oGg" eventType="valueChanged" id="xLr-wV-wYa"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="YAu-YG-xSi" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" constant="20" id="PCP-CR-xix"/>
+                                    <constraint firstItem="CDc-iR-c7p" firstAttribute="leading" secondItem="YAu-YG-xSi" secondAttribute="trailing" constant="20" id="RFJ-8a-WtE"/>
+                                    <constraint firstAttribute="trailing" secondItem="CDc-iR-c7p" secondAttribute="trailing" constant="20" id="WfO-6Q-kdT"/>
+                                    <constraint firstAttribute="height" constant="50" id="XCF-1z-B7Q"/>
+                                    <constraint firstItem="YAu-YG-xSi" firstAttribute="centerY" secondItem="BkI-ST-6lq" secondAttribute="centerY" id="mhq-KU-BU6"/>
+                                    <constraint firstItem="CDc-iR-c7p" firstAttribute="centerY" secondItem="YAu-YG-xSi" secondAttribute="centerY" id="v6i-Na-bjJ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -120,14 +146,16 @@
                             <constraint firstItem="WSi-1R-LWr" firstAttribute="centerX" secondItem="Md4-t4-5he" secondAttribute="centerX" id="4UG-yS-wtK"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="leading" secondItem="Md4-t4-5he" secondAttribute="trailing" constant="16" id="5RU-2L-7Sb"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" secondItem="Qoe-I9-dll" secondAttribute="leading" id="6hy-A6-kfe"/>
+                            <constraint firstItem="BkI-ST-6lq" firstAttribute="trailing" secondItem="Qoe-I9-dll" secondAttribute="trailing" id="8Cb-Zl-n55"/>
                             <constraint firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="F2Z-fU-P1b"/>
                             <constraint firstItem="JvK-aX-fgP" firstAttribute="top" secondItem="gMD-r1-Pgs" secondAttribute="bottom" constant="8" id="F4n-Es-e3G"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="top" secondItem="WSi-1R-LWr" secondAttribute="bottom" constant="8" id="I5G-lB-icc"/>
                             <constraint firstItem="5VB-3F-wwv" firstAttribute="top" secondItem="Qoe-I9-dll" secondAttribute="top" priority="900" id="LDp-cD-NhZ"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="width" secondItem="JvK-aX-fgP" secondAttribute="width" id="NQp-fq-Vlf"/>
                             <constraint firstItem="oxw-uk-Eue" firstAttribute="leading" secondItem="fbH-pV-VxN" secondAttribute="leading" id="Q8E-oq-b4d"/>
-                            <constraint firstItem="gMD-r1-Pgs" firstAttribute="trailing" secondItem="5VB-3F-wwv" secondAttribute="trailing" id="QEM-bZ-dhh"/>
+                            <constraint firstItem="gMD-r1-Pgs" firstAttribute="trailing" secondItem="LBa-rV-Hj0" secondAttribute="trailing" id="QEM-bZ-dhh"/>
                             <constraint firstItem="XDA-ee-aQO" firstAttribute="top" secondItem="oxw-uk-Eue" secondAttribute="bottom" constant="8" id="Qu2-eO-iPg"/>
+                            <constraint firstItem="BkI-ST-6lq" firstAttribute="bottom" secondItem="Qoe-I9-dll" secondAttribute="bottom" id="RdK-8K-ZWF"/>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="centerY" secondItem="gMD-r1-Pgs" secondAttribute="centerY" id="Rdc-7p-qIn"/>
                             <constraint firstItem="XDA-ee-aQO" firstAttribute="trailing" secondItem="oxw-uk-Eue" secondAttribute="trailing" id="Rf3-Uf-F1O"/>
                             <constraint firstItem="xXK-rE-ke9" firstAttribute="centerY" secondItem="SpT-Mg-MmS" secondAttribute="centerY" id="Tky-wK-g92"/>
@@ -140,10 +168,11 @@
                             <constraint firstItem="Md4-t4-5he" firstAttribute="top" secondItem="XDA-ee-aQO" secondAttribute="bottom" constant="20" id="h1X-w3-cE1"/>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="top" id="iL4-uS-ed9"/>
                             <constraint firstItem="oxw-uk-Eue" firstAttribute="top" secondItem="fbH-pV-VxN" secondAttribute="bottom" constant="8" id="ias-zK-hW2"/>
-                            <constraint firstItem="Md4-t4-5he" firstAttribute="leading" secondItem="5VB-3F-wwv" secondAttribute="leading" id="ity-mH-uwB"/>
+                            <constraint firstItem="Md4-t4-5he" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" id="ity-mH-uwB"/>
                             <constraint firstItem="gMD-r1-Pgs" firstAttribute="centerX" secondItem="JvK-aX-fgP" secondAttribute="centerX" id="jnL-Wz-deK"/>
                             <constraint firstItem="Qoe-I9-dll" firstAttribute="trailing" secondItem="fbH-pV-VxN" secondAttribute="trailing" constant="16" id="kca-pR-EMT"/>
                             <constraint firstItem="SpT-Mg-MmS" firstAttribute="width" secondItem="WSi-1R-LWr" secondAttribute="width" id="qaB-9B-a8O"/>
+                            <constraint firstItem="Qoe-I9-dll" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" id="sxk-rH-yGT"/>
                             <constraint firstItem="XDA-ee-aQO" firstAttribute="leading" secondItem="oxw-uk-Eue" secondAttribute="leading" id="tPQ-aa-ptb"/>
                             <constraint firstItem="5VB-3F-wwv" firstAttribute="leading" secondItem="LBa-rV-Hj0" secondAttribute="leading" id="tsO-HP-lR4"/>
                             <constraint firstItem="oxw-uk-Eue" firstAttribute="trailing" secondItem="fbH-pV-VxN" secondAttribute="trailing" id="uPU-kp-VFI"/>
@@ -163,8 +192,11 @@
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
                         <outlet property="nextLabel" destination="XDA-ee-aQO" id="rwp-mh-ICO"/>
                         <outlet property="nowLabel" destination="oxw-uk-Eue" id="fue-hN-kxF"/>
+                        <outlet property="sizeView" destination="BkI-ST-6lq" id="awX-yO-qOd"/>
                         <outlet property="timelineSwitch" destination="jec-Hp-ASJ" id="hlN-FI-Qgr"/>
                         <outlet property="titleLabel" destination="fbH-pV-VxN" id="h1M-zQ-aaa"/>
+                        <outletCollection property="letterboxMarginConstraints" destination="tsO-HP-lR4" id="MHP-dG-K8n"/>
+                        <outletCollection property="letterboxMarginConstraints" destination="F2Z-fU-P1b" id="qYo-YB-uPj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YB9-ot-Yez" userLabel="First Responder" sceneMemberID="firstResponder"/>
