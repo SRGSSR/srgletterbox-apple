@@ -77,7 +77,7 @@
                                                 <constraint firstAttribute="height" constant="55" id="n4t-bo-Ia9"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <state key="normal" image="play-32"/>
+                                            <state key="normal" image="play_centered-32"/>
                                             <connections>
                                                 <action selector="playNextMedia:" destination="-1" eventType="touchUpInside" id="Hmy-Fw-vvm"/>
                                             </connections>
@@ -145,6 +145,6 @@
         </view>
     </objects>
     <resources>
-        <image name="play-32" width="32" height="32"/>
+        <image name="play_centered-32" width="32" height="32"/>
     </resources>
 </document>
