@@ -1,8 +1,14 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "Errur da colliaziun. Per plaschair controllar las colliaziuns da internet / rait";
 
+/* Title of a cancel button */
+"Cancel" = "Annular";
+
 /* Short label for countdown display */
 "Days" = "Dìs";
+
+/* Introductory label for a duration */
+"Duration:  %@" = "Durada: %@";
 
 /* Label to explain that a content has expired
    Short label identifying content which has expired. */
@@ -22,6 +28,9 @@
 
 /* Short label for countdown display */
 "Minutes" = "Minutas";
+
+/* For continuous playback, introductory label for content which is about to start */
+"Next" = "Proxim";
 
 /* Text displayed when no media is available for playback */
 "No media" = "Naginas medias";
