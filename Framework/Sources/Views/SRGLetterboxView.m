@@ -336,7 +336,7 @@ static void commonInit(SRGLetterboxView *self);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
     
     // The availability component layout depends on the view size. Update appearance
-    [self updateAvailabilityLabelForController:self.controller];
+    [self updateAvailabilityForController:self.controller];
 }
 
 #pragma mark Fonts
