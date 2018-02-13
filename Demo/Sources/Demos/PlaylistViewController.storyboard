@@ -127,6 +127,8 @@
                         <outlet property="letterboxBottomConstraint" destination="lf7-hY-sbo" id="XIv-KR-mRM"/>
                         <outlet property="letterboxController" destination="SHG-hd-icm" id="Ryw-aI-vXh"/>
                         <outlet property="letterboxView" destination="iIt-9C-yD1" id="Lfp-dY-iYL"/>
+                        <outlet property="nextButton" destination="jkW-E3-Muc" id="OS8-3B-50r"/>
+                        <outlet property="previousButton" destination="5th-Sz-JvA" id="lm1-7B-yCG"/>
                         <outlet property="settingsView" destination="qBn-Uk-4Va" id="8hK-va-Mp7"/>
                         <outletCollection property="letterboxMarginConstraints" destination="SFL-SD-jgG" id="iIt-v5-eyy"/>
                         <outletCollection property="letterboxMarginConstraints" destination="Uxg-gk-Tsg" id="MZc-Jo-QeP"/>

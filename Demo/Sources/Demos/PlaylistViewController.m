@@ -17,6 +17,9 @@
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 
+@property (nonatomic, weak) IBOutlet UIButton *previousButton;
+@property (nonatomic, weak) IBOutlet UIButton *nextButton;
+
 @property (nonatomic, weak) IBOutlet UIView *settingsView;
 
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
@@ -65,6 +68,13 @@
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
+    [self updatePlaylistButtons];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(metadataDidChange:)
+                                                 name:SRGLetterboxMetadataDidChangeNotification
+                                               object:self.letterboxController];
+    
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
         [self.letterboxController playMedia:firstMedia withChaptersOnly:NO];
@@ -87,6 +97,14 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+#pragma mark UI
+
+- (void)updatePlaylistButtons
+{
+    self.previousButton.hidden = (! self.letterboxController.previousMedia);
+    self.nextButton.hidden = (! self.letterboxController.nextMedia);
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
@@ -190,6 +208,13 @@
     [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = slider.value;
     }];
+}
+
+#pragma mark Notifications
+
+- (void)metadataDidChange:(NSNotification *)notification
+{
+    [self updatePlaylistButtons];
 }
 
 @end
