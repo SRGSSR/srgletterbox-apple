@@ -336,6 +336,9 @@
                         </view>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="PVb-dG-Ogc" firstAttribute="width" secondItem="2FG-lj-osJ" secondAttribute="width" priority="998" id="J4J-fj-FlU"/>
+                        <constraint firstItem="PVb-dG-Ogc" firstAttribute="width" secondItem="gSf-Ma-6s2" secondAttribute="width" priority="998" id="TOr-yu-Zn8"/>
+                        <constraint firstItem="PVb-dG-Ogc" firstAttribute="width" secondItem="Zxm-0X-24a" secondAttribute="width" priority="998" id="bVX-sf-kNQ"/>
                         <constraint firstItem="Fmy-kA-oqE" firstAttribute="width" secondItem="c9e-kh-DKu" secondAttribute="width" id="sqt-D4-YZ3"/>
                     </constraints>
                 </stackView>
