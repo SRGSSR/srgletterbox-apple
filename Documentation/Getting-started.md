@@ -136,6 +136,16 @@ Usually, a Letterbox view is part of a view controller view hiearchy. In such ca
 
 Refer to the modal view controller demo for a concrete example.
 
+## Playlists and continuous playback
+
+The Letterbox controller supports playlists, as well as automatic playback of the next available media (continuous playback). Simply provide an object serving playlists, conforming to the `SRGLetterboxControllerPlaylistDataSource` protocol, and assigned to the `playlistDataSource` controller property.
+
+Once a playlist data source has been setup, you can skip to the next or previous item at any time using the dedicated methods available from the Letterbox controller `Playlists` category.
+
+By default, when media playback ends, playback will continue automatically with the next item of the playlist after some time. During this transition period, an attached Letterbox view will display a dedicated overlay allowing the user to either directly play the next item or cancel the transition. 
+
+You can adjust the transition duration or even disable continuous playback entirely through the `continuousPlaybackTransitionDuration` property. The `ContinousPlayback` category this property is available from also provides information about such transitions, most notably when it started or when it will end, as well as which media will be played next.
+
 ## Statistics
 
 If your project has started an [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) tracker, stream playback statistics will automatically be sent when a controller plays a media. This behavior can be disabled by setting the `tracked` property of a controller to `NO`.
