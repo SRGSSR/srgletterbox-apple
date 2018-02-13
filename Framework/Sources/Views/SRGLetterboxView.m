@@ -51,7 +51,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsToSuperviewEdgeConstraints;
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
@@ -1125,15 +1124,11 @@ static void commonInit(SRGLetterboxView *self);
         static const CGFloat kControlsFillGreaterPriority = 950.f;
         
         if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-            self.controlsAspectRatioConstraint.priority = kControlsFillGreaterPriority;
-            
             [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
                 constraint.priority = kControlsFillLesserPriority;
             }];
         }
         else {
-            self.controlsAspectRatioConstraint.priority = kControlsFillLesserPriority;
-            
             [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
                 constraint.priority = kControlsFillGreaterPriority;
             }];
