@@ -638,6 +638,11 @@
                     break;
                 }
                     
+                case 2: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:radio:8864883"];
+                    break;
+                }
+                    
                 default: {
                     break;
                 }

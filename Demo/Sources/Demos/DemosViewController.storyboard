@@ -1221,6 +1221,28 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="P7p-Ev-f7S">
+                                        <rect key="frame" x="0.0" y="3183.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="P7p-Ev-f7S" id="lMt-rI-0mn">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sexomax" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yw4-FH-9iQ">
+                                                    <rect key="frame" x="8" y="8" width="359" height="27.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="yw4-FH-9iQ" secondAttribute="trailing" constant="8" id="4cu-Ah-QEW"/>
+                                                <constraint firstAttribute="bottom" secondItem="yw4-FH-9iQ" secondAttribute="bottom" constant="8" id="7wS-Lq-zyx"/>
+                                                <constraint firstItem="yw4-FH-9iQ" firstAttribute="leading" secondItem="lMt-rI-0mn" secondAttribute="leading" constant="8" id="GfO-mX-Eca"/>
+                                                <constraint firstItem="yw4-FH-9iQ" firstAttribute="top" secondItem="lMt-rI-0mn" secondAttribute="top" constant="8" id="Jlf-WO-DVQ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
