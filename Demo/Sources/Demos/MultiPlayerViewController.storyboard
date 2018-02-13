@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5WB-zg-NQB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5WB-zg-NQB">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -51,7 +51,6 @@
                                 <rect key="frame" x="59.5" y="251" width="256" height="144"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="Udg-mi-has" secondAttribute="height" multiplier="16:9" id="AsT-af-V8e"/>
                                     <constraint firstAttribute="width" constant="256" id="a34-v1-gax"/>
                                 </constraints>
                                 <connections>
@@ -73,17 +72,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="mnt-gM-iQ3" firstAttribute="top" secondItem="Y0W-Wa-7Cb" secondAttribute="top" id="0cT-sM-Y27"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="centerX" secondItem="Y0W-Wa-7Cb" secondAttribute="centerX" id="0eE-kC-2i4"/>
                             <constraint firstItem="Udg-mi-has" firstAttribute="centerX" secondItem="Y0W-Wa-7Cb" secondAttribute="centerX" id="3Qj-KR-z4t"/>
                             <constraint firstItem="Udg-mi-has" firstAttribute="width" secondItem="Udg-mi-has" secondAttribute="height" multiplier="16:9" id="OdK-YN-cbo"/>
-                            <constraint firstItem="c1j-HG-eIf" firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="VO1-Ex-fdw"/>
                             <constraint firstItem="Y0W-Wa-7Cb" firstAttribute="bottom" secondItem="1bb-qO-DK7" secondAttribute="bottom" id="aku-MR-UHB"/>
                             <constraint firstItem="c1j-HG-eIf" firstAttribute="top" secondItem="Udg-mi-has" secondAttribute="bottom" constant="20" id="eAf-tY-4Sj"/>
-                            <constraint firstItem="c1j-HG-eIf" firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="jgA-f8-0kU"/>
                             <constraint firstItem="Y0W-Wa-7Cb" firstAttribute="trailing" secondItem="1bb-qO-DK7" secondAttribute="trailing" id="jyS-a3-NEU"/>
                             <constraint firstItem="1bb-qO-DK7" firstAttribute="leading" secondItem="Y0W-Wa-7Cb" secondAttribute="leading" id="kDE-YM-s3S"/>
                             <constraint firstItem="mnt-gM-iQ3" firstAttribute="leading" secondItem="Y0W-Wa-7Cb" secondAttribute="leading" id="pBI-TA-KIY"/>
                             <constraint firstItem="Udg-mi-has" firstAttribute="top" secondItem="1bb-qO-DK7" secondAttribute="bottom" constant="20" id="suW-fL-3Rn"/>
-                            <constraint firstItem="c1j-HG-eIf" firstAttribute="centerX" secondItem="Udg-mi-has" secondAttribute="centerX" id="yMv-XR-Psr"/>
                             <constraint firstItem="1bb-qO-DK7" firstAttribute="top" secondItem="Y0W-Wa-7Cb" secondAttribute="top" id="z88-in-Ldl"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Y0W-Wa-7Cb"/>
