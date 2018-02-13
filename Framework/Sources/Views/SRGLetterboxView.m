@@ -741,7 +741,7 @@ static void commonInit(SRGLetterboxView *self);
         // Tiny layout
         if (CGRectGetWidth(self.frame) < 290.f) {
             NSString *availabilityLabelText = nil;
-            if (timeIntervalBeforeStart > 60. * 60.) {
+            if (dateComponents.day > 0) {
                 static NSDateComponentsFormatter *s_longDateComponentsFormatter;
                 static dispatch_once_t s_onceToken;
                 dispatch_once(&s_onceToken, ^{
@@ -751,13 +751,23 @@ static void commonInit(SRGLetterboxView *self);
                 });
                 availabilityLabelText = [s_longDateComponentsFormatter stringFromDateComponents:dateComponents];
             }
+            else if (timeIntervalBeforeStart >= 60. * 60.) {
+                static NSDateComponentsFormatter *s_mediumDateComponentsFormatter;
+                static dispatch_once_t s_onceToken;
+                dispatch_once(&s_onceToken, ^{
+                    s_mediumDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                    s_mediumDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                    s_mediumDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+                });
+                availabilityLabelText = [s_mediumDateComponentsFormatter stringFromDateComponents:dateComponents];
+            }
             else if (timeIntervalBeforeStart >= 0) {
                 static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
                 static dispatch_once_t s_onceToken;
                 dispatch_once(&s_onceToken, ^{
                     s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                    s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
-                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+                    s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
                 });
                 availabilityLabelText = [s_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
             }
