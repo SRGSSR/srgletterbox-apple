@@ -790,11 +790,11 @@ static void commonInit(SRGLetterboxView *self);
                 availabilityLabelText = [s_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
             }
             else {
-                availabilityLabelText = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.")];
+                availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
             }
             
             self.availabilityLabel.hidden = NO;
-            self.availabilityLabel.text = availabilityLabelText;
+            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
             self.availabilityLabelBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
