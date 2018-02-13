@@ -736,6 +736,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
+        NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
         
         // Tiny layout
         if (CGRectGetWidth(self.frame) < 290.f) {
@@ -748,7 +749,7 @@ static void commonInit(SRGLetterboxView *self);
                     s_longDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
                     s_longDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
                 });
-                availabilityLabelText = [s_longDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+                availabilityLabelText = [s_longDateComponentsFormatter stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 0) {
                 static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
@@ -758,7 +759,7 @@ static void commonInit(SRGLetterboxView *self);
                     s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
                     s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
                 });
-                availabilityLabelText = [s_shortDateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart];
+                availabilityLabelText = [s_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
             }
             else {
                 availabilityLabelText = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.")];
@@ -771,7 +772,6 @@ static void commonInit(SRGLetterboxView *self);
         }
         // Standard layout
         else {
-            NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
             if (dateComponents.day < SRGCountdownViewDaysLimit) {
                 self.availabilityLabel.hidden = YES;
                 self.availabilityLabelBackgroundView.hidden = YES;
