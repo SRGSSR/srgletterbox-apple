@@ -738,8 +738,24 @@ static void commonInit(SRGLetterboxView *self);
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
         
+        // Large number of days. Label only
+        if (dateComponents.day >= SRGCountdownViewDaysLimit) {
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
+                s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+            });
+            
+            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
+            self.availabilityLabel.hidden = NO;
+            self.availabilityLabelBackgroundView.hidden = NO;
+            
+            self.countdownView.hidden = YES;
+        }
         // Tiny layout
-        if (CGRectGetWidth(self.frame) < 290.f) {
+        else if (CGRectGetWidth(self.frame) < 290.f) {
             NSString *availabilityLabelText = nil;
             if (dateComponents.day > 0) {
                 static NSDateComponentsFormatter *s_longDateComponentsFormatter;
@@ -767,7 +783,7 @@ static void commonInit(SRGLetterboxView *self);
                 dispatch_once(&s_onceToken, ^{
                     s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
                     s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
+                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
                 });
                 availabilityLabelText = [s_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
             }
@@ -781,30 +797,13 @@ static void commonInit(SRGLetterboxView *self);
             
             self.countdownView.hidden = YES;
         }
-        // Standard layout
+        // Large layout
         else {
-            if (dateComponents.day < SRGCountdownViewDaysLimit) {
-                self.availabilityLabel.hidden = YES;
-                self.availabilityLabelBackgroundView.hidden = YES;
-                
-                self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
-                self.countdownView.hidden = NO;
-            }
-            else {
-                static NSDateComponentsFormatter *s_dateComponentsFormatter;
-                static dispatch_once_t s_onceToken;
-                dispatch_once(&s_onceToken, ^{
-                    s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                    s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
-                    s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-                });
-                
-                self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
-                self.availabilityLabel.hidden = NO;
-                self.availabilityLabelBackgroundView.hidden = NO;
-                
-                self.countdownView.hidden = YES;
-            }
+            self.availabilityLabel.hidden = YES;
+            self.availabilityLabelBackgroundView.hidden = YES;
+            
+            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
+            self.countdownView.hidden = NO;
         }
     }
     else {
