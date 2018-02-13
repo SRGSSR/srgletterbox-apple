@@ -767,6 +767,7 @@ static void commonInit(SRGLetterboxView *self);
             
             self.availabilityLabel.hidden = NO;
             self.availabilityLabel.text = availabilityLabelText;
+            self.availabilityLabelBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
@@ -799,6 +800,8 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.availabilityLabel.hidden = YES;
         self.availabilityLabelBackgroundView.hidden = YES;
+        
+        self.countdownView.hidden = YES;
     }
 }
 
