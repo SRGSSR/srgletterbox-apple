@@ -20,11 +20,6 @@
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
-const NSInteger SRGLetterboxDefaultStartBitRate = 800;
-
-const NSInteger SRGLetterboxBackwardSkipInterval = 10.;
-const NSInteger SRGLetterboxForwardSkipInterval = 30.;
-
 NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
@@ -50,8 +45,17 @@ NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLett
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
-NSTimeInterval const SRGLetterboxUpdateIntervalDefault = 30.;
-NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault = 30.;
+const NSInteger SRGLetterboxDefaultStartBitRate = 800;
+
+const NSTimeInterval SRGLetterboxUpdateIntervalDefault = 30.;
+const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
+
+const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+
+const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDefault = 5;
+const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationImmediate = 0;
+const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -124,8 +128,20 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) NSTimer *liveStreamEndDateTimer;
 @property (nonatomic) NSTimer *socialCountViewTimer;
 
+// Timer for continuous playback
+@property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
+
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
+
+@property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+
+@property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
+
+// Do not use a parent context class so that all properties are KVO-observable.
+@property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
+@property (nonatomic) NSDate *continuousPlaybackTransitionEndDate;
+@property (nonatomic) SRGMedia *continuousPlaybackUpcomingMedia;
 
 @property (nonatomic) NSTimeInterval updateInterval;
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
@@ -180,6 +196,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDefault;
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
                                                      name:FXReachabilityStatusDidChangeNotification
@@ -217,6 +235,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.endDateTimer = nil;
     self.liveStreamEndDateTimer = nil;
     self.socialCountViewTimer = nil;
+    self.continuousPlaybackTransitionTimer = nil;
 }
 
 #pragma mark Getters and setters
@@ -257,6 +276,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (CMTimeRange)timeRange
 {
     return self.mediaPlayerController.timeRange;
+}
+
+- (void)setContinuousPlaybackTransitionDuration:(NSTimeInterval)continuousPlaybackTransitionDuration
+{
+    if (continuousPlaybackTransitionDuration < 0) {
+        continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationImmediate;
+    }
+    _continuousPlaybackTransitionDuration = continuousPlaybackTransitionDuration;
 }
 
 - (void)setMuted:(BOOL)muted
@@ -402,6 +429,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _socialCountViewTimer = socialCountViewTimer;
 }
 
+- (void)setContinuousPlaybackTransitionTimer:(NSTimer *)continuousPlaybackTransitionTimer
+{
+    [_continuousPlaybackTransitionTimer invalidate];
+    _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
+}
+
 #pragma mark Periodic time observers
 
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
@@ -412,6 +445,118 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (void)removePeriodicTimeObserver:(id)observer
 {
     [self.mediaPlayerController removePeriodicTimeObserver:observer];
+}
+
+#pragma mark Playlists
+
+- (BOOL)canPlayNextMedia
+{
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
+    return self.nextMedia != nil;
+}
+
+- (BOOL)canPlayPreviousMedia
+{
+    if (self.pictureInPictureActive) {
+        return NO;
+    }
+    
+    return self.previousMedia != nil;
+}
+
+- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    if (! [self canPlayNextMedia]) {
+        return NO;
+    }
+    
+    SRGMedia *media = self.nextMedia;
+    if (media) {
+        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
+{
+    if (! [self canPlayPreviousMedia]) {
+        return NO;
+    }
+    
+    SRGMedia *media = self.previousMedia;
+    if (media) {
+        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (BOOL)playNextMedia
+{
+    if (! [self canPlayNextMedia]) {
+        return NO;
+    }
+    
+    SRGMedia *media = self.nextMedia;
+    if (media) {
+        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (BOOL)playPreviousMedia
+{
+    if (! [self canPlayPreviousMedia]) {
+        return NO;
+    }
+    
+    SRGMedia *media = self.previousMedia;
+    if (media) {
+        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (SRGMedia *)nextMedia
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(nextMediaForController:)]) {
+        return [self.playlistDataSource nextMediaForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (SRGMedia *)previousMedia
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(previousMediaForController:)]) {
+        return [self.playlistDataSource previousMediaForController:self];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (void)cancelContinuousPlayback
+{
+    self.continuousPlaybackTransitionTimer = nil;
+    self.continuousPlaybackTransitionStartDate = nil;
+    self.continuousPlaybackTransitionEndDate = nil;
+    self.continuousPlaybackUpcomingMedia = nil;
 }
 
 #pragma mark Data
@@ -969,6 +1114,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
+    self.continuousPlaybackTransitionTimer = nil;
+    self.continuousPlaybackTransitionStartDate = nil;
+    self.continuousPlaybackTransitionEndDate = nil;
+    self.continuousPlaybackUpcomingMedia = nil;
+    
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
 }
@@ -1063,7 +1213,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     @weakify(self)
     [self prepareToPlayURN:URN withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
-        
         [self play];
     }];
 }
@@ -1073,7 +1222,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     @weakify(self)
     [self prepareToPlayMedia:media withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
         @strongify(self)
-        
         [self play];
     }];
 }
@@ -1263,9 +1411,33 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             [self.requestQueue addRequest:request resume:YES];
         }];
     }
-    
-    if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
+    else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
         self.socialCountViewTimer = nil;
+    }
+    else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        SRGMedia *nextMedia = self.nextMedia;
+        if (nextMedia && self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
+            if (self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationImmediate) {
+                self.continuousPlaybackTransitionStartDate = NSDate.date;
+                self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackTransitionDuration];
+                self.continuousPlaybackUpcomingMedia = nextMedia;
+                
+                @weakify(self)
+                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
+                    @strongify(self)
+                    
+                    [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                    
+                    self.continuousPlaybackTransitionTimer = nil;
+                    self.continuousPlaybackTransitionStartDate = nil;
+                    self.continuousPlaybackTransitionEndDate = nil;
+                    self.continuousPlaybackUpcomingMedia = nil;
+                }];
+            }
+            else {
+                [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+            }
+        }
     }
 }
 

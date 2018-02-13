@@ -62,7 +62,7 @@ static void commonInit(SRGCountdownView *self);
     if (self = [super initWithFrame:frame]) {
         commonInit(self);
         
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGLetterboxView. Manually
+        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGCountdownView. Manually
         // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
         [self awakeFromNib];
     }

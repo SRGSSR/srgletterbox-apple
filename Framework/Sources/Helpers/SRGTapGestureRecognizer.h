@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Default delay between consecutive taps.
  */
-OBJC_EXTERN const NSTimeInterval SRGTapGestureRecognizerDelay;
+OBJC_EXPORT const NSTimeInterval SRGTapGestureRecognizerDelay;
 
 /**
  *  Custom tap gesture recognizer with customizable delay between taps.

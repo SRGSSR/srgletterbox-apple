@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Notification sent when the service settings have been updated.
  */
-OBJC_EXTERN NSString * const SRGLetterboxServiceSettingsDidChangeNotification;
+OBJC_EXPORT NSString * const SRGLetterboxServiceSettingsDidChangeNotification;
 
 @interface SRGLetterboxService (Private)
 

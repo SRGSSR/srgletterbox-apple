@@ -11,6 +11,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
+#import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
@@ -26,6 +27,7 @@
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAppearance/SRGAppearance.h>
 #import <libextobjc/libextobjc.h>
@@ -49,7 +51,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsAspectRatioConstraint;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsToSuperviewEdgeConstraints;
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
@@ -72,6 +73,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
 @property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
+
+@property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
+@property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 
@@ -332,7 +336,7 @@ static void commonInit(SRGLetterboxView *self);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
     
     // The availability component layout depends on the view size. Update appearance
-    [self updateAvailabilityLabelForController:self.controller];
+    [self updateAvailabilityForController:self.controller];
 }
 
 #pragma mark Fonts
@@ -344,7 +348,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    [self updateAvailabilityLabelForController:self.controller];
+    [self updateAvailabilityForController:self.controller];
 }
 
 #pragma mark Accessibility
@@ -401,16 +405,19 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         
+        [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackTransitionEndDate)];
+        
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
         }
         
-        [self updateAvailabilityLabelForController:controller];
+        [self updateAvailabilityForController:controller];
     }
     
     _controller = controller;
     
     self.playbackButton.controller = controller;
+    self.continuousPlaybackView.controller = controller;
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
@@ -466,6 +473,14 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(externalPlaybackStateDidChange:)
                                                      name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                    object:mediaPlayerController];
+        
+        @weakify(self)
+        @weakify(controller)
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+            @strongify(self)
+            @strongify(controller)
+            [self updateLayoutForController:controller];
+        }];
         
         [self.playerView addSubview:mediaPlayerController.view];
         
@@ -614,7 +629,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (! [self isTimelineAlwaysHidden]
         && (hasError || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
-            || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
+                || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
     else {
@@ -718,10 +733,10 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorLabel.text = error.localizedDescription;
     
-    [self updateAvailabilityLabelForController:controller];
+    [self updateAvailabilityForController:controller];
 }
 
-- (void)updateAvailabilityLabelForController:(SRGLetterboxController *)controller
+- (void)updateAvailabilityForController:(SRGLetterboxController *)controller
 {
     SRGMedia *media = controller.media;
     self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
@@ -912,23 +927,25 @@ static void commonInit(SRGLetterboxView *self);
         }];
     }
     
-    self.controlsView.alpha = userInterfaceHidden ? 0.f : 1.f;
-    
     self.notificationImageView.hidden = (self.notificationMessage == nil);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
     BOOL hasError = ([self errorForController:controller] != nil);
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
+    BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller] && ! isContinuousPlaybackViewVisible;
+    
+    self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
     // Only display error view if there is an error and we are not displaying the availability view
-    self.errorView.alpha = (hasError && ! isAvailabilityViewVisible) ? 1.f : 0.f;
+    self.errorView.alpha = (hasError && ! isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
     // Only display retry instructions if there is a media to retry with (set the `hidden` property so that the wrapping
     // error stack view layout is properly adjusted)
     self.errorInstructionsLabel.hidden = ! controller.URN;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
+    self.continuousPlaybackWrapperView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
@@ -951,7 +968,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:controller.mediaComposition];
     SRGLetterboxViewBehavior timelineBehavior = [self timelineBehaviorForController:controller];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
     
     // Scroll to selected index when opening the timeline
     BOOL isTimelineVisible = (timelineHeight != 0.f);
@@ -1107,15 +1124,11 @@ static void commonInit(SRGLetterboxView *self);
         static const CGFloat kControlsFillGreaterPriority = 950.f;
         
         if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-            self.controlsAspectRatioConstraint.priority = kControlsFillGreaterPriority;
-            
             [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
                 constraint.priority = kControlsFillLesserPriority;
             }];
         }
         else {
-            self.controlsAspectRatioConstraint.priority = kControlsFillLesserPriority;
-            
             [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
                 constraint.priority = kControlsFillGreaterPriority;
             }];
@@ -1154,7 +1167,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
-        [self updateAvailabilityLabelForController:controller];
+        [self updateAvailabilityForController:controller];
     }];
 }
 

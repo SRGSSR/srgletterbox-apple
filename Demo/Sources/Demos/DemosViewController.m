@@ -11,13 +11,18 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "PlaylistViewController.h"
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
+#import <libextobjc/libextobjc.h>
+
 @interface DemosViewController ()
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsBarButtonItem;
+
+@property (nonatomic) SRGDataProvider *dataProvider;
 
 @end
 
@@ -102,6 +107,49 @@
 {
     MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType uid:uid];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
+}
+
+- (void)openPlaylistForShowWithURNString:(NSString *)URNString
+{
+    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+    
+    SRGShowURN *showURN = [SRGShowURN showURNWithString:URNString];
+    if (! showURN) {
+        return;
+    }
+    
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+    [[self.dataProvider latestEpisodesForShowWithURN:showURN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        if (error) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+            return;
+        }
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGMedia.new, contentType), @(SRGContentTypeEpisode)];
+        
+        NSMutableArray *medias = [NSMutableArray array];
+        for (SRGEpisode *episode in episodeComposition.episodes) {
+            NSArray *mediasForEpisode = [episode.medias filteredArrayUsingPredicate:predicate];
+            [medias addObjectsFromArray:mediasForEpisode];
+        }
+        
+        [self openPlaylistWithMedias:[medias copy]];
+    }] resume];
+}
+
+- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias
+{
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playlistViewController.presentingViewController) {
+        return;
+    }
+    
+    [self presentViewController:playlistViewController animated:YES completion:nil];
 }
 
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
@@ -576,6 +624,29 @@
                 }
             }
             break;
+        }
+            
+        case 8: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:105233"];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:6454706"];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:radio:8864883"];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
         }
             
         default: {

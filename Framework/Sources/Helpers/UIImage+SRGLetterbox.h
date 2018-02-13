@@ -10,8 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Paths of standard supplied vector images.
-OBJC_EXTERN NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder (16:9 usual ratio).
-OBJC_EXTERN NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void);           // Media artwork placeholder (1:1 ratio).
+OBJC_EXPORT NSString *SRGLetterboxMediaPlaceholderFilePath(void);                  // Media placeholder (16:9 usual ratio).
+OBJC_EXPORT NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void);           // Media artwork placeholder (1:1 ratio).
 
 /**
  *  Return the image URL for an object and width, `nil` if the image URL is not found or invalid.
@@ -19,7 +19,7 @@ OBJC_EXTERN NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void);        
  *  @discussion If some images have been overridden by local versions (see SRGDataProvider NSURL+SRGDataProvider.h file),
  *              the returned URL might be a file URL.
  */
-OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type);
+OBJC_EXPORT NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type);
 
 /**
  *  Return the (square) artwork image URL for an object, with a given dimension.
@@ -27,7 +27,7 @@ OBJC_EXTERN NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object
  *  @discussion If some images have been overridden by local versions (see SRGDataProvider NSURL+SRGDataProvider.h file),
  *              the returned URL might be a file URL.
  */
-OBJC_EXTERN NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension);
+OBJC_EXPORT NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension);
 
 /**
  *  Available image scales.
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, SRGImageSet) {
 /**
  *  Return the recommended size matching a given image scale.
  */
-OBJC_EXTERN CGSize SRGSizeForImageScale(SRGImageScale imageScale);
+OBJC_EXPORT CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 
 /**
  *  Standard images from Letterbox bundle.

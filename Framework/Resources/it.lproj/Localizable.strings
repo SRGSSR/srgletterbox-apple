@@ -1,8 +1,14 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "È stato rilevato un problema di rete. Si prega di controllare le impostazioni di rete e la connessione Internet";
 
+/* Title of a cancel button */
+"Cancel" = "Annulla";
+
 /* Short label for countdown display */
 "Days" = "Giorni";
+
+/* Introductory label for a duration */
+"Duration:  %@" = "Duration:  %@";
 
 /* Label to explain that a content has expired
    Short label identifying content which has expired. */
@@ -22,6 +28,9 @@
 
 /* Short label for countdown display */
 "Minutes" = "Minuti";
+
+/* For continuous playback, introductory label for content which is about to start */
+"Next" = "Next";
 
 /* Text displayed when no media is available for playback */
 "No media" = "Nessun media";

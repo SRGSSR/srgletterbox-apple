@@ -122,7 +122,10 @@
     self.letterboxController.contentURLOverridingBlock = ^(SRGMediaURN * _Nonnull URN) {
         return [URN isEqual:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8806790"]] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
-    [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
+    
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
+    }
     
     [self reloadData];
 }
@@ -136,13 +139,6 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
-}
-
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    
-    self.sizeView.hidden = (CGRectGetWidth(self.view.frame) > CGRectGetHeight(self.view.frame));
 }
 
 #pragma mark Rotation
@@ -161,7 +157,7 @@
 
 - (BOOL)prefersHomeIndicatorAutoHidden
 {
-    return self.letterboxView.userInterfaceHidden;
+    return self.letterboxView.fullScreen && self.letterboxView.userInterfaceHidden;
 }
 
 #pragma mark Data
@@ -254,10 +250,12 @@
         if (fullScreen) {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintGreaterPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLowerPriority;
+            self.sizeView.alpha = 0.f;
         }
         else {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLowerPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintGreaterPriority;
+            self.sizeView.alpha = 1.f;
         }
     };
     

@@ -26,6 +26,11 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 };
 
 /**
+ *  Default set of commands. Seeks and skips are available.
+ */
+OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
+
+/**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
  *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
@@ -82,47 +87,12 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 @end
 
 /**
- *  Delegate protocol for playback command customization.
- *
- *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which 
- *              button will be available. Other commands remain available when using a remote, though:
- *                - Tap twice to play the next track.
- *                - Tap three times to play the previous track.
- *                - Tap twice and hold to seek forward.
- *                - Tap three times and hold to see backward.
- */
-@protocol SRGLetterboxCommandDelegate <NSObject>
-
-@optional
-
-/**
- *  Return the set of commands which should be available during playback. If not implemented, the seek and skip commands
- *  will be available.
- *
- *  @discussion The play / pause command cannot be customized. This method is called continuously during playback,
- *              you can therefore alter the availability of the commands during playback as well.
- */
-- (SRGLetterboxCommands)letterboxAvailableCommands;
-
-/**
- *  Called when the previous track must be played.
- */
-- (void)letterboxWillSkipToPreviousTrack;
-
-/**
- *  Called when the next track mjust be played.
- */
-- (void)letterboxWillSkipToNextTrack;
-
-@end
-
-/**
  *  The Letterbox service is a singleton, which can provide the following application-wide features for one Letterbox 
  *  controller at a time:
- *    - AirPlay
- *    - Picture in picture (for devices supporting it)
- *    - Control center and lock screen media information
- *    - Remote playback controls
+ *    - AirPlay.
+ *    - Picture in picture (for devices supporting it).
+ *    - Control center and lock screen media information.
+ *    - Remote playback controls.
  *
  *  These features namely only make sense for one controller at a time, which explains why a Letterbox controller
  *  does not offert them by default. At any time, calling the `-enableWithController:pictureInPictureDelegate:`
@@ -180,15 +150,6 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 - (void)disable;
 
 /**
- *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
- *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
- *  them to precisely control how it is made.
- *
- *  Default is `YES`.
- */
-@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
-
-/**
  *  The controller for which application-wide services are enabled, if any.
  */
 @property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
@@ -201,18 +162,45 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
 @property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
- *  The playback command delegate, if any has been set. Use it to customize commands available in the control center
- *  and on the lock screen, as well as with remotes (e.g. headsets).
- */
-@property (nonatomic, weak, nullable) id<SRGLetterboxCommandDelegate> commandDelegate;
-
-/**
  *  If set to `YES`, playback never switches to full-screen playback on an external screen. This is especially handy 
  *  when you need to mirror your application for presentation purposes.
  *
  *  Default is `NO`.
  */
 @property (nonatomic, getter=isMirroredOnExternalScreen) BOOL mirroredOnExternalScreen;
+
+@end
+
+/**
+ *  Now playing information and command customization. Commands are available both from the control center as well
+ *  as on remotes (e.g. headset remote or Apple Watch).
+ *
+ *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which
+ *              button will be available. Other commands remain available when using a remote, though. A headset button,
+ *              for example, allows you to:
+ *                - Tap twice to play the next track.
+ *                - Tap three times to play the previous track.
+ *                - Tap twice and hold to seek forward.
+ *                - Tap three times and hold to seek backward.
+ */
+@interface SRGLetterboxService (NowPlayingInfoAndCommands)
+
+/**
+ *  Iff set to `YES`, the control center and lock screen automatically display media information and associated
+ *  playback commands. Applications can set this value to `NO` if they want to disable this integration, allowing
+ *  them to precisely control which information is displayed.
+ *
+ *  Default is `YES`.
+ */
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
+
+/**
+ *  Return the set of commands which might be available during playback. Whether or not a command is available or not
+ *  ultimately depends on the media being played (e.g. seeks methods are not available if the media is not seekable).
+ *
+ *  The default value is `SRGLetterboxCommandsDefault`.
+ */
+@property (nonatomic) SRGLetterboxCommands allowedCommands;
 
 @end
 

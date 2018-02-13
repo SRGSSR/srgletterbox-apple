@@ -18,6 +18,8 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
+SRGLetterboxCommands SRGLetterboxCommandsDefault = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
+
 NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterboxServiceSettingsDidChangeNotification";
 
 @interface SRGLetterboxService () {
@@ -29,6 +31,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 @property (nonatomic) SRGLetterboxController *controller;
 @property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
+@property (nonatomic) SRGLetterboxCommands allowedCommands;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 @property (nonatomic) YYWebImageOperation *imageOperation;
@@ -58,6 +63,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 {
     if (self = [super init]) {
         self.nowPlayingInfoAndCommandsEnabled = YES;
+        self.allowedCommands = SRGLetterboxCommandsDefault;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
@@ -93,6 +99,13 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [self resetRemoteCommandCenter];
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
     }
+}
+
+- (void)setAllowedCommands:(SRGLetterboxCommands)allowedCommands
+{
+    _allowedCommands = allowedCommands;
+    
+    [self updateRemoteCommandCenterWithController:self.controller];
 }
 
 - (void)setController:(SRGLetterboxController *)controller
@@ -207,7 +220,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // Required for Airplay, picture in picture and control center to work correctly
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
@@ -242,7 +255,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             return;
         }
         
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:NULL];
     });
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
@@ -363,20 +376,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || [AVAudioSession srg_isAirplayActive]
                                                                                                             || [UIDevice srg_isLocked])) {
-        SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
-        if ([self.commandDelegate respondsToSelector:@selector(letterboxAvailableCommands)]) {
-            availableCommands = [self.commandDelegate letterboxAvailableCommands];
-        }
-        
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
-        commandCenter.skipBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
-        commandCenter.seekForwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekForward);
-        commandCenter.seekBackwardCommand.enabled = (availableCommands & SRGLetterboxCommandSeekBackward);
-        commandCenter.nextTrackCommand.enabled = (availableCommands & SRGLetterboxCommandNextTrack);
-        commandCenter.previousTrackCommand.enabled = (availableCommands & SRGLetterboxCommandPreviousTrack);
+        commandCenter.skipForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
+        commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
+        commandCenter.seekForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekForward);
+        commandCenter.seekBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekBackward);
+        commandCenter.nextTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandNextTrack && [controller canPlayNextMedia]);
+        commandCenter.previousTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandPreviousTrack && [controller canPlayPreviousMedia]);
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -614,16 +622,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)previousTrack:(id)sender
 {
-    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToPreviousTrack)]) {
-        [self.commandDelegate letterboxWillSkipToPreviousTrack];
-    }
+    [self.controller playPreviousMedia];
 }
 
 - (void)nextTrack:(id)sender
 {
-    if ([self.commandDelegate respondsToSelector:@selector(letterboxWillSkipToNextTrack)]) {
-        [self.commandDelegate letterboxWillSkipToNextTrack];
-    }
+    [self.controller playNextMedia];
 }
 
 - (void)doNothing:(id)sender

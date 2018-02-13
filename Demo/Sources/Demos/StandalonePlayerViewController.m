@@ -71,7 +71,9 @@
     self.nowPlayingInfoAndCommandsEnabled.on = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
     self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
-    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
