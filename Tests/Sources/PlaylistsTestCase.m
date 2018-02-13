@@ -217,14 +217,14 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
-    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - SRGLetterboxContinuousPlaybackDelayDefault < 1);
+    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - SRGLetterboxContinuousPlaybackTransitionDurationDefault < 1);
 }
 
 - (void)testDisabledContinuousPlayback
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackDelay = SRGLetterboxContinuousPlaybackDelayDisabled;
+    self.controller.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
@@ -281,7 +281,7 @@ static SRGMediaURN *MediaURN2(void)
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackDelay = SRGLetterboxContinuousPlaybackDelayImmediate;
+    self.controller.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationImmediate;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
@@ -462,7 +462,7 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
-    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - SRGLetterboxContinuousPlaybackDelayDefault < 1);
+    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - SRGLetterboxContinuousPlaybackTransitionDurationDefault < 1);
 }
 
 - (void)testContinuousPlaybackTransitionKeyValueObserving

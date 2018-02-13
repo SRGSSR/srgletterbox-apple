@@ -53,9 +53,9 @@ const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
 const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
 const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
 
-const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDefault = 5;
-const NSTimeInterval SRGLetterboxContinuousPlaybackDelayImmediate = 0;
-const NSTimeInterval SRGLetterboxContinuousPlaybackDelayDisabled = DBL_MAX;
+const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDefault = 5;
+const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationImmediate = 0;
+const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
 {
@@ -136,7 +136,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
-@property (nonatomic) NSTimeInterval continuousPlaybackDelay;
+@property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
 
 // Do not use a parent context class so that all properties are KVO-observable.
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
@@ -196,7 +196,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
-        self.continuousPlaybackDelay = SRGLetterboxContinuousPlaybackDelayDefault;
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDefault;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -278,12 +278,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     return self.mediaPlayerController.timeRange;
 }
 
-- (void)setContinuousPlaybackDelay:(NSTimeInterval)continuousPlaybackDelay
+- (void)setContinuousPlaybackTransitionDuration:(NSTimeInterval)continuousPlaybackTransitionDuration
 {
-    if (continuousPlaybackDelay < 0) {
-        continuousPlaybackDelay = SRGLetterboxContinuousPlaybackDelayImmediate;
+    if (continuousPlaybackTransitionDuration < 0) {
+        continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationImmediate;
     }
-    _continuousPlaybackDelay = continuousPlaybackDelay;
+    _continuousPlaybackTransitionDuration = continuousPlaybackTransitionDuration;
 }
 
 - (void)setMuted:(BOOL)muted
@@ -1416,14 +1416,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         SRGMedia *nextMedia = self.nextMedia;
-        if (nextMedia && self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayDisabled && ! self.pictureInPictureActive) {
-            if (self.continuousPlaybackDelay != SRGLetterboxContinuousPlaybackDelayImmediate) {
+        if (nextMedia && self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
+            if (self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationImmediate) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
-                self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackDelay];
+                self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackTransitionDuration];
                 self.continuousPlaybackUpcomingMedia = nextMedia;
                 
                 @weakify(self)
-                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackDelay repeats:NO block:^(NSTimer * _Nonnull timer) {
+                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
                     [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];

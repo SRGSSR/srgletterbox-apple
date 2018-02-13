@@ -37,7 +37,7 @@
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
-    viewController.letterboxController.continuousPlaybackDelay = 10.;
+    viewController.letterboxController.continuousPlaybackTransitionDuration = 10.;
     
     return viewController;
 }
