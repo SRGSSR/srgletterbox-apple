@@ -157,7 +157,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
     });
     
     NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:nextMedia.duration / 1000.];
-    self.durationLabel.text = [NSString stringWithFormat:@"Duration:  %@  ", durationString];
+    self.durationLabel.text = [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Duration:  %@  ", @"Introductory label for a duration"), durationString];
     
     [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     
