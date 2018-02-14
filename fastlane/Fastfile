@@ -12,7 +12,20 @@ fastlane_version "1.95.0"
 default_platform :ios
 
 platform :ios do
-  before_all do
+  before_all do |lane|
+
+    # For the demo, before all, check if we have a demo release description
+    if lane.to_s == "demo"
+      build_number = get_build_number
+      marketing_version = getMarketingVersion
+      tag_version = marketing_version + '-' + build_number
+
+      whatsNewForDemo = getWhatsNewForDemo(tag_version: tag_version)
+      if whatsNewForDemo.empty?
+        UI.user_error!("Whoops, there is no demo release note in the WhatsNew-demo.json file for " + tag_version)
+      end
+    end
+
     ensure_git_status_clean
     carthage(
       command: "bootstrap",
@@ -56,6 +69,46 @@ platform :ios do
     merakiPushApps
 
     saveLastNightliesSuccessGitCommitHash
+    
+  end
+
+  desc "Build a new demo on HockeyApp with the current build number. If we're not in a release process (master or release/*), it bumps the build number. You are responsible to tag the library version."
+  lane :demo do
+
+    build_number = get_build_number
+    marketing_version = getMarketingVersion
+    tag_version = marketing_version + '-' + build_number
+
+    whatsNewForDemo = getWhatsNewForDemo(tag_version: tag_version)
+
+    build_lane(
+      configuration: "Release",
+      scheme: "SRGLetterbox-demo"
+    )
+
+    hockey_lane(
+      api_token: "687ea4742b7a4835ba652c0cfb43eb1e",
+      public_identifier: "7bf489539f6e44739133ae456c41dc2c",
+      notes: whatsNewForDemo
+    )
+
+    clean_build_artifacts
+
+    merakiPushApps
+
+    #Bump build number and push to the repo only if we're not in a release process
+    
+    branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
+    is_in_release_process = (branch_name.include? 'master') || (branch_name.include? 'release')
+
+    if ! is_in_release_process
+      build_number = increment_build_number
+      commit_version_bump(
+        xcodeproj: "SRGLetterbox.xcodeproj",
+        message: "Bump build number to " + build_number
+      )
+      push_to_git_remote
+    end
     
   end
 
@@ -139,6 +192,23 @@ platform :ios do
     file.close
     puts lastNightliesSuccessGitCommitHash
     lastNightliesSuccessGitCommitHash
+  end
+
+  desc "Return the marketing version, without suffix"
+  private_lane :getMarketingVersion do
+     marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d "    MARKETING_VERSION = "'
+     marketing_version = marketing_version.lines.last.gsub(/\s+/, "")
+     marketing_version
+  end
+
+  desc "Return the what's new text from WhatsNew-demo.json file in the repository"
+  private_lane :getWhatsNewForDemo do |options|
+    tag_version = options[:tag_version]
+    file = File.open("../WhatsNew-demo.json", "r")  
+    json = JSON.parse(file.read)
+    file.close
+    whatsNew = json[tag_version]
+    whatsNew ? whatsNew : ''
   end
 
   desc "Try to push new apps on registered devices with Meraki"
