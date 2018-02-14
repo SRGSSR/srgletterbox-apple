@@ -10,6 +10,8 @@
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
+#import <libextobjc/libextobjc.h>
+
 @interface PlaylistViewController ()
 
 @property (nonatomic) Playlist *playlist;
@@ -69,11 +71,11 @@
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     [self updatePlaylistButtons];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(metadataDidChange:)
-                                                 name:SRGLetterboxMetadataDidChangeNotification
-                                               object:self.letterboxController];
+    @weakify(self)
+    [self.letterboxController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        @strongify(self)
+        [self updatePlaylistButtons];
+    }];
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
@@ -181,11 +183,13 @@
 - (IBAction)playPreviousMedia:(id)sender
 {
     [self.letterboxController playPreviousMedia];
+    [self updatePlaylistButtons];
 }
 
 - (IBAction)playNextMedia:(id)sender
 {
     [self.letterboxController playNextMedia];
+    [self updatePlaylistButtons];
 }
 
 - (IBAction)toggleView:(id)sender
@@ -208,13 +212,6 @@
     [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = slider.value;
     }];
-}
-
-#pragma mark Notifications
-
-- (void)metadataDidChange:(NSNotification *)notification
-{
-    [self updatePlaylistButtons];
 }
 
 @end
