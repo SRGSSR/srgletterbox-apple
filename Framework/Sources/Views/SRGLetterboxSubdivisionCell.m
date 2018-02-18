@@ -88,12 +88,12 @@
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:[NSDate date]];
-    if (blockingReason == SRGBlockingReasonStartDate) {
+    SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:[NSDate date]];
+    if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString];
         self.durationLabel.hidden = NO;
     }
-    else if (blockingReason == SRGBlockingReasonEndDate) {
+    else if (timeAvailability == SRGTimeAvailabilityNotAvailableAnymore) {
         self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Short label identifying content which has expired.").uppercaseString];
         self.durationLabel.hidden = NO;
     }
@@ -127,6 +127,7 @@
         self.durationLabel.hidden = YES;
     }
     
+    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:[NSDate date]];
     if (blockingReason == SRGBlockingReasonNone || blockingReason == SRGBlockingReasonStartDate) {
         self.blockingOverlayView.hidden = YES;
         self.blockingReasonImageView.image = nil;
