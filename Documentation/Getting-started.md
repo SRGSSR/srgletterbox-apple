@@ -148,7 +148,9 @@ You can adjust the transition duration or even disable continuous playback entir
 
 ## Statistics
 
-If your project has started an [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) tracker, stream playback statistics will automatically be sent when a controller plays a media. This behavior can be disabled by setting the `tracked` property of a controller to `NO`.
+Letterbox automatically sends media consumption measurements, provided an SRG Analytics tracker has been started. Refer to the [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) for information about how a tracker is started.
+
+If needed, you can disable automatic tracking for a Letterbox controller by setting its `tracked` property to `NO`.
 
 ## Thread-safety
 
