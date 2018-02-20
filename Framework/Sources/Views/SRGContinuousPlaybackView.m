@@ -181,7 +181,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
             @strongify(self)
             
             if (self.delegate) {
-                [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:self.controller.continuousPlaybackUpcomingMedia selected:NO];
+                [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:upcomingMedia selected:NO];
             }
         }];
     }
@@ -202,22 +202,24 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (IBAction)cancelContinuousPlayback:(id)sender
 {
     self.continuousPlaybackTransitionTimer = nil;
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     
     [self.controller cancelContinuousPlayback];
     
     if (self.delegate) {
-        [self.delegate continuousPlaybackView:self didCancelContinuousPlaybackTransitionWithMedia:self.controller.continuousPlaybackUpcomingMedia];
+        [self.delegate continuousPlaybackView:self didCancelContinuousPlaybackTransitionWithMedia:upcomingMedia];
     }
 }
 
 - (IBAction)playNextMedia:(id)sender
 {
     self.continuousPlaybackTransitionTimer = nil;
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     
     [self.controller playNextMedia];
     
     if (self.delegate) {
-        [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:self.controller.continuousPlaybackUpcomingMedia selected:YES];
+        [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:upcomingMedia selected:YES];
     }
 }
 
