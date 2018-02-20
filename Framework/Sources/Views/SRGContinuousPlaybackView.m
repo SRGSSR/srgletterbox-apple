@@ -7,6 +7,7 @@
 #import "SRGContinuousPlaybackView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -27,6 +28,8 @@ static void commonInit(SRGContinuousPlaybackView *self);
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, weak) id periodicTimeObserver;
+
+@property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
 
 @end
 
@@ -54,6 +57,12 @@ static void commonInit(SRGContinuousPlaybackView *self);
     return self;
 }
 
+- (void)dealloc
+{
+    // Invalidate timers
+    self.continuousPlaybackTransitionTimer = nil;
+}
+
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
@@ -73,6 +82,12 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
     
     [self refreshViewAnimated:NO];
+}
+
+- (void)setContinuousPlaybackTransitionTimer:(NSTimer *)continuousPlaybackTransitionTimer
+{
+    [_continuousPlaybackTransitionTimer invalidate];
+    _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
 }
 
 #pragma mark Overrides
@@ -157,6 +172,19 @@ static void commonInit(SRGContinuousPlaybackView *self);
     NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
     float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
     [self.remainingTimeButton setProgress:progress withDuration:duration];
+    
+    self.continuousPlaybackTransitionTimer = nil;
+    NSTimeInterval remainingInterval = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:NSDate.date];
+    if (remainingInterval > 0) {
+        @weakify(self)
+        self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:duration repeats:NO block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            
+            if (self.delegate) {
+                [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:self.controller.continuousPlaybackUpcomingMedia selected:NO];
+            }
+        }];
+    }
 }
 
 #pragma mark Fonts
@@ -173,12 +201,24 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (IBAction)cancelContinuousPlayback:(id)sender
 {
+    self.continuousPlaybackTransitionTimer = nil;
+    
     [self.controller cancelContinuousPlayback];
+    
+    if (self.delegate) {
+        [self.delegate continuousPlaybackView:self didCancelContinuousPlaybackTransitionWithMedia:self.controller.continuousPlaybackUpcomingMedia];
+    }
 }
 
 - (IBAction)playNextMedia:(id)sender
 {
+    self.continuousPlaybackTransitionTimer = nil;
+    
     [self.controller playNextMedia];
+    
+    if (self.delegate) {
+        [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:self.controller.continuousPlaybackUpcomingMedia selected:YES];
+    }
 }
 
 #pragma mark Notifications

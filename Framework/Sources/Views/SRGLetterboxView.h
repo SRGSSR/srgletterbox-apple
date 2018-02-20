@@ -68,6 +68,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
 /**
+ *  This method is called when the user ends of the Continuous playback transition.
+ *
+ *  @param selected  `YES` if the user clicked on the play button, otherwise, `NO`.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didEndContinuousPlaybackTransitionWithMedia:(SRGMedia *)media selected:(BOOL)selected;
+
+/**
+ *  This method is called when the user cancels the Continuous playback transition.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackTransitionWithMedia:(SRGMedia *)media;
+
+/**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
  *  set or if this method is not implemented, no favorite icon will be displayed.
  *

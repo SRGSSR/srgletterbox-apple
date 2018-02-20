@@ -22,6 +22,8 @@
 @property (nonatomic, weak) IBOutlet UIButton *previousButton;
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
 
+@property (nonatomic, weak) IBOutlet UILabel *continuousPlaybackLabel;
+
 @property (nonatomic, weak) IBOutlet UIView *settingsView;
 
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
@@ -77,6 +79,8 @@
         [self updatePlaylistButtons];
     }];
     
+    self.continuousPlaybackLabel.text = nil;
+    
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
         [self.letterboxController playMedia:firstMedia withChaptersOnly:NO];
@@ -107,6 +111,35 @@
 {
     self.previousButton.hidden = (! self.letterboxController.previousMedia);
     self.nextButton.hidden = (! self.letterboxController.nextMedia);
+}
+
+- (void)updateContinuousPlaybackLabelWithText:(NSString *)text
+{
+    self.continuousPlaybackLabel.alpha = 1.f;
+    self.continuousPlaybackLabel.text = text;
+    [UIView animateWithDuration:3 delay:0. options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.continuousPlaybackLabel.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        self.continuousPlaybackLabel.text = nil;
+        self.continuousPlaybackLabel.alpha = 1.f;
+    }];
+}
+
+#pragma mark SRGLetterboxViewDelegate protocol
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didEndContinuousPlaybackTransitionWithMedia:(SRGMedia *)media selected:(BOOL)selected
+{
+    if (selected) {
+        [self updateContinuousPlaybackLabelWithText:@"Continuous Playback accepted by user."];
+    }
+    else {
+        [self updateContinuousPlaybackLabelWithText:@"Continuous Playback transition finished."];
+    }
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackTransitionWithMedia:(SRGMedia *)media
+{
+    [self updateContinuousPlaybackLabelWithText:@"Continuous Playback canceled."];
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

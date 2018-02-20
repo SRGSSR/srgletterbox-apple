@@ -6,6 +6,8 @@
 
 #import "SRGLetterboxView.h"
 
+#import "SRGContinuousPlaybackView.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -26,7 +28,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
     SRGLetterboxViewBehaviorForcedHidden
 };
 
-@interface SRGLetterboxView (Private)
+@interface SRGLetterboxView (Private) <SRGContinuousPlaybackViewDelegate>
 
 /*
  *  User interface behavior.

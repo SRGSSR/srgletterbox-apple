@@ -11,7 +11,6 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
-#import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
@@ -1387,6 +1386,22 @@ static void commonInit(SRGLetterboxView *self);
     [self.timelineView setNeedsSubdivisionFavoritesUpdate];
 }
 
+#pragma mark SRGContinuousPlaybackViewDelegate protocol
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEndContinuousPlaybackTransitionWithMedia:(SRGMedia *)media selected:(BOOL)selected
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didEndContinuousPlaybackTransitionWithMedia:selected:)]) {
+        [self.delegate letterboxView:self didEndContinuousPlaybackTransitionWithMedia:media selected:selected];
+    }
+}
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelContinuousPlaybackTransitionWithMedia:(SRGMedia *)media
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackTransitionWithMedia:)]) {
+        [self.delegate letterboxView:self didCancelContinuousPlaybackTransitionWithMedia:media];
+    }
+}
+
 #pragma mark SRGControlsViewDelegate protocol
 
 - (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
@@ -1613,6 +1628,8 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceTogglable = YES;
     
     self.videoGravityTapChangeGestureRecognizer.enabled = NO;
+    
+    self.continuousPlaybackView.delegate = self;
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
