@@ -175,7 +175,6 @@ static void commonInit(SRGLetterboxView *self);
     self.errorImageView.image = nil;
     self.errorImageView.hidden = YES;
     
-    self.errorInstructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry");
     self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
     self.backwardSeekButton.alpha = 0.f;
@@ -183,8 +182,9 @@ static void commonInit(SRGLetterboxView *self);
     self.skipToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
-    self.errorView.alpha = 0.f;
     self.availabilityView.alpha = 0.f;
+    
+    self.errorView.hidden = YES;
     
     self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
@@ -937,12 +937,8 @@ static void commonInit(SRGLetterboxView *self);
     
     self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
-    // Only display error view if there is an error and we are not displaying the availability view
-    self.errorView.alpha = (hasError && ! isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
-    
-    // Only display retry instructions if there is a media to retry with (set the `hidden` property so that the wrapping
-    // error stack view layout is properly adjusted)
-    self.errorInstructionsLabel.hidden = ! controller.URN;
+    self.errorView.hidden = ! (hasError && ! isAvailabilityViewVisible && ! isContinuousPlaybackViewVisible);
+    self.errorInstructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackWrapperView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;

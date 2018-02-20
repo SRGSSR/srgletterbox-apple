@@ -11,6 +11,7 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
@@ -58,14 +59,14 @@ static void commonInit(SRGContinuousPlaybackView *self);
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        [_controller removePeriodicTimeObserver:self.periodicTimeObserver];
+        [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackUpcomingMedia)];
     }
     
     _controller = controller;
     
     if (controller) {
         @weakify(self)
-        [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
             [self refreshViewAnimated:YES];
         }];
@@ -139,9 +140,9 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (void)refreshViewAnimated:(BOOL)animated
 {
-    SRGMedia *nextMedia = self.controller.nextMedia;
-    self.titleLabel.text = nextMedia.title;
-    self.subtitleLabel.text = nextMedia.lead ?: nextMedia.summary;
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
+    self.titleLabel.text = upcomingMedia.title;
+    self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -151,7 +152,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
     });
     
-    [self.imageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     
     NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
     float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
