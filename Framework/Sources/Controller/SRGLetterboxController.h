@@ -117,19 +117,25 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
 /**
  *  A playlist data source provides next and previous medias to be played by a controller.
  *
- *  @discussion Since a controller can play any content at any time, there is no way for an implementation to guess
- *              where it must resume if the content appears more than once. For this reason, playlist implementations
- *              should contain a given media at most once (otherwise the playlist behavior will likely be undefined).
+ *  @discussion Since a controller can play any content at any time, there is no way for a playlist implementation to
+ *              guess where it must resume if the content appears more than once in the list. For this reason, playlist
+ *              implementations should contain a given media at most once (otherwise the playlist behavior will likely be
+ *              undefined).
  */
 @protocol SRGLetterboxControllerPlaylistDataSource <NSObject>
 
 /**
  *  The next media to be played for the specified controller.
+ *
+ *  @discussion This method can be called often. Implementations should be efficient enough so that no associated
+ *              performance issues are experienced.
  */
 - (nullable SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller;
 
 /**
  *  The previous media to be played for the specified controller.
+ *
+ *  @discussion Same as for `-nextMediaForController:`.
  */
 - (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
 
