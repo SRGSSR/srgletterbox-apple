@@ -82,7 +82,7 @@
     self.continuousPlaybackLabel.text = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didContinuePlaybackAutomatically:)
+                                             selector:@selector(playbackDidContinueAutomatically:)
                                                  name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                object:self.letterboxController];
     
@@ -211,7 +211,7 @@
 
 #pragma mark Notifications
 
-- (void)didContinuePlaybackAutomatically:(NSNotification *)notification
+- (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
     SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
     [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Autoplay media: %@", media.title]];
