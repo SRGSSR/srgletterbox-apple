@@ -81,6 +81,11 @@
     
     self.continuousPlaybackLabel.text = nil;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(continuousPlaybackNotification:)
+                                                 name:SRGLetterboxDidContinuousPlaybackNotification
+                                               object:self.letterboxController];
+    
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
         [self.letterboxController playMedia:firstMedia withChaptersOnly:NO];
@@ -117,24 +122,12 @@
 {
     self.continuousPlaybackLabel.alpha = 1.f;
     self.continuousPlaybackLabel.text = text;
-    [UIView animateWithDuration:3 delay:0. options:UIViewAnimationOptionCurveEaseIn animations:^{
+    [UIView animateWithDuration:3 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.continuousPlaybackLabel.alpha = 0.f;
     } completion:^(BOOL finished) {
         self.continuousPlaybackLabel.text = nil;
         self.continuousPlaybackLabel.alpha = 1.f;
     }];
-}
-
-#pragma mark SRGLetterboxViewDelegate protocol
-
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media selected by user: %@", upcomingMedia.title]];
-}
-
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media canceled.: %@", upcomingMedia.title]];
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
@@ -204,6 +197,24 @@
         animations();
         completionHandler(YES);
     }
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media selected by user: %@", upcomingMedia.title]];
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media canceled.: %@", upcomingMedia.title]];
+}
+
+#pragma mark Notifications
+
+- (void)continuousPlaybackNotification:(NSNotification *)notification
+{
+    SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Autoplay media: %@", media.title]];
 }
 
 #pragma mark Actions

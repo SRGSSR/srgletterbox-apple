@@ -39,6 +39,8 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlaybackDidRetryNotification";
 
+NSString * const SRGLetterboxDidContinuousPlaybackNotification = @"SRGLetterboxDidContinuousPlaybackNotification";
+
 NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLivestreamDidFinishNotification";
 
 NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLetterboxSocialCountViewWillIncreaseNotification";
@@ -1432,10 +1434,20 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     self.continuousPlaybackTransitionStartDate = nil;
                     self.continuousPlaybackTransitionEndDate = nil;
                     self.continuousPlaybackUpcomingMedia = nil;
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxDidContinuousPlaybackNotification
+                                                                        object:self
+                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                                  SRGLetterboxMediaKey : nextMedia }];
                 }];
             }
             else {
                 [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxDidContinuousPlaybackNotification
+                                                                    object:self
+                                                                  userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                              SRGLetterboxMediaKey : nextMedia }];
             }
         }
     }
