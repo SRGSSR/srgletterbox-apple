@@ -83,7 +83,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didContinuePlaybackAutomatically:)
-                                                 name:SRGLetterboxDidContinuePlaybackAutomaticallyNotification
+                                                 name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                object:self.letterboxController];
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;

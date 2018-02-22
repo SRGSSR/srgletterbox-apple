@@ -39,7 +39,7 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlaybackDidRetryNotification";
 
-NSString * const SRGLetterboxDidContinuePlaybackAutomaticallyNotification = @"SRGLetterboxDidContinuePlaybackAutomaticallyNotification";
+NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification = @"SRGLetterboxPlaybackDidContinueAutomaticallyNotification";
 
 NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLivestreamDidFinishNotification";
 
@@ -1435,7 +1435,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     self.continuousPlaybackTransitionEndDate = nil;
                     self.continuousPlaybackUpcomingMedia = nil;
                     
-                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxDidContinuePlaybackAutomaticallyNotification
+                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                         object:self
                                                                       userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
                                                                                   SRGLetterboxMediaKey : nextMedia }];
@@ -1444,7 +1444,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             else if (nextMedia) {
                 [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxDidContinuePlaybackAutomaticallyNotification
+                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                     object:self
                                                                   userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
                                                                               SRGLetterboxMediaKey : nextMedia }];
