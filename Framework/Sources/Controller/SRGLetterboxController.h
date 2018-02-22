@@ -85,7 +85,7 @@ OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
  *  Notification sent when the controller play the next media automatically. Use the `SRGLetterboxURNKey` and
  *  `SRGLetterboxMediaKey` keys to retrieve the media automatically sent after from the notification `userInfo` dictionary.
  */
-OBJC_EXPORT NSString * const SRGLetterboxDidContinuousPlaybackNotification;
+OBJC_EXPORT NSString * const SRGLetterboxDidContinuePlaybackAutomaticallyNotification;
 
 /**
  *  The default start bit rate to start (800 kbps).

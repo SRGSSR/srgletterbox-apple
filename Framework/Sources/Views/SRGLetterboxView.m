@@ -1391,7 +1391,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didSelectUpcomingMedia:(SRGMedia *)upcomingMedia
 {
     if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectContinuousPlaybackUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didCancelContinuousPlaybackUpcomingMedia:upcomingMedia];
+        [self.delegate letterboxView:self didSelectContinuousPlaybackUpcomingMedia:upcomingMedia];
     }
 }
 

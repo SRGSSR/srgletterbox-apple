@@ -178,9 +178,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     [self.controller cancelContinuousPlayback];
     
-    if (self.delegate) {
-        [self.delegate continuousPlaybackView:self didCancelUpcomingMedia:upcomingMedia];
-    }
+    [self.delegate continuousPlaybackView:self didCancelUpcomingMedia:upcomingMedia];
 }
 
 - (IBAction)playNextMedia:(id)sender
@@ -189,9 +187,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     [self.controller playNextMedia];
     
-    if (self.delegate) {
-        [self.delegate continuousPlaybackView:self didSelectUpcomingMedia:upcomingMedia];
-    }
+    [self.delegate continuousPlaybackView:self didSelectUpcomingMedia:upcomingMedia];
 }
 
 #pragma mark Notifications
