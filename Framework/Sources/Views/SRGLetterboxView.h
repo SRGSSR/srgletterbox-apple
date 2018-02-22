@@ -72,12 +72,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param selected  `YES` if the user clicked on the play button, otherwise, `NO`.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didEndContinuousPlaybackTransitionWithMedia:(SRGMedia *)media selected:(BOOL)selected;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
  *  This method is called when the user cancels the Continuous playback transition.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackTransitionWithMedia:(SRGMedia *)media;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been

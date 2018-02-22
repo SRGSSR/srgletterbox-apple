@@ -14,16 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGContinuousPlaybackViewDelegate <NSObject>
 
 /**
- *  This method is called when the user ends of the Continuous playback transition.
- *
- *  @param selected  `YES` if the user clicked on the play button, otherwise, `NO`.
+ *  This method is called when the user selected the play button.
  */
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEndContinuousPlaybackTransitionWithMedia:(SRGMedia *)media selected:(BOOL)selected;
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didSelectUpcomingMedia:(SRGMedia *)media;
 
 /**
- *  This method is called when the user cancels the Continuous playback transition.
+ *  This method is called when the user canceled the Continuous playback transition.
  */
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelContinuousPlaybackTransitionWithMedia:(SRGMedia *)media;
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelUpcomingMedia:(SRGMedia *)media;
 
 @end
 

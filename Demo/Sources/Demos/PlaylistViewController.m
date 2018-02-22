@@ -127,19 +127,14 @@
 
 #pragma mark SRGLetterboxViewDelegate protocol
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didEndContinuousPlaybackTransitionWithMedia:(SRGMedia *)media selected:(BOOL)selected
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    if (selected) {
-        [self updateContinuousPlaybackLabelWithText:@"Continuous Playback accepted by user."];
-    }
-    else {
-        [self updateContinuousPlaybackLabelWithText:@"Continuous Playback transition finished."];
-    }
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media selected by user: %@", upcomingMedia.title]];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackTransitionWithMedia:(SRGMedia *)media
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    [self updateContinuousPlaybackLabelWithText:@"Continuous Playback canceled."];
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media canceled.: %@", upcomingMedia.title]];
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

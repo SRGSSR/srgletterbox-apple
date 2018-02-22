@@ -29,8 +29,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
-@property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
-
 @end
 
 @implementation SRGContinuousPlaybackView
@@ -57,12 +55,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     return self;
 }
 
-- (void)dealloc
-{
-    // Invalidate timers
-    self.continuousPlaybackTransitionTimer = nil;
-}
-
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
@@ -82,12 +74,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
     
     [self refreshViewAnimated:NO];
-}
-
-- (void)setContinuousPlaybackTransitionTimer:(NSTimer *)continuousPlaybackTransitionTimer
-{
-    [_continuousPlaybackTransitionTimer invalidate];
-    _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
 }
 
 #pragma mark Overrides
@@ -172,19 +158,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
     float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
     [self.remainingTimeButton setProgress:progress withDuration:duration];
-    
-    self.continuousPlaybackTransitionTimer = nil;
-    NSTimeInterval remainingInterval = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:NSDate.date];
-    if (remainingInterval > 0) {
-        @weakify(self)
-        self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:duration repeats:NO block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            
-            if (self.delegate) {
-                [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:upcomingMedia selected:NO];
-            }
-        }];
-    }
 }
 
 #pragma mark Fonts
@@ -201,25 +174,23 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (IBAction)cancelContinuousPlayback:(id)sender
 {
-    self.continuousPlaybackTransitionTimer = nil;
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     
     [self.controller cancelContinuousPlayback];
     
     if (self.delegate) {
-        [self.delegate continuousPlaybackView:self didCancelContinuousPlaybackTransitionWithMedia:upcomingMedia];
+        [self.delegate continuousPlaybackView:self didCancelUpcomingMedia:upcomingMedia];
     }
 }
 
 - (IBAction)playNextMedia:(id)sender
 {
-    self.continuousPlaybackTransitionTimer = nil;
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     
     [self.controller playNextMedia];
     
     if (self.delegate) {
-        [self.delegate continuousPlaybackView:self didEndContinuousPlaybackTransitionWithMedia:upcomingMedia selected:YES];
+        [self.delegate continuousPlaybackView:self didSelectUpcomingMedia:upcomingMedia];
     }
 }
 
