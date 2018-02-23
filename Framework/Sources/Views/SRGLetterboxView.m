@@ -620,12 +620,11 @@ static void commonInit(SRGLetterboxView *self);
     
     // Timeline and error overlays must be displayed at the same time.
     BOOL hasError = ([self errorForController:controller] != nil);
-    BOOL hasMedia = controller.media || controller.URN;
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     if (! [self isTimelineAlwaysHidden]
-        && (hasError || ! hasMedia || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
+        && (hasError || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
                 || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
