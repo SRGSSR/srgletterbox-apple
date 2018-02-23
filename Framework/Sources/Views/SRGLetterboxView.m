@@ -85,6 +85,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
+@property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
@@ -496,6 +498,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self updateUserInterfaceForController:controller animated:NO];
+    [self updateTimeLabelsForController:controller];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -1147,6 +1150,38 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
+{
+    if (self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
+        SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+        
+        NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
+        if (durationInSeconds < 60. * 60) {
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+                s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+            });
+            self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
+        else {
+            static NSDateComponentsFormatter *s_dateComponentsFormatter;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
+                s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+            });
+            self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
+    }
+    else {
+        self.durationLabel.text = nil;
+    }
+}
+
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     [self updateUserInterfaceForController:self.controller animated:animated];
@@ -1161,6 +1196,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
         [self updateAvailabilityForController:controller];
+        [self updateTimeLabelsForController:controller];
     }];
 }
 
