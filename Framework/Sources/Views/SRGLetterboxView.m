@@ -1404,7 +1404,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
 {
-    // Larger image set starting with iPhone Plus in landscape orientation
     SRGImageSet imageSet = (CGRectGetWidth(self.playerView.bounds) < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
     CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
     
