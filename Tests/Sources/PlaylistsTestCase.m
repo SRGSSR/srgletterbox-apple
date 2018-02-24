@@ -210,6 +210,10 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
     }];
     
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
+    }];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN2());
@@ -261,14 +265,19 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
     // Wait some time. We don't expect playback to automatically continue with the next item
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must remain in the current state");
+    }];
+    
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must not continue automatically");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1());
@@ -307,6 +316,10 @@ static SRGMediaURN *MediaURN2(void)
     // Seek near the end
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
@@ -386,14 +399,19 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
     // Wait some time. We don't expect playback to automatically continue with the next item
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must remain in the current state");
+    }];
+    
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"The player must not continue automatically");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1());
@@ -453,6 +471,10 @@ static SRGMediaURN *MediaURN2(void)
     // The next media which was previously found will still be played
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -516,6 +538,9 @@ static SRGMediaURN *MediaURN2(void)
     }];
     [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackUpcomingMedia) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
         return controller.continuousPlaybackUpcomingMedia.URN == nil;
+    }];
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
