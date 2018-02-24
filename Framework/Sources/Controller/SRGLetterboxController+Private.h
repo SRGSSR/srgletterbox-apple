@@ -45,6 +45,13 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
 
 /**
+ *  Play the upcoming media currently available.
+ *
+ *  @return `YES` iff successful.
+ */
+- (BOOL)playUpcomingMedia;
+
+/**
  *  Ask the player to reload its configuration by calling the associated configuration block, if any. Does nothing if
  *  the player has not been created yet.
  */

@@ -533,6 +533,17 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
+- (BOOL)playUpcomingMedia
+{
+    if (self.continuousPlaybackUpcomingMedia) {
+        [self playMedia:self.continuousPlaybackUpcomingMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
 - (SRGMedia *)nextMedia
 {
     if ([self.playlistDataSource respondsToSelector:@selector(nextMediaForController:)]) {

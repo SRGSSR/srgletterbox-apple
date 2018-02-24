@@ -79,7 +79,7 @@
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" image="play_centered-32"/>
                                             <connections>
-                                                <action selector="playNextMedia:" destination="-1" eventType="touchUpInside" id="Hmy-Fw-vvm"/>
+                                                <action selector="playUpcomingMedia:" destination="-1" eventType="touchUpInside" id="hJc-A4-GWk"/>
                                             </connections>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ov5-2a-xCM" userLabel="Spacer View">

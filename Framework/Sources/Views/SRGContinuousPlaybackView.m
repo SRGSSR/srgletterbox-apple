@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -181,13 +182,13 @@ static void commonInit(SRGContinuousPlaybackView *self);
     [self.delegate continuousPlaybackView:self didCancelUpcomingMedia:upcomingMedia];
 }
 
-- (IBAction)playNextMedia:(id)sender
+- (IBAction)playUpcomingMedia:(id)sender
 {
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     
-    [self.controller playNextMedia];
-    
-    [self.delegate continuousPlaybackView:self didSelectUpcomingMedia:upcomingMedia];
+    if ([self.controller playUpcomingMedia]) {
+        [self.delegate continuousPlaybackView:self didSelectUpcomingMedia:upcomingMedia];
+    }
 }
 
 #pragma mark Notifications
