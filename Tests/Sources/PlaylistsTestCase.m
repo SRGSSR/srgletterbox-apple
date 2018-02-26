@@ -210,7 +210,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
     }];
     
-    [self expectationForNotification:SRGLetterboxPlaybackDidAutomaticallyContinueNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
         return [media.URN isEqual:MediaURN2()];
     }];
@@ -270,7 +270,7 @@ static SRGMediaURN *MediaURN2(void)
         XCTFail(@"The player must remain in the current state");
     }];
     
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidAutomaticallyContinueNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
@@ -319,7 +319,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self expectationForNotification:SRGLetterboxPlaybackDidAutomaticallyContinueNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
         return [media.URN isEqual:MediaURN2()];
     }];
@@ -405,7 +405,7 @@ static SRGMediaURN *MediaURN2(void)
         XCTFail(@"The player must remain in the current state");
     }];
     
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidAutomaticallyContinueNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
@@ -475,7 +475,7 @@ static SRGMediaURN *MediaURN2(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
     }];
     
-    [self expectationForNotification:SRGLetterboxPlaybackDidAutomaticallyContinueNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
         return [media.URN isEqual:MediaURN2()];
     }];
@@ -542,7 +542,7 @@ static SRGMediaURN *MediaURN2(void)
     [self keyValueObservingExpectationForObject:self.controller keyPath:@keypath(SRGLetterboxController.new, continuousPlaybackUpcomingMedia) handler:^BOOL(SRGLetterboxController * _Nonnull controller, NSDictionary * _Nonnull change) {
         return controller.continuousPlaybackUpcomingMedia.URN == nil;
     }];
-    [self expectationForNotification:SRGLetterboxPlaybackDidAutomaticallyContinueNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
         return [media.URN isEqual:MediaURN2()];
     }];
