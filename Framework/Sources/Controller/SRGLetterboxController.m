@@ -280,8 +280,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)setContinuousPlaybackTransitionDuration:(NSTimeInterval)continuousPlaybackTransitionDuration
 {
-    if (continuousPlaybackTransitionDuration < 0) {
-        continuousPlaybackTransitionDuration = 0;
+    if (continuousPlaybackTransitionDuration < 0.) {
+        continuousPlaybackTransitionDuration = 0.;
     }
     _continuousPlaybackTransitionDuration = continuousPlaybackTransitionDuration;
 }
@@ -1429,7 +1429,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         SRGMedia *nextMedia = self.nextMedia;
         if (nextMedia && self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
-            if (self.continuousPlaybackTransitionDuration != 0) {
+            if (self.continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
                 self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackTransitionDuration];
                 self.continuousPlaybackUpcomingMedia = nextMedia;
