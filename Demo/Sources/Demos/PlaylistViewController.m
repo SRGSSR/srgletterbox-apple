@@ -126,7 +126,6 @@
         self.continuousPlaybackLabel.alpha = 0.f;
     } completion:^(BOOL finished) {
         self.continuousPlaybackLabel.text = nil;
-        self.continuousPlaybackLabel.alpha = 1.f;
     }];
 }
 
@@ -201,12 +200,12 @@
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media selected by user: %@", upcomingMedia.title]];
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Suggested media '%@' actively played by the user.", upcomingMedia.title]];
 }
 
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media canceled.: %@", upcomingMedia.title]];
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Continuous playback canceled for media '%@'.", upcomingMedia.title]];
 }
 
 #pragma mark Notifications
@@ -214,7 +213,7 @@
 - (void)playbackDidAutomaticallyContinue:(NSNotification *)notification
 {
     SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
-    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Autoplay with media: %@", media.title]];
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Autoplay with media '%@'.", media.title]];
 }
 
 #pragma mark Actions
