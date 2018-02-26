@@ -11,6 +11,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGASValueTrackingSlider.h"
+#import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
@@ -36,7 +37,7 @@ const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
+@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
