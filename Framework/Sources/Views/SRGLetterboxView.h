@@ -68,14 +68,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
 /**
- *  This method is called when the user proactively plays the upcoming media suggested during continuous playback.
+ *  This method is called when the user proactively plays the media suggested during continuous playback.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)media;
 
 /**
- *  This method is called when the user cancels the continuous playback transition.
+ *  This method is called when the user cancels continuous playback of the suggested media.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)media;
 
 /**
  *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been

@@ -1388,17 +1388,17 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
 
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didSelectUpcomingMedia:(SRGMedia *)upcomingMedia
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectContinuousPlaybackUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didSelectContinuousPlaybackUpcomingMedia:upcomingMedia];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
     }
 }
 
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelUpcomingMedia:(SRGMedia *)upcomingMedia
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didCancelContinuousPlaybackUpcomingMedia:upcomingMedia];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
     }
 }
 

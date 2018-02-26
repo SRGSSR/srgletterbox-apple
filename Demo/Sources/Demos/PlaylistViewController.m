@@ -199,12 +199,12 @@
     }
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
     [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media selected by user: %@", upcomingMedia.title]];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
     [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Upcoming media canceled.: %@", upcomingMedia.title]];
 }

@@ -11,17 +11,20 @@ NS_ASSUME_NONNULL_BEGIN
 // Forward declarations
 @class SRGContinuousPlaybackView;
 
+/**
+ *  View delegate.
+ */
 @protocol SRGContinuousPlaybackViewDelegate <NSObject>
 
 /**
- *  This method is called when the user selected the play button.
+ *  This method is called when the user proactively chooses to play the suggested media.
  */
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didSelectUpcomingMedia:(SRGMedia *)media;
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)media;
 
 /**
- *  This method is called when the user canceled the Continuous playback transition.
+ *  This method is called when the user cancels continuous playback of the suggested media.
  */
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelUpcomingMedia:(SRGMedia *)media;
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)media;
 
 @end
 
@@ -37,7 +40,7 @@ IB_DESIGNABLE
 @property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
 /**
- *  View optional delegate.
+ *  View delegate.
  */
 @property (nonatomic, weak, nullable) IBOutlet id<SRGContinuousPlaybackViewDelegate> delegate;
 
