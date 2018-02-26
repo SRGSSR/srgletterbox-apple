@@ -22,6 +22,8 @@
 @property (nonatomic, weak) IBOutlet UIButton *previousButton;
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
 
+@property (nonatomic, weak) IBOutlet UILabel *continuousPlaybackLabel;
+
 @property (nonatomic, weak) IBOutlet UIView *settingsView;
 
 // Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
@@ -77,6 +79,13 @@
         [self updatePlaylistButtons];
     }];
     
+    self.continuousPlaybackLabel.text = nil;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackDidContinueAutomatically:)
+                                                 name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                               object:self.letterboxController];
+    
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
         [self.letterboxController playMedia:firstMedia withChaptersOnly:NO];
@@ -107,6 +116,17 @@
 {
     self.previousButton.hidden = (! self.letterboxController.previousMedia);
     self.nextButton.hidden = (! self.letterboxController.nextMedia);
+}
+
+- (void)updateContinuousPlaybackLabelWithText:(NSString *)text
+{
+    self.continuousPlaybackLabel.alpha = 1.f;
+    self.continuousPlaybackLabel.text = text;
+    [UIView animateWithDuration:3 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.continuousPlaybackLabel.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        self.continuousPlaybackLabel.text = nil;
+    }];
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
@@ -176,6 +196,24 @@
         animations();
         completionHandler(YES);
     }
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Suggested media '%@' actively played by the user.", upcomingMedia.title]];
+}
+
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Continuous playback canceled for media '%@'.", upcomingMedia.title]];
+}
+
+#pragma mark Notifications
+
+- (void)playbackDidContinueAutomatically:(NSNotification *)notification
+{
+    SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
+    [self updateContinuousPlaybackLabelWithText:[NSString stringWithFormat:@"Autoplay with media '%@'.", media.title]];
 }
 
 #pragma mark Actions

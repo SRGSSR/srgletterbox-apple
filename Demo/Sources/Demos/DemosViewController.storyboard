@@ -1175,7 +1175,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Playlists" footerTitle="This section opens a media in the context of a playlist" id="nX7-ck-2ms">
+                            <tableViewSection headerTitle="Playlists" footerTitle="This section opens a media in the context of a playlist." id="nX7-ck-2ms">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="amb-Ni-GhC">
                                         <rect key="frame" x="0.0" y="3095.5" width="375" height="44"/>

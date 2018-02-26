@@ -37,7 +37,7 @@ const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGControlsViewDelegate>
+@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
@@ -1387,6 +1387,22 @@ static void commonInit(SRGLetterboxView *self);
     [self.timelineView setNeedsSubdivisionFavoritesUpdate];
 }
 
+#pragma mark SRGContinuousPlaybackViewDelegate protocol
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+}
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+}
+
 #pragma mark SRGControlsViewDelegate protocol
 
 - (void)controlsViewDidLayoutSubviews:(SRGControlsView *)controlsView
@@ -1613,6 +1629,8 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceTogglable = YES;
     
     self.videoGravityTapChangeGestureRecognizer.enabled = NO;
+    
+    self.continuousPlaybackView.delegate = self;
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {

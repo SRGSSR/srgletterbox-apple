@@ -138,13 +138,13 @@ Refer to the modal view controller demo for a concrete example.
 
 ## Playlists and continuous playback
 
-The Letterbox controller supports playlists, as well as automatic playback of the next available media (continuous playback). Simply provide an object serving playlists, conforming to the `SRGLetterboxControllerPlaylistDataSource` protocol, and assigned to the `playlistDataSource` controller property.
+The Letterbox controller supports playlists as well as automatic playback of the next available media (continuous playback). To use these features, simply provide an object serving playlists conforming to the `SRGLetterboxControllerPlaylistDataSource` protocol, and assigned to the `playlistDataSource` controller property.
 
 Once a playlist data source has been setup, you can skip to the next or previous item at any time using the dedicated methods available from the Letterbox controller `Playlists` category.
 
-By default, when media playback ends, playback will continue automatically with the next item of the playlist after some time. During this transition period, an attached Letterbox view will display a dedicated overlay allowing the user to either directly play the next item or cancel the transition. 
+If you want playback to automatically continue with the next media in a playlist once playback of the current media ends, set a `continuousPlaybackTransitionDuration` value, defining the delay before playback of the next media begins. During the transition between two medias, an attached Letterbox view will display an overlay allowing the user to either directly play the next item or cancel the transition. 
 
-You can adjust the transition duration or even disable continuous playback entirely through the `continuousPlaybackTransitionDuration` property. The `ContinousPlayback` category this property is available from also provides information about such transitions, most notably when it started or when it will end, as well as which media will be played next.
+If needed, the controller `ContinousPlayback` category provides complete information about continuous playback transition (start and end date, and media which will be played next).
 
 ## Statistics
 

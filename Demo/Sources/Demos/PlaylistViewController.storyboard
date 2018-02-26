@@ -99,10 +99,17 @@
                                     <action selector="playNextMedia:" destination="FfM-Po-XJn" eventType="touchUpInside" id="DiN-vz-S7a"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Continuous Playback" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ZB-3D-9cI">
+                                <rect key="frame" x="40" y="343" width="334" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="kfy-qN-7R0" firstAttribute="trailing" secondItem="6ZB-3D-9cI" secondAttribute="trailing" constant="40" id="0aX-L5-MkI"/>
                             <constraint firstItem="jkW-E3-Muc" firstAttribute="top" secondItem="iIt-9C-yD1" secondAttribute="bottom" constant="30" id="3IE-oA-pCL"/>
                             <constraint firstItem="iIt-9C-yD1" firstAttribute="top" secondItem="kfy-qN-7R0" secondAttribute="top" id="8G7-u8-NS7"/>
                             <constraint firstItem="kfy-qN-7R0" firstAttribute="leading" secondItem="qBn-Uk-4Va" secondAttribute="leading" id="DHR-zF-11g"/>
@@ -112,6 +119,8 @@
                             <constraint firstItem="qBn-Uk-4Va" firstAttribute="bottom" secondItem="kfy-qN-7R0" secondAttribute="bottom" id="VdU-wP-dab"/>
                             <constraint firstItem="bjI-QY-aK3" firstAttribute="leading" secondItem="kfy-qN-7R0" secondAttribute="leading" id="aRu-1a-4RD"/>
                             <constraint firstItem="5th-Sz-JvA" firstAttribute="leading" secondItem="kfy-qN-7R0" secondAttribute="leading" constant="40" id="ad0-Bf-cQa"/>
+                            <constraint firstItem="6ZB-3D-9cI" firstAttribute="top" secondItem="5th-Sz-JvA" secondAttribute="bottom" constant="30" id="b1L-Wj-UzJ"/>
+                            <constraint firstItem="6ZB-3D-9cI" firstAttribute="leading" secondItem="kfy-qN-7R0" secondAttribute="leading" constant="40" id="bkB-99-Qy6"/>
                             <constraint firstItem="kfy-qN-7R0" firstAttribute="trailing" secondItem="qBn-Uk-4Va" secondAttribute="trailing" id="eYK-Ty-CGG"/>
                             <constraint firstAttribute="bottom" secondItem="iIt-9C-yD1" secondAttribute="bottom" priority="850" id="lf7-hY-sbo"/>
                             <constraint firstItem="5th-Sz-JvA" firstAttribute="top" secondItem="iIt-9C-yD1" secondAttribute="bottom" constant="30" id="nqc-qB-lUa"/>
@@ -123,6 +132,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="continuousPlaybackLabel" destination="6ZB-3D-9cI" id="Rji-XN-l8D"/>
                         <outlet property="letterboxAspectRatioConstraint" destination="rIM-b5-m4d" id="fjX-qn-XM7"/>
                         <outlet property="letterboxBottomConstraint" destination="lf7-hY-sbo" id="XIv-KR-mRM"/>
                         <outlet property="letterboxController" destination="SHG-hd-icm" id="Ryw-aI-vXh"/>

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PlaylistViewController : UIViewController <SRGLetterboxPictureInPictureDelegate>
+@interface PlaylistViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
 - (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias;
 

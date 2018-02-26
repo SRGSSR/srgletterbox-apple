@@ -7,6 +7,8 @@
 #import "SRGContinuousPlaybackView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -173,12 +175,19 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (IBAction)cancelContinuousPlayback:(id)sender
 {
+    // Save media informations since cancelling will change it
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     [self.controller cancelContinuousPlayback];
+    [self.delegate continuousPlaybackView:self didCancelWithUpcomingMedia:upcomingMedia];
 }
 
-- (IBAction)playNextMedia:(id)sender
+- (IBAction)playUpcomingMedia:(id)sender
 {
-    [self.controller playNextMedia];
+    // Save media information since playing will change it
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
+    if ([self.controller playUpcomingMedia]) {
+        [self.delegate continuousPlaybackView:self didEngageWithUpcomingMedia:upcomingMedia];
+    }
 }
 
 #pragma mark Notifications

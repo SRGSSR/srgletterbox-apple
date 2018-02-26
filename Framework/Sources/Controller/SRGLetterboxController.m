@@ -39,6 +39,8 @@ NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybac
 
 NSString * const SRGLetterboxPlaybackDidRetryNotification = @"SRGLetterboxPlaybackDidRetryNotification";
 
+NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification = @"SRGLetterboxPlaybackDidContinueAutomaticallyNotification";
+
 NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLivestreamDidFinishNotification";
 
 NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLetterboxSocialCountViewWillIncreaseNotification";
@@ -53,8 +55,6 @@ const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
 const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
 const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
 
-const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDefault = 5;
-const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationImmediate = 0;
 const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
 
 static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
@@ -196,7 +196,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
-        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDefault;
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -280,8 +280,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)setContinuousPlaybackTransitionDuration:(NSTimeInterval)continuousPlaybackTransitionDuration
 {
-    if (continuousPlaybackTransitionDuration < 0) {
-        continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationImmediate;
+    if (continuousPlaybackTransitionDuration < 0.) {
+        continuousPlaybackTransitionDuration = 0.;
     }
     _continuousPlaybackTransitionDuration = continuousPlaybackTransitionDuration;
 }
@@ -522,6 +522,18 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     
     SRGMedia *media = self.previousMedia;
+    if (media) {
+        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (BOOL)playUpcomingMedia
+{
+    SRGMedia *media = self.continuousPlaybackUpcomingMedia;
     if (media) {
         [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
         return YES;
@@ -1417,7 +1429,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         SRGMedia *nextMedia = self.nextMedia;
         if (nextMedia && self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
-            if (self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationImmediate) {
+            if (self.continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
                 self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackTransitionDuration];
                 self.continuousPlaybackUpcomingMedia = nextMedia;
@@ -1432,10 +1444,20 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     self.continuousPlaybackTransitionStartDate = nil;
                     self.continuousPlaybackTransitionEndDate = nil;
                     self.continuousPlaybackUpcomingMedia = nil;
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                                        object:self
+                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                                  SRGLetterboxMediaKey : nextMedia }];
                 }];
             }
-            else {
+            else if (nextMedia) {
                 [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                                    object:self
+                                                                  userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                              SRGLetterboxMediaKey : nextMedia }];
             }
         }
     }
