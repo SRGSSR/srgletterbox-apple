@@ -68,14 +68,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
 /**
- *  This method is called when the user ends of the Continuous playback transition.
- *
- *  @param selected  `YES` if the user clicked on the play button, otherwise, `NO`.
+ *  This method is called when the user proactively plays the upcoming media suggested during continuous playback.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
- *  This method is called when the user cancels the Continuous playback transition.
+ *  This method is called when the user cancels the continuous playback transition.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackUpcomingMedia:(SRGMedia *)upcomingMedia;
 
