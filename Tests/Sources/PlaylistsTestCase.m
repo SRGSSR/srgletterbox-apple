@@ -273,8 +273,7 @@ static SRGMediaURN *MediaURN2(void)
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
-        return [media.URN isEqual:MediaURN2()];
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -320,8 +319,7 @@ static SRGMediaURN *MediaURN2(void)
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
-        return [media.URN isEqual:MediaURN2()];
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
@@ -480,8 +478,7 @@ static SRGMediaURN *MediaURN2(void)
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
-        return [media.URN isEqual:MediaURN2()];
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -549,8 +546,7 @@ static SRGMediaURN *MediaURN2(void)
         return controller.continuousPlaybackUpcomingMedia.URN == nil;
     }];
     [self expectationForNotification:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        SRGMedia *media = notification.userInfo[SRGLetterboxMediaKey];
-        return [media.URN isEqual:MediaURN2()];
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2()];
     }];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
