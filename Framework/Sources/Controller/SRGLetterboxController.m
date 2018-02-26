@@ -535,8 +535,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (BOOL)playUpcomingMedia
 {
-    if (self.continuousPlaybackUpcomingMedia) {
-        [self playMedia:self.continuousPlaybackUpcomingMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+    SRGMedia *media = self.continuousPlaybackUpcomingMedia;
+    if (media) {
+        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
         return YES;
     }
     else {
