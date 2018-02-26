@@ -111,8 +111,6 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxForwardSkipInterval;            // 
 /**
  *  Standard intervals before automatically playing the next item in a playlist.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDefault;           // 5 seconds
-OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationImmediate;         // 0 seconds
 OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled;          // Disable continuous playback
 
 /**
@@ -459,8 +457,8 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  The delay before playback automatically continues with the next media.
  *
- *  The default value is `SRGLetterboxContinuousPlaybackTransitionDurationDefault`. Use the special constant
- *  `SRGLetterboxContinuousPlaybackTransitionDurationDisabled` to disable continuous playback.
+ *  The default value is `SRGLetterboxContinuousPlaybackTransitionDurationDisabled`, i.e. continuous playback is
+ *  disabled. You can set the duration to 0 for immediate continuation.
  *
  *  @discussion Values smaller than 0 will be fixed to 0.
  */
