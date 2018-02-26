@@ -1448,8 +1448,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidAutomaticallyContinueNotification
                                                                         object:self
-                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                                  SRGLetterboxMediaKey : nextMedia }];
+                                                                      userInfo:@{ SRGLetterboxMediaKey : nextMedia }];
                 }];
             }
             else if (nextMedia) {
@@ -1457,8 +1456,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidAutomaticallyContinueNotification
                                                                     object:self
-                                                                  userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                              SRGLetterboxMediaKey : nextMedia }];
+                                                                  userInfo:@{ SRGLetterboxMediaKey : nextMedia }];
             }
         }
     }
