@@ -1030,6 +1030,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (void)play
 {
     if (self.mediaPlayerController.contentURL) {
+        [self cancelContinuousPlayback];
         [self.mediaPlayerController play];
     }
     else if (self.media) {
