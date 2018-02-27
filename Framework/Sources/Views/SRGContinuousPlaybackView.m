@@ -70,11 +70,11 @@ static void commonInit(SRGContinuousPlaybackView *self);
         @weakify(self)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            [self refreshViewAnimated:YES];
+            [self refreshView];
         }];
     }
     
-    [self refreshViewAnimated:NO];
+    [self refreshView];
 }
 
 #pragma mark Overrides
@@ -97,7 +97,7 @@ static void commonInit(SRGContinuousPlaybackView *self);
                                                      name:UIContentSizeCategoryDidChangeNotification
                                                    object:nil];
         
-        [self refreshViewAnimated:NO];
+        [self refreshView];
         [self updateFonts];
     }
     else {
@@ -140,9 +140,14 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 #pragma mark UI
 
-- (void)refreshViewAnimated:(BOOL)animated
+- (void)refreshView
 {
+    // Only update with valid upcoming information
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
+    if (! upcomingMedia) {
+        return;
+    }
+    
     self.titleLabel.text = upcomingMedia.title;
     self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
     

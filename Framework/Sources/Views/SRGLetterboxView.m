@@ -405,7 +405,7 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                       object:previousMediaPlayerController];
         
-        [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackTransitionEndDate)];
+        [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackUpcomingMedia)];
         
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
@@ -476,10 +476,10 @@ static void commonInit(SRGLetterboxView *self);
         
         @weakify(self)
         @weakify(controller)
-        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackTransitionEndDate) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
             @strongify(controller)
-            [self updateLayoutForController:controller];
+            [self updateUserInterfaceForController:controller animated:YES];
         }];
         
         [self.playerView addSubview:mediaPlayerController.view];
