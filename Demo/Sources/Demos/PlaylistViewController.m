@@ -43,12 +43,13 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     PlaylistViewController *viewController = [storyboard instantiateInitialViewController];
 
-    viewController.playlist = [[Playlist alloc] initWithMedias:medias];
+    Playlist *playlist = [[Playlist alloc] initWithMedias:medias];
+    playlist.continuousPlaybackTransitionDuration = 10.;
+    viewController.playlist = playlist;
 
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
-    viewController.letterboxController.continuousPlaybackTransitionDuration = 10.;
     
     return viewController;
 }

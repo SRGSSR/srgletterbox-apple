@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias;
 
+@property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
+
 @property (nonatomic, readonly, nullable) NSArray<SRGMedia *> *medias;
 
 @end

@@ -136,9 +136,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
 
-@property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
-
-// Do not use a parent context class so that all properties are KVO-observable.
+// Remark: Not wrapped into a parent context class so that all properties are KVO-observable.
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
 @property (nonatomic) NSDate *continuousPlaybackTransitionEndDate;
 @property (nonatomic) SRGMedia *continuousPlaybackUpcomingMedia;
@@ -195,8 +193,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
-        
-        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(reachabilityDidChange:)
@@ -276,14 +272,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 - (CMTimeRange)timeRange
 {
     return self.mediaPlayerController.timeRange;
-}
-
-- (void)setContinuousPlaybackTransitionDuration:(NSTimeInterval)continuousPlaybackTransitionDuration
-{
-    if (continuousPlaybackTransitionDuration < 0.) {
-        continuousPlaybackTransitionDuration = 0.;
-    }
-    _continuousPlaybackTransitionDuration = continuousPlaybackTransitionDuration;
 }
 
 - (void)setMuted:(BOOL)muted
@@ -564,6 +552,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 }
 
 - (void)cancelContinuousPlayback
+{
+    [self resetContinuousPlayback];
+}
+
+- (void)resetContinuousPlayback
 {
     self.continuousPlaybackTransitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
@@ -1126,10 +1119,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    self.continuousPlaybackTransitionTimer = nil;
-    self.continuousPlaybackTransitionStartDate = nil;
-    self.continuousPlaybackTransitionEndDate = nil;
-    self.continuousPlaybackUpcomingMedia = nil;
+    [self resetContinuousPlayback];
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1428,22 +1418,27 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         SRGMedia *nextMedia = self.nextMedia;
-        if (nextMedia && self.continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
-            if (self.continuousPlaybackTransitionDuration != 0.) {
+        
+        NSTimeInterval continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
+        if ([self.playlistDataSource respondsToSelector:@selector(continuousPlaybackTransitionDurationForController:)]) {
+            continuousPlaybackTransitionDuration = [self.playlistDataSource continuousPlaybackTransitionDurationForController:self];
+            if (continuousPlaybackTransitionDuration < 0.) {
+                continuousPlaybackTransitionDuration = 0.;
+            }
+        }
+        
+        if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
+            if (continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
-                self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:self.continuousPlaybackTransitionDuration];
+                self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:continuousPlaybackTransitionDuration];
                 self.continuousPlaybackUpcomingMedia = nextMedia;
                 
                 @weakify(self)
-                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:self.continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
+                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
                     [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
-                    
-                    self.continuousPlaybackTransitionTimer = nil;
-                    self.continuousPlaybackTransitionStartDate = nil;
-                    self.continuousPlaybackTransitionEndDate = nil;
-                    self.continuousPlaybackUpcomingMedia = nil;
+                    [self resetContinuousPlayback];
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                         object:self

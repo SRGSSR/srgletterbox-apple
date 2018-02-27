@@ -20,6 +20,7 @@
 {
     if (self = [super init]) {
         self.mediasSet = [NSOrderedSet orderedSetWithArray:medias];
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
     }
     return self;
 }
@@ -68,6 +69,11 @@
     else {
         return self.mediasSet.firstObject;
     }
+}
+
+- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
+{
+    return self.continuousPlaybackTransitionDuration;
 }
 
 @end
