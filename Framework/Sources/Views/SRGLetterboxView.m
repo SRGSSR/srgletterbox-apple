@@ -479,7 +479,7 @@ static void commonInit(SRGLetterboxView *self);
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
             @strongify(controller)
-            [self updateLayoutForController:controller];
+            [self updateUserInterfaceForController:controller animated:YES];
         }];
         
         [self.playerView addSubview:mediaPlayerController.view];

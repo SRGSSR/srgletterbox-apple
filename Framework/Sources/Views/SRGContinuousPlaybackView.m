@@ -142,7 +142,12 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 - (void)refreshView
 {
+    // Only update with valid upcoming information
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
+    if (! upcomingMedia) {
+        return;
+    }
+    
     self.titleLabel.text = upcomingMedia.title;
     self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
     
