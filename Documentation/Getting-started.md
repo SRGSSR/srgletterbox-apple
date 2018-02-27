@@ -142,7 +142,7 @@ The Letterbox controller supports playlists as well as automatic playback of the
 
 Once a playlist data source has been setup, you can skip to the next or previous item at any time using the dedicated methods available from the Letterbox controller `Playlists` category.
 
-If you want playback to automatically continue with the next media in a playlist once playback of the current media ends, set a `continuousPlaybackTransitionDuration` value, defining the delay before playback of the next media begins. During the transition between two medias, an attached Letterbox view will display an overlay allowing the user to either directly play the next item or cancel the transition. 
+If you want playback to automatically continue with the next media in a playlist once playback of the current media ends, implement the optional `-continuousPlaybackTransitionDurationForController:` delegate method, defining the delay before playback of the next media begins. During the transition between two medias, an attached Letterbox view will display an overlay allowing the user to either directly play the next item or cancel the transition. 
 
 If needed, the controller `ContinousPlayback` category provides complete information about continuous playback transition (start and end date, and media which will be played next).
 

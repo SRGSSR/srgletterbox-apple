@@ -229,10 +229,11 @@ static SRGMediaURN *MediaURN2(void)
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackTransitionDuration = 5.;
+    static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -283,17 +284,16 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
-    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - self.controller.continuousPlaybackTransitionDuration < 1);
+    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - kContinuousPlaybackTransitionDuration < 1);
 }
 
 - (void)testImmediateContinuousPlayback
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackTransitionDuration = 0.;
-    
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.continuousPlaybackTransitionDuration = 0.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -351,10 +351,9 @@ static SRGMediaURN *MediaURN2(void)
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackTransitionDuration = 5.;
-    
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -426,10 +425,11 @@ static SRGMediaURN *MediaURN2(void)
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackTransitionDuration = 5.;
+    static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -488,17 +488,16 @@ static SRGMediaURN *MediaURN2(void)
     XCTAssertNil(self.controller.continuousPlaybackTransitionEndDate);
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
-    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - self.controller.continuousPlaybackTransitionDuration < 1);
+    XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - kContinuousPlaybackTransitionDuration < 1);
 }
 
 - (void)testContinuousPlaybackTransitionKeyValueObserving
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
-    self.controller.continuousPlaybackTransitionDuration = 5.;
-    
     [[self.dataProvider mediasWithURNs:@[MediaURN1(), MediaURN2()] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];

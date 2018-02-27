@@ -143,6 +143,17 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  */
 - (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
 
+@optional
+
+/**
+ *  To enable continuous playback, implement this method and return a valid non-negative transition duration. Values
+ *  lower than 0 will be fixed to 0. A duration of 0 enables immediate continuation.
+ *
+ *  You can return `SRGLetterboxContinuousPlaybackTransitionDurationDisabled` to disable continuous playback, which
+ *  is equivalent to not having this method implemented.
+ */
+- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
+
 @end
 
 /**
@@ -453,16 +464,6 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Remark: Continuous playback is not active when picture in picture is active.
  */
 @interface SRGLetterboxController (ContinuousPlayback)
-
-/**
- *  The delay before playback automatically continues with the next media.
- *
- *  The default value is `SRGLetterboxContinuousPlaybackTransitionDurationDisabled`, i.e. continuous playback is
- *  disabled. You can set the duration to 0 for immediate continuation.
- *
- *  @discussion Values smaller than 0 will be fixed to 0.
- */
-@property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
 
 /**
  *  The date at which the continuous playback transition to the next media started. KVO-observable.
