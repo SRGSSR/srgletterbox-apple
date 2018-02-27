@@ -553,6 +553,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)cancelContinuousPlayback
 {
+    [self resetContinuousPlayback];
+}
+
+- (void)resetContinuousPlayback
+{
     self.continuousPlaybackTransitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
     self.continuousPlaybackTransitionEndDate = nil;
@@ -1114,10 +1119,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    self.continuousPlaybackTransitionTimer = nil;
-    self.continuousPlaybackTransitionStartDate = nil;
-    self.continuousPlaybackTransitionEndDate = nil;
-    self.continuousPlaybackUpcomingMedia = nil;
+    [self resetContinuousPlayback];
     
     // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1436,11 +1438,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     @strongify(self)
                     
                     [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
-                    
-                    self.continuousPlaybackTransitionTimer = nil;
-                    self.continuousPlaybackTransitionStartDate = nil;
-                    self.continuousPlaybackTransitionEndDate = nil;
-                    self.continuousPlaybackUpcomingMedia = nil;
+                    [self resetContinuousPlayback];
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                         object:self
