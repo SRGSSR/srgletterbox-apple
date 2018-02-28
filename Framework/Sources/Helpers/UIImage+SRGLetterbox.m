@@ -233,32 +233,32 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-32"] : [UIImage srg_letterboxImageNamed:@"play-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-48"] : [UIImage srg_letterboxImageNamed:@"play-64"];
 }
 
 + (UIImage *)srg_letterboxPauseImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause-48"] : [UIImage srg_letterboxImageNamed:@"pause-64"];
 }
 
 + (UIImage *)srg_letterboxStopImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop-48"] : [UIImage srg_letterboxImageNamed:@"stop-64"];
 }
 
 + (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-32"] : [UIImage srg_letterboxImageNamed:@"forward-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-48"] : [UIImage srg_letterboxImageNamed:@"forward-64"];
 }
 
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-32"] : [UIImage srg_letterboxImageNamed:@"backward-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-48"] : [UIImage srg_letterboxImageNamed:@"backward-64"];
 }
 
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-48"] : [UIImage srg_letterboxImageNamed:@"back_live-64"];
 }
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error
