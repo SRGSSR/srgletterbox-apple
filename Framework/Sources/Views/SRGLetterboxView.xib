@@ -105,7 +105,7 @@
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="192.5" y="107.5" width="64" height="88"/>
+                                    <rect key="frame" x="216.5" y="107.5" width="64" height="88"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="backward-48"/>
@@ -114,12 +114,12 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                                    <rect key="frame" x="256.5" y="107.5" width="68" height="88"/>
+                                    <rect key="frame" x="280.5" y="120.5" width="20" height="62"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="324.5" y="107.5" width="64" height="88"/>
+                                    <rect key="frame" x="300.5" y="107.5" width="64" height="88"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="forward-48"/>
@@ -128,7 +128,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="388.5" y="107.5" width="64" height="88"/>
+                                    <rect key="frame" x="364.5" y="107.5" width="64" height="88"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="back_live-48"/>
@@ -146,6 +146,10 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="48" id="krz-KZ-6xI"/>
                                             </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="image" keyPath="viewModeMonoscopicImage" value="view_mode_monoscopic-48"/>
+                                                <userDefinedRuntimeAttribute type="image" keyPath="viewModeStereoscopicImage" value="view_mode_stereoscopic-48"/>
+                                            </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lr5-be-k4j" customClass="SRGAirplayButton">
                                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -530,5 +534,7 @@
         <image name="fullscreen-48" width="48" height="48"/>
         <image name="geoblocked-25" width="25" height="25"/>
         <image name="notification-16" width="16" height="16"/>
+        <image name="view_mode_monoscopic-48" width="48" height="48"/>
+        <image name="view_mode_stereoscopic-48" width="48" height="48"/>
     </resources>
 </document>
