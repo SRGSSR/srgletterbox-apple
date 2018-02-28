@@ -98,14 +98,14 @@
                             <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5q-RH-Wvg" userLabel="User Interface Toggle Active View">
-                                    <rect key="frame" x="0.0" y="0.0" width="617" height="245"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="617" height="255"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <connections>
                                         <outletCollection property="gestureRecognizers" destination="cSD-No-gUM" appends="YES" id="Llk-zp-Ezc"/>
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                                    <rect key="frame" x="210.5" y="107.5" width="64" height="88"/>
+                                    <rect key="frame" x="234.5" y="107.5" width="64" height="88"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="backward-48"/>
@@ -114,12 +114,12 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                                    <rect key="frame" x="274.5" y="107.5" width="68" height="88"/>
+                                    <rect key="frame" x="298.5" y="120.5" width="20" height="62"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                                    <rect key="frame" x="342.5" y="107.5" width="64" height="88"/>
+                                    <rect key="frame" x="318.5" y="107.5" width="64" height="88"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="forward-48"/>
@@ -128,7 +128,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                                    <rect key="frame" x="406.5" y="107.5" width="64" height="88"/>
+                                    <rect key="frame" x="382.5" y="107.5" width="64" height="88"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                                     <state key="normal" image="back_live-48"/>
@@ -137,7 +137,7 @@
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                                    <rect key="frame" x="8" y="245" width="601" height="48"/>
+                                    <rect key="frame" x="8" y="255" width="601" height="48"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" userLabel="View mode Button" customClass="SRGViewModeButton">
                                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -227,7 +227,7 @@
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="leading" secondItem="cih-8k-dqC" secondAttribute="trailing" id="1MA-ls-Rsr"/>
-                                <constraint firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="850" constant="10" id="1df-li-DMF"/>
+                                <constraint firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="850" id="1df-li-DMF"/>
                                 <constraint firstAttribute="trailing" secondItem="d5q-RH-Wvg" secondAttribute="trailing" id="40U-6f-Z7v"/>
                                 <constraint firstItem="d5q-RH-Wvg" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="CNS-6S-nVb"/>
                                 <constraint firstItem="Suw-jc-FuV" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="DdS-Ik-n8V"/>
@@ -308,7 +308,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Availability Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="561" y="245" width="48" height="48"/>
+                            <rect key="frame" x="561" y="255" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="vbq-6i-PaK"/>
@@ -321,11 +321,11 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="itD-sp-6vZ" userLabel="Availability Label Background View">
-                            <rect key="frame" x="253" y="142.5" width="79" height="18.5"/>
+                            <rect key="frame" x="269" y="142.5" width="79" height="18.5"/>
                             <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr">
-                            <rect key="frame" x="253" y="144.5" width="75" height="14.5"/>
+                            <rect key="frame" x="271" y="144.5" width="75" height="14.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -354,7 +354,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ud9-ir-nBF" userLabel="Continuous Playback Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="561" y="245" width="48" height="48"/>
+                            <rect key="frame" x="561" y="255" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="XTQ-9s-fVu"/>
@@ -379,7 +379,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ess-8e-PUx" userLabel="Error Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="561" y="245" width="48" height="48"/>
+                            <rect key="frame" x="561" y="255" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="HBf-Xn-XW4"/>
