@@ -1424,7 +1424,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark SRGTimeSliderDelegate protocol
 
-- (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(CGFloat)value interactive:(BOOL)interactive
+- (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
     SRGSubdivision *selectedSubdivision = [self subdivisionOnTimelineAtTime:time];
     
@@ -1440,6 +1440,43 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self reloadImageForController:self.controller];
+}
+
+- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time
+{
+    NSDictionary<NSAttributedStringKey, id> *attributes = @{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] };
+    
+    SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
+    if (slider.isLive) {
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"In Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") attributes:attributes];
+    }
+    else if (streamType == SRGMediaPlayerStreamTypeDVR) {
+        NSDate *date = slider.date;
+        if (date) {
+            static dispatch_once_t s_onceToken;
+            static NSDateFormatter *s_dateFormatter;
+            dispatch_once(&s_onceToken, ^{
+                s_dateFormatter = [[NSDateFormatter alloc] init];
+                s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
+                s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
+            });
+            
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[s_dateFormatter stringFromDate:date] attributes:attributes]];
+            return [attributedString copy];
+        }
+        else {
+            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:attributes];
+        }
+    }
+    else if (streamType == SRGMediaPlayerStreamTypeLive) {
+        return nil;
+    }
+    else {
+        NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? [NSDateComponentsFormatter srg_shortDateComponentsFormatter] : [NSDateComponentsFormatter srg_mediumDateComponentsFormatter];
+        NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
+        return [[NSAttributedString alloc] initWithString:string attributes:attributes];
+    }
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol
