@@ -76,6 +76,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 
+@property (nonatomic, weak) IBOutlet UIStackView *controlsStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
@@ -329,6 +330,10 @@ static void commonInit(SRGLetterboxView *self);
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
     }];
+    
+    // Force autolayout after hiding full screen button on iOS 9.
+    [self.controlsStackView setNeedsLayout];
+    [self.controlsStackView layoutIfNeeded];
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;

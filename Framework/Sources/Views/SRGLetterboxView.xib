@@ -26,6 +26,7 @@
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="continuousPlaybackView" destination="7IC-Zz-0Qp" id="TgK-ix-TeL"/>
                 <outlet property="continuousPlaybackWrapperView" destination="In0-qW-XO1" id="W22-2O-X6X"/>
+                <outlet property="controlsStackView" destination="tuV-Cd-a2U" id="sRm-N7-r0Q"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="countdownView" destination="Kqh-PW-yvN" id="6QH-6J-Ib1"/>
                 <outlet property="durationLabel" destination="5WU-3U-ZqK" id="4Pb-AN-6yQ"/>
