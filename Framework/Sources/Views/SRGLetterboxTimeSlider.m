@@ -10,6 +10,12 @@
 
 static void commonInit(SRGLetterboxTimeSlider *self);
 
+@interface SRGLetterboxTimeSlider ()
+
+@property (nonatomic, weak) CAShapeLayer *tipLayer;
+
+@end
+
 @implementation SRGLetterboxTimeSlider
 
 #pragma mark Object lifecycle
@@ -40,7 +46,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     CGRect thumbRect = [super thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
     
     static const CGFloat kPadding = 3.f;
-    static const CGFloat kBubbleDistance = 4.f;
+    static const CGFloat kBubbleDistance = 6.f;
     
     CGSize intrinsicContentSize = self.valueLabel.intrinsicContentSize;
     CGFloat width = intrinsicContentSize.width + 2 * kPadding;
@@ -49,6 +55,11 @@ static void commonInit(SRGLetterboxTimeSlider *self);
                                        CGRectGetMinY(thumbRect) - height - kBubbleDistance,
                                        fminf(width, CGRectGetWidth(self.bounds)),
                                        height);
+    
+    self.tipLayer.frame = CGRectMake(CGRectGetMidX(thumbRect) - CGRectGetWidth(self.tipLayer.frame) / 2.f,
+                                     CGRectGetMaxY(self.valueLabel.frame),
+                                     CGRectGetWidth(self.tipLayer.frame),
+                                     CGRectGetHeight(self.tipLayer.frame));
 }
 
 @end
@@ -59,6 +70,25 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     valueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     valueLabel.backgroundColor = [UIColor whiteColor];
     valueLabel.textAlignment = NSTextAlignmentCenter;
+    valueLabel.layer.masksToBounds = YES;
+    valueLabel.layer.cornerRadius = 1.f;
     [self addSubview:valueLabel];
     self.valueLabel = valueLabel;
+    
+    CGFloat kTipWidth = 6.f;
+    CGFloat kTipHeight = 4.f;
+    
+    UIBezierPath *tipPath = [UIBezierPath bezierPath];
+    [tipPath moveToPoint:CGPointZero];
+    [tipPath addLineToPoint:CGPointMake(kTipWidth, 0.f)];
+    [tipPath addLineToPoint:CGPointMake(kTipWidth / 2.f, kTipHeight)];
+    [tipPath closePath];
+    
+    CAShapeLayer *tipLayer = [CAShapeLayer layer];
+    tipLayer.frame = CGRectMake(0.f, 0.f, kTipWidth, kTipHeight);
+    tipLayer.fillColor = [UIColor whiteColor].CGColor;
+    tipLayer.path = tipPath.CGPath;
+    tipLayer.actions = @{ @"position" : [NSNull null] };        // Disable implicit position animations so that the tip follows position changes instantaneously
+    [self.layer addSublayer:tipLayer];
+    self.tipLayer = tipLayer;
 }
