@@ -47,12 +47,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSuperviewBottomConstraint;
 
-@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsStackToSafeAreaEdgeConstraints;
-@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsStackToSuperviewEdgeConstraints;
-
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 
-@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray<NSLayoutConstraint *> *controlsToSuperviewEdgeConstraints;
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
@@ -890,26 +886,6 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
-    static const CGFloat kControlsStackConstraintGreaterPriority = 950.f;
-    static const CGFloat kControlsStackConstraintLesserPriority = 850.f;
-    
-    if (userInterfaceHidden) {
-        [self.controlsStackToSafeAreaEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-            constraint.priority = kControlsStackConstraintLesserPriority;
-        }];
-        [self.controlsStackToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-            constraint.priority = kControlsStackConstraintGreaterPriority;
-        }];
-    }
-    else {
-        [self.controlsStackToSafeAreaEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-            constraint.priority = kControlsStackConstraintGreaterPriority;
-        }];
-        [self.controlsStackToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-            constraint.priority = kControlsStackConstraintLesserPriority;
-        }];
-    }
-    
     self.notificationImageView.hidden = (self.notificationMessage == nil);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
@@ -1088,20 +1064,6 @@ static void commonInit(SRGLetterboxView *self);
         if (self.targetVideoGravity) {
             playerLayer.videoGravity = self.targetVideoGravity;
             self.targetVideoGravity = nil;
-        }
-        
-        static const CGFloat kControlsFillLesserPriority = 850.f;
-        static const CGFloat kControlsFillGreaterPriority = 950.f;
-        
-        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-            [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-                constraint.priority = kControlsFillLesserPriority;
-            }];
-        }
-        else {
-            [self.controlsToSuperviewEdgeConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-                constraint.priority = kControlsFillGreaterPriority;
-            }];
         }
     };
     void (^completion)(BOOL) = ^(BOOL finished) {

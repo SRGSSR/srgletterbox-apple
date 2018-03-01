@@ -60,12 +60,6 @@
                 <outletCollection property="fullScreenButtons" destination="WT7-v6-7uh" id="TH2-pa-Rqx"/>
                 <outletCollection property="fullScreenButtons" destination="Ess-8e-PUx" id="KTs-lZ-QxB"/>
                 <outletCollection property="fullScreenButtons" destination="uEB-dd-8By" id="DTu-JR-O7y"/>
-                <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="6SK-x6-Wug" id="2HX-bM-bpa"/>
-                <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="Qw7-jT-MLe" id="eWb-7p-O6k"/>
-                <outletCollection property="controlsStackToSafeAreaEdgeConstraints" destination="t4f-BY-Z05" id="JOS-ts-cCB"/>
-                <outletCollection property="controlsStackToSuperviewEdgeConstraints" destination="1df-li-DMF" id="fBz-R8-z0p"/>
-                <outletCollection property="controlsStackToSuperviewEdgeConstraints" destination="jYc-mo-h52" id="5jM-Nu-OTi"/>
-                <outletCollection property="controlsStackToSuperviewEdgeConstraints" destination="z6A-op-3gV" id="qTl-dt-tUY"/>
                 <outletCollection property="fullScreenButtons" destination="Ud9-ir-nBF" id="9pf-eZ-Cif"/>
             </connections>
         </placeholder>
@@ -98,7 +92,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5q-RH-Wvg" userLabel="User Interface Toggle Active View">
-                                    <rect key="frame" x="0.0" y="0.0" width="617" height="255"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="617" height="273"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <connections>
                                         <outletCollection property="gestureRecognizers" destination="cSD-No-gUM" appends="YES" id="Llk-zp-Ezc"/>
@@ -137,7 +131,7 @@
                                     </connections>
                                 </button>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                                    <rect key="frame" x="8" y="255" width="601" height="48"/>
+                                    <rect key="frame" x="0.0" y="273" width="617" height="48"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" userLabel="View mode Button" customClass="SRGViewModeButton">
                                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -198,13 +192,13 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Duration Label">
-                                            <rect key="frame" x="168" y="0.0" width="333" height="48"/>
+                                            <rect key="frame" x="168" y="0.0" width="349" height="48"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                            <rect key="frame" x="503" y="0.0" width="48" height="48"/>
+                                            <rect key="frame" x="519" y="0.0" width="48" height="48"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -212,7 +206,7 @@
                                             </constraints>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Controls Full Screen Button" customClass="SRGFullScreenButton">
-                                            <rect key="frame" x="553" y="0.0" width="48" height="48"/>
+                                            <rect key="frame" x="569" y="0.0" width="48" height="48"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="48" id="wp2-4M-YHh"/>
@@ -234,7 +228,6 @@
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="leading" secondItem="cih-8k-dqC" secondAttribute="trailing" id="1MA-ls-Rsr"/>
-                                <constraint firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="850" id="1df-li-DMF"/>
                                 <constraint firstAttribute="trailing" secondItem="d5q-RH-Wvg" secondAttribute="trailing" id="40U-6f-Z7v"/>
                                 <constraint firstItem="d5q-RH-Wvg" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" id="CNS-6S-nVb"/>
                                 <constraint firstItem="Suw-jc-FuV" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="DdS-Ik-n8V"/>
@@ -243,11 +236,9 @@
                                 <constraint firstItem="tuV-Cd-a2U" firstAttribute="top" secondItem="d5q-RH-Wvg" secondAttribute="bottom" id="Xmy-uP-q7K"/>
                                 <constraint firstItem="cih-8k-dqC" firstAttribute="centerY" secondItem="yE6-Vv-zcn" secondAttribute="centerY" id="cIZ-zB-LSb"/>
                                 <constraint firstItem="KlV-OH-iUB" firstAttribute="leading" secondItem="Suw-jc-FuV" secondAttribute="trailing" id="gyT-pT-X3e"/>
-                                <constraint firstAttribute="trailing" secondItem="tuV-Cd-a2U" secondAttribute="trailing" priority="850" constant="8" id="jYc-mo-h52"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerY" secondItem="mae-cR-Ydf" secondAttribute="centerY" id="kIV-4o-g6R"/>
                                 <constraint firstItem="yE6-Vv-zcn" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="mKD-PG-ES5"/>
                                 <constraint firstItem="KlV-OH-iUB" firstAttribute="centerY" secondItem="Suw-jc-FuV" secondAttribute="centerY" id="s3p-71-303"/>
-                                <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" secondItem="mae-cR-Ydf" secondAttribute="leading" priority="850" constant="8" id="z6A-op-3gV"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -315,7 +306,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Availability Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="561" y="255" width="48" height="48"/>
+                            <rect key="frame" x="569" y="273" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="vbq-6i-PaK"/>
@@ -361,7 +352,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ud9-ir-nBF" userLabel="Continuous Playback Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="561" y="255" width="48" height="48"/>
+                            <rect key="frame" x="569" y="273" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="XTQ-9s-fVu"/>
@@ -386,7 +377,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ess-8e-PUx" userLabel="Error Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="561" y="255" width="48" height="48"/>
+                            <rect key="frame" x="569" y="273" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="HBf-Xn-XW4"/>
@@ -455,7 +446,7 @@
                 <constraint firstItem="uEB-dd-8By" firstAttribute="trailing" secondItem="WT7-v6-7uh" secondAttribute="trailing" id="48t-P6-nxr"/>
                 <constraint firstAttribute="trailing" secondItem="aun-4y-dBi" secondAttribute="trailing" id="5Cg-FC-gXE"/>
                 <constraint firstItem="diO-OC-keM" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="66N-1p-69l"/>
-                <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="tuV-Cd-a2U" secondAttribute="trailing" priority="950" id="6SK-x6-Wug"/>
+                <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" secondItem="tuV-Cd-a2U" secondAttribute="trailing" id="6SK-x6-Wug"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="erX-bp-o7I" secondAttribute="trailing" priority="950" id="9dG-oM-VjP"/>
                 <constraint firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="D0i-tF-POP"/>
@@ -465,7 +456,7 @@
                 <constraint firstItem="aun-4y-dBi" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="top" id="IMZ-f5-OZQ"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="bottom" secondItem="WT7-v6-7uh" secondAttribute="bottom" id="Kny-50-QFa"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="Q1D-uB-3Zk"/>
-                <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="950" id="Qw7-jT-MLe"/>
+                <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" id="Qw7-jT-MLe"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="QwU-xA-Yyr"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="Sxy-F5-8e6"/>
                 <constraint firstItem="0Mg-fI-Oss" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Feb-b9-W6K" secondAttribute="leading" priority="950" id="YcY-Dg-Lwt"/>
@@ -486,7 +477,7 @@
                 <constraint firstItem="uEB-dd-8By" firstAttribute="leading" secondItem="WT7-v6-7uh" secondAttribute="leading" id="qiI-Ei-EYS"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="top" secondItem="aWQ-IF-YZO" secondAttribute="bottom" id="sSH-Tf-zdR"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="sXj-cA-rcx"/>
-                <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Feb-b9-W6K" secondAttribute="leading" priority="950" id="t4f-BY-Z05"/>
+                <constraint firstItem="tuV-Cd-a2U" firstAttribute="leading" secondItem="Feb-b9-W6K" secondAttribute="leading" id="t4f-BY-Z05"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="bottom" secondItem="WT7-v6-7uh" secondAttribute="bottom" id="wta-y6-9er"/>
                 <constraint firstAttribute="trailing" secondItem="In0-qW-XO1" secondAttribute="trailing" id="wu1-LT-BM8"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="yqg-fs-HwK"/>
