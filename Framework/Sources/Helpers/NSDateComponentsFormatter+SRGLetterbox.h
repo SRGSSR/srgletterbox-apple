@@ -25,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSDateComponentsFormatter *)srg_shortDateComponentsFormatter;
 
+/**
+ *  Date components formatter for accessibility purposes.
+ */
++ (NSDateComponentsFormatter *)srg_accessibilityDateComponentsFormatter;
+
 @end
 
 NS_ASSUME_NONNULL_END

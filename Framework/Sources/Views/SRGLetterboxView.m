@@ -1143,9 +1143,11 @@ static void commonInit(SRGLetterboxView *self);
         else {
             self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
         }
+        self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
     }
     else {
         self.durationLabel.text = nil;
+        self.durationLabel.accessibilityLabel = nil;
     }
 }
 

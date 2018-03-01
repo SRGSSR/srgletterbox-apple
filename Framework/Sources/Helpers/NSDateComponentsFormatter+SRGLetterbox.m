@@ -44,4 +44,16 @@
     return s_dateComponentsFormatter;
 }
 
++ (NSDateComponentsFormatter *)srg_accessibilityDateComponentsFormatter
+{
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+    });
+    return s_dateComponentsFormatter;
+}
+
 @end
