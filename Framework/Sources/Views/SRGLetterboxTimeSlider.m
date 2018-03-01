@@ -37,12 +37,16 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     CGRect trackFrame = [super trackRectForBounds:self.bounds];
     CGRect thumbRect = [super thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
     
-    static CGFloat const kWidth = 100.f;
-    static CGFloat const kHeight = 30.f;
-    self.valueLabel.frame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - kWidth / 2.f, CGRectGetWidth(self.bounds) - kWidth), 0.f),
-                                       CGRectGetMinY(thumbRect) - kHeight,
-                                       kWidth,
-                                       kHeight);
+    static const CGFloat kPadding = 3.f;
+    static const CGFloat kBubbleDistance = 4.f;
+    
+    CGSize intrinsicContentSize = self.valueLabel.intrinsicContentSize;
+    CGFloat width = intrinsicContentSize.width + 2 * kPadding;
+    CGFloat height = intrinsicContentSize.height + 2 * kPadding;
+    self.valueLabel.frame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
+                                       CGRectGetMinY(thumbRect) - height - kBubbleDistance,
+                                       fminf(width, CGRectGetWidth(self.bounds)),
+                                       height);
 }
 
 @end
