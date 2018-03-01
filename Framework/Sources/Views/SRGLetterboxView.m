@@ -1144,9 +1144,16 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (void)updateTimeLabels
+{
+    [self updateTimeLabelsForController:self.controller];
+}
+
 - (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
 {
-    if (self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
+    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
+            && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
         SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
         
         NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
@@ -1516,6 +1523,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateUserInterfaceAnimated:YES];
+    [self updateTimeLabels];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
