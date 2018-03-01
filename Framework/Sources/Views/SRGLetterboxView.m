@@ -10,7 +10,6 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
-#import "SRGASValueTrackingSlider.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
@@ -21,6 +20,7 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
+#import "SRGLetterboxTimeSlider.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
@@ -37,7 +37,7 @@ const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
 static void commonInit(SRGLetterboxView *self);
 
-@interface SRGLetterboxView () <SRGASValueTrackingSliderDataSource, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
+@interface SRGLetterboxView () <SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
 @property (nonatomic, weak) IBOutlet UIView *playerView;
@@ -82,7 +82,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
-@property (nonatomic, weak) IBOutlet SRGASValueTrackingSlider *timeSlider;
+@property (nonatomic, weak) IBOutlet SRGLetterboxTimeSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
@@ -195,13 +195,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.delegate = self;
     
     self.timeSlider.resumingAfterSeek = NO;
-    self.timeSlider.popUpViewColor = UIColor.whiteColor;
-    self.timeSlider.textColor = UIColor.blackColor;
-    self.timeSlider.popUpViewWidthPaddingFactor = 1.2f;
-    self.timeSlider.popUpViewHeightPaddingFactor = 1.4f;
-    self.timeSlider.popUpViewCornerRadius = 1.f;
-    self.timeSlider.popUpViewArrowLength = 4.f;
-    self.timeSlider.dataSource = self;
     self.timeSlider.delegate = self;
     
     self.timelineHeightConstraint.constant = 0.f;
@@ -694,6 +687,11 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Data display
 
+- (void)setNeedsSubdivisionFavoritesUpdate
+{
+    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
+}
+
 - (NSArray<SRGSubdivision *> *)subdivisionsForMediaComposition:(SRGMediaComposition *)mediaComposition
 {
     if (! mediaComposition) {
@@ -1064,16 +1062,6 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
-    // Pop-up visibility
-    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        [self.timeSlider hidePopUpViewAnimated:NO];
-    }
-    else {
-        [self.timeSlider showPopUpViewAnimated:NO];
-    }
-    
     // Play button / loading indicator visibility
     BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
         && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
@@ -1384,46 +1372,6 @@ static void commonInit(SRGLetterboxView *self);
 - (IBAction)retry:(id)sender
 {
     [self.controller restart];
-}
-
-#pragma mark SRGASValueTrackingSliderDataSource protocol
-
-- (NSAttributedString *)slider:(SRGASValueTrackingSlider *)slider attributedStringForValue:(float)value
-{
-    if (self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive || self.controller.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
-        NSDate *date = slider.date;
-        
-        NSString *string = nil;
-        if (slider.live) {
-            string = SRGLetterboxLocalizedString(@"In Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live");
-        }
-        else if (date) {
-            static dispatch_once_t s_onceToken;
-            static NSDateFormatter *s_dateFormatter;
-            dispatch_once(&s_onceToken, ^{
-                s_dateFormatter = [[NSDateFormatter alloc] init];
-                s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
-                s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
-            });
-            
-            string = [s_dateFormatter stringFromDate:date];
-        }
-        else {
-            string = SRGLetterboxNonLocalizedString(@"--:--");
-        }
-        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }]];
-        
-        return [attributedString copy];
-    }
-    else {
-        return [[NSAttributedString alloc] initWithString:slider.valueString ?: SRGLetterboxNonLocalizedString(@"--:--") attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
-    }
-}
-
-- (void)setNeedsSubdivisionFavoritesUpdate
-{
-    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
 }
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
