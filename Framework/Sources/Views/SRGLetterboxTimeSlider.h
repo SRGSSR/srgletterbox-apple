@@ -8,6 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  Custom slider displaying a small time bubble attached to its knob.
+ */
 @interface SRGLetterboxTimeSlider : SRGTimeSlider
 
 @end
