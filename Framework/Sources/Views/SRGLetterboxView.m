@@ -8,6 +8,7 @@
 #import "SRGLetterboxView+Private.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGContinuousPlaybackView.h"
@@ -776,34 +777,13 @@ static void commonInit(SRGLetterboxView *self);
         else if (CGRectGetWidth(self.frame) < 290.f) {
             NSString *availabilityLabelText = nil;
             if (dateComponents.day > 0) {
-                static NSDateComponentsFormatter *s_longDateComponentsFormatter;
-                static dispatch_once_t s_onceToken;
-                dispatch_once(&s_onceToken, ^{
-                    s_longDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                    s_longDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
-                    s_longDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
-                });
-                availabilityLabelText = [s_longDateComponentsFormatter stringFromDateComponents:dateComponents];
+                availabilityLabelText = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 60. * 60.) {
-                static NSDateComponentsFormatter *s_mediumDateComponentsFormatter;
-                static dispatch_once_t s_onceToken;
-                dispatch_once(&s_onceToken, ^{
-                    s_mediumDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                    s_mediumDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
-                    s_mediumDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad | NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
-                });
-                availabilityLabelText = [s_mediumDateComponentsFormatter stringFromDateComponents:dateComponents];
+                availabilityLabelText = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 0) {
-                static NSDateComponentsFormatter *s_shortDateComponentsFormatter;
-                static dispatch_once_t s_onceToken;
-                dispatch_once(&s_onceToken, ^{
-                    s_shortDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                    s_shortDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-                    s_shortDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-                });
-                availabilityLabelText = [s_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
+                availabilityLabelText = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else {
                 availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
@@ -1158,24 +1138,10 @@ static void commonInit(SRGLetterboxView *self);
         
         NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
         if (durationInSeconds < 60. * 60) {
-            static NSDateComponentsFormatter *s_dateComponentsFormatter;
-            static dispatch_once_t s_onceToken;
-            dispatch_once(&s_onceToken, ^{
-                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-                s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-            });
-            self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+            self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
         }
         else {
-            static NSDateComponentsFormatter *s_dateComponentsFormatter;
-            static dispatch_once_t s_onceToken;
-            dispatch_once(&s_onceToken, ^{
-                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour;
-                s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-            });
-            self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+            self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
         }
     }
     else {
