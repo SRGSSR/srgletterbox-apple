@@ -93,6 +93,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
+
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
@@ -938,6 +941,18 @@ static void commonInit(SRGLetterboxView *self);
     
     if (shouldFocus) {
         [self.timelineView scrollToSelectedIndexAnimated:NO];
+    }
+    
+    static const CGFloat kBottomConstraintGreaterPriority = 950.f;
+    static const CGFloat kBottomConstraintLesserPriority = 850.f;
+    
+    if (isTimelineVisible) {
+        self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
+        self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
+    }
+    else {
+        self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
+        self.timelineToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
     }
         
     return timelineHeight;
