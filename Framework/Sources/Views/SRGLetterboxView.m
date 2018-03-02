@@ -1360,7 +1360,7 @@ static void commonInit(SRGLetterboxView *self);
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
-    // Controls disyplayed depends on the view size.
+    // Controls depends on the view size.
     BOOL backwardSeekButtonHidden = NO;
     BOOL forwardSeekButtonHidden = NO;
     BOOL skipToLiveButtonHidden = NO;
