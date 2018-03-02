@@ -96,6 +96,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToControlsViewBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToSafeAreaBottomConstraint;
+
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
@@ -949,10 +952,16 @@ static void commonInit(SRGLetterboxView *self);
     if (isTimelineVisible) {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
+        
+        self.controlsStackViewToControlsViewBottomConstraint.priority = kBottomConstraintGreaterPriority;
+        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
     }
     else {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
+        
+        self.controlsStackViewToControlsViewBottomConstraint.priority = kBottomConstraintLesserPriority;
+        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
     }
         
     return timelineHeight;
