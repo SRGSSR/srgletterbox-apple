@@ -42,6 +42,20 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 {
     super.value = value;
     
+    [self updateLayoutForValue:value];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self updateLayoutForValue:self.value];
+}
+
+#pragma mark Layout
+
+- (void)updateLayoutForValue:(float)value
+{
     CGRect trackFrame = [super trackRectForBounds:self.bounds];
     CGRect thumbRect = [super thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
     
