@@ -331,9 +331,12 @@ static void commonInit(SRGLetterboxView *self);
         button.hidden = fullScreenButtonHidden;
     }];
     
-    // Force autolayout after hiding full screen button on iOS 9.
-    [self.controlsStackView setNeedsLayout];
-    [self.controlsStackView layoutIfNeeded];
+    // Fix incorrect empty space after hiding full screen button on iOS 9.
+    NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+    if (operatingSystemVersion.majorVersion == 9) {
+        [self.controlsStackView setNeedsLayout];
+        [self.controlsStackView layoutIfNeeded];
+    }
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
