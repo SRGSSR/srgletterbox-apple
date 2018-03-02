@@ -44,9 +44,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *playerView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSuperviewBottomConstraint;
-
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
@@ -942,20 +939,7 @@ static void commonInit(SRGLetterboxView *self);
     if (shouldFocus) {
         [self.timelineView scrollToSelectedIndexAnimated:NO];
     }
-    
-    // Ensure the timeline is always contained within the safe area when displayed
-    static const CGFloat kTimelineConstraintGreaterPriority = 950.f;
-    static const CGFloat kTimelineConstraintLesserPriority = 850.f;
-    
-    if (isTimelineVisible) {
-        self.timelineToSafeAreaBottomConstraint.priority = kTimelineConstraintGreaterPriority;
-        self.timelineToSuperviewBottomConstraint.priority = kTimelineConstraintLesserPriority;
-    }
-    else {
-        self.timelineToSafeAreaBottomConstraint.priority = kTimelineConstraintLesserPriority;
-        self.timelineToSuperviewBottomConstraint.priority = kTimelineConstraintGreaterPriority;
-    }
-    
+        
     return timelineHeight;
 }
 
