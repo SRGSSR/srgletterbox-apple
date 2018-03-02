@@ -143,7 +143,7 @@
                                 <action selector="skipToLive:" destination="-1" eventType="touchUpInside" id="7Hl-Fn-8uD"/>
                             </connections>
                         </button>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
                             <rect key="frame" x="0.0" y="255" width="617" height="48"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" userLabel="View mode Button" customClass="SRGViewModeButton">
