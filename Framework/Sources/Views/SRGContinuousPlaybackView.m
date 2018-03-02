@@ -111,31 +111,27 @@ static void commonInit(SRGContinuousPlaybackView *self);
 {
     [super layoutSubviews];
     
+    BOOL introLabelHidden = NO;
+    BOOL titleLabelHidden = NO;
+    BOOL subtitleLabelHidden = NO;
+    BOOL cancelButtonHidden = NO;
+    
     CGFloat height = CGRectGetHeight(self.frame);
+    if (height < 200.f) {
+        introLabelHidden = YES;
+        subtitleLabelHidden = YES;
+    }
+    if (height < 150.f) {
+        cancelButtonHidden = YES;
+    }
     if (height < 100.f) {
-        self.introLabel.hidden = YES;
-        self.titleLabel.hidden = YES;
-        self.subtitleLabel.hidden = YES;
-        self.cancelButton.hidden = YES;
+        titleLabelHidden = YES;
     }
-    else if (height < 150.f) {
-        self.introLabel.hidden = YES;
-        self.titleLabel.hidden = NO;
-        self.subtitleLabel.hidden = YES;
-        self.cancelButton.hidden = YES;
-    }
-    else if (height < 200.f) {
-        self.introLabel.hidden = YES;
-        self.titleLabel.hidden = NO;
-        self.subtitleLabel.hidden = YES;
-        self.cancelButton.hidden = NO;
-    }
-    else {
-        self.introLabel.hidden = NO;
-        self.titleLabel.hidden = NO;
-        self.subtitleLabel.hidden = NO;
-        self.cancelButton.hidden = NO;
-    }
+    
+    self.introLabel.hidden = introLabelHidden;
+    self.titleLabel.hidden = titleLabelHidden;
+    self.subtitleLabel.hidden = subtitleLabelHidden;
+    self.cancelButton.hidden = cancelButtonHidden;
 }
 
 #pragma mark UI
