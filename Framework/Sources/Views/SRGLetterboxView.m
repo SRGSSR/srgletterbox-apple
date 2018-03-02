@@ -343,7 +343,7 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-    
+        
     // The availability component layout depends on the view size. Update appearance
     [self updateAvailabilityForController:self.controller];
 }
@@ -1359,6 +1359,53 @@ static void commonInit(SRGLetterboxView *self);
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+    
+    // Controls disyplayed depends on the view size.
+    BOOL backwardSeekButtonHidden = NO;
+    BOOL forwardSeekButtonHidden = NO;
+    BOOL skipToLiveButtonHidden = NO;
+    BOOL viewModeButtonHidden = NO;
+    BOOL pictureInPictureButtonnHidden = NO;
+    BOOL timeSliderHidden = NO;
+    BOOL durationLabelHidden = NO;
+    BOOL tracksButtonHidden = NO;
+    
+    CGFloat controlsHeight = CGRectGetHeight(controlsView.frame);
+    if (controlsHeight < 165) {
+        skipToLiveButtonHidden |= YES;
+        timeSliderHidden |= YES;
+        durationLabelHidden |= YES;
+    }
+    if (controlsHeight < 120) {
+        backwardSeekButtonHidden |= YES;
+        forwardSeekButtonHidden |= YES;
+        viewModeButtonHidden |= YES;
+        pictureInPictureButtonnHidden |= YES;
+        tracksButtonHidden |= YES;
+    }
+    
+    CGFloat controlsWidth = CGRectGetWidth(controlsView.frame);
+    if (controlsWidth < 290) {
+        skipToLiveButtonHidden |= YES;
+        timeSliderHidden |= YES;
+        durationLabelHidden |= YES;
+    }
+    if (controlsWidth < 215) {
+        backwardSeekButtonHidden |= YES;
+        forwardSeekButtonHidden |= YES;
+        viewModeButtonHidden |= YES;
+        pictureInPictureButtonnHidden |= YES;
+        tracksButtonHidden |= YES;
+    }
+    
+    self.backwardSeekButton.hidden = backwardSeekButtonHidden;
+    self.forwardSeekButton.hidden = forwardSeekButtonHidden;
+    self.skipToLiveButton.hidden = skipToLiveButtonHidden;
+    self.viewModeButton.alwaysHidden = viewModeButtonHidden;
+    self.pictureInPictureButton.alwaysHidden = pictureInPictureButtonnHidden;
+    self.timeSlider.hidden = timeSliderHidden;
+    self.durationLabel.hidden = durationLabelHidden;
+    self.tracksButton.alwaysHidden = tracksButtonHidden;
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
