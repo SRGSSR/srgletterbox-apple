@@ -8,12 +8,24 @@
 
 @implementation SRGLetterboxBaseView
 
+#pragma mark Getters and setters
+
+- (void)setController:(SRGLetterboxController *)controller
+{
+    _controller = controller;
+    
+    [self updateForController:controller];
+}
+
 #pragma mark Subclassing hooks
 
 - (void)updateFonts
 {}
 
 - (void)updateAccessibility;
+{}
+
+- (void)updateForController:(SRGLetterboxController *)controller
 {}
 
 #pragma mark Overrides

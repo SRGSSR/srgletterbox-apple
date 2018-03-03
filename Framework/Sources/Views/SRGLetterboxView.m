@@ -158,6 +158,7 @@ static void commonInit(SRGLetterboxView *self);
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
     
+    self.availabilityView.alpha = 0.f;
     self.timelineHeightConstraint.constant = 0.f;
     
     self.errorView.hidden = YES;
@@ -650,7 +651,7 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImageForController:controller];
     
     [self.errorView updateForController:controller];
-    [self.availabilityView updateAvailabilityForController:controller];
+    [self.availabilityView updateForController:controller];
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -904,7 +905,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
-        [self.availabilityView updateAvailabilityForController:controller];
+        [self.availabilityView updateForController:controller];
     }];
 }
 

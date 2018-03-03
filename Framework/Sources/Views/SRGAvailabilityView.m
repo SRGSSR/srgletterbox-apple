@@ -15,46 +15,38 @@
 @interface SRGAvailabilityView ()
 
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
-@property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
-@property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
+@property (nonatomic, weak) IBOutlet UIView *messageBackgroundView;
+@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
 
 @end
 
 @implementation SRGAvailabilityView
 
-- (void)setController:(SRGLetterboxController *)controller
-{
-    _controller = controller;
-    
-    [self updateAvailabilityForController:controller];
-}
+#pragma mark Overrides
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     
-    self.alpha = 0.f;
-    self.availabilityLabelBackgroundView.layer.cornerRadius = 4.f;
+    self.messageBackgroundView.layer.cornerRadius = 4.f;
 }
 
-- (void)layoutSubviews
+#pragma mark Subclassing hooks
+
+- (void)updateFonts
 {
-    [super layoutSubviews];
-    
-    // The availability component layout depends on the view size. Update appearance
-    [self updateAvailabilityForController:self.controller];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
-- (void)updateAvailabilityForController:(SRGLetterboxController *)controller
+- (void)updateForController:(SRGLetterboxController *)controller
 {
     SRGMedia *media = controller.media;
-    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:[NSDate date]];
     if (blockingReason == SRGBlockingReasonEndDate) {
-        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
-        self.availabilityLabel.hidden = NO;
-        self.availabilityLabelBackgroundView.hidden = NO;
+        self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
+        self.messageLabel.hidden = NO;
+        self.messageBackgroundView.hidden = NO;
         
         self.countdownView.hidden = YES;
     }
@@ -72,9 +64,9 @@
                 s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
             });
             
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
-            self.availabilityLabel.hidden = NO;
-            self.availabilityLabelBackgroundView.hidden = NO;
+            self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
+            self.messageLabel.hidden = NO;
+            self.messageBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
@@ -94,24 +86,24 @@
                 availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
             }
             
-            self.availabilityLabel.hidden = NO;
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
-            self.availabilityLabelBackgroundView.hidden = NO;
+            self.messageLabel.hidden = NO;
+            self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
+            self.messageBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
         // Large layout
         else {
-            self.availabilityLabel.hidden = YES;
-            self.availabilityLabelBackgroundView.hidden = YES;
+            self.messageLabel.hidden = YES;
+            self.messageBackgroundView.hidden = YES;
             
             self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
             self.countdownView.hidden = NO;
         }
     }
     else {
-        self.availabilityLabel.hidden = YES;
-        self.availabilityLabelBackgroundView.hidden = YES;
+        self.messageLabel.hidden = YES;
+        self.messageBackgroundView.hidden = YES;
         
         self.countdownView.hidden = YES;
     }
