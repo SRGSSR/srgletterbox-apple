@@ -35,6 +35,15 @@
     self.iconImageView.hidden = YES;
 }
 
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [self updateLayout];
+    }
+}
+
 - (void)updateForContentSizeCategory
 {
     [super updateForContentSizeCategory];
