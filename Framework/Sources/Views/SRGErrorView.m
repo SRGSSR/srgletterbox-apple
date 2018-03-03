@@ -28,14 +28,13 @@
 {
     [super awakeFromNib];
     
+    self.messageLabel.numberOfLines = 3;
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    self.messageLabel.numberOfLines = 3;
     
     [self reloadDataForController:self.controller];
 }
