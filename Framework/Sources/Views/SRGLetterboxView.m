@@ -47,7 +47,7 @@ static void commonInit(SRGLetterboxView *self);
 @interface SRGLetterboxView () <SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
-@property (nonatomic, weak) IBOutlet UIView *playerView;
+@property (nonatomic, weak) IBOutlet UIView *playbackView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
@@ -344,7 +344,7 @@ static void commonInit(SRGLetterboxView *self);
         
         [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackUpcomingMedia)];
         
-        if (previousMediaPlayerController.view.superview == self.playerView) {
+        if (previousMediaPlayerController.view.superview == self.playbackView) {
             [previousMediaPlayerController.view removeFromSuperview];
         }
     }
@@ -410,14 +410,14 @@ static void commonInit(SRGLetterboxView *self);
             [self updateUserInterfaceForController:controller animated:YES];
         }];
         
-        [self.playerView addSubview:mediaPlayerController.view];
+        [self.playbackView addSubview:mediaPlayerController.view];
         
         // Force autolayout to ensure the layout is immediately correct 
         [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.playerView);
+            make.edges.equalTo(self.playbackView);
         }];
         
-        [self.playerView layoutIfNeeded];
+        [self.playbackView layoutIfNeeded];
     }
     else {
         [self unregisterUserInterfaceUpdateTimers];
