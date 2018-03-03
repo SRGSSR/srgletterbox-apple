@@ -55,20 +55,18 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) UIImageView *loadingImageView;
 @property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
 @property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
-
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
-
-@property (nonatomic) NSTimer *userInterfaceUpdateTimer;
-
-@property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
+@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 
 @property (nonatomic, weak) IBOutlet UIView *notificationView;
 @property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
 @property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
+
+@property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
+
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelBottomConstraint;
 
-@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
@@ -80,6 +78,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
+@property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 @property (nonatomic) NSTimer *inactivityTimer;
 
 @property (nonatomic, copy) NSString *notificationMessage;
