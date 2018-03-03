@@ -346,6 +346,18 @@ static void commonInit(SRGLetterboxView *self);
         
     // The availability component layout depends on the view size. Update appearance
     [self updateAvailabilityForController:self.controller];
+    
+    // Error view layout depends on the view size
+    self.errorImageView.hidden = NO;
+    self.errorInstructionsLabel.hidden = NO;
+    
+    CGFloat height = CGRectGetHeight(self.errorView.frame);
+    if (height < 170.f) {
+        self.errorInstructionsLabel.hidden = YES;
+    }
+    if (height < 140.f) {
+        self.errorImageView.hidden = YES;
+    }
 }
 
 #pragma mark Fonts
