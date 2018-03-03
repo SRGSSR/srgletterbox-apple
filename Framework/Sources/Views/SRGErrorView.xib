@@ -70,8 +70,16 @@
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="xb5-SL-7yq"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="StB-Yp-XGw" appends="YES" id="wgh-3P-KAc"/>
+            </connections>
             <point key="canvasLocation" x="52" y="-904.5"/>
         </view>
+        <tapGestureRecognizer id="StB-Yp-XGw" userLabel="Retry Tap Gesture Recognizer">
+            <connections>
+                <action selector="retry:" destination="-1" id="bll-lc-uuo"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="geoblocked-25" width="25" height="25"/>

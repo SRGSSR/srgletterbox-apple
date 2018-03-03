@@ -300,4 +300,9 @@
     [self.controller skipToLiveWithCompletionHandler:nil];
 }
 
+- (IBAction)hideUserInterface:(id)sender
+{
+    [self.delegate controlsViewDidTap:self];
+}
+
 @end

@@ -70,4 +70,11 @@
     }
 }
 
+#pragma mark Actions
+
+- (IBAction)retry:(id)sender
+{
+    [self.controller restart];
+}
+
 @end

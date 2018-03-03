@@ -963,14 +963,6 @@ static void commonInit(SRGLetterboxView *self);
     [self setTogglableUserInterfaceHidden:NO animated:YES];
 }
 
-- (IBAction)hideUserInterface:(UIGestureRecognizer *)gestureRecognizer
-{
-    // Defer execution to avoid conflicts with the activity gesture above
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setTogglableUserInterfaceHidden:YES animated:YES];
-    });
-}
-
 - (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
@@ -988,11 +980,6 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Actions
-
-- (IBAction)retry:(id)sender
-{
-    [self.controller restart];
-}
 
 - (IBAction)toggleFullScreen:(id)sender
 {
@@ -1016,6 +1003,14 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark SRGControlsViewDelegate protocol
+
+- (void)controlsViewDidTap:(SRGControlsView *)controlsView
+{
+    // Defer execution to avoid conflicts with the activity gesture
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setTogglableUserInterfaceHidden:YES animated:YES];
+    });
+}
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {

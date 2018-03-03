@@ -35,15 +35,15 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diO-OC-keM" userLabel="Playback View">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="MQv-Za-8Ye" appends="YES" id="hRi-g4-rrj"/>
@@ -51,40 +51,37 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View" customClass="SRGNotificationView">
-                    <rect key="frame" x="0.0" y="321" width="0.0" height="0.0"/>
+                    <rect key="frame" x="0.0" y="321" width="617" height="0.0"/>
                     <color key="backgroundColor" red="0.18431372549019609" green="0.47058823529411764" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" id="bhK-qW-N61"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-Uc-uEb" customClass="SRGLetterboxTimelineView">
-                    <rect key="frame" x="0.0" y="321" width="0.0" height="0.0"/>
+                    <rect key="frame" x="0.0" y="321" width="617" height="0.0"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" id="eCB-ci-0lC"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Availability View" customClass="SRGAvailabilityView">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In0-qW-XO1" customClass="SRGContinuousPlaybackView">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aWQ-IF-YZO" userLabel="Error View" customClass="SRGErrorView">
-                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="321"/>
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
-                    <connections>
-                        <outletCollection property="gestureRecognizers" destination="iXq-HC-lOl" appends="YES" id="hjv-LW-Cek"/>
-                    </connections>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -137,21 +134,6 @@
             <connections>
                 <action selector="showUserInterface:" destination="-1" id="3Wi-4t-YHt"/>
                 <outlet property="delegate" destination="-1" id="zsU-uc-Qor"/>
-            </connections>
-        </tapGestureRecognizer>
-        <tapGestureRecognizer id="cSD-No-gUM" userLabel="Hide user interface Tap Gesture Recognizer">
-            <connections>
-                <action selector="hideUserInterface:" destination="-1" id="f6i-7M-9sG"/>
-            </connections>
-        </tapGestureRecognizer>
-        <tapGestureRecognizer id="iXq-HC-lOl" userLabel="Retry Tap Gesture Recognizer">
-            <connections>
-                <action selector="retry:" destination="-1" id="6N3-uz-ppc"/>
-            </connections>
-        </tapGestureRecognizer>
-        <tapGestureRecognizer id="Si8-HF-UEx" userLabel="Hide User interface Tap Gesture Recognizer">
-            <connections>
-                <action selector="hideUserInterface:" destination="-1" id="Z5Z-gf-ZmY"/>
             </connections>
         </tapGestureRecognizer>
         <tapGestureRecognizer numberOfTapsRequired="2" id="y7P-pN-sI4" customClass="SRGTapGestureRecognizer">

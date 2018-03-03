@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol SRGControlsViewDelegate <NSObject>
 
+- (void)controlsViewDidTap:(SRGControlsView *)controlsView;
+
 - (void)controlsView:(SRGControlsView *)controlsView isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive;
 
 @end

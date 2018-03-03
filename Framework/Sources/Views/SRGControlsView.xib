@@ -41,6 +41,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5yN-2Q-RQa" userLabel="User Interface Toggle Active View">
                     <rect key="frame" x="0.0" y="0.0" width="499" height="399"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="7Es-75-w3X" appends="YES" id="1vt-VN-9Tf"/>
+                    </connections>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGq-uz-ZWW">
                     <rect key="frame" x="0.0" y="399" width="499" height="48"/>
@@ -188,6 +191,11 @@
             <viewLayoutGuide key="safeArea" id="DS9-EZ-6jg"/>
             <point key="canvasLocation" x="96.5" y="-55.5"/>
         </view>
+        <tapGestureRecognizer id="7Es-75-w3X" userLabel="Hide User interface Tap Gesture Recognizer">
+            <connections>
+                <action selector="hideUserInterface:" destination="-1" id="coq-cT-CLX"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="back_live-48" width="48" height="48"/>
