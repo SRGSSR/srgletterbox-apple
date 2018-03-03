@@ -10,6 +10,8 @@
 
 @interface SRGNotificationView ()
 
+@property (nonatomic, weak) IBOutlet UIView *contentView;
+
 @property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
 @property (nonatomic, weak) IBOutlet UILabel *messageLabel;
 
@@ -35,15 +37,6 @@
     self.iconImageView.hidden = YES;
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    
-    if (newWindow) {
-        [self updateLayout];
-    }
-}
-
 - (void)updateForContentSizeCategory
 {
     [super updateForContentSizeCategory];
@@ -51,31 +44,32 @@
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
-- (CGFloat)updateLayout
+- (CGFloat)updateLayoutWithMessage:(NSString *)message
 {
-    // TODO:
-#if 0
-    self.imageView.hidden = (self.notificationMessage == nil);
-    self.messageLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
-    self.messageLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
+    BOOL hasMessage = (message != nil);
+    
+    self.iconImageView.hidden = ! hasMessage;
+    
+    CGFloat verticalMargin = hasMessage ? 6.f : 0.f;
+    self.messageLabelTopConstraint.constant = verticalMargin;
+    self.messageLabelBottomConstraint.constant = verticalMargin;
     
     // The notification message determines the height of the view required to display it.
-    self.messageLabel.text = self.notificationMessage;
+    self.messageLabel.text = message;
     
     // Force autolayout
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
+    [self.contentView setNeedsLayout];
+    [self.contentView layoutIfNeeded];
     
     // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
     // adjusts
     // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
     CGSize fittingSize = UILayoutFittingCompressedSize;
-    fittingSize.width = CGRectGetWidth(self.frame);
-    return [self systemLayoutSizeFittingSize:fittingSize
-               withHorizontalFittingPriority:UILayoutPriorityRequired
-                     verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
-#endif
-    return 0.f;
+    fittingSize.width = CGRectGetWidth(self.contentView.frame);
+    CGSize size = [self.contentView systemLayoutSizeFittingSize:fittingSize
+                                  withHorizontalFittingPriority:UILayoutPriorityRequired
+                                        verticalFittingPriority:UILayoutPriorityFittingSizeLevel];
+    return size.height;
 }
 
 @end

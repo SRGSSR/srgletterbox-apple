@@ -57,7 +57,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationHeightConstraint;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
@@ -773,10 +772,8 @@ static void commonInit(SRGLetterboxView *self);
     void (^animations)(void) = ^{
         BOOL userInterfaceHidden = [self updateLayoutForController:controller];
         CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
-        CGFloat notificationHeight = [self.notificationView updateLayout];
+        CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
         [self updateControlsLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
-        
-        self.notificationHeightConstraint.constant = notificationHeight;
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         

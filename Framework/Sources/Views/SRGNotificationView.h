@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 IB_DESIGNABLE
 @interface SRGNotificationView : SRGLetterboxBaseView
 
-- (CGFloat)updateLayout;
+- (CGFloat)updateLayoutWithMessage:(nullable NSString *)message;
 
 @end
 
