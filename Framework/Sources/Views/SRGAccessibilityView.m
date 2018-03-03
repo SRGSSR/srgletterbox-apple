@@ -13,6 +13,11 @@
 
 #pragma mark Accessibility
 
+- (BOOL)isAccessibilityElement
+{
+    return YES;
+}
+
 - (NSString *)accessibilityLabel
 {
     return (self.letterboxView.controller.media.mediaType == SRGMediaTypeAudio) ? SRGLetterboxAccessibilityLocalizedString(@"Audio", @"The main area on the letterbox view, where the audio or its thumbnail is displayed") : SRGLetterboxAccessibilityLocalizedString(@"Video", @"The main area on the letterbox view, where the video or its thumbnail is displayed");

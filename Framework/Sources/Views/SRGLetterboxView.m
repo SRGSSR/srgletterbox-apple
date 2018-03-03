@@ -15,6 +15,7 @@
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
+#import "SRGErrorView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -56,10 +57,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
-@property (nonatomic, weak) IBOutlet UIView *errorView;
-@property (nonatomic, weak) IBOutlet UIImageView *errorImageView;
-@property (nonatomic, weak) IBOutlet UILabel *errorLabel;
-@property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
+@property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
 
 @property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
@@ -159,13 +157,6 @@ static void commonInit(SRGLetterboxView *self);
     }];
     self.loadingImageView = loadingImageView;
     
-    self.errorImageView.image = nil;
-    self.errorImageView.hidden = YES;
-    
-    self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
-    
-    self.errorView.hidden = YES;
-    
     self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
     
@@ -173,6 +164,8 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.delegate = self;
     
     self.timelineHeightConstraint.constant = 0.f;
+    
+    self.errorView.hidden = YES;
     
     // Workaround UIImage view tint color bug
     // See http://stackoverflow.com/a/26042893/760435
@@ -195,8 +188,6 @@ static void commonInit(SRGLetterboxView *self);
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
     }];
-    
-    self.accessibilityView.isAccessibilityElement = YES;
     
     [self reloadData];
 }
@@ -288,26 +279,12 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-    
-    // Error view layout depends on the view size
-    self.errorImageView.hidden = NO;
-    self.errorInstructionsLabel.hidden = NO;
-    
-    CGFloat height = CGRectGetHeight(self.errorView.frame);
-    if (height < 170.f) {
-        self.errorInstructionsLabel.hidden = YES;
-    }
-    if (height < 140.f) {
-        self.errorImageView.hidden = YES;
-    }
 }
 
 #pragma mark Fonts
 
 - (void)updateFonts
 {
-    self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
-    self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
@@ -677,14 +654,7 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    NSError *error = [self errorForController:controller];
-    
-    UIImage *image = [UIImage srg_letterboxImageForError:error];
-    self.errorImageView.image = image;
-    self.errorImageView.hidden = (image == nil);            // Hidden so that the stack view wrapper can adjust its layout properly
-    
-    self.errorLabel.text = error.localizedDescription;
-    
+    [self.errorView updateForController:controller];
     [self.availabilityView updateAvailabilityForController:controller];
 }
 
@@ -778,7 +748,6 @@ static void commonInit(SRGLetterboxView *self);
     self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
     self.errorView.hidden = (! hasError && hasMedia) || isAvailabilityViewVisible || isContinuousPlaybackViewVisible;
-    self.errorInstructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackWrapperView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
