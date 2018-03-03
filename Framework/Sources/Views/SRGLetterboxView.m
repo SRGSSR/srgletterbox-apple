@@ -1180,6 +1180,11 @@ static void commonInit(SRGLetterboxView *self);
     [self.controller restart];
 }
 
+- (IBAction)toggleFullScreen:(id)sender
+{
+    [self setFullScreen:!self.isFullScreen animated:YES];
+}
+
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
 
 - (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
@@ -1197,11 +1202,6 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark SRGControlsViewDelegate protocol
-
-- (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView
-{
-    [self setFullScreen:!self.isFullScreen animated:YES];
-}
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {

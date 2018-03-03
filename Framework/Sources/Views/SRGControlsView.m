@@ -313,11 +313,6 @@
     }];
 }
 
-- (IBAction)toggleFullScreen:(id)sender
-{
-    [self.delegate controlsViewDidToggleFullScreen:self];
-}
-
 - (IBAction)skipToLive:(id)sender
 {
     [self.controller skipToLiveWithCompletionHandler:nil];
