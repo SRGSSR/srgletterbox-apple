@@ -36,6 +36,11 @@ OBJC_EXPORT NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *
  */
 OBJC_EXPORT CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfaceHidden);
 
+/**
+ *  Return `YES` iff the view is loading content.
+ */
+OBJC_EXPORT BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view);
+
 @interface SRGLetterboxView (Private)
 
 /*

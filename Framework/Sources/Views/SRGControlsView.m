@@ -224,20 +224,7 @@
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
-    // Play button / loading indicator visibility
-    // TODO: Factor out
-    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-    
-    BOOL visible = isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
-    if (visible) {
-        self.playbackButton.alpha = 0.f;
-    }
-    else {
-        self.playbackButton.alpha = 1.f;
-    }
+    self.playbackButton.alpha = SRGLetterboxViewIsLoading(view) ? 0.f : 1.f;
     
     static const CGFloat kBottomConstraintGreaterPriority = 950.f;
     static const CGFloat kBottomConstraintLesserPriority = 850.f;

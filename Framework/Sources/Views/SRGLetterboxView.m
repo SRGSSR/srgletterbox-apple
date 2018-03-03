@@ -740,17 +740,8 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self.controlsView updateLayoutForController:controller view:self userInterfaceHidden:userInterfaceHidden];
     
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    
-    // Play button / loading indicator visibility
-    // TODO: Factor out
-    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-    
-    BOOL visible = isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
-    if (visible) {
+    BOOL isLoading = SRGLetterboxViewIsLoading(self);
+    if (isLoading) {
         self.loadingImageView.alpha = 1.f;
         [self.loadingImageView startAnimating];
     }
@@ -1234,4 +1225,18 @@ CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfac
     NSArray<SRGSubdivision *> *subdivisions = [view subdivisionsForMediaComposition:controller.mediaComposition];
     SRGLetterboxViewBehavior timelineBehavior = [view timelineBehaviorForController:controller];
     return (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? view.preferredTimelineHeight : 0.f;
+}
+
+
+BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view)
+{
+    SRGLetterboxController *controller = view.controller;
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    
+    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
+    
+    return isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
 }
