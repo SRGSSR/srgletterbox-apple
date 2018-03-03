@@ -8,15 +8,6 @@
 
 @implementation SRGLetterboxControllerView
 
-#pragma mark Getters and setters
-
-- (void)setController:(SRGLetterboxController *)controller
-{
-    _controller = controller;
-    
-    [self updateForController:controller];
-}
-
 #pragma mark Subclassing hooks
 
 - (void)updateForController:(SRGLetterboxController *)controller
