@@ -47,19 +47,15 @@ static void commonInit(SRGLetterboxView *self);
 @interface SRGLetterboxView () <SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *mainView;
-@property (nonatomic, weak) IBOutlet UIView *playbackView;
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-
-@property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
-@property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
-
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UIView *playbackView;
+@property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
-
+@property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
 @property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
 
-@property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
@@ -750,7 +746,7 @@ static void commonInit(SRGLetterboxView *self);
     self.errorView.hidden = (! hasError && hasMedia) || isAvailabilityViewVisible || isContinuousPlaybackViewVisible;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
-    self.continuousPlaybackWrapperView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
+    self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)

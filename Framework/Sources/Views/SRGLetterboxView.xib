@@ -20,8 +20,7 @@
             <connections>
                 <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Vms-yM-ckf"/>
-                <outlet property="continuousPlaybackView" destination="7IC-Zz-0Qp" id="TgK-ix-TeL"/>
-                <outlet property="continuousPlaybackWrapperView" destination="In0-qW-XO1" id="W22-2O-X6X"/>
+                <outlet property="continuousPlaybackView" destination="In0-qW-XO1" id="bcF-rC-31c"/>
                 <outlet property="controlsStackViewToControlsViewBottomConstraint" destination="GWH-14-Qfa" id="85c-IA-PVD"/>
                 <outlet property="controlsStackViewToSafeAreaBottomConstraint" destination="n4N-fl-i2I" id="Z4G-pI-1l9"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
@@ -42,7 +41,6 @@
                 <outlet property="videoGravityTapChangeGestureRecognizer" destination="y7P-pN-sI4" id="hpI-dX-KNQ"/>
                 <outletCollection property="fullScreenButtons" destination="Ess-8e-PUx" id="KTs-lZ-QxB"/>
                 <outletCollection property="fullScreenButtons" destination="uEB-dd-8By" id="DTu-JR-O7y"/>
-                <outletCollection property="fullScreenButtons" destination="Ud9-ir-nBF" id="9pf-eZ-Cif"/>
                 <outletCollection property="fullScreenButtons" destination="WT7-v6-7uh" id="TH2-pa-Rqx"/>
             </connections>
         </placeholder>
@@ -304,11 +302,11 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="itD-sp-6vZ" userLabel="Availability Label Background View">
-                            <rect key="frame" x="253" y="142.5" width="79" height="18.5"/>
+                            <rect key="frame" x="269" y="142.5" width="79" height="18.5"/>
                             <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr">
-                            <rect key="frame" x="253" y="144.5" width="75" height="14.5"/>
+                            <rect key="frame" x="271" y="144.5" width="75" height="14.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -334,34 +332,9 @@
                         <outlet property="countdownView" destination="Kqh-PW-yvN" id="18U-4y-1tI"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In0-qW-XO1">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In0-qW-XO1" customClass="SRGContinuousPlaybackView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7IC-Zz-0Qp" customClass="SRGContinuousPlaybackView">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ud9-ir-nBF" userLabel="Continuous Playback Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="569" y="255" width="48" height="48"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstAttribute="width" priority="999" constant="48" id="XTQ-9s-fVu"/>
-                            </constraints>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <state key="normal" image="fullscreen-48"/>
-                            <state key="selected" image="cancel_fullscreen-48"/>
-                            <connections>
-                                <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="xFR-sn-8ff"/>
-                            </connections>
-                        </button>
-                    </subviews>
                     <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <constraints>
-                        <constraint firstItem="7IC-Zz-0Qp" firstAttribute="leading" secondItem="In0-qW-XO1" secondAttribute="leading" id="TCZ-iN-j7O"/>
-                        <constraint firstAttribute="bottom" secondItem="7IC-Zz-0Qp" secondAttribute="bottom" id="VWU-Bb-HIy"/>
-                        <constraint firstItem="7IC-Zz-0Qp" firstAttribute="top" secondItem="In0-qW-XO1" secondAttribute="top" id="ciK-eu-Xnh"/>
-                        <constraint firstAttribute="trailing" secondItem="7IC-Zz-0Qp" secondAttribute="trailing" id="uqz-X4-qn6"/>
-                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aWQ-IF-YZO" userLabel="Error View" customClass="SRGErrorView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
@@ -458,9 +431,7 @@
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="leading" secondItem="WT7-v6-7uh" secondAttribute="leading" id="Mpq-3A-aee"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="PZq-fu-r05"/>
                 <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Sv9-qj-ejU"/>
-                <constraint firstItem="Ud9-ir-nBF" firstAttribute="bottom" secondItem="WT7-v6-7uh" secondAttribute="bottom" id="VyD-hx-Rci"/>
                 <constraint firstItem="4W1-hx-tda" firstAttribute="leading" secondItem="Feb-b9-W6K" secondAttribute="leading" id="Y8W-1a-yg1"/>
-                <constraint firstItem="Ud9-ir-nBF" firstAttribute="top" secondItem="WT7-v6-7uh" secondAttribute="top" id="YKz-SI-rnm"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="leading" secondItem="WT7-v6-7uh" secondAttribute="leading" id="aJ4-34-bWO"/>
                 <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="bCe-ds-SiE"/>
@@ -473,14 +444,12 @@
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="iBj-yw-veM"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="bottom" secondItem="WT7-v6-7uh" secondAttribute="bottom" id="jaF-rt-YUs"/>
                 <constraint firstItem="mae-cR-Ydf" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="kCh-ZV-ZKv"/>
-                <constraint firstItem="Ud9-ir-nBF" firstAttribute="leading" secondItem="WT7-v6-7uh" secondAttribute="leading" id="kTE-xy-9gL"/>
                 <constraint firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="bottom" priority="850" id="mjF-oA-P4t"/>
                 <constraint firstItem="Feb-b9-W6K" firstAttribute="bottom" secondItem="tuV-Cd-a2U" secondAttribute="bottom" priority="850" id="n4N-fl-i2I"/>
                 <constraint firstItem="Feb-b9-W6K" firstAttribute="trailing" secondItem="4W1-hx-tda" secondAttribute="trailing" id="nYH-na-0Vk"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="nZW-9E-vt0"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="sXj-cA-rcx"/>
                 <constraint firstItem="uEB-dd-8By" firstAttribute="trailing" secondItem="WT7-v6-7uh" secondAttribute="trailing" id="u6A-Ji-zbT"/>
-                <constraint firstItem="Ud9-ir-nBF" firstAttribute="trailing" secondItem="WT7-v6-7uh" secondAttribute="trailing" id="uum-wF-jgU"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="v0q-nr-OXF"/>
                 <constraint firstItem="Ess-8e-PUx" firstAttribute="trailing" secondItem="WT7-v6-7uh" secondAttribute="trailing" id="vCW-NR-PLY"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="vUw-lf-qtn"/>
