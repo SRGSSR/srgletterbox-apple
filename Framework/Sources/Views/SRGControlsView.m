@@ -6,13 +6,15 @@
 
 #import "SRGControlsView.h"
 
-#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
 #import "UIFont+SRGLetterbox.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGControlsView ()
@@ -244,6 +246,28 @@
     }
     else {
         self.playbackButton.alpha = 1.f;
+    }
+}
+
+- (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
+            && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
+        SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+        
+        NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
+        if (durationInSeconds < 60. * 60) {
+            self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        }
+        else {
+            self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        }
+        self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+    }
+    else {
+        self.durationLabel.text = nil;
+        self.durationLabel.accessibilityLabel = nil;
     }
 }
 

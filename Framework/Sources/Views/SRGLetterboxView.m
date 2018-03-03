@@ -151,10 +151,10 @@ static void commonInit(SRGLetterboxView *self);
     
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
-    [self.mainView insertSubview:loadingImageView aboveSubview:self.playbackButton];
+    [self.mainView insertSubview:loadingImageView aboveSubview:self.controlsView];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.playbackButton.mas_centerX);
-        make.centerY.equalTo(self.playbackButton.mas_centerY);
+        make.centerX.equalTo(self.controlsView.mas_centerX);
+        make.centerY.equalTo(self.controlsView.mas_centerY);
     }];
     self.loadingImageView = loadingImageView;
     
@@ -455,7 +455,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self updateUserInterfaceForController:controller animated:NO];
-    [self updateTimeLabelsForController:controller];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -1008,33 +1007,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateTimeLabels
-{
-    [self updateTimeLabelsForController:self.controller];
-}
-
-- (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
-{
-    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
-    if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
-            && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
-        SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-        
-        NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
-        if (durationInSeconds < 60. * 60) {
-            self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-        }
-        else {
-            self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-        }
-        self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-    }
-    else {
-        self.durationLabel.text = nil;
-        self.durationLabel.accessibilityLabel = nil;
-    }
-}
-
 - (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     [self updateUserInterfaceForController:self.controller animated:animated];
@@ -1049,7 +1021,6 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
         [self updateAvailabilityForController:controller];
-        [self updateTimeLabelsForController:controller];
     }];
 }
 
@@ -1338,7 +1309,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateUserInterfaceAnimated:YES];
-    [self updateTimeLabels];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
