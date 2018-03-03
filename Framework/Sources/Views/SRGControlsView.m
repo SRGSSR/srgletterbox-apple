@@ -132,52 +132,34 @@
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
-    // Control visibility depends on the view size.
-    BOOL backwardSeekButtonHidden = NO;
-    BOOL forwardSeekButtonHidden = NO;
-    BOOL skipToLiveButtonHidden = NO;
-    BOOL viewModeButtonHidden = NO;
-    BOOL pictureInPictureButtonHidden = NO;
-    BOOL timeSliderHidden = NO;
-    BOOL durationLabelHidden = NO;
-    BOOL tracksButtonHidden = NO;
-    
+    // Control visibility depends on the view size.    
     CGFloat controlsHeight = CGRectGetHeight(self.frame);
     if (controlsHeight < 165.f) {
-        skipToLiveButtonHidden = YES;
-        timeSliderHidden = YES;
-        durationLabelHidden = YES;
+        self.skipToLiveButton.hidden = YES;
+        self.timeSlider.hidden = YES;
+        self.durationLabel.hidden = YES;
     }
     if (controlsHeight < 120.f) {
-        backwardSeekButtonHidden = YES;
-        forwardSeekButtonHidden = YES;
-        viewModeButtonHidden = YES;
-        pictureInPictureButtonHidden = YES;
-        tracksButtonHidden = YES;
+        self.backwardSeekButton.hidden = YES;
+        self.forwardSeekButton.hidden = YES;
+        self.viewModeButton.alwaysHidden = YES;
+        self.pictureInPictureButton.alwaysHidden = YES;
+        self.tracksButton.alwaysHidden = YES;
     }
     
     CGFloat controlsWidth = CGRectGetWidth(self.frame);
     if (controlsWidth < 290.f) {
-        skipToLiveButtonHidden = YES;
-        timeSliderHidden = YES;
-        durationLabelHidden = YES;
+        self.skipToLiveButton.hidden = YES;
+        self.timeSlider.hidden = YES;
+        self.durationLabel.hidden = YES;
     }
     if (controlsWidth < 215.f) {
-        backwardSeekButtonHidden = YES;
-        forwardSeekButtonHidden = YES;
-        viewModeButtonHidden = YES;
-        pictureInPictureButtonHidden = YES;
-        tracksButtonHidden = YES;
+        self.backwardSeekButton.hidden = YES;
+        self.forwardSeekButton.hidden = YES;
+        self.viewModeButton.alwaysHidden = YES;
+        self.pictureInPictureButton.alwaysHidden = YES;
+        self.tracksButton.alwaysHidden = YES;
     }
-    
-    self.backwardSeekButton.hidden = backwardSeekButtonHidden;
-    self.forwardSeekButton.hidden = forwardSeekButtonHidden;
-    self.skipToLiveButton.hidden = skipToLiveButtonHidden;
-    self.viewModeButton.alwaysHidden = viewModeButtonHidden;
-    self.pictureInPictureButton.alwaysHidden = pictureInPictureButtonHidden;
-    self.timeSlider.hidden = timeSliderHidden;
-    self.durationLabel.hidden = durationLabelHidden;
-    self.tracksButton.alwaysHidden = tracksButtonHidden;
 }
 
 - (void)updateFonts
