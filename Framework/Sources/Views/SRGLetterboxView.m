@@ -311,10 +311,12 @@ static void commonInit(SRGLetterboxView *self);
     
     _controller = controller;
     
+    // TODO: Can be automatically made recursively
     self.controlsView.controller = controller;
     self.errorView.controller = controller;
     self.availabilityView.controller = controller;
     self.continuousPlaybackView.controller = controller;
+    self.timelineView.controller = controller;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.

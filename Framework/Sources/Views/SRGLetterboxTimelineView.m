@@ -7,14 +7,13 @@
 #import "SRGLetterboxTimelineView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxView+Private.h"
 #import "SRGLetterboxSubdivisionCell.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
-
-static void commonInit(SRGLetterboxTimelineView *self);
 
 @interface SRGLetterboxTimelineView ()
 
@@ -23,24 +22,6 @@ static void commonInit(SRGLetterboxTimelineView *self);
 @end
 
 @implementation SRGLetterboxTimelineView
-
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
-    }
-    return self;
-}
 
 #pragma mark Getters and setters
 
@@ -82,6 +63,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.selectedIndex = NSNotFound;
+    self.backgroundColor = [UIColor clearColor];
     
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -238,17 +222,3 @@ static void commonInit(SRGLetterboxTimelineView *self);
 }
 
 @end
-
-static void commonInit(SRGLetterboxTimelineView *self)
-{
-    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-    // an SRGLetterboxTimelineView to avoid infinite recursion
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-    
-    self.selectedIndex = NSNotFound;
-    self.backgroundColor = [UIColor clearColor];
-}
