@@ -35,6 +35,8 @@
 {
     [super layoutSubviews];
     
+    self.messageLabel.numberOfLines = 3;
+    
     [self updateForController:self.controller];
 }
 
