@@ -115,38 +115,6 @@
                                 <outletCollection property="gestureRecognizers" destination="cSD-No-gUM" appends="YES" id="Llk-zp-Ezc"/>
                             </connections>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                            <rect key="frame" x="216.5" y="107.5" width="64" height="88"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
-                            <state key="normal" image="backward-48"/>
-                            <connections>
-                                <action selector="skipBackward:" destination="-1" eventType="touchUpInside" id="Loz-hP-9Pp"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                            <rect key="frame" x="280.5" y="120.5" width="20" height="62"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                            <rect key="frame" x="300.5" y="107.5" width="64" height="88"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
-                            <state key="normal" image="forward-48"/>
-                            <connections>
-                                <action selector="skipForward:" destination="-1" eventType="touchUpInside" id="3qu-4V-dhz"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                            <rect key="frame" x="364.5" y="107.5" width="64" height="88"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
-                            <state key="normal" image="back_live-48"/>
-                            <connections>
-                                <action selector="skipToLive:" destination="-1" eventType="touchUpInside" id="7Hl-Fn-8uD"/>
-                            </connections>
-                        </button>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
                             <rect key="frame" x="0.0" y="255" width="617" height="48"/>
                             <subviews>
@@ -209,7 +177,7 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Duration Label">
-                                    <rect key="frame" x="-34" y="0.0" width="361" height="48"/>
+                                    <rect key="frame" x="142" y="0.0" width="361" height="48"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -240,6 +208,38 @@
                                 <constraint firstAttribute="height" constant="48" id="0jf-HD-Oah"/>
                             </constraints>
                         </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
+                            <rect key="frame" x="216.5" y="107.5" width="64" height="88"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
+                            <state key="normal" image="backward-48"/>
+                            <connections>
+                                <action selector="skipBackward:" destination="-1" eventType="touchUpInside" id="Loz-hP-9Pp"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
+                            <rect key="frame" x="280.5" y="120.5" width="20" height="62"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
+                            <rect key="frame" x="300.5" y="107.5" width="64" height="88"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
+                            <state key="normal" image="forward-48"/>
+                            <connections>
+                                <action selector="skipForward:" destination="-1" eventType="touchUpInside" id="3qu-4V-dhz"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
+                            <rect key="frame" x="364.5" y="107.5" width="64" height="88"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
+                            <state key="normal" image="back_live-48"/>
+                            <connections>
+                                <action selector="skipToLive:" destination="-1" eventType="touchUpInside" id="7Hl-Fn-8uD"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
