@@ -17,8 +17,6 @@
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
-static void commonInit(SRGContinuousPlaybackView *self);
-
 @interface SRGContinuousPlaybackView ()
 
 @property (nonatomic, weak) IBOutlet UILabel *introLabel;
@@ -34,47 +32,29 @@ static void commonInit(SRGContinuousPlaybackView *self);
 
 @implementation SRGContinuousPlaybackView
 
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-        
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGContinuousPlaybackView. Manually
-        // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
-        [self awakeFromNib];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
-    }
-    return self;
-}
-
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
 {
-    if (_controller) {
-        [_controller removeObserver:self keyPath:@keypath(_controller.continuousPlaybackUpcomingMedia)];
+    SRGLetterboxController *previousController = super.controller;
+    
+    if (previousController) {
+        [previousController removeObserver:self keyPath:@keypath(previousController.continuousPlaybackUpcomingMedia)];
     }
     
-    _controller = controller;
+    super.controller = controller;
     
     if (controller) {
         @weakify(self)
+        @weakify(controller)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            [self refreshView];
+            @strongify(controller)
+            [self reloadDataForController:controller];
         }];
     }
     
-    [self refreshView];
+    [self reloadDataForController:controller];
 }
 
 #pragma mark Overrides
@@ -85,26 +65,6 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     self.introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
     [self.cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
-}
-
-- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    
-    if (newWindow) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(contentSizeCategoryDidChange:)
-                                                     name:UIContentSizeCategoryDidChangeNotification
-                                                   object:nil];
-        
-        [self refreshView];
-        [self updateFonts];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIContentSizeCategoryDidChangeNotification
-                                                      object:nil];
-    }
 }
 
 - (void)layoutSubviews
@@ -134,12 +94,22 @@ static void commonInit(SRGContinuousPlaybackView *self);
     self.cancelButton.hidden = cancelButtonHidden;
 }
 
-#pragma mark UI
-
-- (void)refreshView
+- (void)contentSizeCategoryDidChange
 {
+    [super contentSizeCategoryDidChange];
+    
+    self.introLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.titleLabel.font = [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+}
+
+- (void)reloadDataForController:(SRGLetterboxController *)controller
+{
+    [super reloadDataForController:controller];
+    
     // Only update with valid upcoming information
-    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
+    SRGMedia *upcomingMedia = controller.continuousPlaybackUpcomingMedia;
     if (! upcomingMedia) {
         return;
     }
@@ -157,19 +127,9 @@ static void commonInit(SRGContinuousPlaybackView *self);
     
     [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     
-    NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
-    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
+    NSTimeInterval duration = [controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:controller.continuousPlaybackTransitionStartDate];
+    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
     [self.remainingTimeButton setProgress:progress withDuration:duration];
-}
-
-#pragma mark Fonts
-
-- (void)updateFonts
-{
-    self.introLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.titleLabel.font = [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
-    self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
 #pragma mark Actions
@@ -191,23 +151,4 @@ static void commonInit(SRGContinuousPlaybackView *self);
     }
 }
 
-#pragma mark Notifications
-
-- (void)contentSizeCategoryDidChange:(NSNotification *)notification
-{
-    [self updateFonts];
-}
-
 @end
-
-static void commonInit(SRGContinuousPlaybackView *self)
-{
-    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-    // an SRGCountdownView to avoid infinite recursion
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    view.backgroundColor = [UIColor clearColor];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-}
