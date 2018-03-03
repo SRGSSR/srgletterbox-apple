@@ -74,10 +74,10 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s3j-tc-N2I" userLabel="Time Slider Centering View">
-                            <rect key="frame" x="144" y="0.0" width="16" height="48"/>
+                            <rect key="frame" x="144" y="0.0" width="223" height="48"/>
                             <subviews>
                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1p6-Al-g2u" customClass="SRGLetterboxTimeSlider">
-                                    <rect key="frame" x="6" y="13" width="4" height="23"/>
+                                    <rect key="frame" x="6" y="13" width="211" height="23"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="22" id="Iwb-lM-S2E"/>
                                     </constraints>
@@ -100,8 +100,8 @@
                                 <constraint firstItem="1p6-Al-g2u" firstAttribute="centerY" secondItem="s3j-tc-N2I" secondAttribute="centerY" id="gdL-0E-Ckz"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORs-3U-2nL" userLabel="Duration Label">
-                            <rect key="frame" x="160" y="0.0" width="243" height="48"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99:99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORs-3U-2nL" userLabel="Duration Label">
+                            <rect key="frame" x="367" y="0.0" width="36" height="48"/>
                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
