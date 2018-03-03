@@ -12,6 +12,7 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGLetterboxView+Private.h"
 #import "UIFont+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
@@ -23,9 +24,6 @@
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
 @property (nonatomic, weak) IBOutlet UIStackView *controlsStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
@@ -35,6 +33,13 @@
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToSelfBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToSafeAreaBottomConstraint;
+
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
 @end
 
@@ -194,9 +199,9 @@
     }
 }
 
-- (void)updateLayoutForController:(SRGLetterboxController *)controller
+- (void)updateLayoutForController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [super updateLayoutForController:controller];
+    [super updateLayoutForController:controller view:view userInterfaceHidden:userInterfaceHidden];
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
@@ -232,6 +237,19 @@
     }
     else {
         self.playbackButton.alpha = 1.f;
+    }
+    
+    static const CGFloat kBottomConstraintGreaterPriority = 950.f;
+    static const CGFloat kBottomConstraintLesserPriority = 850.f;
+    
+    CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(view, userInterfaceHidden);
+    if (timelineHeight != 0.f) {
+        self.controlsStackViewToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
+        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
+    }
+    else {
+        self.controlsStackViewToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
+        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
     }
 }
 

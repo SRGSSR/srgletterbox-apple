@@ -62,9 +62,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToControlsViewBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToSafeAreaBottomConstraint;
-
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
@@ -713,15 +710,12 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    NSArray<SRGSubdivision *> *subdivisions = [self subdivisionsForMediaComposition:controller.mediaComposition];
-    SRGLetterboxViewBehavior timelineBehavior = [self timelineBehaviorForController:controller];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(self, userInterfaceHidden);
+    self.timelineHeightConstraint.constant = timelineHeight;
     
     // Scroll to selected index when opening the timeline
     BOOL isTimelineVisible = (timelineHeight != 0.f);
     BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && isTimelineVisible);
-    self.timelineHeightConstraint.constant = timelineHeight;
-    
     if (shouldFocus) {
         [self.timelineView scrollToSelectedIndexAnimated:NO];
     }
@@ -732,25 +726,19 @@ static void commonInit(SRGLetterboxView *self);
     if (isTimelineVisible) {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
-        
-        self.controlsStackViewToControlsViewBottomConstraint.priority = kBottomConstraintGreaterPriority;
-        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
     }
     else {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
-        
-        self.controlsStackViewToControlsViewBottomConstraint.priority = kBottomConstraintLesserPriority;
-        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
     }
         
     return timelineHeight;
 }
 
 // TODO: Remove, this method should not be required anymore (controls view implements it)
-- (void)updateControlsLayoutForController:(SRGLetterboxController *)controller
+- (void)updateControlsLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [self.controlsView updateLayoutForController:controller];
+    [self.controlsView updateLayoutForController:controller view:self userInterfaceHidden:userInterfaceHidden];
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
@@ -784,7 +772,7 @@ static void commonInit(SRGLetterboxView *self);
         BOOL userInterfaceHidden = [self updateLayoutForController:controller];
         CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayout];
-        [self updateControlsLayoutForController:controller];
+        [self updateControlsLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
         
         self.notificationHeightConstraint.constant = notificationHeight;
         
@@ -1240,4 +1228,12 @@ NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
     else {
         return nil;
     }
+}
+
+CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfaceHidden)
+{
+    SRGLetterboxController *controller = view.controller;
+    NSArray<SRGSubdivision *> *subdivisions = [view subdivisionsForMediaComposition:controller.mediaComposition];
+    SRGLetterboxViewBehavior timelineBehavior = [view timelineBehaviorForController:controller];
+    return (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? view.preferredTimelineHeight : 0.f;
 }

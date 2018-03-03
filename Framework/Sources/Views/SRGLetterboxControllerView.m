@@ -22,7 +22,7 @@
 - (void)updateForController:(SRGLetterboxController *)controller
 {}
 
-- (void)updateLayoutForController:(SRGLetterboxController *)controller
+- (void)updateLayoutForController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
 {}
 
 @end

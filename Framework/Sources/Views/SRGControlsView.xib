@@ -20,6 +20,8 @@
                 <outlet property="airplayButton" destination="xno-LT-xef" id="5c8-TN-6ST"/>
                 <outlet property="backwardSeekButton" destination="fsV-iR-Pxo" id="UWb-1Y-8cg"/>
                 <outlet property="controlsStackView" destination="cGq-uz-ZWW" id="4E0-AV-FCJ"/>
+                <outlet property="controlsStackViewToSafeAreaBottomConstraint" destination="JBV-zU-h3g" id="CNG-k1-wS7"/>
+                <outlet property="controlsStackViewToSelfBottomConstraint" destination="mxw-0M-QS6" id="yU2-Hg-LAb"/>
                 <outlet property="durationLabel" destination="ORs-3U-2nL" id="hDZ-S7-Fpz"/>
                 <outlet property="forwardSeekButton" destination="sJC-uY-JVi" id="0Hb-iJ-qFF"/>
                 <outlet property="horizontalSpacingForwardToSkipToLiveConstraint" destination="C2n-59-Cwy" id="k2n-bt-IBI"/>

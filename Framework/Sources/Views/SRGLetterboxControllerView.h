@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxController.h"
 #import "SRGLetterboxBaseView.h"
+#import "SRGLetterboxView.h"
 
 #import <UIKit/UIKit.h>
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
 - (void)updateForController:(nullable SRGLetterboxController *)controller NS_REQUIRES_SUPER;
-- (void)updateLayoutForController:(nullable SRGLetterboxController *)controller NS_REQUIRES_SUPER;
+- (void)updateLayoutForController:(nullable SRGLetterboxController *)controller view:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden  NS_REQUIRES_SUPER;
 
 @end
 
