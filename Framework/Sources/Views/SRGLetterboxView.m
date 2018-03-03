@@ -348,6 +348,7 @@ static void commonInit(SRGLetterboxView *self);
     _controller = controller;
     
     self.controlsView.controller = controller;
+    self.errorView.controller = controller;
     self.availabilityView.controller = controller;
     self.continuousPlaybackView.controller = controller;
     
@@ -484,24 +485,6 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
-- (NSError *)errorForController:(SRGLetterboxController *)controller
-{
-    NSError *error = controller.error;
-    if (error) {
-        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
-        // displayed instead)
-        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
-            return nil;
-        }
-        else {
-            return error;
-        }
-    }
-    else {
-        return nil;
-    }
-}
-
 - (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
 {
     SRGBlockingReason blockingReason = [controller.media blockingReasonAtDate:[NSDate date]];
@@ -520,7 +503,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Controls and error overlays must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
-    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
     BOOL hasMedia = controller.media || controller.URN;
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
@@ -543,7 +526,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
     // Timeline and error overlays must be displayed at the same time.
-    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
@@ -736,7 +719,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
     self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
-    BOOL hasError = ([self errorForController:controller] != nil);
+    BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
     BOOL hasMedia = controller.media || controller.URN;
     BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller] && ! isContinuousPlaybackViewVisible;
@@ -1303,4 +1286,22 @@ static void commonInit(SRGLetterboxView *self)
 #endif
     
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+}
+
+NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
+{
+    NSError *error = controller.error;
+    if (error) {
+        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
+        // displayed instead)
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+            return nil;
+        }
+        else {
+            return error;
+        }
+    }
+    else {
+        return nil;
+    }
 }

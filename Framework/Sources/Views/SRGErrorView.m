@@ -52,22 +52,14 @@
 {
     [super updateForController:controller];
     
-    // TODO: Centering issues
+    NSError *error =  SRGLetterboxViewErrorForController(controller);
+    UIImage *image = [UIImage srg_letterboxImageForError:error];
+    self.imageView.image = image;
+    self.messageLabel.text = error.localizedDescription;
     self.instructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
     
-    // TODO: Warning, image view visibility depends on both layout size and image availability
-#if 0
-    NSError *error = [self errorForController:controller];
-    
-    UIImage *image = [UIImage srg_letterboxImageForError:error];
-    self.errorImageView.image = image;
-    self.errorImageView.hidden = (image == nil);            // Hidden so that the stack view wrapper can adjust its layout properly
-    
-    self.errorLabel.text = error.localizedDescription;
-#endif
-    
     self.imageView.hidden = NO;
-    self.instructionsLabel.hidden = NO;
+    self.instructionsLabel.hidden = (image == nil);     // Hide if empty so that the stack view wrapper can adjust its layout properly
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 170.f) {
