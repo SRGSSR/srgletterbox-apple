@@ -37,10 +37,6 @@
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 
-// TODO: Make full screen button replication easier, e.g. by adding it automatically to all overlays which declare
-//       they don't have one (subclassing hook returning the button itself, probably letting the view insert the button
-//       where it wants). Remove countdown wrapper view introduced for this purpose. Automatically set constraints
-
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
 static void commonInit(SRGLetterboxView *self);
@@ -52,12 +48,11 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *playbackView;
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
-@property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
-@property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
-@property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
-@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
-
 @property (nonatomic, weak) IBOutlet SRGNotificationView *notificationView;
+@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
+@property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
+@property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
+@property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
 
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
