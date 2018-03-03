@@ -40,9 +40,9 @@
     [self updateForController:self.controller];
 }
 
-- (void)updateForContentSizeCategory
+- (void)contentSizeCategoryDidChange
 {
-    [super updateForContentSizeCategory];
+    [super contentSizeCategoryDidChange];
     
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];

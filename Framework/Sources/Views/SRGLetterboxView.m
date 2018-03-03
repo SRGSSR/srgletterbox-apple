@@ -57,7 +57,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
-
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
 
@@ -103,7 +102,7 @@ static void commonInit(SRGLetterboxView *self);
     if (self = [super initWithFrame:frame]) {
         commonInit(self);
         
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGLetterboxView. Manually
+        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an `SRGLetterboxView`. Manually
         // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
         [self awakeFromNib];
     }
@@ -129,6 +128,9 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super awakeFromNib];
     
+    self.accessibilityView.letterboxView = self;
+    self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
+    
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
     [self insertSubview:loadingImageView aboveSubview:self.controlsView];
@@ -138,16 +140,13 @@ static void commonInit(SRGLetterboxView *self);
     }];
     self.loadingImageView = loadingImageView;
     
-    self.accessibilityView.letterboxView = self;
-    self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
-    
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
     
     self.availabilityView.alpha = 0.f;
-    self.timelineHeightConstraint.constant = 0.f;
-    
     self.errorView.hidden = YES;
+    
+    self.timelineHeightConstraint.constant = 0.f;
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
@@ -172,7 +171,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (newWindow) {
         [self updateUserInterfaceAnimated:NO];
-        [self updateAccessibility];
+        [self voiceOverStatusDidChange];
         [self reloadData];
         [self registerUserInterfaceUpdateTimers];
         
@@ -249,7 +248,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Accessibility
 
-- (void)updateAccessibility
+- (void)voiceOverStatusDidChange
 {
     if (UIAccessibilityIsVoiceOverRunning()) {
         self.accessibilityView.alpha = 1.f;
@@ -1180,7 +1179,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
 {
-    [self updateAccessibility];
+    [self voiceOverStatusDidChange];
 }
 
 @end
