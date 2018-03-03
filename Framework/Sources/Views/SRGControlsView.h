@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
+#import "SRGLetterboxControllerView.h"
 
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <UIKit/UIKit.h>
@@ -26,12 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Internal view class for controls layout.
  */
-@interface SRGControlsView : UIView <SRGTimeSliderDelegate>
-
-/**
- *  The attached controller.
- */
-@property (nonatomic, weak, nullable) SRGLetterboxController *controller;
+@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate>
 
 /**
  *  View optional delegate.
@@ -61,8 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
  *              player position.
  */
 @property (nonatomic, readonly, getter=isLive) BOOL live;
-
-- (void)updateLayoutForController:(SRGLetterboxController *)controller;
 
 @end
 

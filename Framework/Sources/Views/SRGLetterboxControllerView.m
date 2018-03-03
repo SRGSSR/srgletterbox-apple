@@ -22,4 +22,7 @@
 - (void)updateForController:(SRGLetterboxController *)controller
 {}
 
+- (void)updateLayoutForController:(SRGLetterboxController *)controller
+{}
+
 @end

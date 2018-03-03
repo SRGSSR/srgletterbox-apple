@@ -42,21 +42,6 @@
 
 #pragma mark Getters and setters
 
-- (void)setController:(SRGLetterboxController *)controller
-{
-    _controller = controller;
-    
-    self.playbackButton.controller = controller;
-    
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
-    self.airplayButton.mediaPlayerController = mediaPlayerController;
-    self.tracksButton.mediaPlayerController = mediaPlayerController;
-    self.timeSlider.mediaPlayerController = mediaPlayerController;
-    
-    self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
-}
-
 - (CMTime)time
 {
     return self.timeSlider.time;
@@ -83,7 +68,6 @@
     self.skipToLiveButton.alpha = 0.f;
     
     self.timeSlider.alpha = 0.f;
-    self.timeSlider.timeLeftValueLabel.hidden = YES;
     self.timeSlider.resumingAfterSeek = NO;
     self.timeSlider.delegate = self;
     
@@ -171,78 +155,25 @@
     }
 }
 
-- (void)updateFonts
+- (void)setController:(SRGLetterboxController *)controller
 {
-    self.timeSlider.timeLeftValueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-}
-
-- (void)updateLayoutForController:(SRGLetterboxController *)controller
-{
+    super.controller = controller;
+    
+    self.playbackButton.controller = controller;
+    
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
+    self.airplayButton.mediaPlayerController = mediaPlayerController;
+    self.tracksButton.mediaPlayerController = mediaPlayerController;
+    self.timeSlider.mediaPlayerController = mediaPlayerController;
     
-    // General playback controls
-    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        self.forwardSeekButton.alpha = 0.f;
-        self.backwardSeekButton.alpha = 0.f;
-        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
-        
-        self.timeSlider.alpha = 0.f;
-        self.timeSlider.timeLeftValueLabel.hidden = YES;
-    }
-    else {
-        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
-        
-        switch (mediaPlayerController.streamType) {
-            case SRGMediaPlayerStreamTypeOnDemand: {
-                self.timeSlider.alpha = 1.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-                break;
-            }
-                
-            case SRGMediaPlayerStreamTypeLive: {
-                self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
-                break;
-            }
-                
-            case SRGMediaPlayerStreamTypeDVR: {
-                self.timeSlider.alpha = 1.f;
-                // Hide timeLeftValueLabel to give the width space to the timeSlider
-                self.timeSlider.timeLeftValueLabel.hidden = YES;
-                break;
-            }
-                
-            default: {
-                self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = YES;
-                break;
-            }
-        }
-    }
-    
-    // Play button / loading indicator visibility
-    // TODO: Factor out
-    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-    
-    BOOL visible = isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
-    if (visible) {
-        self.playbackButton.alpha = 0.f;
-    }
-    else {
-        self.playbackButton.alpha = 1.f;
-    }
+    self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
 }
 
-// TODO: Perform at the proper location. Currently not called anymore
-- (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
+- (void)updateForController:(SRGLetterboxController *)controller
 {
+    [super updateForController:controller];
+    
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
             && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
@@ -260,6 +191,47 @@
     else {
         self.durationLabel.text = nil;
         self.durationLabel.accessibilityLabel = nil;
+    }
+}
+
+- (void)updateLayoutForController:(SRGLetterboxController *)controller
+{
+    [super updateLayoutForController:controller];
+    
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    
+    // General playback controls
+    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        self.forwardSeekButton.alpha = 0.f;
+        self.backwardSeekButton.alpha = 0.f;
+        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        
+        self.timeSlider.alpha = 0.f;
+    }
+    else {
+        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        
+        SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
+        self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+    }
+    
+    // Play button / loading indicator visibility
+    // TODO: Factor out
+    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
+        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
+    
+    BOOL visible = isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
+    if (visible) {
+        self.playbackButton.alpha = 0.f;
+    }
+    else {
+        self.playbackButton.alpha = 1.f;
     }
 }
 

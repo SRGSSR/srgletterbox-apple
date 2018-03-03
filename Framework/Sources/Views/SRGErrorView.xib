@@ -18,7 +18,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="Cn3-Wc-3wA" userLabel="Error View">
+        <view contentMode="scaleToFill" id="Cn3-Wc-3wA" userLabel="Main View">
             <rect key="frame" x="0.0" y="0.0" width="452" height="345"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
