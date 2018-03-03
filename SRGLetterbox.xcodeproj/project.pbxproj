@@ -91,6 +91,7 @@
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
 		6F78EBAD204AF28D008B0FCA /* SRGLetterboxBaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F78EBAB204AF28D008B0FCA /* SRGLetterboxBaseView.h */; };
 		6F78EBAE204AF28D008B0FCA /* SRGLetterboxBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F78EBAC204AF28D008B0FCA /* SRGLetterboxBaseView.m */; };
+		6F78EBB0204B00A5008B0FCA /* SRGErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F78EBAF204B00A5008B0FCA /* SRGErrorView.xib */; };
 		6F919BD4202DA48E000DD351 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */; };
 		6F919BD5202DA48E000DD351 /* SRGRemainingTimeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
@@ -397,6 +398,7 @@
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6F78EBAB204AF28D008B0FCA /* SRGLetterboxBaseView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxBaseView.h; sourceTree = "<group>"; };
 		6F78EBAC204AF28D008B0FCA /* SRGLetterboxBaseView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxBaseView.m; sourceTree = "<group>"; };
+		6F78EBAF204B00A5008B0FCA /* SRGErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SRGErrorView.xib; sourceTree = "<group>"; };
 		6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGRemainingTimeButton.h; sourceTree = "<group>"; };
 		6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGRemainingTimeButton.m; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
@@ -684,6 +686,7 @@
 				6FB4422E201F1FC600FA5AF8 /* SRGCountdownView.xib */,
 				6F555838204AD31000878A97 /* SRGErrorView.h */,
 				6F555839204AD31000878A97 /* SRGErrorView.m */,
+				6F78EBAF204B00A5008B0FCA /* SRGErrorView.xib */,
 				6FDF33B21F012DA200BA1D6E /* SRGFullScreenButton.h */,
 				6FDF33B31F012DA200BA1D6E /* SRGFullScreenButton.m */,
 				6F78EBAB204AF28D008B0FCA /* SRGLetterboxBaseView.h */,
@@ -1066,6 +1069,7 @@
 				6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */,
 				6FE844F31E605CDA00F90F67 /* SRGLetterboxSubdivisionCell.xib in Resources */,
 				08FA0CBB1E2E5874000C94EF /* Images.xcassets in Resources */,
+				6F78EBB0204B00A5008B0FCA /* SRGErrorView.xib in Resources */,
 				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
 				6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */,
 				6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */,

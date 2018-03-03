@@ -14,53 +14,46 @@
 
 @interface SRGErrorView ()
 
-@property (nonatomic, weak) IBOutlet UIImageView *errorImageView;
-@property (nonatomic, weak) IBOutlet UILabel *errorLabel;
-@property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
+@property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
 
 @end
 
 @implementation SRGErrorView
 
+#pragma mark Overrides
+
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     
-    self.errorImageView.image = nil;
-    self.errorImageView.hidden = YES;
-    
-    self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
+    self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
-    // Error view layout depends on the view size
-    self.errorImageView.hidden = NO;
-    self.errorInstructionsLabel.hidden = NO;
-    
-    CGFloat height = CGRectGetHeight(self.frame);
-    if (height < 170.f) {
-        self.errorInstructionsLabel.hidden = YES;
-    }
-    if (height < 140.f) {
-        self.errorImageView.hidden = YES;
-    }
+    [self updateForController:self.controller];
 }
 
-- (void)updateFonts
+- (void)updateForContentSizeCategory
 {
-    self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
-    self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    [super updateForContentSizeCategory];
+    
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
 - (void)updateForController:(SRGLetterboxController *)controller
 {
-    // TODO: Centering issues
-    self.errorInstructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    [super updateForController:controller];
     
-    // TODO
+    // TODO: Centering issues
+    self.instructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    
+    // TODO: Warning, image view visibility depends on both layout size and image availability
 #if 0
     NSError *error = [self errorForController:controller];
     
@@ -70,6 +63,17 @@
     
     self.errorLabel.text = error.localizedDescription;
 #endif
+    
+    self.imageView.hidden = NO;
+    self.instructionsLabel.hidden = NO;
+    
+    CGFloat height = CGRectGetHeight(self.frame);
+    if (height < 170.f) {
+        self.instructionsLabel.hidden = YES;
+    }
+    if (height < 140.f) {
+        self.imageView.hidden = YES;
+    }
 }
 
 @end

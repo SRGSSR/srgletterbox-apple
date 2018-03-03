@@ -4,15 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
+#import "SRGLetterboxControllerView.h"
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SRGErrorView : UIView
-
-- (void)updateForController:(SRGLetterboxController *)controller;
+@interface SRGErrorView : SRGLetterboxControllerView
 
 @end
 
