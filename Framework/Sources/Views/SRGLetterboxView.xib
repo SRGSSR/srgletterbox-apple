@@ -18,7 +18,6 @@
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="X1U-mA-f72"/>
                 <outlet property="imageView" destination="gv4-Rp-xBi" id="OaD-1O-nnk"/>
-                <outlet property="mainView" destination="ZVz-wN-LVi" id="How-3U-mon"/>
                 <outlet property="notificationView" destination="aun-4y-dBi" id="M09-fc-S7k"/>
                 <outlet property="playbackView" destination="diO-OC-keM" id="0ga-MU-4Fp"/>
                 <outlet property="showUserInterfaceTapGestureRecognizer" destination="MQv-Za-8Ye" id="kQb-jX-UeC"/>

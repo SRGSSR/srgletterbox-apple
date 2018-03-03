@@ -47,8 +47,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
-@property (nonatomic, weak) IBOutlet UIView *mainView;
-
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *playbackView;
@@ -141,7 +139,7 @@ static void commonInit(SRGLetterboxView *self);
     
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
     loadingImageView.alpha = 0.f;
-    [self.mainView insertSubview:loadingImageView aboveSubview:self.controlsView];
+    [self insertSubview:loadingImageView aboveSubview:self.controlsView];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.controlsView.mas_centerX);
         make.centerY.equalTo(self.controlsView.mas_centerY);
@@ -164,7 +162,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
                                                                                                             action:@selector(resetInactivityTimer:)];
     activityGestureRecognizer.delegate = self;
-    [self.mainView addGestureRecognizer:activityGestureRecognizer];
+    [self addGestureRecognizer:activityGestureRecognizer];
     
     self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
     
