@@ -11,6 +11,7 @@
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
+#import "SRGAvailabilityView.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
 #import "SRGCountdownView.h"
@@ -51,6 +52,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
+@property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
 
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
@@ -58,11 +60,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIImageView *errorImageView;
 @property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 @property (nonatomic, weak) IBOutlet UILabel *errorInstructionsLabel;
-
-@property (nonatomic, weak) IBOutlet UIView *availabilityView;
-@property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
-@property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
-@property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
@@ -167,8 +164,6 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorInstructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
-    self.availabilityView.alpha = 0.f;
-    
     self.errorView.hidden = YES;
     
     self.accessibilityView.letterboxView = self;
@@ -202,8 +197,6 @@ static void commonInit(SRGLetterboxView *self);
     }];
     
     self.accessibilityView.isAccessibilityElement = YES;
-    
-    self.availabilityLabelBackgroundView.layer.cornerRadius = 4.f;
     
     [self reloadData];
 }
@@ -295,9 +288,6 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-        
-    // The availability component layout depends on the view size. Update appearance
-    [self updateAvailabilityForController:self.controller];
     
     // Error view layout depends on the view size
     self.errorImageView.hidden = NO;
@@ -319,8 +309,6 @@ static void commonInit(SRGLetterboxView *self);
     self.errorLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.errorInstructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
-    
-    [self updateAvailabilityForController:self.controller];
 }
 
 #pragma mark Accessibility
@@ -382,13 +370,12 @@ static void commonInit(SRGLetterboxView *self);
         if (previousMediaPlayerController.view.superview == self.playerView) {
             [previousMediaPlayerController.view removeFromSuperview];
         }
-        
-        [self updateAvailabilityForController:controller];
     }
     
     _controller = controller;
     
     self.controlsView.controller = controller;
+    self.availabilityView.controller = controller;
     self.continuousPlaybackView.controller = controller;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
@@ -698,79 +685,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorLabel.text = error.localizedDescription;
     
-    [self updateAvailabilityForController:controller];
-}
-
-- (void)updateAvailabilityForController:(SRGLetterboxController *)controller
-{
-    SRGMedia *media = controller.media;
-    self.availabilityLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
-    
-    SRGBlockingReason blockingReason = [media blockingReasonAtDate:[NSDate date]];
-    if (blockingReason == SRGBlockingReasonEndDate) {
-        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
-        self.availabilityLabel.hidden = NO;
-        self.availabilityLabelBackgroundView.hidden = NO;
-        
-        self.countdownView.hidden = YES;
-    }
-    else if (blockingReason == SRGBlockingReasonStartDate) {
-        NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
-        NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
-        
-        // Large number of days. Label only
-        if (dateComponents.day >= SRGCountdownViewDaysLimit) {
-            static NSDateComponentsFormatter *s_dateComponentsFormatter;
-            static dispatch_once_t s_onceToken;
-            dispatch_once(&s_onceToken, ^{
-                s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-                s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
-                s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-            });
-            
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
-            self.availabilityLabel.hidden = NO;
-            self.availabilityLabelBackgroundView.hidden = NO;
-            
-            self.countdownView.hidden = YES;
-        }
-        // Tiny layout
-        else if (CGRectGetWidth(self.frame) < 290.f) {
-            NSString *availabilityLabelText = nil;
-            if (dateComponents.day > 0) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
-            }
-            else if (timeIntervalBeforeStart >= 60. * 60.) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
-            }
-            else if (timeIntervalBeforeStart >= 0) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
-            }
-            else {
-                availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
-            }
-            
-            self.availabilityLabel.hidden = NO;
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
-            self.availabilityLabelBackgroundView.hidden = NO;
-            
-            self.countdownView.hidden = YES;
-        }
-        // Large layout
-        else {
-            self.availabilityLabel.hidden = YES;
-            self.availabilityLabelBackgroundView.hidden = YES;
-            
-            self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
-            self.countdownView.hidden = NO;
-        }
-    }
-    else {
-        self.availabilityLabel.hidden = YES;
-        self.availabilityLabelBackgroundView.hidden = YES;
-        
-        self.countdownView.hidden = YES;
-    }
+    [self.availabilityView updateAvailabilityForController:controller];
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -1025,7 +940,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
-        [self updateAvailabilityForController:controller];
+        [self.availabilityView updateAvailabilityForController:controller];
     }];
 }
 

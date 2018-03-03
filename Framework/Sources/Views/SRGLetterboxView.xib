@@ -19,15 +19,12 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGLetterboxView">
             <connections>
                 <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
-                <outlet property="availabilityLabel" destination="gY1-0w-vfr" id="5Gf-M7-FVx"/>
-                <outlet property="availabilityLabelBackgroundView" destination="itD-sp-6vZ" id="fGv-b8-aOY"/>
-                <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
+                <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Vms-yM-ckf"/>
                 <outlet property="continuousPlaybackView" destination="7IC-Zz-0Qp" id="TgK-ix-TeL"/>
                 <outlet property="continuousPlaybackWrapperView" destination="In0-qW-XO1" id="W22-2O-X6X"/>
                 <outlet property="controlsStackViewToControlsViewBottomConstraint" destination="GWH-14-Qfa" id="85c-IA-PVD"/>
                 <outlet property="controlsStackViewToSafeAreaBottomConstraint" destination="n4N-fl-i2I" id="Z4G-pI-1l9"/>
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
-                <outlet property="countdownView" destination="Kqh-PW-yvN" id="6QH-6J-Ib1"/>
                 <outlet property="errorImageView" destination="Qcj-e1-NDt" id="Ljv-hb-gKX"/>
                 <outlet property="errorInstructionsLabel" destination="GOa-XY-Rd1" id="q6b-Qo-fXV"/>
                 <outlet property="errorLabel" destination="2BA-1U-foT" id="uYU-zE-umn"/>
@@ -307,7 +304,7 @@
                         <constraint firstAttribute="height" id="eCB-ci-0lC"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Availability View">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Availability View" customClass="SRGAvailabilityView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kqh-PW-yvN" customClass="SRGCountdownView">
@@ -352,6 +349,11 @@
                         <constraint firstItem="gY1-0w-vfr" firstAttribute="centerX" secondItem="Ipy-eN-bUs" secondAttribute="centerX" id="mAD-3q-vfI"/>
                         <constraint firstItem="gY1-0w-vfr" firstAttribute="centerY" secondItem="Ipy-eN-bUs" secondAttribute="centerY" id="reL-DS-z6M"/>
                     </constraints>
+                    <connections>
+                        <outlet property="availabilityLabel" destination="gY1-0w-vfr" id="hod-xY-SyK"/>
+                        <outlet property="availabilityLabelBackgroundView" destination="itD-sp-6vZ" id="1Z8-I2-flA"/>
+                        <outlet property="countdownView" destination="Kqh-PW-yvN" id="18U-4y-1tI"/>
+                    </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In0-qW-XO1">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
