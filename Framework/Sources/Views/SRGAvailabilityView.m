@@ -31,18 +31,28 @@
     self.messageBackgroundView.layer.cornerRadius = 4.f;
 }
 
-#pragma mark Subclassing hooks
-
-- (void)updateFonts
+- (void)layoutSubviews
 {
+    [super layoutSubviews];
+    
+    // The availability component layout depends on the view size.
+    [self updateForController:self.controller];
+}
+
+- (void)updateForContentSizeCategory
+{
+    [super updateForContentSizeCategory];
+
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
 - (void)updateForController:(SRGLetterboxController *)controller
 {
+    [super updateForController:controller];
+    
     SRGMedia *media = controller.media;
     
-    SRGBlockingReason blockingReason = [media blockingReasonAtDate:[NSDate date]];
+    SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
     if (blockingReason == SRGBlockingReasonEndDate) {
         self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
         self.messageLabel.hidden = NO;

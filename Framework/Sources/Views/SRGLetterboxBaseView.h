@@ -10,8 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SRGLetterboxBaseView : UIView
 
-- (void)updateFonts;
-- (void)updateAccessibility;
+- (void)updateForContentSizeCategory NS_REQUIRES_SUPER;
+- (void)updateForAccessibility NS_REQUIRES_SUPER;
 
 @end
 

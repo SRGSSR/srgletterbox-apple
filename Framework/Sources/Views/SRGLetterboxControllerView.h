@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
-- (void)updateForController:(nullable SRGLetterboxController *)controller;
+- (void)updateForController:(nullable SRGLetterboxController *)controller NS_REQUIRES_SUPER;
 
 @end
 

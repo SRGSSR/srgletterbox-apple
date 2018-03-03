@@ -43,8 +43,8 @@ static void commonInit(SRGLetterboxBaseView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateFonts];
-        [self updateAccessibility];
+        [self updateForContentSizeCategory];
+        [self updateForAccessibility];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(contentSizeCategoryDidChange:)
@@ -67,22 +67,22 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 #pragma mark Subclassing hooks
 
-- (void)updateFonts
+- (void)updateForContentSizeCategory
 {}
 
-- (void)updateAccessibility
+- (void)updateForAccessibility
 {}
 
 #pragma mark Notifications
 
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification
 {
-    [self updateFonts];
+    [self updateForContentSizeCategory];
 }
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
 {
-    [self updateAccessibility];
+    [self updateForAccessibility];
 }
 
 @end
