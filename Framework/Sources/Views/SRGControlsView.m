@@ -240,6 +240,7 @@
     }
 }
 
+// TODO: Perform at the proper location. Currently not called anymore
 - (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
 {
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
