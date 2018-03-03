@@ -36,26 +36,6 @@ static void commonInit(SRGLetterboxBaseView *self);
     return self;
 }
 
-#pragma mark Getters and setters
-
-- (void)setController:(SRGLetterboxController *)controller
-{
-    _controller = controller;
-    
-    [self updateForController:controller];
-}
-
-#pragma mark Subclassing hooks
-
-- (void)updateFonts
-{}
-
-- (void)updateAccessibility;
-{}
-
-- (void)updateForController:(SRGLetterboxController *)controller
-{}
-
 #pragma mark Overrides
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -84,6 +64,14 @@ static void commonInit(SRGLetterboxBaseView *self);
                                                       object:nil];
     }
 }
+
+#pragma mark Subclassing hooks
+
+- (void)updateFonts
+{}
+
+- (void)updateAccessibility
+{}
 
 #pragma mark Notifications
 

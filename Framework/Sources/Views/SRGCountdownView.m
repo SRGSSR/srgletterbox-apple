@@ -14,8 +14,6 @@
 
 NSInteger SRGCountdownViewDaysLimit = 100;
 
-static void commonInit(SRGCountdownView *self);
-
 @interface SRGCountdownView ()
 
 @property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
@@ -54,28 +52,6 @@ static void commonInit(SRGCountdownView *self);
 @end
 
 @implementation SRGCountdownView
-
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-        
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an SRGCountdownView. Manually
-        // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
-        [self awakeFromNib];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
-    }
-    return self;
-}
 
 #pragma mark Overrides
 
@@ -289,18 +265,6 @@ static void commonInit(SRGCountdownView *self);
 }
 
 @end
-
-static void commonInit(SRGCountdownView *self)
-{
-    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-    // an SRGCountdownView to avoid infinite recursion
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    view.backgroundColor = [UIColor clearColor];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-}
 
 NSDateComponents *SRGDateComponentsForTimeIntervalSinceNow(NSTimeInterval timeInterval)
 {

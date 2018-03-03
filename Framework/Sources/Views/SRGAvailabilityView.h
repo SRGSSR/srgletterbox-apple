@@ -4,14 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxBaseView.h"
+#import "SRGLetterboxControllerView.h"
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 IB_DESIGNABLE
-@interface SRGAvailabilityView : SRGLetterboxBaseView
+@interface SRGAvailabilityView : SRGLetterboxControllerView
 
 @end
 

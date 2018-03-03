@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <UIKit/UIKit.h>
+#import "SRGLetterboxBaseView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +24,7 @@ OBJC_EXPORT NSInteger SRGCountdownViewDaysLimit;
  *  A simple view displaying a remaining time (in seconds) as a fancy countdown.
  */
 IB_DESIGNABLE
-@interface SRGCountdownView : UIView
+@interface SRGCountdownView : SRGLetterboxBaseView
 
 /**
  *  The remaining time to be displayed (in seconds).
