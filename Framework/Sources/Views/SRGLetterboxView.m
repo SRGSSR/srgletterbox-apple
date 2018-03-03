@@ -384,6 +384,7 @@ static void commonInit(SRGLetterboxView *self);
     
     _controller = controller;
     
+    self.controlsView.controller = controller;
     self.continuousPlaybackView.controller = controller;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
