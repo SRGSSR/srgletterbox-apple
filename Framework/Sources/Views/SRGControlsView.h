@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Internal view class for controls layout.
  */
+IB_DESIGNABLE
 @interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate>
 
 /**

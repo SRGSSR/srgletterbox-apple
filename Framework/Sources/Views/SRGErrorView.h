@@ -10,6 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+IB_DESIGNABLE
 @interface SRGErrorView : SRGLetterboxControllerView
 
 @end
