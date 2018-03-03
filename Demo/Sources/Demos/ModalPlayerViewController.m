@@ -419,7 +419,7 @@
 - (IBAction)changeMargins:(UISlider *)slider
 {
     [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        constraint.constant = slider.value;
+        constraint.constant = slider.maximumValue - slider.value;
     }];
 }
 
