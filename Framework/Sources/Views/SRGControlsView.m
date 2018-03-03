@@ -132,7 +132,16 @@
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
-    // Control visibility depends on the view size.    
+    // Control visibility depends on the view size.
+    self.skipToLiveButton.hidden = NO;
+    self.timeSlider.hidden = NO;
+    self.durationLabel.hidden = NO;
+    self.backwardSeekButton.hidden = NO;
+    self.forwardSeekButton.hidden = NO;
+    self.viewModeButton.alwaysHidden = NO;
+    self.pictureInPictureButton.alwaysHidden = NO;
+    self.tracksButton.alwaysHidden = YES;
+    
     CGFloat controlsHeight = CGRectGetHeight(self.frame);
     if (controlsHeight < 165.f) {
         self.skipToLiveButton.hidden = YES;
