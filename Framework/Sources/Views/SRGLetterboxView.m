@@ -597,8 +597,8 @@ static void commonInit(SRGLetterboxView *self);
     
     [self reloadImageForController:controller];
     
-    [self.errorView updateForController:controller];
-    [self.availabilityView updateForController:controller];
+    [self.errorView reloadDataForController:controller];
+    [self.availabilityView reloadDataForController:controller];
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller
@@ -811,7 +811,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
-        [self.availabilityView updateForController:controller];
+        [self.availabilityView reloadDataForController:controller];
     }];
 }
 

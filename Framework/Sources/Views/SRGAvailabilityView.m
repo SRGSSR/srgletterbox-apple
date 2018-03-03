@@ -36,7 +36,7 @@
     [super layoutSubviews];
     
     // The availability component layout depends on the view size.
-    [self updateForController:self.controller];
+    [self reloadDataForController:self.controller];
 }
 
 - (void)contentSizeCategoryDidChange
@@ -46,9 +46,9 @@
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
-- (void)updateForController:(SRGLetterboxController *)controller
+- (void)reloadDataForController:(SRGLetterboxController *)controller
 {
-    [super updateForController:controller];
+    [super reloadDataForController:controller];
     
     SRGMedia *media = controller.media;
     

@@ -37,7 +37,7 @@
     
     self.messageLabel.numberOfLines = 3;
     
-    [self updateForController:self.controller];
+    [self reloadDataForController:self.controller];
 }
 
 - (void)contentSizeCategoryDidChange
@@ -48,9 +48,9 @@
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
-- (void)updateForController:(SRGLetterboxController *)controller
+- (void)reloadDataForController:(SRGLetterboxController *)controller
 {
-    [super updateForController:controller];
+    [super reloadDataForController:controller];
     
     NSError *error =  SRGLetterboxViewErrorForController(controller);
     UIImage *image = [UIImage srg_letterboxImageForError:error];
