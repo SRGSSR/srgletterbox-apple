@@ -24,6 +24,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGNotificationView.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
@@ -58,14 +59,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 
-@property (nonatomic, weak) IBOutlet UIView *notificationView;
-@property (nonatomic, weak) IBOutlet UIImageView *notificationImageView;
-@property (nonatomic, weak) IBOutlet UILabel *notificationLabel;
+@property (nonatomic, weak) IBOutlet SRGNotificationView *notificationView;
 
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
-
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelTopConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *notificationLabelBottomConstraint;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 
@@ -163,14 +159,6 @@ static void commonInit(SRGLetterboxView *self);
     
     self.errorView.hidden = YES;
     
-    // Workaround UIImage view tint color bug
-    // See http://stackoverflow.com/a/26042893/760435
-    UIImage *notificationImage = self.notificationImageView.image;
-    self.notificationImageView.image = nil;
-    self.notificationImageView.image = notificationImage;
-    self.notificationLabel.text = nil;
-    self.notificationImageView.hidden = YES;
-    
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
@@ -195,7 +183,6 @@ static void commonInit(SRGLetterboxView *self);
     if (newWindow) {
         [self updateUserInterfaceAnimated:NO];
         [self updateAccessibility];
-        [self updateFonts];
         [self reloadData];
         [self registerUserInterfaceUpdateTimers];
         
@@ -219,10 +206,6 @@ static void commonInit(SRGLetterboxView *self);
                                                  selector:@selector(serviceSettingsDidChange:)
                                                      name:SRGLetterboxServiceSettingsDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(contentSizeCategoryDidChange:)
-                                                     name:UIContentSizeCategoryDidChangeNotification
-                                                   object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(accessibilityVoiceOverStatusChanged:)
                                                      name:UIAccessibilityVoiceOverStatusChanged
@@ -256,9 +239,6 @@ static void commonInit(SRGLetterboxView *self);
                                                         name:SRGLetterboxServiceSettingsDidChangeNotification
                                                       object:[SRGLetterboxService sharedService]];
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIContentSizeCategoryDidChangeNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIAccessibilityVoiceOverStatusChanged
                                                       object:nil];
     }
@@ -275,13 +255,6 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-}
-
-#pragma mark Fonts
-
-- (void)updateFonts
-{
-    self.notificationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
 #pragma mark Accessibility
@@ -714,10 +687,6 @@ static void commonInit(SRGLetterboxView *self);
             break;
         }
     }
-    
-    self.notificationImageView.hidden = (self.notificationMessage == nil);
-    self.notificationLabelBottomConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
-    self.notificationLabelTopConstraint.constant = (self.notificationMessage != nil) ? 6.f : 0.f;
 
     BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
     BOOL hasMedia = controller.media || controller.URN;
@@ -784,25 +753,6 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-- (CGFloat)updateNotificationLayout
-{
-    // The notification message determines the height of the view required to display it.
-    self.notificationLabel.text = self.notificationMessage;
-    
-    // Force autolayout
-    [self.notificationView setNeedsLayout];
-    [self.notificationView layoutIfNeeded];
-    
-    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
-    // adjusts
-    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
-    CGSize fittingSize = UILayoutFittingCompressedSize;
-    fittingSize.width = CGRectGetWidth(self.notificationView.frame);
-    return [self.notificationView systemLayoutSizeFittingSize:fittingSize
-                                withHorizontalFittingPriority:UILayoutPriorityRequired
-                                      verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
-}
-
 // TODO: Remove, this method should not be required anymore (controls view implements it)
 - (void)updateControlsLayoutForController:(SRGLetterboxController *)controller
 {
@@ -839,7 +789,7 @@ static void commonInit(SRGLetterboxView *self);
     void (^animations)(void) = ^{
         BOOL userInterfaceHidden = [self updateLayoutForController:controller];
         CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
-        CGFloat notificationHeight = [self updateNotificationLayout];
+        CGFloat notificationHeight = [self.notificationView updateLayout];
         [self updateControlsLayoutForController:controller];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
@@ -1248,11 +1198,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self reloadData];
     [self updateUserInterfaceAnimated:YES];
-}
-
-- (void)contentSizeCategoryDidChange:(NSNotification *)notification
-{
-    [self updateFonts];
 }
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification

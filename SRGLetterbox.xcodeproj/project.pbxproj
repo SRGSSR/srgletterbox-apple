@@ -216,6 +216,9 @@
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
 		6FF0D89A1F4DABF200B3C1EB /* SRGTimerTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */; };
 		6FF0D89B1F4DABF200B3C1EB /* SRGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */; };
+		6FF77872204B28E400E2EFBE /* SRGNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF77870204B28E400E2EFBE /* SRGNotificationView.h */; };
+		6FF77873204B28E400E2EFBE /* SRGNotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF77871204B28E400E2EFBE /* SRGNotificationView.m */; };
+		6FF77875204B2B2E00E2EFBE /* SRGNotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FF77874204B2B2E00E2EFBE /* SRGNotificationView.xib */; };
 		6FFAD135202C514500FDAA6C /* SRGContinuousPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */; };
 		6FFAD136202C514500FDAA6C /* SRGContinuousPlaybackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */; };
 		6FFAD137202C514500FDAA6C /* SRGContinuousPlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */; };
@@ -479,6 +482,9 @@
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
 		6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGTimerTarget.h; sourceTree = "<group>"; };
 		6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGTimerTarget.m; sourceTree = "<group>"; };
+		6FF77870204B28E400E2EFBE /* SRGNotificationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGNotificationView.h; sourceTree = "<group>"; };
+		6FF77871204B28E400E2EFBE /* SRGNotificationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGNotificationView.m; sourceTree = "<group>"; };
+		6FF77874204B2B2E00E2EFBE /* SRGNotificationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SRGNotificationView.xib; sourceTree = "<group>"; };
 		6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGContinuousPlaybackView.m; sourceTree = "<group>"; };
 		6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGContinuousPlaybackView.h; sourceTree = "<group>"; };
 		6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRGContinuousPlaybackView.xib; sourceTree = "<group>"; };
@@ -710,6 +716,9 @@
 				6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */,
 				08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */,
 				087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */,
+				6FF77870204B28E400E2EFBE /* SRGNotificationView.h */,
+				6FF77871204B28E400E2EFBE /* SRGNotificationView.m */,
+				6FF77874204B2B2E00E2EFBE /* SRGNotificationView.xib */,
 				6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */,
 				6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */,
 			);
@@ -919,6 +928,7 @@
 				6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */,
 				087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
+				6FF77872204B28E400E2EFBE /* SRGNotificationView.h in Headers */,
 				08FA0CF41E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1075,6 +1085,7 @@
 				6F78EBB0204B00A5008B0FCA /* SRGErrorView.xib in Resources */,
 				6FE08CEC1E8B845F00EC4716 /* FontAwesome.otf in Resources */,
 				6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */,
+				6FF77875204B2B2E00E2EFBE /* SRGNotificationView.xib in Resources */,
 				6FE89DD41EBD043D00CE3069 /* placeholder_media-180.pdf in Resources */,
 				08D97F041E2D09F100521A6B /* SRGLetterboxView.xib in Resources */,
 				6F5F376E204B04AA0018F84A /* SRGControlsView.xib in Resources */,
@@ -1159,6 +1170,7 @@
 				6FB4422D201F1FB900FA5AF8 /* SRGCountdownView.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
+				6FF77873204B28E400E2EFBE /* SRGNotificationView.m in Sources */,
 				6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
