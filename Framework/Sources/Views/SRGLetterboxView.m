@@ -588,17 +588,14 @@ static void commonInit(SRGLetterboxView *self);
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
 - (void)reloadDataForController:(SRGLetterboxController *)controller
 {
-    SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    SRGSubdivision *subdivision = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
-    
-    self.timelineView.chapterURN = mediaComposition.mainChapter.URN;
-    self.timelineView.subdivisions = [self subdivisionsForMediaComposition:mediaComposition];
-    self.timelineView.selectedIndex = subdivision ? [self.timelineView.subdivisions indexOfObject:subdivision] : NSNotFound;
-    
     [self reloadImageForController:controller];
     
-    [self.errorView reloadDataForController:controller];
+    // TODO: Recursive
+    [self.controlsView reloadDataForController:controller];
+    [self.timelineView reloadDataForController:controller];
     [self.availabilityView reloadDataForController:controller];
+    [self.continuousPlaybackView reloadDataForController:controller];
+    [self.errorView reloadDataForController:controller];
 }
 
 - (void)reloadImageForController:(SRGLetterboxController *)controller

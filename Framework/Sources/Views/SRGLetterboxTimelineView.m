@@ -7,6 +7,7 @@
 #import "SRGLetterboxTimelineView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLetterboxSubdivisionCell.h"
 
@@ -107,6 +108,19 @@
                                                         name:UIContentSizeCategoryDidChangeNotification
                                                       object:nil];
     }
+}
+
+- (void)reloadDataForController:(SRGLetterboxController *)controller
+{
+    SRGMediaComposition *mediaComposition = controller.mediaComposition;
+    SRGSubdivision *subdivision = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    
+    // TODO
+#if 0
+    self.timelineView.chapterURN = mediaComposition.mainChapter.URN;
+    self.timelineView.subdivisions = [self subdivisionsForMediaComposition:mediaComposition];
+    self.timelineView.selectedIndex = subdivision ? [self.timelineView.subdivisions indexOfObject:subdivision] : NSNotFound;
+#endif
 }
 
 #pragma mark Cell appearance
