@@ -10,6 +10,7 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLetterboxSubdivisionCell.h"
+#import "SRGMediaComposition+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
@@ -117,12 +118,9 @@
     SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
     SRGSubdivision *subdivision = (SRGSegment *)self.controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
-    // TODO
-#if 0
-    self.timelineView.chapterURN = mediaComposition.mainChapter.URN;
-    self.timelineView.subdivisions = [self subdivisionsForMediaComposition:mediaComposition];
-    self.timelineView.selectedIndex = subdivision ? [self.timelineView.subdivisions indexOfObject:subdivision] : NSNotFound;
-#endif
+    self.chapterURN = mediaComposition.mainChapter.URN;
+    self.subdivisions = mediaComposition.srgletterbox_subdivisions;
+    self.selectedIndex = subdivision ? [self.subdivisions indexOfObject:subdivision] : NSNotFound;
 }
 
 #pragma mark Cell appearance

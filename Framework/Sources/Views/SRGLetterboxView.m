@@ -24,6 +24,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGNotificationView.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
@@ -558,30 +559,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setNeedsSubdivisionFavoritesUpdate
 {
     [self.timelineView setNeedsSubdivisionFavoritesUpdate];
-}
-
-- (NSArray<SRGSubdivision *> *)subdivisionsForMediaComposition:(SRGMediaComposition *)mediaComposition
-{
-    if (! mediaComposition) {
-        return nil;
-    }
-    
-    // Show visible segments for the current chapter (if any), and display other chapters but not expanded. If
-    // there is only a chapter, do not display it
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSubdivision.new, hidden)];
-    NSArray<SRGChapter *> *visibleChapters = [mediaComposition.chapters filteredArrayUsingPredicate:predicate];
- 
-    NSMutableArray<SRGSubdivision *> *subdivisions = [NSMutableArray array];
-    for (SRGChapter *chapter in visibleChapters) {
-        if (chapter == mediaComposition.mainChapter && chapter.segments.count != 0) {
-            NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
-            [subdivisions addObjectsFromArray:visibleSegments];
-        }
-        else if (visibleChapters.count > 1) {
-            [subdivisions addObject:chapter];
-        }
-    }
-    return [subdivisions copy];
 }
 
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
@@ -1213,11 +1190,10 @@ NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
 CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfaceHidden)
 {
     SRGLetterboxController *controller = view.controller;
-    NSArray<SRGSubdivision *> *subdivisions = [view subdivisionsForMediaComposition:controller.mediaComposition];
+    NSArray<SRGSubdivision *> *subdivisions = controller.mediaComposition.srgletterbox_subdivisions;
     SRGLetterboxViewBehavior timelineBehavior = [view timelineBehaviorForController:controller];
     return (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? view.preferredTimelineHeight : 0.f;
 }
-
 
 BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view)
 {
