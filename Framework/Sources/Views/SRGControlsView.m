@@ -160,13 +160,13 @@
     }
 }
 
-- (void)setController:(SRGLetterboxController *)controller
+- (void)didAttachToControlller
 {
-    super.controller = controller;
+    [super didAttachToControlller];
     
-    self.playbackButton.controller = controller;
+    self.playbackButton.controller = self.controller;
     
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;

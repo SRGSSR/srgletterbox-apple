@@ -8,7 +8,28 @@
 
 @implementation SRGLetterboxControllerView
 
+#pragma mark Getters and setters
+
+- (void)setController:(SRGLetterboxController *)controller
+{
+    if (_controller) {
+        [self willUnattachFromController];
+    }
+    
+    _controller = controller;
+    
+    if (controller) {
+        [self didAttachToControlller];
+    }
+}
+
 #pragma mark Subclassing hooks
+
+- (void)willUnattachFromController
+{}
+
+- (void)didAttachToControlller
+{}
 
 - (void)reloadData
 {}
