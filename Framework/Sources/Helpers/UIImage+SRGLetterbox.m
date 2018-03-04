@@ -233,56 +233,59 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-32"] : [UIImage srg_letterboxImageNamed:@"play-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-48"] : [UIImage srg_letterboxImageNamed:@"play-64"];
 }
 
 + (UIImage *)srg_letterboxPauseImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause-32"] : [UIImage srg_letterboxImageNamed:@"pause-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause-48"] : [UIImage srg_letterboxImageNamed:@"pause-64"];
 }
 
 + (UIImage *)srg_letterboxStopImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop-32"] : [UIImage srg_letterboxImageNamed:@"stop-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop-48"] : [UIImage srg_letterboxImageNamed:@"stop-64"];
 }
 
 + (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-32"] : [UIImage srg_letterboxImageNamed:@"forward-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-48"] : [UIImage srg_letterboxImageNamed:@"forward-64"];
 }
 
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-32"] : [UIImage srg_letterboxImageNamed:@"backward-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-48"] : [UIImage srg_letterboxImageNamed:@"backward-64"];
 }
 
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-32"] : [UIImage srg_letterboxImageNamed:@"back_live-52"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-48"] : [UIImage srg_letterboxImageNamed:@"back_live-64"];
 }
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error
 {
-    if (! error || ! [error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+    if (! error) {
         return nil;
     }
     
-    UIImage *image = nil;
-    switch (error.code) {
-        case SRGLetterboxErrorCodeBlocked: {
+    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
+        if (error.code == SRGLetterboxErrorCodeBlocked) {
             SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
-            image = [self srg_letterboxImageForBlockingReason:blockingReason];
-            break;
+            return [self srg_letterboxImageForBlockingReason:blockingReason];
         }
-            
-        // TODO: Other error codes
-            
-        default: {
-            break;
+        else if (underlyingError) {
+            return [self srg_letterboxImageForError:underlyingError];
+        }
+        else {
+            return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
         }
     }
-    
-    return image;
+    else if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
+        return [UIImage srg_letterboxImageNamed:@"no_network-25"];
+    }
+    else {
+        return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
+    }
 }
 
 + (UIImage *)srg_letterboxImageForBlockingReason:(SRGBlockingReason)blockingReason
@@ -293,10 +296,23 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             break;
         }
             
-        // TODO: Other blocking reasons
+        case SRGBlockingReasonLegal: {
+            return [UIImage srg_letterboxImageNamed:@"legal-25"];
+            break;
+        }
+            
+        case SRGBlockingReasonAgeRating12: {
+            return [UIImage srg_letterboxImageNamed:@"rating_12-25"];
+            break;
+        }
+            
+        case SRGBlockingReasonAgeRating18: {
+            return [UIImage srg_letterboxImageNamed:@"rating_18-25"];
+            break;
+        }
             
         default: {
-            return  nil;
+            return [UIImage srg_letterboxImageNamed:@"generic_blocked-25"];
             break;
         }
     }

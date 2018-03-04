@@ -102,7 +102,8 @@ static void commonInit(SRGLetterboxTimelineView *self);
     
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     CGFloat height = CGRectGetHeight(self.frame);
-    collectionViewLayout.itemSize = CGSizeMake(16.f / 13.f * height, height);
+    CGFloat width = (height > 0) ? 16.f / 13.f * height : 10e-6f; // UICollectionViewFlowLayout doesn't allow CGSizeZero
+    collectionViewLayout.itemSize = CGSizeMake(width, height);
     
     [self.collectionView.collectionViewLayout invalidateLayout];
 }

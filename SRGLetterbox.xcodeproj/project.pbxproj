@@ -77,6 +77,8 @@
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
 		6F4855AC1E3A669B00B0141C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F4855AA1E3A669B00B0141C /* Localizable.strings */; };
+		6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */; };
+		6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */; };
 		6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */; };
 		6F6EA9051F4DA2D900844199 /* NSTimer+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
@@ -157,6 +159,8 @@
 		6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */; };
 		6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
 		6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
+		6FC993562047D30000797F64 /* SRGLetterboxTimeSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC993542047D30000797F64 /* SRGLetterboxTimeSlider.h */; };
+		6FC993572047D30000797F64 /* SRGLetterboxTimeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC993552047D30000797F64 /* SRGLetterboxTimeSlider.m */; };
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
@@ -199,10 +203,6 @@
 		6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
-		6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC331E7BC766003F760F /* SRGASValuePopUpView.h */; };
-		6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */; };
-		6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */; };
-		6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */; };
 		6FF0D89A1F4DABF200B3C1EB /* SRGTimerTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */; };
 		6FF0D89B1F4DABF200B3C1EB /* SRGTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */; };
 		6FFAD135202C514500FDAA6C /* SRGContinuousPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */; };
@@ -372,6 +372,8 @@
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AE1E3A66AB00B0141C /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AF1E3A66B100B0141C /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDateComponentsFormatter+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDateComponentsFormatter+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxController+Private.h"; sourceTree = "<group>"; };
@@ -422,6 +424,8 @@
 		6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-320.pdf"; sourceTree = "<group>"; };
 		6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGProgram+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGProgram+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6FC993542047D30000797F64 /* SRGLetterboxTimeSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimeSlider.h; sourceTree = "<group>"; };
+		6FC993552047D30000797F64 /* SRGLetterboxTimeSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxTimeSlider.m; sourceTree = "<group>"; };
 		6FCB995B1F56948D00790EAA /* ServerSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerSettings.h; sourceTree = "<group>"; };
 		6FCB995C1F56948D00790EAA /* ServerSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerSettings.m; sourceTree = "<group>"; };
 		6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlayerViewController.h; sourceTree = "<group>"; };
@@ -451,10 +455,6 @@
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
-		6FEBEC331E7BC766003F760F /* SRGASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGASValuePopUpView.h; sourceTree = "<group>"; };
-		6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValuePopUpView.m; sourceTree = "<group>"; };
-		6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGASValueTrackingSlider.h; sourceTree = "<group>"; };
-		6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGASValueTrackingSlider.m; sourceTree = "<group>"; };
 		6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGTimerTarget.h; sourceTree = "<group>"; };
 		6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGTimerTarget.m; sourceTree = "<group>"; };
 		6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGContinuousPlaybackView.m; sourceTree = "<group>"; };
@@ -596,6 +596,8 @@
 			children = (
 				6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */,
 				6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */,
+				6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */,
+				6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */,
 				6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */,
 				6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */,
 				6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */,
@@ -624,7 +626,6 @@
 		6F48559D1E3A311C00B0141C /* Externals */ = {
 			isa = PBXGroup;
 			children = (
-				6FEBEC321E7BC766003F760F /* ASValueTrackingSlider */,
 				6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */,
 			);
 			path = Externals;
@@ -652,8 +653,6 @@
 			children = (
 				6FDF33AE1F012D7500BA1D6E /* SRGAccessibilityView.h */,
 				6FDF33AF1F012D7500BA1D6E /* SRGAccessibilityView.m */,
-				6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */,
-				6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */,
 				6FFAD133202C514500FDAA6C /* SRGContinuousPlaybackView.h */,
 				6FFAD132202C514400FDAA6C /* SRGContinuousPlaybackView.m */,
 				6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */,
@@ -672,10 +671,14 @@
 				6FE844E81E60349900F90F67 /* SRGLetterboxTimelineView.h */,
 				6FE844E91E60349900F90F67 /* SRGLetterboxTimelineView.m */,
 				6FE844EC1E603B3100F90F67 /* SRGLetterboxTimelineView.xib */,
+				6FC993542047D30000797F64 /* SRGLetterboxTimeSlider.h */,
+				6FC993552047D30000797F64 /* SRGLetterboxTimeSlider.m */,
 				6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */,
 				6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */,
 				08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */,
 				087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */,
+				6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */,
+				6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -843,17 +846,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6FEBEC321E7BC766003F760F /* ASValueTrackingSlider */ = {
-			isa = PBXGroup;
-			children = (
-				6FEBEC331E7BC766003F760F /* SRGASValuePopUpView.h */,
-				6FEBEC341E7BC766003F760F /* SRGASValuePopUpView.m */,
-				6FEBEC351E7BC766003F760F /* SRGASValueTrackingSlider.h */,
-				6FEBEC361E7BC766003F760F /* SRGASValueTrackingSlider.m */,
-			);
-			path = ASValueTrackingSlider;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -867,14 +859,14 @@
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				6F919BD4202DA48E000DD351 /* SRGRemainingTimeButton.h in Headers */,
 				6FB4422C201F1FB900FA5AF8 /* SRGCountdownView.h in Headers */,
-				6FEBEC391E7BC766003F760F /* SRGASValueTrackingSlider.h in Headers */,
+				6FC993562047D30000797F64 /* SRGLetterboxTimeSlider.h in Headers */,
+				6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				6FDF33B41F012DA200BA1D6E /* SRGFullScreenButton.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				6FE844EA1E60349900F90F67 /* SRGLetterboxTimelineView.h in Headers */,
 				6FFAD136202C514500FDAA6C /* SRGContinuousPlaybackView.h in Headers */,
 				6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */,
-				6FEBEC371E7BC766003F760F /* SRGASValuePopUpView.h in Headers */,
 				08BDD8721EE5C876006A2704 /* SRGLetterboxPlaybackButton.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
@@ -1107,12 +1099,12 @@
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */,
+				6FC993572047D30000797F64 /* SRGLetterboxTimeSlider.m in Sources */,
 				6FDF33B11F012D7500BA1D6E /* SRGAccessibilityView.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
 				6FB696541F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m in Sources */,
 				6FFAD135202C514500FDAA6C /* SRGContinuousPlaybackView.m in Sources */,
 				08BDD8731EE5C876006A2704 /* SRGLetterboxPlaybackButton.m in Sources */,
-				6FEBEC3A1E7BC766003F760F /* SRGASValueTrackingSlider.m in Sources */,
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6FE844F11E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.m in Sources */,
@@ -1123,7 +1115,7 @@
 				6FB4422D201F1FB900FA5AF8 /* SRGCountdownView.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
-				6FEBEC381E7BC766003F760F /* SRGASValuePopUpView.m in Sources */,
+				6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
