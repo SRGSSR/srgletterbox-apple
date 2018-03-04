@@ -17,13 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
 // Only called if a controller was attached
-- (void)willUnattachFromController NS_REQUIRES_SUPER;
+- (void)willDetachFromController NS_REQUIRES_SUPER;
 - (void)didAttachToController NS_REQUIRES_SUPER;
 
+
+// TODO: -didUpdateMetatadata?
 - (void)reloadData NS_REQUIRES_SUPER;
 
 // Update INTERNAL constraint / subview visibility (not constraints on self, e.g. not its own height or its own alpha or hidden
 // property). External constraints are the responsibility of the superview.
+
+// TODO: -didUpdateLayout...?
 - (void)updateLayoutForView:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden  NS_REQUIRES_SUPER;
 
 @end

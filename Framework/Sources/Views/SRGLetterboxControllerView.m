@@ -13,7 +13,7 @@
 - (void)setController:(SRGLetterboxController *)controller
 {
     if (_controller) {
-        [self willUnattachFromController];
+        [self willDetachFromController];
     }
     
     _controller = controller;
@@ -25,7 +25,7 @@
 
 #pragma mark Subclassing hooks
 
-- (void)willUnattachFromController
+- (void)willDetachFromController
 {}
 
 - (void)didAttachToController
