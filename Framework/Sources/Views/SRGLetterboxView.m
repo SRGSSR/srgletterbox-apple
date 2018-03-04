@@ -350,16 +350,19 @@ static void commonInit(SRGLetterboxView *self);
     [self updateAvailabilityForController:self.controller];
     
     // Error view layout depends on the view size
-    self.errorImageView.hidden = NO;
-    self.errorInstructionsLabel.hidden = NO;
+    BOOL errorLabelHidden = NO;
+    BOOL errorInstructionsLabelHidden = NO;
     
-    CGFloat height = CGRectGetHeight(self.errorView.frame);
-    if (height < 170.f) {
-        self.errorInstructionsLabel.hidden = YES;
+    CGFloat errorViewHeight = CGRectGetHeight(self.errorView.frame);
+    if (errorViewHeight < 170.f) {
+        errorInstructionsLabelHidden = YES;
     }
-    if (height < 140.f) {
-        self.errorImageView.hidden = YES;
+    if (errorViewHeight < 140.f) {
+        errorLabelHidden = YES;
     }
+    
+    self.errorInstructionsLabel.hidden = errorInstructionsLabelHidden;
+    self.errorLabel.hidden = errorLabelHidden;
 }
 
 #pragma mark Fonts
