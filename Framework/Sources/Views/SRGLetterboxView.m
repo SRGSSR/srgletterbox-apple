@@ -162,8 +162,6 @@ static void commonInit(SRGLetterboxView *self);
     [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         button.hidden = fullScreenButtonHidden;
     }];
-    
-    [self reloadData];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -174,8 +172,7 @@ static void commonInit(SRGLetterboxView *self);
         [self voiceOverStatusDidChange];
         [self registerUserInterfaceUpdateTimers];
         
-        [self updateUserInterfaceAnimated:NO];
-        [self reloadData];
+        [self reloadDataAnimated:NO];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -366,7 +363,7 @@ static void commonInit(SRGLetterboxView *self);
         @weakify(self)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            [self updateUserInterfaceAnimated:YES];
+            [self reloadDataAnimated:YES];
         }];
         
         [self.playbackView addSubview:mediaPlayerController.view];
@@ -382,8 +379,7 @@ static void commonInit(SRGLetterboxView *self);
         [self unregisterUserInterfaceUpdateTimers];
     }
     
-    [self reloadData];
-    [self updateUserInterfaceAnimated:NO];
+    [self reloadDataAnimated:YES];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -556,7 +552,7 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
-- (void)reloadData
+- (void)reloadDataAnimated:(BOOL)animated
 {
     [self reloadImage];
     
@@ -566,6 +562,8 @@ static void commonInit(SRGLetterboxView *self);
     [self.availabilityView reloadData];
     [self.continuousPlaybackView reloadData];
     [self.errorView reloadData];
+    
+    [self updateUserInterfaceAnimated:animated];
 }
 
 - (void)reloadImage
@@ -764,7 +762,6 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         [self updateUserInterfaceAnimated:YES];
-        [self reloadData];
     }];
 }
 
@@ -1007,8 +1004,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadData];
-    [self updateUserInterfaceAnimated:YES];
+    [self reloadDataAnimated:YES];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -1016,8 +1012,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = NSNotFound;
     self.timelineView.time = kCMTimeZero;
     
-    [self reloadData];
-    [self updateUserInterfaceAnimated:YES];
+    [self reloadDataAnimated:YES];
 }
 
 - (void)playbackDidRetry:(NSNotification *)notification
@@ -1032,7 +1027,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self reloadDataAnimated:YES];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
@@ -1102,8 +1097,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self reloadData];
-    [self updateUserInterfaceAnimated:YES];
+    [self reloadDataAnimated:YES];
 }
 
 - (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
