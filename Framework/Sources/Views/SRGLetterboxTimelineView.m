@@ -19,6 +19,10 @@
 
 @interface SRGLetterboxTimelineView ()
 
+// TODO: Can now get rid of internal chapter URN property?
+@property (nonatomic) SRGMediaURN *chapterURN;
+@property (nonatomic) NSArray<SRGSubdivision *> *subdivisions;
+
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 
 @end
@@ -218,6 +222,20 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SRGSubdivision *subdivision = self.subdivisions[indexPath.row];
+    
+    if ([self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
+        if ([subdivision isKindOfClass:[SRGSegment class]]) {
+            SRGSegment *segment = (SRGSegment *)subdivision;
+            self.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+        }
+        else {
+            self.chapterURN = subdivision.URN;
+            self.time = kCMTimeZero;
+        }
+        self.selectedIndex = [self.subdivisions indexOfObject:subdivision];
+        [self scrollToSelectedIndexAnimated:YES];
+    }
+    
     [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];
 }
 

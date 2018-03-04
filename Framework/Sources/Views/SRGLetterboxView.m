@@ -979,21 +979,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision
 {
-    if (! [self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
-        return;
-    }
-    
-    if ([subdivision isKindOfClass:[SRGSegment class]]) {
-        SRGSegment *segment = (SRGSegment *)subdivision;
-        self.timelineView.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
-    }
-    else {
-        self.timelineView.chapterURN = subdivision.URN;
-        self.timelineView.time = kCMTimeZero;
-    }
-    self.timelineView.selectedIndex = [timelineView.subdivisions indexOfObject:subdivision];
-    [self.timelineView scrollToSelectedIndexAnimated:YES];
-    
     if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSubdivision:)]) {
         [self.delegate letterboxView:self didSelectSubdivision:subdivision];
     }
