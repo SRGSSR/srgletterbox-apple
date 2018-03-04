@@ -1402,17 +1402,17 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     CGFloat controlsWidth = CGRectGetWidth(controlsView.frame);
-    if (controlsWidth < 290.f) {
+    if (controlsWidth < 295.f) {
         skipToLiveButtonHidden = YES;
-        timeSliderHidden = YES;
+        viewModeButtonHidden = YES;
         durationLabelHidden = YES;
+        tracksButtonHidden = YES;
     }
     if (controlsWidth < 215.f) {
         backwardSeekButtonHidden = YES;
         forwardSeekButtonHidden = YES;
-        viewModeButtonHidden = YES;
+        timeSliderHidden = YES;
         pictureInPictureButtonHidden = YES;
-        tracksButtonHidden = YES;
     }
     
     self.backwardSeekButton.hidden = backwardSeekButtonHidden;
