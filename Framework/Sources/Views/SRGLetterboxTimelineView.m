@@ -110,10 +110,12 @@
     }
 }
 
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {
-    SRGMediaComposition *mediaComposition = controller.mediaComposition;
-    SRGSubdivision *subdivision = (SRGSegment *)controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    [super reloadData];
+    
+    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
+    SRGSubdivision *subdivision = (SRGSegment *)self.controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
     // TODO
 #if 0

@@ -10,7 +10,7 @@
 
 #pragma mark Subclassing hooks
 
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {}
 
 - (void)updateLayoutForController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden

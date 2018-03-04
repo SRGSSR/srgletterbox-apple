@@ -175,9 +175,9 @@
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
 }
 
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {
-    [super reloadDataForController:controller];
+    [super reloadData];
     
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing

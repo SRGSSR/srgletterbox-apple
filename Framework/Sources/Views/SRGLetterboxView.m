@@ -320,8 +320,6 @@ static void commonInit(SRGLetterboxView *self);
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
-    [self reloadDataForController:controller];
-    
     if (controller) {
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         [self registerUserInterfaceUpdateTimersForController:controller];
@@ -384,6 +382,7 @@ static void commonInit(SRGLetterboxView *self);
         [self unregisterUserInterfaceUpdateTimers];
     }
     
+    [self reloadData];
     [self updateUserInterfaceForController:controller animated:NO];
 }
 
@@ -586,24 +585,24 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {
-    [self reloadImageForController:controller];
+    [self reloadImage];
     
     // TODO: Recursive
-    [self.controlsView reloadDataForController:controller];
-    [self.timelineView reloadDataForController:controller];
-    [self.availabilityView reloadDataForController:controller];
-    [self.continuousPlaybackView reloadDataForController:controller];
-    [self.errorView reloadDataForController:controller];
+    [self.controlsView reloadData];
+    [self.timelineView reloadData];
+    [self.availabilityView reloadData];
+    [self.continuousPlaybackView reloadData];
+    [self.errorView reloadData];
 }
 
-- (void)reloadImageForController:(SRGLetterboxController *)controller
+- (void)reloadImage
 {
     // For livestreams, rely on channel information when available
-    SRGMedia *media = controller.subdivisionMedia ?: controller.media;
-    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
-        SRGChannel *channel = controller.channel;
+    SRGMedia *media = self.controller.subdivisionMedia ?: self.controller.media;
+    if (media.contentType == SRGContentTypeLivestream && self.controller.channel) {
+        SRGChannel *channel = self.controller.channel;
         
         // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
         NSDate *date = self.controlsView.date;
@@ -619,11 +618,6 @@ static void commonInit(SRGLetterboxView *self);
     else {
         [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     }
-}
-
-- (void)reloadData
-{
-    return [self reloadDataForController:self.controller];
 }
 
 #pragma mark UI behavior changes
@@ -808,7 +802,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
-        [self.availabilityView reloadDataForController:controller];
+        [self.availabilityView reloadData];
     }];
 }
 
@@ -1001,7 +995,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.delegate letterboxView:self didScrollWithSubdivision:selectedSubdivision time:time interactive:interactive];
     }
     
-    [self reloadImageForController:self.controller];
+    [self reloadImage];
 }
 
 #pragma mark SRGLetterboxTimelineViewDelegate protocol

@@ -32,31 +32,6 @@
 
 @implementation SRGContinuousPlaybackView
 
-#pragma mark Getters and setters
-
-- (void)setController:(SRGLetterboxController *)controller
-{
-    SRGLetterboxController *previousController = super.controller;
-    
-    if (previousController) {
-        [previousController removeObserver:self keyPath:@keypath(previousController.continuousPlaybackUpcomingMedia)];
-    }
-    
-    super.controller = controller;
-    
-    if (controller) {
-        @weakify(self)
-        @weakify(controller)
-        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
-            @strongify(self)
-            @strongify(controller)
-            [self reloadDataForController:controller];
-        }];
-    }
-    
-    [self reloadDataForController:controller];
-}
-
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -104,12 +79,12 @@
     self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {
-    [super reloadDataForController:controller];
+    [super reloadData];
     
     // Only update with valid upcoming information
-    SRGMedia *upcomingMedia = controller.continuousPlaybackUpcomingMedia;
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     if (! upcomingMedia) {
         return;
     }
@@ -127,8 +102,8 @@
     
     [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     
-    NSTimeInterval duration = [controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:controller.continuousPlaybackTransitionStartDate];
-    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
+    NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
+    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
     [self.remainingTimeButton setProgress:progress withDuration:duration];
 }
 

@@ -36,7 +36,7 @@
 {
     [super layoutSubviews];
     
-    [self reloadDataForController:self.controller];
+    [self reloadData];
 }
 
 - (void)contentSizeCategoryDidChange
@@ -47,15 +47,15 @@
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {
-    [super reloadDataForController:controller];
+    [super reloadData];
     
-    NSError *error =  SRGLetterboxViewErrorForController(controller);
+    NSError *error =  SRGLetterboxViewErrorForController(self.controller);
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
-    self.instructionsLabel.text = controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    self.instructionsLabel.text = self.controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
     
     self.imageView.hidden = NO;
     self.instructionsLabel.hidden = (image == nil);     // Hide if empty so that the stack view wrapper can adjust its layout properly

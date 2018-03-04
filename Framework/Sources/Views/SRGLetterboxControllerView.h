@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, nullable) SRGLetterboxController *controller;
 
-- (void)reloadDataForController:(nullable SRGLetterboxController *)controller NS_REQUIRES_SUPER;
+- (void)reloadData NS_REQUIRES_SUPER;
 
 // Update INTERNAL constraint / subview visibility (not constraints on self, e.g. not its own height or its own alpha or hidden
 // property). External constraints are the responsibility of the superview.

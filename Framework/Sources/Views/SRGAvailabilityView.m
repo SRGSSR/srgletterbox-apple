@@ -36,7 +36,8 @@
     [super layoutSubviews];
     
     // The availability component layout depends on the view size.
-    [self reloadDataForController:self.controller];
+    // TODO: Technically incorrect
+    [self reloadData];
 }
 
 - (void)contentSizeCategoryDidChange
@@ -46,11 +47,11 @@
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
-- (void)reloadDataForController:(SRGLetterboxController *)controller
+- (void)reloadData
 {
-    [super reloadDataForController:controller];
+    [super reloadData];
     
-    SRGMedia *media = controller.media;
+    SRGMedia *media = self.controller.media;
     
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
     if (blockingReason == SRGBlockingReasonEndDate) {
