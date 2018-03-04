@@ -118,17 +118,13 @@
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
                             <rect key="frame" x="0.0" y="255" width="617" height="48"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" userLabel="View mode Button" customClass="SRGViewModeButton">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGViewModeButton">
                                     <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="width" priority="999" constant="48" id="krz-KZ-6xI"/>
                                     </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="image" keyPath="viewModeMonoscopicImage" value="view_mode_monoscopic-48"/>
-                                        <userDefinedRuntimeAttribute type="image" keyPath="viewModeStereoscopicImage" value="view_mode_stereoscopic-48"/>
-                                    </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lr5-be-k4j" customClass="SRGAirplayButton">
                                     <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -536,7 +532,5 @@
         <image name="fullscreen-48" width="48" height="48"/>
         <image name="geoblocked-25" width="25" height="25"/>
         <image name="notification-16" width="16" height="16"/>
-        <image name="view_mode_monoscopic-48" width="48" height="48"/>
-        <image name="view_mode_stereoscopic-48" width="48" height="48"/>
     </resources>
 </document>
