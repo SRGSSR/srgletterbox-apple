@@ -171,10 +171,11 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self updateUserInterfaceAnimated:NO];
         [self voiceOverStatusDidChange];
-        [self reloadData];
         [self registerUserInterfaceUpdateTimers];
+        
+        [self updateUserInterfaceAnimated:NO];
+        [self reloadData];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -363,11 +364,9 @@ static void commonInit(SRGLetterboxView *self);
                                                    object:mediaPlayerController];
         
         @weakify(self)
-        @weakify(controller)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            @strongify(controller)
-            [self updateUserInterfaceForController:controller animated:YES];
+            [self updateUserInterfaceAnimated:YES];
         }];
         
         [self.playbackView addSubview:mediaPlayerController.view];
@@ -384,7 +383,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self reloadData];
-    [self updateUserInterfaceForController:controller animated:NO];
+    [self updateUserInterfaceAnimated:NO];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -449,34 +448,29 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
-- (BOOL)isAvailabilityViewHiddenForController:(SRGLetterboxController *)controller
+- (BOOL)isAvailabilityViewHidden
 {
-    SRGBlockingReason blockingReason = [controller.media blockingReasonAtDate:[NSDate date]];
-    return ! controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
+    SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:[NSDate date]];
+    return ! self.controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
 }
 
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
 {
-    return [self userInterfaceBehaviorForController:self.controller];
-}
-
-- (SRGLetterboxViewBehavior)userInterfaceBehaviorForController:(SRGLetterboxController *)controller
-{
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
     // Controls and error overlays must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
-    BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
-    BOOL hasMedia = controller.media || controller.URN;
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    BOOL hasError = (SRGLetterboxViewErrorForController(self.controller) != nil);
+    BOOL hasMedia = self.controller.media || self.controller.URN;
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden];
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
-    if (hasError || ! hasMedia || isAvailabilityViewVisible || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    if (hasError || ! hasMedia || isAvailabilityViewVisible || self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
-             && (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
+             && (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || self.controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
         return SRGLetterboxViewBehaviorForcedVisible;
     }
     else {
@@ -484,18 +478,18 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (SRGLetterboxViewBehavior)timelineBehaviorForController:(SRGLetterboxController *)controller
+- (SRGLetterboxViewBehavior)timelineBehavior
 {
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
     // Timeline and error overlays must be displayed at the same time.
-    BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller];
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    BOOL hasError = (SRGLetterboxViewErrorForController(self.controller) != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden];
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     if (! [self isTimelineAlwaysHidden]
-        && (hasError || isAvailabilityViewVisible || isUsingAirplay || (controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
+        && (hasError || isAvailabilityViewVisible || isUsingAirplay || (self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
                 || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
@@ -624,13 +618,13 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark UI updates
 
-- (BOOL)updateLayoutForController:(SRGLetterboxController *)controller
+- (BOOL)updateLayout
 {
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
     BOOL userInterfaceHidden = NO;
-    switch ([self userInterfaceBehaviorForController:controller]) {
+    switch ([self userInterfaceBehavior]) {
         case SRGLetterboxViewBehaviorForcedHidden: {
             userInterfaceHidden = YES;
             break;
@@ -647,10 +641,10 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
 
-    BOOL hasError = (SRGLetterboxViewErrorForController(controller) != nil);
-    BOOL hasMedia = controller.media || controller.URN;
-    BOOL isContinuousPlaybackViewVisible = (controller.continuousPlaybackUpcomingMedia != nil);
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHiddenForController:controller] && ! isContinuousPlaybackViewVisible;
+    BOOL hasError = (SRGLetterboxViewErrorForController(self.controller) != nil);
+    BOOL hasMedia = self.controller.media || self.controller.URN;
+    BOOL isContinuousPlaybackViewVisible = (self.controller.continuousPlaybackUpcomingMedia != nil);
+    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden] && ! isContinuousPlaybackViewVisible;
     
     self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
     
@@ -661,7 +655,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
-    SRGMedia *media = controller.media;
+    SRGMedia *media = self.controller.media;
     BOOL playerViewVisible = (media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     if (@available(iOS 11, *)) {
@@ -670,13 +664,25 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
+    BOOL isLoading = SRGLetterboxViewIsLoading(self);
+    if (isLoading) {
+        self.loadingImageView.alpha = 1.f;
+        [self.loadingImageView startAnimating];
+    }
+    else {
+        self.loadingImageView.alpha = 0.f;
+        [self.loadingImageView stopAnimating];
+    }
+    
+    // TODO: Recursively call overlay layout hooks
+    
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
     
     return userInterfaceHidden;
 }
 
-- (CGFloat)updateTimelineLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
+- (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(self, userInterfaceHidden);
     self.timelineHeightConstraint.constant = timelineHeight;
@@ -703,23 +709,7 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-// TODO: Remove, this method should not be required anymore (controls view implements it)
-- (void)updateControlsLayoutForController:(SRGLetterboxController *)controller userInterfaceHidden:(BOOL)userInterfaceHidden
-{
-    [self.controlsView updateLayoutForController:controller view:self userInterfaceHidden:userInterfaceHidden];
-    
-    BOOL isLoading = SRGLetterboxViewIsLoading(self);
-    if (isLoading) {
-        self.loadingImageView.alpha = 1.f;
-        [self.loadingImageView startAnimating];
-    }
-    else {
-        self.loadingImageView.alpha = 0.f;
-        [self.loadingImageView stopAnimating];
-    }
-}
-
-- (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
+- (void)updateUserInterfaceAnimated:(BOOL)animated
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -728,10 +718,12 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     void (^animations)(void) = ^{
-        BOOL userInterfaceHidden = [self updateLayoutForController:controller];
-        CGFloat timelineHeight = [self updateTimelineLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
+        BOOL userInterfaceHidden = [self updateLayout];
+        CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        [self updateControlsLayoutForController:controller userInterfaceHidden:userInterfaceHidden];
+        
+        // TODO: Recursively call layout update hooks
+        [self.controlsView updateLayoutForView:self userInterfaceHidden:userInterfaceHidden];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         
@@ -740,7 +732,7 @@ static void commonInit(SRGLetterboxView *self);
             self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
         }
         
-        AVPlayerLayer *playerLayer = controller.mediaPlayerController.playerLayer;
+        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
         if (self.targetVideoGravity) {
             playerLayer.videoGravity = self.targetVideoGravity;
             self.targetVideoGravity = nil;
@@ -766,20 +758,13 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateUserInterfaceAnimated:(BOOL)animated
-{
-    [self updateUserInterfaceForController:self.controller animated:animated];
-}
-
 - (void)registerUserInterfaceUpdateTimersForController:(SRGLetterboxController *)controller
 {
     @weakify(self)
-    @weakify(controller)
     self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        @strongify(controller)
-        [self updateUserInterfaceForController:controller animated:YES];
-        [self.availabilityView reloadData];
+        [self updateUserInterfaceAnimated:YES];
+        [self reloadData];
     }];
 }
 
@@ -1176,7 +1161,7 @@ CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfac
 {
     SRGLetterboxController *controller = view.controller;
     NSArray<SRGSubdivision *> *subdivisions = controller.mediaComposition.srgletterbox_subdivisions;
-    SRGLetterboxViewBehavior timelineBehavior = [view timelineBehaviorForController:controller];
+    SRGLetterboxViewBehavior timelineBehavior = [view timelineBehavior];
     return (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? view.preferredTimelineHeight : 0.f;
 }
 

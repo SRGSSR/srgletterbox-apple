@@ -19,7 +19,7 @@
     _controller = controller;
     
     if (controller) {
-        [self didAttachToControlller];
+        [self didAttachToController];
     }
 }
 
@@ -28,13 +28,13 @@
 - (void)willUnattachFromController
 {}
 
-- (void)didAttachToControlller
+- (void)didAttachToController
 {}
 
 - (void)reloadData
 {}
 
-- (void)updateLayoutForController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForView:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
 {}
 
 @end

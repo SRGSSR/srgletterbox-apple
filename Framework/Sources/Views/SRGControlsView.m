@@ -160,9 +160,9 @@
     }
 }
 
-- (void)didAttachToControlller
+- (void)didAttachToController
 {
-    [super didAttachToControlller];
+    [super didAttachToController];
     
     self.playbackButton.controller = self.controller;
     
@@ -199,11 +199,11 @@
     }
 }
 
-- (void)updateLayoutForController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForView:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [super updateLayoutForController:controller view:view userInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForView:view userInterfaceHidden:userInterfaceHidden];
     
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
     // General playback controls
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
@@ -211,14 +211,14 @@
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
-        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         self.timeSlider.alpha = 0.f;
     }
     else {
-        self.forwardSeekButton.alpha = [controller canSkipForward] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [controller canSkipBackward] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [controller canSkipToLive] ? 1.f : 0.f;
+        self.forwardSeekButton.alpha = [self.controller canSkipForward] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [self.controller canSkipBackward] ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
