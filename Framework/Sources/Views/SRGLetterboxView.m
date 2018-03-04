@@ -1389,15 +1389,15 @@ static void commonInit(SRGLetterboxView *self);
     
     CGFloat controlsHeight = CGRectGetHeight(controlsView.frame);
     if (controlsHeight < 165.f) {
-        skipToLiveButtonHidden = YES;
         timeSliderHidden = YES;
-        durationLabelHidden = YES;
     }
     if (controlsHeight < 120.f) {
         backwardSeekButtonHidden = YES;
         forwardSeekButtonHidden = YES;
+        skipToLiveButtonHidden = YES;
         viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
+        durationLabelHidden = YES;
         tracksButtonHidden = YES;
     }
     
