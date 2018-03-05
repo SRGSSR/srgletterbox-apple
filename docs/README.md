@@ -78,7 +78,7 @@ import SRGLetterbox
 
 ### Working with the library
 
-To learn about how the library can be used, have a look at the [getting started guide](Documentation/Getting-started.md).
+To learn about how the library can be used, have a look at the [getting started guide](Getting-started.md).
 
 ### Logging
 
@@ -113,4 +113,4 @@ Moreover, video playback is paused by the system automatically when putting the 
 
 ## License
 
-See the [LICENSE](LICENSE) file for more information.
+See the [LICENSE](../LICENSE) file for more information.
