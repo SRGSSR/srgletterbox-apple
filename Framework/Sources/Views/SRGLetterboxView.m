@@ -1388,8 +1388,9 @@ static void commonInit(SRGLetterboxView *self);
     BOOL tracksButtonHidden = NO;
     
     CGFloat controlsHeight = CGRectGetHeight(controlsView.frame);
-    if (controlsHeight < 165.f) {
+    if (controlsHeight < 166.5f) {
         timeSliderHidden = YES;
+        durationLabelHidden = YES;
     }
     if (controlsHeight < 120.f) {
         backwardSeekButtonHidden = YES;
@@ -1397,22 +1398,21 @@ static void commonInit(SRGLetterboxView *self);
         skipToLiveButtonHidden = YES;
         viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
-        durationLabelHidden = YES;
         tracksButtonHidden = YES;
     }
     
     CGFloat controlsWidth = CGRectGetWidth(controlsView.frame);
-    if (controlsWidth < 295.f) {
+    if (controlsWidth < 296.f) {
         skipToLiveButtonHidden = YES;
-        viewModeButtonHidden = YES;
+        timeSliderHidden = YES;
         durationLabelHidden = YES;
-        tracksButtonHidden = YES;
     }
-    if (controlsWidth < 215.f) {
+    if (controlsWidth < 214.f) {
         backwardSeekButtonHidden = YES;
         forwardSeekButtonHidden = YES;
-        timeSliderHidden = YES;
+        viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
+        tracksButtonHidden = YES;
     }
     
     self.backwardSeekButton.hidden = backwardSeekButtonHidden;
