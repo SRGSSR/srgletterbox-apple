@@ -16,6 +16,8 @@
 		087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
 		08817716204EF54E0088CB78 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08817714204EF54E0088CB78 /* SRGLiveLabel.h */; };
 		08817717204EF54E0088CB78 /* SRGLiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08817715204EF54E0088CB78 /* SRGLiveLabel.m */; };
+		0881771E204F50DD0088CB78 /* SRGControlWrapperView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0881771C204F50DD0088CB78 /* SRGControlWrapperView.h */; };
+		0881771F204F50DD0088CB78 /* SRGControlWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0881771D204F50DD0088CB78 /* SRGControlWrapperView.m */; };
 		08BA348B1F4ADF1F00D9C204 /* MediaListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */; };
 		08BA348D1F4AF4C900D9C204 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */; };
 		08BDD8721EE5C876006A2704 /* SRGLetterboxPlaybackButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */; };
@@ -326,6 +328,8 @@
 		087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08817714204EF54E0088CB78 /* SRGLiveLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLiveLabel.h; sourceTree = "<group>"; };
 		08817715204EF54E0088CB78 /* SRGLiveLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLiveLabel.m; sourceTree = "<group>"; };
+		0881771C204F50DD0088CB78 /* SRGControlWrapperView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGControlWrapperView.h; sourceTree = "<group>"; };
+		0881771D204F50DD0088CB78 /* SRGControlWrapperView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGControlWrapperView.m; sourceTree = "<group>"; };
 		08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MediaListViewController.storyboard; sourceTree = "<group>"; };
 		08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxPlaybackButton.h; sourceTree = "<group>"; };
@@ -662,6 +666,8 @@
 				6FFAD134202C514500FDAA6C /* SRGContinuousPlaybackView.xib */,
 				080A6B141E8E79EF0084F484 /* SRGControlsView.h */,
 				080A6B151E8E79EF0084F484 /* SRGControlsView.m */,
+				0881771C204F50DD0088CB78 /* SRGControlWrapperView.h */,
+				0881771D204F50DD0088CB78 /* SRGControlWrapperView.m */,
 				6FB4422A201F1FB900FA5AF8 /* SRGCountdownView.h */,
 				6FB4422B201F1FB900FA5AF8 /* SRGCountdownView.m */,
 				6FB4422E201F1FC600FA5AF8 /* SRGCountdownView.xib */,
@@ -881,6 +887,7 @@
 				6FE844F01E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				08817716204EF54E0088CB78 /* SRGLiveLabel.h in Headers */,
+				0881771E204F50DD0088CB78 /* SRGControlWrapperView.h in Headers */,
 				08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */,
 				6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
@@ -1109,6 +1116,7 @@
 				6FC993572047D30000797F64 /* SRGLetterboxTimeSlider.m in Sources */,
 				6FDF33B11F012D7500BA1D6E /* SRGAccessibilityView.m in Sources */,
 				08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */,
+				0881771F204F50DD0088CB78 /* SRGControlWrapperView.m in Sources */,
 				6FB696541F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m in Sources */,
 				6FFAD135202C514500FDAA6C /* SRGContinuousPlaybackView.m in Sources */,
 				08BDD8731EE5C876006A2704 /* SRGLetterboxPlaybackButton.m in Sources */,
