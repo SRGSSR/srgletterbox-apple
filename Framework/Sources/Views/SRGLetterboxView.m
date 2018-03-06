@@ -81,6 +81,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet UIView *liveLabelView;
 
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
@@ -519,7 +520,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self updateUserInterfaceForController:controller animated:NO];
-    [self updateTimeLabelsForController:controller];
+    [self updateControlLabelsForController:controller];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -1023,7 +1024,7 @@ static void commonInit(SRGLetterboxView *self);
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
                 break;
             }
                 
@@ -1061,6 +1062,8 @@ static void commonInit(SRGLetterboxView *self);
         self.loadingImageView.alpha = 0.f;
         [self.loadingImageView stopAnimating];
     }
+    
+    [self updateControlLabelsForController:controller];
 }
 
 - (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
@@ -1110,16 +1113,17 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateTimeLabels
+- (void)updateControlLabels
 {
-    [self updateTimeLabelsForController:self.controller];
+    [self updateControlLabelsForController:self.controller];
 }
 
-- (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
+- (void)updateControlLabelsForController:(SRGLetterboxController *)controller
 {
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
     if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
-            && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
+            && streamType == SRGStreamTypeOnDemand) {
         SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
         
         NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
@@ -1135,6 +1139,8 @@ static void commonInit(SRGLetterboxView *self);
         self.durationLabel.text = nil;
         self.durationLabel.accessibilityLabel = nil;
     }
+    
+    self.liveLabelView.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
 }
 
 - (void)updateUserInterfaceAnimated:(BOOL)animated
@@ -1151,7 +1157,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
         [self updateAvailabilityForController:controller];
-        [self updateTimeLabelsForController:controller];
+        [self updateControlLabelsForController:controller];
     }];
 }
 
@@ -1481,7 +1487,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.isLive) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         NSDate *date = slider.date;
@@ -1559,7 +1565,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateUserInterfaceAnimated:YES];
-    [self updateTimeLabels];
+    [self updateControlLabels];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];

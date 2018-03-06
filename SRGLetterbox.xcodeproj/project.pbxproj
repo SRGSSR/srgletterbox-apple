@@ -14,6 +14,8 @@
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
 		087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
+		08817716204EF54E0088CB78 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08817714204EF54E0088CB78 /* SRGLiveLabel.h */; };
+		08817717204EF54E0088CB78 /* SRGLiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08817715204EF54E0088CB78 /* SRGLiveLabel.m */; };
 		08BA348B1F4ADF1F00D9C204 /* MediaListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */; };
 		08BA348D1F4AF4C900D9C204 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */; };
 		08BDD8721EE5C876006A2704 /* SRGLetterboxPlaybackButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */; };
@@ -322,6 +324,8 @@
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
 		087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+SRGLetterbox.m"; sourceTree = "<group>"; };
+		08817714204EF54E0088CB78 /* SRGLiveLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLiveLabel.h; sourceTree = "<group>"; };
+		08817715204EF54E0088CB78 /* SRGLiveLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLiveLabel.m; sourceTree = "<group>"; };
 		08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MediaListViewController.storyboard; sourceTree = "<group>"; };
 		08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		08BDD8701EE5C876006A2704 /* SRGLetterboxPlaybackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxPlaybackButton.h; sourceTree = "<group>"; };
@@ -677,6 +681,8 @@
 				6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */,
 				08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */,
 				087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */,
+				08817714204EF54E0088CB78 /* SRGLiveLabel.h */,
+				08817715204EF54E0088CB78 /* SRGLiveLabel.m */,
 				6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */,
 				6F919BD3202DA48E000DD351 /* SRGRemainingTimeButton.m */,
 			);
@@ -874,6 +880,7 @@
 				6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */,
 				6FE844F01E6056AB00F90F67 /* SRGLetterboxSubdivisionCell.h in Headers */,
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
+				08817716204EF54E0088CB78 /* SRGLiveLabel.h in Headers */,
 				08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */,
 				6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
@@ -1114,6 +1121,7 @@
 				6F919BD5202DA48E000DD351 /* SRGRemainingTimeButton.m in Sources */,
 				6FB4422D201F1FB900FA5AF8 /* SRGCountdownView.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
+				08817717204EF54E0088CB78 /* SRGLiveLabel.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView.m in Sources */,
 				6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */,
 			);
