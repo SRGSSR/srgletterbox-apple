@@ -1492,7 +1492,7 @@ static void commonInit(SRGLetterboxView *self);
     
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.isLive) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") attributes:attributes];
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live").uppercaseString attributes:attributes];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         NSDate *date = slider.date;
