@@ -7,9 +7,6 @@
 /* Short label for countdown display */
 "Days" = "Giorni";
 
-/* Introductory label for a duration */
-"Duration:  %@" = "Duration:  %@";
-
 /* Label to explain that a content has expired
    Short label identifying content which has expired. */
 "Expired" = "Non più disponibile";
@@ -17,10 +14,8 @@
 /* Short label for countdown display */
 "Hours" = "Ore";
 
-/* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
-"In Live" = "Live";
-
-/* Short label identifying a livestream. */
+/* Short label identifying a livestream.
+   Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
 "Live" = "Live";
 
 /* Notification message displayed when a live broadcast has finished. */
@@ -30,10 +25,7 @@
 "Minutes" = "Minuti";
 
 /* For continuous playback, introductory label for content which is about to start */
-"Next" = "Next";
-
-/* Text displayed when no media is available for playback */
-"No media" = "Nessun media";
+"Next" = "Prossimo";
 
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Riproduzione su AirPlay";
