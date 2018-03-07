@@ -13,6 +13,7 @@
 #import "SRGAccessibilityView.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
+#import "SRGControlWrapperView.h"
 #import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -22,6 +23,7 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGLiveLabel.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
@@ -81,7 +83,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
-@property (nonatomic, weak) IBOutlet UIView *liveLabelView;
+@property (nonatomic, weak) IBOutlet SRGLiveLabel *liveLabel;
+@property (nonatomic, weak) IBOutlet SRGControlWrapperView *liveLabelWrapperView;
 
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
@@ -1140,7 +1143,7 @@ static void commonInit(SRGLetterboxView *self);
         self.durationLabel.accessibilityLabel = nil;
     }
     
-    self.liveLabelView.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
+    self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
 }
 
 - (void)updateUserInterfaceAnimated:(BOOL)animated
@@ -1381,6 +1384,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL viewModeButtonHidden = NO;
     BOOL pictureInPictureButtonHidden = NO;
     BOOL timeSliderHidden = NO;
+    BOOL liveLabelWrapperViewHidden = NO;
     BOOL durationLabelHidden = NO;
     BOOL tracksButtonHidden = NO;
     
@@ -1395,6 +1399,7 @@ static void commonInit(SRGLetterboxView *self);
         skipToLiveButtonHidden = YES;
         viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
+        liveLabelWrapperViewHidden = YES;
         tracksButtonHidden = YES;
     }
     
@@ -1409,6 +1414,7 @@ static void commonInit(SRGLetterboxView *self);
         forwardSeekButtonHidden = YES;
         viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
+        liveLabelWrapperViewHidden = YES;
         tracksButtonHidden = YES;
     }
     
@@ -1419,6 +1425,7 @@ static void commonInit(SRGLetterboxView *self);
     self.pictureInPictureButton.alwaysHidden = pictureInPictureButtonHidden;
     self.timeSlider.hidden = timeSliderHidden;
     self.durationLabel.hidden = durationLabelHidden;
+    self.liveLabelWrapperView.alwaysHidden = liveLabelWrapperViewHidden;
     self.tracksButton.alwaysHidden = tracksButtonHidden;
 }
 
@@ -1663,6 +1670,8 @@ static void commonInit(SRGLetterboxView *self)
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
+    
+    self.liveLabelWrapperView.observingWrappedViewHidden = YES;
     
     self.videoGravityTapChangeGestureRecognizer.enabled = NO;
     

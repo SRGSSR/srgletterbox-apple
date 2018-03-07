@@ -40,8 +40,14 @@ static void commonInit(SRGLiveLabel *self);
     static const CGFloat kHeight = 19.f;
     
     CGSize intrinsicContentSize = super.intrinsicContentSize;
-    return CGSizeMake(intrinsicContentSize.width + 2 * kHorizontalMargin, kHeight);
+    return CGSizeEqualToSize(intrinsicContentSize, CGSizeZero) ? intrinsicContentSize : CGSizeMake(intrinsicContentSize.width + 2 * kHorizontalMargin, kHeight);
 }
+
+//- (void)setHidden:(BOOL)hidden
+//{
+//    [super setHidden:hidden];
+//    self.attributedText = hidden ? nil : [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in controls, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
+//}
 
 #pragma mark Accessibility
 
@@ -71,5 +77,6 @@ static void commonInit(SRGLiveLabel *self)
     self.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = 2.f;
-    self.attributedText = [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in controls, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
+    
+    self.hidden = NO;
 }
