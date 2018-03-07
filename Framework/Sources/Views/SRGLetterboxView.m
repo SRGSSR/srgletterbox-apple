@@ -309,11 +309,11 @@ static void commonInit(SRGLetterboxView *self);
     _controller = controller;
     
     // TODO: Can be automatically made recursively
-    self.controlsView.controller = controller;
-    self.errorView.controller = controller;
-    self.availabilityView.controller = controller;
-    self.continuousPlaybackView.controller = controller;
-    self.timelineView.controller = controller;
+    [self.controlsView setController:controller view:self];
+    [self.errorView setController:controller view:self];
+    [self.availabilityView setController:controller view:self];
+    [self.continuousPlaybackView setController:controller view:self];
+    [self.timelineView setController:controller view:self];
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.
@@ -721,7 +721,7 @@ static void commonInit(SRGLetterboxView *self);
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
         
         // TODO: Recursively call layout update hooks
-        [self.controlsView updateLayoutForView:self userInterfaceHidden:userInterfaceHidden];
+        [self.controlsView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         

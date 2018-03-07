@@ -160,13 +160,13 @@
     }
 }
 
-- (void)didAttachToController
+- (void)setController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view
 {
-    [super didAttachToController];
+    [super setController:controller view:view];
     
-    self.playbackButton.controller = self.controller;
+    self.playbackButton.controller = controller;
     
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
@@ -199,9 +199,9 @@
     }
 }
 
-- (void)updateLayoutForView:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [super updateLayoutForView:view userInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
@@ -224,12 +224,12 @@
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
-    self.playbackButton.alpha = SRGLetterboxViewIsLoading(view) ? 0.f : 1.f;
+    self.playbackButton.alpha = SRGLetterboxViewIsLoading(self.view) ? 0.f : 1.f;
     
     static const CGFloat kBottomConstraintGreaterPriority = 950.f;
     static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
-    CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(view, userInterfaceHidden);
+    CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(self.view, userInterfaceHidden);
     if (timelineHeight != 0.f) {
         self.controlsStackViewToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
         self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;

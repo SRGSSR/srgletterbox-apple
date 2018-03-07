@@ -14,12 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SRGLetterboxControllerView : SRGLetterboxBaseView
 
-@property (nonatomic, weak, nullable) SRGLetterboxController *controller;
+- (void)setController:(nullable SRGLetterboxController *)controller view:(SRGLetterboxView *)view NS_REQUIRES_SUPER;
 
-// Only called if a controller was attached
-- (void)willDetachFromController NS_REQUIRES_SUPER;
-- (void)didAttachToController NS_REQUIRES_SUPER;
-
+@property (nonatomic, readonly, weak, nullable) SRGLetterboxController *controller;
+@property (nonatomic, readonly, weak, nullable) SRGLetterboxView *view;
 
 // TODO: -didUpdateMetatadata?
 - (void)reloadData NS_REQUIRES_SUPER;
@@ -28,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 // property). External constraints are the responsibility of the superview.
 
 // TODO: -didUpdateLayout...?
-- (void)updateLayoutForView:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden  NS_REQUIRES_SUPER;
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
 
 @end
 

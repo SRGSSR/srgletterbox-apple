@@ -6,35 +6,29 @@
 
 #import "SRGLetterboxControllerView.h"
 
+@interface SRGLetterboxControllerView ()
+
+@property (nonatomic, weak) SRGLetterboxController *controller;
+@property (nonatomic, weak) SRGLetterboxView *view;
+
+@end
+
 @implementation SRGLetterboxControllerView
 
-#pragma mark Getters and setters
+#pragma mark Binding
 
-- (void)setController:(SRGLetterboxController *)controller
+- (void)setController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view
 {
-    if (_controller) {
-        [self willDetachFromController];
-    }
-    
-    _controller = controller;
-    
-    if (controller) {
-        [self didAttachToController];
-    }
+    self.controller = controller;
+    self.view = view;
 }
 
 #pragma mark Subclassing hooks
 
-- (void)willDetachFromController
-{}
-
-- (void)didAttachToController
-{}
-
 - (void)reloadData
 {}
 
-- (void)updateLayoutForView:(SRGLetterboxView *)view userInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {}
 
 @end
