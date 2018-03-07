@@ -682,7 +682,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(self, userInterfaceHidden);
+    NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
+    SRGLetterboxViewBehavior timelineBehavior = [self timelineBehavior];
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
     self.timelineHeightConstraint.constant = timelineHeight;
     
     // Scroll to selected index when opening the timeline
@@ -1149,14 +1151,6 @@ NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
     else {
         return nil;
     }
-}
-
-CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfaceHidden)
-{
-    SRGLetterboxController *controller = view.controller;
-    NSArray<SRGSubdivision *> *subdivisions = controller.mediaComposition.srgletterbox_subdivisions;
-    SRGLetterboxViewBehavior timelineBehavior = [view timelineBehavior];
-    return (subdivisions.count != 0 && ! controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? view.preferredTimelineHeight : 0.f;
 }
 
 BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view)

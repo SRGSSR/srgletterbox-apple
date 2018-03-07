@@ -34,9 +34,6 @@
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToSelfBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *controlsStackViewToSafeAreaBottomConstraint;
-
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
@@ -225,19 +222,6 @@
     }
     
     self.playbackButton.alpha = SRGLetterboxViewIsLoading(self.view) ? 0.f : 1.f;
-    
-    static const CGFloat kBottomConstraintGreaterPriority = 950.f;
-    static const CGFloat kBottomConstraintLesserPriority = 850.f;
-    
-    CGFloat timelineHeight = SRGLetterboxViewTimelineHeight(self.view, userInterfaceHidden);
-    if (timelineHeight != 0.f) {
-        self.controlsStackViewToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
-        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
-    }
-    else {
-        self.controlsStackViewToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
-        self.controlsStackViewToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
-    }
 }
 
 #pragma mark SRGTimeSliderDelegate protocol

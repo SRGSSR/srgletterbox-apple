@@ -32,11 +32,6 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
 OBJC_EXPORT NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller);
 
 /**
- *  Return the timeline height of the given view.
- */
-OBJC_EXPORT CGFloat SRGLetterboxViewTimelineHeight(SRGLetterboxView *view, BOOL userInterfaceHidden);
-
-/**
  *  Return `YES` iff the view is loading content.
  */
 OBJC_EXPORT BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view);
