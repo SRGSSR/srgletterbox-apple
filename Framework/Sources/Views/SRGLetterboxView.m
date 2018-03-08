@@ -308,12 +308,11 @@ static void commonInit(SRGLetterboxView *self);
     
     _controller = controller;
     
-    // TODO: Can be automatically made recursively
-    [self.controlsView setController:controller view:self];
-    [self.errorView setController:controller view:self];
-    [self.availabilityView setController:controller view:self];
-    [self.continuousPlaybackView setController:controller view:self];
-    [self.timelineView setController:controller view:self];
+    self.controlsView.controller = controller;
+    self.errorView.controller = controller;
+    self.availabilityView.controller = controller;
+    self.continuousPlaybackView.controller = controller;
+    self.timelineView.controller = controller;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.
@@ -665,8 +664,7 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
-    BOOL isLoading = SRGLetterboxViewIsLoading(self);
-    if (isLoading) {
+    if (self.controller.loading) {
         self.loadingImageView.alpha = 1.f;
         [self.loadingImageView startAnimating];
     }

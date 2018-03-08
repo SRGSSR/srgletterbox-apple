@@ -3082,4 +3082,6 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
+// TODO: Add checks for loading property (+ test for KVO)
+
 @end

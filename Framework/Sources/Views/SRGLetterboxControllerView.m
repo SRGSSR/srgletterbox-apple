@@ -22,7 +22,7 @@
 {
     _controller = controller;
     
-    [self didUpdateController];
+    [self didAttach];
     [self reloadData];
     [self updateLayoutForUserInterfaceHidden:self.parentView.userInterfaceHidden];
 }
@@ -32,13 +32,19 @@
     UIView *parentView = self.superview;
     while (parentView) {
         if ([parentView isKindOfClass:[SRGLetterboxView class]]) {
-            return parentView;
+            return (SRGLetterboxView *)parentView;
         }
+        parentView = parentView.superview;
     }
     return nil;
 }
 
 #pragma mark Subclassing hooks
+
+- (void)didAttach
+{
+    
+}
 
 - (void)reloadData
 {}

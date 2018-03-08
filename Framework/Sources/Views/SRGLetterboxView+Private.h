@@ -31,11 +31,6 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
  */
 OBJC_EXPORT NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller);
 
-/**
- *  Return `YES` iff the view is loading content.
- */
-OBJC_EXPORT BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view);
-
 @interface SRGLetterboxView (Private)
 
 /*

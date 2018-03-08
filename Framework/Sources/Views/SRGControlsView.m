@@ -157,13 +157,13 @@
     }
 }
 
-- (void)setController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view
+- (void)didAttach
 {
-    [super setController:controller view:view];
+    [super didAttach];
     
-    self.playbackButton.controller = controller;
+    self.playbackButton.controller = self.controller;
     
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airplayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
@@ -221,7 +221,7 @@
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
-    self.playbackButton.alpha = SRGLetterboxViewIsLoading(self.view) ? 0.f : 1.f;
+    self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
 }
 
 #pragma mark SRGTimeSliderDelegate protocol
