@@ -556,7 +556,10 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self reloadImage];
     
-    // TODO: Recursive
+    // TODO: Two ideas:
+    //   - Post a notification, have each view respond to the notification by calling its reload hook
+    //   - Have the parent overlay class register to all notifs (instead of LetterboxView, which could be a subclass of
+    //     the main overlay class, with hidden public interface, though)
     [self.controlsView reloadData];
     [self.timelineView reloadData];
     [self.availabilityView reloadData];
@@ -1151,17 +1154,4 @@ NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
     else {
         return nil;
     }
-}
-
-BOOL SRGLetterboxViewIsLoading(SRGLetterboxView *view)
-{
-    SRGLetterboxController *controller = view.controller;
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    
-    BOOL isPlayerLoading = mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePlaying
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStatePaused
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateEnded
-        && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle;
-    
-    return isPlayerLoading || controller.dataAvailability == SRGLetterboxDataAvailabilityLoading;
 }

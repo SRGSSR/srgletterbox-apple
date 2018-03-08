@@ -6,21 +6,36 @@
 
 #import "SRGLetterboxControllerView.h"
 
+#import "SRGLetterboxView.h"
+
 @interface SRGLetterboxControllerView ()
 
-@property (nonatomic, weak) SRGLetterboxController *controller;
-@property (nonatomic, weak) SRGLetterboxView *view;
+@property (nonatomic, readonly) SRGLetterboxView *parentView;
 
 @end
 
 @implementation SRGLetterboxControllerView
 
-#pragma mark Binding
+#pragma mark Getters and setters
 
-- (void)setController:(SRGLetterboxController *)controller view:(SRGLetterboxView *)view
+- (void)setController:(SRGLetterboxController *)controller
 {
-    self.controller = controller;
-    self.view = view;
+    _controller = controller;
+    
+    [self didUpdateController];
+    [self reloadData];
+    [self updateLayoutForUserInterfaceHidden:self.parentView.userInterfaceHidden];
+}
+
+- (SRGLetterboxView *)parentView
+{
+    UIView *parentView = self.superview;
+    while (parentView) {
+        if ([parentView isKindOfClass:[SRGLetterboxView class]]) {
+            return parentView;
+        }
+    }
+    return nil;
 }
 
 #pragma mark Subclassing hooks

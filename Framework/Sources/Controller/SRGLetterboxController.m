@@ -92,6 +92,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
+static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAvailability, SRGMediaPlayerPlaybackState playbackState)
+{
+    BOOL isPlayerLoading = playbackState == SRGMediaPlayerPlaybackStatePreparing
+        || playbackState == SRGMediaPlayerPlaybackStateSeeking
+        || playbackState == SRGMediaPlayerPlaybackStateStalled;
+    return isPlayerLoading || dataAvailability == SRGLetterboxDataAvailabilityLoading;
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -113,6 +121,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) SRGMediaURN *socialCountViewURN;
 
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
+@property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -236,6 +245,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 #pragma mark Getters and setters
 
+- (void)setDataAvailability:(SRGLetterboxDataAvailability)dataAvailability
+{
+    _dataAvailability = dataAvailability;
+    
+    self.loading = SRGLetterboxControllerIsLoading(dataAvailability, self.playbackState);
+}
+
 - (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
 {
     if (_playbackState == playbackState) {
@@ -248,6 +264,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
+    
+    self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
                                                         object:self
