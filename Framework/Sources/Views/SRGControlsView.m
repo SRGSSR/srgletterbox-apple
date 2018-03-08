@@ -94,69 +94,6 @@
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    // Fix incorrect empty space after hiding full screen button on iOS 9.
-    NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
-    if (operatingSystemVersion.majorVersion == 9) {
-        [self.controlsStackView setNeedsLayout];
-        [self.controlsStackView layoutIfNeeded];
-    }
-    
-    SRGImageSet imageSet = (CGRectGetWidth(self.bounds) < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
-    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
-    
-    self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingForwardToSkipToLiveConstraint.constant = horizontalSpacing;
-    
-    self.playbackButton.imageSet = imageSet;
-    
-    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
-    
-    // Control visibility depends on the view size.
-    self.skipToLiveButton.hidden = NO;
-    self.timeSlider.hidden = NO;
-    self.durationLabel.hidden = NO;
-    self.backwardSeekButton.hidden = NO;
-    self.forwardSeekButton.hidden = NO;
-    self.viewModeButton.alwaysHidden = NO;
-    self.pictureInPictureButton.alwaysHidden = NO;
-    self.tracksButton.alwaysHidden = YES;
-    
-    CGFloat controlsHeight = CGRectGetHeight(self.frame);
-    if (controlsHeight < 165.f) {
-        self.skipToLiveButton.hidden = YES;
-        self.timeSlider.hidden = YES;
-        self.durationLabel.hidden = YES;
-    }
-    if (controlsHeight < 120.f) {
-        self.backwardSeekButton.hidden = YES;
-        self.forwardSeekButton.hidden = YES;
-        self.viewModeButton.alwaysHidden = YES;
-        self.pictureInPictureButton.alwaysHidden = YES;
-        self.tracksButton.alwaysHidden = YES;
-    }
-    
-    CGFloat controlsWidth = CGRectGetWidth(self.frame);
-    if (controlsWidth < 290.f) {
-        self.skipToLiveButton.hidden = YES;
-        self.timeSlider.hidden = YES;
-        self.durationLabel.hidden = YES;
-    }
-    if (controlsWidth < 215.f) {
-        self.backwardSeekButton.hidden = YES;
-        self.forwardSeekButton.hidden = YES;
-        self.viewModeButton.alwaysHidden = YES;
-        self.pictureInPictureButton.alwaysHidden = YES;
-        self.tracksButton.alwaysHidden = YES;
-    }
-}
-
 - (void)didAttach
 {
     [super didAttach];
@@ -222,6 +159,64 @@
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
+    
+    CGFloat width = CGRectGetWidth(self.frame);
+    SRGImageSet imageSet = (width < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
+    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
+    
+    self.horizontalSpacingPlaybackToBackwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
+    self.horizontalSpacingForwardToSkipToLiveConstraint.constant = horizontalSpacing;
+    
+    self.playbackButton.imageSet = imageSet;
+    
+    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+    
+    // Responsiveness
+    self.skipToLiveButton.hidden = NO;
+    self.timeSlider.hidden = NO;
+    self.durationLabel.hidden = NO;
+    self.backwardSeekButton.hidden = NO;
+    self.forwardSeekButton.hidden = NO;
+    self.viewModeButton.alwaysHidden = NO;
+    self.pictureInPictureButton.alwaysHidden = NO;
+    self.tracksButton.alwaysHidden = YES;
+    
+    CGFloat height = CGRectGetHeight(self.frame);
+    if (height < 165.f) {
+        self.skipToLiveButton.hidden = YES;
+        self.timeSlider.hidden = YES;
+        self.durationLabel.hidden = YES;
+    }
+    if (height < 120.f) {
+        self.backwardSeekButton.hidden = YES;
+        self.forwardSeekButton.hidden = YES;
+        self.viewModeButton.alwaysHidden = YES;
+        self.pictureInPictureButton.alwaysHidden = YES;
+        self.tracksButton.alwaysHidden = YES;
+    }
+    
+    if (width < 290.f) {
+        self.skipToLiveButton.hidden = YES;
+        self.timeSlider.hidden = YES;
+        self.durationLabel.hidden = YES;
+    }
+    if (width < 215.f) {
+        self.backwardSeekButton.hidden = YES;
+        self.forwardSeekButton.hidden = YES;
+        self.viewModeButton.alwaysHidden = YES;
+        self.pictureInPictureButton.alwaysHidden = YES;
+        self.tracksButton.alwaysHidden = YES;
+    }
+    
+    // Fix incorrect empty space after hiding the full screen button on iOS 9.
+    NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+    if (operatingSystemVersion.majorVersion == 9) {
+        [self.controlsStackView setNeedsLayout];
+        [self.controlsStackView layoutIfNeeded];
+    }
 }
 
 #pragma mark SRGTimeSliderDelegate protocol

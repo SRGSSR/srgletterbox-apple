@@ -56,9 +56,14 @@
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
     self.instructionsLabel.text = self.controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+}
+
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     self.messageLabel.hidden = NO;
-    self.instructionsLabel.hidden = (image == nil);     // Hide if empty so that the stack view wrapper can adjust its layout properly
+    self.instructionsLabel.hidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 170.f) {

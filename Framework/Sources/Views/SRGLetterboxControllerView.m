@@ -10,7 +10,7 @@
 
 @interface SRGLetterboxControllerView ()
 
-@property (nonatomic, readonly) SRGLetterboxView *parentView;
+@property (nonatomic, readonly) SRGLetterboxView *srg_letterbox_parentView;
 
 @end
 
@@ -24,10 +24,10 @@
     
     [self didAttach];
     [self reloadData];
-    [self updateLayoutForUserInterfaceHidden:self.parentView.userInterfaceHidden];
+    [self srg_letterbox_updateLayout];
 }
 
-- (SRGLetterboxView *)parentView
+- (SRGLetterboxView *)srg_letterbox_parentView
 {
     UIView *parentView = self.superview;
     while (parentView) {
@@ -39,12 +39,36 @@
     return nil;
 }
 
+#pragma mark Overrides
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self srg_letterbox_updateLayout];
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [self reloadData];
+    }
+}
+
+#pragma mark Helpers
+
+- (void)srg_letterbox_updateLayout
+{
+    BOOL userInterfaceHidden = self.srg_letterbox_parentView ? self.srg_letterbox_parentView.userInterfaceHidden : YES;
+    [self updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+}
+
 #pragma mark Subclassing hooks
 
 - (void)didAttach
-{
-    
-}
+{}
 
 - (void)reloadData
 {}

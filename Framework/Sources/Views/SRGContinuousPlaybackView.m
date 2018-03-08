@@ -26,8 +26,6 @@
 @property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
-@property (nonatomic, weak) id periodicTimeObserver;
-
 @end
 
 @implementation SRGContinuousPlaybackView
@@ -40,33 +38,6 @@
     
     self.introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
     [self.cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    BOOL introLabelHidden = NO;
-    BOOL titleLabelHidden = NO;
-    BOOL subtitleLabelHidden = NO;
-    BOOL cancelButtonHidden = NO;
-    
-    CGFloat height = CGRectGetHeight(self.frame);
-    if (height < 200.f) {
-        introLabelHidden = YES;
-        subtitleLabelHidden = YES;
-    }
-    if (height < 150.f) {
-        cancelButtonHidden = YES;
-    }
-    if (height < 100.f) {
-        titleLabelHidden = YES;
-    }
-    
-    self.introLabel.hidden = introLabelHidden;
-    self.titleLabel.hidden = titleLabelHidden;
-    self.subtitleLabel.hidden = subtitleLabelHidden;
-    self.cancelButton.hidden = cancelButtonHidden;
 }
 
 - (void)contentSizeCategoryDidChange
@@ -105,6 +76,28 @@
     NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
     float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
     [self.remainingTimeButton setProgress:progress withDuration:duration];
+}
+
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
+    self.introLabel.hidden = NO;
+    self.titleLabel.hidden = NO;
+    self.subtitleLabel.hidden = NO;
+    self.cancelButton.hidden = NO;
+    
+    CGFloat height = CGRectGetHeight(self.frame);
+    if (height < 200.f) {
+        self.introLabel.hidden = YES;
+        self.subtitleLabel.hidden = YES;
+    }
+    if (height < 150.f) {
+        self.cancelButton.hidden = YES;
+    }
+    if (height < 100.f) {
+        self.titleLabel.hidden = YES;
+    }
 }
 
 #pragma mark Actions
