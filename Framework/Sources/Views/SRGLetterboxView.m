@@ -200,6 +200,7 @@ static void commonInit(SRGLetterboxView *self);
     self.viewModeButton.viewModeMonoscopicImage = [UIImage imageNamed:@"view_mode_monoscopic-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.viewModeButton.viewModeStereoscopicImage = [UIImage imageNamed:@"view_mode_stereoscopic-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.airplayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+    self.airplayButton.audioImage = [UIImage imageNamed:@"airplay_audio-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.tracksButton.image = [UIImage imageNamed:@"subtitles_off-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
