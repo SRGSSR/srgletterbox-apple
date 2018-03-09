@@ -139,6 +139,8 @@
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
+    self.alpha = ! userInterfaceHidden ? 1.f : 0.f;
+    
     // General playback controls
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing

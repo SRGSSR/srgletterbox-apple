@@ -634,8 +634,6 @@ static void commonInit(SRGLetterboxView *self);
     BOOL isContinuousPlaybackViewVisible = (self.controller.continuousPlaybackUpcomingMedia != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden] && ! isContinuousPlaybackViewVisible;
     
-    self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
-    
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
