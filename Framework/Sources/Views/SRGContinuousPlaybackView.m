@@ -87,16 +87,23 @@
     self.subtitleLabel.hidden = NO;
     self.cancelButton.hidden = NO;
     
-    CGFloat height = CGRectGetHeight(self.frame);
-    if (height < 200.f) {
-        self.introLabel.hidden = YES;
-        self.subtitleLabel.hidden = YES;
+    if (self.controller.continuousPlaybackUpcomingMedia) {
+        self.alpha = 1.f;
+        
+        CGFloat height = CGRectGetHeight(self.frame);
+        if (height < 200.f) {
+            self.introLabel.hidden = YES;
+            self.subtitleLabel.hidden = YES;
+        }
+        if (height < 150.f) {
+            self.cancelButton.hidden = YES;
+        }
+        if (height < 100.f) {
+            self.titleLabel.hidden = YES;
+        }
     }
-    if (height < 150.f) {
-        self.cancelButton.hidden = YES;
-    }
-    if (height < 100.f) {
-        self.titleLabel.hidden = YES;
+    else {
+        self.alpha = 0.f;
     }
 }
 

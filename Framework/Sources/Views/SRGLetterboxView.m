@@ -621,10 +621,6 @@ static void commonInit(SRGLetterboxView *self);
         }
     }
     
-    BOOL isContinuousPlaybackViewVisible = (self.controller.continuousPlaybackUpcomingMedia != nil);
-    
-    self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
-    
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
