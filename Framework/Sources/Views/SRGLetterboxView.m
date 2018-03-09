@@ -157,6 +157,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (newWindow) {
         [self registerUserInterfaceUpdateTimersForController:self.controller];
+        [self resetInactivityTimer];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -255,6 +256,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     [self registerListeners];
     [self registerUserInterfaceUpdateTimers];
+    [self resetInactivityTimer];
     
     if (mediaPlayerController.view) {
         [self.playbackView addSubview:mediaPlayerController.view];
