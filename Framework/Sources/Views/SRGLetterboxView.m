@@ -414,7 +414,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self reloadDataInView:self animated:animated];
     [self reloadImage];
-    
     [self updateUserInterfaceAnimated:animated];
 }
 
@@ -688,12 +687,24 @@ static void commonInit(SRGLetterboxView *self);
         [self.loadingImageView stopAnimating];
     }
     
-    // TODO: Recursively call overlay layout hooks
+    [self updateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
     
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
     
     return userInterfaceHidden;
+}
+
+- (void)updateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
+        SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
+        [controllerView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    }
+    
+    for (UIView *subview in view.subviews) {
+        [self updateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+    }
 }
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
