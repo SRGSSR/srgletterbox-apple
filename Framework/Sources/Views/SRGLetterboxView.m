@@ -114,7 +114,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dealloc
 {
-    [self unregisterListeners];
+    [self unregisterObservers];
 }
 
 #pragma mark Overrides
@@ -230,7 +230,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super willUpdateController];
     
-    [self unregisterListeners];
+    [self unregisterObservers];
     [self unregisterUserInterfaceUpdateTimers];
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -254,7 +254,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = nil;
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    [self registerListeners];
+    [self registerObservers];
     [self registerUserInterfaceUpdateTimers];
     [self resetInactivityTimer];
     
@@ -448,6 +448,19 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (BOOL)shouldHideFullScreenButton
+{
+    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
+        return YES;
+    }
+    
+    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
+        return NO;
+    }
+    
+    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+}
+
 #pragma mark Data refresh
 
 - (void)refreshAnimated:(BOOL)animated
@@ -482,7 +495,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma Listeners
 
-- (void)registerListeners
+- (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -531,7 +544,7 @@ static void commonInit(SRGLetterboxView *self);
     }];
 }
 
-- (void)unregisterListeners
+- (void)unregisterObservers
 {
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -587,7 +600,6 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
-// Only alter user interface visibility if togglable
 - (void)setTogglableUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
     if (! self.userInterfaceTogglable) {
@@ -779,26 +791,6 @@ static void commonInit(SRGLetterboxView *self);
     self.completion = completion;
 }
 
-- (BOOL)shouldHideFullScreenButton
-{
-    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
-        return YES;
-    }
-    
-    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
-        return NO;
-    }
-    
-    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
-}
-
-- (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
-{
-    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
-        [self showNotificationMessage:SRGLetterboxLocalizedString(@"Playback on AirPlay", @"Message displayed when broadcasting on an AirPlay device") animated:animated];
-    }
-}
-
 #pragma mark Notification banners
 
 - (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
@@ -828,6 +820,13 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = nil;
     [self updateLayoutAnimated:animated];
+}
+
+- (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
+{
+    if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
+        [self showNotificationMessage:SRGLetterboxLocalizedString(@"Playback on AirPlay", @"Message displayed when broadcasting on an AirPlay device") animated:animated];
+    }
 }
 
 #pragma mark Subdivisions
