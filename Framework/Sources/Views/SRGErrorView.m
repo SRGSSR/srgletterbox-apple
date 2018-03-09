@@ -55,7 +55,7 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    if (! self.controller.error) {
+    if (! self.contextView.error) {
         self.alpha = 0.f;
     }
     else {
