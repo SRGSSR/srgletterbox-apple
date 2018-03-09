@@ -114,7 +114,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)dealloc
 {
-    [self unregisterListenersForController:self.controller];
+    [self unregisterListeners];
 }
 
 #pragma mark Overrides
@@ -156,7 +156,7 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self registerUserInterfaceUpdateTimers];
+        [self registerUserInterfaceUpdateTimersForController:self.controller];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -229,13 +229,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super willUpdateController];
     
-    if (self.controller) {
-        [self unregisterListenersForController:self.controller];
-        
-        SRGMediaPlayerController *previousMediaPlayerController = self.controller.mediaPlayerController;
-        if (previousMediaPlayerController.view.superview == self.playbackView) {
-            [previousMediaPlayerController.view removeFromSuperview];
-        }
+    [self unregisterListeners];
+    [self unregisterUserInterfaceUpdateTimers];
+    
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    if (mediaPlayerController.view.superview == self.playbackView) {
+        [mediaPlayerController.view removeFromSuperview];
     }
 }
 
@@ -253,11 +252,11 @@ static void commonInit(SRGLetterboxView *self);
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
-    if (self.controller) {
-        SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-        [self registerListenersForController:self.controller];
-        [self registerUserInterfaceUpdateTimersForController:self.controller];
-        
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    [self registerListeners];
+    [self registerUserInterfaceUpdateTimers];
+    
+    if (mediaPlayerController.view) {
         [self.playbackView addSubview:mediaPlayerController.view];
         
         // Force autolayout to ensure the layout is immediately correct
@@ -266,9 +265,6 @@ static void commonInit(SRGLetterboxView *self);
         }];
         
         [self.playbackView layoutIfNeeded];
-    }
-    else {
-        [self unregisterUserInterfaceUpdateTimers];
     }
     
     [self refreshAnimated:NO];
@@ -484,8 +480,9 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma Listeners
 
-- (void)registerListenersForController:(SRGLetterboxController *)controller
+- (void)registerListeners
 {
+    SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -532,8 +529,9 @@ static void commonInit(SRGLetterboxView *self);
     }];
 }
 
-- (void)unregisterListenersForController:(SRGLetterboxController *)controller
+- (void)unregisterListeners
 {
+    SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
