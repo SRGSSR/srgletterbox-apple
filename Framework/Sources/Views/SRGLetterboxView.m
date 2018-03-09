@@ -323,7 +323,7 @@ static void commonInit(SRGLetterboxView *self);
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
             self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-            [self updateUserInterfaceAnimated:animated];
+            [self updateLayoutAnimated:animated];
         }
         self.fullScreenAnimationRunning = NO;
     }];
@@ -389,7 +389,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.preferredTimelineHeight = preferredTimelineHeight;
-    [self updateUserInterfaceAnimated:animated];
+    [self updateLayoutAnimated:animated];
 }
 
 - (BOOL)isTimelineAlwaysHidden
@@ -456,7 +456,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self srg_recursivelyReloadData];
     [self reloadImage];
-    [self updateUserInterfaceAnimated:animated];
+    [self updateLayoutAnimated:animated];
 }
 
 - (void)reloadImage
@@ -579,7 +579,7 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceHidden = hidden;
     self.userInterfaceTogglable = togglable;
     
-    [self updateUserInterfaceAnimated:animated];
+    [self updateLayoutAnimated:animated];
 }
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
@@ -597,9 +597,55 @@ static void commonInit(SRGLetterboxView *self);
     [self setUserInterfaceHidden:hidden animated:animated togglable:self.userInterfaceTogglable];
 }
 
-#pragma mark UI updates
+#pragma mark Layout updates
 
-- (BOOL)updateLayout
+- (void)updateLayoutAnimated:(BOOL)animated
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
+        _inWillAnimateUserInterface = YES;
+        [self.delegate letterboxViewWillAnimateUserInterface:self];
+        _inWillAnimateUserInterface = NO;
+    }
+    
+    void (^animations)(void) = ^{
+        BOOL userInterfaceHidden = [self updateMainLayout];
+        CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
+        CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
+        
+        self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
+        
+        BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+        if (! self.fullScreen && ! isFrameFullScreen) {
+            self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
+        }
+        
+        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+        if (self.targetVideoGravity) {
+            playerLayer.videoGravity = self.targetVideoGravity;
+            self.targetVideoGravity = nil;
+        }
+    };
+    void (^completion)(BOOL) = ^(BOOL finished) {
+        self.completion ? self.completion(finished) : nil;
+        
+        self.animations = nil;
+        self.completion = nil;
+    };
+    
+    if (animated) {
+        [self layoutIfNeeded];
+        [UIView animateWithDuration:0.2 animations:^{
+            animations();
+            [self layoutIfNeeded];
+        } completion:completion];
+    }
+    else {
+        animations();
+        completion(YES);
+    }
+}
+
+- (BOOL)updateMainLayout
 {
     BOOL userInterfaceHidden = NO;
     switch ([self userInterfaceBehavior]) {
@@ -678,58 +724,14 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-- (void)updateUserInterfaceAnimated:(BOOL)animated
-{
-    if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
-        _inWillAnimateUserInterface = YES;
-        [self.delegate letterboxViewWillAnimateUserInterface:self];
-        _inWillAnimateUserInterface = NO;
-    }
-    
-    void (^animations)(void) = ^{
-        BOOL userInterfaceHidden = [self updateLayout];
-        CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
-        CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        
-        self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
-        
-        BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-        if (! self.fullScreen && ! isFrameFullScreen) {
-            self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
-        }
-        
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-        if (self.targetVideoGravity) {
-            playerLayer.videoGravity = self.targetVideoGravity;
-            self.targetVideoGravity = nil;
-        }
-    };
-    void (^completion)(BOOL) = ^(BOOL finished) {
-        self.completion ? self.completion(finished) : nil;
-        
-        self.animations = nil;
-        self.completion = nil;
-    };
-    
-    if (animated) {
-        [self layoutIfNeeded];
-        [UIView animateWithDuration:0.2 animations:^{
-            animations();
-            [self layoutIfNeeded];
-        } completion:completion];
-    }
-    else {
-        animations();
-        completion(YES);
-    }
-}
+#pragma mark Timer registration
 
 - (void)registerUserInterfaceUpdateTimersForController:(SRGLetterboxController *)controller
 {
     @weakify(self)
     self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        [self updateUserInterfaceAnimated:YES];
+        [self updateLayoutAnimated:YES];
     }];
 }
 
@@ -809,7 +811,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = notificationMessage;
     
-    [self updateUserInterfaceAnimated:animated];
+    [self updateLayoutAnimated:animated];
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
@@ -825,7 +827,7 @@ static void commonInit(SRGLetterboxView *self);
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self updateUserInterfaceAnimated:animated];
+    [self updateLayoutAnimated:animated];
 }
 
 #pragma mark Subdivisions
@@ -871,7 +873,7 @@ static void commonInit(SRGLetterboxView *self);
         self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
     }
     
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 #pragma mark Actions
@@ -985,7 +987,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackDidRetry:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 - (void)livestreamDidFinish:(NSNotification *)notification
@@ -1037,30 +1039,30 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)externalPlaybackStateDidChange:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 // Called when the route is changed from the control center
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
-    [self updateUserInterfaceAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
