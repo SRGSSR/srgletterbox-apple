@@ -138,8 +138,6 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.delegate = self;
     self.continuousPlaybackView.delegate = self;
     
-    self.availabilityView.alpha = 0.f;
-    
     self.timelineHeightConstraint.constant = 0.f;
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
@@ -280,12 +278,6 @@ static void commonInit(SRGLetterboxView *self);
     _inactivityTimer = inactivityTimer;
 }
 
-- (BOOL)isAvailabilityViewHidden
-{
-    SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:[NSDate date]];
-    return ! self.controller.media || (blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate);
-}
-
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -295,10 +287,9 @@ static void commonInit(SRGLetterboxView *self);
     // control visbility state variable, only its visual result.
     BOOL hasError = (self.controller.error != nil);
     BOOL hasMedia = self.controller.media || self.controller.URN;
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
-    if (hasError || ! hasMedia || isAvailabilityViewVisible || self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    if (hasError || ! hasMedia || self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
@@ -317,11 +308,10 @@ static void commonInit(SRGLetterboxView *self);
     
     // Timeline and error overlays must be displayed at the same time.
     BOOL hasError = (self.controller.error != nil);
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
     if (! [self isTimelineAlwaysHidden]
-        && (hasError || isAvailabilityViewVisible || isUsingAirplay || (self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
+        && (hasError || isUsingAirplay || (self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
                 || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
@@ -632,9 +622,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     BOOL isContinuousPlaybackViewVisible = (self.controller.continuousPlaybackUpcomingMedia != nil);
-    BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden] && ! isContinuousPlaybackViewVisible;
     
-    self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;

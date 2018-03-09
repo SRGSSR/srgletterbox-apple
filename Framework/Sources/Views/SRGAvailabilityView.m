@@ -89,6 +89,8 @@
     
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
     if (blockingReason == SRGBlockingReasonEndDate) {
+        self.alpha = 1.f;
+        
         self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
         self.messageLabel.hidden = NO;
         self.messageBackgroundView.hidden = NO;
@@ -97,6 +99,8 @@
         self.countdownView.hidden = YES;
     }
     else if (blockingReason == SRGBlockingReasonStartDate) {
+        self.alpha = 1.f;
+        
         NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
         NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
         
@@ -143,6 +147,8 @@
         }
     }
     else {
+        self.alpha = 0.f;
+        
         self.messageLabel.hidden = YES;
         self.countdownView.hidden = YES;
     }
