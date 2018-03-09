@@ -454,95 +454,6 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Overrides
 
-- (void)registerListenersForController:(SRGLetterboxController *)controller
-{
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(metadataDidChange:)
-                                                 name:SRGLetterboxMetadataDidChangeNotification
-                                               object:controller];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackDidFail:)
-                                                 name:SRGLetterboxPlaybackDidFailNotification
-                                               object:controller];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackDidRetry:)
-                                                 name:SRGLetterboxPlaybackDidRetryNotification
-                                               object:controller];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(livestreamDidFinish:)
-                                                 name:SRGLetterboxLivestreamDidFinishNotification
-                                               object:controller];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackStateDidChange:)
-                                                 name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(segmentDidStart:)
-                                                 name:SRGMediaPlayerSegmentDidStartNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(segmentDidEnd:)
-                                                 name:SRGMediaPlayerSegmentDidEndNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(willSkipBlockedSegment:)
-                                                 name:SRGMediaPlayerWillSkipBlockedSegmentNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(externalPlaybackStateDidChange:)
-                                                 name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
-                                               object:mediaPlayerController];
-    
-    @weakify(self)
-    [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
-        @strongify(self)
-        [self refreshAnimated:YES];
-    }];
-
-}
-
-- (void)unregisterListenersForController:(SRGLetterboxController *)controller
-{
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxMetadataDidChangeNotification
-                                                  object:controller];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxPlaybackDidFailNotification
-                                                  object:controller];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxPlaybackDidRetryNotification
-                                                  object:controller];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxLivestreamDidFinishNotification
-                                                  object:controller];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerSegmentDidStartNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerSegmentDidEndNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
-                                                  object:mediaPlayerController];
-    
-    [controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia)];
-    
-    if (mediaPlayerController.view.superview == self.playbackView) {
-        [mediaPlayerController.view removeFromSuperview];
-    }
-    
-}
-
 - (void)willUpdateController
 {
     [super willUpdateController];
@@ -603,6 +514,97 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+}
+
+#pragma Listeners
+
+- (void)registerListenersForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(metadataDidChange:)
+                                                 name:SRGLetterboxMetadataDidChangeNotification
+                                               object:controller];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackDidFail:)
+                                                 name:SRGLetterboxPlaybackDidFailNotification
+                                               object:controller];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackDidRetry:)
+                                                 name:SRGLetterboxPlaybackDidRetryNotification
+                                               object:controller];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(livestreamDidFinish:)
+                                                 name:SRGLetterboxLivestreamDidFinishNotification
+                                               object:controller];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackStateDidChange:)
+                                                 name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                               object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(segmentDidStart:)
+                                                 name:SRGMediaPlayerSegmentDidStartNotification
+                                               object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(segmentDidEnd:)
+                                                 name:SRGMediaPlayerSegmentDidEndNotification
+                                               object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willSkipBlockedSegment:)
+                                                 name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                               object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(externalPlaybackStateDidChange:)
+                                                 name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
+                                               object:mediaPlayerController];
+    
+    @weakify(self)
+    [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self refreshAnimated:YES];
+    }];
+    
+}
+
+- (void)unregisterListenersForController:(SRGLetterboxController *)controller
+{
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxMetadataDidChangeNotification
+                                                  object:controller];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxPlaybackDidFailNotification
+                                                  object:controller];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxPlaybackDidRetryNotification
+                                                  object:controller];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxLivestreamDidFinishNotification
+                                                  object:controller];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                  object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGMediaPlayerSegmentDidStartNotification
+                                                  object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGMediaPlayerSegmentDidEndNotification
+                                                  object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                                  object:mediaPlayerController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
+                                                  object:mediaPlayerController];
+    
+    [controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia)];
+    
+    if (mediaPlayerController.view.superview == self.playbackView) {
+        [mediaPlayerController.view removeFromSuperview];
+    }
+    
 }
 
 #pragma mark UI behavior changes
@@ -748,9 +750,6 @@ static void commonInit(SRGLetterboxView *self);
         BOOL userInterfaceHidden = [self updateLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        
-        // TODO: Recursively call layout update hooks
-        [self.controlsView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
         
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
         
