@@ -6,14 +6,6 @@
 
 #import "SRGLetterboxControllerView.h"
 
-#import "SRGLetterboxView.h"
-
-@interface SRGLetterboxControllerView ()
-
-@property (nonatomic, readonly) SRGLetterboxView *srg_letterbox_parentView;
-
-@end
-
 @implementation SRGLetterboxControllerView
 
 #pragma mark Getters and setters
@@ -25,18 +17,6 @@
     [self didAttach];
     [self reloadData];
     [self srg_letterbox_updateLayout];
-}
-
-- (SRGLetterboxView *)srg_letterbox_parentView
-{
-    UIView *parentView = self.superview;
-    while (parentView) {
-        if ([parentView isKindOfClass:[SRGLetterboxView class]]) {
-            return (SRGLetterboxView *)parentView;
-        }
-        parentView = parentView.superview;
-    }
-    return nil;
 }
 
 #pragma mark Overrides
@@ -61,7 +41,7 @@
 
 - (void)srg_letterbox_updateLayout
 {
-    BOOL userInterfaceHidden = self.srg_letterbox_parentView ? self.srg_letterbox_parentView.userInterfaceHidden : YES;
+    BOOL userInterfaceHidden = self.contextView ? self.contextView.userInterfaceHidden : YES;
     [self updateLayoutForUserInterfaceHidden:userInterfaceHidden];
 }
 

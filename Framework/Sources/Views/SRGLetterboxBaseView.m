@@ -36,6 +36,21 @@ static void commonInit(SRGLetterboxBaseView *self);
     return self;
 }
 
+#pragma mark Getters and setters
+
+- (SRGLetterboxView *)contextView
+{
+    // Start with self. The context can namely be the receiver itself
+    UIView *contextView = self;
+    while (contextView) {
+        if ([contextView isKindOfClass:[SRGLetterboxView class]]) {
+            return (SRGLetterboxView *)contextView;
+        }
+        contextView = contextView.superview;
+    }
+    return nil;
+}
+
 #pragma mark Overrides
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -89,12 +104,15 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 static void commonInit(SRGLetterboxBaseView *self)
 {
-    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-    // an `SRGLetterboxBaseView` to avoid infinite recursion
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    view.backgroundColor = [UIColor clearColor];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
+    NSString *nibName = NSStringFromClass([self class]);
+    if ([[NSBundle srg_letterboxBundle] pathForResource:nibName ofType:@"nib"]) {
+        // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
+        // an `SRGLetterboxBaseView` to avoid infinite recursion
+        UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:nibName owner:self options:nil] firstObject];
+        view.backgroundColor = [UIColor clearColor];
+        [self addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+    }
 }

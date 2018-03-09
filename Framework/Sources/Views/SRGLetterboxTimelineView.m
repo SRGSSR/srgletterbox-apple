@@ -19,7 +19,6 @@
 
 @interface SRGLetterboxTimelineView ()
 
-// TODO: Can now get rid of internal chapter URN property?
 @property (nonatomic) SRGMediaURN *chapterURN;
 @property (nonatomic) NSArray<SRGSubdivision *> *subdivisions;
 

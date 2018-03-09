@@ -36,7 +36,7 @@ OBJC_EXPORT NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *
 /*
  *  User interface behavior.
  */
-- (SRGLetterboxViewBehavior)userInterfaceBehavior;
+@property (nonatomic, readonly) SRGLetterboxViewBehavior userInterfaceBehavior;
 
 @end
 

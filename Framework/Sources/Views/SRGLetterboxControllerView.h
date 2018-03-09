@@ -4,10 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
 #import "SRGLetterboxBaseView.h"
-
-#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

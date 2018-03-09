@@ -129,7 +129,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super awakeFromNib];
     
-    self.accessibilityView.letterboxView = self;
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
     
     UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
