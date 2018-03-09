@@ -613,9 +613,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)updateLayout
 {
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
-    
     BOOL userInterfaceHidden = NO;
     switch ([self userInterfaceBehavior]) {
         case SRGLetterboxViewBehaviorForcedHidden: {
@@ -642,10 +639,12 @@ static void commonInit(SRGLetterboxView *self);
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
     
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
-    SRGMedia *media = self.controller.media;
-    BOOL playerViewVisible = (media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
+    BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     if (@available(iOS 11, *)) {
         if ([NSBundle srg_letterbox_isProductionVersion] && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirplayActive]) {
