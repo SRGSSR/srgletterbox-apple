@@ -12,19 +12,14 @@
 @interface SRGControlWrapperView : UIView
 
 /**
- *  Wrapped view which declared as the only accessibility element.
- */
-@property (nonatomic, weak) IBOutlet UIView *wrappedView;
-
-/**
- *  When set to `YES`, force the view to be hidden / display like the wrapped view.
+ *  When set to `YES`, force the view to be hidden / display like the first subview.
  *
  *  Default value is `NO`.
  */
-@property (nonatomic, getter=isObservingWrappedViewHidden) IBInspectable BOOL observingWrappedViewHidden;
+@property (nonatomic, getter=isObservingFirstSubviewHidden) IBInspectable BOOL observingFirstSubviewHidden;
 
 /**
- *  When set to `YES`, force the view to be always hidden, even if the wrapper view and subviews aren't hidden.
+ *  When set to `YES`, force the view to be always hidden, even if subviews aren't hidden.
  *
  *  Default value is `NO`.
  */

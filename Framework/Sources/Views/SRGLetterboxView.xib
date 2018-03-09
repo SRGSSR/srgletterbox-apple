@@ -71,7 +71,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diO-OC-keM" userLabel="Playback View">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                    <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                     <subviews>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
                             <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
@@ -80,10 +80,10 @@
                             <gestureRecognizers/>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                            <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hl-p0-Y81">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                            <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <connections>
@@ -105,17 +105,17 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                    <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5q-RH-Wvg" userLabel="User Interface Toggle Active View">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="255"/>
+                            <rect key="frame" x="0.0" y="0.0" width="619" height="255"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="cSD-No-gUM" appends="YES" id="Llk-zp-Ezc"/>
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-Cd-a2U">
-                            <rect key="frame" x="0.0" y="255" width="617" height="48"/>
+                            <rect key="frame" x="0.0" y="255" width="619" height="48"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-wz-mvo" customClass="SRGViewModeButton">
                                     <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -142,10 +142,10 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mPC-dS-wD5" userLabel="Time Slider Wrapper View" customClass="SRGControlWrapperView">
-                                    <rect key="frame" x="144" y="0.0" width="16" height="48"/>
+                                    <rect key="frame" x="144" y="0.0" width="274" height="48"/>
                                     <subviews>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGLetterboxTimeSlider">
-                                            <rect key="frame" x="6" y="13" width="4" height="23"/>
+                                            <rect key="frame" x="6" y="13" width="262" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="22" id="7RX-FO-lDz"/>
                                             </constraints>
@@ -170,21 +170,35 @@
                                         <constraint firstItem="TJI-j4-mRH" firstAttribute="leading" secondItem="mPC-dS-wD5" secondAttribute="leading" constant="8" id="QiC-u5-MZI"/>
                                         <constraint firstAttribute="trailing" secondItem="TJI-j4-mRH" secondAttribute="trailing" constant="8" id="inh-eY-Y04"/>
                                     </constraints>
-                                    <connections>
-                                        <outlet property="wrappedView" destination="TJI-j4-mRH" id="O1d-Ja-A0n"/>
-                                    </connections>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="observingFirstSubviewHidden" value="NO"/>
+                                    </userDefinedRuntimeAttributes>
                                 </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Duration Label">
-                                    <rect key="frame" x="160" y="0.0" width="335" height="48"/>
-                                    <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gZ9-8M-zG6" userLabel="Duration Wrapper View" customClass="SRGControlWrapperView">
+                                    <rect key="frame" x="418" y="0.0" width="0.0" height="48"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Duration Label">
+                                            <rect key="frame" x="-168" y="0.0" width="335" height="48"/>
+                                            <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="5WU-3U-ZqK" secondAttribute="trailing" constant="13" id="B4b-8m-rSY"/>
+                                        <constraint firstItem="5WU-3U-ZqK" firstAttribute="centerY" secondItem="gZ9-8M-zG6" secondAttribute="centerY" id="NoG-Iq-lbY"/>
+                                        <constraint firstItem="5WU-3U-ZqK" firstAttribute="leading" secondItem="gZ9-8M-zG6" secondAttribute="leading" constant="13" id="RGX-1P-PLh"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="observingFirstSubviewHidden" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="189-ZC-Nor" userLabel="Live label Wrapper View" customClass="SRGControlWrapperView">
-                                    <rect key="frame" x="495" y="0.0" width="26" height="48"/>
+                                    <rect key="frame" x="468" y="0.0" width="55" height="48"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KBJ-eu-VbX" userLabel="Live Label" customClass="SRGLiveLabel">
-                                            <rect key="frame" x="13" y="15.5" width="0.0" height="16.5"/>
+                                            <rect key="frame" x="13" y="15.5" width="29" height="16.5"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -196,12 +210,12 @@
                                         <constraint firstItem="KBJ-eu-VbX" firstAttribute="centerY" secondItem="189-ZC-Nor" secondAttribute="centerY" constant="-0.5" id="I9o-f6-Dg6"/>
                                         <constraint firstItem="KBJ-eu-VbX" firstAttribute="leading" secondItem="189-ZC-Nor" secondAttribute="leading" constant="13" id="UXr-jf-yTC"/>
                                     </constraints>
-                                    <connections>
-                                        <outlet property="wrappedView" destination="KBJ-eu-VbX" id="w9v-Zd-Ljc"/>
-                                    </connections>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="observingFirstSubviewHidden" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
-                                    <rect key="frame" x="521" y="0.0" width="48" height="48"/>
+                                    <rect key="frame" x="523" y="0.0" width="48" height="48"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
@@ -209,7 +223,7 @@
                                     </constraints>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WT7-v6-7uh" userLabel="Controls Full Screen Button" customClass="SRGFullScreenButton">
-                                    <rect key="frame" x="569" y="0.0" width="48" height="48"/>
+                                    <rect key="frame" x="571" y="0.0" width="48" height="48"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="width" priority="999" constant="48" id="wp2-4M-YHh"/>
@@ -227,7 +241,7 @@
                             </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                            <rect key="frame" x="234.5" y="107.5" width="64" height="88"/>
+                            <rect key="frame" x="235.5" y="107.5" width="64" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                             <state key="normal" image="backward-48"/>
@@ -236,12 +250,12 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                            <rect key="frame" x="298.5" y="120.5" width="20" height="62"/>
+                            <rect key="frame" x="299.5" y="120.5" width="20" height="62"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                            <rect key="frame" x="318.5" y="107.5" width="64" height="88"/>
+                            <rect key="frame" x="319.5" y="107.5" width="64" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                             <state key="normal" image="forward-48"/>
@@ -250,7 +264,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                            <rect key="frame" x="382.5" y="107.5" width="64" height="88"/>
+                            <rect key="frame" x="383.5" y="107.5" width="64" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                             <state key="normal" image="back_live-48"/>
@@ -278,10 +292,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View">
-                    <rect key="frame" x="0.0" y="303" width="617" height="18"/>
+                    <rect key="frame" x="0.0" y="303" width="619" height="18"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4W1-hx-tda" userLabel="Notification Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="18"/>
+                            <rect key="frame" x="0.0" y="0.0" width="619" height="18"/>
                             <subviews>
                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="notification-16" translatesAutoresizingMaskIntoConstraints="NO" id="0Mg-fI-Oss">
                                     <rect key="frame" x="4" y="1" width="16" height="16"/>
@@ -292,7 +306,7 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="&lt;notification&gt;" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="erX-bp-o7I">
-                                    <rect key="frame" x="28" y="0.0" width="581" height="18"/>
+                                    <rect key="frame" x="28" y="0.0" width="583" height="18"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -317,21 +331,21 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-Uc-uEb" customClass="SRGLetterboxTimelineView">
-                    <rect key="frame" x="0.0" y="321" width="617" height="0.0"/>
+                    <rect key="frame" x="0.0" y="321" width="619" height="0.0"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" id="eCB-ci-0lC"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-eN-bUs" userLabel="Availability View">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                    <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kqh-PW-yvN" customClass="SRGCountdownView">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                            <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-dd-8By" userLabel="Availability Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="569" y="255" width="48" height="48"/>
+                            <rect key="frame" x="571" y="255" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="vbq-6i-PaK"/>
@@ -344,7 +358,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr" customClass="SRGPaddedLabel">
-                            <rect key="frame" x="271" y="144.5" width="75" height="14.5"/>
+                            <rect key="frame" x="254" y="144.5" width="75" height="14.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -362,14 +376,14 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In0-qW-XO1">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                    <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7IC-Zz-0Qp" customClass="SRGContinuousPlaybackView">
-                            <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                            <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ud9-ir-nBF" userLabel="Continuous Playback Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="569" y="255" width="48" height="48"/>
+                            <rect key="frame" x="571" y="255" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="XTQ-9s-fVu"/>
@@ -391,10 +405,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aWQ-IF-YZO" userLabel="Error View">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="303"/>
+                    <rect key="frame" x="0.0" y="0.0" width="619" height="303"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ess-8e-PUx" userLabel="Error Full Screen Button" customClass="SRGFullScreenButton">
-                            <rect key="frame" x="569" y="255" width="48" height="48"/>
+                            <rect key="frame" x="571" y="255" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="HBf-Xn-XW4"/>
@@ -407,33 +421,33 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zef-QB-r5b">
-                            <rect key="frame" x="8" y="36" width="601" height="231"/>
+                            <rect key="frame" x="8" y="36" width="603" height="231"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDL-Lo-qgh" userLabel="Spacer View">
-                                    <rect key="frame" x="0.0" y="0.0" width="601" height="69"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="603" height="69"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="Qcj-e1-NDt">
-                                    <rect key="frame" x="0.0" y="77" width="601" height="25"/>
+                                    <rect key="frame" x="0.0" y="77" width="603" height="25"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" priority="999" constant="25" id="xnv-o5-pwv"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2BA-1U-foT">
-                                    <rect key="frame" x="0.0" y="110" width="601" height="20.5"/>
+                                    <rect key="frame" x="0.0" y="110" width="603" height="20.5"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Tap to retry" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOa-XY-Rd1">
-                                    <rect key="frame" x="0.0" y="138.5" width="601" height="16"/>
+                                    <rect key="frame" x="0.0" y="138.5" width="603" height="16"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cW-7G-KzV" userLabel="Spacer View">
-                                    <rect key="frame" x="0.0" y="162.5" width="601" height="68.5"/>
+                                    <rect key="frame" x="0.0" y="162.5" width="603" height="68.5"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                             </subviews>

@@ -11,26 +11,32 @@
 
 @implementation SRGControlWrapperView
 
-#pragma mark Getters and setters
+#pragma mark Overrides
 
-- (void)setWrappedView:(UIView *)wrappedView
+- (void)willMoveToWindow:(UIWindow *)newWindow
 {
-    if (_wrappedView) {
-        [_wrappedView removeObserver:self keyPath:@keypath(_wrappedView.hidden)];
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        UIView *wrappedView = self.subviews.firstObject;
+        if (wrappedView) {
+            @weakify(self)
+            [wrappedView addObserver:self keyPath:@keypath(wrappedView.hidden) options:0 block:^(MAKVONotification *notification) {
+                @strongify(self)
+                [self updateHidden];
+            }];
+        }
+        [self updateHidden];
     }
-    
-    _wrappedView = wrappedView;
-    
-    if (wrappedView) {
-        @weakify(self)
-        [wrappedView addObserver:self keyPath:@keypath(wrappedView.hidden) options:0 block:^(MAKVONotification *notification) {
-            @strongify(self)
-            [self updateHidden];
-        }];
+    else {
+        UIView *wrappedView = self.subviews.firstObject;
+        if (wrappedView) {
+            [wrappedView removeObserver:self keyPath:@keypath(wrappedView.hidden)];
+        }
     }
-    
-    [self updateHidden];
 }
+
+#pragma mark Getters and setters
 
 - (void)setAlwaysHidden:(BOOL)alwaysHidden
 {
@@ -45,8 +51,8 @@
     if (self.alwaysHidden) {
         self.hidden = YES;
     }
-    else if (self.observingWrappedViewHidden && self.wrappedView) {
-        self.hidden = self.wrappedView.hidden;
+    else if (self.observingFirstSubviewHidden && self.subviews.firstObject) {
+        self.hidden = self.subviews.firstObject.hidden;
     }
     else {
         // By default, don't hide the view.
@@ -63,7 +69,7 @@
 
 - (NSArray *)accessibilityElements
 {
-    return (self.wrappedView) ? @[self.wrappedView] : nil;
+    return (self.subviews.firstObject) ? @[self.subviews.firstObject] : nil;
 }
 
 @end

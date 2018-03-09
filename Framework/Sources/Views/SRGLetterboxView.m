@@ -1671,8 +1671,6 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     
-    self.liveLabelWrapperView.observingWrappedViewHidden = YES;
-    
     self.videoGravityTapChangeGestureRecognizer.enabled = NO;
     
     self.continuousPlaybackView.delegate = self;
