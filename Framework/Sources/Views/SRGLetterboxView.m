@@ -366,6 +366,11 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineView.subdivisions;
 }
 
+- (void)setNeedsSubdivisionFavoritesUpdate
+{
+    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
+}
+
 - (CMTime)time
 {
     return self.controlsView.time;
@@ -381,21 +386,16 @@ static void commonInit(SRGLetterboxView *self);
     return self.controlsView.live;
 }
 
-#pragma mark Data display
-
-- (void)setNeedsSubdivisionFavoritesUpdate
-{
-    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
-}
+#pragma mark Data refresh
 
 - (void)refreshAnimated:(BOOL)animated
 {
-    [self reloadDataInView:self animated:animated];
+    [self reloadDataInView:self];
     [self reloadImage];
     [self updateUserInterfaceAnimated:animated];
 }
 
-- (void)reloadDataInView:(UIView *)view animated:(BOOL)animated
+- (void)reloadDataInView:(UIView *)view
 {
     if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
         SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
@@ -403,7 +403,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     for (UIView *subview in view.subviews) {
-        [self reloadDataInView:subview animated:animated];
+        [self reloadDataInView:subview];
     }
 }
 
