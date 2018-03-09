@@ -196,7 +196,7 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
         
-        [self reloadDataAnimated:NO];
+        [self refreshAnimated:NO];
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
@@ -410,22 +410,24 @@ static void commonInit(SRGLetterboxView *self);
     [self.timelineView setNeedsSubdivisionFavoritesUpdate];
 }
 
-// Responsible of updating the data to be displayed. Must not alter visibility of UI elements or anything else
-- (void)reloadDataAnimated:(BOOL)animated
+- (void)refreshAnimated:(BOOL)animated
 {
+    [self reloadDataInView:self animated:animated];
     [self reloadImage];
     
-    // TODO: Two ideas:
-    //   - Post a notification, have each view respond to the notification by calling its reload hook
-    //   - Have the parent overlay class register to all notifs (instead of LetterboxView, which could be a subclass of
-    //     the main overlay class, with hidden public interface, though)
-    [self.controlsView reloadData];
-    [self.timelineView reloadData];
-    [self.availabilityView reloadData];
-    [self.continuousPlaybackView reloadData];
-    [self.errorView reloadData];
-    
     [self updateUserInterfaceAnimated:animated];
+}
+
+- (void)reloadDataInView:(UIView *)view animated:(BOOL)animated
+{
+    if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
+        SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
+        [controllerView reloadData];
+    }
+    
+    for (UIView *subview in view.subviews) {
+        [self reloadDataInView:subview animated:animated];
+    }
 }
 
 - (void)reloadImage
@@ -497,7 +499,7 @@ static void commonInit(SRGLetterboxView *self);
     @weakify(self)
     [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
-        [self reloadDataAnimated:YES];
+        [self refreshAnimated:YES];
     }];
 
 }
@@ -588,7 +590,7 @@ static void commonInit(SRGLetterboxView *self);
         [self unregisterUserInterfaceUpdateTimers];
     }
     
-    [self reloadDataAnimated:YES];
+    [self refreshAnimated:YES];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -1020,7 +1022,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
+    [self refreshAnimated:YES];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -1028,7 +1030,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = NSNotFound;
     self.timelineView.time = kCMTimeZero;
     
-    [self reloadDataAnimated:YES];
+    [self refreshAnimated:YES];
 }
 
 - (void)playbackDidRetry:(NSNotification *)notification
@@ -1043,7 +1045,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
+    [self refreshAnimated:YES];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
@@ -1113,7 +1115,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self reloadDataAnimated:YES];
+    [self refreshAnimated:YES];
 }
 
 @end
