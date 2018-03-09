@@ -390,21 +390,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)refreshAnimated:(BOOL)animated
 {
-    [self reloadDataInView:self];
+    [self recursivelyReloadData];
     [self reloadImage];
     [self updateUserInterfaceAnimated:animated];
-}
-
-- (void)reloadDataInView:(UIView *)view
-{
-    if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
-        SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
-        [controllerView reloadData];
-    }
-    
-    for (UIView *subview in view.subviews) {
-        [self reloadDataInView:subview];
-    }
 }
 
 - (void)reloadImage
@@ -662,24 +650,12 @@ static void commonInit(SRGLetterboxView *self);
         [self.loadingImageView stopAnimating];
     }
     
-    [self updateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
+    [self recursivelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
     
     return userInterfaceHidden;
-}
-
-- (void)updateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
-{
-    if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
-        SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
-        [controllerView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    }
-    
-    for (UIView *subview in view.subviews) {
-        [self updateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
-    }
 }
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
