@@ -139,7 +139,8 @@
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
-    self.alpha = ! userInterfaceHidden ? 1.f : 0.f;
+    SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
+    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
     
     // General playback controls
     if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
