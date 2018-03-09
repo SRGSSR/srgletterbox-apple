@@ -473,7 +473,7 @@ static void commonInit(SRGLetterboxView *self);
         [self unregisterUserInterfaceUpdateTimers];
     }
     
-    [self refreshAnimated:YES];
+    [self refreshAnimated:NO];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
