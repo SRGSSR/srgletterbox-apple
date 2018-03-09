@@ -66,7 +66,7 @@
 
 @implementation UIView (SRGLetterboxControllerView)
 
-- (void)recursivelyReloadData
+- (void)srg_recursivelyReloadData
 {
     [self reloadDataInView:self];
 }
@@ -83,7 +83,7 @@
     }
 }
 
-- (void)recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)srg_recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [self updateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
 }

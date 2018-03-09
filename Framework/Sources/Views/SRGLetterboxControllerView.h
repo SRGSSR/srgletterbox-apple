@@ -33,8 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIView (SRGLetterboxControllerView)
 
-- (void)recursivelyReloadData;
-- (void)recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden;
+- (void)srg_recursivelyReloadData;
+- (void)srg_recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden;
 
 @end
 

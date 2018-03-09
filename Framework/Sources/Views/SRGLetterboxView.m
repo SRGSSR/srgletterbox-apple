@@ -397,7 +397,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)refreshAnimated:(BOOL)animated
 {
-    [self recursivelyReloadData];
+    [self srg_recursivelyReloadData];
     [self reloadImage];
     [self updateUserInterfaceAnimated:animated];
 }
@@ -643,7 +643,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.loadingImageView stopAnimating];
     }
     
-    [self recursivelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [self srg_recursivelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
