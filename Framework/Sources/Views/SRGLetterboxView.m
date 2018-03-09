@@ -102,10 +102,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (self = [super initWithFrame:frame]) {
         commonInit(self);
-        
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an `SRGLetterboxView`. Manually
-        // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
-        [self awakeFromNib];
     }
     return self;
 }
@@ -142,6 +138,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
+    self.continuousPlaybackView.delegate = self;
     
     self.availabilityView.alpha = 0.f;
     self.errorView.hidden = YES;
@@ -155,6 +152,7 @@ static void commonInit(SRGLetterboxView *self);
     activityGestureRecognizer.delegate = self;
     [self addGestureRecognizer:activityGestureRecognizer];
     
+    self.videoGravityTapChangeGestureRecognizer.enabled = NO;
     self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
     
     BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
@@ -1132,28 +1130,15 @@ static void commonInit(SRGLetterboxView *self);
 
 static void commonInit(SRGLetterboxView *self)
 {
-    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-    // an SRGLetterboxView to avoid infinite recursion
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-    
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
-    
-    self.videoGravityTapChangeGestureRecognizer.enabled = NO;
-    
-    self.continuousPlaybackView.delegate = self;
+    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         self.accessibilityIgnoresInvertColors = YES;
     }
 #endif
-    
-    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
 }
 
 NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
