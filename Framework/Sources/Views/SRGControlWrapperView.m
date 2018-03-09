@@ -49,6 +49,7 @@
         self.hidden = self.wrappedView.hidden;
     }
     else {
+        // By default, don't hide the view.
         self.hidden = NO;
     }
 }

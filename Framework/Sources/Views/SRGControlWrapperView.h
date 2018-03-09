@@ -6,11 +6,13 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  Control wrapper view helps a control to have margin constraints in the control stack view.
+ */
 @interface SRGControlWrapperView : UIView
 
 /**
  *  Wrapped view which declared as the only accessibility element.
- *
  */
 @property (nonatomic, weak) IBOutlet UIView *wrappedView;
 
@@ -22,7 +24,7 @@
 @property (nonatomic, getter=isObservingWrappedViewHidden) IBInspectable BOOL observingWrappedViewHidden;
 
 /**
- *  When set to `YES`, force the view to be always hidden, even if the wrapper view isn't empty.
+ *  When set to `YES`, force the view to be always hidden, even if the wrapper view and subviews aren't hidden.
  *
  *  Default value is `NO`.
  */
