@@ -21,7 +21,6 @@
                 <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
                 <outlet property="airplayButton" destination="lr5-be-k4j" id="4p4-NX-C1t"/>
                 <outlet property="availabilityLabel" destination="gY1-0w-vfr" id="5Gf-M7-FVx"/>
-                <outlet property="availabilityLabelBackgroundView" destination="itD-sp-6vZ" id="fGv-b8-aOY"/>
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Hum-Dp-d4M"/>
                 <outlet property="backwardSeekButton" destination="cih-8k-dqC" id="BMB-dJ-c01"/>
                 <outlet property="continuousPlaybackView" destination="7IC-Zz-0Qp" id="TgK-ix-TeL"/>
@@ -344,12 +343,8 @@
                                 <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="ZC0-pL-q9N"/>
                             </connections>
                         </button>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="itD-sp-6vZ" userLabel="Availability Label Background View">
-                            <rect key="frame" x="253" y="142.5" width="79" height="18.5"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr">
-                            <rect key="frame" x="253" y="144.5" width="75" height="14.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gY1-0w-vfr" customClass="SRGPaddedLabel">
+                            <rect key="frame" x="271" y="144.5" width="75" height="14.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -358,12 +353,8 @@
                     <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstItem="itD-sp-6vZ" firstAttribute="bottom" secondItem="gY1-0w-vfr" secondAttribute="bottom" constant="2" id="76N-Q1-ZEK"/>
-                        <constraint firstItem="itD-sp-6vZ" firstAttribute="trailing" secondItem="gY1-0w-vfr" secondAttribute="trailing" constant="2" id="9Ut-a5-n3J"/>
                         <constraint firstAttribute="trailing" secondItem="Kqh-PW-yvN" secondAttribute="trailing" id="Ddh-VH-Pq4"/>
-                        <constraint firstItem="itD-sp-6vZ" firstAttribute="top" secondItem="gY1-0w-vfr" secondAttribute="top" constant="-2" id="Fme-Qq-nno"/>
                         <constraint firstAttribute="bottom" secondItem="Kqh-PW-yvN" secondAttribute="bottom" id="G3P-p8-vDd"/>
-                        <constraint firstItem="itD-sp-6vZ" firstAttribute="leading" secondItem="gY1-0w-vfr" secondAttribute="leading" constant="-2" id="RIs-hE-ujL"/>
                         <constraint firstItem="Kqh-PW-yvN" firstAttribute="top" secondItem="Ipy-eN-bUs" secondAttribute="top" id="ZhS-ef-hcS"/>
                         <constraint firstItem="Kqh-PW-yvN" firstAttribute="leading" secondItem="Ipy-eN-bUs" secondAttribute="leading" id="c2O-js-ZSU"/>
                         <constraint firstItem="gY1-0w-vfr" firstAttribute="centerX" secondItem="Ipy-eN-bUs" secondAttribute="centerX" id="mAD-3q-vfI"/>
