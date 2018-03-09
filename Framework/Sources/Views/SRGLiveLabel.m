@@ -43,12 +43,6 @@ static void commonInit(SRGLiveLabel *self);
     return CGSizeEqualToSize(intrinsicContentSize, CGSizeZero) ? intrinsicContentSize : CGSizeMake(intrinsicContentSize.width + 2 * kHorizontalMargin, kHeight);
 }
 
-//- (void)setHidden:(BOOL)hidden
-//{
-//    [super setHidden:hidden];
-//    self.attributedText = hidden ? nil : [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in controls, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
-//}
-
 #pragma mark Accessibility
 
 - (BOOL)isAccessibilityElement
@@ -72,6 +66,7 @@ static void commonInit(SRGLiveLabel *self)
 {
     self.backgroundColor = [UIColor redColor];
     self.textColor = [UIColor whiteColor];
+    self.attributedText = [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     self.textAlignment = NSTextAlignmentCenter;
     self.numberOfLines = 1;
     self.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
