@@ -94,9 +94,9 @@
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
 }
 
-- (void)didAttach
+- (void)didUpdateController
 {
-    [super didAttach];
+    [super didUpdateController];
     
     self.playbackButton.controller = self.controller;
     

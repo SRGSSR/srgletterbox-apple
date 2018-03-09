@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
+#import "SRGLetterboxControllerView.h"
 
 #import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  controls will be hidden from view so that the error can be properly read.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
+@interface SRGLetterboxView : SRGLetterboxControllerView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
 
 /**
  *  Set the motion manager to use for device tracking when playing 360° videos. At most one motion manager should
@@ -199,12 +199,6 @@ IB_DESIGNABLE
  *  behavior is undefined.
  */
 + (void)setMotionManager:(nullable CMMotionManager *)motionManager;
-
-/**
- *  The controller bound to the view. The controller can be changed at any time, the view will automatically be updated
- *  accordingly.
- */
-@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
 
 /**
  *  View optional delegate.

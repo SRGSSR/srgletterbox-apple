@@ -81,7 +81,7 @@
 		6F555837204ABBBB00878A97 /* SRGAvailabilityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F555835204ABBBB00878A97 /* SRGAvailabilityView.m */; };
 		6F55583A204AD31000878A97 /* SRGErrorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F555838204AD31000878A97 /* SRGErrorView.h */; };
 		6F55583B204AD31000878A97 /* SRGErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F555839204AD31000878A97 /* SRGErrorView.m */; };
-		6F555846204AE6AB00878A97 /* SRGLetterboxControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F555844204AE6AB00878A97 /* SRGLetterboxControllerView.h */; };
+		6F555846204AE6AB00878A97 /* SRGLetterboxControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F555844204AE6AB00878A97 /* SRGLetterboxControllerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F555847204AE6AB00878A97 /* SRGLetterboxControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F555845204AE6AB00878A97 /* SRGLetterboxControllerView.m */; };
 		6F555849204AEED100878A97 /* SRGAvailabilityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F555848204AEED100878A97 /* SRGAvailabilityView.xib */; };
 		6F5F376E204B04AA0018F84A /* SRGControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F5F376D204B04AA0018F84A /* SRGControlsView.xib */; };
@@ -90,7 +90,7 @@
 		6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */; };
 		6F6EA9051F4DA2D900844199 /* NSTimer+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
-		6F78EBAD204AF28D008B0FCA /* SRGLetterboxBaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F78EBAB204AF28D008B0FCA /* SRGLetterboxBaseView.h */; };
+		6F78EBAD204AF28D008B0FCA /* SRGLetterboxBaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F78EBAB204AF28D008B0FCA /* SRGLetterboxBaseView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F78EBAE204AF28D008B0FCA /* SRGLetterboxBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F78EBAC204AF28D008B0FCA /* SRGLetterboxBaseView.m */; };
 		6F78EBB0204B00A5008B0FCA /* SRGErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F78EBAF204B00A5008B0FCA /* SRGErrorView.xib */; };
 		6F919BD4202DA48E000DD351 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F919BD2202DA48E000DD351 /* SRGRemainingTimeButton.h */; };

@@ -6,15 +6,18 @@
 
 #import "SRGLetterboxControllerView.h"
 
+#import "SRGLetterboxView.h"
+
 @implementation SRGLetterboxControllerView
 
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
 {
+    [self willUpdateController];
     _controller = controller;
+    [self didUpdateController];
     
-    [self didAttach];
     [self reloadData];
     [self srg_letterbox_updateLayout];
 }
@@ -47,7 +50,10 @@
 
 #pragma mark Subclassing hooks
 
-- (void)didAttach
+- (void)willUpdateController
+{}
+
+- (void)didUpdateController
 {}
 
 - (void)reloadData

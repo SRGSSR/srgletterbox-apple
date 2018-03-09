@@ -7,6 +7,7 @@
 #import "SRGLetterboxBaseView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxView.h"
 
 #import <Masonry/Masonry.h>
 

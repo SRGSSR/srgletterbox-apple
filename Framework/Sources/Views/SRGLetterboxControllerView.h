@@ -5,14 +5,23 @@
 //
 
 #import "SRGLetterboxBaseView.h"
+#import "SRGLetterboxController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+// TODO: Hide everything in a subclassing category, except the controller property. Probably import
+//       SRGLetterboxView.h from the private header.
+
 @interface SRGLetterboxControllerView : SRGLetterboxBaseView
 
-@property (nonatomic, weak, nullable) SRGLetterboxController *controller;
+/**
+ *  The controller bound to the view. The controller can be changed at any time, the view will automatically be updated
+ *  accordingly.
+ */
+@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
 
-- (void)didAttach NS_REQUIRES_SUPER;
+- (void)willUpdateController NS_REQUIRES_SUPER;
+- (void)didUpdateController NS_REQUIRES_SUPER;
 
 - (void)reloadData NS_REQUIRES_SUPER;
 
