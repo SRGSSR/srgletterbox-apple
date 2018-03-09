@@ -799,7 +799,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark Letterbox notification banners
+#pragma mark Notification banners
 
 - (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
 {
@@ -872,8 +872,6 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
     }
-    
-    [self updateLayoutAnimated:YES];
 }
 
 #pragma mark Actions
