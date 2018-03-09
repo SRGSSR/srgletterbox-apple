@@ -6,6 +6,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  Live label for the control stack view.
+ */
 @interface SRGLiveLabel : UILabel
 
 @end

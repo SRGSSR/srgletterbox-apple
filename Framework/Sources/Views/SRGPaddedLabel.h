@@ -6,6 +6,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  Padded label with 2 margin points, a 4 corner radius and 75% black color.
+ */
 @interface SRGPaddedLabel : UILabel
 
 @end
