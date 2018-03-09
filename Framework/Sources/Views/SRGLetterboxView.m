@@ -139,7 +139,6 @@ static void commonInit(SRGLetterboxView *self);
     self.continuousPlaybackView.delegate = self;
     
     self.availabilityView.alpha = 0.f;
-    self.errorView.hidden = YES;
     
     self.timelineHeightConstraint.constant = 0.f;
     
@@ -294,7 +293,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Controls and error overlays must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
-    BOOL hasError = (SRGLetterboxViewErrorForController(self.controller) != nil);
+    BOOL hasError = (self.controller.error != nil);
     BOOL hasMedia = self.controller.media || self.controller.URN;
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
@@ -317,7 +316,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
     // Timeline and error overlays must be displayed at the same time.
-    BOOL hasError = (SRGLetterboxViewErrorForController(self.controller) != nil);
+    BOOL hasError = (self.controller.error != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden];
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     
@@ -384,6 +383,24 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isLive
 {
     return self.controlsView.live;
+}
+
+- (NSError *)error
+{
+    NSError *error = self.controller.error;
+    if (error) {
+        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
+        // displayed instead)
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+            return nil;
+        }
+        else {
+            return error;
+        }
+    }
+    else {
+        return nil;
+    }
 }
 
 #pragma mark Data refresh
@@ -525,7 +542,6 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(self)
         [self refreshAnimated:YES];
     }];
-    
 }
 
 - (void)unregisterListenersForController:(SRGLetterboxController *)controller
@@ -617,15 +633,11 @@ static void commonInit(SRGLetterboxView *self);
             break;
         }
     }
-
-    BOOL hasError = (SRGLetterboxViewErrorForController(self.controller) != nil);
-    BOOL hasMedia = self.controller.media || self.controller.URN;
+    
     BOOL isContinuousPlaybackViewVisible = (self.controller.continuousPlaybackUpcomingMedia != nil);
     BOOL isAvailabilityViewVisible = ! [self isAvailabilityViewHidden] && ! isContinuousPlaybackViewVisible;
     
     self.controlsView.alpha = (! userInterfaceHidden && ! isContinuousPlaybackViewVisible) ? 1.f : 0.f;
-    
-    self.errorView.hidden = (! hasError && hasMedia) || isAvailabilityViewVisible || isContinuousPlaybackViewVisible;
     
     self.availabilityView.alpha = isAvailabilityViewVisible ? 1.f : 0.f;
     self.continuousPlaybackView.alpha = isContinuousPlaybackViewVisible ? 1.f : 0.f;
@@ -774,7 +786,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL finished))completion
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
 {
     if (! _inWillAnimateUserInterface) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -1091,22 +1103,4 @@ static void commonInit(SRGLetterboxView *self)
         self.accessibilityIgnoresInvertColors = YES;
     }
 #endif
-}
-
-NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller)
-{
-    NSError *error = controller.error;
-    if (error) {
-        // Do not display unavailability controller errors as errors within the view (pre- and post-roll UI will be
-        // displayed instead)
-        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
-            return nil;
-        }
-        else {
-            return error;
-        }
-    }
-    else {
-        return nil;
-    }
 }

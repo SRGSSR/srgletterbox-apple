@@ -26,12 +26,12 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
     SRGLetterboxViewBehaviorForcedHidden
 };
 
-/**
- *  Return error conditions for a controller, from the point of view of a Letterbox view.
- */
-OBJC_EXPORT NSError *SRGLetterboxViewErrorForController(SRGLetterboxController *controller);
-
 @interface SRGLetterboxView (Private)
+
+/**
+ *  Return error information attached to the view.
+ */
+@property (nonatomic, readonly, nullable) NSError *error;
 
 /*
  *  User interface behavior.

@@ -32,13 +32,6 @@
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    [self reloadData];
-}
-
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
@@ -51,26 +44,34 @@
 {
     [super reloadData];
     
-    NSError *error =  SRGLetterboxViewErrorForController(self.controller);
+    NSError *error = self.contextView.error;
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
-    self.instructionsLabel.text = self.controller.URN ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    self.messageLabel.hidden = NO;
-    self.instructionsLabel.hidden = NO;
-    
-    CGFloat height = CGRectGetHeight(self.frame);
-    if (height < 170.f) {
-        self.instructionsLabel.hidden = YES;
+    if (! self.controller.error) {
+        self.alpha = 0.f;
     }
-    if (height < 140.f) {
-        self.messageLabel.hidden = YES;
+    else {
+        self.alpha = 1.f;
+        
+        self.imageView.hidden = NO;
+        self.messageLabel.hidden = NO;
+        self.instructionsLabel.hidden = NO;
+        
+        CGFloat height = CGRectGetHeight(self.frame);
+        if (height < 170.f) {
+            self.instructionsLabel.hidden = YES;
+        }
+        if (height < 140.f) {
+            self.messageLabel.hidden = YES;
+        }
     }
 }
 
