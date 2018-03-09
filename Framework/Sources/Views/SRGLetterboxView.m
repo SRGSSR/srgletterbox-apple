@@ -55,8 +55,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
 @property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
 
-@property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
-
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
@@ -119,7 +117,7 @@ static void commonInit(SRGLetterboxView *self);
     [self unregisterListenersForController:self.controller];
 }
 
-#pragma mark View lifecycle
+#pragma mark Overrides
 
 - (void)awakeFromNib
 {
@@ -154,11 +152,6 @@ static void commonInit(SRGLetterboxView *self);
     
     self.videoGravityTapChangeGestureRecognizer.enabled = NO;
     self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
-    
-    BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-    [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        button.hidden = fullScreenButtonHidden;
-    }];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -220,8 +213,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark Accessibility
-
 - (void)voiceOverStatusDidChange
 {
     [super voiceOverStatusDidChange];
@@ -242,11 +233,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
 {
     _delegate = delegate;
-    
-    BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-    [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        button.hidden = fullScreenButtonHidden;
-    }];
 }
 
 - (void)setUserInterfaceUpdateTimer:(NSTimer *)userInterfaceUpdateTimer
@@ -279,12 +265,6 @@ static void commonInit(SRGLetterboxView *self);
     
     [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
         if (finished) {
-            BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-            [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-                button.selected = fullScreen;
-                button.hidden = fullScreenButtonHidden;
-            }];
-            
             _fullScreen = fullScreen;
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
@@ -504,11 +484,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    
-    BOOL fullScreenButtonHidden = [self shouldHideFullScreenButton];
-    [self.fullScreenButtons enumerateObjectsUsingBlock:^(SRGFullScreenButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        button.hidden = fullScreenButtonHidden;
-    }];
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
