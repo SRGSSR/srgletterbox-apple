@@ -225,6 +225,63 @@ static void commonInit(SRGLetterboxView *self);
     [self resetInactivityTimer];
 }
 
+- (void)willUpdateController
+{
+    [super willUpdateController];
+    
+    if (self.controller) {
+        [self unregisterListenersForController:self.controller];
+        
+        SRGMediaPlayerController *previousMediaPlayerController = self.controller.mediaPlayerController;
+        if (previousMediaPlayerController.view.superview == self.playbackView) {
+            [previousMediaPlayerController.view removeFromSuperview];
+        }
+    }
+}
+
+- (void)didUpdateController
+{
+    [super didUpdateController];
+    
+    self.controlsView.controller = self.controller;
+    self.errorView.controller = self.controller;
+    self.availabilityView.controller = self.controller;
+    self.continuousPlaybackView.controller = self.controller;
+    self.timelineView.controller = self.controller;
+    
+    // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
+    // cleaned up when the controller changes.
+    self.notificationMessage = nil;
+    
+    if (self.controller) {
+        SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+        [self registerListenersForController:self.controller];
+        [self registerUserInterfaceUpdateTimersForController:self.controller];
+        
+        [self.playbackView addSubview:mediaPlayerController.view];
+        
+        // Force autolayout to ensure the layout is immediately correct
+        [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.playbackView);
+        }];
+        
+        [self.playbackView layoutIfNeeded];
+    }
+    else {
+        [self unregisterUserInterfaceUpdateTimers];
+    }
+    
+    [self refreshAnimated:NO];
+}
+
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
+    BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
+    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+}
+
 #pragma mark Getters and setters
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -423,65 +480,6 @@ static void commonInit(SRGLetterboxView *self);
     else {
         [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
     }
-}
-
-#pragma mark Overrides
-
-- (void)willUpdateController
-{
-    [super willUpdateController];
-    
-    if (self.controller) {
-        [self unregisterListenersForController:self.controller];
-        
-        SRGMediaPlayerController *previousMediaPlayerController = self.controller.mediaPlayerController;
-        if (previousMediaPlayerController.view.superview == self.playbackView) {
-            [previousMediaPlayerController.view removeFromSuperview];
-        }
-    }
-}
-
-- (void)didUpdateController
-{
-    [super didUpdateController];
-    
-    self.controlsView.controller = self.controller;
-    self.errorView.controller = self.controller;
-    self.availabilityView.controller = self.controller;
-    self.continuousPlaybackView.controller = self.controller;
-    self.timelineView.controller = self.controller;
-    
-    // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
-    // cleaned up when the controller changes.
-    self.notificationMessage = nil;
-    
-    if (self.controller) {
-        SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-        [self registerListenersForController:self.controller];
-        [self registerUserInterfaceUpdateTimersForController:self.controller];
-        
-        [self.playbackView addSubview:mediaPlayerController.view];
-        
-        // Force autolayout to ensure the layout is immediately correct
-        [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.playbackView);
-        }];
-        
-        [self.playbackView layoutIfNeeded];
-    }
-    else {
-        [self unregisterUserInterfaceUpdateTimers];
-    }
-    
-    [self refreshAnimated:NO];
-}
-
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
-{
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    
-    BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
-    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
 }
 
 #pragma Listeners
