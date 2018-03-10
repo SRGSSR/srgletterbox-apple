@@ -14,18 +14,24 @@
 
 - (void)dealloc
 {
-    if (self.controller) {
-        [self willDetachFromController];
-    }
+    self.controller = nil;
 }
 
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
 {
-    [self willDetachFromController];
-    _controller = controller;
-    [self didAttachToController];
+    if (_controller) {
+        [self willDetachFromController];
+        _controller = nil;
+        [self didDetachFromController];
+    }
+    
+    if (controller) {
+        [self willAttachToController];
+        _controller = controller;
+        [self didAttachToController];
+    }
     
     [self reloadData];
     [self srg_letterbox_updateLayout];
@@ -60,6 +66,12 @@
 #pragma mark Subclassing hooks
 
 - (void)willDetachFromController
+{}
+
+- (void)didDetachFromController
+{}
+
+- (void)willAttachToController
 {}
 
 - (void)didAttachToController

@@ -230,13 +230,28 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super willDetachFromController];
     
-    [self unregisterObservers];
-    [self refreshAnimated:NO];
-    
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     if (mediaPlayerController.view.superview == self.playbackView) {
         [mediaPlayerController.view removeFromSuperview];
     }
+}
+
+- (void)didDetachFromController
+{
+    [super didDetachFromController];
+    
+    self.controlsView.controller = nil;
+    self.errorView.controller = nil;
+    self.availabilityView.controller = nil;
+    self.continuousPlaybackView.controller = nil;
+    self.timelineView.controller = nil;
+    
+    // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
+    // cleaned up when the controller changes.
+    self.notificationMessage = nil;
+    
+    [self unregisterObservers];
+    [self refreshAnimated:NO];
 }
 
 - (void)didAttachToController
@@ -249,10 +264,6 @@ static void commonInit(SRGLetterboxView *self);
     self.availabilityView.controller = controller;
     self.continuousPlaybackView.controller = controller;
     self.timelineView.controller = controller;
-    
-    // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
-    // cleaned up when the controller changes.
-    self.notificationMessage = nil;
     
     [self registerObservers];
     
