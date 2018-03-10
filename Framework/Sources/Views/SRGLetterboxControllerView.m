@@ -10,13 +10,28 @@
 
 @implementation SRGLetterboxControllerView
 
+#pragma mark Object lifecycle
+
+- (void)dealloc
+{
+    if (self.controller) {
+        [self willDetachFromController];
+    }
+}
+
 #pragma mark Getters and setters
 
 - (void)setController:(SRGLetterboxController *)controller
 {
-    [self willUpdateController];
+    if (_controller) {
+        [self willDetachFromController];
+    }
+    
     _controller = controller;
-    [self didUpdateController];
+    
+    if (controller) {
+        [self didAttachToController];
+    }
     
     [self reloadData];
     [self srg_letterbox_updateLayout];
@@ -50,10 +65,10 @@
 
 #pragma mark Subclassing hooks
 
-- (void)willUpdateController
+- (void)willDetachFromController
 {}
 
-- (void)didUpdateController
+- (void)didAttachToController
 {}
 
 - (void)reloadData

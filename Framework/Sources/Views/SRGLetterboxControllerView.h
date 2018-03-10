@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
 
-- (void)willUpdateController NS_REQUIRES_SUPER;
-- (void)didUpdateController NS_REQUIRES_SUPER;
+- (void)willDetachFromController NS_REQUIRES_SUPER;
+- (void)didAttachToController NS_REQUIRES_SUPER;
 
 - (void)reloadData NS_REQUIRES_SUPER;
 

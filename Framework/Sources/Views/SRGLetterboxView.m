@@ -112,11 +112,6 @@ static void commonInit(SRGLetterboxView *self);
     return self;
 }
 
-- (void)dealloc
-{
-    [self unregisterObservers];
-}
-
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -156,7 +151,12 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self registerUserInterfaceUpdateTimersForController:self.controller];
+        @weakify(self)
+        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            [self updateLayoutAnimated:YES];
+        }];
+        
         [self resetInactivityTimer];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -191,7 +191,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         // Invalidate timers
         self.inactivityTimer = nil;
-        [self unregisterUserInterfaceUpdateTimers];
+        self.userInterfaceUpdateTimer = nil;
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -226,12 +226,12 @@ static void commonInit(SRGLetterboxView *self);
     [self resetInactivityTimer];
 }
 
-- (void)willUpdateController
+- (void)willDetachFromController
 {
-    [super willUpdateController];
+    [super willDetachFromController];
     
     [self unregisterObservers];
-    [self unregisterUserInterfaceUpdateTimers];
+    [self refreshAnimated:NO];
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     if (mediaPlayerController.view.superview == self.playbackView) {
@@ -239,30 +239,29 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)didUpdateController
+- (void)didAttachToController
 {
-    [super didUpdateController];
+    [super didAttachToController];
     
-    self.controlsView.controller = self.controller;
-    self.errorView.controller = self.controller;
-    self.availabilityView.controller = self.controller;
-    self.continuousPlaybackView.controller = self.controller;
-    self.timelineView.controller = self.controller;
+    SRGLetterboxController *controller = self.controller;
+    self.controlsView.controller = controller;
+    self.errorView.controller = controller;
+    self.availabilityView.controller = controller;
+    self.continuousPlaybackView.controller = controller;
+    self.timelineView.controller = controller;
     
     // Notifications are transient and therefore do not need to be persisted at the controller level. They can be simply
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     [self registerObservers];
-    [self registerUserInterfaceUpdateTimers];
-    [self resetInactivityTimer];
     
-    if (mediaPlayerController.view) {
-        [self.playbackView addSubview:mediaPlayerController.view];
+    UIView *mediaPlayerView = controller.mediaPlayerController.view;
+    if (mediaPlayerView) {
+        [self.playbackView addSubview:mediaPlayerView];
         
         // Force autolayout to ensure the layout is immediately correct
-        [mediaPlayerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+        [mediaPlayerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.playbackView);
         }];
         
@@ -737,25 +736,6 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Timer registration
-
-- (void)registerUserInterfaceUpdateTimersForController:(SRGLetterboxController *)controller
-{
-    @weakify(self)
-    self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-        @strongify(self)
-        [self updateLayoutAnimated:YES];
-    }];
-}
-
-- (void)registerUserInterfaceUpdateTimers
-{
-    return [self registerUserInterfaceUpdateTimersForController:self.controller];
-}
-
-- (void)unregisterUserInterfaceUpdateTimers
-{
-    self.userInterfaceUpdateTimer = nil;
-}
 
 - (void)resetInactivityTimer
 {
