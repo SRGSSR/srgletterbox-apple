@@ -23,15 +23,9 @@
 
 - (void)setController:(SRGLetterboxController *)controller
 {
-    if (_controller) {
-        [self willDetachFromController];
-    }
-    
+    [self willDetachFromController];
     _controller = controller;
-    
-    if (controller) {
-        [self didAttachToController];
-    }
+    [self didAttachToController];
     
     [self reloadData];
     [self srg_letterbox_updateLayout];

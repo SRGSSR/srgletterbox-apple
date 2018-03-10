@@ -339,6 +339,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Controls and error overlays must never be displayed at the same time. This does not change the final expected
     // control visbility state variable, only its visual result.
+    // TODO: hasMedia should check the URN only? Reuse view.error instead of controller.error? Can the code be simpler
     BOOL hasError = (self.controller.error != nil);
     BOOL hasMedia = self.controller.media || self.controller.URN;
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
