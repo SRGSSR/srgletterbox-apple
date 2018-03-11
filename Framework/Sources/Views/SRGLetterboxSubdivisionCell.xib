@@ -49,7 +49,7 @@
                         <rect key="frame" x="5" y="60" width="25" height="25"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </imageView>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" 00:00 " textAlignment="natural" lineBreakMode="wordWrap" minimumFontSize="10" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="xPG-fm-CkX" userLabel="Duration Label">
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" 00:00 " textAlignment="center" lineBreakMode="wordWrap" minimumFontSize="10" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="xPG-fm-CkX" userLabel="Duration Label" customClass="SRGPaddedLabel">
                         <rect key="frame" x="121" y="65" width="34" height="18"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
