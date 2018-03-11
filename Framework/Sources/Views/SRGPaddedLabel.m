@@ -32,21 +32,28 @@ static void commonInit(SRGPaddedLabel *self);
 
 - (CGSize)intrinsicContentSize
 {
-    static const CGFloat kHorizontalMargin = 2.f;
-    static const CGFloat kVerticalMargin = 2.f;
-    
     CGSize intrinsicContentSize = super.intrinsicContentSize;
-    return CGSizeEqualToSize(intrinsicContentSize, CGSizeZero) ? intrinsicContentSize : CGSizeMake(intrinsicContentSize.width + 2 * kHorizontalMargin, intrinsicContentSize.height + 2 * kVerticalMargin);
+    return CGSizeEqualToSize(intrinsicContentSize, CGSizeZero) ? intrinsicContentSize : CGSizeMake(intrinsicContentSize.width + 2 * self.horizontalMargin, intrinsicContentSize.height + 2 * self.verticalMargin);
+}
+
+#pragma mark Getters ans Setters
+
+- (void)setHorizontalMargin:(CGFloat)horizontalMargin
+{
+    _horizontalMargin = horizontalMargin;
+    [self layoutIfNeeded];
+}
+
+- (void)setVerticalMargin:(CGFloat)verticalMargin
+{
+    _verticalMargin = verticalMargin;
+    [self layoutIfNeeded];
 }
 
 @end
 
 static void commonInit(SRGPaddedLabel *self)
 {
-    self.backgroundColor = [UIColor colorWithWhite:0.f alpha:.75f];
-    self.textColor = [UIColor whiteColor];
     self.layer.masksToBounds = YES;
-    self.layer.cornerRadius = 4.f;
-    
     self.hidden = NO;
 }

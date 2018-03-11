@@ -7,8 +7,13 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  Padded label with 2 margin points, a 4 corner radius and 75% black color.
+ *  Padded label with custom margins
+ *
+ *  @discussion: Set `backgroundColor`, `textColor` and `layer.cornerRadius` to customize the pad.
  */
 @interface SRGPaddedLabel : UILabel
+
+@property (nonatomic) CGFloat horizontalMargin; // Apply at left and right
+@property (nonatomic) CGFloat verticalMargin;   // Apply at top and bottom
 
 @end

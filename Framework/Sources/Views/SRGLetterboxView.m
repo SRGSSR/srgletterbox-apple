@@ -24,6 +24,7 @@
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxTimeSlider.h"
 #import "SRGLiveLabel.h"
+#import "SRGPaddedLabel.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
@@ -68,7 +69,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
-@property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
+@property (nonatomic, weak) IBOutlet SRGPaddedLabel *availabilityLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
@@ -1685,4 +1686,8 @@ static void commonInit(SRGLetterboxView *self)
 #endif
     
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+    
+    self.availabilityLabel.horizontalMargin = 2.f;
+    self.availabilityLabel.verticalMargin = 2.f;
+    self.layer.cornerRadius = 4.f;
 }
