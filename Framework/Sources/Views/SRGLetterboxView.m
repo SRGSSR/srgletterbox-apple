@@ -83,6 +83,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet SRGControlWrapperView *durationLabelWrapperView;
 @property (nonatomic, weak) IBOutlet SRGLiveLabel *liveLabel;
 @property (nonatomic, weak) IBOutlet SRGControlWrapperView *liveLabelWrapperView;
 
@@ -1137,10 +1138,12 @@ static void commonInit(SRGLetterboxView *self);
             self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
         }
         self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        self.durationLabel.hidden = NO;
     }
     else {
         self.durationLabel.text = nil;
         self.durationLabel.accessibilityLabel = nil;
+        self.durationLabel.hidden = YES;
     }
     
     self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
@@ -1384,14 +1387,14 @@ static void commonInit(SRGLetterboxView *self);
     BOOL viewModeButtonHidden = NO;
     BOOL pictureInPictureButtonHidden = NO;
     BOOL timeSliderHidden = NO;
+    BOOL durationLabelWrapperViewHidden = NO;
     BOOL liveLabelWrapperViewHidden = NO;
-    BOOL durationLabelHidden = NO;
     BOOL tracksButtonHidden = NO;
     
     CGFloat controlsHeight = CGRectGetHeight(controlsView.frame);
     if (controlsHeight < 166.5f) {
         timeSliderHidden = YES;
-        durationLabelHidden = YES;
+        durationLabelWrapperViewHidden = YES;
     }
     if (controlsHeight < 120.f) {
         backwardSeekButtonHidden = YES;
@@ -1407,7 +1410,7 @@ static void commonInit(SRGLetterboxView *self);
     if (controlsWidth < 296.f) {
         skipToLiveButtonHidden = YES;
         timeSliderHidden = YES;
-        durationLabelHidden = YES;
+        durationLabelWrapperViewHidden = YES;
     }
     if (controlsWidth < 214.f) {
         backwardSeekButtonHidden = YES;
@@ -1424,7 +1427,7 @@ static void commonInit(SRGLetterboxView *self);
     self.viewModeButton.alwaysHidden = viewModeButtonHidden;
     self.pictureInPictureButton.alwaysHidden = pictureInPictureButtonHidden;
     self.timeSlider.hidden = timeSliderHidden;
-    self.durationLabel.hidden = durationLabelHidden;
+    self.durationLabelWrapperView.alwaysHidden = durationLabelWrapperViewHidden;
     self.liveLabelWrapperView.alwaysHidden = liveLabelWrapperViewHidden;
     self.tracksButton.alwaysHidden = tracksButtonHidden;
 }
