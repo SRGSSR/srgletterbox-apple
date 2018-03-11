@@ -17,22 +17,20 @@
 {
     [super willMoveToWindow:newWindow];
     
+    UIView *wrappedView = self.subviews.firstObject;
+    
     if (newWindow) {
-        UIView *wrappedView = self.subviews.firstObject;
         if (wrappedView) {
             @weakify(self)
             [wrappedView addObserver:self keyPath:@keypath(wrappedView.hidden) options:0 block:^(MAKVONotification *notification) {
                 @strongify(self)
-                [self updateHidden];
+                [self updateAppearance];
             }];
         }
-        [self updateHidden];
+        [self updateAppearance];
     }
-    else {
-        UIView *wrappedView = self.subviews.firstObject;
-        if (wrappedView) {
-            [wrappedView removeObserver:self keyPath:@keypath(wrappedView.hidden)];
-        }
+    else if (wrappedView) {
+        [wrappedView removeObserver:self keyPath:@keypath(wrappedView.hidden)];
     }
 }
 
@@ -41,12 +39,12 @@
 - (void)setAlwaysHidden:(BOOL)alwaysHidden
 {
     _alwaysHidden = alwaysHidden;
-    [self updateHidden];
+    [self updateAppearance];
 }
 
 #pragma mark UI
 
-- (void)updateHidden
+- (void)updateAppearance
 {
     if (self.alwaysHidden) {
         self.hidden = YES;
