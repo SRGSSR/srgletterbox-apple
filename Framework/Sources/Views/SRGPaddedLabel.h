@@ -9,9 +9,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Padded label with custom margins
- *
- *  @discussion: Set `backgroundColor`, `textColor` and `layer.cornerRadius` to customize the pad.
+ *  Padded label with custom margins.
  */
 @interface SRGPaddedLabel : UILabel
 
