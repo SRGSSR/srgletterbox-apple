@@ -295,11 +295,6 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Getters and setters
 
-- (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
-{
-    _delegate = delegate;
-}
-
 - (void)setUserInterfaceUpdateTimer:(NSTimer *)userInterfaceUpdateTimer
 {
     [_userInterfaceUpdateTimer invalidate];
