@@ -50,6 +50,29 @@
     self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
+- (void)willDetachFromController
+{
+    [super willDetachFromController];
+    
+    SRGLetterboxController *controller = self.controller;
+    [controller removeObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia)];
+}
+
+- (void)didAttachToController
+{
+    [super didAttachToController];
+    
+    SRGLetterboxController *controller = self.controller;
+    
+    @weakify(self)
+    [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self reloadData];
+    }];
+    
+    [self reloadData];
+}
+
 - (void)reloadData
 {
     [super reloadData];
