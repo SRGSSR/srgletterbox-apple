@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxControllerView.h"
 
+#import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxView.h"
 
 @implementation SRGLetterboxControllerView
@@ -23,28 +24,38 @@
 {
     if (_controller) {
         [self willDetachFromController];
+        
         _controller = nil;
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxMetadataDidChangeNotification
+                                                      object:_controller];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SRGLetterboxPlaybackDidFailNotification
+                                                      object:_controller];
+        
         [self didDetachFromController];
     }
     
     if (controller) {
         [self willAttachToController];
+        
         _controller = controller;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(srg_letterbox_metadataDidChange:)
+                                                     name:SRGLetterboxMetadataDidChangeNotification
+                                                   object:controller];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(srg_letterbox_playbackDidFail:)
+                                                     name:SRGLetterboxPlaybackDidFailNotification
+                                                   object:controller];
+        
         [self didAttachToController];
     }
     
     [self reloadData];
-    [self srg_letterbox_updateLayout];
 }
 
 #pragma mark Overrides
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    [self srg_letterbox_updateLayout];
-}
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
@@ -53,14 +64,6 @@
     if (newWindow) {
         [self reloadData];
     }
-}
-
-#pragma mark Helpers
-
-- (void)srg_letterbox_updateLayout
-{
-    BOOL userInterfaceHidden = self.contextView ? self.contextView.userInterfaceHidden : YES;
-    [self updateLayoutForUserInterfaceHidden:userInterfaceHidden];
 }
 
 #pragma mark Subclassing hooks
@@ -83,26 +86,21 @@
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {}
 
+#pragma mark Notifications
+
+- (void)srg_letterbox_metadataDidChange:(NSNotification *)notification
+{
+    [self reloadData];
+}
+
+- (void)srg_letterbox_playbackDidFail:(NSNotification *)notification
+{
+    [self reloadData];
+}
+
 @end
 
 @implementation UIView (SRGLetterboxControllerView)
-
-- (void)srg_recursivelyReloadData
-{
-    [self reloadDataInView:self];
-}
-
-- (void)reloadDataInView:(UIView *)view
-{
-    if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
-        SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
-        [controllerView reloadData];
-    }
-    
-    for (UIView *subview in view.subviews) {
-        [self reloadDataInView:subview];
-    }
-}
 
 - (void)srg_recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {

@@ -185,7 +185,7 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
         
-        [self refreshAnimated:NO];
+        [self updateLayoutAnimated:NO];
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
@@ -251,7 +251,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = nil;
     
     [self unregisterObservers];
-    [self refreshAnimated:NO];
+    [self updateLayoutAnimated:NO];
 }
 
 - (void)didAttachToController
@@ -279,7 +279,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.playbackView layoutIfNeeded];
     }
     
-    [self refreshAnimated:NO];
+    [self updateLayoutAnimated:NO];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -474,11 +474,11 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Data refresh
 
-- (void)refreshAnimated:(BOOL)animated
+- (void)reloadData
 {
-    [self srg_recursivelyReloadData];
+    [super reloadData];
+    
     [self reloadImage];
-    [self updateLayoutAnimated:animated];
 }
 
 - (void)reloadImage
@@ -511,10 +511,6 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(metadataDidChange:)
-                                                 name:SRGLetterboxMetadataDidChangeNotification
-                                               object:controller];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playbackDidFail:)
                                                  name:SRGLetterboxPlaybackDidFailNotification
@@ -554,9 +550,6 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxMetadataDidChangeNotification
-                                                  object:controller];
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SRGLetterboxPlaybackDidFailNotification
                                                   object:controller];
@@ -953,17 +946,12 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Notifications
 
-- (void)metadataDidChange:(NSNotification *)notification
-{
-    [self refreshAnimated:YES];
-}
-
 - (void)playbackDidFail:(NSNotification *)notification
 {
     self.timelineView.selectedIndex = NSNotFound;
     self.timelineView.time = kCMTimeZero;
     
-    [self refreshAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 - (void)playbackDidRetry:(NSNotification *)notification
@@ -978,7 +966,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self refreshAnimated:YES];
+    [self updateLayoutAnimated:YES];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
@@ -1048,7 +1036,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self refreshAnimated:YES];
+    [self updateLayoutAnimated:YES];
 }
 
 @end
