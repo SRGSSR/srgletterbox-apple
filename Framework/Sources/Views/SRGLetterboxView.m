@@ -346,14 +346,8 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
-    // Controls and error overlays must never be displayed at the same time. This does not change the final expected
-    // control visbility state variable, only its visual result.
-    // TODO: hasMedia should check the URN only? Reuse view.error instead of controller.error? Can the code be simpler
-    BOOL hasError = (self.controller.error != nil);
-    BOOL hasMedia = self.controller.media || self.controller.URN;
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    
-    if (hasError || ! hasMedia || self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    if (self.controller.error || ! self.controller.URN || self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
@@ -370,12 +364,9 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
-    // Timeline and error overlays must be displayed at the same time.
-    BOOL hasError = (self.controller.error != nil);
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    
     if (! [self isTimelineAlwaysHidden]
-        && (hasError || isUsingAirplay || (self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
+        && (self.controller.error || isUsingAirplay || (self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
                 || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
             return SRGLetterboxViewBehaviorForcedVisible;
         }
