@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface SRGPaddedLabel : UILabel
 
-@property (nonatomic) CGFloat horizontalMargin; // Apply at left and right
-@property (nonatomic) CGFloat verticalMargin;   // Apply at top and bottom
+@property (nonatomic) IBInspectable CGFloat horizontalMargin; // Apply at left and right
+@property (nonatomic) IBInspectable CGFloat verticalMargin;   // Apply at top and bottom
 
 @end
 
