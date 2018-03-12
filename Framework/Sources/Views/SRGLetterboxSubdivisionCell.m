@@ -7,6 +7,7 @@
 #import "SRGLetterboxSubdivisionCell.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGPaddedLabel.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -16,7 +17,7 @@
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet SRGPaddedLabel *durationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *media360ImageView;
 
@@ -54,6 +55,8 @@
     self.favoriteImageView.backgroundColor = [UIColor srg_redColor];
     self.favoriteImageView.hidden = YES;
     
+    self.durationLabel.horizontalMargin = 5.f;
+    
     self.blockingOverlayView.hidden = YES;
     
     // Workaround UIImage view tint color bug
@@ -90,19 +93,19 @@
     
     SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:[NSDate date]];
     if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
-        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString];
+        self.durationLabel.text = SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString;
         self.durationLabel.hidden = NO;
     }
     else if (timeAvailability == SRGTimeAvailabilityNotAvailableAnymore) {
-        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Short label identifying content which has expired.").uppercaseString];
+        self.durationLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Short label identifying content which has expired.").uppercaseString;
         self.durationLabel.hidden = NO;
     }
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
-        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@  ", NSLocalizedString(@"Live", @"Short label identifying a livestream.")].uppercaseString
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"Live", @"Short label identifying a livestream or currently in live condition.").uppercaseString
                                                                                            attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
                                                                                                          NSForegroundColorAttributeName : [UIColor whiteColor] }];
         
-        [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"●  ")
+        [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ●")
                                                                                attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
                                                                                              NSForegroundColorAttributeName : [UIColor redColor] }]];
         
@@ -118,8 +121,7 @@
             s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
         });
         
-        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
-        self.durationLabel.text = [NSString stringWithFormat:@"  %@  ", durationString];
+        self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
         self.durationLabel.hidden = NO;
     }
     else {

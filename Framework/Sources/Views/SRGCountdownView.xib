@@ -23,7 +23,6 @@
                 <outlet property="hoursStackView" destination="2FG-lj-osJ" id="2tc-Da-FC9"/>
                 <outlet property="hoursTitleLabel" destination="LCX-0E-ukx" id="Cuk-nU-Mdi"/>
                 <outlet property="messageLabel" destination="WjU-kI-8d4" id="6VZ-Re-YNJ"/>
-                <outlet property="messageLabelBackgroundView" destination="bQQ-tP-kgn" id="xHV-qi-C3w"/>
                 <outlet property="minutes0Label" destination="du1-JC-vKi" id="yuC-O4-LGT"/>
                 <outlet property="minutes1Label" destination="OhW-3B-N0F" id="EYb-oh-NMC"/>
                 <outlet property="minutesColonLabel" destination="nAF-2g-IvX" id="UR7-ah-5yL"/>
@@ -342,12 +341,9 @@
                         <constraint firstItem="Fmy-kA-oqE" firstAttribute="width" secondItem="c9e-kh-DKu" secondAttribute="width" id="sqt-D4-YZ3"/>
                     </constraints>
                 </stackView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bQQ-tP-kgn" userLabel="Message Label Background View">
-                    <rect key="frame" x="263.5" y="181.5" width="70.5" height="18.5"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;message&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WjU-kI-8d4" userLabel="Message Label">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;message&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WjU-kI-8d4" userLabel="Message Label" customClass="SRGPaddedLabel">
                     <rect key="frame" x="265.5" y="183.5" width="66.5" height="14.5"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -356,17 +352,13 @@
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="top" secondItem="JLS-Yu-wna" secondAttribute="bottom" id="7M1-8S-OtX"/>
-                <constraint firstItem="bQQ-tP-kgn" firstAttribute="top" secondItem="WjU-kI-8d4" secondAttribute="top" constant="-2" id="FBU-j2-kQo"/>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="trailing" secondItem="Fmy-kA-oqE" secondAttribute="leading" id="OPO-c6-SyU"/>
-                <constraint firstItem="bQQ-tP-kgn" firstAttribute="leading" secondItem="WjU-kI-8d4" secondAttribute="leading" constant="-2" id="OQ8-Up-a5i"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="OaL-Hm-cWS"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="U9a-05-urL"/>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="leading" secondItem="c9e-kh-DKu" secondAttribute="trailing" id="YJZ-xv-EGo"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Zej-Nh-SDJ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="NK9-AD-19i" secondAttribute="bottom" id="Zhr-Y2-MI8"/>
-                <constraint firstItem="bQQ-tP-kgn" firstAttribute="bottom" secondItem="WjU-kI-8d4" secondAttribute="bottom" constant="2" id="aQ0-BH-lkU"/>
                 <constraint firstItem="WjU-kI-8d4" firstAttribute="top" secondItem="osw-XW-h57" secondAttribute="top" constant="10" id="ekc-im-KNc"/>
-                <constraint firstItem="bQQ-tP-kgn" firstAttribute="trailing" secondItem="WjU-kI-8d4" secondAttribute="trailing" constant="2" id="gNx-m0-mtx"/>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="bottom" secondItem="osw-XW-h57" secondAttribute="top" id="mzC-ha-VGG"/>
                 <constraint firstItem="WjU-kI-8d4" firstAttribute="centerX" secondItem="NK9-AD-19i" secondAttribute="centerX" id="wbA-PE-Ufo"/>
             </constraints>

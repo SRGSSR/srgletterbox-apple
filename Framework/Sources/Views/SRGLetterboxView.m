@@ -13,6 +13,7 @@
 #import "SRGAccessibilityView.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
+#import "SRGControlWrapperView.h"
 #import "SRGCountdownView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -22,6 +23,8 @@
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGLiveLabel.h"
+#import "SRGPaddedLabel.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIFont+SRGLetterbox.h"
@@ -65,8 +68,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic, weak) IBOutlet UIView *availabilityView;
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
-@property (nonatomic, weak) IBOutlet UIView *availabilityLabelBackgroundView;
-@property (nonatomic, weak) IBOutlet UILabel *availabilityLabel;
+@property (nonatomic, weak) IBOutlet SRGPaddedLabel *availabilityLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *continuousPlaybackWrapperView;
 @property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
@@ -81,6 +83,9 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet SRGControlWrapperView *durationLabelWrapperView;
+@property (nonatomic, weak) IBOutlet SRGLiveLabel *liveLabel;
+@property (nonatomic, weak) IBOutlet SRGControlWrapperView *liveLabelWrapperView;
 
 @property (nonatomic) IBOutletCollection(SRGFullScreenButton) NSArray<SRGFullScreenButton *> *fullScreenButtons;
 
@@ -182,6 +187,12 @@ static void commonInit(SRGLetterboxView *self);
     self.skipToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
+    
+    self.availabilityLabel.horizontalMargin = 5.f;
+    self.availabilityLabel.verticalMargin = 2.f;
+    self.availabilityLabel.layer.cornerRadius = 4.f;
+    self.availabilityLabel.layer.masksToBounds = YES;
+    
     self.availabilityView.alpha = 0.f;
     
     self.errorView.hidden = YES;
@@ -242,8 +253,6 @@ static void commonInit(SRGLetterboxView *self);
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
-    
-    self.availabilityLabelBackgroundView.layer.cornerRadius = 4.f;
     
     [self reloadData];
 }
@@ -519,7 +528,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self updateUserInterfaceForController:controller animated:NO];
-    [self updateTimeLabelsForController:controller];
+    [self updateControlLabelsForController:controller];
 }
 
 - (void)setDelegate:(id<SRGLetterboxViewDelegate>)delegate
@@ -768,9 +777,8 @@ static void commonInit(SRGLetterboxView *self);
     
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:[NSDate date]];
     if (blockingReason == SRGBlockingReasonEndDate) {
-        self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
+        self.availabilityLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
         self.availabilityLabel.hidden = NO;
-        self.availabilityLabelBackgroundView.hidden = NO;
         
         self.countdownView.hidden = YES;
     }
@@ -788,38 +796,33 @@ static void commonInit(SRGLetterboxView *self);
                 s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
             });
             
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
+            self.availabilityLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
             self.availabilityLabel.hidden = NO;
-            self.availabilityLabelBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
         // Tiny layout
         else if (CGRectGetWidth(self.frame) < 290.f) {
-            NSString *availabilityLabelText = nil;
             if (dateComponents.day > 0) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                self.availabilityLabel.text = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 60. * 60.) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                self.availabilityLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 0) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                self.availabilityLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else {
-                availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+                self.availabilityLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
             }
             
             self.availabilityLabel.hidden = NO;
-            self.availabilityLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
-            self.availabilityLabelBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
         // Large layout
         else {
             self.availabilityLabel.hidden = YES;
-            self.availabilityLabelBackgroundView.hidden = YES;
             
             self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
             self.countdownView.hidden = NO;
@@ -827,8 +830,6 @@ static void commonInit(SRGLetterboxView *self);
     }
     else {
         self.availabilityLabel.hidden = YES;
-        self.availabilityLabelBackgroundView.hidden = YES;
-        
         self.countdownView.hidden = YES;
     }
 }
@@ -1023,7 +1024,7 @@ static void commonInit(SRGLetterboxView *self);
                 
             case SRGMediaPlayerStreamTypeLive: {
                 self.timeSlider.alpha = 0.f;
-                self.timeSlider.timeLeftValueLabel.hidden = NO;
+                self.timeSlider.timeLeftValueLabel.hidden = YES;
                 break;
             }
                 
@@ -1061,6 +1062,8 @@ static void commonInit(SRGLetterboxView *self);
         self.loadingImageView.alpha = 0.f;
         [self.loadingImageView stopAnimating];
     }
+    
+    [self updateControlLabelsForController:controller];
 }
 
 - (void)updateUserInterfaceForController:(SRGLetterboxController *)controller animated:(BOOL)animated
@@ -1110,16 +1113,17 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)updateTimeLabels
+- (void)updateControlLabels
 {
-    [self updateTimeLabelsForController:self.controller];
+    [self updateControlLabelsForController:self.controller];
 }
 
-- (void)updateTimeLabelsForController:(SRGLetterboxController *)controller
+- (void)updateControlLabelsForController:(SRGLetterboxController *)controller
 {
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
     if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
-            && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
+            && streamType == SRGStreamTypeOnDemand) {
         SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
         
         NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
@@ -1130,11 +1134,15 @@ static void commonInit(SRGLetterboxView *self);
             self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
         }
         self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        self.durationLabel.hidden = NO;
     }
     else {
         self.durationLabel.text = nil;
         self.durationLabel.accessibilityLabel = nil;
+        self.durationLabel.hidden = YES;
     }
+    
+    self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
 }
 
 - (void)updateUserInterfaceAnimated:(BOOL)animated
@@ -1151,7 +1159,7 @@ static void commonInit(SRGLetterboxView *self);
         @strongify(controller)
         [self updateUserInterfaceForController:controller animated:YES];
         [self updateAvailabilityForController:controller];
-        [self updateTimeLabelsForController:controller];
+        [self updateControlLabelsForController:controller];
     }];
 }
 
@@ -1375,13 +1383,14 @@ static void commonInit(SRGLetterboxView *self);
     BOOL viewModeButtonHidden = NO;
     BOOL pictureInPictureButtonHidden = NO;
     BOOL timeSliderHidden = NO;
-    BOOL durationLabelHidden = NO;
+    BOOL durationLabelWrapperViewHidden = NO;
+    BOOL liveLabelWrapperViewHidden = NO;
     BOOL tracksButtonHidden = NO;
     
     CGFloat controlsHeight = CGRectGetHeight(controlsView.frame);
     if (controlsHeight < 166.5f) {
         timeSliderHidden = YES;
-        durationLabelHidden = YES;
+        durationLabelWrapperViewHidden = YES;
     }
     if (controlsHeight < 120.f) {
         backwardSeekButtonHidden = YES;
@@ -1389,6 +1398,7 @@ static void commonInit(SRGLetterboxView *self);
         skipToLiveButtonHidden = YES;
         viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
+        liveLabelWrapperViewHidden = YES;
         tracksButtonHidden = YES;
     }
     
@@ -1396,13 +1406,14 @@ static void commonInit(SRGLetterboxView *self);
     if (controlsWidth < 296.f) {
         skipToLiveButtonHidden = YES;
         timeSliderHidden = YES;
-        durationLabelHidden = YES;
+        durationLabelWrapperViewHidden = YES;
     }
     if (controlsWidth < 214.f) {
         backwardSeekButtonHidden = YES;
         forwardSeekButtonHidden = YES;
         viewModeButtonHidden = YES;
         pictureInPictureButtonHidden = YES;
+        liveLabelWrapperViewHidden = YES;
         tracksButtonHidden = YES;
     }
     
@@ -1412,7 +1423,8 @@ static void commonInit(SRGLetterboxView *self);
     self.viewModeButton.alwaysHidden = viewModeButtonHidden;
     self.pictureInPictureButton.alwaysHidden = pictureInPictureButtonHidden;
     self.timeSlider.hidden = timeSliderHidden;
-    self.durationLabel.hidden = durationLabelHidden;
+    self.durationLabelWrapperView.alwaysHidden = durationLabelWrapperViewHidden;
+    self.liveLabelWrapperView.alwaysHidden = liveLabelWrapperViewHidden;
     self.tracksButton.alwaysHidden = tracksButtonHidden;
 }
 
@@ -1481,7 +1493,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.isLive) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         NSDate *date = slider.date;
@@ -1559,7 +1571,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateUserInterfaceAnimated:YES];
-    [self updateTimeLabels];
+    [self updateControlLabels];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
