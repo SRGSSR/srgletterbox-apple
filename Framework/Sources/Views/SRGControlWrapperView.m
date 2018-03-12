@@ -20,16 +20,14 @@
     UIView *wrappedView = self.subviews.firstObject;
     
     if (newWindow) {
-        if (wrappedView) {
-            @weakify(self)
-            [wrappedView addObserver:self keyPath:@keypath(wrappedView.hidden) options:0 block:^(MAKVONotification *notification) {
-                @strongify(self)
-                [self updateAppearance];
-            }];
-        }
+        @weakify(self)
+        [wrappedView addObserver:self keyPath:@keypath(wrappedView.hidden) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self updateAppearance];
+        }];
         [self updateAppearance];
     }
-    else if (wrappedView) {
+    else {
         [wrappedView removeObserver:self keyPath:@keypath(wrappedView.hidden)];
     }
 }
