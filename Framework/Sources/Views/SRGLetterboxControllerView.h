@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// TODO: Hide in SRGLetterboxView.m
 @interface UIView (SRGLetterboxControllerView)
 
 - (void)srg_recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden;

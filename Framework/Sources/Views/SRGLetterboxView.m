@@ -146,6 +146,15 @@ static void commonInit(SRGLetterboxView *self);
     self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    BOOL userInterfaceHidden = [self updateMainLayout];
+    [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [self.notificationView updateLayoutWithMessage:self.notificationMessage];
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     [super willMoveToWindow:newWindow];
