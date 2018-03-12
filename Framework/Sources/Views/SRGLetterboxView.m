@@ -78,8 +78,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
-@property (nonatomic, copy) AVLayerVideoGravity targetVideoGravity;
-
 @end
 
 @implementation SRGLetterboxView {
@@ -606,6 +604,11 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)updateLayoutAnimated:(BOOL)animated
 {
+    [self updateLayoutAnimated:animated withAdditionalAnimations:nil];
+}
+
+- (void)updateLayoutAnimated:(BOOL)animated withAdditionalAnimations:(void (^)(void))additionalAnimations
+{
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
         [self.delegate letterboxViewWillAnimateUserInterface:self];
@@ -613,22 +616,12 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     void (^animations)(void) = ^{
+        additionalAnimations ? additionalAnimations() : nil;
+        
         BOOL userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
-        
-        BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-        if (! self.fullScreen && ! isFrameFullScreen) {
-            self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
-        }
-        
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-        if (self.targetVideoGravity) {
-            playerLayer.videoGravity = self.targetVideoGravity;
-            self.targetVideoGravity = nil;
-        }
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -681,6 +674,13 @@ static void commonInit(SRGLetterboxView *self);
         if ([NSBundle srg_letterbox_isProductionVersion] && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirplayActive]) {
             playerViewVisible = NO;
         }
+    }
+    
+    // Force aspect fit ratio when not full screen
+    BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
+    if (! self.fullScreen && ! isFrameFullScreen) {
+        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     
     if (self.controller.loading) {
@@ -857,17 +857,15 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
-    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-    
-    // Set the desired content gravity, based on the current layer state. The result is applied with UI updates,
-    // ensuring all updates are animated at the same time.
-    if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-        self.targetVideoGravity = AVLayerVideoGravityResizeAspectFill;
-    }
-    else {
-        self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
-    }
-    [self updateLayoutAnimated:YES];
+    [self updateLayoutAnimated:YES withAdditionalAnimations:^{
+        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        }
+        else {
+            playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        }
+    }];
 }
 
 #pragma mark Actions
