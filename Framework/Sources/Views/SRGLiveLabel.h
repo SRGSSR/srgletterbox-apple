@@ -6,9 +6,13 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  Live label for the control stack view.
  */
 @interface SRGLiveLabel : UILabel
 
 @end
+
+NS_ASSUME_NONNULL_END

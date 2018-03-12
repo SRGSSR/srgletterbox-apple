@@ -6,6 +6,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  Control wrapper view helps a control to have margin constraints in the control stack view.
  */
@@ -26,3 +28,5 @@
 @property (nonatomic, getter=isAlwaysHidden) IBInspectable BOOL alwaysHidden;
 
 @end
+
+NS_ASSUME_NONNULL_END
