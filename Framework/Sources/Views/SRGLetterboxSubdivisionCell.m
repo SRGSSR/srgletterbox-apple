@@ -105,7 +105,7 @@
                                                                                            attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
                                                                                                          NSForegroundColorAttributeName : [UIColor whiteColor] }];
         
-        [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ●")
+        [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ●")
                                                                                attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
                                                                                              NSForegroundColorAttributeName : [UIColor redColor] }]];
         
