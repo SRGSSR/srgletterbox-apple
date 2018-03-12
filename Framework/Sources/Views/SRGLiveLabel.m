@@ -45,19 +45,9 @@ static void commonInit(SRGLiveLabel *self);
 
 #pragma mark Accessibility
 
-- (BOOL)isAccessibilityElement
-{
-    return YES;
-}
-
 - (NSString *)accessibilityLabel
 {
     return SRGLetterboxAccessibilityLocalizedString(@"Live playback", @"Live label when playing live.");
-}
-
-- (UIAccessibilityTraits)accessibilityTraits
-{
-    return UIAccessibilityTraitStaticText;
 }
 
 @end
@@ -71,6 +61,4 @@ static void commonInit(SRGLiveLabel *self)
     self.numberOfLines = 1;
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = 2.f;
-    
-    self.hidden = NO;
 }
