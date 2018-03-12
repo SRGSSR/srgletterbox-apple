@@ -188,6 +188,12 @@ static void commonInit(SRGLetterboxView *self);
     self.skipToLiveButton.alpha = 0.f;
     self.timeSlider.alpha = 0.f;
     self.timeSlider.timeLeftValueLabel.hidden = YES;
+    
+    self.availabilityLabel.horizontalMargin = 2.f;
+    self.availabilityLabel.verticalMargin = 2.f;
+    self.availabilityLabel.layer.cornerRadius = 4.f;
+    self.availabilityLabel.layer.masksToBounds = YES;
+    
     self.availabilityView.alpha = 0.f;
     
     self.errorView.hidden = YES;
@@ -1686,8 +1692,4 @@ static void commonInit(SRGLetterboxView *self)
 #endif
     
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
-    
-    self.availabilityLabel.horizontalMargin = 2.f;
-    self.availabilityLabel.verticalMargin = 2.f;
-    self.layer.cornerRadius = 4.f;
 }

@@ -6,27 +6,7 @@
 
 #import "SRGPaddedLabel.h"
 
-static void commonInit(SRGPaddedLabel *self);
-
 @implementation SRGPaddedLabel
-
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
-    }
-    return self;
-}
 
 #pragma mark Overrides
 
@@ -51,9 +31,3 @@ static void commonInit(SRGPaddedLabel *self);
 }
 
 @end
-
-static void commonInit(SRGPaddedLabel *self)
-{
-    self.layer.masksToBounds = YES;
-    self.hidden = NO;
-}
