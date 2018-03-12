@@ -512,6 +512,10 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(metadataDidChange:)
+                                                 name:SRGLetterboxMetadataDidChangeNotification
+                                               object:controller];
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playbackDidFail:)
                                                  name:SRGLetterboxPlaybackDidFailNotification
                                                object:controller];
@@ -550,6 +554,9 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxMetadataDidChangeNotification
+                                                  object:controller];
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SRGLetterboxPlaybackDidFailNotification
                                                   object:controller];
@@ -945,6 +952,11 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Notifications
+
+- (void)metadataDidChange:(NSNotification *)notification
+{
+    [self updateLayoutAnimated:YES];
+}
 
 - (void)playbackDidFail:(NSNotification *)notification
 {
