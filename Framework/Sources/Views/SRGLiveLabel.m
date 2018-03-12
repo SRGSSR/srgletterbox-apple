@@ -69,7 +69,6 @@ static void commonInit(SRGLiveLabel *self)
     self.attributedText = [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     self.textAlignment = NSTextAlignmentCenter;
     self.numberOfLines = 1;
-    self.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = 2.f;
     
