@@ -138,7 +138,7 @@ static void commonInit(SRGLetterboxView *self);
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
-                                                                                                            action:@selector(resetInactivityTimer:)];
+                                                                                                            action:@selector(resetInactivity:)];
     activityGestureRecognizer.delegate = self;
     [self addGestureRecognizer:activityGestureRecognizer];
     
@@ -151,13 +151,8 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        @weakify(self)
-        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            [self updateLayoutAnimated:YES];
-        }];
-        
-        [self resetInactivityTimer];
+        [self startPeriodicUserInterfaceUpdates];
+        [self resetInactivityTrigger];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -189,9 +184,8 @@ static void commonInit(SRGLetterboxView *self);
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
-        // Invalidate timers
-        self.inactivityTimer = nil;
-        self.userInterfaceUpdateTimer = nil;
+        [self stopPeriodicUserInterfaceUpdates];
+        [self stopInactivityTrigger];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -223,7 +217,7 @@ static void commonInit(SRGLetterboxView *self);
         self.accessibilityView.alpha = 0.f;
     }
     
-    [self resetInactivityTimer];
+    [self resetInactivityTrigger];
 }
 
 - (void)willDetachFromController
@@ -739,9 +733,21 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-#pragma mark Timer registration
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
+{
+    if (! _inWillAnimateUserInterface) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can only be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
+                                     userInfo:nil];
+    }
+    
+    self.animations = animations;
+    self.completion = completion;
+}
 
-- (void)resetInactivityTimer
+#pragma mark Timer management
+
+- (void)resetInactivityTrigger
 {
     if (! UIAccessibilityIsVoiceOverRunning()) {
         @weakify(self)
@@ -763,16 +769,23 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
+- (void)stopInactivityTrigger
 {
-    if (! _inWillAnimateUserInterface) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can only be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
-                                     userInfo:nil];
-    }
-    
-    self.animations = animations;
-    self.completion = completion;
+    self.inactivityTimer = nil;
+}
+
+- (void)startPeriodicUserInterfaceUpdates
+{
+    @weakify(self)
+    self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        @strongify(self)
+        [self updateLayoutAnimated:YES];
+    }];
+}
+
+- (void)stopPeriodicUserInterfaceUpdates
+{
+    self.userInterfaceUpdateTimer = nil;
 }
 
 #pragma mark Notification banners
@@ -833,9 +846,9 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Gesture recognizers
 
-- (void)resetInactivityTimer:(UIGestureRecognizer *)gestureRecognizer
+- (void)resetInactivity:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self resetInactivityTimer];
+    [self resetInactivityTrigger];
 }
 
 - (IBAction)showUserInterface:(UIGestureRecognizer *)gestureRecognizer

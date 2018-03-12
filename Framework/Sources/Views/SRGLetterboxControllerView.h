@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Document: Update INTERNAL constraint / subview visibility (not constraints on self, e.g. not its own height or its own alpha or hidden
 // property). External constraints are the responsibility of the superview.
-// Never call directly. Is called by the parent Letterbox view to have a consistent layout transaction.
+// NEVER call directly. Is called by the parent Letterbox view to always ensure a consistent layout transactions are made.
 // No assumption must be made about the order in which reloadData and updateLayout are calles
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
 
