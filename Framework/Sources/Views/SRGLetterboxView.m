@@ -705,11 +705,14 @@ static void commonInit(SRGLetterboxView *self);
     NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
     SRGLetterboxViewBehavior timelineBehavior = [self timelineBehavior];
     CGFloat timelineHeight = (subdivisions.count != 0 && ! self.controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
+    
+    BOOL isTimelineVisible = (timelineHeight != 0.f);
+    
+    // Scroll to selected index when opening the timeline. `shouldFocus` needs to be calculated before the constant is updated
+    // for the following to work.
+    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && isTimelineVisible);
     self.timelineHeightConstraint.constant = timelineHeight;
     
-    // Scroll to selected index when opening the timeline
-    BOOL isTimelineVisible = (timelineHeight != 0.f);
-    BOOL shouldFocus = (self.timelineHeightConstraint.constant == 0.f && isTimelineVisible);
     if (shouldFocus) {
         [self.timelineView scrollToSelectedIndexAnimated:NO];
     }
