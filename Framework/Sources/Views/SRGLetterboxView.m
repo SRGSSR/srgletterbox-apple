@@ -877,6 +877,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         self.targetVideoGravity = AVLayerVideoGravityResizeAspect;
     }
+    [self updateLayoutAnimated:YES];
 }
 
 #pragma mark Actions
