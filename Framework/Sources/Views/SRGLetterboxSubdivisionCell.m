@@ -121,8 +121,7 @@
             s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
         });
         
-        NSString *durationString = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
-        self.durationLabel.text = durationString;
+        self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
         self.durationLabel.hidden = NO;
     }
     else {
