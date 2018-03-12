@@ -598,6 +598,7 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceHidden = hidden;
     self.userInterfaceTogglable = togglable;
     
+    [self resetInactivityTrigger];
     [self updateLayoutAnimated:animated];
 }
 
