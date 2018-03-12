@@ -62,7 +62,6 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
-@property (nonatomic) NSTimer *userInterfaceUpdateTimer;
 @property (nonatomic) NSTimer *inactivityTimer;
 
 @property (nonatomic, copy) NSString *notificationMessage;
@@ -158,7 +157,6 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self startPeriodicUserInterfaceUpdates];
         [self resetInactivityTrigger];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -191,7 +189,6 @@ static void commonInit(SRGLetterboxView *self);
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
-        [self stopPeriodicUserInterfaceUpdates];
         [self stopInactivityTrigger];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -292,12 +289,6 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 #pragma mark Getters and setters
-
-- (void)setUserInterfaceUpdateTimer:(NSTimer *)userInterfaceUpdateTimer
-{
-    [_userInterfaceUpdateTimer invalidate];
-    _userInterfaceUpdateTimer = userInterfaceUpdateTimer;
-}
 
 - (void)setFullScreen:(BOOL)fullScreen
 {
@@ -771,20 +762,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)stopInactivityTrigger
 {
     self.inactivityTimer = nil;
-}
-
-- (void)startPeriodicUserInterfaceUpdates
-{
-    @weakify(self)
-    self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-        @strongify(self)
-        [self updateLayoutAnimated:YES];
-    }];
-}
-
-- (void)stopPeriodicUserInterfaceUpdates
-{
-    self.userInterfaceUpdateTimer = nil;
 }
 
 #pragma mark Notification banners

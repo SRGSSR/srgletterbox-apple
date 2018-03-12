@@ -38,6 +38,8 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
+@property (nonatomic) NSTimer *userInterfaceUpdateTimer;
+
 @end
 
 @implementation SRGControlsView
@@ -57,6 +59,12 @@
 - (BOOL)isLive
 {
     return self.timeSlider.live;
+}
+
+- (void)setUserInterfaceUpdateTimer:(NSTimer *)userInterfaceUpdateTimer
+{
+    [_userInterfaceUpdateTimer invalidate];
+    _userInterfaceUpdateTimer = userInterfaceUpdateTimer;
 }
 
 #pragma mark Overrides
@@ -92,6 +100,22 @@
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        @weakify(self)
+        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            [self.contextView updateLayoutAnimated:YES];
+        }];
+    }
+    else {
+        self.userInterfaceUpdateTimer = nil;
+    }
 }
 
 - (void)didDetachFromController

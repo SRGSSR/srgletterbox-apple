@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
  */
 @property (nonatomic, readonly) SRGLetterboxViewBehavior userInterfaceBehavior;
 
+- (void)updateLayoutAnimated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

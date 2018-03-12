@@ -9,6 +9,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
+#import "SRGLetterboxView+Private.h"
 #import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -68,6 +69,7 @@
     [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
         [self reloadData];
+        [self.contextView updateLayoutAnimated:YES];
     }];
     
     [self reloadData];
