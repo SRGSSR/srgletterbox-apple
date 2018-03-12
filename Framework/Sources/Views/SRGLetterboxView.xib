@@ -143,10 +143,10 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mPC-dS-wD5" userLabel="Time Slider Wrapper View" customClass="SRGControlWrapperView">
-                                    <rect key="frame" x="144" y="0.0" width="274" height="48"/>
+                                    <rect key="frame" x="144" y="0.0" width="262" height="48"/>
                                     <subviews>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="TJI-j4-mRH" customClass="SRGLetterboxTimeSlider">
-                                            <rect key="frame" x="6" y="13" width="262" height="23"/>
+                                            <rect key="frame" x="6" y="13" width="250" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="22" id="7RX-FO-lDz"/>
                                             </constraints>
@@ -172,14 +172,14 @@
                                         <constraint firstAttribute="trailing" secondItem="TJI-j4-mRH" secondAttribute="trailing" constant="8" id="inh-eY-Y04"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="observingFirstSubviewHidden" value="NO"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="matchingFirstSubviewHidden" value="NO"/>
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gZ9-8M-zG6" userLabel="Duration Wrapper View" customClass="SRGControlWrapperView">
-                                    <rect key="frame" x="418" y="0.0" width="0.0" height="48"/>
+                                    <rect key="frame" x="406" y="0.0" width="62" height="48"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Duration Label">
-                                            <rect key="frame" x="-168" y="0.0" width="335" height="48"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99:99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WU-3U-ZqK" userLabel="Duration Label">
+                                            <rect key="frame" x="13" y="16" width="36" height="17"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -192,14 +192,14 @@
                                         <constraint firstItem="5WU-3U-ZqK" firstAttribute="leading" secondItem="gZ9-8M-zG6" secondAttribute="leading" constant="13" id="RGX-1P-PLh"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="observingFirstSubviewHidden" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="matchingFirstSubviewHidden" value="YES"/>
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="189-ZC-Nor" userLabel="Live label Wrapper View" customClass="SRGControlWrapperView">
                                     <rect key="frame" x="468" y="0.0" width="55" height="48"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KBJ-eu-VbX" userLabel="Live Label" customClass="SRGLiveLabel">
-                                            <rect key="frame" x="13" y="15.5" width="29" height="16.5"/>
+                                            <rect key="frame" x="13" y="16" width="29" height="17"/>
                                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -212,7 +212,7 @@
                                         <constraint firstItem="KBJ-eu-VbX" firstAttribute="leading" secondItem="189-ZC-Nor" secondAttribute="leading" constant="13" id="UXr-jf-yTC"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="observingFirstSubviewHidden" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="matchingFirstSubviewHidden" value="YES"/>
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iRM-He-GD6" customClass="SRGTracksButton">
@@ -242,7 +242,7 @@
                             </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cih-8k-dqC" userLabel="Backward Button">
-                            <rect key="frame" x="235.5" y="107.5" width="64" height="88"/>
+                            <rect key="frame" x="211.5" y="107.5" width="64" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                             <state key="normal" image="backward-48"/>
@@ -251,12 +251,12 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE6-Vv-zcn" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                            <rect key="frame" x="299.5" y="120.5" width="20" height="62"/>
+                            <rect key="frame" x="275.5" y="107.5" width="68" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suw-jc-FuV" userLabel="Forward Button">
-                            <rect key="frame" x="319.5" y="107.5" width="64" height="88"/>
+                            <rect key="frame" x="343.5" y="107.5" width="64" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                             <state key="normal" image="forward-48"/>
@@ -265,7 +265,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KlV-OH-iUB">
-                            <rect key="frame" x="383.5" y="107.5" width="64" height="88"/>
+                            <rect key="frame" x="407.5" y="107.5" width="64" height="88"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                             <state key="normal" image="back_live-48"/>

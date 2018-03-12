@@ -17,8 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  When set to `YES`, force the view to be hidden / display like the first subview.
  *
  *  Default value is `NO`.
+ *
+ *  @discussion When set to `YES`, the view is shown or hidden by having its `hidden` property automatically adjusted.
+ *              Attempting to manually alter this property in this case leads to undefined behavior. You can still
+ *              force the view to always be hidden by setting its `alwaysHidden` property to `YES` if needed.
  */
-@property (nonatomic, getter=isObservingFirstSubviewHidden) IBInspectable BOOL observingFirstSubviewHidden;
+@property (nonatomic, getter=isMatchingFirstSubviewHidden) IBInspectable BOOL matchingFirstSubviewHidden;
 
 /**
  *  When set to `YES`, force the view to be always hidden, even if subviews aren't hidden.

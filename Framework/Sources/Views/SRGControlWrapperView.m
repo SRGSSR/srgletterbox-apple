@@ -36,6 +36,12 @@
 
 #pragma mark Getters and setters
 
+- (void)setMatchingFirstSubviewHidden:(BOOL)matchingFirstSubviewHidden
+{
+    _matchingFirstSubviewHidden = matchingFirstSubviewHidden;
+    [self updateAppearance];
+}
+
 - (void)setAlwaysHidden:(BOOL)alwaysHidden
 {
     _alwaysHidden = alwaysHidden;
@@ -49,7 +55,7 @@
     if (self.alwaysHidden) {
         self.hidden = YES;
     }
-    else if (self.observingFirstSubviewHidden && self.subviews.firstObject) {
+    else if (self.matchingFirstSubviewHidden && self.subviews.firstObject) {
         self.hidden = self.subviews.firstObject.hidden;
     }
     else {
