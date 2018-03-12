@@ -56,10 +56,6 @@
     else if (self.matchingFirstSubviewHidden && self.subviews.firstObject) {
         self.hidden = self.subviews.firstObject.hidden;
     }
-    else {
-        // By default, don't hide the view.
-        self.hidden = NO;
-    }
 }
 
 #pragma mark Accessibility
