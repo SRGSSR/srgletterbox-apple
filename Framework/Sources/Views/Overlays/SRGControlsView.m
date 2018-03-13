@@ -212,7 +212,8 @@
     // Responsiveness
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
-    self.durationLabel.hidden = NO;
+    self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
+                                    || self.controller.mediaPlayerController.streamType != SRGStreamTypeOnDemand);;
     self.backwardSeekButton.hidden = NO;
     self.forwardSeekButton.hidden = NO;
     self.viewModeButton.alwaysHidden = NO;
@@ -245,9 +246,6 @@
         self.pictureInPictureButton.alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
-    
-    self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
-                                    || self.controller.mediaPlayerController.streamType != SRGStreamTypeOnDemand);
     
     // Fix incorrect empty space after hiding the full screen button on iOS 9.
     NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
