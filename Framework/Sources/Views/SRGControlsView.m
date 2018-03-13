@@ -224,7 +224,7 @@
     self.forwardSeekButton.hidden = NO;
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = NO;
-    self.tracksButton.alwaysHidden = YES;
+    self.tracksButton.alwaysHidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 165.f) {
