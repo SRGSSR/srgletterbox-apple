@@ -68,37 +68,10 @@
     @weakify(self)
     [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
-        [self reloadData];
-        [self.contextView updateLayoutAnimated:YES];
+        [self refresh];
     }];
     
-    [self reloadData];
-}
-
-- (void)reloadData
-{
-    // Only update with valid upcoming information
-    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
-    if (! upcomingMedia) {
-        return;
-    }
-    
-    self.titleLabel.text = upcomingMedia.title;
-    self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
-    
-    static NSDateComponentsFormatter *s_dateComponentsFormatter;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-        s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-    });
-    
-    [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
-    
-    NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
-    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
-    [self.remainingTimeButton setProgress:progress withDuration:duration];
+    [self refresh];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -128,6 +101,34 @@
     else {
         self.alpha = 0.f;
     }
+}
+
+#pragma mark UI
+
+- (void)refresh
+{
+    // Only update with valid upcoming information
+    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
+    if (! upcomingMedia) {
+        return;
+    }
+    
+    self.titleLabel.text = upcomingMedia.title;
+    self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
+    
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+        s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+    });
+    
+    [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    
+    NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
+    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
+    [self.remainingTimeButton setProgress:progress withDuration:duration];
 }
 
 #pragma mark Actions

@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  View associated with accessibility (mostly for display).
+ *  Accessibility player placeholder view.
  */
 @interface SRGAccessibilityView : SRGLetterboxBaseView
 

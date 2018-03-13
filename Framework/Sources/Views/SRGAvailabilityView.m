@@ -52,7 +52,7 @@
         @weakify(self)
         self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateAvailability];
+            [self refresh];
         }];
     }
     else {
@@ -71,20 +71,20 @@
 {
     [super metadataDidChange];
     
-    [self updateAvailability];
+    [self refresh];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    [self updateAvailability];
+    [self refresh];
 }
 
 #pragma mark UI
 
 // Data and display are tightly coupled, and therefore factored out as a single method called for all update needs
-- (void)updateAvailability
+- (void)refresh
 {
     SRGMedia *media = self.controller.media;
     
