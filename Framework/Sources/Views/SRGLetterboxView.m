@@ -980,7 +980,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)externalPlaybackStateDidChange:(NSNotification *)notification
 {
-    [self setNeedsLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
@@ -992,7 +991,6 @@ static void commonInit(SRGLetterboxView *self);
 // Called when the route is changed from the control center
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self setNeedsLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
