@@ -53,7 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)voiceOverStatusDidChange NS_REQUIRES_SUPER;
 
 /**
- *  Method called when the parent Letterbox context view is required to perform a layout update.
+ *  Method called when the parent Letterbox context view is required to perform a layout update. Subclasses can implement
+ *  this method to perform related layout changes, e.g. showing or hiding items, updating layout constraints, etc. All
+ *  changes will be automatically animated within the same animation transaction as the parent view.
  *
  *  @discussion Never call this method directly. If your subclass needs to ask for a layout, call `-setNeedsLayoutAnimated:`
  *              instead.
@@ -61,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
 
 /**
- *  Call to trigger a layout update.
+ *  Call to trigger a layout update on the parent context.
  */
 - (void)setNeedsLayoutAnimated:(BOOL)animated;
 
