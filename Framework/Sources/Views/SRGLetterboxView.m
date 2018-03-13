@@ -545,7 +545,6 @@ static void commonInit(SRGLetterboxView *self);
     if (mediaPlayerController.view.superview == self.playbackView) {
         [mediaPlayerController.view removeFromSuperview];
     }
-    
 }
 
 #pragma mark UI behavior changes
