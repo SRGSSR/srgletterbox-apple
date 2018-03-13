@@ -683,12 +683,24 @@ static void commonInit(SRGLetterboxView *self);
         [self.loadingImageView stopAnimating];
     }
     
-    [self srg_recursivelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
     
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
     
     return userInterfaceHidden;
+}
+
+- (void)recursivelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    if ([view isKindOfClass:[SRGLetterboxBaseView class]]) {
+        SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
+        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    }
+    
+    for (UIView *subview in view.subviews) {
+        [self recursivelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+    }
 }
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden

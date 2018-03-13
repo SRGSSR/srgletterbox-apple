@@ -101,24 +101,3 @@
 }
 
 @end
-
-@implementation UIView (SRGLetterboxControllerView)
-
-- (void)srg_recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
-{
-    [self updateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
-}
-
-- (void)updateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
-{
-    if ([view isKindOfClass:[SRGLetterboxBaseView class]]) {
-        SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
-        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    }
-    
-    for (UIView *subview in view.subviews) {
-        [self updateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
-    }
-}
-
-@end
