@@ -187,7 +187,7 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
         
-        [self updateLayoutAnimated:NO];
+        [self setNeedsLayoutAnimated:NO];
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
@@ -251,7 +251,7 @@ static void commonInit(SRGLetterboxView *self);
     self.notificationMessage = nil;
     
     [self unregisterObservers];
-    [self updateLayoutAnimated:NO];
+    [self setNeedsLayoutAnimated:NO];
 }
 
 - (void)didAttachToController
@@ -279,7 +279,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.playbackView layoutIfNeeded];
     }
     
-    [self updateLayoutAnimated:NO];
+    [self setNeedsLayoutAnimated:NO];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -288,6 +288,11 @@ static void commonInit(SRGLetterboxView *self);
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+}
+
+- (void)setNeedsLayoutAnimated:(BOOL)animated
+{
+    [self setNeedsLayoutAnimated:animated withAdditionalAnimations:nil];
 }
 
 #pragma mark Getters and setters
@@ -320,7 +325,7 @@ static void commonInit(SRGLetterboxView *self);
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
             self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
-            [self updateLayoutAnimated:animated];
+            [self setNeedsLayoutAnimated:animated];
         }
         self.fullScreenAnimationRunning = NO;
     }];
@@ -378,7 +383,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     self.preferredTimelineHeight = preferredTimelineHeight;
-    [self updateLayoutAnimated:animated];
+    [self setNeedsLayoutAnimated:animated];
 }
 
 - (BOOL)isTimelineAlwaysHidden
@@ -468,7 +473,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineView.selectedIndex = NSNotFound;
     self.timelineView.time = kCMTimeZero;
     
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)reloadImage
@@ -572,7 +577,7 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     [self resetInactivityTrigger];
-    [self updateLayoutAnimated:animated];
+    [self setNeedsLayoutAnimated:animated];
 }
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
@@ -591,12 +596,7 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Layout updates
 
-- (void)updateLayoutAnimated:(BOOL)animated
-{
-    [self updateLayoutAnimated:animated withAdditionalAnimations:nil];
-}
-
-- (void)updateLayoutAnimated:(BOOL)animated withAdditionalAnimations:(void (^)(void))additionalAnimations
+- (void)setNeedsLayoutAnimated:(BOOL)animated withAdditionalAnimations:(void (^)(void))additionalAnimations
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
         _inWillAnimateUserInterface = YES;
@@ -786,7 +786,7 @@ static void commonInit(SRGLetterboxView *self);
     
     self.notificationMessage = notificationMessage;
     
-    [self updateLayoutAnimated:animated];
+    [self setNeedsLayoutAnimated:animated];
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     
     [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
@@ -802,7 +802,7 @@ static void commonInit(SRGLetterboxView *self);
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
     
     self.notificationMessage = nil;
-    [self updateLayoutAnimated:animated];
+    [self setNeedsLayoutAnimated:animated];
 }
 
 - (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
@@ -844,7 +844,9 @@ static void commonInit(SRGLetterboxView *self);
 
 - (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self updateLayoutAnimated:YES withAdditionalAnimations:^{
+    @weakify(self)
+    [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
+        @strongify(self)
         AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
         if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
             playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
@@ -953,7 +955,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackDidRetry:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)livestreamDidFinish:(NSNotification *)notification
@@ -963,7 +965,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
@@ -1005,35 +1007,35 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)externalPlaybackStateDidChange:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
 }
 
 // Called when the route is changed from the control center
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)screenDidConnect:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)screenDidDisconnect:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self updateLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:YES];
 }
 
 @end

@@ -108,7 +108,7 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
 {
-    [self.contextView updateLayoutAnimated:animated];
+    [self.contextView setNeedsLayoutAnimated:animated];
 }
 
 @end
