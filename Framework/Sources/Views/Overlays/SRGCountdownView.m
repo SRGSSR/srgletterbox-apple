@@ -9,7 +9,6 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 
-#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 NSInteger SRGCountdownViewDaysLimit = 100;

@@ -7,7 +7,6 @@
 #import "SRGContinuousPlaybackView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGRemainingTimeButton.h"
@@ -15,7 +14,6 @@
 
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
-#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGContinuousPlaybackView ()

@@ -8,15 +8,12 @@
 #import "SRGLetterboxView+Private.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAccessibilityView.h"
 #import "SRGAvailabilityView.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsView.h"
-#import "SRGCountdownView.h"
 #import "SRGErrorView.h"
-#import "SRGFullScreenButton.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
@@ -24,18 +21,13 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
-#import "SRGLetterboxTimeSlider.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGNotificationView.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
-#import "UIFont+SRGLetterbox.h"
-#import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
-#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
-#import <SRGAppearance/SRGAppearance.h>
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 

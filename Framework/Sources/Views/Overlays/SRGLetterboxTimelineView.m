@@ -13,11 +13,6 @@
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 
-#import <libextobjc/libextobjc.h>
-#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
-#import <Masonry/Masonry.h>
-#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
-
 @interface SRGLetterboxTimelineView ()
 
 @property (nonatomic) SRGMediaURN *chapterURN;
