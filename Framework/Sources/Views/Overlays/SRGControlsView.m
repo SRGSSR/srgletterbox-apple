@@ -9,10 +9,12 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
+#import "SRGControlWrapperView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGLiveLabel.h"
 #import "UIFont+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
@@ -33,6 +35,9 @@
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
+@property (nonatomic, weak) IBOutlet SRGControlWrapperView *durationLabelWrapperView;
+@property (nonatomic, weak) IBOutlet SRGLiveLabel *liveLabel;
+@property (nonatomic, weak) IBOutlet SRGControlWrapperView *liveLabelWrapperView;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
@@ -168,13 +173,13 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    
     SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
     self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
+    
     if (playbackState == SRGMediaPlayerPlaybackStateIdle
             || playbackState == SRGMediaPlayerPlaybackStatePreparing
             || playbackState == SRGMediaPlayerPlaybackStateEnded) {
@@ -189,11 +194,16 @@
         self.backwardSeekButton.alpha = [self.controller canSkipBackward] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
-        SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
+        
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
+    
+    self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
+                                 || streamType != SRGStreamTypeOnDemand);
+    
+    self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
     
     CGFloat width = CGRectGetWidth(self.frame);
     SRGImageSet imageSet = (width < 668.f) ? SRGImageSetNormal : SRGImageSetLarge;
@@ -212,38 +222,40 @@
     // Responsiveness
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
-    self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
-                                    || self.controller.mediaPlayerController.streamType != SRGStreamTypeOnDemand);;
+    self.durationLabelWrapperView.alwaysHidden = NO;
     self.backwardSeekButton.hidden = NO;
     self.forwardSeekButton.hidden = NO;
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = NO;
+    self.liveLabelWrapperView.alwaysHidden = NO;
     self.tracksButton.alwaysHidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 165.f) {
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
-        self.durationLabel.hidden = YES;
+        self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (height < 120.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
+        self.liveLabelWrapperView.alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
     if (width < 290.f) {
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
-        self.durationLabel.hidden = YES;
+        self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (width < 215.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
+        self.liveLabelWrapperView.alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
@@ -268,7 +280,7 @@
     
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.isLive) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"In Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live") attributes:attributes];
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         NSDate *date = slider.date;

@@ -21,10 +21,13 @@
                 <outlet property="backwardSeekButton" destination="fsV-iR-Pxo" id="UWb-1Y-8cg"/>
                 <outlet property="controlsStackView" destination="cGq-uz-ZWW" id="4E0-AV-FCJ"/>
                 <outlet property="durationLabel" destination="ORs-3U-2nL" id="hDZ-S7-Fpz"/>
+                <outlet property="durationLabelWrapperView" destination="PlI-KR-CX6" id="3eY-fY-beV"/>
                 <outlet property="forwardSeekButton" destination="sJC-uY-JVi" id="0Hb-iJ-qFF"/>
                 <outlet property="horizontalSpacingForwardToSkipToLiveConstraint" destination="C2n-59-Cwy" id="k2n-bt-IBI"/>
                 <outlet property="horizontalSpacingPlaybackToBackwardConstraint" destination="JrM-ym-l0e" id="agX-SN-ayk"/>
                 <outlet property="horizontalSpacingPlaybackToForwardConstraint" destination="eAJ-PX-FFt" id="K3r-Cb-Hyo"/>
+                <outlet property="liveLabel" destination="hfY-e1-gJs" id="JrB-I3-TwN"/>
+                <outlet property="liveLabelWrapperView" destination="eeD-TF-oNL" id="Csk-Ry-2pj"/>
                 <outlet property="pictureInPictureButton" destination="RYB-bE-iGb" id="ItI-41-9qv"/>
                 <outlet property="playbackButton" destination="XsM-fD-Xjk" id="4Gh-uk-XcY"/>
                 <outlet property="skipToLiveButton" destination="bWK-b9-2Ez" id="lh6-Fh-Mor"/>
@@ -76,11 +79,11 @@
                                 <constraint firstAttribute="width" priority="999" constant="48" id="3ky-3d-BIU"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s3j-tc-N2I" userLabel="Time Slider Centering View">
-                            <rect key="frame" x="144" y="0.0" width="223" height="48"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s3j-tc-N2I" userLabel="Time Slider Wrapper View" customClass="SRGControlWrapperView">
+                            <rect key="frame" x="144" y="0.0" width="61.5" height="48"/>
                             <subviews>
                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1p6-Al-g2u" customClass="SRGLetterboxTimeSlider">
-                                    <rect key="frame" x="6" y="13" width="211" height="23"/>
+                                    <rect key="frame" x="9" y="13" width="43.5" height="23"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="22" id="Iwb-lM-S2E"/>
                                     </constraints>
@@ -98,17 +101,51 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="1p6-Al-g2u" firstAttribute="leading" secondItem="s3j-tc-N2I" secondAttribute="leading" constant="8" id="LLY-jD-h5I"/>
-                                <constraint firstAttribute="trailing" secondItem="1p6-Al-g2u" secondAttribute="trailing" constant="8" id="PhY-G2-HGC"/>
+                                <constraint firstItem="1p6-Al-g2u" firstAttribute="leading" secondItem="s3j-tc-N2I" secondAttribute="leading" constant="11" id="LLY-jD-h5I"/>
+                                <constraint firstAttribute="trailing" secondItem="1p6-Al-g2u" secondAttribute="trailing" constant="11" id="PhY-G2-HGC"/>
                                 <constraint firstItem="1p6-Al-g2u" firstAttribute="centerY" secondItem="s3j-tc-N2I" secondAttribute="centerY" id="gdL-0E-Ckz"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99:99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORs-3U-2nL" userLabel="Duration Label">
-                            <rect key="frame" x="367" y="0.0" width="36" height="48"/>
-                            <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PlI-KR-CX6" userLabel="Duration Label Wrapper View" customClass="SRGControlWrapperView">
+                            <rect key="frame" x="205.5" y="0.0" width="136" height="48"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99:99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORs-3U-2nL" userLabel="Duration Label">
+                                    <rect key="frame" x="11" y="16" width="114" height="16.5"/>
+                                    <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="ORs-3U-2nL" secondAttribute="trailing" constant="11" id="2PE-kr-Zcw"/>
+                                <constraint firstItem="ORs-3U-2nL" firstAttribute="leading" secondItem="PlI-KR-CX6" secondAttribute="leading" constant="11" id="FjD-eb-Ufu"/>
+                                <constraint firstItem="ORs-3U-2nL" firstAttribute="centerY" secondItem="PlI-KR-CX6" secondAttribute="centerY" id="lFR-f5-hXq"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="matchingFirstSubviewHidden" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eeD-TF-oNL" userLabel="Live Label Wrapper View" customClass="SRGControlWrapperView">
+                            <rect key="frame" x="341.5" y="0.0" width="61.5" height="48"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfY-e1-gJs" userLabel="Live Label" customClass="SRGLiveLabel">
+                                    <rect key="frame" x="11" y="16" width="39.5" height="16.5"/>
+                                    <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="hfY-e1-gJs" firstAttribute="centerY" secondItem="eeD-TF-oNL" secondAttribute="centerY" id="5dp-Mf-6c9"/>
+                                <constraint firstAttribute="trailing" secondItem="hfY-e1-gJs" secondAttribute="trailing" constant="11" id="SOc-pO-6Gj"/>
+                                <constraint firstItem="hfY-e1-gJs" firstAttribute="leading" secondItem="eeD-TF-oNL" secondAttribute="leading" constant="11" id="Wst-7U-M7Y"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="matchingFirstSubviewHidden" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4v3-Sk-Mrv" customClass="SRGTracksButton">
                             <rect key="frame" x="403" y="0.0" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -133,7 +170,7 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button">
-                    <rect key="frame" x="151.5" y="179.5" width="64" height="88"/>
+                    <rect key="frame" x="175.5" y="179.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="backward-48"/>
@@ -142,12 +179,12 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XsM-fD-Xjk" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                    <rect key="frame" x="215.5" y="179.5" width="68" height="88"/>
+                    <rect key="frame" x="239.5" y="192.5" width="20" height="62"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJC-uY-JVi" userLabel="Forward Button">
-                    <rect key="frame" x="283.5" y="179.5" width="64" height="88"/>
+                    <rect key="frame" x="259.5" y="179.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="forward-48"/>
@@ -156,7 +193,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWK-b9-2Ez">
-                    <rect key="frame" x="347.5" y="179.5" width="64" height="88"/>
+                    <rect key="frame" x="323.5" y="179.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="back_live-48"/>
