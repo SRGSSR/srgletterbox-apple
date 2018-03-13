@@ -89,6 +89,9 @@ static void commonInit(SRGLetterboxBaseView *self);
 - (void)voiceOverStatusDidChange
 {}
 
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{}
+
 #pragma mark Notifications
 
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification

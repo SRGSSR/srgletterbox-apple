@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
  *    - Controller hooks, called when a controller is attached or detached, and in which subclasses can e.g. perform
  *      additional controller registrations and unregistrations.
  *    - Metadata and failure hooks, called when the controller updates its metadata or fails for some reason.
- *    - Layout hook, called when the related parent Letterbox view layout is updated.
  *
  *  Concrete `SRGLetterboxControllerView` subclasses are created and used exactly like `SRGLetterboxBaseView` subclasses
  *  (@see `SRGLetterboxBaseView` documentation). When implementing them, however, use the various available hooks to
@@ -62,20 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  Method called when the attached controller encountered a playback failure.
  */
 - (void)playbackDidFail NS_REQUIRES_SUPER;
-
-/**
- *  Method called when the parent Letterbox context view is required to perform a layout update.
- *
- *  @discussion Never call this method directly. If your subclass needs to ask for a layout, call `-setNeedsLayoutAnimated:`
- *              instead.
- */
-// TODO: Move to the `SRGLetterboxBaseView` class.
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
-
-/**
- *  Call to trigger a layout update.
- */
-- (void)setNeedsLayoutAnimated:(BOOL)animated;
 
 @end
 

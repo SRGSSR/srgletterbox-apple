@@ -88,9 +88,6 @@
 - (void)playbackDidFail
 {}
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
-{}
-
 #pragma mark Layout
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
