@@ -120,20 +120,20 @@
             self.countdownView.hidden = YES;
         }
         else if (CGRectGetWidth(self.frame) < 290.f) {
-            NSString *availabilityLabelText = nil;
+            NSString *message = nil;
             if (dateComponents.day > 0) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                message = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 60. * 60.) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                message = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 0.) {
-                availabilityLabelText = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                message = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else {
-                availabilityLabelText = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+                message = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
             }
-            self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", availabilityLabelText];
+            self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", message];
             self.messageLabel.hidden = NO;
             self.messageBackgroundView.hidden = NO;
             
