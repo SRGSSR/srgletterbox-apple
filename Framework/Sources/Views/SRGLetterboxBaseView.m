@@ -7,7 +7,7 @@
 #import "SRGLetterboxBaseView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGLetterboxView.h"
+#import "SRGLetterboxView+Private.h"
 
 #import <Masonry/Masonry.h>
 
@@ -22,8 +22,8 @@ static void commonInit(SRGLetterboxBaseView *self);
     if (self = [super initWithFrame:frame]) {
         commonInit(self);
         
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT an `SRGLetterboxBaseView`. Manually
-        // calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
+        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT a instance of the class.
+        // Manually calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
         [self awakeFromNib];
     }
     return self;
@@ -108,7 +108,7 @@ static void commonInit(SRGLetterboxBaseView *self)
     NSString *nibName = NSStringFromClass([self class]);
     if ([[NSBundle srg_letterboxBundle] pathForResource:nibName ofType:@"nib"]) {
         // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-        // an `SRGLetterboxBaseView` to avoid infinite recursion
+        // an instance of the class itself to avoid infinite recursion.
         UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:nibName owner:self options:nil] firstObject];
         view.backgroundColor = [UIColor clearColor];
         [self addSubview:view];

@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxBaseView+Subclassing.h"
+#import "SRGLetterboxView+Private.h"
 
 @implementation SRGAccessibilityView
 

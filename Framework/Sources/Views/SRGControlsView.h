@@ -19,14 +19,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol SRGControlsViewDelegate <NSObject>
 
+/**
+ *  Method called when the user did tap on the controls view.
+ */
 - (void)controlsViewDidTap:(SRGControlsView *)controlsView;
 
+/**
+ *  Method called when the time slider moved, either interactively or during normal playback.
+ */
 - (void)controlsView:(SRGControlsView *)controlsView isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive;
 
 @end
 
 /**
- *  Internal view class for controls layout.
+ *  View displaying controls.
  */
 IB_DESIGNABLE
 @interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate>

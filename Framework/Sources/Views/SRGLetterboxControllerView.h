@@ -9,6 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  Abstract base class for Letterbox views bound to a Letterbox controller.
+ */
 @interface SRGLetterboxControllerView : SRGLetterboxBaseView
 
 /**

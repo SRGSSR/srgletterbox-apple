@@ -89,7 +89,7 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self reloadData];
+        [self refresh];
     }
 }
 
@@ -159,12 +159,12 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 {
     _remainingTimeInterval = MAX(remainingTimeInterval, 0);
     
-    [self reloadData];
+    [self refresh];
 }
 
 #pragma mark UI
 
-- (void)reloadData
+- (void)refresh
 {
     NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
     NSInteger day1 = dateComponents.day / 10;

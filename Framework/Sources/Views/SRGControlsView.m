@@ -110,7 +110,7 @@
         @weakify(self)
         self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self.contextView updateLayoutAnimated:YES];
+            [self setNeedsLayoutAnimated:YES];
         }];
     }
     else {
@@ -157,8 +157,8 @@
             && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
         SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
         
-        NSTimeInterval durationInSeconds = mainChapter.duration / 1000;
-        if (durationInSeconds < 60. * 60) {
+        NSTimeInterval durationInSeconds = mainChapter.duration / 1000.;
+        if (durationInSeconds < 60. * 60.) {
             self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
         }
         else {

@@ -6,8 +6,9 @@
 
 #import "SRGLetterboxControllerView.h"
 
+#import "SRGLetterboxBaseView+Subclassing.h"
 #import "SRGLetterboxController+Private.h"
-#import "SRGLetterboxView.h"
+#import "SRGLetterboxView+Private.h"
 
 @implementation SRGLetterboxControllerView
 
@@ -89,6 +90,13 @@
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {}
+
+#pragma mark Layout
+
+- (void)setNeedsLayoutAnimated:(BOOL)animated
+{
+    [self.contextView updateLayoutAnimated:animated];
+}
 
 #pragma mark Notifications
 

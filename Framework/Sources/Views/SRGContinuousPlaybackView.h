@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- *  View displayed during a continuous playback transition.
+ *  View displayed during a continuous playback transition between two medias.
  */
 IB_DESIGNABLE
 @interface SRGContinuousPlaybackView : SRGLetterboxControllerView
