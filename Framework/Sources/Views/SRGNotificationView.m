@@ -6,6 +6,8 @@
 
 #import "SRGNotificationView.h"
 
+#import "SRGLetterboxBaseView+Subclassing.h"
+
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGNotificationView ()

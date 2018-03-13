@@ -10,9 +10,9 @@
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
-#import "SRGLetterboxView+Private.h"
 #import "UIFont+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>

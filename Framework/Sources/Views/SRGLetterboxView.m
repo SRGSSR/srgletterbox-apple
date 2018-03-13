@@ -17,6 +17,7 @@
 #import "SRGCountdownView.h"
 #import "SRGErrorView.h"
 #import "SRGFullScreenButton.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"

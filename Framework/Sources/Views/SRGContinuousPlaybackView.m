@@ -9,7 +9,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
-#import "SRGLetterboxView+Private.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 

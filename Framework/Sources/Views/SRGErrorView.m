@@ -7,7 +7,7 @@
 #import "SRGErrorView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGLetterboxView+Private.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>

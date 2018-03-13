@@ -9,37 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// TODO: Hide everything in a subclassing category, except the controller property. Probably import
-//       SRGLetterboxView.h from the private header.
-
 @interface SRGLetterboxControllerView : SRGLetterboxBaseView
 
 /**
- *  The controller bound to the view. The controller can be changed at any time, the view will automatically be updated
- *  accordingly.
+ *  The controller bound to the view.
  */
 @property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
-
-- (void)willDetachFromController NS_REQUIRES_SUPER;
-- (void)didDetachFromController NS_REQUIRES_SUPER;
-
-- (void)willAttachToController NS_REQUIRES_SUPER;
-- (void)didAttachToController NS_REQUIRES_SUPER;
-
-- (void)reloadData NS_REQUIRES_SUPER;
-
-// Document: Update INTERNAL constraint / subview visibility (not constraints on self, e.g. not its own height or its own alpha or hidden
-// property). External constraints are the responsibility of the superview.
-// NEVER call directly. Is called by the parent Letterbox view to always ensure a consistent layout transactions are made.
-// No assumption must be made about the order in which reloadData and updateLayout are calles
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
-
-@end
-
-// TODO: Hide in SRGLetterboxView.m
-@interface UIView (SRGLetterboxControllerView)
-
-- (void)srg_recursivelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden;
 
 @end
 

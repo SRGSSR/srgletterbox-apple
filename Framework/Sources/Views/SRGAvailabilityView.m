@@ -10,6 +10,7 @@
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGCountdownView.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>

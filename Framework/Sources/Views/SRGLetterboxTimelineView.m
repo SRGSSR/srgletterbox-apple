@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
