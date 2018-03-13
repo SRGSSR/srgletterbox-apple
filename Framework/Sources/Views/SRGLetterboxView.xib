@@ -18,6 +18,7 @@
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="X1U-mA-f72"/>
                 <outlet property="imageView" destination="gv4-Rp-xBi" id="OaD-1O-nnk"/>
+                <outlet property="loadingBackgroundView" destination="N5a-bL-wow" id="tnK-H9-qTt"/>
                 <outlet property="notificationView" destination="aun-4y-dBi" id="M09-fc-S7k"/>
                 <outlet property="playbackView" destination="diO-OC-keM" id="0ga-MU-4Fp"/>
                 <outlet property="showUserInterfaceTapGestureRecognizer" destination="MQv-Za-8Ye" id="kQb-jX-UeC"/>
@@ -48,6 +49,10 @@
                         <outletCollection property="gestureRecognizers" destination="MQv-Za-8Ye" appends="YES" id="hRi-g4-rrj"/>
                         <outletCollection property="gestureRecognizers" destination="y7P-pN-sI4" appends="YES" id="gP2-dm-Oez"/>
                     </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N5a-bL-wow" userLabel="Loading Background View">
+                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
@@ -94,8 +99,10 @@
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="8YW-uc-lDC"/>
                 <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="9hc-0k-Qe3"/>
+                <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="N5a-bL-wow" secondAttribute="bottom" id="C1R-um-9Gn"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="CTi-QM-nX4"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="Ceb-TG-tgI"/>
+                <constraint firstItem="N5a-bL-wow" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="CsB-8U-o9j"/>
                 <constraint firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="D0i-tF-POP"/>
                 <constraint firstAttribute="trailing" secondItem="ysx-Uc-uEb" secondAttribute="trailing" id="D8a-X2-bbV"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="Hch-lI-uFP"/>
@@ -105,6 +112,7 @@
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="Kzh-L7-fal"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="PZq-fu-r05"/>
                 <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Sv9-qj-ejU"/>
+                <constraint firstItem="N5a-bL-wow" firstAttribute="trailing" secondItem="ZVz-wN-LVi" secondAttribute="trailing" id="X1L-00-GCo"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
                 <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="bCe-ds-SiE"/>
                 <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="d11-V3-ugi"/>
@@ -120,6 +128,7 @@
                 <constraint firstItem="In0-qW-XO1" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="v0q-nr-OXF"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="vUw-lf-qtn"/>
                 <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="y82-XT-rig"/>
+                <constraint firstItem="N5a-bL-wow" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="ydA-R8-2qf"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="zFw-U5-vTD"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

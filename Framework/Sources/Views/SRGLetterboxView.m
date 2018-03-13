@@ -48,6 +48,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *playbackView;
+@property (nonatomic, weak) IBOutlet UIView *loadingBackgroundView;
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
 @property (nonatomic, weak) IBOutlet SRGNotificationView *notificationView;
@@ -672,10 +673,12 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     if (self.controller.loading) {
+        self.loadingBackgroundView.alpha = userInterfaceHidden ? 1.f : 0.f;
         self.loadingImageView.alpha = 1.f;
         [self.loadingImageView startAnimating];
     }
     else {
+        self.loadingBackgroundView.alpha = 0.f;
         self.loadingImageView.alpha = 0.f;
         [self.loadingImageView stopAnimating];
     }
