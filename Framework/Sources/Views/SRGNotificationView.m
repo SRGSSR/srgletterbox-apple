@@ -12,8 +12,6 @@
 
 @interface SRGNotificationView ()
 
-@property (nonatomic, weak) IBOutlet UIView *contentView;
-
 @property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
 @property (nonatomic, weak) IBOutlet UILabel *messageLabel;
 
