@@ -41,6 +41,26 @@
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
+- (void)willDetachFromController
+{
+    [super willDetachFromController];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxPlaybackDidRetryNotification
+                                                  object:self.controller];
+}
+
+- (void)didAttachToController
+{
+    [super didAttachToController];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackDidRetry:)
+                                                 name:SRGLetterboxPlaybackDidRetryNotification
+                                               object:self.controller];
+
+}
+
 - (void)playbackDidFail
 {
     [super playbackDidFail];
@@ -81,6 +101,13 @@
 - (IBAction)retry:(id)sender
 {
     [self.controller restart];
+}
+
+#pragma mark Notifications
+
+- (void)playbackDidRetry:(NSNotification *)notification
+{
+    [self setNeedsLayoutAnimated:YES];
 }
 
 @end

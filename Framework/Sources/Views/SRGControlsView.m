@@ -112,9 +112,25 @@
             @strongify(self)
             [self setNeedsLayoutAnimated:YES];
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(screenDidConnect:)
+                                                     name:UIScreenDidConnectNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(screenDidDisconnect:)
+                                                     name:UIScreenDidDisconnectNotification
+                                                   object:nil];
     }
     else {
         self.userInterfaceUpdateTimer = nil;
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIScreenDidConnectNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIScreenDidDisconnectNotification
+                                                      object:nil];
     }
 }
 
@@ -329,6 +345,18 @@
 - (IBAction)hideUserInterface:(id)sender
 {
     [self.delegate controlsViewDidTap:self];
+}
+
+#pragma mark Notifications
+
+- (void)screenDidConnect:(NSNotification *)notification
+{
+    [self setNeedsLayoutAnimated:YES];
+}
+
+- (void)screenDidDisconnect:(NSNotification *)notification
+{
+    [self setNeedsLayoutAnimated:YES];
 }
 
 @end

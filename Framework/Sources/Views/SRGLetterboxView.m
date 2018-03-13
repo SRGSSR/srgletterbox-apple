@@ -170,14 +170,6 @@ static void commonInit(SRGLetterboxView *self);
                                                      name:SRGMediaPlayerWirelessRouteDidChangeNotification
                                                    object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(screenDidConnect:)
-                                                     name:UIScreenDidConnectNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(screenDidDisconnect:)
-                                                     name:UIScreenDidDisconnectNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(serviceSettingsDidChange:)
                                                      name:SRGLetterboxServiceSettingsDidChangeNotification
                                                    object:[SRGLetterboxService sharedService]];
@@ -198,12 +190,6 @@ static void commonInit(SRGLetterboxView *self);
                                                       object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGMediaPlayerWirelessRouteDidChangeNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIScreenDidConnectNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIScreenDidDisconnectNotification
                                                       object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGLetterboxServiceSettingsDidChangeNotification
@@ -280,6 +266,23 @@ static void commonInit(SRGLetterboxView *self);
     }
     
     [self setNeedsLayoutAnimated:NO];
+}
+
+- (void)metadataDidChange
+{
+    [super metadataDidChange];
+    
+    [self reloadImage];
+}
+
+- (void)playbackDidFail
+{
+    [super playbackDidFail];
+    
+    self.timelineView.selectedIndex = NSNotFound;
+    self.timelineView.time = kCMTimeZero;
+    
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -459,23 +462,6 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Data refresh
 
-- (void)metadataDidChange
-{
-    [super metadataDidChange];
-    
-    [self reloadImage];
-}
-
-- (void)playbackDidFail
-{
-    [super playbackDidFail];
-    
-    self.timelineView.selectedIndex = NSNotFound;
-    self.timelineView.time = kCMTimeZero;
-    
-    [self setNeedsLayoutAnimated:YES];
-}
-
 - (void)reloadImage
 {
     // For livestreams, rely on channel information when available
@@ -499,17 +485,13 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma Listeners
+#pragma mark Observer management
 
 - (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackDidRetry:)
-                                                 name:SRGLetterboxPlaybackDidRetryNotification
-                                               object:controller];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(livestreamDidFinish:)
                                                  name:SRGLetterboxLivestreamDidFinishNotification
@@ -541,9 +523,6 @@ static void commonInit(SRGLetterboxView *self);
     SRGLetterboxController *controller = self.controller;
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxPlaybackDidRetryNotification
-                                                  object:controller];
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SRGLetterboxLivestreamDidFinishNotification
                                                   object:controller];
@@ -953,11 +932,6 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Notifications
 
-- (void)playbackDidRetry:(NSNotification *)notification
-{
-    [self setNeedsLayoutAnimated:YES];
-}
-
 - (void)livestreamDidFinish:(NSNotification *)notification
 {
     [self showNotificationMessage:SRGLetterboxLocalizedString(@"Live broadcast ended", @"Notification message displayed when a live broadcast has finished.") animated:YES];
@@ -1021,16 +995,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [self setNeedsLayoutAnimated:YES];
     [self showAirplayNotificationMessageIfNeededAnimated:YES];
-}
-
-- (void)screenDidConnect:(NSNotification *)notification
-{
-    [self setNeedsLayoutAnimated:YES];
-}
-
-- (void)screenDidDisconnect:(NSNotification *)notification
-{
-    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
