@@ -65,7 +65,7 @@
 {
     [super playbackDidFail];
     
-    NSError *error = self.contextView.error;
+    NSError *error = self.contextLetterboxView.error;
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
@@ -76,7 +76,7 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    if (! self.contextView.error) {
+    if (! self.contextLetterboxView.error) {
         self.alpha = 0.f;
     }
     else {

@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion The context of an `SRGLetterboxView` is the view itself.
  */
-@property (nonatomic, readonly, nullable) SRGLetterboxView *contextView;
+@property (nonatomic, readonly, nullable) SRGLetterboxView *contextLetterboxView;
 
 /**
  *  Method called when the content size category changes. Subclasses can e.g. implement this method if needed to adjust
