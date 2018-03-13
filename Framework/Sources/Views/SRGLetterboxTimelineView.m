@@ -98,21 +98,11 @@
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow
+- (void)contentSizeCategoryDidChange
 {
-    [super willMoveToWindow:newWindow];
+    [super contentSizeCategoryDidChange];
     
-    if (newWindow) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(contentSizeCategoryDidChange:)
-                                                     name:UIContentSizeCategoryDidChangeNotification
-                                                   object:nil];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIContentSizeCategoryDidChangeNotification
-                                                      object:nil];
-    }
+    [self.collectionView reloadData];
 }
 
 - (void)metadataDidChange
@@ -244,13 +234,6 @@
     cell.delegate = self;
     cell.subdivision = self.subdivisions[indexPath.row];
     [self updateAppearanceForCell:cell];
-}
-
-#pragma mark Notifications
-
-- (void)contentSizeCategoryDidChange:(NSNotification *)notification
-{
-    [self.collectionView reloadData];
 }
 
 @end
