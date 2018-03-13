@@ -18,9 +18,14 @@ NS_ASSUME_NONNULL_BEGIN
  *      additional controller registrations and unregistrations.
  *    - Metadata and failure hooks, called when the controller updates its metadata or fails for some reason.
  *
- *  Concrete `SRGLetterboxControllerView` subclasses are created and used exactly like `SRGLetterboxBaseView` subclasses
- *  (@see `SRGLetterboxBaseView` documentation). When implementing them, however, use the various available hooks to
- *  ensure that your view appropriately responds to controller changes, metadata updates and layout requests.
+ *  Concrete `SRGLetterboxControllerView` subclasses are created and used exactly like `SRGLetterboxBaseView` subclasses:
+ *    - Create a new subclass, importing `SRGLetterboxControllerView.h` from its header file.
+ *    - In the `.m` implementation file, import the `SRGLetterboxControllerView+Subclassing.h` header meant for subclass
+ *      implementation.
+ *    - Add an associated nib file bearing the same name as your class.
+ *    - Add a simple `UIView` to your nib as first object, and set the File's owner type to your class. Bind any
+ *      outlets to the File's owner.
+ *    - Implement the various hook methods if required.
  */
 @interface SRGLetterboxControllerView (Subclassing)
 

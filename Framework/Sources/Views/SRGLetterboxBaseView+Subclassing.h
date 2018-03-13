@@ -20,7 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  view, as they are able to automatically find which parent view context they belong to.
  *
  *  To create your own concrete `SRGLetterboxBaseView` subclass:
- *    - Create a new subclass, importing SRGLetterboxBaseView+Subclassing.h
+ *    - Create a new subclass, importing `SRGLetterboxBaseView.h` from its header file.
+ *    - In the `.m` implementation file, import the `SRGLetterboxBaseView+Subclassing.h` header meant for subclass
+ *      implementation.
  *    - Add an associated nib file bearing the same name as your class.
  *    - Add a simple `UIView` to your nib as first object, and set the File's owner type to your class. Bind any
  *      outlets to the File's owner.

@@ -88,13 +88,6 @@
 - (void)playbackDidFail
 {}
 
-#pragma mark Layout
-
-- (void)setNeedsLayoutAnimated:(BOOL)animated
-{
-    [self.contextView updateLayoutAnimated:animated];
-}
-
 #pragma mark Notifications
 
 - (void)srg_letterbox_metadataDidChange:(NSNotification *)notification
@@ -118,9 +111,9 @@
 
 - (void)updateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    if ([view isKindOfClass:[SRGLetterboxControllerView class]]) {
-        SRGLetterboxControllerView *controllerView = (SRGLetterboxControllerView *)view;
-        [controllerView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    if ([view isKindOfClass:[SRGLetterboxBaseView class]]) {
+        SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
+        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     }
     
     for (UIView *subview in view.subviews) {

@@ -104,6 +104,13 @@ static void commonInit(SRGLetterboxBaseView *self);
     [self voiceOverStatusDidChange];
 }
 
+#pragma mark Layout
+
+- (void)setNeedsLayoutAnimated:(BOOL)animated
+{
+    [self.contextView updateLayoutAnimated:animated];
+}
+
 @end
 
 static void commonInit(SRGLetterboxBaseView *self)
