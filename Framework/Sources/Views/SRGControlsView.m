@@ -152,24 +152,16 @@
 {
     [super metadataDidChange];
     
-    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
-    if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing
-            && self.controller.mediaPlayerController.streamType == SRGStreamTypeOnDemand) {
-        SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-        
-        NSTimeInterval durationInSeconds = mainChapter.duration / 1000.;
-        if (durationInSeconds < 60. * 60.) {
-            self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-        }
-        else {
-            self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-        }
-        self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+    SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+    
+    NSTimeInterval durationInSeconds = mainChapter.duration / 1000.;
+    if (durationInSeconds < 60. * 60.) {
+        self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
     }
     else {
-        self.durationLabel.text = nil;
-        self.durationLabel.accessibilityLabel = nil;
+        self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
     }
+    self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -182,9 +174,10 @@
     self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
     
     // General playback controls
-    if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateEnded) {
+    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    if (playbackState == SRGMediaPlayerPlaybackStateIdle
+            || playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
@@ -252,6 +245,9 @@
         self.pictureInPictureButton.alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
+    
+    self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
+                                    || self.controller.mediaPlayerController.streamType != SRGStreamTypeOnDemand);
     
     // Fix incorrect empty space after hiding the full screen button on iOS 9.
     NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
