@@ -666,32 +666,32 @@
 		6F50592420581CAF00823003 /* Overlays */ = {
 			isa = PBXGroup;
 			children = (
-				6F50592520581CAF00823003 /* SRGNotificationView.h */,
-				6F50592620581CAF00823003 /* SRGCountdownView.h */,
-				6F50592720581CAF00823003 /* SRGLetterboxTimelineView.m */,
-				6F50592820581CAF00823003 /* SRGLetterboxSubdivisionCell.xib */,
-				6F50592920581CAF00823003 /* SRGControlsView.m */,
-				6F50592A20581CAF00823003 /* SRGAvailabilityView.m */,
-				6F50592B20581CAF00823003 /* SRGContinuousPlaybackView.m */,
-				6F50592C20581CAF00823003 /* SRGLetterboxSubdivisionCell.m */,
-				6F50592D20581CAF00823003 /* SRGControlsView.xib */,
 				6F50592E20581CAF00823003 /* SRGAccessibilityView.h */,
-				6F50592F20581CAF00823003 /* SRGErrorView.h */,
+				6F50593E20581CAF00823003 /* SRGAccessibilityView.m */,
+				6F50593B20581CAF00823003 /* SRGAvailabilityView.h */,
+				6F50592A20581CAF00823003 /* SRGAvailabilityView.m */,
 				6F50593020581CAF00823003 /* SRGAvailabilityView.xib */,
-				6F50593120581CAF00823003 /* SRGErrorView.xib */,
-				6F50593220581CAF00823003 /* SRGLetterboxTimelineView.xib */,
-				6F50593320581CAF00823003 /* SRGCountdownView.m */,
+				6F50593A20581CAF00823003 /* SRGContinuousPlaybackView.h */,
+				6F50592B20581CAF00823003 /* SRGContinuousPlaybackView.m */,
 				6F50593420581CAF00823003 /* SRGContinuousPlaybackView.xib */,
+				6F50593C20581CAF00823003 /* SRGControlsView.h */,
+				6F50592920581CAF00823003 /* SRGControlsView.m */,
+				6F50592D20581CAF00823003 /* SRGControlsView.xib */,
+				6F50592620581CAF00823003 /* SRGCountdownView.h */,
+				6F50593320581CAF00823003 /* SRGCountdownView.m */,
+				6F50593820581CAF00823003 /* SRGCountdownView.xib */,
+				6F50592F20581CAF00823003 /* SRGErrorView.h */,
+				6F50593D20581CAF00823003 /* SRGErrorView.m */,
+				6F50593120581CAF00823003 /* SRGErrorView.xib */,
+				6F50593920581CAF00823003 /* SRGLetterboxSubdivisionCell.h */,
+				6F50592C20581CAF00823003 /* SRGLetterboxSubdivisionCell.m */,
+				6F50592820581CAF00823003 /* SRGLetterboxSubdivisionCell.xib */,
+				6F50593720581CAF00823003 /* SRGLetterboxTimelineView.h */,
+				6F50592720581CAF00823003 /* SRGLetterboxTimelineView.m */,
+				6F50593220581CAF00823003 /* SRGLetterboxTimelineView.xib */,
+				6F50592520581CAF00823003 /* SRGNotificationView.h */,
 				6F50593520581CAF00823003 /* SRGNotificationView.m */,
 				6F50593620581CAF00823003 /* SRGNotificationView.xib */,
-				6F50593720581CAF00823003 /* SRGLetterboxTimelineView.h */,
-				6F50593820581CAF00823003 /* SRGCountdownView.xib */,
-				6F50593920581CAF00823003 /* SRGLetterboxSubdivisionCell.h */,
-				6F50593A20581CAF00823003 /* SRGContinuousPlaybackView.h */,
-				6F50593B20581CAF00823003 /* SRGAvailabilityView.h */,
-				6F50593C20581CAF00823003 /* SRGControlsView.h */,
-				6F50593D20581CAF00823003 /* SRGErrorView.m */,
-				6F50593E20581CAF00823003 /* SRGAccessibilityView.m */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -699,14 +699,14 @@
 		6F50593F20581CAF00823003 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				6F50594020581CAF00823003 /* SRGLetterboxTimeSlider.h */,
-				6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */,
-				6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */,
-				6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */,
 				6F50594420581CAF00823003 /* SRGLetterboxBaseView.h */,
-				6F50594520581CAF00823003 /* SRGLetterboxTimeSlider.m */,
-				6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */,
 				6F50594720581CAF00823003 /* SRGLetterboxBaseView.m */,
+				6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */,
+				6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */,
+				6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */,
+				6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */,
+				6F50594020581CAF00823003 /* SRGLetterboxTimeSlider.h */,
+				6F50594520581CAF00823003 /* SRGLetterboxTimeSlider.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -714,12 +714,12 @@
 		6F50594820581CAF00823003 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
-				6F50594920581CAF00823003 /* SRGLetterboxPlaybackButton.m */,
-				6F50594A20581CAF00823003 /* SRGRemainingTimeButton.m */,
 				6F50594B20581CAF00823003 /* SRGFullScreenButton.h */,
-				6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */,
 				6F50594D20581CAF00823003 /* SRGFullScreenButton.m */,
+				6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */,
+				6F50594920581CAF00823003 /* SRGLetterboxPlaybackButton.m */,
 				6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */,
+				6F50594A20581CAF00823003 /* SRGRemainingTimeButton.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
