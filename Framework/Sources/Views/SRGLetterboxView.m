@@ -179,7 +179,6 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
         
-        [self setNeedsLayoutAnimated:NO];
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
@@ -938,7 +937,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self setNeedsLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:NO];
     
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
@@ -985,7 +984,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self setNeedsLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:NO];
 }
 
 // Called when the route is changed from the control center
@@ -996,7 +995,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification
 {
-    [self setNeedsLayoutAnimated:YES];
+    [self setNeedsLayoutAnimated:NO];
 }
 
 @end
