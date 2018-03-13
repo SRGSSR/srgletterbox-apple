@@ -46,6 +46,8 @@
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
+#pragma mark Refresh
+
 - (CGFloat)updateLayoutWithMessage:(NSString *)message
 {
     BOOL hasMessage = (message != nil);
@@ -60,18 +62,17 @@
     self.messageLabel.text = message;
     
     // Force autolayout
-    [self.contentView setNeedsLayout];
-    [self.contentView layoutIfNeeded];
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
     
     // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
     // adjusts
     // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
     CGSize fittingSize = UILayoutFittingCompressedSize;
-    fittingSize.width = CGRectGetWidth(self.contentView.frame);
-    CGSize size = [self.contentView systemLayoutSizeFittingSize:fittingSize
-                                  withHorizontalFittingPriority:UILayoutPriorityRequired
-                                        verticalFittingPriority:UILayoutPriorityFittingSizeLevel];
-    return size.height;
+    fittingSize.width = CGRectGetWidth(self.frame);
+    return [self systemLayoutSizeFittingSize:fittingSize
+               withHorizontalFittingPriority:UILayoutPriorityRequired
+                     verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
 }
 
 @end
