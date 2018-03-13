@@ -11,6 +11,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGCountdownView.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -18,8 +19,7 @@
 @interface SRGAvailabilityView ()
 
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
-@property (nonatomic, weak) IBOutlet UIView *messageBackgroundView;
-@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
+@property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
 
 @property (nonatomic) NSTimer *updateTimer;
 
@@ -41,7 +41,10 @@
 {
     [super awakeFromNib];
     
-    self.messageBackgroundView.layer.cornerRadius = 4.f;
+    self.messageLabel.horizontalMargin = 5.f;
+    self.messageLabel.verticalMargin = 2.f;
+    self.messageLabel.layer.cornerRadius = 4.f;
+    self.messageLabel.layer.masksToBounds = YES;
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -92,9 +95,8 @@
     if (blockingReason == SRGBlockingReasonEndDate) {
         self.alpha = 1.f;
         
-        self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired")];
+        self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
         self.messageLabel.hidden = NO;
-        self.messageBackgroundView.hidden = NO;
         
         self.countdownView.remainingTimeInterval = 0;
         self.countdownView.hidden = YES;
@@ -113,35 +115,30 @@
                 s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
                 s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
             });
-            self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]]];
+            self.messageLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:timeIntervalBeforeStart]];
             self.messageLabel.hidden = NO;
-            self.messageBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
         else if (CGRectGetWidth(self.frame) < 290.f) {
-            NSString *message = nil;
             if (dateComponents.day > 0) {
-                message = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                self.messageLabel.text = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 60. * 60.) {
-                message = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                self.messageLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else if (timeIntervalBeforeStart >= 0.) {
-                message = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
+                self.messageLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
             }
             else {
-                message = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+                self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
             }
-            self.messageLabel.text = [NSString stringWithFormat:@"  %@  ", message];
             self.messageLabel.hidden = NO;
-            self.messageBackgroundView.hidden = NO;
             
             self.countdownView.hidden = YES;
         }
         else {
             self.messageLabel.hidden = YES;
-            self.messageBackgroundView.hidden = YES;
             
             self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
             self.countdownView.hidden = NO;

@@ -13,7 +13,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGAvailabilityView">
             <connections>
                 <outlet property="countdownView" destination="P8g-C0-z1t" id="8LZ-VF-bur"/>
-                <outlet property="messageBackgroundView" destination="x8b-v1-cKp" id="OPV-7s-X7z"/>
                 <outlet property="messageLabel" destination="5lk-nX-aAQ" id="Yh0-ma-qXZ"/>
             </connections>
         </placeholder>
@@ -26,12 +25,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="542" height="394"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x8b-v1-cKp" userLabel="Message Background View">
-                    <rect key="frame" x="231.5" y="188" width="79" height="18.5"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lk-nX-aAQ">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;availability&gt;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lk-nX-aAQ" customClass="SRGPaddedLabel">
                     <rect key="frame" x="233.5" y="190" width="75" height="14.5"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -44,11 +40,7 @@
                 <constraint firstItem="5lk-nX-aAQ" firstAttribute="centerY" secondItem="zUN-5t-Sqj" secondAttribute="centerY" id="416-Hu-zqC"/>
                 <constraint firstItem="5lk-nX-aAQ" firstAttribute="centerX" secondItem="zUN-5t-Sqj" secondAttribute="centerX" id="DBx-47-3pw"/>
                 <constraint firstAttribute="trailing" secondItem="P8g-C0-z1t" secondAttribute="trailing" id="V2v-ao-aD0"/>
-                <constraint firstItem="x8b-v1-cKp" firstAttribute="bottom" secondItem="5lk-nX-aAQ" secondAttribute="bottom" constant="2" id="gLz-6F-86Q"/>
                 <constraint firstAttribute="bottom" secondItem="P8g-C0-z1t" secondAttribute="bottom" id="jNz-Il-jRA"/>
-                <constraint firstItem="x8b-v1-cKp" firstAttribute="top" secondItem="5lk-nX-aAQ" secondAttribute="top" constant="-2" id="jSS-R2-T8h"/>
-                <constraint firstItem="x8b-v1-cKp" firstAttribute="trailing" secondItem="5lk-nX-aAQ" secondAttribute="trailing" constant="2" id="ni6-wf-hbD"/>
-                <constraint firstItem="x8b-v1-cKp" firstAttribute="leading" secondItem="5lk-nX-aAQ" secondAttribute="leading" constant="-2" id="s1X-Je-96T"/>
                 <constraint firstItem="P8g-C0-z1t" firstAttribute="top" secondItem="zUN-5t-Sqj" secondAttribute="top" id="xqQ-RJ-ksm"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
