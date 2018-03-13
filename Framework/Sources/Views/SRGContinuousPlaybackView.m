@@ -77,8 +77,6 @@
 
 - (void)reloadData
 {
-    [super reloadData];
-    
     // Only update with valid upcoming information
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     if (! upcomingMedia) {

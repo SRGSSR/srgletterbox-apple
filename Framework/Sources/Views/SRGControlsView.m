@@ -148,9 +148,9 @@
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
 }
 
-- (void)reloadData
+- (void)metadataDidChange
 {
-    [super reloadData];
+    [super metadataDidChange];
     
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     if (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStateEnded && playbackState != SRGMediaPlayerPlaybackStatePreparing

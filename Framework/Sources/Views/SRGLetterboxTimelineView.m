@@ -115,9 +115,9 @@
     }
 }
 
-- (void)reloadData
+- (void)metadataDidChange
 {
-    [super reloadData];
+    [super metadataDidChange];
     
     SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
     SRGSubdivision *subdivision = (SRGSegment *)self.controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;

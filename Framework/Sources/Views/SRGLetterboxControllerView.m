@@ -33,6 +33,7 @@
                                                         name:SRGLetterboxPlaybackDidFailNotification
                                                       object:_controller];
         
+        
         [self didDetachFromController];
     }
     
@@ -52,7 +53,7 @@
         [self didAttachToController];
     }
     
-    [self reloadData];
+    [self metadataDidChange];
 }
 
 #pragma mark Overrides
@@ -62,7 +63,7 @@
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self reloadData];
+        [self metadataDidChange];
     }
 }
 
@@ -80,7 +81,10 @@
 - (void)didAttachToController
 {}
 
-- (void)reloadData
+- (void)metadataDidChange
+{}
+
+- (void)playbackDidFail
 {}
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -90,12 +94,12 @@
 
 - (void)srg_letterbox_metadataDidChange:(NSNotification *)notification
 {
-    [self reloadData];
+    [self metadataDidChange];
 }
 
 - (void)srg_letterbox_playbackDidFail:(NSNotification *)notification
 {
-    [self reloadData];
+    [self playbackDidFail];
 }
 
 @end

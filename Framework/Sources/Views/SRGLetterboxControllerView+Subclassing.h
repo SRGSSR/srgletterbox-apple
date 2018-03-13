@@ -18,13 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)willAttachToController NS_REQUIRES_SUPER;
 - (void)didAttachToController NS_REQUIRES_SUPER;
 
-// TODO: Rename as -didUpdateMetadata
-- (void)reloadData NS_REQUIRES_SUPER;
+- (void)metadataDidChange NS_REQUIRES_SUPER;
+- (void)playbackDidFail NS_REQUIRES_SUPER;
 
 // Document: Update INTERNAL constraint / subview visibility (not constraints on self, e.g. not its own height or its own alpha or hidden
 // property). External constraints are the responsibility of the superview.
 // NEVER call directly. Is called by the parent Letterbox view to always ensure a consistent layout transactions are made.
-// No assumption must be made about the order in which reloadData and updateLayout are calles
+// No assumption must be made about the order in which metadataDidChange and updateLayout are called
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
 
 @end

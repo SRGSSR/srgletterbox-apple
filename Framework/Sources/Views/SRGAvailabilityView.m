@@ -67,9 +67,9 @@
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
-- (void)reloadData
+- (void)metadataDidChange
 {
-    [super reloadData];
+    [super metadataDidChange];
     
     [self updateAvailability];
 }

@@ -40,9 +40,9 @@
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
-- (void)reloadData
+- (void)playbackDidFail
 {
-    [super reloadData];
+    [super playbackDidFail];
     
     NSError *error = self.contextView.error;
     UIImage *image = [UIImage srg_letterboxImageForError:error];
