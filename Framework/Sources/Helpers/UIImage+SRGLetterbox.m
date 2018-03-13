@@ -311,6 +311,12 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             break;
         }
             
+        case SRGBlockingReasonStartDate:
+        case SRGBlockingReasonEndDate: {
+            return nil;
+            break;
+        }
+            
         default: {
             return [UIImage srg_letterboxImageNamed:@"generic_blocked-25"];
             break;
