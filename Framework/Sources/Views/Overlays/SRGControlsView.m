@@ -221,7 +221,15 @@
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
-    self.fullScreenButton.alpha = userInterfaceHidden ? 0.f : 1.f;
+    
+    if (self.controller.error || ! self.controller.URN || self.controller.continuousPlaybackUpcomingMedia) {
+        SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
+        BOOL userControlsDisabled = ! parentLetterboxView.userInterfaceTogglable && parentLetterboxView.userInterfaceHidden;
+        self.fullScreenButton.alpha = userControlsDisabled ? 0.f : 1.f;
+    }
+    else {
+        self.fullScreenButton.alpha = userInterfaceHidden ? 0.f : 1.f;
+    }
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -253,11 +261,11 @@
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
     // Manage the phantom button, as the real full-screen button will follow its frame
-    if ([self.delegate controlsViewShoulHideFullScreenButton:self]) {
-        self.fullScreenPhantomButton.hidden = YES;
-    }
-    else if (self.controller.error || ! self.controller.URN || self.controller.continuousPlaybackUpcomingMedia) {
+    if (self.controller.error || ! self.controller.URN || self.controller.continuousPlaybackUpcomingMedia) {
         self.fullScreenPhantomButton.hidden = NO;
+    }
+    else {
+        self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShoulHideFullScreenButton:self];
     }
     
     // Responsiveness
