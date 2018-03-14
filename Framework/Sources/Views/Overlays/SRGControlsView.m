@@ -271,7 +271,7 @@
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
-    [self.delegate controlsView:self isMovingToPlaybackTime:time withValue:value interactive:interactive];
+    [self.delegate controlsView:self isMovingSliderToPlaybackTime:time withValue:value interactive:interactive];
 }
 
 - (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time

@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Method called when the time slider moved, either interactively or during normal playback.
  */
-- (void)controlsView:(SRGControlsView *)controlsView isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive;
+- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive;
 
 @end
 

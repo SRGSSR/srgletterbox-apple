@@ -859,7 +859,7 @@ static void commonInit(SRGLetterboxView *self);
     });
 }
 
-- (void)controlsView:(SRGControlsView *)controlsView isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
+- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
     SRGSubdivision *selectedSubdivision = [self subdivisionOnTimelineAtTime:time];
     
