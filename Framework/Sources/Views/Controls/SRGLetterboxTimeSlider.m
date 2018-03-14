@@ -52,6 +52,13 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     [self updateLayoutForValue:self.value];
 }
 
+#pragma mark Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+    return (self.alpha != 0) ? [super isAccessibilityElement] : NO;
+}
+
 #pragma mark Layout
 
 - (void)updateLayoutForValue:(float)value
