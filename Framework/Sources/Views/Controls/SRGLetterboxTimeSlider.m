@@ -91,7 +91,6 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 static void commonInit(SRGLetterboxTimeSlider *self)
 {
     UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    valueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     valueLabel.backgroundColor = [UIColor whiteColor];
     valueLabel.textAlignment = NSTextAlignmentCenter;
     valueLabel.layer.masksToBounds = YES;

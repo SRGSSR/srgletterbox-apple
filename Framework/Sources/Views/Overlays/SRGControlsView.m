@@ -278,7 +278,7 @@
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.isLive) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         NSDate *date = slider.date;
@@ -291,12 +291,12 @@
                 s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
             });
             
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[s_dateFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }]];
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[s_dateFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
             return [attributedString copy];
         }
         else {
-            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }];
         }
     }
     else if (streamType == SRGMediaPlayerStreamTypeLive) {
@@ -305,7 +305,7 @@
     else {
         NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? [NSDateComponentsFormatter srg_shortDateComponentsFormatter] : [NSDateComponentsFormatter srg_mediumDateComponentsFormatter];
         NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
-        return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle] }];
+        return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }];
     }
 }
 
