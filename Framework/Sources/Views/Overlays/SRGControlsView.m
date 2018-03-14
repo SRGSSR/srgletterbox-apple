@@ -119,6 +119,7 @@
         if (parentLetterboxView) {
             SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] initWithFrame:CGRectZero];
             fullScreenButton.tintColor = [UIColor whiteColor];
+            fullScreenButton.selected = parentLetterboxView.isFullScreen;
             [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
             [parentLetterboxView insertSubview:fullScreenButton atIndex:parentLetterboxView.subviews.count - 1];
             [fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -215,6 +216,8 @@
     else {
         self.fullScreenButton.alpha = userInterfaceHidden ? 0.f : 1.f;
     }
+    self.fullScreenButton.selected = self.parentLetterboxView.isFullScreen;
+
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
