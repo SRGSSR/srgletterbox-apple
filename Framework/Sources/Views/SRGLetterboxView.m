@@ -71,6 +71,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
+@property (nonatomic) NSTimer *periodicUpdateTimer;
+
 @end
 
 @implementation SRGLetterboxView {
@@ -153,6 +155,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (newWindow) {
         [self resetInactivityTrigger];
+        [self startPeriodicUpdates];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive:)
@@ -176,6 +179,7 @@ static void commonInit(SRGLetterboxView *self);
     }
     else {
         [self stopInactivityTrigger];
+        [self stopPeriodicUpdates];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIApplicationDidBecomeActiveNotification
@@ -330,6 +334,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     [_inactivityTimer invalidate];
     _inactivityTimer = inactivityTimer;
+}
+
+- (void)setPeriodicUpdateTimer:(NSTimer *)periodicUpdateTimer
+{
+    [_periodicUpdateTimer invalidate];
+    _periodicUpdateTimer = periodicUpdateTimer;
 }
 
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
@@ -744,6 +754,20 @@ static void commonInit(SRGLetterboxView *self);
 - (void)stopInactivityTrigger
 {
     self.inactivityTimer = nil;
+}
+
+- (void)startPeriodicUpdates
+{
+    @weakify(self)
+    self.periodicUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        @strongify(self)
+        [self setNeedsLayoutAnimated:YES];
+    }];
+}
+
+- (void)stopPeriodicUpdates
+{
+    self.periodicUpdateTimer = nil;
 }
 
 #pragma mark Notification banners

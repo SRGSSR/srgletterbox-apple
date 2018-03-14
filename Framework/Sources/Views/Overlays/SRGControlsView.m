@@ -46,8 +46,6 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
-@property (nonatomic) NSTimer *userInterfaceUpdateTimer;
-
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenButton;
 
 @end
@@ -69,12 +67,6 @@
 - (BOOL)isLive
 {
     return self.timeSlider.live;
-}
-
-- (void)setUserInterfaceUpdateTimer:(NSTimer *)userInterfaceUpdateTimer
-{
-    [_userInterfaceUpdateTimer invalidate];
-    _userInterfaceUpdateTimer = userInterfaceUpdateTimer;
 }
 
 #pragma mark Overrides
@@ -121,12 +113,6 @@
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        @weakify(self)
-        self.userInterfaceUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            [self setNeedsLayoutAnimated:YES];
-        }];
-        
         // Inject the full screen button as first Letterbox view. This ensures the button remains accessible at all times,
         // while its position is determined by a phantom button inserted in the bottom stack view.
         SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
@@ -142,7 +128,6 @@
         }
     }
     else {
-        self.userInterfaceUpdateTimer = nil;
         [self.fullScreenButton removeFromSuperview];
     }
 }
