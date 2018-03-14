@@ -80,9 +80,16 @@
     self.titleLabel.hidden = NO;
     self.subtitleLabel.hidden = NO;
     self.cancelButton.hidden = NO;
+    self.remainingTimeButton.enabled = YES;
     
     if (self.controller.continuousPlaybackUpcomingMedia) {
         self.alpha = 1.f;
+        
+        BOOL userControlsDisabled = !self.parentLetterboxView.userInterfaceTogglable && self.parentLetterboxView.userInterfaceHidden;
+        if (userControlsDisabled) {
+            self.remainingTimeButton.enabled = NO;
+            self.cancelButton.hidden = YES;
+        }
         
         CGFloat height = CGRectGetHeight(self.frame);
         if (height < 200.f) {
