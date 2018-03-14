@@ -118,6 +118,13 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     [self.controller togglePlayPause];
 }
 
+#pragma mark Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+    return (self.alpha != 0);
+}
+
 #pragma mark Notifications
 
 - (void)playbackStateDidChange:(NSNotification *)notification
