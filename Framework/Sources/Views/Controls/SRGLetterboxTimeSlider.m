@@ -56,7 +56,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (BOOL)isAccessibilityElement
 {
-    return (self.alpha != 0) ? [super isAccessibilityElement] : NO;
+    return (self.alpha != 0);
 }
 
 #pragma mark Layout
