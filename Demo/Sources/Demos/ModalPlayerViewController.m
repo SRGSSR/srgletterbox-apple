@@ -106,9 +106,6 @@
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
-    // Start with a hidden interface
-    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
-    
     // Always display the full-screen interface in landscape orientation
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
@@ -126,6 +123,10 @@
     if (self.URN) {
         [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
     }
+    
+    // Start with a hidden interface. Performed after a URN has been assigned so that no UI is visible at all
+    // initially (see -letterboxViewWillAnimateUserInterface: implementation)
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
     [self reloadData];
 }
