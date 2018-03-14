@@ -334,6 +334,10 @@
 
 - (IBAction)close:(id)sender
 {
+    if (self.interactiveTransition) {
+        NSLog(@"strange interactiveTransition");
+    }
+    self.interactiveTransition = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -422,6 +426,16 @@
     [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = slider.maximumValue - slider.value;
     }];
+}
+
+- (IBAction)toggleView:(id)sender
+{
+    if (self.letterboxView.controller) {
+        self.letterboxView.controller = nil;
+    }
+    else {
+        self.letterboxView.controller = self.letterboxController;
+    }
 }
 
 #pragma mark Notifications

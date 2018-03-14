@@ -113,29 +113,47 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BkI-ST-6lq">
-                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="566" width="375" height="101"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi">
-                                        <rect key="frame" x="20" y="15" width="32.5" height="20.5"/>
+                                        <rect key="frame" x="20" y="20" width="32.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p">
-                                        <rect key="frame" x="70.5" y="10.5" width="286.5" height="31"/>
+                                        <rect key="frame" x="70.5" y="15.5" width="286.5" height="31"/>
                                         <connections>
                                             <action selector="changeMargins:" destination="FcC-Qn-oGg" eventType="valueChanged" id="xLr-wV-wYa"/>
                                         </connections>
                                     </slider>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View attached to the controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f00-yt-8VM">
+                                        <rect key="frame" x="20" y="60.5" width="235.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c7h-bN-xe4">
+                                        <rect key="frame" x="306" y="55.5" width="51" height="31"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <action selector="toggleView:" destination="FcC-Qn-oGg" eventType="valueChanged" id="LWO-jo-IT6"/>
+                                        </connections>
+                                    </switch>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="f00-yt-8VM" firstAttribute="top" secondItem="YAu-YG-xSi" secondAttribute="bottom" constant="20" id="2Qu-I8-g0c"/>
+                                    <constraint firstItem="f00-yt-8VM" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" constant="20" id="8Fz-Hr-b8m"/>
+                                    <constraint firstAttribute="trailing" secondItem="c7h-bN-xe4" secondAttribute="trailing" constant="20" id="I9g-Mc-okK"/>
+                                    <constraint firstItem="c7h-bN-xe4" firstAttribute="leading" secondItem="YAu-YG-xSi" secondAttribute="trailing" constant="253.5" id="IGa-Yr-OC1"/>
+                                    <constraint firstItem="YAu-YG-xSi" firstAttribute="top" secondItem="BkI-ST-6lq" secondAttribute="top" constant="20" id="LEc-cI-GMg"/>
                                     <constraint firstItem="YAu-YG-xSi" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" constant="20" id="PCP-CR-xix"/>
                                     <constraint firstItem="CDc-iR-c7p" firstAttribute="leading" secondItem="YAu-YG-xSi" secondAttribute="trailing" constant="20" id="RFJ-8a-WtE"/>
                                     <constraint firstAttribute="trailing" secondItem="CDc-iR-c7p" secondAttribute="trailing" constant="20" id="WfO-6Q-kdT"/>
-                                    <constraint firstAttribute="height" constant="50" id="XCF-1z-B7Q"/>
-                                    <constraint firstItem="YAu-YG-xSi" firstAttribute="centerY" secondItem="BkI-ST-6lq" secondAttribute="centerY" id="mhq-KU-BU6"/>
+                                    <constraint firstAttribute="bottom" secondItem="f00-yt-8VM" secondAttribute="bottom" constant="20" id="oFl-zj-O9U"/>
                                     <constraint firstItem="CDc-iR-c7p" firstAttribute="centerY" secondItem="YAu-YG-xSi" secondAttribute="centerY" id="v6i-Na-bjJ"/>
+                                    <constraint firstItem="c7h-bN-xe4" firstAttribute="centerY" secondItem="f00-yt-8VM" secondAttribute="centerY" id="yzh-LV-BgD"/>
                                 </constraints>
                             </view>
                         </subviews>
