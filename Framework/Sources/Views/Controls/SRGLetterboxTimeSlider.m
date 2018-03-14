@@ -102,6 +102,7 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     valueLabel.textAlignment = NSTextAlignmentCenter;
     valueLabel.layer.masksToBounds = YES;
     valueLabel.layer.cornerRadius = 2.f;
+    valueLabel.isAccessibilityElement = NO;
     [self addSubview:valueLabel];
     self.valueLabel = valueLabel;
     
