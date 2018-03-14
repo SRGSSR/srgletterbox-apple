@@ -25,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)controlsViewDidTap:(SRGControlsView *)controlsView;
 
 /**
+ *  Method called when the user toggles full screen using the dedicated button.
+ */
+- (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView;
+
+/**
  *  Method called when the time slider moved, either interactively or during normal playback.
  */
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive;

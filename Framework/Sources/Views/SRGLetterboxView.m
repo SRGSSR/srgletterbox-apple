@@ -859,6 +859,11 @@ static void commonInit(SRGLetterboxView *self);
     });
 }
 
+- (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView
+{
+    [self setFullScreen:!self.isFullScreen animated:YES];
+}
+
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
     SRGSubdivision *selectedSubdivision = [self subdivisionOnTimelineAtTime:time];

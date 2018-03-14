@@ -335,4 +335,9 @@
     [self.delegate controlsViewDidTap:self];
 }
 
+- (IBAction)toggleFullScreen:(id)sender
+{
+    [self.delegate controlsViewDidToggleFullScreen:self];
+}
+
 @end
