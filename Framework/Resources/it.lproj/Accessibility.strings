@@ -22,8 +22,11 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Schermo intero";
 
-/* Short label identifying a livestream. */
+/* Short label identifying a livestream or currently in live condition. */
 "Live" = "Live";
+
+/* Live label when playing live. */
+"Live playback" = "Riproduzione live";
 
 /* Pause button label */
 "Pause" = "Pausa";

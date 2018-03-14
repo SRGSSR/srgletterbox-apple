@@ -14,8 +14,8 @@
 /* Short label for countdown display */
 "Hours" = "Ore";
 
-/* Short label identifying a livestream.
-   Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
+/* Short label identifying a livestream or currently in live condition.
+   Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
 
 /* Notification message displayed when a live broadcast has finished. */
