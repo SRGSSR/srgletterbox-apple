@@ -51,7 +51,8 @@
     dispatch_once(&s_onceToken, ^{
         s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
         s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+        s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
     });
     return s_dateComponentsFormatter;
 }

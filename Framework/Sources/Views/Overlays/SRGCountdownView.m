@@ -7,6 +7,7 @@
 #import "SRGCountdownView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGPaddedLabel.h"
 
@@ -237,17 +238,8 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (NSString *)accessibilityLabel
 {
-    static NSDateComponentsFormatter *s_accessibilityDateComponentsFormatter;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_accessibilityDateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-        s_accessibilityDateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
-        s_accessibilityDateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
-        s_accessibilityDateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-    });
-    
     if (self.remainingTimeInterval > 0) {
-        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_accessibilityDateComponentsFormatter stringFromTimeInterval:self.remainingTimeInterval]];
+        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:self.remainingTimeInterval]];
     }
     else {
         return SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
