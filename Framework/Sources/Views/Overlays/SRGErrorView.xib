@@ -15,6 +15,7 @@
                 <outlet property="imageView" destination="Dx1-tQ-QL9" id="dNU-wK-AEt"/>
                 <outlet property="instructionsLabel" destination="CTE-Z2-SlR" id="diF-24-eWg"/>
                 <outlet property="messageLabel" destination="pFp-fu-N3n" id="Ezs-wh-yJ1"/>
+                <outlet property="retryTapGestureRecognizer" destination="StB-Yp-XGw" id="3Cm-WS-j26"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

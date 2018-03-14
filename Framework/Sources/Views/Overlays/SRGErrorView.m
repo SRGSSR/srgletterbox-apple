@@ -19,6 +19,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *messageLabel;
 @property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
 
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *retryTapGestureRecognizer;
+
 @end
 
 @implementation SRGErrorView
@@ -76,15 +78,21 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    if (! self.contextLetterboxView.error) {
-        self.alpha = 0.f;
-    }
-    else {
+    SRGLetterboxView *contextLetterboxView = self.contextLetterboxView;
+    BOOL userControlsDisabled = !contextLetterboxView.userInterfaceTogglable && contextLetterboxView.userInterfaceHidden;
+    
+    self.imageView.hidden = NO;
+    self.messageLabel.hidden = NO;
+    self.instructionsLabel.hidden = NO;
+    self.retryTapGestureRecognizer.enabled = YES;
+    
+    if (self.contextLetterboxView.error) {
         self.alpha = 1.f;
         
-        self.imageView.hidden = NO;
-        self.messageLabel.hidden = NO;
-        self.instructionsLabel.hidden = NO;
+        if (userControlsDisabled) {
+            self.instructionsLabel.hidden = YES;
+            self.retryTapGestureRecognizer.enabled = NO;
+        }
         
         CGFloat height = CGRectGetHeight(self.frame);
         if (height < 170.f) {
@@ -93,6 +101,9 @@
         if (height < 140.f) {
             self.messageLabel.hidden = YES;
         }
+    }
+    else {
+        self.alpha = 0.f;
     }
 }
 
