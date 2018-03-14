@@ -67,7 +67,7 @@
 {
     [super playbackDidFail];
     
-    NSError *error = self.contextLetterboxView.error;
+    NSError *error = self.parentLetterboxView.error;
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
@@ -78,17 +78,16 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    SRGLetterboxView *contextLetterboxView = self.contextLetterboxView;
-    BOOL userControlsDisabled = !contextLetterboxView.userInterfaceTogglable && contextLetterboxView.userInterfaceHidden;
-    
     self.imageView.hidden = NO;
     self.messageLabel.hidden = NO;
     self.instructionsLabel.hidden = NO;
     self.retryTapGestureRecognizer.enabled = YES;
     
-    if (self.contextLetterboxView.error) {
+    SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
+    if (parentLetterboxView.error) {
         self.alpha = 1.f;
         
+        BOOL userControlsDisabled = !parentLetterboxView.userInterfaceTogglable && parentLetterboxView.userInterfaceHidden;
         if (userControlsDisabled) {
             self.instructionsLabel.hidden = YES;
             self.retryTapGestureRecognizer.enabled = NO;

@@ -34,11 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGLetterboxBaseView (Subclassing)
 
 /**
- *  Return the Letterbox view context for the receiver, if any.
+ *  Return the Letterbox parent view for the receiver, if any.
  *
- *  @discussion The context of an `SRGLetterboxView` is the view itself.
+ *  @discussion The parent of an `SRGLetterboxView` is the view itself.
  */
-@property (nonatomic, readonly, nullable) SRGLetterboxView *contextLetterboxView;
+@property (nonatomic, readonly, nullable) SRGLetterboxView *parentLetterboxView;
 
 /**
  *  Method called when the content size category changes. Subclasses can e.g. implement this method if needed to adjust

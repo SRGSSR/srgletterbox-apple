@@ -39,15 +39,15 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 #pragma mark Getters and setters
 
-- (SRGLetterboxView *)contextLetterboxView
+- (SRGLetterboxView *)parentLetterboxView
 {
     // Start with self. The context can namely be the receiver itself
-    UIView *contextLetterboxView = self;
-    while (contextLetterboxView) {
-        if ([contextLetterboxView isKindOfClass:[SRGLetterboxView class]]) {
-            return (SRGLetterboxView *)contextLetterboxView;
+    UIView *parentLetterboxView = self;
+    while (parentLetterboxView) {
+        if ([parentLetterboxView isKindOfClass:[SRGLetterboxView class]]) {
+            return (SRGLetterboxView *)parentLetterboxView;
         }
-        contextLetterboxView = contextLetterboxView.superview;
+        parentLetterboxView = parentLetterboxView.superview;
     }
     return nil;
 }
@@ -108,7 +108,7 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
 {
-    [self.contextLetterboxView setNeedsLayoutAnimated:animated];
+    [self.parentLetterboxView setNeedsLayoutAnimated:animated];
 }
 
 @end
