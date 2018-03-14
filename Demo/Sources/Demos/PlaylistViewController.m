@@ -241,6 +241,23 @@
     }
 }
 
+- (IBAction)togglableControls:(UISegmentedControl *)segmentedControl
+{
+    switch (segmentedControl.selectedSegmentIndex) {
+        case 1:
+            [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
+            break;
+            
+        case 2:
+            [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:NO];
+            break;
+            
+        default:
+            [self.letterboxView setUserInterfaceHidden:self.letterboxView.userInterfaceHidden animated:YES togglable:YES];
+            break;
+    }
+}
+
 - (IBAction)close:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
