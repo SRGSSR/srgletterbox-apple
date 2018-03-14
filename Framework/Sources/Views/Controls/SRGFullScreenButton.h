@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Full screen button.
  */
+IB_DESIGNABLE
 @interface SRGFullScreenButton : UIButton
 
 @end

@@ -50,6 +50,15 @@ static void commonInit(SRGLiveLabel *self);
     return SRGLetterboxAccessibilityLocalizedString(@"Live playback", @"Live label when playing live.");
 }
 
+#pragma mark Interface Builder integration
+
+- (void)prepareForInterfaceBuilder
+{
+    [super prepareForInterfaceBuilder];
+    
+    commonInit(self);
+}
+
 @end
 
 static void commonInit(SRGLiveLabel *self)

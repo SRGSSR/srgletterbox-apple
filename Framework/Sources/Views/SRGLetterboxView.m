@@ -438,19 +438,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (BOOL)shouldHideFullScreenButton
-{
-    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
-        return YES;
-    }
-    
-    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
-        return NO;
-    }
-    
-    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
-}
-
 #pragma mark Data refresh
 
 - (void)reloadImage
@@ -857,6 +844,19 @@ static void commonInit(SRGLetterboxView *self);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self setTogglableUserInterfaceHidden:YES animated:YES];
     });
+}
+
+- (BOOL)controlsViewShoulHideFullScreenButton:(SRGControlsView *)controlsView
+{
+    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
+        return YES;
+    }
+    
+    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
+        return NO;
+    }
+    
+    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
 }
 
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView

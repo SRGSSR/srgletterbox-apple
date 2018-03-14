@@ -10,6 +10,7 @@
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGControlWrapperView.h"
+#import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxPlaybackButton.h"
@@ -18,6 +19,7 @@
 #import "UIFont+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
+#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGControlsView ()
@@ -27,12 +29,13 @@
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
 
-@property (nonatomic, weak) IBOutlet UIStackView *controlsStackView;
+@property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimeSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
+@property (nonatomic, weak) IBOutlet SRGFullScreenButton *fullScreenPhantomButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
 @property (nonatomic, weak) IBOutlet SRGControlWrapperView *durationLabelWrapperView;
@@ -44,6 +47,8 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
 
 @property (nonatomic) NSTimer *userInterfaceUpdateTimer;
+
+@property (nonatomic, weak) SRGFullScreenButton *fullScreenButton;
 
 @end
 
@@ -86,6 +91,10 @@
     self.timeSlider.resumingAfterSeek = NO;
     self.timeSlider.delegate = self;
     
+    // Always hidden from view. Only used to define the frame of the real full screen button, injected at the top of
+    // the view hierarchy at runtime.
+    self.fullScreenPhantomButton.alpha = 0.f;
+    
     self.airplayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
@@ -117,9 +126,23 @@
             @strongify(self)
             [self setNeedsLayoutAnimated:YES];
         }];
+        
+        // Inject the full screen button as first Letterbox view. This ensures the button remains accessible at all times,
+        // while its position is determined by a phantom button inserted in the bottom stack view.
+        SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
+        if (parentLetterboxView) {
+            SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] initWithFrame:CGRectZero];
+            fullScreenButton.tintColor = [UIColor whiteColor];
+            [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
+            [parentLetterboxView insertSubview:fullScreenButton atIndex:parentLetterboxView.subviews.count - 1];
+            [fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(self.fullScreenPhantomButton);
+            }];
+        }
     }
     else {
         self.userInterfaceUpdateTimer = nil;
+        [self.fullScreenButton removeFromSuperview];
     }
 }
 
@@ -194,7 +217,6 @@
         self.backwardSeekButton.alpha = [self.controller canSkipBackward] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
-        
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
@@ -218,6 +240,8 @@
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+    
+    self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShoulHideFullScreenButton:self];
     
     // Responsiveness
     self.backwardSeekButton.hidden = NO;
@@ -262,8 +286,8 @@
     // Fix incorrect empty space after hiding the full screen button on iOS 9.
     NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
     if (operatingSystemVersion.majorVersion == 9) {
-        [self.controlsStackView setNeedsLayout];
-        [self.controlsStackView layoutIfNeeded];
+        [self.bottomStackView setNeedsLayout];
+        [self.bottomStackView layoutIfNeeded];
     }
 }
 

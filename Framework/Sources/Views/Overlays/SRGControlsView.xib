@@ -19,10 +19,11 @@
             <connections>
                 <outlet property="airplayButton" destination="xno-LT-xef" id="5c8-TN-6ST"/>
                 <outlet property="backwardSeekButton" destination="fsV-iR-Pxo" id="UWb-1Y-8cg"/>
-                <outlet property="controlsStackView" destination="cGq-uz-ZWW" id="4E0-AV-FCJ"/>
+                <outlet property="bottomStackView" destination="cGq-uz-ZWW" id="489-97-x2C"/>
                 <outlet property="durationLabel" destination="hfY-e1-gJs" id="6e8-rd-k4R"/>
                 <outlet property="durationLabelWrapperView" destination="eeD-TF-oNL" id="hhD-2T-sZb"/>
                 <outlet property="forwardSeekButton" destination="sJC-uY-JVi" id="0Hb-iJ-qFF"/>
+                <outlet property="fullScreenPhantomButton" destination="SZB-Ed-WsD" id="5gH-y1-ikh"/>
                 <outlet property="horizontalSpacingForwardToSkipToLiveConstraint" destination="C2n-59-Cwy" id="k2n-bt-IBI"/>
                 <outlet property="horizontalSpacingPlaybackToBackwardConstraint" destination="JrM-ym-l0e" id="agX-SN-ayk"/>
                 <outlet property="horizontalSpacingPlaybackToForwardConstraint" destination="eAJ-PX-FFt" id="K3r-Cb-Hyo"/>
@@ -110,7 +111,7 @@
                             <rect key="frame" x="403" y="0.0" width="50" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfY-e1-gJs" userLabel="Duration Label">
-                                    <rect key="frame" x="11" y="15.5" width="28" height="17"/>
+                                    <rect key="frame" x="11" y="16" width="28" height="17"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -130,7 +131,7 @@
                             <rect key="frame" x="453" y="0.0" width="50" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="joB-a5-mWm" userLabel="Live Label" customClass="SRGLiveLabel">
-                                    <rect key="frame" x="11" y="15.5" width="28" height="17"/>
+                                    <rect key="frame" x="11" y="15" width="28" height="19"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -154,18 +155,13 @@
                                 <constraint firstAttribute="width" priority="999" constant="48" id="jOw-eb-9va"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SZB-Ed-WsD" userLabel="Full Screen Button" customClass="SRGFullScreenButton">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SZB-Ed-WsD" userLabel="Full Screen Phantom Button" customClass="SRGFullScreenButton">
                             <rect key="frame" x="551" y="0.0" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" priority="999" constant="48" id="0aJ-6p-Gap"/>
                             </constraints>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <state key="normal" image="fullscreen-48"/>
-                            <state key="selected" image="cancel_fullscreen-48"/>
-                            <connections>
-                                <action selector="toggleFullScreen:" destination="-1" eventType="touchUpInside" id="twb-eA-VZ9"/>
-                            </connections>
                         </button>
                     </subviews>
                     <constraints>
@@ -240,9 +236,7 @@
     <resources>
         <image name="back_live-48" width="48" height="48"/>
         <image name="backward-48" width="48" height="48"/>
-        <image name="cancel_fullscreen-48" width="48" height="48"/>
         <image name="forward-48" width="48" height="48"/>
-        <image name="fullscreen-48" width="48" height="48"/>
         <image name="view_mode_monoscopic-48" width="48" height="48"/>
         <image name="view_mode_stereoscopic-48" width="48" height="48"/>
     </resources>

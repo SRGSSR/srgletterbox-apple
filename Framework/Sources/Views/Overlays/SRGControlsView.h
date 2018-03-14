@@ -25,6 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)controlsViewDidTap:(SRGControlsView *)controlsView;
 
 /**
+ *  Implement to return `YES` iff the full screen button must be shown.
+ *
+ *  @discussion If no delegate has been defined, the default behavior is `NO`.
+ */
+- (BOOL)controlsViewShoulHideFullScreenButton:(SRGControlsView *)controlsView;
+
+/**
  *  Method called when the user toggles full screen using the dedicated button.
  */
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView;
