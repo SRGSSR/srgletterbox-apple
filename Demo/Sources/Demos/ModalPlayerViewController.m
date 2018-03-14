@@ -225,7 +225,7 @@
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
         self.letterboxAspectRatioConstraint.constant = heightOffset;
-        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
+        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN && ! self.letterboxController.loading) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         if (@available(iOS 11, *)) {
