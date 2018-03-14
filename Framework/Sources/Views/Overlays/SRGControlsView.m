@@ -138,6 +138,7 @@
             [fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(self.fullScreenPhantomButton);
             }];
+            self.fullScreenButton = fullScreenButton;
         }
     }
     else {
@@ -201,8 +202,6 @@
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
-    SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
-    
     if (playbackState == SRGMediaPlayerPlaybackStateIdle
             || playbackState == SRGMediaPlayerPlaybackStatePreparing
             || playbackState == SRGMediaPlayerPlaybackStateEnded) {
@@ -217,14 +216,26 @@
         self.backwardSeekButton.alpha = [self.controller canSkipBackward] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
+        SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
         self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
+    self.fullScreenButton.alpha = userInterfaceHidden ? 0.f : 1.f;
+}
+
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
+    SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
+    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
+    
+    // General playback controls
+    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
     self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
-                                 || streamType != SRGStreamTypeOnDemand);
-    
+                                    || streamType != SRGStreamTypeOnDemand);
     self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
     
     CGFloat width = CGRectGetWidth(self.frame);
@@ -245,11 +256,8 @@
     if ([self.delegate controlsViewShoulHideFullScreenButton:self]) {
         self.fullScreenPhantomButton.hidden = YES;
     }
-    else if (self.controller.error || ! self.controller.URN || self.controller.playUpcomingMedia) {
+    else if (self.controller.error || ! self.controller.URN || self.controller.continuousPlaybackUpcomingMedia) {
         self.fullScreenPhantomButton.hidden = NO;
-    }
-    else {
-        self.fullScreenPhantomButton.hidden = userInterfaceHidden;
     }
     
     // Responsiveness

@@ -30,7 +30,7 @@ IB_DESIGNABLE
 /**
  *  The remaining time to be displayed (in seconds).
  */
-@property (nonatomic) NSTimeInterval remainingTimeInterval;
+- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval animated:(BOOL)animated;
 
 @end
 

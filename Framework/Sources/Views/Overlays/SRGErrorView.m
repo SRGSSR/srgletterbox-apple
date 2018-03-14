@@ -78,31 +78,31 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
+    self.alpha = self.parentLetterboxView.error ? 1.f : 0.f;
+}
+
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
     self.imageView.hidden = NO;
     self.messageLabel.hidden = NO;
     self.instructionsLabel.hidden = NO;
     self.retryTapGestureRecognizer.enabled = YES;
     
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
-    if (parentLetterboxView.error) {
-        self.alpha = 1.f;
-        
-        BOOL userControlsDisabled = !parentLetterboxView.userInterfaceTogglable && parentLetterboxView.userInterfaceHidden;
-        if (userControlsDisabled) {
-            self.instructionsLabel.hidden = YES;
-            self.retryTapGestureRecognizer.enabled = NO;
-        }
-        
-        CGFloat height = CGRectGetHeight(self.frame);
-        if (height < 170.f) {
-            self.instructionsLabel.hidden = YES;
-        }
-        if (height < 140.f) {
-            self.messageLabel.hidden = YES;
-        }
+    BOOL userControlsDisabled = ! parentLetterboxView.userInterfaceTogglable && parentLetterboxView.userInterfaceHidden;
+    if (userControlsDisabled) {
+        self.instructionsLabel.hidden = YES;
+        self.retryTapGestureRecognizer.enabled = NO;
     }
-    else {
-        self.alpha = 0.f;
+    
+    CGFloat height = CGRectGetHeight(self.frame);
+    if (height < 170.f) {
+        self.instructionsLabel.hidden = YES;
+    }
+    if (height < 140.f) {
+        self.messageLabel.hidden = YES;
     }
 }
 

@@ -92,6 +92,9 @@ static void commonInit(SRGLetterboxBaseView *self);
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {}
 
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{}
+
 #pragma mark Notifications
 
 - (void)contentSizeCategoryDidChange:(NSNotification *)notification

@@ -66,15 +66,22 @@
     @weakify(self)
     [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
-        [self refresh];
+        [self refreshAnimated:YES];
     }];
     
-    [self refresh];
+    [self refreshAnimated:NO];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
+    self.alpha = (self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;
+}
+
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     self.introLabel.hidden = NO;
     self.titleLabel.hidden = NO;
@@ -83,8 +90,6 @@
     self.remainingTimeButton.enabled = YES;
     
     if (self.controller.continuousPlaybackUpcomingMedia) {
-        self.alpha = 1.f;
-        
         BOOL userControlsDisabled = !self.parentLetterboxView.userInterfaceTogglable && self.parentLetterboxView.userInterfaceHidden;
         if (userControlsDisabled) {
             self.remainingTimeButton.enabled = NO;
@@ -103,37 +108,35 @@
             self.titleLabel.hidden = YES;
         }
     }
-    else {
-        self.alpha = 0.f;
-    }
 }
 
 #pragma mark UI
 
-- (void)refresh
+- (void)refreshAnimated:(BOOL)animated
 {
     // Only update with valid upcoming information
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
-    if (! upcomingMedia) {
-        return;
+    if (upcomingMedia) {
+        self.titleLabel.text = upcomingMedia.title;
+        self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
+        
+        static NSDateComponentsFormatter *s_dateComponentsFormatter;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
+            s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+        });
+        
+        [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+        
+        NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
+        float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
+        [self.remainingTimeButton setProgress:progress withDuration:duration];
     }
     
-    self.titleLabel.text = upcomingMedia.title;
-    self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
-    
-    static NSDateComponentsFormatter *s_dateComponentsFormatter;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-        s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-    });
-    
-    [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
-    
-    NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
-    float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;
-    [self.remainingTimeButton setProgress:progress withDuration:duration];
+    // The layout depends on the data. Force a refresh
+    [self.parentLetterboxView setNeedsLayoutAnimated:animated];
 }
 
 #pragma mark Actions

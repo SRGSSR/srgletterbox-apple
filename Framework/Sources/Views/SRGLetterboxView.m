@@ -144,6 +144,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL userInterfaceHidden = [self updateMainLayout];
     [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
     [self.notificationView updateLayoutWithMessage:self.notificationMessage];
+    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -276,9 +277,9 @@ static void commonInit(SRGLetterboxView *self);
     [self setNeedsLayoutAnimated:YES];
 }
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
     self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
@@ -560,10 +561,11 @@ static void commonInit(SRGLetterboxView *self);
         _inWillAnimateUserInterface = NO;
     }
     
+    __block BOOL userInterfaceHidden = NO;
     void (^animations)(void) = ^{
         additionalAnimations ? additionalAnimations() : nil;
         
-        BOOL userInterfaceHidden = [self updateMainLayout];
+        userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
         self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
@@ -586,6 +588,8 @@ static void commonInit(SRGLetterboxView *self);
         animations();
         completion(YES);
     }
+    
+    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
 }
 
 - (BOOL)updateMainLayout
@@ -656,6 +660,18 @@ static void commonInit(SRGLetterboxView *self);
     
     for (UIView *subview in view.subviews) {
         [self recursivelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+    }
+}
+
+- (void)recursivelyImmediatelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    if ([view isKindOfClass:[SRGLetterboxBaseView class]]) {
+        SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
+        [baseView immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    }
+    
+    for (UIView *subview in view.subviews) {
+        [self recursivelyImmediatelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
     }
 }
 

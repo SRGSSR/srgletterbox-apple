@@ -17,6 +17,8 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 
 @interface SRGCountdownView ()
 
+@property (nonatomic) NSTimeInterval remainingTimeInterval;
+
 @property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
 
 @property (nonatomic, weak) IBOutlet UIStackView *daysStackView;
@@ -90,13 +92,13 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self refresh];
+        [self refreshAnimated:NO];
     }
 }
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
 
@@ -152,20 +154,43 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     }];
     
     self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    
+    // Hide days / hours when not needed
+    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
+    if (dateComponents.day == 0) {
+        self.daysStackView.hidden = YES;
+        self.hoursColonLabel.hidden = YES;
+        
+        if (dateComponents.hour == 0) {
+            self.hoursStackView.hidden = YES;
+            self.minutesColonLabel.hidden = YES;
+        }
+        else {
+            self.hoursStackView.hidden = NO;
+            self.minutesColonLabel.hidden = NO;
+        }
+    }
+    else {
+        self.daysStackView.hidden = NO;
+        self.hoursColonLabel.hidden = NO;
+        
+        self.hoursStackView.hidden = NO;
+        self.minutesColonLabel.hidden = NO;
+    }
 }
 
 #pragma mark Getters and setters
 
-- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval
+- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval animated:(BOOL)animated
 {
-    _remainingTimeInterval = MAX(remainingTimeInterval, 0);
+    self.remainingTimeInterval = MAX(remainingTimeInterval, 0);
     
-    [self refresh];
+    [self refreshAnimated:animated];
 }
 
 #pragma mark UI
 
-- (void)refresh
+- (void)refreshAnimated:(BOOL)animated
 {
     NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
     NSInteger day1 = dateComponents.day / 10;
@@ -199,34 +224,15 @@ NSInteger SRGCountdownViewDaysLimit = 100;
         self.seconds0Label.text = @"9";
     }
     
-    // Hide days / hours when not needed
-    if (dateComponents.day == 0) {
-        self.daysStackView.hidden = YES;
-        self.hoursColonLabel.hidden = YES;
-        
-        if (dateComponents.hour == 0) {
-            self.hoursStackView.hidden = YES;
-            self.minutesColonLabel.hidden = YES;
-        }
-        else {
-            self.hoursStackView.hidden = NO;
-            self.minutesColonLabel.hidden = NO;
-        }
-    }
-    else {
-        self.daysStackView.hidden = NO;
-        self.hoursColonLabel.hidden = NO;
-        
-        self.hoursStackView.hidden = NO;
-        self.minutesColonLabel.hidden = NO;
-    }
-    
     if (self.remainingTimeInterval == 0) {
         self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
     }
     else {
         self.messageLabel.text = nil;
     }
+    
+    // The layout depends on the data. Force a refresh
+    [self.parentLetterboxView setNeedsLayoutAnimated:animated];
 }
 
 #pragma mark Accessibility
