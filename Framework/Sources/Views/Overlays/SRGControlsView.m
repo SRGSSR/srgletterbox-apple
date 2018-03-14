@@ -220,37 +220,37 @@
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
     // Responsiveness
+    self.backwardSeekButton.hidden = NO;
+    self.forwardSeekButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
     self.durationLabelWrapperView.alwaysHidden = NO;
-    self.backwardSeekButton.hidden = NO;
-    self.forwardSeekButton.hidden = NO;
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = NO;
     self.liveLabelWrapperView.alwaysHidden = NO;
     self.tracksButton.alwaysHidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
-    if (height < 165.f) {
-        self.skipToLiveButton.hidden = YES;
+    if (height < 167.f) {
         self.timeSlider.hidden = YES;
         self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (height < 120.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
+        self.skipToLiveButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
         self.liveLabelWrapperView.alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
-    if (width < 290.f) {
+    if (width < 296.f) {
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
         self.durationLabelWrapperView.alwaysHidden = YES;
     }
-    if (width < 215.f) {
+    if (width < 214.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
