@@ -29,6 +29,7 @@
 @property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
 
 @property (nonatomic, weak) IBOutlet UIView *sizeView;
+@property (nonatomic, weak) IBOutlet UISlider *heightOffsetSlider;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
@@ -223,7 +224,7 @@
 {
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.letterboxAspectRatioConstraint.constant = heightOffset;
+        self.letterboxAspectRatioConstraint.constant = heightOffset + self.heightOffsetSlider.value;
         self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN && ! self.letterboxController.loading) ? 0.f : 1.f;
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
@@ -421,6 +422,13 @@
     [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = slider.maximumValue - slider.value;
     }];
+}
+
+- (IBAction)changeHeightOffset:(UISlider *)slider
+{
+    // Force a layout. The updated offset value will be added to the recommended aspect ratio constant in
+    // `-letterboxViewWillAnimateUserInterface:` implementation
+    [self.letterboxView setNeedsLayout];
 }
 
 - (IBAction)toggleView:(id)sender

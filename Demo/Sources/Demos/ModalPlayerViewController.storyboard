@@ -115,7 +115,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BkI-ST-6lq">
                                 <rect key="frame" x="0.0" y="526" width="375" height="141"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Width" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mqV-QZ-PBl" userLabel="Width">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Width" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mqV-QZ-PBl" userLabel="Width Label">
                                         <rect key="frame" x="20" y="20" width="45.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -127,16 +127,19 @@
                                             <action selector="changeMargins:" destination="FcC-Qn-oGg" eventType="valueChanged" id="0Qh-QR-Edp"/>
                                         </connections>
                                     </slider>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Aspect ratio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi" userLabel="Height">
-                                        <rect key="frame" x="20" y="60.5" width="92.5" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Height offset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi" userLabel="Height Offset Label">
+                                        <rect key="frame" x="20" y="60.5" width="100" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p" userLabel="Height Slider">
-                                        <rect key="frame" x="130.5" y="56" width="226.5" height="31"/>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-100" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p" userLabel="Height Offset Slider">
+                                        <rect key="frame" x="138" y="56" width="219" height="31"/>
+                                        <connections>
+                                            <action selector="changeHeightOffset:" destination="FcC-Qn-oGg" eventType="valueChanged" id="8FW-Xt-MTu"/>
+                                        </connections>
                                     </slider>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View attached to the controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f00-yt-8VM">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View attached to the controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f00-yt-8VM" userLabel="Hook Label">
                                         <rect key="frame" x="20" y="100.5" width="235.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -218,6 +221,7 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
+                        <outlet property="heightOffsetSlider" destination="CDc-iR-c7p" id="eDh-rv-OiO"/>
                         <outlet property="letterboxAspectRatioConstraint" destination="nYf-MQ-bSx" id="b4g-qt-TY5"/>
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
                         <outlet property="letterboxController" destination="V5l-nr-tDL" id="po7-Q3-coI"/>
