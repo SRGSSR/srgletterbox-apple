@@ -10,12 +10,28 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGLoadingView"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGLoadingView">
+            <connections>
+                <outlet property="dimmingView" destination="Nh0-K3-pJu" id="xlc-2f-99Y"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="505" height="322"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nh0-K3-pJu">
+                    <rect key="frame" x="0.0" y="0.0" width="505" height="322"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Nh0-K3-pJu" secondAttribute="bottom" id="Co2-X3-HCZ"/>
+                <constraint firstItem="Nh0-K3-pJu" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="J6R-rs-ett"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Nh0-K3-pJu" secondAttribute="trailing" id="lgq-EA-UN2"/>
+                <constraint firstItem="Nh0-K3-pJu" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="uPT-nM-Yfw"/>
+            </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -52,7 +52,7 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N5a-bL-wow" customClass="SRGLoadingView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mae-cR-Ydf" userLabel="Controls View" customClass="SRGControlsView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>

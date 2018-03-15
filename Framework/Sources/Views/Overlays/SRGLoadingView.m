@@ -13,6 +13,7 @@
 
 @interface SRGLoadingView ()
 
+@property (nonatomic, weak) IBOutlet UIView *dimmingView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
 @end
@@ -34,18 +35,25 @@
     self.loadingImageView = loadingImageView;
 }
 
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
+    self.dimmingView.hidden = ! userInterfaceHidden;
+    
+    if (self.controller.loading) {
+        [self.loadingImageView startAnimating];
+    }
+    else {
+        [self.loadingImageView stopAnimating];
+    }
+}
+
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    if (self.controller.loading) {
-        self.alpha = 1.f;
-        [self.loadingImageView startAnimating];
-    }
-    else {
-        self.alpha = 0.f;
-        [self.loadingImageView stopAnimating];
-    }
+    self.alpha = self.controller.loading ? 1.f : 0.f;
 }
 
 @end
