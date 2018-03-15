@@ -21,6 +21,7 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
+#import "SRGLoadingView.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGNotificationView.h"
 #import "SRGProgram+SRGLetterbox.h"
@@ -40,9 +41,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *playbackView;
-@property (nonatomic, weak) IBOutlet UIView *loadingBackgroundView;
+@property (nonatomic, weak) IBOutlet SRGLoadingView *loadingView;
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
-@property (nonatomic, weak) UIImageView *loadingImageView;
 @property (nonatomic, weak) IBOutlet SRGNotificationView *notificationView;
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
 @property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
@@ -112,15 +112,6 @@ static void commonInit(SRGLetterboxView *self);
     [super awakeFromNib];
     
     self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
-    
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
-    loadingImageView.alpha = 0.f;
-    [self insertSubview:loadingImageView aboveSubview:self.controlsView];
-    [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.controlsView.mas_centerX);
-        make.centerY.equalTo(self.controlsView.mas_centerY);
-    }];
-    self.loadingImageView = loadingImageView;
     
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
@@ -219,6 +210,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super didDetachFromController];
     
+    self.loadingView.controller = nil;
     self.controlsView.controller = nil;
     self.errorView.controller = nil;
     self.availabilityView.controller = nil;
@@ -238,6 +230,7 @@ static void commonInit(SRGLetterboxView *self);
     [super didAttachToController];
     
     SRGLetterboxController *controller = self.controller;
+    self.loadingView.controller = controller;
     self.controlsView.controller = controller;
     self.errorView.controller = controller;
     self.availabilityView.controller = controller;
@@ -635,17 +628,6 @@ static void commonInit(SRGLetterboxView *self);
     if (! self.fullScreen && ! isFrameFullScreen) {
         AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    }
-    
-    if (self.controller.loading) {
-        self.loadingBackgroundView.alpha = userInterfaceHidden ? 1.f : 0.f;
-        self.loadingImageView.alpha = 1.f;
-        [self.loadingImageView startAnimating];
-    }
-    else {
-        self.loadingBackgroundView.alpha = 0.f;
-        self.loadingImageView.alpha = 0.f;
-        [self.loadingImageView stopAnimating];
     }
     
     [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];

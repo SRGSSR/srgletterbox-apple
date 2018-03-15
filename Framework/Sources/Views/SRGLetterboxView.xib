@@ -18,7 +18,7 @@
                 <outlet property="controlsView" destination="mae-cR-Ydf" id="VTY-uT-tbf"/>
                 <outlet property="errorView" destination="aWQ-IF-YZO" id="X1U-mA-f72"/>
                 <outlet property="imageView" destination="gv4-Rp-xBi" id="OaD-1O-nnk"/>
-                <outlet property="loadingBackgroundView" destination="N5a-bL-wow" id="tnK-H9-qTt"/>
+                <outlet property="loadingView" destination="N5a-bL-wow" id="LEm-Wq-lXB"/>
                 <outlet property="notificationView" destination="aun-4y-dBi" id="M09-fc-S7k"/>
                 <outlet property="playbackView" destination="diO-OC-keM" id="0ga-MU-4Fp"/>
                 <outlet property="showUserInterfaceTapGestureRecognizer" destination="MQv-Za-8Ye" id="kQb-jX-UeC"/>
@@ -50,7 +50,7 @@
                         <outletCollection property="gestureRecognizers" destination="y7P-pN-sI4" appends="YES" id="gP2-dm-Oez"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N5a-bL-wow" userLabel="Loading Background View">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N5a-bL-wow" customClass="SRGLoadingView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                 </view>

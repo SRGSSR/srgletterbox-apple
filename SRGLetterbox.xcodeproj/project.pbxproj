@@ -185,6 +185,9 @@
 		6FB6BB031EC2E103006672EC /* ModalTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB017991E975F87004CCAF8 /* ModalTransition.m */; };
 		6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */; };
 		6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */; };
+		6FB83A8E205AAFE90013928B /* SRGLoadingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB83A8C205AAFE90013928B /* SRGLoadingView.h */; };
+		6FB83A8F205AAFE90013928B /* SRGLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB83A8D205AAFE90013928B /* SRGLoadingView.m */; };
+		6FB83A91205AAFFE0013928B /* SRGLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FB83A90205AAFFE0013928B /* SRGLoadingView.xib */; };
 		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */; };
 		6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
@@ -477,6 +480,9 @@
 		6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandalonePlayerViewController.h; sourceTree = "<group>"; };
 		6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandalonePlayerViewController.m; sourceTree = "<group>"; };
 		6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StandalonePlayerViewController.storyboard; sourceTree = "<group>"; };
+		6FB83A8C205AAFE90013928B /* SRGLoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLoadingView.h; sourceTree = "<group>"; };
+		6FB83A8D205AAFE90013928B /* SRGLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLoadingView.m; sourceTree = "<group>"; };
+		6FB83A90205AAFFE0013928B /* SRGLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SRGLoadingView.xib; sourceTree = "<group>"; };
 		6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxService.h; sourceTree = "<group>"; };
 		6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxService.m; sourceTree = "<group>"; };
 		6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MAKVONotificationCenter.framework; path = Carthage/Build/iOS/MAKVONotificationCenter.framework; sourceTree = "<group>"; };
@@ -703,6 +709,9 @@
 				6F50593220581CAF00823003 /* SRGLetterboxTimelineView.xib */,
 				08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */,
 				08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */,
+				6FB83A8C205AAFE90013928B /* SRGLoadingView.h */,
+				6FB83A8D205AAFE90013928B /* SRGLoadingView.m */,
+				6FB83A90205AAFFE0013928B /* SRGLoadingView.xib */,
 				6F50592520581CAF00823003 /* SRGNotificationView.h */,
 				6F50593520581CAF00823003 /* SRGNotificationView.m */,
 				6F50593620581CAF00823003 /* SRGNotificationView.xib */,
@@ -962,6 +971,7 @@
 				6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
 				08A05B1E20585DD200E80BD6 /* SRGPaddedLabel.h in Headers */,
+				6FB83A8E205AAFE90013928B /* SRGLoadingView.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
 				6FEA9D9D1E4DA977007DED52 /* SRGLetterboxError.h in Headers */,
 				6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */,
@@ -1139,6 +1149,7 @@
 				6FC886641EC57BD7000BC3FF /* placeholder_media-320.pdf in Resources */,
 				6F50595B20581CAF00823003 /* SRGErrorView.xib in Resources */,
 				6F50595220581CAF00823003 /* SRGLetterboxSubdivisionCell.xib in Resources */,
+				6FB83A91205AAFFE0013928B /* SRGLoadingView.xib in Resources */,
 				6F50595720581CAF00823003 /* SRGControlsView.xib in Resources */,
 				6F50596020581CAF00823003 /* SRGNotificationView.xib in Resources */,
 				6F50595A20581CAF00823003 /* SRGAvailabilityView.xib in Resources */,
@@ -1217,6 +1228,7 @@
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell.m in Sources */,
 				08A05B2120585DD200E80BD6 /* SRGPaddedLabel.m in Sources */,
+				6FB83A8F205AAFE90013928B /* SRGLoadingView.m in Sources */,
 				6F50596720581CAF00823003 /* SRGErrorView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				08A05B2920585DF000E80BD6 /* SRGLiveLabel.m in Sources */,
