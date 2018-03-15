@@ -30,13 +30,12 @@
 
 @property (nonatomic, weak) IBOutlet UIView *sizeView;
 
-// Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
-@property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
+@property (nonatomic) BOOL wantsFullScreen;
 
 @property (nonatomic) NSMutableArray<SRGSubdivision *> *favoritedSubdivisions;
 
