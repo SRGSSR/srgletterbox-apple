@@ -131,11 +131,12 @@
                             <constraint firstItem="iIt-9C-yD1" firstAttribute="leading" secondItem="OtS-KZ-Hox" secondAttribute="leading" id="SFL-SD-jgG"/>
                             <constraint firstAttribute="trailing" secondItem="iIt-9C-yD1" secondAttribute="trailing" id="Uxg-gk-Tsg"/>
                             <constraint firstItem="qBn-Uk-4Va" firstAttribute="bottom" secondItem="kfy-qN-7R0" secondAttribute="bottom" id="VdU-wP-dab"/>
-                            <constraint firstItem="bjI-QY-aK3" firstAttribute="leading" secondItem="kfy-qN-7R0" secondAttribute="leading" id="aRu-1a-4RD"/>
+                            <constraint firstItem="bjI-QY-aK3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kfy-qN-7R0" secondAttribute="leading" id="aRu-1a-4RD"/>
                             <constraint firstItem="5th-Sz-JvA" firstAttribute="leading" secondItem="kfy-qN-7R0" secondAttribute="leading" constant="40" id="ad0-Bf-cQa"/>
                             <constraint firstItem="6ZB-3D-9cI" firstAttribute="top" secondItem="5th-Sz-JvA" secondAttribute="bottom" constant="30" id="b1L-Wj-UzJ"/>
                             <constraint firstItem="6ZB-3D-9cI" firstAttribute="leading" secondItem="kfy-qN-7R0" secondAttribute="leading" constant="40" id="bkB-99-Qy6"/>
                             <constraint firstItem="kfy-qN-7R0" firstAttribute="trailing" secondItem="qBn-Uk-4Va" secondAttribute="trailing" id="eYK-Ty-CGG"/>
+                            <constraint firstItem="bjI-QY-aK3" firstAttribute="leading" secondItem="iIt-9C-yD1" secondAttribute="leading" priority="950" id="k8r-gZ-Bgp"/>
                             <constraint firstAttribute="bottom" secondItem="iIt-9C-yD1" secondAttribute="bottom" priority="850" id="lf7-hY-sbo"/>
                             <constraint firstItem="5th-Sz-JvA" firstAttribute="top" secondItem="iIt-9C-yD1" secondAttribute="bottom" constant="30" id="nqc-qB-lUa"/>
                             <constraint firstItem="bjI-QY-aK3" firstAttribute="top" secondItem="iIt-9C-yD1" secondAttribute="top" id="qb0-4e-uY6"/>
