@@ -8,16 +8,16 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGPaddedLabel.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 NSInteger SRGCountdownViewDaysLimit = 100;
 
 @interface SRGCountdownView ()
-
-@property (nonatomic) NSTimeInterval remainingTimeInterval;
 
 @property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
 
@@ -52,9 +52,20 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
+@property (nonatomic) NSDate *initialDate;
+@property (nonatomic) NSTimer *updateTimer;
+
 @end
 
 @implementation SRGCountdownView
+
+#pragma mark Getters and setters
+
+- (void)setUpdateTimer:(NSTimer *)updateTimer
+{
+    [_updateTimer invalidate];
+    _updateTimer = updateTimer;
+}
 
 #pragma mark Overrides
 
@@ -92,7 +103,18 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self refreshAnimated:NO];
+        @weakify(self)
+        self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            [self refresh];
+            [self updateLayout];
+        }];
+        
+        [self refresh];
+        [self updateLayout];
+    }
+    else {
+        self.updateTimer = nil;
     }
 }
 
@@ -100,8 +122,70 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
+    [self updateLayout];
+}
 
+#pragma mark Getters and setters
+
+- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval
+{
+    _remainingTimeInterval = MAX(remainingTimeInterval, 0);
+    
+    self.initialDate = NSDate.date;
+    
+    [self refresh];
+    [self updateLayout];
+}
+
+#pragma mark UI
+
+- (void)refresh
+{
+    NSTimeInterval elapsedTime = [NSDate.date timeIntervalSinceDate:self.initialDate];
+    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(fmax(self.remainingTimeInterval - elapsedTime, 0.));
+    NSInteger day1 = dateComponents.day / 10;
+    if (day1 < SRGCountdownViewDaysLimit / 10) {
+        self.days1Label.text = @(day1).stringValue;
+        self.days0Label.text = @(dateComponents.day - day1 * 10).stringValue;
+        
+        NSInteger hours1 = dateComponents.hour / 10;
+        self.hours1Label.text = @(hours1).stringValue;
+        self.hours0Label.text = @(dateComponents.hour - hours1 * 10).stringValue;
+        
+        NSInteger minutes1 = dateComponents.minute / 10;
+        self.minutes1Label.text = @(minutes1).stringValue;
+        self.minutes0Label.text = @(dateComponents.minute - minutes1 * 10).stringValue;
+        
+        NSInteger seconds1 = dateComponents.second / 10;
+        self.seconds1Label.text = @(seconds1).stringValue;
+        self.seconds0Label.text = @(dateComponents.second - seconds1 * 10).stringValue;
+    }
+    else {
+        self.days1Label.text = @"9";
+        self.days0Label.text = @"9";
+        
+        self.hours1Label.text = @"2";
+        self.hours0Label.text = @"3";
+        
+        self.minutes1Label.text = @"5";
+        self.minutes0Label.text = @"9";
+        
+        self.seconds1Label.text = @"5";
+        self.seconds0Label.text = @"9";
+    }
+    
+    if (self.remainingTimeInterval == 0) {
+        self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+    }
+    else {
+        self.messageLabel.text = nil;
+    }
+}
+
+- (void)updateLayout
+{
+    BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
+    
     [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = isLarge ? 88.f : 70.f;
     }];
@@ -177,62 +261,6 @@ NSInteger SRGCountdownViewDaysLimit = 100;
         self.hoursStackView.hidden = NO;
         self.minutesColonLabel.hidden = NO;
     }
-}
-
-#pragma mark Getters and setters
-
-- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval animated:(BOOL)animated
-{
-    self.remainingTimeInterval = MAX(remainingTimeInterval, 0);
-    
-    [self refreshAnimated:animated];
-}
-
-#pragma mark UI
-
-- (void)refreshAnimated:(BOOL)animated
-{
-    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
-    NSInteger day1 = dateComponents.day / 10;
-    if (day1 < SRGCountdownViewDaysLimit / 10) {
-        self.days1Label.text = @(day1).stringValue;
-        self.days0Label.text = @(dateComponents.day - day1 * 10).stringValue;
-        
-        NSInteger hours1 = dateComponents.hour / 10;
-        self.hours1Label.text = @(hours1).stringValue;
-        self.hours0Label.text = @(dateComponents.hour - hours1 * 10).stringValue;
-        
-        NSInteger minutes1 = dateComponents.minute / 10;
-        self.minutes1Label.text = @(minutes1).stringValue;
-        self.minutes0Label.text = @(dateComponents.minute - minutes1 * 10).stringValue;
-        
-        NSInteger seconds1 = dateComponents.second / 10;
-        self.seconds1Label.text = @(seconds1).stringValue;
-        self.seconds0Label.text = @(dateComponents.second - seconds1 * 10).stringValue;
-    }
-    else {
-        self.days1Label.text = @"9";
-        self.days0Label.text = @"9";
-        
-        self.hours1Label.text = @"2";
-        self.hours0Label.text = @"3";
-        
-        self.minutes1Label.text = @"5";
-        self.minutes0Label.text = @"9";
-        
-        self.seconds1Label.text = @"5";
-        self.seconds0Label.text = @"9";
-    }
-    
-    if (self.remainingTimeInterval == 0) {
-        self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
-    }
-    else {
-        self.messageLabel.text = nil;
-    }
-    
-    // The layout depends on the data. Force a refresh
-    [self.parentLetterboxView setNeedsLayoutAnimated:animated];
 }
 
 #pragma mark Accessibility

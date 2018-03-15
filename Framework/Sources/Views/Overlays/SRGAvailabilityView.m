@@ -48,7 +48,8 @@
 {
     [super metadataDidChange];
     
-    [self refreshAnimated:NO];
+    [self refresh];
+    [self updateLayout];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -64,39 +65,12 @@
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    SRGMedia *media = self.controller.media;
-    
-    SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
-    if (blockingReason == SRGBlockingReasonStartDate) {
-        NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
-        NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
-        
-        if (dateComponents.day >= SRGCountdownViewDaysLimit) {
-            self.messageLabel.hidden = NO;
-            self.countdownView.hidden = YES;
-        }
-        else if (CGRectGetWidth(self.frame) < 290.f) {
-            self.messageLabel.hidden = NO;
-            self.countdownView.hidden = YES;
-        }
-        else {
-            self.messageLabel.hidden = YES;
-            self.countdownView.hidden = NO;
-        }
-    }
-    else if (blockingReason == SRGBlockingReasonEndDate) {
-        self.messageLabel.hidden = NO;
-        self.countdownView.hidden = YES;
-    }
-    else {
-        self.messageLabel.hidden = YES;
-        self.countdownView.hidden = YES;
-    }
+    [self updateLayout];
 }
 
 #pragma mark UI
 
-- (void)refreshAnimated:(BOOL)animated
+- (void)refresh
 {
     SRGMedia *media = self.controller.media;
     
@@ -128,15 +102,47 @@
             self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
         }
         
-        [self.countdownView setRemainingTimeInterval:timeIntervalBeforeStart animated:animated];
+        self.countdownView.remainingTimeInterval = timeIntervalBeforeStart;
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {
         self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
-        [self.countdownView setRemainingTimeInterval:0 animated:animated];
+        self.countdownView.remainingTimeInterval = 0.;
     }
     else {
         self.messageLabel.text = nil;
-        [self.countdownView setRemainingTimeInterval:0 animated:animated];
+        self.countdownView.remainingTimeInterval = 0.;
+    }
+}
+
+- (void)updateLayout
+{
+    SRGMedia *media = self.controller.media;
+    
+    SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
+    if (blockingReason == SRGBlockingReasonStartDate) {
+        NSTimeInterval timeIntervalBeforeStart = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
+        NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(timeIntervalBeforeStart);
+        
+        if (dateComponents.day >= SRGCountdownViewDaysLimit) {
+            self.messageLabel.hidden = NO;
+            self.countdownView.hidden = YES;
+        }
+        else if (CGRectGetWidth(self.frame) < 290.f) {
+            self.messageLabel.hidden = NO;
+            self.countdownView.hidden = YES;
+        }
+        else {
+            self.messageLabel.hidden = YES;
+            self.countdownView.hidden = NO;
+        }
+    }
+    else if (blockingReason == SRGBlockingReasonEndDate) {
+        self.messageLabel.hidden = NO;
+        self.countdownView.hidden = YES;
+    }
+    else {
+        self.messageLabel.hidden = YES;
+        self.countdownView.hidden = YES;
     }
 }
 
