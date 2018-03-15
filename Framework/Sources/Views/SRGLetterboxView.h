@@ -262,8 +262,7 @@ IB_DESIGNABLE
  *                    constraint to make the player view slightly taller.
  *  @param completion The block to be called on completion.
  *
- *  @discussion Attempting to call this method outside the correct delegate method is a programming error and will throw
- *              an exception.
+ *  @discussion Call this method outside the correct delegate method leads to undefined behavior.
  */
 - (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 

@@ -143,10 +143,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super layoutSubviews];
     
-    BOOL userInterfaceHidden = [self updateMainLayout];
-    [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
-    [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
+    [self setNeedsLayoutAnimated:NO];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -566,9 +563,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)setNeedsLayoutAnimated:(BOOL)animated withAdditionalAnimations:(void (^)(void))additionalAnimations
 {
     if ([self.delegate respondsToSelector:@selector(letterboxViewWillAnimateUserInterface:)]) {
-        _inWillAnimateUserInterface = YES;
         [self.delegate letterboxViewWillAnimateUserInterface:self];
-        _inWillAnimateUserInterface = NO;
     }
     
     __block BOOL userInterfaceHidden = NO;
@@ -719,12 +714,6 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
 {
-    if (! _inWillAnimateUserInterface) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"-animateAlongsideUserInterfaceWithAnimations:completion: can only be called from within the -animateAlongsideUserInterfaceWithAnimations: method of the Letterbox view delegate"
-                                     userInfo:nil];
-    }
-    
     self.animations = animations;
     self.completion = completion;
 }
