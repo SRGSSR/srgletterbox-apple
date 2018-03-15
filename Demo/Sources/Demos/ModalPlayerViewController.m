@@ -333,10 +333,6 @@
 
 - (IBAction)close:(id)sender
 {
-    if (self.interactiveTransition) {
-        NSLog(@"strange interactiveTransition");
-    }
-    self.interactiveTransition = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
