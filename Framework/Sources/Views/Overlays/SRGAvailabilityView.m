@@ -21,19 +21,9 @@
 @property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
 
-@property (nonatomic) NSTimer *updateTimer;
-
 @end
 
 @implementation SRGAvailabilityView
-
-#pragma mark Getters and setters
-
-- (void)setUpdateTimer:(NSTimer *)updateTimer
-{
-    [_updateTimer invalidate];
-    _updateTimer = updateTimer;
-}
 
 #pragma mark Overrides
 
@@ -45,24 +35,6 @@
     self.messageLabel.verticalMargin = 2.f;
     self.messageLabel.layer.cornerRadius = 4.f;
     self.messageLabel.layer.masksToBounds = YES;
-}
-
-- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    
-    if (newWindow) {
-        @weakify(self)
-        self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
-            @strongify(self)
-            [self refreshAnimated:YES];
-        }];
-    }
-    else {
-        self.updateTimer = nil;
-    }
-    
-    [self refreshAnimated:NO];
 }
 
 - (void)contentSizeCategoryDidChange
@@ -166,9 +138,6 @@
         self.messageLabel.text = nil;
         [self.countdownView setRemainingTimeInterval:0 animated:animated];
     }
-    
-    // The layout depends on the data. Force a refresh
-    [self.parentLetterboxView setNeedsLayoutAnimated:animated];
 }
 
 @end
