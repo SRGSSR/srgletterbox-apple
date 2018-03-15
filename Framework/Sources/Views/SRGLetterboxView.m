@@ -875,7 +875,7 @@ static void commonInit(SRGLetterboxView *self);
     });
 }
 
-- (BOOL)controlsViewShoulHideFullScreenButton:(SRGControlsView *)controlsView
+- (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView
 {
     if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
         return YES;

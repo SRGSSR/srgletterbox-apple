@@ -247,13 +247,8 @@
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
-    // Manage the phantom button, as the real full-screen button will follow its frame
-    if (self.controller.error || ! self.controller.URN || self.controller.continuousPlaybackUpcomingMedia) {
-        self.fullScreenPhantomButton.hidden = NO;
-    }
-    else {
-        self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShoulHideFullScreenButton:self];
-    }
+    // Show or hide the phantom button in the controls stack, as the real full-screen button will follow its frame
+    self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShouldHideFullScreenButton:self];
     
     // Responsiveness
     self.backwardSeekButton.hidden = NO;

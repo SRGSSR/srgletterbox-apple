@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion If no delegate has been defined, the default behavior is `NO`.
  */
-- (BOOL)controlsViewShoulHideFullScreenButton:(SRGControlsView *)controlsView;
+- (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView;
 
 /**
  *  Method called when the user toggles full screen using the dedicated button.
