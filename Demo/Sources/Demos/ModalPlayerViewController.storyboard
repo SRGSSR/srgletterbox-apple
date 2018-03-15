@@ -133,7 +133,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-100" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p" userLabel="Height Offset Slider">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-200" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p" userLabel="Height Offset Slider">
                                         <rect key="frame" x="138" y="56" width="219" height="31"/>
                                         <connections>
                                             <action selector="changeHeightOffset:" destination="FcC-Qn-oGg" eventType="valueChanged" id="8FW-Xt-MTu"/>
