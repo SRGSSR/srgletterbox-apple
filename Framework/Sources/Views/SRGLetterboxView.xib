@@ -50,7 +50,7 @@
                         <outletCollection property="gestureRecognizers" destination="y7P-pN-sI4" appends="YES" id="gP2-dm-Oez"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N5a-bL-wow" customClass="SRGLoadingView">
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N5a-bL-wow" customClass="SRGLoadingView">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
