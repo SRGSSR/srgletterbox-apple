@@ -127,7 +127,7 @@
             self.messageLabel.hidden = NO;
             self.countdownView.hidden = YES;
         }
-        else if (CGRectGetWidth(self.frame) < 290.f) {
+        else if (CGRectGetWidth(self.frame) < 290.f || CGRectGetHeight(self.frame) < 145.f) {
             self.messageLabel.hidden = NO;
             self.countdownView.hidden = YES;
         }
