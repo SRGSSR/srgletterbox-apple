@@ -35,6 +35,15 @@
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    
+    if (newWindow) {
+        [self refresh];
+    }
+}
+
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
@@ -52,9 +61,18 @@
                                                   object:self.controller];
 }
 
+- (void)didDetachFromController
+{
+    [super didDetachFromController];
+    
+    [self refresh];
+}
+
 - (void)didAttachToController
 {
     [super didAttachToController];
+    
+    [self refresh];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playbackDidRetry:)
@@ -67,11 +85,7 @@
 {
     [super playbackDidFail];
     
-    NSError *error = self.parentLetterboxView.error;
-    UIImage *image = [UIImage srg_letterboxImageForError:error];
-    self.imageView.image = image;
-    self.messageLabel.text = error.localizedDescription;
-    self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    [self refresh];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -104,6 +118,17 @@
     if (height < 140.f) {
         self.messageLabel.hidden = YES;
     }
+}
+
+#pragma mark UI
+
+- (void)refresh
+{
+    NSError *error = self.parentLetterboxView.error;
+    UIImage *image = [UIImage srg_letterboxImageForError:error];
+    self.imageView.image = image;
+    self.messageLabel.text = error.localizedDescription;
+    self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
 }
 
 #pragma mark Actions
