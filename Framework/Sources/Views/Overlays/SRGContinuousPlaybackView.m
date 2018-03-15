@@ -67,7 +67,7 @@
     [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
         [self refresh];
-        [self updateLayout];
+        [self.parentLetterboxView setNeedsLayoutAnimated:YES];
     }];
     
     [self refresh];
