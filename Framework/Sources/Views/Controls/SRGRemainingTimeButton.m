@@ -74,7 +74,7 @@
 
 - (UIAccessibilityTraits)accessibilityTraits
 {
-    return UIAccessibilityTraitButton|UIAccessibilityTraitUpdatesFrequently;
+    return UIAccessibilityTraitButton | UIAccessibilityTraitUpdatesFrequently;
 }
 
 @end
