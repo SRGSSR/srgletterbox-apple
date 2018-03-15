@@ -23,7 +23,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="211"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" secondItem="5VB-3F-wwv" secondAttribute="width" multiplier="9:16" priority="950" id="ff4-Ik-keP"/>
+                                    <constraint firstAttribute="height" secondItem="5VB-3F-wwv" secondAttribute="width" multiplier="9:16" priority="950" id="nYf-MQ-bSx"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="controller" destination="V5l-nr-tDL" id="6mJ-p1-ZCM"/>
@@ -113,28 +113,37 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BkI-ST-6lq">
-                                <rect key="frame" x="0.0" y="566" width="375" height="101"/>
+                                <rect key="frame" x="0.0" y="526" width="375" height="141"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi">
-                                        <rect key="frame" x="20" y="20" width="32.5" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Width" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mqV-QZ-PBl" userLabel="Width">
+                                        <rect key="frame" x="20" y="20" width="45.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p">
-                                        <rect key="frame" x="70.5" y="15.5" width="286.5" height="31"/>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="qMX-lV-otw" userLabel="Width Slider">
+                                        <rect key="frame" x="83.5" y="15.5" width="273.5" height="31"/>
                                         <connections>
-                                            <action selector="changeMargins:" destination="FcC-Qn-oGg" eventType="valueChanged" id="xLr-wV-wYa"/>
+                                            <action selector="changeMargins:" destination="FcC-Qn-oGg" eventType="valueChanged" id="0Qh-QR-Edp"/>
                                         </connections>
                                     </slider>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Aspect ratio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi" userLabel="Height">
+                                        <rect key="frame" x="20" y="60.5" width="92.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p" userLabel="Height Slider">
+                                        <rect key="frame" x="130.5" y="56" width="226.5" height="31"/>
+                                    </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View attached to the controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f00-yt-8VM">
-                                        <rect key="frame" x="20" y="60.5" width="235.5" height="20.5"/>
+                                        <rect key="frame" x="20" y="100.5" width="235.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c7h-bN-xe4">
-                                        <rect key="frame" x="306" y="55.5" width="51" height="31"/>
+                                        <rect key="frame" x="306" y="95.5" width="51" height="31"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <action selector="toggleView:" destination="FcC-Qn-oGg" eventType="valueChanged" id="LWO-jo-IT6"/>
@@ -145,14 +154,19 @@
                                 <constraints>
                                     <constraint firstItem="f00-yt-8VM" firstAttribute="top" secondItem="YAu-YG-xSi" secondAttribute="bottom" constant="20" id="2Qu-I8-g0c"/>
                                     <constraint firstItem="f00-yt-8VM" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" constant="20" id="8Fz-Hr-b8m"/>
+                                    <constraint firstItem="qMX-lV-otw" firstAttribute="leading" secondItem="mqV-QZ-PBl" secondAttribute="trailing" constant="20" id="9kf-8p-PFE"/>
+                                    <constraint firstItem="qMX-lV-otw" firstAttribute="centerY" secondItem="mqV-QZ-PBl" secondAttribute="centerY" id="G23-GI-7Xm"/>
                                     <constraint firstAttribute="trailing" secondItem="c7h-bN-xe4" secondAttribute="trailing" constant="20" id="I9g-Mc-okK"/>
-                                    <constraint firstItem="c7h-bN-xe4" firstAttribute="leading" secondItem="YAu-YG-xSi" secondAttribute="trailing" constant="253.5" id="IGa-Yr-OC1"/>
-                                    <constraint firstItem="YAu-YG-xSi" firstAttribute="top" secondItem="BkI-ST-6lq" secondAttribute="top" constant="20" id="LEc-cI-GMg"/>
                                     <constraint firstItem="YAu-YG-xSi" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" constant="20" id="PCP-CR-xix"/>
                                     <constraint firstItem="CDc-iR-c7p" firstAttribute="leading" secondItem="YAu-YG-xSi" secondAttribute="trailing" constant="20" id="RFJ-8a-WtE"/>
                                     <constraint firstAttribute="trailing" secondItem="CDc-iR-c7p" secondAttribute="trailing" constant="20" id="WfO-6Q-kdT"/>
+                                    <constraint firstItem="YAu-YG-xSi" firstAttribute="top" secondItem="mqV-QZ-PBl" secondAttribute="bottom" constant="20" id="chQ-yj-UFk"/>
+                                    <constraint firstItem="mqV-QZ-PBl" firstAttribute="top" secondItem="BkI-ST-6lq" secondAttribute="top" constant="20" id="hUc-iU-KXg"/>
                                     <constraint firstAttribute="bottom" secondItem="f00-yt-8VM" secondAttribute="bottom" constant="20" id="oFl-zj-O9U"/>
+                                    <constraint firstItem="mqV-QZ-PBl" firstAttribute="leading" secondItem="BkI-ST-6lq" secondAttribute="leading" constant="20" id="sQp-QS-BH0"/>
+                                    <constraint firstAttribute="trailing" secondItem="qMX-lV-otw" secondAttribute="trailing" constant="20" id="u62-qs-RH6"/>
                                     <constraint firstItem="CDc-iR-c7p" firstAttribute="centerY" secondItem="YAu-YG-xSi" secondAttribute="centerY" id="v6i-Na-bjJ"/>
+                                    <constraint firstItem="c7h-bN-xe4" firstAttribute="leading" secondItem="f00-yt-8VM" secondAttribute="trailing" constant="50.5" id="vwO-cp-yZG"/>
                                     <constraint firstItem="c7h-bN-xe4" firstAttribute="centerY" secondItem="f00-yt-8VM" secondAttribute="centerY" id="yzh-LV-BgD"/>
                                 </constraints>
                             </view>
@@ -204,7 +218,7 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
-                        <outlet property="letterboxAspectRatioConstraint" destination="ff4-Ik-keP" id="XIP-pS-dzp"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="nYf-MQ-bSx" id="b4g-qt-TY5"/>
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
                         <outlet property="letterboxController" destination="V5l-nr-tDL" id="po7-Q3-coI"/>
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
