@@ -27,10 +27,10 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Nh0-K3-pJu" secondAttribute="bottom" id="Co2-X3-HCZ"/>
-                <constraint firstItem="Nh0-K3-pJu" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="J6R-rs-ett"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Nh0-K3-pJu" secondAttribute="trailing" id="lgq-EA-UN2"/>
-                <constraint firstItem="Nh0-K3-pJu" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="uPT-nM-Yfw"/>
+                <constraint firstAttribute="bottom" secondItem="Nh0-K3-pJu" secondAttribute="bottom" id="Co2-X3-HCZ"/>
+                <constraint firstItem="Nh0-K3-pJu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="J6R-rs-ett"/>
+                <constraint firstAttribute="trailing" secondItem="Nh0-K3-pJu" secondAttribute="trailing" id="lgq-EA-UN2"/>
+                <constraint firstItem="Nh0-K3-pJu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="uPT-nM-Yfw"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
