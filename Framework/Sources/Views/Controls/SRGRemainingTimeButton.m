@@ -60,7 +60,7 @@
 {
     NSTimeInterval timeIntervalToTargetDate = [self.targetDate timeIntervalSinceDate:NSDate.date];
     if (timeIntervalToTargetDate > 0) {
-        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Will play in %@", @"Continuous playback Play button label"), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:timeIntervalToTargetDate]];
+        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Will play in %@", @"Continuous playback Play button label (time parameter)"), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:timeIntervalToTargetDate]];
     }
     else {
         return SRGLetterboxAccessibilityLocalizedString(@"Play", @"Play button label");
