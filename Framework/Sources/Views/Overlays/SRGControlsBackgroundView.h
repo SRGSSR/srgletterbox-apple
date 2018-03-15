@@ -9,10 +9,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Overlay displayed when the associated controller is loading data.
+ *  Overlay displayed as background for controls, ensuring their readability. Also displays the loading indicator.
  */
 IB_DESIGNABLE
-@interface SRGLoadingView : SRGLetterboxControllerView
+@interface SRGControlsBackgroundView : SRGLetterboxControllerView
 
 @end
 

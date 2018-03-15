@@ -12,6 +12,7 @@
 #import "SRGAccessibilityView.h"
 #import "SRGAvailabilityView.h"
 #import "SRGContinuousPlaybackView.h"
+#import "SRGControlsBackgroundView.h"
 #import "SRGControlsView.h"
 #import "SRGErrorView.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
@@ -21,7 +22,6 @@
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxTimelineView.h"
-#import "SRGLoadingView.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGNotificationView.h"
 #import "SRGProgram+SRGLetterbox.h"
@@ -41,7 +41,7 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *playbackView;
-@property (nonatomic, weak) IBOutlet SRGLoadingView *loadingView;
+@property (nonatomic, weak) IBOutlet SRGControlsBackgroundView *controlsBackgroundView;
 @property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
 @property (nonatomic, weak) IBOutlet SRGNotificationView *notificationView;
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
@@ -210,7 +210,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super didDetachFromController];
     
-    self.loadingView.controller = nil;
+    self.controlsBackgroundView.controller = nil;
     self.controlsView.controller = nil;
     self.errorView.controller = nil;
     self.availabilityView.controller = nil;
@@ -230,7 +230,7 @@ static void commonInit(SRGLetterboxView *self);
     [super didAttachToController];
     
     SRGLetterboxController *controller = self.controller;
-    self.loadingView.controller = controller;
+    self.controlsBackgroundView.controller = controller;
     self.controlsView.controller = controller;
     self.errorView.controller = controller;
     self.availabilityView.controller = controller;

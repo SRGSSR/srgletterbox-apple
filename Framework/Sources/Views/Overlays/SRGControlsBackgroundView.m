@@ -4,21 +4,21 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLoadingView.h"
+#import "SRGControlsBackgroundView.h"
 
 #import "UIImageView+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 
 #import <Masonry/Masonry.h>
 
-@interface SRGLoadingView ()
+@interface SRGControlsBackgroundView ()
 
 @property (nonatomic, weak) IBOutlet UIView *dimmingView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
 @end
 
-@implementation SRGLoadingView
+@implementation SRGControlsBackgroundView
 
 #pragma mark Overrides
 
