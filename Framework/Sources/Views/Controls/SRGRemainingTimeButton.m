@@ -69,7 +69,7 @@
 
 - (NSString *)accessibilityHint
 {
-    return SRGLetterboxLocalizedString(@"Plays the content immediately.", @"Hint for the continuous playback play button.");
+    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content immediately.", @"Hint for the continuous playback play button.");
 }
 
 - (UIAccessibilityTraits)accessibilityTraits
