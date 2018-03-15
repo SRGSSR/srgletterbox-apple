@@ -121,7 +121,7 @@
             fullScreenButton.tintColor = [UIColor whiteColor];
             fullScreenButton.selected = parentLetterboxView.fullScreen;
             [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
-            [parentLetterboxView insertSubview:fullScreenButton atIndex:parentLetterboxView.subviews.count - 1];
+            [parentLetterboxView insertSubview:fullScreenButton atIndex:parentLetterboxView.subviews.count];
             [fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(self.fullScreenPhantomButton);
             }];
