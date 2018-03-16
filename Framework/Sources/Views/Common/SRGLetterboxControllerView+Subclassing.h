@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)metadataDidChange NS_REQUIRES_SUPER;
 
 /**
- *  Method called when the attached controller encountered a playback failure.
+ *  Method called when the attached controller failed to play the media.
  */
 - (void)playbackDidFail NS_REQUIRES_SUPER;
 

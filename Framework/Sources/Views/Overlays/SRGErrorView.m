@@ -35,15 +35,6 @@
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    
-    if (newWindow) {
-        [self refresh];
-    }
-}
-
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
@@ -52,33 +43,11 @@
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 }
 
-- (void)willDetachFromController
+- (void)metadataDidChange
 {
-    [super willDetachFromController];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxPlaybackDidRetryNotification
-                                                  object:self.controller];
-}
-
-- (void)didDetachFromController
-{
-    [super didDetachFromController];
+    [super metadataDidChange];
     
     [self refresh];
-}
-
-- (void)didAttachToController
-{
-    [super didAttachToController];
-    
-    [self refresh];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackDidRetry:)
-                                                 name:SRGLetterboxPlaybackDidRetryNotification
-                                               object:self.controller];
-
 }
 
 - (void)playbackDidFail
@@ -134,13 +103,6 @@
 - (IBAction)retry:(id)sender
 {
     [self.controller restart];
-}
-
-#pragma mark Notifications
-
-- (void)playbackDidRetry:(NSNotification *)notification
-{
-    [self setNeedsLayoutAnimated:YES];
 }
 
 @end

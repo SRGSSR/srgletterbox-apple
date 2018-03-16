@@ -34,7 +34,6 @@
                                                         name:SRGLetterboxPlaybackDidFailNotification
                                                       object:_controller];
         
-        
         [self didDetachFromController];
     }
     
