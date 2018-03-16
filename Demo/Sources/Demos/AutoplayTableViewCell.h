@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AutoplayTableViewCell : UITableViewCell
 
-@property (nonatomic) SRGMedia *media;
+@property (nonatomic, nullable) SRGMedia *media;
 
 @end
 
