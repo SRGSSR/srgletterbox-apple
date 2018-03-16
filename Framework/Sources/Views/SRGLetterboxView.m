@@ -68,7 +68,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, CGFloat heightOffset);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, BOOL minimal, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @property (nonatomic) NSTimer *periodicUpdateTimer;
@@ -350,6 +350,16 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (BOOL)isMinimal
+{
+    if (self.controller.error || ! self.controller.URN || self.controller.loading) {
+        return self.userInterfaceTogglable || ! self.userInterfaceHidden;
+    }
+    else {
+        return NO;
+    }
+}
+
 - (SRGLetterboxViewBehavior)timelineBehavior
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -572,7 +582,7 @@ static void commonInit(SRGLetterboxView *self);
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        self.animations ? self.animations(userInterfaceHidden, timelineHeight + notificationHeight) : nil;
+        self.animations ? self.animations(userInterfaceHidden, self.minimal, timelineHeight + notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -700,7 +710,7 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
 {
     self.animations = animations;
     self.completion = completion;

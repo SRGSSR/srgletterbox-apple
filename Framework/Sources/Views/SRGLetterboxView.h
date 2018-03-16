@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This method gets called when user interface controls or the timeline are shown or hidden. You can call the `SRGLetterboxView`
- *  `-animateAlongsideUserInterfaceWithAnimations:completion` method from within this method implementation to perform 
+ *  `-animateAlongsideUserInterfaceWithAnimations:completion:` method from within this method implementation to perform 
  *  animations alongside the built-in control animations.
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
@@ -253,6 +253,11 @@ IB_DESIGNABLE
  *  the animations to be performed alongside the player user interface animations when controls, timeline or notifications
  *  are shown or hidden. An optional block to be called on completion can be provided as well.
  *
+ *  Even when controls are hidden, the user interface might still be in a minimal form, ensuring that basic controls
+ *  are available, for example when no media has been loaded or when an error has been encountered. You can use the
+ *  corresponding boolean information to show additional custom controls which must also be available in such cases
+ *  (e.g. a close button which needs to be available in such cases as well).
+ *
  *  @param animations The animations to be performed when these subviews are shown or hidden. The main view is usually 
  *                    animated in response to more information being displayed within it (e.g. a subdivision timeline or a
  *                    notification). If the view frame is not changed, the player will be temporarily shrinked to make room
@@ -264,7 +269,7 @@ IB_DESIGNABLE
  *
  *  @discussion Call this method outside the correct delegate method leads to undefined behavior.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, BOOL minimal, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.

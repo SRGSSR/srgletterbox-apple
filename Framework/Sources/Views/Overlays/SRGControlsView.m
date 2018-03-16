@@ -15,6 +15,7 @@
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
+#import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
 #import "UIFont+SRGLetterbox.h"
 
@@ -208,15 +209,9 @@
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
     
-    if (self.controller.error || ! self.controller.URN || self.controller.continuousPlaybackUpcomingMedia) {
-        SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
-        BOOL userControlsDisabled = ! parentLetterboxView.userInterfaceTogglable && parentLetterboxView.userInterfaceHidden;
-        self.fullScreenButton.alpha = userControlsDisabled ? 0.f : 1.f;
-    }
-    else {
-        self.fullScreenButton.alpha = userInterfaceHidden ? 0.f : 1.f;
-    }
-    self.fullScreenButton.selected = self.parentLetterboxView.fullScreen;
+    SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
+    self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
+    self.fullScreenButton.selected = parentLetterboxView.fullScreen;
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden

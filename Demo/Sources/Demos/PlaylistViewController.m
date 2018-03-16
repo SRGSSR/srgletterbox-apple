@@ -19,6 +19,8 @@
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 
+@property (nonatomic, weak) IBOutlet UIButton *closeButton;
+
 @property (nonatomic, weak) IBOutlet UIButton *previousButton;
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
 
@@ -162,8 +164,9 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
         self.letterboxAspectRatioConstraint.constant = heightOffset;
+        self.closeButton.alpha = (minimal || ! hidden) ? 1.f : 0.f;
         [self.view layoutIfNeeded];
     } completion:nil];
 }

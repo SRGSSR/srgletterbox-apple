@@ -147,6 +147,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="closeButton" destination="bjI-QY-aK3" id="Hru-Sx-wMW"/>
                         <outlet property="continuousPlaybackLabel" destination="6ZB-3D-9cI" id="Rji-XN-l8D"/>
                         <outlet property="letterboxAspectRatioConstraint" destination="rIM-b5-m4d" id="fjX-qn-XM7"/>
                         <outlet property="letterboxBottomConstraint" destination="lf7-hY-sbo" id="XIv-KR-mRM"/>
