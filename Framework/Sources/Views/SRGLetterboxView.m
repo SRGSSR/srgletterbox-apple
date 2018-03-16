@@ -338,11 +338,11 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
     BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    if (self.controller.error || ! self.controller.URN || self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
+    if (self.controller.error || ! self.controller.URN || self.controller.dataAvailability != SRGLetterboxDataAvailabilityLoaded) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     else if (self.userInterfaceTogglable
-             && (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay || self.controller.dataAvailability == SRGLetterboxDataAvailabilityNone)) {
+             && (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay)) {
         return SRGLetterboxViewBehaviorForcedVisible;
     }
     else {
