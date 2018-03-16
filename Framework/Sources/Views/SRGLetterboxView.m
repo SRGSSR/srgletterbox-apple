@@ -352,7 +352,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (BOOL)isMinimal
 {
-    if (self.controller.error || ! self.controller.URN || self.controller.loading) {
+    if (self.controller.error || ! self.controller.URN) {
         return self.userInterfaceTogglable || ! self.userInterfaceHidden;
     }
     else {
