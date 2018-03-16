@@ -9,6 +9,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGLetterboxView+Private.h"
 #import "SRGRemainingTimeButton.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -123,8 +124,7 @@
     self.remainingTimeButton.enabled = YES;
     
     if (self.controller.continuousPlaybackUpcomingMedia) {
-        BOOL userControlsDisabled = !self.parentLetterboxView.userInterfaceTogglable && self.parentLetterboxView.userInterfaceHidden;
-        if (userControlsDisabled) {
+        if (! self.parentLetterboxView.userInterfaceEnabled) {
             self.remainingTimeButton.enabled = NO;
             self.cancelButton.hidden = YES;
         }

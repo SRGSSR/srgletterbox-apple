@@ -360,6 +360,11 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
+- (BOOL)isUserInterfaceEnabled
+{
+    return self.parentLetterboxView.userInterfaceTogglable || ! self.parentLetterboxView.userInterfaceHidden;
+}
+
 - (SRGLetterboxViewBehavior)timelineBehavior
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;

@@ -104,9 +104,7 @@
     self.instructionsLabel.hidden = NO;
     self.retryTapGestureRecognizer.enabled = YES;
     
-    SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
-    BOOL userControlsDisabled = ! parentLetterboxView.userInterfaceTogglable && parentLetterboxView.userInterfaceHidden;
-    if (userControlsDisabled) {
+    if (! self.parentLetterboxView.userInterfaceEnabled) {
         self.instructionsLabel.hidden = YES;
         self.retryTapGestureRecognizer.enabled = NO;
     }

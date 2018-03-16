@@ -45,6 +45,11 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
  */
 @property (nonatomic, readonly, getter=isMinimal) BOOL minimal;
 
+/**
+ *  Return `YES` iff the user interface can be used (i.e. can be toggled or is visible).
+ */
+@property (nonatomic, readonly, getter=isUserInterfaceEnabled) BOOL userInterfaceEnabled;
+
 @end
 
 NS_ASSUME_NONNULL_END
