@@ -8,7 +8,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 
 * A controller to play audios and videos, which supports on-demand, live and DVR streams.
 * A service to manage application-wide playback. 
-* A player view with the official SRG SSR look and feel. The design is standard and cannot be altered. You can bind your own custom overlays to the default player controls, though.
+* A responsive player view with the official SRG SSR look and feel.
 * Support for 360° videos.
 * Support for chapter and segment browsing and selection. 
 * Playlist support.
