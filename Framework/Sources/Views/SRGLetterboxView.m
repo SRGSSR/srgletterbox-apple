@@ -336,7 +336,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
-    if (self.controller.error || ! self.controller.URN || self.controller.dataAvailability != SRGLetterboxDataAvailabilityLoaded) {
+    if (self.controller.error || ! self.controller.URN) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     
