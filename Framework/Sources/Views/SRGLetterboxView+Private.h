@@ -28,11 +28,6 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
 
 @interface SRGLetterboxView (Private)
 
-/**
- *  Return error information attached to the view.
- */
-@property (nonatomic, readonly, nullable) NSError *error;
-
 /*
  *  User interface behavior.
  */

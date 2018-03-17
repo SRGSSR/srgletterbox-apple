@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGLetterboxError.h"
 #import "SRGLetterboxView+Private.h"
 #import "UIImage+SRGLetterbox.h"
 
@@ -61,7 +62,13 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    self.alpha = self.parentLetterboxView.error ? 1.f : 0.f;
+    NSError *error = self.controller.error;
+    if (error) {
+        self.alpha = (! [error.domain isEqualToString:SRGLetterboxErrorDomain] || error.code != SRGLetterboxErrorCodeNotAvailable) ? 1.f : 0.f;
+    }
+    else {
+        self.alpha = 0.f;
+    }
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -91,7 +98,7 @@
 
 - (void)refresh
 {
-    NSError *error = self.parentLetterboxView.error;
+    NSError *error = self.controller.error;
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;

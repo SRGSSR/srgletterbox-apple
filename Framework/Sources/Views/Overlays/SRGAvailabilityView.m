@@ -11,6 +11,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGCountdownView.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGLetterboxError.h"
 #import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
@@ -56,9 +57,8 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    SRGMedia *media = self.controller.media;
-    SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
-    self.alpha = (blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate) ? 1.f : 0.f;
+    NSError *error = self.controller.error;
+    self.alpha = ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) ? 1.f : 0.f;
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
