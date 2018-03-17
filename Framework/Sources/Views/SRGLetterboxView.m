@@ -668,7 +668,13 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.timelineAlwaysHidden && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
+    
+    // The timeline (if other content is available) is displayed when a media is not available, so that the user can
+    // choose another content
+    NSError *error = self.controller.error;
+    BOOL available = ! [error.domain isEqualToString:SRGLetterboxErrorDomain] || error.code != SRGLetterboxErrorCodeNotAvailable;
+    
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.timelineAlwaysHidden && (! userInterfaceHidden || ! available)) ? self.preferredTimelineHeight : 0.f;
     BOOL isTimelineVisible = (timelineHeight != 0.f);
     
     // Scroll to selected index when opening the timeline. `shouldFocus` needs to be calculated before the constant is updated
