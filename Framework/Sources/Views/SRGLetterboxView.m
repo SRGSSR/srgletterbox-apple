@@ -335,18 +335,17 @@ static void commonInit(SRGLetterboxView *self);
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
     
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
     if (self.controller.error || ! self.controller.URN || self.controller.dataAvailability != SRGLetterboxDataAvailabilityLoaded) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
-    else if (self.userInterfaceTogglable && (playbackState == SRGMediaPlayerPlaybackStateEnded || isUsingAirplay)) {
+    
+    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    if (self.userInterfaceTogglable && isUsingAirplay) {
         return SRGLetterboxViewBehaviorForcedVisible;
     }
-    else {
-        return SRGLetterboxViewBehaviorNormal;
-    }
+    
+    return SRGLetterboxViewBehaviorNormal;
 }
 
 - (BOOL)isMinimal
@@ -362,22 +361,6 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isUserInterfaceEnabled
 {
     return self.parentLetterboxView.userInterfaceTogglable || ! self.parentLetterboxView.userInterfaceHidden;
-}
-
-- (SRGLetterboxViewBehavior)timelineBehavior
-{
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
-    
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    if (! [self isTimelineAlwaysHidden]
-        && (self.controller.error || isUsingAirplay || (self.controller.dataAvailability == SRGLetterboxDataAvailabilityLoaded && playbackState == SRGMediaPlayerPlaybackStateIdle)
-                || playbackState == SRGMediaPlayerPlaybackStateEnded)) {
-            return SRGLetterboxViewBehaviorForcedVisible;
-        }
-    else {
-        return SRGLetterboxViewBehaviorNormal;
-    }
 }
 
 - (void)setPreferredTimelineHeight:(CGFloat)preferredTimelineHeight animated:(BOOL)animated
@@ -685,9 +668,7 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
-    SRGLetterboxViewBehavior timelineBehavior = [self timelineBehavior];
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.controller.continuousPlaybackTransitionEndDate && ((timelineBehavior == SRGLetterboxViewBehaviorNormal && ! userInterfaceHidden) || timelineBehavior == SRGLetterboxViewBehaviorForcedVisible)) ? self.preferredTimelineHeight : 0.f;
-    
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.timelineAlwaysHidden && ! userInterfaceHidden) ? self.preferredTimelineHeight : 0.f;
     BOOL isTimelineVisible = (timelineHeight != 0.f);
     
     // Scroll to selected index when opening the timeline. `shouldFocus` needs to be calculated before the constant is updated
