@@ -965,6 +965,9 @@ static void commonInit(SRGLetterboxView *self);
             self.timelineView.time = seekTargetTime;
         }
     }
+    else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        [self setTogglableUserInterfaceHidden:NO animated:YES];
+    }
 }
 
 - (void)segmentDidStart:(NSNotification *)notification
