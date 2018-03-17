@@ -283,6 +283,41 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
 
+- (void)testStop
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertTrue([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle);
+        XCTAssertNotNil(self.controller.URN);
+        XCTAssertNotNil(self.controller.media);
+        XCTAssertNotNil(self.controller.mediaComposition);
+        XCTAssertNil(self.controller.error);
+        XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+        return YES;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    
+    [self.controller stop];
+    
+    XCTAssertNotNil(self.controller.URN);
+    XCTAssertNotNil(self.controller.media);
+    XCTAssertNotNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
 - (void)testReset
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -296,7 +331,13 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+        XCTAssertTrue([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle);
+        XCTAssertNil(self.controller.URN);
+        XCTAssertNil(self.controller.media);
+        XCTAssertNil(self.controller.mediaComposition);
+        XCTAssertNil(self.controller.error);
+        XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+        return YES;
     }];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);

@@ -1122,9 +1122,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.dataProvider = nil;
     }
     
-    [self.mediaPlayerController reset];
-    [self.requestQueue cancel];
-    
     self.error = nil;
     
     self.lastUpdateDate = nil;
@@ -1140,8 +1137,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     [self resetContinuousPlayback];
     
-    // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    
+    [self.mediaPlayerController reset];
+    [self.requestQueue cancel];
 }
 
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
