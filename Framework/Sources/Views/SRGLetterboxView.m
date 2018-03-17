@@ -946,28 +946,28 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self setNeedsLayoutAnimated:YES];
-    
-    SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     SRGMediaPlayerPlaybackState previousPlaybackState = [notification.userInfo[SRGMediaPlayerPreviousPlaybackStateKey] integerValue];
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
+    SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+    
+    if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateIdle) {
         [self.timelineView scrollToSelectedIndexAnimated:YES];
         [self showAirplayNotificationMessageIfNeededAnimated:YES];
     }
-    else if (playbackState == SRGMediaPlayerPlaybackStatePaused && previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing) {
-        [self showAirplayNotificationMessageIfNeededAnimated:YES];
-    }
-    else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
-        if (notification.userInfo[SRGMediaPlayerSeekTimeKey]) {
-            CMTime seekTargetTime = [notification.userInfo[SRGMediaPlayerSeekTimeKey] CMTimeValue];
-            SRGSubdivision *subdivision = [self subdivisionOnTimelineAtTime:seekTargetTime];
-            self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
-            self.timelineView.time = seekTargetTime;
-        }
-    }
-    else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
+    
+    if (playbackState == SRGMediaPlayerPlaybackStatePaused || playbackState == SRGMediaPlayerPlaybackStateEnded) {
         [self setTogglableUserInterfaceHidden:NO animated:YES];
     }
+    else if (playbackState == SRGMediaPlayerPlaybackStateSeeking) {
+        NSValue *seekTimeValue = notification.userInfo[SRGMediaPlayerSeekTimeKey];
+        if (seekTimeValue) {
+            CMTime seekTime = seekTimeValue.CMTimeValue;
+            SRGSubdivision *subdivision = [self subdivisionOnTimelineAtTime:seekTime];
+            self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
+            self.timelineView.time = seekTime;
+        }
+    }
+    
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)segmentDidStart:(NSNotification *)notification
