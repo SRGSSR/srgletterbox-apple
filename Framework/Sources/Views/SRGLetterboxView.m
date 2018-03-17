@@ -448,12 +448,17 @@ static void commonInit(SRGLetterboxView *self);
 - (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(livestreamDidFinish:)
                                                  name:SRGLetterboxLivestreamDidFinishNotification
                                                object:controller];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackDidContinueAutomatically:)
+                                                 name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                               object:controller];
+    
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playbackStateDidChange:)
                                                  name:SRGMediaPlayerPlaybackStateDidChangeNotification
@@ -479,11 +484,14 @@ static void commonInit(SRGLetterboxView *self);
 - (void)unregisterObservers
 {
     SRGLetterboxController *controller = self.controller;
-    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SRGLetterboxLivestreamDidFinishNotification
                                                   object:controller];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                  object:controller];
+    
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                   object:mediaPlayerController];
@@ -821,6 +829,8 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
+    [self setTogglableUserInterfaceHidden:YES animated:NO];
+    
     if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
         [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
     }
@@ -927,6 +937,11 @@ static void commonInit(SRGLetterboxView *self);
 - (void)livestreamDidFinish:(NSNotification *)notification
 {
     [self showNotificationMessage:SRGLetterboxLocalizedString(@"Live broadcast ended", @"Notification message displayed when a live broadcast has finished.") animated:YES];
+}
+
+- (void)playbackDidContinueAutomatically:(NSNotification *)notification
+{
+    [self setTogglableUserInterfaceHidden:YES animated:NO];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification

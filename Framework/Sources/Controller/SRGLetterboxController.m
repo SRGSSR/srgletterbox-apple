@@ -1467,10 +1467,14 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             else if (nextMedia) {
                 [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                                    object:self
-                                                                  userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                              SRGLetterboxMediaKey : nextMedia }];
+                // Send notification on next run loop, so that other observers of the playback end notification all receive
+                // the notification before the continuous playback notification is emitted.
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                                        object:self
+                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                                  SRGLetterboxMediaKey : nextMedia }];
+                });
             }
         }
     }
