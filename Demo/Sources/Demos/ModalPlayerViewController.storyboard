@@ -92,7 +92,7 @@
                                 <rect key="frame" x="0.0" y="414.5" width="179.5" height="30"/>
                                 <state key="normal" title="Full screen"/>
                                 <connections>
-                                    <action selector="fullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="pT2-G7-imR"/>
+                                    <action selector="toggleFullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="LgO-pO-ZZe"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xXK-rE-ke9">

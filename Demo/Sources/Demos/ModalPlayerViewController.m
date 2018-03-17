@@ -357,7 +357,7 @@
     [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
 }
 
-- (IBAction)fullScreen:(id)sender
+- (IBAction)toggleFullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
 }
