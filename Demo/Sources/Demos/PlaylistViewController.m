@@ -24,7 +24,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *previousButton;
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
 
-@property (nonatomic, weak) IBOutlet UILabel *continuousPlaybackLabel;
+@property (nonatomic, weak) IBOutlet UILabel *playbackInformationLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *settingsView;
 
@@ -82,7 +82,7 @@
         [self updatePlaylistButtons];
     }];
     
-    self.continuousPlaybackLabel.text = nil;
+    self.playbackInformationLabel.text = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playbackDidContinueAutomatically:)
@@ -123,12 +123,12 @@
 
 - (void)updateContinuousPlaybackLabelWithText:(NSString *)text
 {
-    self.continuousPlaybackLabel.alpha = 1.f;
-    self.continuousPlaybackLabel.text = text;
+    self.playbackInformationLabel.alpha = 1.f;
+    self.playbackInformationLabel.text = text;
     [UIView animateWithDuration:3 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.continuousPlaybackLabel.alpha = 0.f;
+        self.playbackInformationLabel.alpha = 0.f;
     } completion:^(BOOL finished) {
-        self.continuousPlaybackLabel.text = nil;
+        self.playbackInformationLabel.text = nil;
     }];
 }
 
@@ -244,20 +244,50 @@
     }
 }
 
-- (IBAction)togglableControls:(UISegmentedControl *)segmentedControl
+- (IBAction)selectUserInterfaceBehavior:(UISegmentedControl *)segmentedControl
 {
     switch (segmentedControl.selectedSegmentIndex) {
-        case 1:
-            [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
-            break;
-            
-        case 2:
-            [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:NO];
-            break;
-            
-        default:
+        case 0: {
             [self.letterboxView setUserInterfaceHidden:self.letterboxView.userInterfaceHidden animated:YES togglable:YES];
             break;
+        }
+            
+        case 1: {
+            [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
+            break;
+        }
+            
+        case 2: {
+            [self.letterboxView setUserInterfaceHidden:YES animated:YES togglable:NO];
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
+}
+
+- (IBAction)selectDelay:(UISegmentedControl *)segmentedControl
+{
+    switch (segmentedControl.selectedSegmentIndex) {
+        case 0: {
+            self.playlist.continuousPlaybackTransitionDuration = 0.;
+            break;
+        }
+            
+        case 1: {
+            self.playlist.continuousPlaybackTransitionDuration = 5.;
+            break;
+        }
+            
+        case 2: {
+            self.playlist.continuousPlaybackTransitionDuration = 10.;
+        }
+            
+        default: {
+            break;
+        }
     }
 }
 
