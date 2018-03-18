@@ -11,10 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSTimer (SRGLetterbox)
 
 /**
- *  Compatibility method for `-scheduledTimerWithTimeInterval:repeats:block:`, a method only available starting with iOS 10.
+ *  Create a block-based timer (a feature only available since iOS 10), scheduled with common run loop modes.
  */
-// TODO: Remove when iOS 10 is the minimum required version
-+ (NSTimer *)srg_scheduledTimerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *timer))block;
++ (NSTimer *)srg_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *timer))block;
 
 @end
 

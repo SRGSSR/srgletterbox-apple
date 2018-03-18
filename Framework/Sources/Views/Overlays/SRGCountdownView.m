@@ -104,7 +104,7 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     
     if (newWindow) {
         @weakify(self)
-        self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+        self.updateTimer = [NSTimer srg_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             [self refresh];
             [self updateLayout];
