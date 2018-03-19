@@ -2802,6 +2802,43 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:10. handler:nil];
 }
 
+- (void)testSwitchToSegmentURNWhilePreparing
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:OnDemandLongVideoSegmentURN() withChaptersOnly:NO];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGMediaPlayerSegmentDidStartNotification object:self.controller.mediaPlayerController handler:nil];
+    
+    NSArray<SRGSegment *> *segments = self.controller.mediaComposition.mainChapter.segments;
+    XCTAssertTrue(segments.count >= 3);
+    
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:segments[2].URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
+}
+
 - (void)testSocialCountViewPlayOnChapter
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
