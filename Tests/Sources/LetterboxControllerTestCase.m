@@ -3135,7 +3135,7 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
-- (void)testLoadingOnSkip
+- (void)testLoadingWhileSeeking
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -3152,13 +3152,14 @@ static NSURL *MMFServiceURL(void)
     XCTAssertFalse(self.controller.loading);
     
     // Seek far enough from live conditions
-    __block BOOL seekReceived = NO;
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking) {
-            seekReceived = YES;
             XCTAssertTrue(self.controller.loading);
+            return NO;
         }
-        return seekReceived && [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            return YES;
+        }
     }];
     
     [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
