@@ -1020,8 +1020,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         SRGRequest *playRequest = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             @strongify(self)
             
-            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-            
             if (error) {
                 [self updateWithError:error];
                 return;
@@ -1408,7 +1406,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self stop];
     }
     
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
+    if (playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+    }
+    else if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
         __block SRGSubdivision *subdivision = self.mediaComposition.mainChapter;
         
         static const NSTimeInterval kDefaultTimerInterval = 10.;
