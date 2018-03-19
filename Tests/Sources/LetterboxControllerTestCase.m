@@ -32,6 +32,11 @@ static SRGMediaURN *OnDemandLongVideoSegmentURN(void)
     return [SRGMediaURN mediaURNWithString:@"urn:srf:video:5fe1618a-b710-42aa-ac8a-cb9eabf42426"];
 }
 
+static SRGMediaURN *OnDemandAudioWithChaptersURN(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:audio:9355007"];
+}
+
 static SRGMediaURN *LiveOnlyVideoURN(void)
 {
     return [SRGMediaURN mediaURNWithString:@"urn:rsi:video:livestream_La1"];
@@ -2828,6 +2833,46 @@ static NSURL *MMFServiceURL(void)
     
     XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
     BOOL switched = [self.controller switchToURN:segments[2].URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
+}
+
+- (void)testSwitchToChapterURNWhilePreparing
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:OnDemandAudioWithChaptersURN() withChaptersOnly:NO];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
+    
+    NSMutableArray<SRGChapter *> *chapters = self.controller.mediaComposition.chapters.mutableCopy;
+    [chapters removeObject:self.controller.mediaComposition.mainChapter];
+    SRGChapter *chapter = chapters.firstObject;
+    XCTAssertNotNil(chapter);
+
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:chapter.URN withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
         [completionHandlerExpectation fulfill];
     }];
