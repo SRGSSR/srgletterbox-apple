@@ -69,5 +69,5 @@ static void commonInit(SRGLiveLabel *self)
     self.textAlignment = NSTextAlignmentCenter;
     self.numberOfLines = 1;
     self.layer.masksToBounds = YES;
-    self.layer.cornerRadius = 2.f;
+    self.layer.cornerRadius = 1.f;
 }
