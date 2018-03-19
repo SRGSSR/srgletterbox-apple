@@ -3158,6 +3158,7 @@ static NSURL *MMFServiceURL(void)
             return NO;
         }
         else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            XCTAssertFalse(self.controller.loading);
             return YES;
         }
     }];
