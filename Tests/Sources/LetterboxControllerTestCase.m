@@ -2918,11 +2918,8 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
     
-    // TODO: Is it normal to not have a Completion Handler call if the switch occrued without a new playback?
-//    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
     BOOL switched = [self.controller switchToURN:MMFOnDemandLongVideoGeoblockSegmentURN() withCompletionHandler:^(BOOL finished) {
-//        XCTAssertTrue(finished);
-//        [completionHandlerExpectation fulfill];
+        XCTFail(@"Completion handler must not be called");
     }];
     XCTAssertTrue(switched);
     
