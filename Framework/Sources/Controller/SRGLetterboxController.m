@@ -1186,6 +1186,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
         [self updateWithError:blockingReasonError];
         
+        if (blockingReasonError) {
+            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+        }
+        
         [self stop];
         self.socialCountViewURN = nil;
         self.socialCountViewTimer = nil;
