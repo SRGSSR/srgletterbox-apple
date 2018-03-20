@@ -76,6 +76,8 @@
 {
     [super awakeFromNib];
     
+    self.backgroundColor = UIColor.clearColor;
+    
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
     self.skipToLiveButton.alpha = 0.f;
