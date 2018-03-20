@@ -82,6 +82,16 @@ static SRGMediaURN *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
 }
 
+static SRGMediaURN *MMFOnDemandLongVideoURN()
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:8992584"];
+}
+
+static SRGMediaURN *MMFOnDemandLongVideoGeoblockSegmentURN()
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:8992624"];
+}
+
 static NSURL *MMFServiceURL(void)
 {
     return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
@@ -2879,6 +2889,49 @@ static NSURL *MMFServiceURL(void)
     XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
+}
+
+- (void)testSwitchToBlockedChapterURNWhilePreparing
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:MMFOnDemandLongVideoURN() withChaptersOnly:YES];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MMFOnDemandLongVideoGeoblockSegmentURN()];
+    }];
+    
+    XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
+    
+    // TODO: Is it normal to not have a Completion Handler call if the switch occrued without a new playback?
+//    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:MMFOnDemandLongVideoGeoblockSegmentURN() withCompletionHandler:^(BOOL finished) {
+//        XCTAssertTrue(finished);
+//        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonGeoblocking);
+    XCTAssertNotNil(self.controller.error);
+    XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     XCTAssertFalse(self.controller.loading);
