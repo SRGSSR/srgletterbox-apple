@@ -124,11 +124,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
         self.updateTimer = [NSTimer srg_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             [self refresh];
-            [self updateLayout];
         }];
         
         [self refresh];
-        [self updateLayout];
     }
     else {
         self.updateTimer = nil;
@@ -139,7 +137,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    [self updateLayout];
+    [self refresh];
 }
 
 #pragma mark Getters and setters
@@ -151,16 +149,16 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     self.initialDate = NSDate.date;
     
     [self refresh];
-    [self updateLayout];
 }
 
 #pragma mark UI
 
 - (void)refresh
 {
-    // Large digit countdown
     NSTimeInterval currentRemainingTimeInterval = self.currentRemainingTimeInterval;
     NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(currentRemainingTimeInterval);
+    
+    // Large digit countdown construction
     NSInteger day1 = dateComponents.day / 10;
     if (day1 < SRGCountdownViewDaysLimit / 10) {
         self.days1Label.text = @(day1).stringValue;
@@ -215,6 +213,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     else {
         self.remainingTimeLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
     }
+    
+    // The layout highly depends on the value to be displayed, update it at the same time
+    [self updateLayout];
 }
 
 - (void)updateLayout

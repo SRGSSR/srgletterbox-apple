@@ -452,7 +452,7 @@
                     
                     NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
                     startDateComponents.day = 100;
-                    startDateComponents.second = 3;
+                    startDateComponents.second = 7;
                     NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
                     
                     NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
@@ -472,7 +472,7 @@
                     
                     NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
                     startDateComponents.day = 1;
-                    startDateComponents.second = 3;
+                    startDateComponents.second = 7;
                     NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
                     
                     NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
@@ -492,7 +492,7 @@
                     
                     NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
                     startDateComponents.hour = 1;
-                    startDateComponents.second = 3;
+                    startDateComponents.second = 7;
                     NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
                     
                     NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
