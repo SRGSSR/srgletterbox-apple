@@ -151,6 +151,10 @@ If you want playback to automatically continue with the next media in a playlist
 
 If needed, the controller `ContinousPlayback` category provides complete information about continuous playback transition (start and end date, and media which will be played next).
 
+## Image copyrights
+
+Media sometimes provide image copyright information via the `imageCopyright` property. If your application displays a Letterbox view, you should ensure that this information is somehow displayed in its vicinity.
+
 ## Statistics
 
 Letterbox automatically sends media consumption measurements, provided an SRG Analytics tracker has been started. Refer to the [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) for information about how a tracker is started.
