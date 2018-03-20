@@ -142,7 +142,7 @@ static void commonInit(SRGLetterboxView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self resetInactivityTrigger];
+        [self restartInactivityTracker];
         [self startPeriodicUpdates];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -166,7 +166,7 @@ static void commonInit(SRGLetterboxView *self);
         [self showAirplayNotificationMessageIfNeededAnimated:NO];
     }
     else {
-        [self stopInactivityTrigger];
+        [self stopInactivityTracker];
         [self stopPeriodicUpdates];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -193,7 +193,7 @@ static void commonInit(SRGLetterboxView *self);
         self.accessibilityView.alpha = 0.f;
     }
     
-    [self resetInactivityTrigger];
+    [self restartInactivityTracker];
 }
 
 - (void)willDetachFromController
@@ -521,10 +521,10 @@ static void commonInit(SRGLetterboxView *self);
     self.userInterfaceTogglable = togglable;
     
     if (! hidden && togglable) {
-        [self resetInactivityTrigger];
+        [self restartInactivityTracker];
     }
     else {
-        [self stopInactivityTrigger];
+        [self stopInactivityTracker];
     }
     
     [self setNeedsLayoutAnimated:animated];
@@ -696,11 +696,12 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Timer management
 
-- (void)resetInactivityTrigger
+// For optimal results, this method must be called when any form of user interaction is detected.
+- (void)restartInactivityTracker
 {
     if (! UIAccessibilityIsVoiceOverRunning()) {
         @weakify(self)
-        self.inactivityTimer = [NSTimer srg_timerWithTimeInterval:4. repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.inactivityTimer = [NSTimer srg_timerWithTimeInterval:4. repeats:YES /* important */ block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -716,7 +717,7 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-- (void)stopInactivityTrigger
+- (void)stopInactivityTracker
 {
     self.inactivityTimer = nil;
 }
@@ -795,7 +796,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)resetInactivity:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self resetInactivityTrigger];
+    [self restartInactivityTracker];
 }
 
 - (IBAction)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
