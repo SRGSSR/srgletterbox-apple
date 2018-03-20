@@ -34,6 +34,9 @@
 /* Play button label */
 "Play" = "Laschar ir";
 
+/* Hint for the continuous playback play button. */
+"Plays the content immediately." = "Lascha ir immediat cuntegn.";
+
 /* Segment or chapter cell hint */
 "Plays the content." = "Mussar cuntegn.";
 
@@ -42,3 +45,6 @@
 
 /* The main area on the letterbox view, where the video or its thumbnail is displayed */
 "Video" = "Video";
+
+/* Continuous playback Play button label (time parameter) */
+"Will play in %@" = "Va en%@";

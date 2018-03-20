@@ -34,6 +34,9 @@
 /* Play button label */
 "Play" = "Abspielen";
 
+/* Hint for the continuous playback play button. */
+"Plays the content immediately." = "Sofort abspielen.";
+
 /* Segment or chapter cell hint */
 "Plays the content." = "Inhalt abspielen";
 
@@ -42,3 +45,6 @@
 
 /* The main area on the letterbox view, where the video or its thumbnail is displayed */
 "Video" = "Video";
+
+/* Continuous playback Play button label (time parameter) */
+"Will play in %@" = "Wird gestartet in %@";
