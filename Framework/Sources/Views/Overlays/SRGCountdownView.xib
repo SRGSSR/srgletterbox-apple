@@ -27,6 +27,8 @@
                 <outlet property="minutes1Label" destination="OhW-3B-N0F" id="EYb-oh-NMC"/>
                 <outlet property="minutesColonLabel" destination="nAF-2g-IvX" id="UR7-ah-5yL"/>
                 <outlet property="minutesTitleLabel" destination="FAb-Ov-9r3" id="Zt8-XL-4KE"/>
+                <outlet property="remainingTimeLabel" destination="pqR-Nq-CTh" id="lQ3-xQ-DbN"/>
+                <outlet property="remainingTimeStackView" destination="NK9-AD-19i" id="Xt4-kR-Mvf"/>
                 <outlet property="seconds0Label" destination="IDl-Qo-Wpg" id="IK7-Qc-jly"/>
                 <outlet property="seconds1Label" destination="L0A-Px-igp" id="o8d-DI-rUw"/>
                 <outlet property="secondsTitleLabel" destination="FEU-4E-XMw" id="j66-Md-uzn"/>
@@ -348,10 +350,18 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99:99:99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pqR-Nq-CTh" userLabel="Remaining Time Label" customClass="SRGPaddedLabel">
+                    <rect key="frame" x="271.5" y="128" width="53.5" height="14.5"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="top" secondItem="JLS-Yu-wna" secondAttribute="bottom" id="7M1-8S-OtX"/>
+                <constraint firstItem="pqR-Nq-CTh" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="A1S-e8-YKq"/>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="trailing" secondItem="Fmy-kA-oqE" secondAttribute="leading" id="OPO-c6-SyU"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="OaL-Hm-cWS"/>
                 <constraint firstItem="NK9-AD-19i" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="U9a-05-urL"/>
@@ -360,6 +370,7 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="NK9-AD-19i" secondAttribute="bottom" id="Zhr-Y2-MI8"/>
                 <constraint firstItem="WjU-kI-8d4" firstAttribute="top" secondItem="osw-XW-h57" secondAttribute="top" constant="10" id="ekc-im-KNc"/>
                 <constraint firstItem="6Gq-SM-dmY" firstAttribute="bottom" secondItem="osw-XW-h57" secondAttribute="top" id="mzC-ha-VGG"/>
+                <constraint firstItem="pqR-Nq-CTh" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="tNH-A0-jps"/>
                 <constraint firstItem="WjU-kI-8d4" firstAttribute="centerX" secondItem="NK9-AD-19i" secondAttribute="centerX" id="wbA-PE-Ufo"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

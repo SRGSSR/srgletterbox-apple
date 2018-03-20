@@ -15,9 +15,11 @@
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
 
-NSInteger SRGCountdownViewDaysLimit = 100;
+static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @interface SRGCountdownView ()
+
+@property (nonatomic, weak) IBOutlet UIStackView *remainingTimeStackView;
 
 @property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
 
@@ -49,6 +51,7 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *heightConstraints;
 
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
+@property (nonatomic, weak) IBOutlet SRGPaddedLabel *remainingTimeLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
@@ -96,6 +99,12 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     self.messageLabel.horizontalMargin = 5.f;
     self.messageLabel.verticalMargin = 2.f;
     self.messageLabel.layer.masksToBounds = YES;
+    
+    self.remainingTimeLabel.horizontalMargin = 5.f;
+    self.remainingTimeLabel.verticalMargin = 2.f;
+    self.remainingTimeLabel.layer.masksToBounds = YES;
+    
+    self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -141,8 +150,11 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (void)refresh
 {
-    NSTimeInterval elapsedTime = [NSDate.date timeIntervalSinceDate:self.initialDate];
-    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(fmax(self.remainingTimeInterval - elapsedTime, 0.));
+    NSTimeInterval elapsedTimeInterval = [NSDate.date timeIntervalSinceDate:self.initialDate];
+    NSTimeInterval remainingTimeInterval = fmax(self.remainingTimeInterval - elapsedTimeInterval, 0.);
+    
+    // Large digit countdown
+    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(remainingTimeInterval);
     NSInteger day1 = dateComponents.day / 10;
     if (day1 < SRGCountdownViewDaysLimit / 10) {
         self.days1Label.text = @(day1).stringValue;
@@ -174,11 +186,28 @@ NSInteger SRGCountdownViewDaysLimit = 100;
         self.seconds0Label.text = @"9";
     }
     
-    if (self.remainingTimeInterval == 0) {
-        self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+    // Small coutndown label construction
+    if (dateComponents.day >= SRGCountdownViewDaysLimit) {
+        static NSDateComponentsFormatter *s_dateComponentsFormatter;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
+            s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        });
+        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:remainingTimeInterval]];
+    }
+    else if (dateComponents.day > 0) {
+        self.remainingTimeLabel.text = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
+    }
+    else if (remainingTimeInterval >= 60. * 60.) {
+        self.remainingTimeLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
+    }
+    else if (remainingTimeInterval >= 0.) {
+        self.remainingTimeLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
     }
     else {
-        self.messageLabel.text = nil;
+        self.remainingTimeLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
     }
 }
 
@@ -186,6 +215,7 @@ NSInteger SRGCountdownViewDaysLimit = 100;
 {
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
     
+    // Appearance
     [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = isLarge ? 88.f : 70.f;
     }];
@@ -239,27 +269,44 @@ NSInteger SRGCountdownViewDaysLimit = 100;
     
     self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
     
-    // Hide days / hours when not needed
+    // Visibility
     NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
-    if (dateComponents.day == 0) {
-        self.daysStackView.hidden = YES;
-        self.hoursColonLabel.hidden = YES;
+    if (dateComponents.day >= SRGCountdownViewDaysLimit) {
+        self.remainingTimeLabel.hidden = NO;
+        self.remainingTimeStackView.hidden = YES;
+        self.messageLabel.hidden = YES;
+    }
+    else if (CGRectGetWidth(self.frame) < 300.f || CGRectGetHeight(self.frame) < 145.f) {
+        self.remainingTimeLabel.hidden = NO;
+        self.remainingTimeStackView.hidden = YES;
+        self.messageLabel.hidden = YES;
+    }
+    else {
+        self.remainingTimeLabel.hidden = YES;
+        self.remainingTimeStackView.hidden = NO;
         
-        if (dateComponents.hour == 0) {
-            self.hoursStackView.hidden = YES;
-            self.minutesColonLabel.hidden = YES;
+        self.messageLabel.hidden = (self.remainingTimeInterval != 0);
+        
+        if (dateComponents.day == 0) {
+            self.daysStackView.hidden = YES;
+            self.hoursColonLabel.hidden = YES;
+            
+            if (dateComponents.hour == 0) {
+                self.hoursStackView.hidden = YES;
+                self.minutesColonLabel.hidden = YES;
+            }
+            else {
+                self.hoursStackView.hidden = NO;
+                self.minutesColonLabel.hidden = NO;
+            }
         }
         else {
+            self.daysStackView.hidden = NO;
+            self.hoursColonLabel.hidden = NO;
+            
             self.hoursStackView.hidden = NO;
             self.minutesColonLabel.hidden = NO;
         }
-    }
-    else {
-        self.daysStackView.hidden = NO;
-        self.hoursColonLabel.hidden = NO;
-        
-        self.hoursStackView.hidden = NO;
-        self.minutesColonLabel.hidden = NO;
     }
 }
 
