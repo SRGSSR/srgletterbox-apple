@@ -19,6 +19,8 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @interface SRGCountdownView ()
 
+@property (nonatomic, readonly) NSTimeInterval currentRemainingTimeInterval;
+
 @property (nonatomic, weak) IBOutlet UIStackView *remainingTimeStackView;
 
 @property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
@@ -68,6 +70,12 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 {
     [_updateTimer invalidate];
     _updateTimer = updateTimer;
+}
+
+- (NSTimeInterval)currentRemainingTimeInterval
+{
+    NSTimeInterval elapsedTimeInterval = [NSDate.date timeIntervalSinceDate:self.initialDate];
+    return fmax(self.remainingTimeInterval - elapsedTimeInterval, 0.);
 }
 
 #pragma mark Overrides
@@ -150,11 +158,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (void)refresh
 {
-    NSTimeInterval elapsedTimeInterval = [NSDate.date timeIntervalSinceDate:self.initialDate];
-    NSTimeInterval remainingTimeInterval = fmax(self.remainingTimeInterval - elapsedTimeInterval, 0.);
-    
     // Large digit countdown
-    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(remainingTimeInterval);
+    NSTimeInterval currentRemainingTimeInterval = self.currentRemainingTimeInterval;
+    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(currentRemainingTimeInterval);
     NSInteger day1 = dateComponents.day / 10;
     if (day1 < SRGCountdownViewDaysLimit / 10) {
         self.days1Label.text = @(day1).stringValue;
@@ -195,15 +201,15 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
             s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
             s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
         });
-        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:remainingTimeInterval]];
+        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:currentRemainingTimeInterval]];
     }
     else if (dateComponents.day > 0) {
         self.remainingTimeLabel.text = [[NSDateComponentsFormatter srg_longDateComponentsFormatter] stringFromDateComponents:dateComponents];
     }
-    else if (remainingTimeInterval >= 60. * 60.) {
+    else if (currentRemainingTimeInterval >= 60. * 60.) {
         self.remainingTimeLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromDateComponents:dateComponents];
     }
-    else if (remainingTimeInterval >= 0.) {
+    else if (currentRemainingTimeInterval >= 0.) {
         self.remainingTimeLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromDateComponents:dateComponents];
     }
     else {
@@ -270,7 +276,8 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
     
     // Visibility
-    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(self.remainingTimeInterval);
+    NSTimeInterval currentRemainingTimeInterval = self.currentRemainingTimeInterval;
+    NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(currentRemainingTimeInterval);
     if (dateComponents.day >= SRGCountdownViewDaysLimit) {
         self.remainingTimeLabel.hidden = NO;
         self.remainingTimeStackView.hidden = YES;
@@ -285,7 +292,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
         self.remainingTimeLabel.hidden = YES;
         self.remainingTimeStackView.hidden = NO;
         
-        self.messageLabel.hidden = (self.remainingTimeInterval != 0);
+        self.messageLabel.hidden = (currentRemainingTimeInterval != 0);
         
         if (dateComponents.day == 0) {
             self.daysStackView.hidden = YES;
@@ -319,8 +326,8 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (NSString *)accessibilityLabel
 {
-    if (self.remainingTimeInterval > 0) {
-        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:self.remainingTimeInterval]];
+    if (self.currentRemainingTimeInterval > 0) {
+        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:self.currentRemainingTimeInterval]];
     }
     else {
         return SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
