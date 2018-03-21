@@ -3227,7 +3227,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertFalse(self.controller.loading);
 }
 
-- (void)testLoadingValueObserving
+- (void)testLoadingKeyValueObserving
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@YES];
     

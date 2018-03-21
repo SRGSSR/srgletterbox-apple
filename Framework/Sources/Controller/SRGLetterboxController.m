@@ -116,7 +116,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic) SRGRequestQueue *requestQueue;
+
+@property (nonatomic) SRGRequestQueue *mainQueue;
+@property (nonatomic) SRGRequestQueue *updateQueue;
 
 // Use timers (not time observers) so that updates are performed also when the controller is idle
 @property (nonatomic) NSTimer *updateTimer;
@@ -752,7 +754,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             
             updateCompletionBlock(media, SRGBlockingReasonErrorForMedia(media, [NSDate date]), NO, previousMedia, SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate));
         }];
-        [self.requestQueue addRequest:mediaRequest resume:YES];
+        [self.updateQueue addRequest:mediaRequest resume:YES];
         return;
     }
     
@@ -786,7 +788,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
                     NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
                     if (! [previousResources isEqualToSet:resources]) {
-                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, (self.error) ? error : nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, self.error ? error : nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                         return;
                     }
                 }
@@ -800,13 +802,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.mediaComposition.fullLengthMedia.URN
                                                                                           chaptersOnly:self.chaptersOnly
                                                                                        completionBlock:mediaCompositionCompletionBlock];
-            [self.requestQueue addRequest:fullLengthMediaCompositionRequest resume:YES];
+            [self.updateQueue addRequest:fullLengthMediaCompositionRequest resume:YES];
         }
         else {
             mediaCompositionCompletionBlock(mediaComposition, error);
         }
     }];
-    [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+    [self.updateQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
 - (void)updateChannel
@@ -822,16 +824,16 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     
     if (self.media.mediaType == SRGMediaTypeVideo) {
         SRGRequest *request = [self.dataProvider tvChannelWithUid:self.media.channel.uid completionBlock:completionBlock];
-        [self.requestQueue addRequest:request resume:YES];
+        [self.updateQueue addRequest:request resume:YES];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
         if (self.media.vendor == SRGVendorSRF && ! [self.media.uid isEqualToString:self.media.channel.uid]) {
             SRGRequest *request = [self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:self.media.uid completionBlock:completionBlock];
-            [self.requestQueue addRequest:request resume:YES];
+            [self.updateQueue addRequest:request resume:YES];
         }
         else {
             SRGRequest *request = [self.dataProvider radioChannelWithUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock];
-            [self.requestQueue addRequest:request resume:YES];
+            [self.updateQueue addRequest:request resume:YES];
         }
     }
 }
@@ -905,7 +907,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.chaptersOnly = chaptersOnly;
     
     @weakify(self)
-    self.requestQueue = [[SRGRequestQueue alloc] init];
+    self.mainQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
+        @strongify(self)
+        self.loading = ! finished;
+    }];
+    self.updateQueue = [[SRGRequestQueue alloc] init];
     
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
@@ -955,11 +961,11 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 
                 if (URN.mediaType == SRGMediaTypeVideo) {
                     SRGRequest *mediaRequest = [self.dataProvider videosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
-                    [self.requestQueue addRequest:mediaRequest resume:YES];
+                    [self.mainQueue addRequest:mediaRequest resume:YES];
                 }
                 else {
                     SRGRequest *mediaRequest = [self.dataProvider audiosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
-                    [self.requestQueue addRequest:mediaRequest resume:YES];
+                    [self.mainQueue addRequest:mediaRequest resume:YES];
                 }
             }
             return;
@@ -999,7 +1005,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         }];
         
         if (playRequest) {
-            [self.requestQueue addRequest:playRequest resume:YES];
+            [self.mainQueue addRequest:playRequest resume:YES];
         }
         else {
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
@@ -1008,7 +1014,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             [self updateWithError:error];
         }
     }];
-    [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+    [self.mainQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
 - (void)play
@@ -1104,7 +1110,9 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
     
     [self.mediaPlayerController reset];
-    [self.requestQueue cancel];
+    
+    [self.mainQueue cancel];
+    [self.updateQueue cancel];
 }
 
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
@@ -1163,7 +1171,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 BOOL finished = (error == nil);
                 completionHandler ? completionHandler(finished) : nil;
             }];
-            [self.requestQueue addRequest:request resume:YES];
+            [self.mainQueue addRequest:request resume:YES];
         }
     }
     // Playing another segment from the same media. Seek
@@ -1393,7 +1401,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 self.socialCountViewURN = socialCountOverview.URN;
                 self.socialCountViewTimer = nil;
             }];
-            [self.requestQueue addRequest:request resume:YES];
+            [self.updateQueue addRequest:request resume:YES];
         }];
     }
     else if (playbackState == SRGMediaPlayerPlaybackStateIdle) {
