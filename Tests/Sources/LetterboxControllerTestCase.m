@@ -3240,4 +3240,6 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+// TODO: Add test: Metadata updates after stop, not anymore after reset
+
 @end
