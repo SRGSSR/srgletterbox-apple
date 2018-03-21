@@ -92,14 +92,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
-static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAvailability, SRGMediaPlayerPlaybackState playbackState)
-{
-    BOOL isPlayerLoading = playbackState == SRGMediaPlayerPlaybackStatePreparing
-        || playbackState == SRGMediaPlayerPlaybackStateSeeking
-        || playbackState == SRGMediaPlayerPlaybackStateStalled;
-    return isPlayerLoading || dataAvailability == SRGLetterboxDataAvailabilityLoading;
-}
-
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -120,7 +112,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 // Save the URN sent to the social count view service, to not send it twice
 @property (nonatomic) SRGMediaURN *socialCountViewURN;
 
-@property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
@@ -245,13 +236,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Getters and setters
 
-- (void)setDataAvailability:(SRGLetterboxDataAvailability)dataAvailability
-{
-    _dataAvailability = dataAvailability;
-    
-    self.loading = SRGLetterboxControllerIsLoading(dataAvailability, self.playbackState);
-}
-
 - (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
 {
     if (_playbackState == playbackState) {
@@ -264,8 +248,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
-    
-    self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
                                                         object:self
@@ -874,12 +856,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     }
     // Use a friendly error message for all other reasons
     else {
-        NSInteger code = (self.dataAvailability == SRGLetterboxDataAvailabilityNone) ? SRGLetterboxErrorCodeNotFound : SRGLetterboxErrorCodeNotPlayable;
-        if ([error.domain isEqualToString:SRGDataProviderErrorDomain] && error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404) {
-            code = SRGLetterboxErrorCodeNotFound;
-        }
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
-                                         code:code
+                                         code:SRGLetterboxErrorCodeNotPlayable
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
                                                  NSUnderlyingErrorKey : error }];
     }
@@ -929,8 +907,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] init];
     
-    self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
-    
     // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
     if (self.contentURLOverridingBlock) {
         NSURL *contentURL = self.contentURLOverridingBlock(URN);
@@ -949,7 +925,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             
             // Media readily available. Done
             if (media) {
-                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
                 [self updateWithError:blockingReasonError];
                 [self notifyLivestreamEndWithMedia:media previousMedia:nil];
@@ -962,12 +937,9 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             else {
                 void (^mediasCompletionBlock)(NSArray<SRGMedia *> * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
                     if (error) {
-                        self.dataAvailability = SRGLetterboxDataAvailabilityNone;
                         [self updateWithError:error];
                         return;
                     }
-                    
-                    self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                     
                     [self updateWithURN:nil media:medias.firstObject mediaComposition:nil subdivision:nil channel:nil];
                     [self notifyLivestreamEndWithMedia:media previousMedia:nil];
@@ -998,7 +970,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         @strongify(self)
         
         if (error) {
-            self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self updateWithError:error];
             return;
         }
@@ -1011,7 +982,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
         if (blockingReasonError) {
-            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
             return;
         }
@@ -1032,8 +1002,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             [self.requestQueue addRequest:playRequest resume:YES];
         }
         else {
-            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-            
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
                                                  code:SRGDataProviderErrorCodeInvalidData
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
@@ -1124,8 +1092,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     self.lastUpdateDate = nil;
     
-    self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-    
     self.streamType = SRGStreamTypeNone;
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
@@ -1185,14 +1151,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
         [self updateWithError:blockingReasonError];
-        
-        if (blockingReasonError) {
-            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-        }
-        
         [self stop];
+        
         self.socialCountViewURN = nil;
         self.socialCountViewTimer = nil;
+        
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
@@ -1410,10 +1373,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self stop];
     }
     
-    if (playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-    }
-    else if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
         __block SRGSubdivision *subdivision = self.mediaComposition.mainChapter;
         
         static const NSTimeInterval kDefaultTimerInterval = 10.;
@@ -1498,9 +1458,6 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)playbackDidFail:(NSNotification *)notification
 {
-    if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
-        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-    }
     [self updateWithError:notification.userInfo[SRGMediaPlayerErrorKey]];
 }
 

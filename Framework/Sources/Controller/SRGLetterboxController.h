@@ -10,24 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Controller data availability.
- */
-typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
-    /**
-     *  No data is available.
-     */
-    SRGLetterboxDataAvailabilityNone,
-    /**
-     *  Data is being loaded.
-     */
-    SRGLetterboxDataAvailabilityLoading,
-    /**
-     *  Data has been loaded once.
-     */
-    SRGLetterboxDataAvailabilityLoaded
-};
-
-/**
  *  Types.
  */
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
@@ -316,17 +298,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 - (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Return the current data availability. KVO-observable.
- *
- *  @discussion The availability is reset to `SRGLetterboxDataAvailabilityNone` when calling a prepare / play methods
- *              to play new content.
- */
-@property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
-
-/**
- *  Return `YES` iff the controller is loading data (either retrieving metadata or buffering).
- *
- *  KVO-observable.
+ *  Return `YES` iff the controller is loading data (either retrieving metadata or buffering). KVO-observable.
  */
 @property (nonatomic, readonly, getter=isLoading) BOOL loading;
 
