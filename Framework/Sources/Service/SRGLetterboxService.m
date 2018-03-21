@@ -116,7 +116,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [_controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.pictureInPictureController.pictureInPictureActive)];
+        AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
+        [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:SRGLetterboxMetadataDidChangeNotification
@@ -143,24 +144,25 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         
-        @weakify(self)
-        @weakify(mediaPlayerController)
-        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
-            @strongify(self)
-            @strongify(mediaPlayerController)
+        if (pictureInPictureController) {
+            @weakify(self)
+            @weakify(pictureInPictureController)
+            [pictureInPictureController addObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
+                @strongify(self)
+                @strongify(pictureInPictureController)
+                
+                // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
+                // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
+                // those methods manually
+                if (mediaPlayerController.player.externalPlaybackActive) {
+                    [self pictureInPictureController:pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
+                    [self pictureInPictureControllerDidStopPictureInPicture:pictureInPictureController];
+                }
+            }];
             
-            // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
-            // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
-            // those methods manually
-            if (mediaPlayerController.player.externalPlaybackActive) {
-                [self pictureInPictureController:mediaPlayerController.pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-                [self pictureInPictureControllerDidStopPictureInPicture:mediaPlayerController.pictureInPictureController];
-            }
-        }];
-        
-        if (mediaPlayerController.pictureInPictureController) {
-            mediaPlayerController.pictureInPictureController.delegate = self;
+            pictureInPictureController.delegate = self;
         }
         else {
             @weakify(self)

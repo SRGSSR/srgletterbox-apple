@@ -54,14 +54,14 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     }
     
     _controller = controller;
-    [self refreshButton];
+    [self refresh];
     
     if (controller) {
         @weakify(self)
         self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             
-            [self refreshButton];
+            [self refresh];
         }];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playbackStateDidChange:)
@@ -73,7 +73,7 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
 - (void)setImageSet:(SRGImageSet)imageSet
 {
     _imageSet = imageSet;
-    [self refreshButton];
+    [self refresh];
 }
 
 #pragma mark Overrides
@@ -83,13 +83,13 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self refreshButton];
+        [self refresh];
     }
 }
 
 #pragma mark UI
 
-- (void)refreshButton
+- (void)refresh
 {
     // Keep the most recent state when seeking
     if (self.controller.playbackState != SRGMediaPlayerPlaybackStateSeeking) {
@@ -118,11 +118,18 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     [self.controller togglePlayPause];
 }
 
+#pragma mark Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+    return (self.alpha != 0);
+}
+
 #pragma mark Notifications
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self refreshButton];
+    [self refresh];
 }
 
 @end

@@ -7,40 +7,22 @@
 #import "SRGLetterboxTimelineView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGLetterboxView+Private.h"
 #import "SRGLetterboxSubdivisionCell.h"
-
-#import <libextobjc/libextobjc.h>
-#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
-#import <Masonry/Masonry.h>
-#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
-
-static void commonInit(SRGLetterboxTimelineView *self);
+#import "SRGMediaComposition+SRGLetterbox.h"
 
 @interface SRGLetterboxTimelineView ()
+
+@property (nonatomic) SRGMediaURN *chapterURN;
+@property (nonatomic) NSArray<SRGSubdivision *> *subdivisions;
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 
 @end
 
 @implementation SRGLetterboxTimelineView
-
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
-    }
-    return self;
-}
 
 #pragma mark Getters and setters
 
@@ -83,6 +65,9 @@ static void commonInit(SRGLetterboxTimelineView *self);
 {
     [super awakeFromNib];
     
+    self.selectedIndex = NSNotFound;
+    self.backgroundColor = [UIColor clearColor];
+    
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     
@@ -108,21 +93,23 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow
+- (void)contentSizeCategoryDidChange
 {
-    [super willMoveToWindow:newWindow];
+    [super contentSizeCategoryDidChange];
     
-    if (newWindow) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(contentSizeCategoryDidChange:)
-                                                     name:UIContentSizeCategoryDidChangeNotification
-                                                   object:nil];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIContentSizeCategoryDidChangeNotification
-                                                      object:nil];
-    }
+    [self.collectionView reloadData];
+}
+
+- (void)metadataDidChange
+{
+    [super metadataDidChange];
+    
+    SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
+    SRGSubdivision *subdivision = (SRGSegment *)self.controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    
+    self.chapterURN = mediaComposition.mainChapter.URN;
+    self.subdivisions = mediaComposition.srgletterbox_subdivisions;
+    self.selectedIndex = subdivision ? [self.subdivisions indexOfObject:subdivision] : NSNotFound;
 }
 
 #pragma mark Cell appearance
@@ -220,6 +207,20 @@ static void commonInit(SRGLetterboxTimelineView *self);
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SRGSubdivision *subdivision = self.subdivisions[indexPath.row];
+    
+    if ([self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
+        if ([subdivision isKindOfClass:[SRGSegment class]]) {
+            SRGSegment *segment = (SRGSegment *)subdivision;
+            self.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+        }
+        else {
+            self.chapterURN = subdivision.URN;
+            self.time = kCMTimeZero;
+        }
+        self.selectedIndex = [self.subdivisions indexOfObject:subdivision];
+        [self scrollToSelectedIndexAnimated:YES];
+    }
+    
     [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];
 }
 
@@ -230,25 +231,4 @@ static void commonInit(SRGLetterboxTimelineView *self);
     [self updateAppearanceForCell:cell];
 }
 
-#pragma mark Notifications
-
-- (void)contentSizeCategoryDidChange:(NSNotification *)notification
-{
-    [self.collectionView reloadData];
-}
-
 @end
-
-static void commonInit(SRGLetterboxTimelineView *self)
-{
-    // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-    // an SRGLetterboxTimelineView to avoid infinite recursion
-    UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil] firstObject];
-    [self addSubview:view];
-    [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-    
-    self.selectedIndex = NSNotFound;
-    self.backgroundColor = [UIColor clearColor];
-}

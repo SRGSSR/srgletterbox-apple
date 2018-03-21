@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly, nullable) SRGMedia *srgletterbox_liveMedia;
 
+@property (nonatomic, readonly, nullable) NSArray<SRGSubdivision *> *srgletterbox_subdivisions;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxBaseView.h"
 #import "SRGLetterboxView.h"
 
 #import <UIKit/UIKit.h>
@@ -11,11 +12,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  View associated with accessibility (mostly for display).
+ *  Accessibility player placeholder view.
  */
-@interface SRGAccessibilityView : UIView
-
-@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxView *letterboxView;
+@interface SRGAccessibilityView : SRGLetterboxBaseView
 
 @end
 

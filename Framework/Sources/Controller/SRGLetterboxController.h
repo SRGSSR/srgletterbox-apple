@@ -324,6 +324,13 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
 
 /**
+ *  Return `YES` iff the controller is loading data (either retrieving metadata or buffering).
+ *
+ *  KVO-observable.
+ */
+@property (nonatomic, readonly, getter=isLoading) BOOL loading;
+
+/**
  *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;

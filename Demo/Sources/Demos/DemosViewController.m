@@ -448,7 +448,19 @@
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:kMMFCachedScheduledLivestreamURNString
+                    NSDate *nowDate = NSDate.date;
+                    
+                    NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+                    startDateComponents.day = 100;
+                    startDateComponents.second = 7;
+                    NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+                    endDateComponents.day = 101;
+                    NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
+                    [self openModalPlayerWithURNString:URNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -456,7 +468,19 @@
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
+                    NSDate *nowDate = NSDate.date;
+                    
+                    NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+                    startDateComponents.day = 1;
+                    startDateComponents.second = 7;
+                    NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+                    endDateComponents.day = 2;
+                    NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
+                    [self openModalPlayerWithURNString:URNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -464,7 +488,19 @@
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
+                    NSDate *nowDate = NSDate.date;
+                    
+                    NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+                    startDateComponents.hour = 1;
+                    startDateComponents.second = 7;
+                    NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+                    endDateComponents.hour = 2;
+                    NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
+                    [self openModalPlayerWithURNString:URNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -472,7 +508,7 @@
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
+                    [self openModalPlayerWithURNString:kMMFCachedScheduledLivestreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -480,7 +516,7 @@
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
+                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -488,7 +524,7 @@
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
+                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -496,7 +532,7 @@
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -504,7 +540,7 @@
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -512,6 +548,30 @@
                 }
                     
                 case 10: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 11: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 12: {
+                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 13: {
                     [self openModalPlayerWithURNString:kMMFRTSMultipleAudiosURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()

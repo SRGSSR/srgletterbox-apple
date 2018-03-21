@@ -4,11 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxControllerView.h"
+#import "SRGLetterboxSubdivisionCell.h"
+
 #import <CoreMedia/CoreMedia.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
-
-#import "SRGLetterboxSubdivisionCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Timeline displaying subdivisions (segments and chapters) associated with a media.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxTimelineView : UIView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSubdivisionCellDelegate>
+@interface SRGLetterboxTimelineView : SRGLetterboxControllerView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSubdivisionCellDelegate>
 
 /**
  *  The timeline delegate.
@@ -50,14 +51,9 @@ IB_DESIGNABLE
 @property (nonatomic, weak, nullable) id<SRGLetterboxTimelineViewDelegate> delegate;
 
 /**
- *  The chapter URN currently played.
- */
-@property (nonatomic, nullable) SRGMediaURN *chapterURN;
-
-/**
  *  The subdivisions (segments or chapters) displayed by the timeline.
  */
-@property (nonatomic, nullable) NSArray<SRGSubdivision *> *subdivisions;
+@property (nonatomic, readonly, nullable) NSArray<SRGSubdivision *> *subdivisions;
 
 /**
  *  The time to display the timeline progress for.

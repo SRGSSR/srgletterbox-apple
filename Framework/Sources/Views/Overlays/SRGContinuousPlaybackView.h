@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
+#import "SRGLetterboxControllerView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,15 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- *  View displayed during a continuous playback transition.
+ *  View displayed during a continuous playback transition between two medias.
  */
 IB_DESIGNABLE
-@interface SRGContinuousPlaybackView : UIView
-
-/**
- *  The controller which the view is associated with.
- */
-@property (nonatomic, weak, nullable) SRGLetterboxController *controller;
+@interface SRGContinuousPlaybackView : SRGLetterboxControllerView
 
 /**
  *  View delegate.

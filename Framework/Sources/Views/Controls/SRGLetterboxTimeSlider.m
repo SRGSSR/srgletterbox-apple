@@ -56,7 +56,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (BOOL)isAccessibilityElement
 {
-    return (self.alpha != 0) ? [super isAccessibilityElement] : NO;
+    return (self.alpha != 0);
 }
 
 #pragma mark Layout
@@ -70,18 +70,27 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     static const CGFloat kVerticalMargin = 3.f;
     static const CGFloat kBubbleDistance = 6.f;
     
-    CGSize intrinsicContentSize = self.valueLabel.intrinsicContentSize;
-    CGFloat width = intrinsicContentSize.width + 2 * kHorizontalMargin;
-    CGFloat height = intrinsicContentSize.height + 2 * kVerticalMargin;
-    self.valueLabel.frame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
-                                       CGRectGetMinY(thumbRect) - height - kBubbleDistance,
-                                       fminf(width, CGRectGetWidth(self.bounds)),
-                                       height);
-    
-    self.tipLayer.frame = CGRectMake(CGRectGetMidX(thumbRect) - CGRectGetWidth(self.tipLayer.frame) / 2.f,
-                                     CGRectGetMaxY(self.valueLabel.frame),
-                                     CGRectGetWidth(self.tipLayer.frame),
-                                     CGRectGetHeight(self.tipLayer.frame));
+    if (self.valueLabel.text.length != 0) {
+        self.valueLabel.hidden = NO;
+        self.tipLayer.hidden = NO;
+        
+        CGSize intrinsicContentSize = self.valueLabel.intrinsicContentSize;
+        CGFloat width = intrinsicContentSize.width + 2 * kHorizontalMargin;
+        CGFloat height = intrinsicContentSize.height + 2 * kVerticalMargin;
+        self.valueLabel.frame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
+                                           CGRectGetMinY(thumbRect) - height - kBubbleDistance,
+                                           fminf(width, CGRectGetWidth(self.bounds)),
+                                           height);
+        
+        self.tipLayer.frame = CGRectMake(CGRectGetMidX(thumbRect) - CGRectGetWidth(self.tipLayer.frame) / 2.f,
+                                         CGRectGetMaxY(self.valueLabel.frame),
+                                         CGRectGetWidth(self.tipLayer.frame),
+                                         CGRectGetHeight(self.tipLayer.frame));
+    }
+    else {
+        self.valueLabel.hidden = YES;
+        self.tipLayer.hidden = YES;
+    }
 }
 
 @end
@@ -89,11 +98,11 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 static void commonInit(SRGLetterboxTimeSlider *self)
 {
     UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    valueLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     valueLabel.backgroundColor = [UIColor whiteColor];
     valueLabel.textAlignment = NSTextAlignmentCenter;
     valueLabel.layer.masksToBounds = YES;
-    valueLabel.layer.cornerRadius = 2.f;
+    valueLabel.layer.cornerRadius = 1.f;
+    valueLabel.isAccessibilityElement = NO;
     [self addSubview:valueLabel];
     self.valueLabel = valueLabel;
     

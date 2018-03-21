@@ -92,6 +92,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     }
 }
 
+static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAvailability, SRGMediaPlayerPlaybackState playbackState)
+{
+    BOOL isPlayerLoading = playbackState == SRGMediaPlayerPlaybackStatePreparing
+        || playbackState == SRGMediaPlayerPlaybackStateSeeking
+        || playbackState == SRGMediaPlayerPlaybackStateStalled;
+    return isPlayerLoading || dataAvailability == SRGLetterboxDataAvailabilityLoading;
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -113,6 +121,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 @property (nonatomic) SRGMediaURN *socialCountViewURN;
 
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
+@property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -236,6 +245,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 #pragma mark Getters and setters
 
+- (void)setDataAvailability:(SRGLetterboxDataAvailability)dataAvailability
+{
+    _dataAvailability = dataAvailability;
+    
+    self.loading = SRGLetterboxControllerIsLoading(dataAvailability, self.playbackState);
+}
+
 - (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
 {
     if (_playbackState == playbackState) {
@@ -248,6 +264,8 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
+    
+    self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
                                                         object:self
@@ -325,7 +343,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _updateInterval = updateInterval;
     
     @weakify(self)
-    self.updateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.updateTimer = [NSTimer srg_timerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
         [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
@@ -350,7 +368,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     _channelUpdateInterval = channelUpdateInterval;
     
     @weakify(self)
-    self.channelUpdateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.channelUpdateTimer = [NSTimer srg_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
        @strongify(self)
         
         [self updateChannel];
@@ -633,7 +651,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     NSTimeInterval startTimeInterval = [media.startDate timeIntervalSinceNow];
     if (startTimeInterval > 0.) {
         @weakify(self)
-        self.startDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.startDateTimer = [NSTimer srg_timerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
                 if (error) {
@@ -653,7 +671,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     NSTimeInterval endTimeInterval = [media.endDate timeIntervalSinceNow];
     if (endTimeInterval > 0.) {
         @weakify(self)
-        self.endDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.endDateTimer = [NSTimer srg_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, [NSDate date])];
@@ -672,7 +690,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         NSTimeInterval endTimeInterval = [mediaComposition.srgletterbox_liveMedia.endDate timeIntervalSinceNow];
         if (endTimeInterval > 0.) {
             @weakify(self)
-            self.liveStreamEndDateTimer = [NSTimer srg_scheduledTimerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+            self.liveStreamEndDateTimer = [NSTimer srg_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
                 @strongify(self)
                 
                 [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
@@ -1002,8 +1020,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         SRGRequest *playRequest = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
             @strongify(self)
             
-            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-            
             if (error) {
                 [self updateWithError:error];
                 return;
@@ -1104,9 +1120,6 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         self.dataProvider = nil;
     }
     
-    [self.mediaPlayerController reset];
-    [self.requestQueue cancel];
-    
     self.error = nil;
     
     self.lastUpdateDate = nil;
@@ -1122,8 +1135,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     
     [self resetContinuousPlayback];
     
-    // Update metadata first so that it is current when the player status is changed below
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    
+    [self.mediaPlayerController reset];
+    [self.requestQueue cancel];
 }
 
 - (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
@@ -1170,6 +1185,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
         [self updateWithError:blockingReasonError];
+        
+        if (blockingReasonError) {
+            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+        }
         
         [self stop];
         self.socialCountViewURN = nil;
@@ -1391,7 +1410,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         [self stop];
     }
     
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
+    if (playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+    }
+    else if (playbackState == SRGMediaPlayerPlaybackStatePlaying && self.mediaComposition && ! [self.socialCountViewURN isEqual:self.mediaComposition.mainChapter.URN] && ! self.socialCountViewTimer) {
         __block SRGSubdivision *subdivision = self.mediaComposition.mainChapter;
         
         static const NSTimeInterval kDefaultTimerInterval = 10.;
@@ -1400,7 +1422,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             timerInterval = subdivision.duration * .8;
         }
         @weakify(self)
-        self.socialCountViewTimer = [NSTimer srg_scheduledTimerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.socialCountViewTimer = [NSTimer srg_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
@@ -1435,7 +1457,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                 self.continuousPlaybackUpcomingMedia = nextMedia;
                 
                 @weakify(self)
-                self.continuousPlaybackTransitionTimer = [NSTimer srg_scheduledTimerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
+                self.continuousPlaybackTransitionTimer = [NSTimer srg_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
                     [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
@@ -1450,10 +1472,14 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             else if (nextMedia) {
                 [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                                    object:self
-                                                                  userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                              SRGLetterboxMediaKey : nextMedia }];
+                // Send notification on next run loop, so that other observers of the playback end notification all receive
+                // the notification before the continuous playback notification is emitted.
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                                        object:self
+                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                                  SRGLetterboxMediaKey : nextMedia }];
+                });
             }
         }
     }

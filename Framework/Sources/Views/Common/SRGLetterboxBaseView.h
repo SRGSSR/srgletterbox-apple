@@ -9,9 +9,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Full screen button.
+ *  Abstract base class for Letterbox views.
  */
-@interface SRGFullScreenButton : UIButton
+@interface SRGLetterboxBaseView : UIView
 
 @end
 

@@ -6,6 +6,15 @@
 
 #import "SRGRemainingTimeButton.h"
 
+#import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
+
+@interface SRGRemainingTimeButton ()
+
+@property (nonatomic) NSDate *targetDate;
+
+@end
+
 @implementation SRGRemainingTimeButton
 
 - (void)setProgress:(float)progress withDuration:(NSTimeInterval)duration
@@ -13,6 +22,8 @@
     // Sanitize values
     progress = fmaxf(fminf(progress, 1.f), 0.f);
     duration = fmax(duration, 0.);
+    
+    self.targetDate = [NSDate.date dateByAddingTimeInterval:duration];
     
     CGFloat side = fmin(CGRectGetWidth(self.frame), CGRectGetWidth(self.frame));
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
@@ -41,6 +52,29 @@
     progressAnimation.duration = (1.f - progress) * duration;
     progressAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     [progressCircleLayer addAnimation:progressAnimation forKey:@"drawRectStroke"];
+}
+
+#pragma mark Accessibility
+
+- (NSString *)accessibilityLabel
+{
+    NSTimeInterval timeIntervalToTargetDate = [self.targetDate timeIntervalSinceDate:NSDate.date];
+    if (timeIntervalToTargetDate > 0) {
+        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Will play in %@", @"Continuous playback Play button label (time parameter)"), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:timeIntervalToTargetDate]];
+    }
+    else {
+        return SRGLetterboxAccessibilityLocalizedString(@"Play", @"Play button label");
+    }
+}
+
+- (NSString *)accessibilityHint
+{
+    return SRGLetterboxAccessibilityLocalizedString(@"Plays the content immediately.", @"Hint for the continuous playback play button.");
+}
+
+- (UIAccessibilityTraits)accessibilityTraits
+{
+    return UIAccessibilityTraitButton | UIAccessibilityTraitUpdatesFrequently;
 }
 
 @end

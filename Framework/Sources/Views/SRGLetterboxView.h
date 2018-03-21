@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxController.h"
+#import "SRGLetterboxControllerView.h"
 
 #import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This method gets called when user interface controls or the timeline are shown or hidden. You can call the `SRGLetterboxView`
- *  `-animateAlongsideUserInterfaceWithAnimations:completion` method from within this method implementation to perform 
+ *  `-animateAlongsideUserInterfaceWithAnimations:completion:` method from within this method implementation to perform 
  *  animations alongside the built-in control animations.
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  controls will be hidden from view so that the error can be properly read.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxView : UIView <SRGAirplayViewDelegate, SRGTimeSliderDelegate, UIGestureRecognizerDelegate>
+@interface SRGLetterboxView : SRGLetterboxControllerView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
 
 /**
  *  Set the motion manager to use for device tracking when playing 360° videos. At most one motion manager should
@@ -199,12 +199,6 @@ IB_DESIGNABLE
  *  behavior is undefined.
  */
 + (void)setMotionManager:(nullable CMMotionManager *)motionManager;
-
-/**
- *  The controller bound to the view. The controller can be changed at any time, the view will automatically be updated
- *  accordingly.
- */
-@property (nonatomic, weak, nullable) IBOutlet SRGLetterboxController *controller;
 
 /**
  *  View optional delegate.
@@ -259,6 +253,11 @@ IB_DESIGNABLE
  *  the animations to be performed alongside the player user interface animations when controls, timeline or notifications
  *  are shown or hidden. An optional block to be called on completion can be provided as well.
  *
+ *  Even when controls are hidden, the user interface might still be in a minimal form, ensuring that basic controls
+ *  are available, for example when no media has been loaded or when an error has been encountered. You can use the
+ *  corresponding boolean information to show additional custom controls which must also be available in such cases
+ *  (e.g. a close button which needs to be available in such cases as well).
+ *
  *  @param animations The animations to be performed when these subviews are shown or hidden. The main view is usually 
  *                    animated in response to more information being displayed within it (e.g. a subdivision timeline or a
  *                    notification). If the view frame is not changed, the player will be temporarily shrinked to make room
@@ -268,10 +267,9 @@ IB_DESIGNABLE
  *                    constraint to make the player view slightly taller.
  *  @param completion The block to be called on completion.
  *
- *  @discussion Attempting to call this method outside the correct delegate method is a programming error and will throw
- *              an exception.
+ *  @discussion Call this method outside the correct delegate method leads to undefined behavior.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, BOOL minimal, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.

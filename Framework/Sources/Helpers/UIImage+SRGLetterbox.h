@@ -70,7 +70,7 @@ OBJC_EXPORT CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 /**
  *  Return the standard image to be used for a given letterbox error.
  */
-+ (nullable UIImage *)srg_letterboxImageForError:(NSError *)error;
++ (nullable UIImage *)srg_letterboxImageForError:(nullable NSError *)error;
 
 /**
  *  Return the standard image to be used for a given blocking reason.

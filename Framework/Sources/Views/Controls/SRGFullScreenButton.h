@@ -9,9 +9,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Live label for the control stack view.
+ *  Full screen button.
  */
-@interface SRGLiveLabel : UILabel
+IB_DESIGNABLE
+@interface SRGFullScreenButton : UIButton
 
 @end
 

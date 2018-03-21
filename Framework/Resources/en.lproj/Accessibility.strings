@@ -22,14 +22,20 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Full screen";
 
-/* Short label identifying a livestream. */
+/* Short label identifying a livestream or currently in live condition. */
 "Live" = "Live";
+
+/* Live label when playing live. */
+"Live playback" = "Live playback";
 
 /* Pause button label */
 "Pause" = "Pause";
 
 /* Play button label */
 "Play" = "Play";
+
+/* Hint for the continuous playback play button. */
+"Plays the content immediately." = "Plays the content immediately.";
 
 /* Segment or chapter cell hint */
 "Plays the content." = "Plays the content.";
@@ -39,3 +45,6 @@
 
 /* The main area on the letterbox view, where the video or its thumbnail is displayed */
 "Video" = "Video";
+
+/* Continuous playback Play button label (time parameter) */
+"Will play in %@" = "Will play in %@";

@@ -69,7 +69,7 @@ You can also respond to view height changes in the same way, e.g. when a timelin
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
         // Show or hide your own overlays here, or adjust your layout to respond to height changes
     } completion:nil];
 }
@@ -81,14 +81,14 @@ Within the block, you can apply any `UIView` or layout change, as you would in a
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
         // Show or hide your own overlays here, or adjust your layout to respond to height changes
         [self.view layoutIfNeeded];
     } completion:nil];
 }
 ```
 
-Refer to the modal view controller demo implementation for a concrete example. 
+The `-animateAlongsideUserInterfaceWithAnimations:completion:` animation block provides information about whether the usual controls are visible (`hidden` property) or whether the interface is in a minimal state, usually because no media is available or an error has been encountered (`minimal` property). You should use this information to set the visibility of your own custom controls appropriately. Refer to the modal view controller demo implementation for a concrete example. 
 
 ### Full screen
 
@@ -150,6 +150,10 @@ Once a playlist data source has been setup, you can skip to the next or previous
 If you want playback to automatically continue with the next media in a playlist once playback of the current media ends, implement the optional `-continuousPlaybackTransitionDurationForController:` delegate method, defining the delay before playback of the next media begins. During the transition between two medias, an attached Letterbox view will display an overlay allowing the user to either directly play the next item or cancel the transition. 
 
 If needed, the controller `ContinousPlayback` category provides complete information about continuous playback transition (start and end date, and media which will be played next).
+
+## Image copyrights
+
+Media sometimes provide image copyright information via the `imageCopyright` property. If your application displays a Letterbox view, you should ensure that this information is somehow displayed in its vicinity.
 
 ## Statistics
 

@@ -50,6 +50,15 @@ static void commonInit(SRGLiveLabel *self);
     return SRGLetterboxAccessibilityLocalizedString(@"Live playback", @"Live label when playing live.");
 }
 
+#pragma mark Interface Builder integration
+
+- (void)prepareForInterfaceBuilder
+{
+    [super prepareForInterfaceBuilder];
+    
+    commonInit(self);
+}
+
 @end
 
 static void commonInit(SRGLiveLabel *self)
@@ -60,5 +69,5 @@ static void commonInit(SRGLiveLabel *self)
     self.textAlignment = NSTextAlignmentCenter;
     self.numberOfLines = 1;
     self.layer.masksToBounds = YES;
-    self.layer.cornerRadius = 2.f;
+    self.layer.cornerRadius = 1.f;
 }
