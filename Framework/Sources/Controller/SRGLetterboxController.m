@@ -910,6 +910,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.mainQueue = [[SRGRequestQueue alloc] initWithStateChangeBlock:^(BOOL finished, NSError * _Nullable error) {
         @strongify(self)
         self.loading = ! finished;
+        
+        if (finished) {
+            [self updateWithError:error];
+        }
     }];
     self.updateQueue = [[SRGRequestQueue alloc] init];
     
@@ -932,7 +936,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             // Media readily available. Done
             if (media) {
                 NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
-                [self updateWithError:blockingReasonError];
+                [self.mainQueue reportError:blockingReasonError];
                 [self notifyLivestreamEndWithMedia:media previousMedia:nil];
                 
                 if (! blockingReasonError) {
@@ -943,7 +947,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             else {
                 void (^mediasCompletionBlock)(NSArray<SRGMedia *> * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
                     if (error) {
-                        [self updateWithError:error];
+                        [self.mainQueue reportError:error];
                         return;
                     }
                     
@@ -952,7 +956,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
                     
                     NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(medias.firstObject, [NSDate date]);
                     if (blockingReasonError) {
-                        [self updateWithError:blockingReasonError];
+                        [self.mainQueue reportError:blockingReasonError];
                     }
                     else {
                         prepareToPlay(contentURL);
@@ -976,7 +980,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         @strongify(self)
         
         if (error) {
-            [self updateWithError:error];
+            [self.mainQueue reportError:error];
             return;
         }
         
@@ -988,7 +992,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
         if (blockingReasonError) {
-            [self updateWithError:blockingReasonError];
+            [self.mainQueue reportError:blockingReasonError];
             return;
         }
         
@@ -997,7 +1001,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             @strongify(self)
             
             if (error) {
-                [self updateWithError:error];
+                [self.mainQueue reportError:error];
                 return;
             }
             
@@ -1011,7 +1015,7 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
                                                  code:SRGDataProviderErrorCodeInvalidData
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
-            [self updateWithError:error];
+            [self.mainQueue reportError:error];
         }
     }];
     [self.mainQueue addRequest:mediaCompositionRequest resume:YES];
