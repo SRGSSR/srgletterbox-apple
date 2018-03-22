@@ -1048,9 +1048,13 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 
 - (void)stop
 {
+    [self resetContinuousPlayback];
+    
     // Reset the player, including the attached URL. We keep the Letterbox controller context so that playback can
     // be restarted.
     [self.mediaPlayerController reset];
+    
+    [self.mainQueue cancel];
 }
 
 - (void)retry
@@ -1105,13 +1109,10 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    [self resetContinuousPlayback];
-    
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
     
-    [self.mediaPlayerController reset];
+    [self stop];
     
-    [self.mainQueue cancel];
     [self.updateQueue cancel];
 }
 
