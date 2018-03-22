@@ -1163,7 +1163,12 @@ static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
-        [self updateWithError:blockingReasonError];
+        if (self.mainQueue.running) {
+            [self.mainQueue reportError:blockingReasonError];
+        }
+        else {
+            [self updateWithError:blockingReasonError];
+        }
         [self stop];
         
         self.socialCountViewURN = nil;
