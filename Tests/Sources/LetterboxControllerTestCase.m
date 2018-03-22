@@ -370,7 +370,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testPlayUnknownURN
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
@@ -407,7 +407,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testPlayUnplayableResource
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -445,7 +445,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testPlayHDSOnlyResource
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1127,7 +1127,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSkipToLiveForSwissTXTLimitedDVRStream
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1176,7 +1176,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSkipToLiveForSwissTXTFullDVRStream
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1222,7 +1222,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSkipToLiveForSwissTXTLiveOnlyStream
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1378,7 +1378,7 @@ static NSURL *MMFServiceURL(void)
  - (void)testContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
@@ -1435,7 +1435,7 @@ static NSURL *MMFServiceURL(void)
 - (void)test360ContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
@@ -1475,7 +1475,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandFullLengthPlayback
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1521,7 +1521,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandSegmentPlayback
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1568,7 +1568,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandPlaybackAfterSegmentSelection
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1625,7 +1625,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedLivePlayback
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1812,7 +1812,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testMediaAvailableWithServerCacheInconsistency
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2226,7 +2226,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTFullDVRNotYetAvailable
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2307,7 +2307,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTLimitedDVRNotYetAvailable
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2400,7 +2400,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTLiveOnlyNotYetAvailable
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2508,7 +2508,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTFullDVRWithHighlightRemoved
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -2580,7 +2580,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTLimitedDVRWithHighlightRemoved
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Media started 16 seconds ago and is available 28 seconds // Second higlight will be removed
@@ -3322,7 +3322,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    self.controller.updateInterval = 5.;
+    self.controller.updateInterval = 10.;
     [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
@@ -3348,7 +3348,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    self.controller.updateInterval = 5.;
+    self.controller.updateInterval = 10.;
     [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
@@ -3365,7 +3365,7 @@ static NSURL *MMFServiceURL(void)
         XCTFail(@"No metadata updates must be received after a reset");
     }];
     
-    [self expectationForElapsedTimeInterval:10. withHandler:nil];
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
