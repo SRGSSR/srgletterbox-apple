@@ -14,13 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  Notification sent when the livestream associated with the current playback context just finished. The corresponding
  *  media can be retrieved under the `SRGLetterboxMediaKey` user information key.
  */
-OBJC_EXTERN NSString * const SRGLetterboxLivestreamDidFinishNotification;
+OBJC_EXPORT NSString * const SRGLetterboxLivestreamDidFinishNotification;
 
 /**
  *  Notification sent when a request to the social count view service will be fired. The corresponding media subdivision
  *  can be retrieved under the `SRGLetterboxSubdivisionKey` user information key.
  */
-OBJC_EXTERN NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification;
+OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification;
 
 /**
  *  Interface for internal use.
@@ -43,6 +43,13 @@ OBJC_EXTERN NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  *              being played. The configuration block might be used to override these default values.
  */
 @property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
+
+/**
+ *  Play the upcoming media currently available.
+ *
+ *  @return `YES` iff successful.
+ */
+- (BOOL)playUpcomingMedia;
 
 /**
  *  Ask the player to reload its configuration by calling the associated configuration block, if any. Does nothing if

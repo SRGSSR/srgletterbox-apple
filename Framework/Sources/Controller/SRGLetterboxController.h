@@ -10,65 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Types.
- */
-typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
-
-/**
- *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
- *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
- *  notification `userInfo` dictionary.
- */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
-
-/**
- *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
- *
- *  @discussion The data itself should in general change, but the notification might be posted even if no real change
- *              actually occurred. Nevertheless, your implementation should not be concerned about such details and
- *              still respond to change notifications accordingly (e.g. by updating user interface elements).
- */
-OBJC_EXTERN NSString * const SRGLetterboxMetadataDidChangeNotification;
-
-/**
- *  Current metadata.
- */
-OBJC_EXTERN NSString * const SRGLetterboxURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxSubdivisionKey;
-OBJC_EXTERN NSString * const SRGLetterboxChannelKey;
-
-/**
- *  Previous metadata.
- */
-OBJC_EXTERN NSString * const SRGLetterboxPreviousURNKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousMediaCompositionKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousSubdivisionKey;
-OBJC_EXTERN NSString * const SRGLetterboxPreviousChannelKey;
-
-/**
- *  Notification sent when an error has been encountered.
- */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidFailNotification;
-
-/**
- *  Error information.
- */
-OBJC_EXTERN NSString * const SRGLetterboxErrorKey;
-
-/**
- *  Notification sent when playback has been retried (might be automatic when network is reachable again).
- */
-OBJC_EXTERN NSString * const SRGLetterboxPlaybackDidRetryNotification;
-
-/**
- *  The default start bit rate to start (800 kbps).
- */
-OBJC_EXTERN const NSInteger SRGLetterboxDefaultStartBitRate;
-
-/**
  *  Controller data availability.
  */
 typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
@@ -87,20 +28,133 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 };
 
 /**
+ *  Types.
+ */
+typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
+
+/**
+ *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
+ *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
+ *  notification `userInfo` dictionary.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
+
+/**
+ *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
+ *
+ *  @discussion The data itself should in general change, but the notification might be posted even if no real change
+ *              actually occurred. Nevertheless, your implementation should not be concerned about such details and
+ *              still respond to change notifications accordingly (e.g. by updating user interface elements).
+ */
+OBJC_EXPORT NSString * const SRGLetterboxMetadataDidChangeNotification;
+
+/**
+ *  Current metadata.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxURNKey;
+OBJC_EXPORT NSString * const SRGLetterboxMediaKey;
+OBJC_EXPORT NSString * const SRGLetterboxMediaCompositionKey;
+OBJC_EXPORT NSString * const SRGLetterboxSubdivisionKey;
+OBJC_EXPORT NSString * const SRGLetterboxChannelKey;
+
+/**
+ *  Previous metadata.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxPreviousURNKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaCompositionKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousSubdivisionKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousChannelKey;
+
+/**
+ *  Notification sent when an error has been encountered.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidFailNotification;
+
+/**
+ *  Error information.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxErrorKey;
+
+/**
+ *  Notification sent when playback has been retried (might be automatic when network is reachable again).
+ */
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
+
+/**
+ *  Notification sent when the controller plays the next media automatically. Use the `SRGLetterboxURNKey` and
+ *  `SRGLetterboxMediaKey` keys to retrieve upcoming media information from the notification `userInfo` dictionary.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification;
+
+/**
+ *  The default start bit rate to start (800 kbps).
+ */
+OBJC_EXPORT const NSInteger SRGLetterboxDefaultStartBitRate;
+
+/**
  *  Time interval for stream availability checks. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxUpdateIntervalDefault;
+OBJC_EXPORT const NSTimeInterval SRGLetterboxUpdateIntervalDefault;
 
 /**
  *  Time interval to check channel metadata. Default is 30 seconds.
  */
-OBJC_EXPORT NSTimeInterval const SRGLetterboxChannelUpdateIntervalDefault;
+OBJC_EXPORT const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault;
 
 /**
  *  Standard skip intervals.
  */
-OBJC_EXTERN const NSInteger SRGLetterboxBackwardSkipInterval;           // 10 seconds
-OBJC_EXTERN const NSInteger SRGLetterboxForwardSkipInterval;            // 30 seconds
+OBJC_EXPORT const NSTimeInterval SRGLetterboxBackwardSkipInterval;           // 10 seconds
+OBJC_EXPORT const NSTimeInterval SRGLetterboxForwardSkipInterval;            // 30 seconds
+
+/**
+ *  Standard intervals before automatically playing the next item in a playlist.
+ */
+OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled;          // Disable continuous playback
+
+/**
+ *  Forward declarations.
+ */
+@class SRGLetterboxController;
+
+/**
+ *  A playlist data source provides next and previous medias to be played by a controller.
+ *
+ *  @discussion Since a controller can play any content at any time, there is no way for a playlist implementation to
+ *              guess where it must resume if the content appears more than once in the list. For this reason, playlist
+ *              implementations should contain a given media at most once (otherwise the playlist behavior will likely be
+ *              undefined).
+ */
+@protocol SRGLetterboxControllerPlaylistDataSource <NSObject>
+
+/**
+ *  The next media to be played for the specified controller.
+ *
+ *  @discussion This method can be called often. Implementations should be efficient enough so that no associated
+ *              performance issues are experienced.
+ */
+- (nullable SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller;
+
+/**
+ *  The previous media to be played for the specified controller.
+ *
+ *  @discussion Same as for `-nextMediaForController:`.
+ */
+- (nullable SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller;
+
+@optional
+
+/**
+ *  To enable continuous playback, implement this method and return a valid non-negative transition duration. Values
+ *  lower than 0 will be fixed to 0. A duration of 0 enables immediate continuation.
+ *
+ *  You can return `SRGLetterboxContinuousPlaybackTransitionDurationDisabled` to disable continuous playback, which
+ *  is equivalent to not having this method implemented.
+ */
+- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
+
+@end
 
 /**
  *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
@@ -270,6 +324,13 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly) SRGLetterboxDataAvailability dataAvailability;
 
 /**
+ *  Return `YES` iff the controller is loading data (either retrieving metadata or buffering).
+ *
+ *  KVO-observable.
+ */
+@property (nonatomic, readonly, getter=isLoading) BOOL loading;
+
+/**
  *  Set to `YES` to mute the player. Default is `NO`.
  */
 @property (nonatomic, getter=isMuted) BOOL muted;
@@ -338,6 +399,108 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Remove a time observer (does nothing if the observer is not registered).
  */
 - (void)removePeriodicTimeObserver:(nullable id)observer;
+
+@end
+
+/**
+ *  Playlist support. To use playlists, assign a data source which will supply previous and next medias to be played.
+ *
+ *  @discussion Playlist navigation is not available when picture in picture is active.
+ */
+@interface SRGLetterboxController (Playlists)
+
+/**
+ *  Return `YES` iff the next media can be played (or prepared to be played).
+ */
+- (BOOL)canPlayNextMedia;
+
+/**
+ *  Return `YES` iff the next media can be played (or prepared to be played).
+ */
+- (BOOL)canPlayPreviousMedia;
+
+/**
+ *  The playlist data source.
+ */
+@property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+
+/**
+ *  Prepare to play the next media in the playlist. If you want playback to start right after preparation, call `-play`
+ *  from the completion handler.
+ *
+ *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
+ *                           block will only be called if the media could successfully be prepared.
+ *
+ *  @return `YES` iff successful. Note that the method returns `NO` when picture in picture is active.
+ */
+- (BOOL)prepareToPlayNextMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+
+/**
+ *  Same as `-prepareToPlayNextMediaWithCompletionHandler:`, but with the previous madia in the playlist.
+ */
+- (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(nullable void (^)(void))completionHandler;
+
+/**
+ *  Play the next media currently available from the playlist.
+ *
+ *  @return `YES` iff successful. Note that the method returns `NO` when picture in picture is active.
+ */
+- (BOOL)playNextMedia;
+
+/**
+ *  Same as `-playNextMedia`, but with the previous media in the playlist.
+ */
+- (BOOL)playPreviousMedia;
+
+/**
+ *  The next media currently available from the playlist.
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *nextMedia;
+
+/**
+ *  The previous media currently available from the playlist.
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *previousMedia;
+
+@end
+
+/**
+ *  Continuous playback support, i.e. automatically playing the next media in a playlist when a media playback ends.
+ *  Requires a playlist data source supplying next item information.
+ *
+ *  Remark: Continuous playback is not active when picture in picture is active.
+ */
+@interface SRGLetterboxController (ContinuousPlayback)
+
+/**
+ *  The date at which the continuous playback transition to the next media started. KVO-observable.
+ *
+ *  @discussion Returns `nil` if there is no active transition.
+ */
+@property (nonatomic, readonly, nullable) NSDate *continuousPlaybackTransitionStartDate;
+
+/**
+ *  The date at which continuous playback will automatically resume with the next media. KVO-observable.
+ *
+ *  @discussion Returns `nil` if there no active transition. Stays constant during the transition, even if
+ *              continuous playback settings change.
+ */
+@property (nonatomic, readonly, nullable) NSDate *continuousPlaybackTransitionEndDate;
+
+/**
+ *  The upcoming media while undergoing a continuous playback transition. KVO-observable.
+ *
+ *  @discussion Returns `nil` if there no active transition. Stays constant during the transition, even if
+ *              the playlist changes.
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *continuousPlaybackUpcomingMedia;
+
+/**
+ *  Within a continuous playback transition, call this method to cancel automatic playback of the next item.
+ *
+ *  @dicussion This method has no effect outside a transition.
+ */
+- (void)cancelContinuousPlayback;
 
 @end
 

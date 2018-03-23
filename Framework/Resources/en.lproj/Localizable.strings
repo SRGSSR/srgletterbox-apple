@@ -1,6 +1,9 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "A network issue has been encountered. Please check your Internet connection and network settings";
 
+/* Title of a cancel button */
+"Cancel" = "Cancel";
+
 /* Short label for countdown display */
 "Days" = "Days";
 
@@ -11,10 +14,8 @@
 /* Short label for countdown display */
 "Hours" = "Hours";
 
-/* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live stream or a timeshift stream in live */
-"In Live" = "Live";
-
-/* Short label identifying a livestream. */
+/* Short label identifying a livestream or currently in live condition.
+   Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
 
 /* Notification message displayed when a live broadcast has finished. */
@@ -23,8 +24,8 @@
 /* Short label for countdown display */
 "Minutes" = "Minutes";
 
-/* Text displayed when no media is available for playback */
-"No media" = "No content";
+/* For continuous playback, introductory label for content which is about to start */
+"Next" = "Next";
 
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Playback on AirPlay";

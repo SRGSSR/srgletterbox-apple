@@ -71,7 +71,9 @@
     self.nowPlayingInfoAndCommandsEnabled.on = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
     self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
-    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -134,8 +136,8 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
+        self.closeButton.alpha = (minimal || ! hidden) ? 1.f : 0.f;
         self.letterboxAspectRatioConstraint.constant = heightOffset;
         [self.view layoutIfNeeded];
     } completion:nil];

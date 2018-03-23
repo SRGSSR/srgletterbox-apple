@@ -117,10 +117,10 @@
     };
     
     if (self.mediaListType == MediaListMMFTopicList) {
-        request = [self.dataProvider tvLatestMediasForTopicWithUid:self.uid completionBlock:completionBlock];
+        request = [[self.dataProvider tvLatestMediasForTopicWithUid:self.uid completionBlock:completionBlock] requestWithPageSize:100];
     }
     else {
-        request =  [self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock];
+        request = [[self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock] requestWithPageSize:100];
     }
     
     [request resume];

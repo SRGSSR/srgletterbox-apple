@@ -148,6 +148,11 @@
     cell.media = self.medias[indexPath.row];
 }
 
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.media = nil;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGRectGetWidth(tableView.frame) * 9.f / 16.f;

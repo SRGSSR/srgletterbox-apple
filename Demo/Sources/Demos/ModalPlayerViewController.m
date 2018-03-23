@@ -29,14 +29,14 @@
 @property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
 
 @property (nonatomic, weak) IBOutlet UIView *sizeView;
+@property (nonatomic, weak) IBOutlet UISlider *heightOffsetSlider;
 
-// Switching to and from full-screen is made by adjusting the priority / constance of a constraint of the letterbox
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxBottomConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *letterboxAspectRatioConstraint;
 
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
-@property (nonatomic, getter=isTransitioningToFullScreen) BOOL wantsFullScreen;
+@property (nonatomic) BOOL wantsFullScreen;
 
 @property (nonatomic) NSMutableArray<SRGSubdivision *> *favoritedSubdivisions;
 
@@ -106,9 +106,6 @@
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
-    // Start with a hidden interface
-    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
-    
     // Always display the full-screen interface in landscape orientation
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
@@ -122,7 +119,14 @@
     self.letterboxController.contentURLOverridingBlock = ^(SRGMediaURN * _Nonnull URN) {
         return [URN isEqual:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8806790"]] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
-    [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
+    
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:self.chaptersOnly];
+    }
+    
+    // Start with a hidden interface. Performed after a URN has been assigned so that no UI is visible at all
+    // initially (see -letterboxViewWillAnimateUserInterface: implementation)
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
     [self reloadData];
 }
@@ -136,13 +140,6 @@
             [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
         }
     }
-}
-
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    
-    self.sizeView.hidden = (CGRectGetWidth(self.view.frame) > CGRectGetHeight(self.view.frame));
 }
 
 #pragma mark Rotation
@@ -161,7 +158,7 @@
 
 - (BOOL)prefersHomeIndicatorAutoHidden
 {
-    return self.letterboxView.userInterfaceHidden;
+    return self.letterboxView.fullScreen && self.letterboxView.userInterfaceHidden;
 }
 
 #pragma mark Data
@@ -226,9 +223,9 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.letterboxAspectRatioConstraint.constant = heightOffset;
-        self.closeButton.alpha = (hidden && ! self.letterboxController.error && self.letterboxController.URN) ? 0.f : 1.f;
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
+        self.letterboxAspectRatioConstraint.constant = heightOffset + self.heightOffsetSlider.value;
+        self.closeButton.alpha = (minimal || ! hidden) ? 1.f : 0.f;
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         if (@available(iOS 11, *)) {
@@ -254,10 +251,12 @@
         if (fullScreen) {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintGreaterPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintLowerPriority;
+            self.sizeView.alpha = 0.f;
         }
         else {
             self.letterboxBottomConstraint.priority = LetterboxViewConstraintLowerPriority;
             self.letterboxAspectRatioConstraint.priority = LetterboxViewConstraintGreaterPriority;
+            self.sizeView.alpha = 1.f;
         }
     };
     
@@ -358,7 +357,7 @@
     [self.letterboxView setUserInterfaceHidden:NO animated:YES togglable:NO];
 }
 
-- (IBAction)fullScreen:(id)sender
+- (IBAction)toggleFullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
 }
@@ -421,8 +420,25 @@
 - (IBAction)changeMargins:(UISlider *)slider
 {
     [self.letterboxMarginConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        constraint.constant = slider.value;
+        constraint.constant = slider.maximumValue - slider.value;
     }];
+}
+
+- (IBAction)changeHeightOffset:(UISlider *)slider
+{
+    // Force a layout. The updated offset value will be added to the recommended aspect ratio constant in
+    // `-letterboxViewWillAnimateUserInterface:` implementation
+    [self.letterboxView setNeedsLayout];
+}
+
+- (IBAction)toggleView:(id)sender
+{
+    if (self.letterboxView.controller) {
+        self.letterboxView.controller = nil;
+    }
+    else {
+        self.letterboxView.controller = self.letterboxController;
+    }
 }
 
 #pragma mark Notifications

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  See https://clang-analyzer.llvm.org/faq.html.
  */
 __attribute__((annotate("returns_localized_nsstring")))
-OBJC_EXTERN NSString *SRGLetterboxNonLocalizedString(NSString *string);
+OBJC_EXPORT NSString *SRGLetterboxNonLocalizedString(NSString *string);
 
 @interface NSBundle (SRGLetterbox)
 

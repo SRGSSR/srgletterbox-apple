@@ -11,13 +11,18 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "PlaylistViewController.h"
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 
+#import <libextobjc/libextobjc.h>
+
 @interface DemosViewController ()
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsBarButtonItem;
+
+@property (nonatomic) SRGDataProvider *dataProvider;
 
 @end
 
@@ -104,6 +109,49 @@
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
+- (void)openPlaylistForShowWithURNString:(NSString *)URNString
+{
+    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+    
+    SRGShowURN *showURN = [SRGShowURN showURNWithString:URNString];
+    if (! showURN) {
+        return;
+    }
+    
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+    [[self.dataProvider latestEpisodesForShowWithURN:showURN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+        if (error) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+            return;
+        }
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGMedia.new, contentType), @(SRGContentTypeEpisode)];
+        
+        NSMutableArray *medias = [NSMutableArray array];
+        for (SRGEpisode *episode in episodeComposition.episodes) {
+            NSArray *mediasForEpisode = [episode.medias filteredArrayUsingPredicate:predicate];
+            [medias addObjectsFromArray:mediasForEpisode];
+        }
+        
+        [self openPlaylistWithMedias:[medias copy]];
+    }] resume];
+}
+
+- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias
+{
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias];
+    
+    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+    // (might happen if presenting and dismissing fast)
+    if (playlistViewController.presentingViewController) {
+        return;
+    }
+    
+    [self presentViewController:playlistViewController animated:YES completion:nil];
+}
+
 - (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
 {
     SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
@@ -173,8 +221,8 @@
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
-    static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:8399352";
-    static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:8399354";
+    static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:9355007";
+    static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:9355011";
     static NSString * const kAudioDVRURNString = @"urn:rts:audio:3262363";
     static NSString * const kAudioDVRRegionalURNString = @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106";
     
@@ -400,7 +448,19 @@
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:kMMFCachedScheduledLivestreamURNString
+                    NSDate *nowDate = NSDate.date;
+                    
+                    NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+                    startDateComponents.day = 100;
+                    startDateComponents.second = 7;
+                    NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+                    endDateComponents.day = 101;
+                    NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
+                    [self openModalPlayerWithURNString:URNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -408,7 +468,19 @@
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
+                    NSDate *nowDate = NSDate.date;
+                    
+                    NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+                    startDateComponents.day = 1;
+                    startDateComponents.second = 7;
+                    NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+                    endDateComponents.day = 2;
+                    NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
+                    [self openModalPlayerWithURNString:URNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -416,7 +488,19 @@
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
+                    NSDate *nowDate = NSDate.date;
+                    
+                    NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+                    startDateComponents.hour = 1;
+                    startDateComponents.second = 7;
+                    NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+                    endDateComponents.hour = 2;
+                    NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+                    
+                    NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
+                    [self openModalPlayerWithURNString:URNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -424,7 +508,7 @@
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
+                    [self openModalPlayerWithURNString:kMMFCachedScheduledLivestreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -432,7 +516,7 @@
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
+                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -440,7 +524,7 @@
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
+                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -448,7 +532,7 @@
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -456,7 +540,7 @@
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
@@ -464,6 +548,30 @@
                 }
                     
                 case 10: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 11: {
+                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 12: {
+                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
+                                          chaptersOnly:NO
+                                            serviceURL:LetterboxDemoMMFServiceURL()
+                                        updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 13: {
                     [self openModalPlayerWithURNString:kMMFRTSMultipleAudiosURNString
                                           chaptersOnly:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
@@ -576,6 +684,29 @@
                 }
             }
             break;
+        }
+            
+        case 8: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:105233"];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:6454706"];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openPlaylistForShowWithURNString:@"urn:rts:show:radio:8864883"];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
         }
             
         default: {

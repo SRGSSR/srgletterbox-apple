@@ -6,7 +6,8 @@
 
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
-#import <XCTest/XCTest.h>
+
+#import "LetterboxBaseTestCase.h"
 
 // Imports required to test internals
 #import "SRGLetterboxController+Private.h"
@@ -29,6 +30,11 @@ static SRGMediaURN *OnDemandLongVideoURN(void)
 static SRGMediaURN *OnDemandLongVideoSegmentURN(void)
 {
     return [SRGMediaURN mediaURNWithString:@"urn:srf:video:5fe1618a-b710-42aa-ac8a-cb9eabf42426"];
+}
+
+static SRGMediaURN *OnDemandAudioWithChaptersURN(void)
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:audio:9355007"];
 }
 
 static SRGMediaURN *LiveOnlyVideoURN(void)
@@ -76,30 +82,28 @@ static SRGMediaURN *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     return [SRGMediaURN mediaURNWithString:[NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)]];
 }
 
+static SRGMediaURN *MMFOnDemandLongVideoURN()
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:8992584"];
+}
+
+static SRGMediaURN *MMFOnDemandLongVideoGeoblockSegmentURN()
+{
+    return [SRGMediaURN mediaURNWithString:@"urn:rts:video:8992624"];
+}
+
 static NSURL *MMFServiceURL(void)
 {
     return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
 }
 
-@interface LetterboxControllerTestCase : XCTestCase
+@interface LetterboxControllerTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGLetterboxController *controller;
 
 @end
 
 @implementation LetterboxControllerTestCase
-
-#pragma mark Helpers
-
-- (XCTestExpectation *)expectationForElapsedTimeInterval:(NSTimeInterval)timeInterval withHandler:(void (^)(void))handler
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"Wait for %@ seconds", @(timeInterval)]];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-        handler ? handler() : nil;
-    });
-    return expectation;
-}
 
 #pragma mark Setup and tear down
 
@@ -170,11 +174,13 @@ static NSURL *MMFServiceURL(void)
     }];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
     
     SRGMediaURN *URN = OnDemandVideoURN();
     [self.controller playURN:URN withChaptersOnly:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -184,6 +190,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
 }
 
 - (void)testPlayMedia
@@ -193,6 +200,48 @@ static NSURL *MMFServiceURL(void)
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSWI];
     [[dataProvider videosWithUids:@[OnDemandVideoURN().uid] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        media = medias.firstObject;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNotNil(media);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playMedia:media withChaptersOnly:NO];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, media.URN);
+    XCTAssertEqualObjects(self.controller.media, media);
+    XCTAssertEqualObjects(self.controller.fullLengthMedia, media);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, media.URN);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
+}
+
+- (void)testPlayMediaSegment
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
+    
+    __block SRGMedia *media = nil;
+    SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
+    [[dataProvider videosWithUids:@[OnDemandLongVideoSegmentURN().uid] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
         media = medias.firstObject;
         [expectation fulfill];
     }] resume];
@@ -219,9 +268,69 @@ static NSURL *MMFServiceURL(void)
     // Media information must now be available
     XCTAssertEqualObjects(self.controller.URN, media.URN);
     XCTAssertEqualObjects(self.controller.media, media);
-    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, media.URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, OnDemandLongVideoURN());
+    XCTAssertEqualObjects(self.controller.fullLengthMedia.URN, OnDemandLongVideoURN());
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+}
+
+- (void)testPlayRightAfterPrepare
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    SRGMediaURN *URN = OnDemandVideoURN();
+    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
+    [self.controller play];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Media information must now be available
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqualObjects(self.controller.mediaComposition.chapterURN, URN);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+}
+
+- (void)testStop
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        XCTAssertTrue([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle);
+        XCTAssertNotNil(self.controller.URN);
+        XCTAssertNotNil(self.controller.media);
+        XCTAssertNotNil(self.controller.mediaComposition);
+        XCTAssertNil(self.controller.error);
+        XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+        return YES;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    
+    [self.controller stop];
+    
+    XCTAssertNotNil(self.controller.URN);
+    XCTAssertNotNil(self.controller.media);
+    XCTAssertNotNil(self.controller.mediaComposition);
+    XCTAssertNil(self.controller.error);
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
 }
 
 - (void)testReset
@@ -237,7 +346,13 @@ static NSURL *MMFServiceURL(void)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+        XCTAssertTrue([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle);
+        XCTAssertNil(self.controller.URN);
+        XCTAssertNil(self.controller.media);
+        XCTAssertNil(self.controller.mediaComposition);
+        XCTAssertNil(self.controller.error);
+        XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+        return YES;
     }];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
@@ -255,7 +370,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testPlayUnknownURN
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         XCTAssertNotNil(self.controller.error);
@@ -266,17 +381,20 @@ static NSURL *MMFServiceURL(void)
     }];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:_NO_ID_"];
     [self.controller playURN:URN withChaptersOnly:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotFound);
+    XCTAssertFalse(self.controller.loading);
     
     // Metadata updates must not erase playback errors
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
@@ -289,7 +407,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testPlayUnplayableResource
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -301,11 +419,13 @@ static NSURL *MMFServiceURL(void)
     }];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
     
     SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:rts:video:playlist500"];
     [self.controller playURN:URN withChaptersOnly:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
     
     [self waitForExpectationsWithTimeout:60. handler:nil];
     
@@ -320,11 +440,12 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotPlayable);
+    XCTAssertFalse(self.controller.loading);
 }
 
 - (void)testPlayHDSOnlyResource
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1006,7 +1127,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSkipToLiveForSwissTXTLimitedDVRStream
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1055,7 +1176,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSkipToLiveForSwissTXTFullDVRStream
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1101,7 +1222,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSkipToLiveForSwissTXTLiveOnlyStream
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1257,7 +1378,7 @@ static NSURL *MMFServiceURL(void)
  - (void)testContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
@@ -1314,7 +1435,7 @@ static NSURL *MMFServiceURL(void)
 - (void)test360ContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
@@ -1354,7 +1475,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandFullLengthPlayback
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1400,7 +1521,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandSegmentPlayback
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1447,7 +1568,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedOnDemandPlaybackAfterSegmentSelection
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1504,7 +1625,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testUninterruptedLivePlayback
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1691,7 +1812,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testMediaAvailableWithServerCacheInconsistency
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2105,7 +2226,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTFullDVRNotYetAvailable
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2186,7 +2307,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTLimitedDVRNotYetAvailable
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2279,7 +2400,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTLiveOnlyNotYetAvailable
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
@@ -2387,7 +2508,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTFullDVRWithHighlightRemoved
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -2459,7 +2580,7 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testSwissTXTLimitedDVRWithHighlightRemoved
 {
-    self.controller.updateInterval = 10.f;
+    self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
     // Media started 16 seconds ago and is available 28 seconds // Second higlight will be removed
@@ -2694,6 +2815,123 @@ static NSURL *MMFServiceURL(void)
     XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
+}
+
+- (void)testSwitchToSegmentURNWhilePreparing
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:OnDemandLongVideoSegmentURN() withChaptersOnly:NO];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGMediaPlayerSegmentDidStartNotification object:self.controller.mediaPlayerController handler:nil];
+    
+    NSArray<SRGSegment *> *segments = self.controller.mediaComposition.mainChapter.segments;
+    XCTAssertTrue(segments.count >= 3);
+    
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:segments[2].URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
+}
+
+- (void)testSwitchToChapterURNWhilePreparing
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePreparing;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:OnDemandAudioWithChaptersURN() withChaptersOnly:NO];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
+    
+    NSMutableArray<SRGChapter *> *chapters = self.controller.mediaComposition.chapters.mutableCopy;
+    [chapters removeObject:self.controller.mediaComposition.mainChapter];
+    SRGChapter *chapter = chapters.firstObject;
+    XCTAssertNotNil(chapter);
+
+    XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
+    BOOL switched = [self.controller switchToURN:chapter.URN withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+        [completionHandlerExpectation fulfill];
+    }];
+    XCTAssertTrue(switched);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
+}
+
+- (void)testSwitchToBlockedChapterURNWhilePreparing
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:MMFOnDemandLongVideoURN() withChaptersOnly:YES];
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MMFOnDemandLongVideoGeoblockSegmentURN()];
+    }];
+    
+    XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
+    
+    BOOL switched = [self.controller switchToURN:MMFOnDemandLongVideoGeoblockSegmentURN() withCompletionHandler:^(BOOL finished) {
+        XCTFail(@"Completion handler must not be called");
+    }];
+    XCTAssertTrue(switched);
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+    
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonGeoblocking);
+    XCTAssertNotNil(self.controller.error);
+    XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
+    XCTAssertFalse(self.controller.loading);
 }
 
 - (void)testSocialCountViewPlayOnChapter
@@ -3027,6 +3265,111 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self waitForExpectationsWithTimeout:15. handler:nil];
+}
+
+- (void)testLoadingWhileSeeking
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertFalse(self.controller.loading);
+    
+    [self.controller playURN:LiveDVRVideoURN() withChaptersOnly:NO];
+    
+    XCTAssertTrue(self.controller.loading);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertFalse(self.controller.loading);
+    
+    // Seek far enough from live conditions
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking) {
+            XCTAssertTrue(self.controller.loading);
+            return NO;
+        }
+        else if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying) {
+            XCTAssertFalse(self.controller.loading);
+            return YES;
+        }
+    }];
+    
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
+        XCTAssertTrue(finished);
+    }];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertFalse(self.controller.loading);
+}
+
+- (void)testLoadingKeyValueObserving
+{
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@YES];
+    
+    [self.controller playURN:LiveDVRVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
+- (void)testMetadataUpdatesAfterStop
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    self.controller.updateInterval = 10.;
+    [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller stop];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
+    }];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
+- (void)testMetadataUpdatesAfterReset
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    self.controller.updateInterval = 10.;
+    [self.controller playURN:OnDemandVideoURN() withChaptersOnly:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    [self.controller reset];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"No metadata updates must be received after a reset");
+    }];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+    }];
 }
 
 @end

@@ -14,6 +14,7 @@
 @interface AutoplayTableViewCell ()
 
 @property (nonatomic) SRGLetterboxController *letterboxController;
+@property (nonatomic, weak) id periodicTimeObserver;
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
@@ -42,10 +43,18 @@
 {
     [super awakeFromNib];
     
+    self.letterboxController = [[SRGLetterboxController alloc] init];
+    self.letterboxController.serviceURL = ApplicationSettingServiceURL();
+    self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
+    self.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    self.letterboxController.muted = YES;
+    self.letterboxController.resumesAfterRouteBecomesUnavailable = YES;
+    self.letterboxView.controller = self.letterboxController;
+    
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:NO];
     [self.letterboxView setTimelineAlwaysHidden:YES animated:NO];
     
-    self.progressView.hidden = YES;
+    [self updateProgressWithTime:kCMTimeZero];
 }
 
 - (void)prepareForReuse
@@ -60,30 +69,28 @@
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        self.letterboxController = [[SRGLetterboxController alloc] init];
-        self.letterboxController.serviceURL = ApplicationSettingServiceURL();
-        self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-        self.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
-        self.letterboxController.muted = YES;
-        self.letterboxController.resumesAfterRouteBecomesUnavailable = YES;
-        self.letterboxView.controller = self.letterboxController;
-        
         @weakify(self)
-        [self.letterboxController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        self.periodicTimeObserver = [self.letterboxController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
-            
-            CMTimeRange timeRange = self.letterboxController.timeRange;
-            if (CMTIMERANGE_IS_VALID(timeRange) && ! CMTIMERANGE_IS_EMPTY(timeRange)) {
-                self.progressView.progress = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)) / CMTimeGetSeconds(timeRange.duration);
-                self.progressView.hidden = NO;
-            }
-            else {
-                self.progressView.hidden = YES;
-            }
+            [self updateProgressWithTime:time];
         }];
     }
     else {
-        [self.letterboxController reset];
+        [self.letterboxController removePeriodicTimeObserver:self.periodicTimeObserver];
+    }
+}
+
+#pragma UI
+
+- (void)updateProgressWithTime:(CMTime)time
+{
+    CMTimeRange timeRange = self.letterboxController.timeRange;
+    if (CMTIMERANGE_IS_VALID(timeRange) && ! CMTIMERANGE_IS_EMPTY(timeRange)) {
+        self.progressView.progress = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)) / CMTimeGetSeconds(timeRange.duration);
+        self.progressView.hidden = NO;
+    }
+    else {
+        self.progressView.hidden = YES;
     }
 }
 

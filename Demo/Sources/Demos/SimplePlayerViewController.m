@@ -49,7 +49,9 @@
     
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
-    [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    if (self.URN) {
+        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -72,9 +74,7 @@
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, CGFloat heightOffset) {
-        self.navigationController.navigationBarHidden = hidden;
-    } completion:^(BOOL finished) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:nil completion:^(BOOL finished) {
         if (@available(iOS 11, *)) {
             [self setNeedsUpdateOfHomeIndicatorAutoHidden];
         }
