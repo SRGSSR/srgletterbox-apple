@@ -11,6 +11,7 @@
 #import "UIWindow+LetterboxDemo.h"
 
 #import <libextobjc/libextobjc.h>
+#import <SRGAnalytics/SRGAnalytics.h>
 
 @interface PlaylistViewController ()
 
@@ -157,6 +158,16 @@
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
     [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+}
+
+- (void)letterboxDidStartPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_start"];
+}
+
+- (void)letterboxDidEndPictureInPicture
+{
+    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_end"];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
