@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 /**
  *  Types.
  */
-typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(SRGMediaURN *URN);
+typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(NSString *URN);
 
 /**
  *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
@@ -209,7 +209,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAfterRetry` 
  *              property to `NO` when only preparing a player to play.
  */
-- (void)prepareToPlayURN:(SRGMediaURN *)URN
+- (void)prepareToPlayURN:(NSString *)URN
  withPreferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
             startBitRate:(NSInteger)startBitRate
@@ -301,7 +301,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @return `YES` iff switching occurred successfully.
  */
-- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (BOOL)switchToURN:(NSString *)URN withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
@@ -515,7 +515,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)prepareToPlayURN:(SRGMediaURN *)URN
+- (void)prepareToPlayURN:(NSString *)URN
         withChaptersOnly:(BOOL)chaptersOnly
        completionHandler:(nullable void (^)(void))completionHandler;
 
@@ -536,7 +536,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(SRGMediaURN *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
+- (void)playURN:(NSString *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified media.
@@ -553,7 +553,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
  *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)playURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly;
+- (void)playURN:(NSString *)URN withChaptersOnly:(BOOL)chaptersOnly;
 
 /**
  *  Play the specified media.
@@ -642,7 +642,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Unified Resource Name of the media being played.
  */
-@property (nonatomic, readonly, nullable) SRGMediaURN *URN;
+@property (nonatomic, readonly, nullable, copy) NSString *URN;
 
 /**
  *  Media information.

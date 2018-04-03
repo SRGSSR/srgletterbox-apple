@@ -15,7 +15,7 @@
 
 @interface SRGLetterboxTimelineView ()
 
-@property (nonatomic) SRGMediaURN *chapterURN;
+@property (nonatomic, copy) NSString *chapterURN;
 @property (nonatomic) NSArray<SRGSubdivision *> *subdivisions;
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
@@ -26,7 +26,7 @@
 
 #pragma mark Getters and setters
 
-- (void)setChapterURN:(SRGMediaURN *)chapterURN
+- (void)setChapterURN:(NSString *)chapterURN
 {
     _chapterURN = chapterURN;
     [self updateCellAppearance];

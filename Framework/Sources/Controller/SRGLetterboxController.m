@@ -57,20 +57,6 @@ const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
 
 const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
 
-static NSString *SRGDataProviderBusinessUnitIdentifierForVendor(SRGVendor vendor)
-{
-    static NSDictionary *s_businessUnitIdentifiers;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_businessUnitIdentifiers = @{ @(SRGVendorRSI) : SRGDataProviderBusinessUnitIdentifierRSI,
-                                       @(SRGVendorRTR) : SRGDataProviderBusinessUnitIdentifierRTR,
-                                       @(SRGVendorRTS) : SRGDataProviderBusinessUnitIdentifierRTS,
-                                       @(SRGVendorSRF) : SRGDataProviderBusinessUnitIdentifierSRF,
-                                       @(SRGVendorSWI) : SRGDataProviderBusinessUnitIdentifierSWI };
-    });
-    return s_businessUnitIdentifiers[@(vendor)];
-}
-
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:date];
@@ -106,7 +92,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 @property (nonatomic) NSDictionary<NSString *, NSString *> *globalHeaders;
 
-@property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic, copy) NSString *URN;
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
 @property (nonatomic) SRGChannel *channel;
@@ -118,7 +104,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 @property (nonatomic) NSError *error;
 
 // Save the URN sent to the social count view service, to not send it twice
-@property (nonatomic) SRGMediaURN *socialCountViewURN;
+@property (nonatomic, copy) NSString *socialCountViewURN;
 
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic, getter=isLoading) BOOL loading;
@@ -589,7 +575,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 // Pass in which data is available, the method will ensure that the data is consistent based on the most comprehensive
 // information available (media composition first, then media, finally URN). Less comprehensive data will be ignored
-- (void)updateWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition subdivision:(SRGSubdivision *)subdivision channel:(SRGChannel *)channel
+- (void)updateWithURN:(NSString *)URN media:(SRGMedia *)media mediaComposition:(SRGMediaComposition *)mediaComposition subdivision:(SRGSubdivision *)subdivision channel:(SRGChannel *)channel
 {
     if (mediaComposition) {
         SRGSubdivision *mainSubdivision = (subdivision && [mediaComposition mediaForSubdivision:subdivision]) ? subdivision : mediaComposition.mainChapter;
@@ -606,7 +592,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     // data changes, which might occur in rare cases. Sending a few additional notifications, even when no real change
     // occurred, is harmless, though.
     
-    SRGMediaURN *previousURN = self.URN;
+    NSString *previousURN = self.URN;
     SRGMedia *previousMedia = self.media;
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
     SRGSubdivision *previousSubdivision = self.subdivision;
@@ -892,7 +878,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Playback
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
     [self prepareToPlayURN:URN media:nil withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
@@ -902,7 +888,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self prepareToPlayURN:nil media:media withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN media:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN media:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -963,7 +949,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             }
             // Retrieve the media
             else {
-                void (^mediasCompletionBlock)(NSArray<SRGMedia *> * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+                void (^mediaCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error) {
                     if (error) {
                         self.dataAvailability = SRGLetterboxDataAvailabilityNone;
                         [self updateWithError:error];
@@ -972,10 +958,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                     
                     self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                     
-                    [self updateWithURN:nil media:medias.firstObject mediaComposition:nil subdivision:nil channel:nil];
+                    [self updateWithURN:nil media:media mediaComposition:nil subdivision:nil channel:nil];
                     [self notifyLivestreamEndWithMedia:media previousMedia:nil];
                     
-                    NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(medias.firstObject, [NSDate date]);
+                    NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
                     if (blockingReasonError) {
                         [self updateWithError:blockingReasonError];
                     }
@@ -984,14 +970,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                     }
                 };
                 
-                if (URN.mediaType == SRGMediaTypeVideo) {
-                    SRGRequest *mediaRequest = [self.dataProvider videosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
-                    [self.requestQueue addRequest:mediaRequest resume:YES];
-                }
-                else {
-                    SRGRequest *mediaRequest = [self.dataProvider audiosWithUids:@[URN.uid] completionBlock:mediasCompletionBlock];
-                    [self.requestQueue addRequest:mediaRequest resume:YES];
-                }
+                SRGRequest *mediaRequest = [self.dataProvider mediaWithURN:URN completionBlock:mediaCompletionBlock];
+                [self.requestQueue addRequest:mediaRequest resume:YES];
             }
             return;
         }
@@ -1112,11 +1092,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self resetWithURN:nil media:nil];
 }
 
-- (void)resetWithURN:(SRGMediaURN *)URN media:(SRGMedia *)media
+- (void)resetWithURN:(NSString *)URN media:(SRGMedia *)media
 {
     if (URN) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL
-                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierForVendor(URN.vendor)];
+                                                 businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierSRF];
         self.dataProvider.globalHeaders = self.globalHeaders;
     }
     else {
@@ -1149,7 +1129,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
-- (BOOL)switchToURN:(SRGMediaURN *)URN withCompletionHandler:(void (^)(BOOL))completionHandler
+- (BOOL)switchToURN:(NSString *)URN withCompletionHandler:(void (^)(BOOL))completionHandler
 {
     for (SRGChapter *chapter in self.mediaComposition.chapters) {
         if ([chapter.URN isEqual:URN]) {
@@ -1223,7 +1203,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Playback (convenience)
 
-- (void)prepareToPlayURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
 {
     [self prepareToPlayURN:URN withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
@@ -1233,7 +1213,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self prepareToPlayMedia:media withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
 }
 
-- (void)playURN:(SRGMediaURN *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
+- (void)playURN:(NSString *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
 {
     @weakify(self)
     [self prepareToPlayURN:URN withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
@@ -1251,7 +1231,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     }];
 }
 
-- (void)playURN:(SRGMediaURN *)URN withChaptersOnly:(BOOL)chaptersOnly
+- (void)playURN:(NSString *)URN withChaptersOnly:(BOOL)chaptersOnly
 {
     [self playURN:URN withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
 }

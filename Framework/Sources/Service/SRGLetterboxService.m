@@ -408,7 +408,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (SRGMedia *)nowPlayingMediaForController:(SRGLetterboxController *)controller
 {
-    if (controller.URN.mediaType == SRGMediaTypeVideo) {
+    if (controller.media.mediaType == SRGMediaTypeVideo) {
         return controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
     }
     else {
