@@ -160,8 +160,8 @@
 {
     NSParameterAssert(completionBlock);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter a media URN", nil)
-                                                                             message:NSLocalizedString(@"The media will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]", nil)
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter media URN", nil)
+                                                                             message:NSLocalizedString(@"For example: urn:[BU]:[video|audio]:[uid]", nil)
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -651,13 +651,11 @@
                     
                 case 3: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter a MMF topic list ID", nil)
-                                                                                             message:NSLocalizedString(@"The medias will be played with the advanced player.\nFormat: [topic_id]", nil)
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic list ID", nil)
+                                                                                             message:nil
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
-                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = LetterboxDemoNonLocalizedString(@"demo-id");
-                    }];
+                    [alertController addTextFieldWithConfigurationHandler:nil];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                         [self openMediaListWithType:MediaListMMFTopicList uid:alertController.textFields.firstObject.text];
