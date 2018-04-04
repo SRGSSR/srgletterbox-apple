@@ -21,10 +21,7 @@ self.controller = [[SRGLetterboxController alloc] init];
 then call one of the play methods on it, passing it a valid media URN (unique identifier of the media):
 
 ```objective-c
-SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:@"urn:swi:video:42844052"];
-if (URN) {
-    [self.controller playURN:URN withChaptersOnly:NO];
-}
+[self.controller playURN:@"urn:swi:video:42844052" withChaptersOnly:NO];
 ```
 
 You can also instantiate controllers directly in your xibs or storyboards if you prefer.
