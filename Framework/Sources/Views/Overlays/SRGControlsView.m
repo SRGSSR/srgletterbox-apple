@@ -136,6 +136,15 @@
     }
 }
 
+- (void)willDetachFromController
+{
+    [super willDetachFromController];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SRGLetterboxPlaybackStateDidChangeNotification
+                                                  object:self.controller];
+}
+
 - (void)didDetachFromController
 {
     [super didDetachFromController];
@@ -164,22 +173,13 @@
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
-}
-
-- (void)metadataDidChange
-{
-    [super metadataDidChange];
     
-    SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playbackStateDidChange:)
+                                                 name:SRGLetterboxPlaybackStateDidChangeNotification
+                                               object:self.controller];
     
-    NSTimeInterval durationInSeconds = mainChapter.duration / 1000.;
-    if (durationInSeconds < 60. * 60.) {
-        self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-    }
-    else {
-        self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
-    }
-    self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+    [self refresh];
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -297,6 +297,28 @@
     }
 }
 
+#pragma mark UI
+
+- (void)refresh
+{
+    CMTimeRange timeRange = self.controller.timeRange;
+    if (CMTIMERANGE_IS_VALID(timeRange) && ! CMTIMERANGE_IS_EMPTY(timeRange)) {
+        NSTimeInterval durationInSeconds = CMTimeGetSeconds(timeRange.duration);
+        if (durationInSeconds < 60. * 60.) {
+            self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        }
+        else {
+            self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        }
+        
+        self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+    }
+    else {
+        self.durationLabel.text = nil;
+        self.durationLabel.accessibilityLabel = nil;
+    }
+}
+
 #pragma mark SRGTimeSliderDelegate protocol
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
@@ -368,6 +390,13 @@
 - (IBAction)toggleFullScreen:(id)sender
 {
     [self.delegate controlsViewDidToggleFullScreen:self];
+}
+
+#pragma mark Notifications
+
+- (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self refresh];
 }
 
 @end
