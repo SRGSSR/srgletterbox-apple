@@ -165,7 +165,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:self.medias[indexPath.row].URN.URNString];
+    NSString *URN = self.medias[indexPath.row].URN;
     NSURL *serviceURL = (self.mediaListType == MediaListMMFTopicList) ? LetterboxDemoMMFServiceURL() : nil;
     NSNumber *updateIntervalNumber = (self.mediaListType == MediaListMMFTopicList) ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:NO serviceURL:serviceURL updateInterval:updateIntervalNumber];

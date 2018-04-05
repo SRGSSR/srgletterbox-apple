@@ -15,7 +15,7 @@
 
 @interface ModalPlayerViewController ()
 
-@property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic, copy) NSString *URN;
 @property (nonatomic) BOOL chaptersOnly;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
@@ -48,7 +48,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
+- (instancetype)initWithURN:(NSString *)URN chaptersOnly:(BOOL)chaptersOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -73,11 +73,16 @@
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+#pragma clang diagnostic pop
 
 #pragma mark Getters and setters
 
@@ -116,8 +121,8 @@
                                                  name:SRGLetterboxMetadataDidChangeNotification
                                                object:self.letterboxController];
     
-    self.letterboxController.contentURLOverridingBlock = ^(SRGMediaURN * _Nonnull URN) {
-        return [URN isEqual:[SRGMediaURN mediaURNWithString:@"urn:rts:video:8806790"]] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
+    self.letterboxController.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
+        return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
     
     if (self.URN) {

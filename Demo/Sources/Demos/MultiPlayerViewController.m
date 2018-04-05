@@ -13,9 +13,9 @@
 
 @interface MultiPlayerViewController ()
 
-@property (nonatomic) SRGMediaURN *URN;
-@property (nonatomic) SRGMediaURN *URN1;
-@property (nonatomic) SRGMediaURN *URN2;
+@property (nonatomic, copy) NSString *URN;
+@property (nonatomic, copy) NSString *URN1;
+@property (nonatomic, copy) NSString *URN2;
 
 @property (nonatomic, getter=isUserInterfaceAlwaysHidden) BOOL userInterfaceAlwaysHidden;
 
@@ -37,7 +37,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN URN1:(nullable SRGMediaURN *)URN1 URN2:(nullable SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
+- (instancetype)initWithURN:(NSString *)URN URN1:(NSString *)URN1 URN2:(NSString *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
 {
     id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = [SRGLetterboxService sharedService].pictureInPictureDelegate;
     

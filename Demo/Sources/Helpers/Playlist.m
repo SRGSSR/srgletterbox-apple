@@ -36,7 +36,7 @@
 
 - (NSUInteger)currentIndexForMediaPlayedByController:(SRGLetterboxController *)controller
 {
-    SRGMediaURN *URN = controller.URN;
+    NSString *URN = controller.URN;
     if (URN) {
         return [self.mediasSet indexOfObjectPassingTest:^BOOL(SRGMedia * _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
             return [media.URN isEqual:URN];
