@@ -135,11 +135,8 @@ static NSURL *MMFServiceURL(void)
 #pragma clang diagnostic pop
 }
 
-// FIXME: The test does not pass: Setting the LB controller to nil does not release the underlying media player controller,
-//        the idle state is not reached and the LB controller does not get deallocated
 - (void)testDeallocationWhilePlaying
 {
-    // If the player controller is not retained, its player and all associated resources must be automatically discarded
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-unsafe-retained-assign"
     __weak SRGLetterboxController *weakController = self.controller;
@@ -157,6 +154,9 @@ static NSURL *MMFServiceURL(void)
         [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
             return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
         }];
+        
+        // Chicken and egg problem: We ensure the idle state can be reached so that the LB controller gets deallocated
+        [self.controller reset];
         
         self.controller = nil;
         
