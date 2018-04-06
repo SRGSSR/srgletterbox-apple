@@ -100,9 +100,9 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openMediaListWithType:(MediaListType)mediaListType uid:(NSString *)uid
+- (void)openMediaListWithType:(MediaListType)mediaListType URN:(NSString *)URN
 {
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType uid:uid];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType URN:URN];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
@@ -110,7 +110,7 @@
 {
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
     
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
     [[self.dataProvider latestEpisodesForShowWithURN:URN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         if (error) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
@@ -635,30 +635,30 @@
         case 7: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openMediaListWithType:MediaListLivecenterSRF uid:nil];
+                    [self openMediaListWithType:MediaListLivecenterSRF URN:nil];
                     break;
                 }
                     
                 case 1: {
-                    [self openMediaListWithType:MediaListLivecenterRTS uid:nil];
+                    [self openMediaListWithType:MediaListLivecenterRTS URN:nil];
                     break;
                 }
                     
                 case 2: {
-                    [self openMediaListWithType:MediaListLivecenterRSI uid:nil];
+                    [self openMediaListWithType:MediaListLivecenterRSI URN:nil];
                     break;
                 }
                     
                 case 3: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic list ID", nil)
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic URN", nil)
                                                                                              message:nil
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
                     [alertController addTextFieldWithConfigurationHandler:nil];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                        [self openMediaListWithType:MediaListMMFTopicList uid:alertController.textFields.firstObject.text];
+                        [self openMediaListWithType:MediaListMMFTopic URN:alertController.textFields.firstObject.text];
                         
                     }]];
                     [self presentViewController:alertController animated:YES completion:nil];

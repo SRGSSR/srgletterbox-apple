@@ -27,7 +27,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
 
 - (void)setUp
 {
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
     self.controller = [[SRGLetterboxController alloc] init];
 }
 

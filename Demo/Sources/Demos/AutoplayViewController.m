@@ -92,20 +92,20 @@
     self.medias = nil;
     [self.tableView reloadData];
     
-    SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = nil;
+    SRGDataProviderBusinessUnit businessUnit = nil;
     switch (self.autoplayList) {
         case AutoplayListSRFTrendingMedias: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
+            businessUnit = SRGDataProviderBusinessUnitSRF;
             break;
         }
             
         case AutoplayListRTSTrendingMedias: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
+            businessUnit = SRGDataProviderBusinessUnitRTS;
             break;
         }
             
         case AutoplayListRSITrendingMedias: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
+            businessUnit = SRGDataProviderBusinessUnitRSI;
             break;
         }
             
@@ -114,8 +114,8 @@
         }
     }
     
-    if (businessUnitIdentifier) {
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
+    if (businessUnit) {
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
         self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
         
         SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
@@ -123,7 +123,7 @@
             [self.tableView reloadData];
         };
         
-        SRGRequest *request = [self.dataProvider tvTrendingMediasWithLimit:@50 completionBlock:completionBlock];
+        SRGRequest *request = [self.dataProvider tvTrendingMediasForBusinessUnit:businessUnit withLimit:@50 completionBlock:completionBlock];
         [request resume];
         self.request = request;
     }

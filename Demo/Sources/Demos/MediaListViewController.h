@@ -31,18 +31,18 @@ typedef NS_ENUM(NSInteger, MediaListType) {
      */
     MediaListLivecenterRSI,
     /**
-     *  MMF Topic list
+     *  MMF topic
      */
-    MediaListMMFTopicList
+    MediaListMMFTopic
 };
 
 @interface MediaListViewController : UITableViewController
 
-- (instancetype)initWithMediaListType:(MediaListType)mediaListType uid:(nullable NSString *)uid;
+- (instancetype)initWithMediaListType:(MediaListType)mediaListType URN:(nullable NSString *)URN;
 
 @property (nonatomic, readonly) MediaListType mediaListType;
 
-@property (nonatomic, readonly, nullable) NSString *uid;
+@property (nonatomic, readonly, nullable) NSString *URN;
 
 @end
 
