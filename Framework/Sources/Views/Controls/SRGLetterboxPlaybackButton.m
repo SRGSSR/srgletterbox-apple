@@ -59,8 +59,7 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
     if (controller) {
         @weakify(self)
         self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            @strongify(self)
-            
+            @strongify(self)    
             [self refresh];
         }];
         [[NSNotificationCenter defaultCenter] addObserver:self

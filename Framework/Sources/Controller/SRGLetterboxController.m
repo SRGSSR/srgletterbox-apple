@@ -1303,6 +1303,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         return NO;
     }
     
+    SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+    if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+        return NO;
+    }
+    
     SRGMediaPlayerStreamType streamType = self.mediaPlayerController.streamType;
     return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
 }
@@ -1310,6 +1315,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 - (BOOL)canSkipForwardFromTime:(CMTime)time
 {
     if (CMTIME_IS_INDEFINITE(time)) {
+        return NO;
+    }
+    
+    SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+    if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         return NO;
     }
     
