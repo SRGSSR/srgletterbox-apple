@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
+#import "SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
@@ -156,6 +157,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 {
     if (self = [super init]) {
         self.mediaPlayerController = [[SRGMediaPlayerController alloc] init];
+        self.mediaPlayerController.analyticsPlayerName = @"SRGLetterbox";
+        self.mediaPlayerController.analyticsPlayerVersion = SRGLetterboxMarketingVersion();
         
         // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50. Workaround so that the test passes on iOS 11.3.
         self.mediaPlayerController.minimumDVRWindowLength = 40.;
