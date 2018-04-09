@@ -108,19 +108,18 @@
         request = [[self.dataProvider latestMediasForTopicWithURN:self.URN completionBlock:completionBlock] requestWithPageSize:100];
     }
     else {
-        static NSDictionary<NSNumber *, SRGDataProviderBusinessUnit> *s_businessUnits;
+        static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
         static dispatch_once_t s_onceToken;
         dispatch_once(&s_onceToken, ^{
-            s_businessUnits = @{ @(MediaListLivecenterSRF) : SRGDataProviderBusinessUnitSRF,
-                                 @(MediaListLivecenterRTS) : SRGDataProviderBusinessUnitRTS,
-                                 @(MediaListLivecenterRSI) : SRGDataProviderBusinessUnitRSI,
-                                 @(MediaListMMFTopic) : SRGDataProviderBusinessUnitRTS };
+            s_vendors = @{ @(MediaListLivecenterSRF) : @(SRGVendorSRF),
+                           @(MediaListLivecenterRTS) : @(SRGVendorRTS),
+                           @(MediaListLivecenterRSI) : @(SRGVendorRSI),
+                           @(MediaListMMFTopic) : @(SRGVendorRTS) };
         });
         
-        SRGDataProviderBusinessUnit businessUnit = s_businessUnits[@(self.mediaListType)];
-        NSAssert(businessUnit != nil, @"The business unit must be supported");
-        
-        request = [[self.dataProvider liveCenterVideosForBusinessUnit:businessUnit withCompletionBlock:completionBlock] requestWithPageSize:100];
+        NSNumber *vendorNumber = s_vendors[@(self.mediaListType)];
+        NSAssert(vendorNumber != nil, @"The business unit must be supported");
+        request = [[self.dataProvider liveCenterVideosForVendor:vendorNumber.integerValue withCompletionBlock:completionBlock] requestWithPageSize:100];
     }
     
     [request resume];

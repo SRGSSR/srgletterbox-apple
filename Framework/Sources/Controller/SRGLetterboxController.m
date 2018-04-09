@@ -821,8 +821,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)updateChannel
 {
-    SRGDataProviderBusinessUnit businessUnit = SRGDataProviderBusinessUnitForVendor(self.media.vendor);
-    if (! businessUnit || self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
+    if (! self.media || self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
         return;
     }
     
@@ -831,16 +830,16 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     };
     
     if (self.media.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *request = [self.dataProvider tvChannelForBusinessUnit:businessUnit withUid:self.media.channel.uid completionBlock:completionBlock];
+        SRGRequest *request = [self.dataProvider tvChannelForVendor:self.media.vendor withUid:self.media.channel.uid completionBlock:completionBlock];
         [self.requestQueue addRequest:request resume:YES];
     }
     else if (self.media.mediaType == SRGMediaTypeAudio) {
         if (self.media.vendor == SRGVendorSRF && ! [self.media.uid isEqualToString:self.media.channel.uid]) {
-            SRGRequest *request = [self.dataProvider radioChannelForBusinessUnit:businessUnit withUid:self.media.channel.uid livestreamUid:self.media.uid completionBlock:completionBlock];
+            SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:self.media.uid completionBlock:completionBlock];
             [self.requestQueue addRequest:request resume:YES];
         }
         else {
-            SRGRequest *request = [self.dataProvider radioChannelForBusinessUnit:businessUnit withUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock];
+            SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:nil completionBlock:completionBlock];
             [self.requestQueue addRequest:request resume:YES];
         }
     }

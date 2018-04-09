@@ -92,41 +92,40 @@
     self.medias = nil;
     [self.tableView reloadData];
     
-    SRGDataProviderBusinessUnit businessUnit = nil;
+    SRGVendor vendor = SRGVendorNone;
     switch (self.autoplayList) {
         case AutoplayListSRFTrendingMedias: {
-            businessUnit = SRGDataProviderBusinessUnitSRF;
+            vendor = SRGVendorSRF;
             break;
         }
             
         case AutoplayListRTSTrendingMedias: {
-            businessUnit = SRGDataProviderBusinessUnitRTS;
+            vendor = SRGVendorRTS;
             break;
         }
             
         case AutoplayListRSITrendingMedias: {
-            businessUnit = SRGDataProviderBusinessUnitRSI;
+            vendor = SRGVendorRSI;
             break;
         }
             
         default: {
+            return;
             break;
         }
     }
     
-    if (businessUnit) {
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
-        self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
-        
-        SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-            self.medias = medias;
-            [self.tableView reloadData];
-        };
-        
-        SRGRequest *request = [self.dataProvider tvTrendingMediasForBusinessUnit:businessUnit withLimit:@50 completionBlock:completionBlock];
-        [request resume];
-        self.request = request;
-    }
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
+    self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
+    
+    SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.medias = medias;
+        [self.tableView reloadData];
+    };
+    
+    SRGRequest *request = [self.dataProvider tvTrendingMediasForVendor:vendor withLimit:@50 completionBlock:completionBlock];
+    [request resume];
+    self.request = request;
 }
 
 #pragma mark UITableViewDataSource protocol
