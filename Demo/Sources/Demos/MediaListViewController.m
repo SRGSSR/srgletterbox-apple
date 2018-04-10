@@ -15,7 +15,7 @@
 @interface MediaListViewController ()
 
 @property (nonatomic) MediaListType mediaListType;
-@property (nonatomic, nullable) NSString *uid;
+@property (nonatomic, nullable) NSString *URN;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
@@ -28,12 +28,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMediaListType:(MediaListType)mediaListType uid:(NSString *)uid
+- (instancetype)initWithMediaListType:(MediaListType)mediaListType URN:(NSString *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     MediaListViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.mediaListType = mediaListType;
-    viewController.uid = uid;
+    viewController.URN = URN;
     return viewController;
 }
 
@@ -51,20 +51,8 @@
     
     self.title = [self pageTitle];
     
-    static NSDictionary<NSNumber *, SRGDataProviderBusinessUnitIdentifier> *s_businessUnitIdentifiers;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_businessUnitIdentifiers = @{ @(MediaListLivecenterSRF) : SRGDataProviderBusinessUnitIdentifierSRF,
-                                       @(MediaListLivecenterRTS) : SRGDataProviderBusinessUnitIdentifierRTS,
-                                       @(MediaListLivecenterRSI) : SRGDataProviderBusinessUnitIdentifierRSI,
-                                       @(MediaListMMFTopicList) : SRGDataProviderBusinessUnitIdentifierRTS };
-    });
-    
-    SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = s_businessUnitIdentifiers[@(self.mediaListType)];
-    NSAssert(businessUnitIdentifier != nil, @"The business unit must be supported");
-
-    NSURL *serviceURL = (self.mediaListType == MediaListMMFTopicList) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL businessUnitIdentifier:businessUnitIdentifier];
+    NSURL *serviceURL = (self.mediaListType == MediaListMMFTopic) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
         
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -94,7 +82,7 @@
         s_titles = @{ @(MediaListLivecenterSRF) : LetterboxDemoNonLocalizedString(@"SRF Live center"),
                       @(MediaListLivecenterRTS) : LetterboxDemoNonLocalizedString(@"RTS Live center"),
                       @(MediaListLivecenterRSI) : LetterboxDemoNonLocalizedString(@"RSI Live center"),
-                      @(MediaListMMFTopicList) : LetterboxDemoNonLocalizedString(@"MMF topic list") };
+                      @(MediaListMMFTopic) : LetterboxDemoNonLocalizedString(@"MMF topic list") };
     });
     return s_titles[@(self.mediaListType)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
 }
@@ -116,11 +104,22 @@
         [self.tableView reloadData];
     };
     
-    if (self.mediaListType == MediaListMMFTopicList) {
-        request = [[self.dataProvider tvLatestMediasForTopicWithUid:self.uid completionBlock:completionBlock] requestWithPageSize:100];
+    if (self.mediaListType == MediaListMMFTopic) {
+        request = [[self.dataProvider latestMediasForTopicWithURN:self.URN completionBlock:completionBlock] requestWithPageSize:100];
     }
     else {
-        request = [[self.dataProvider liveCenterVideosWithCompletionBlock:completionBlock] requestWithPageSize:100];
+        static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
+        static dispatch_once_t s_onceToken;
+        dispatch_once(&s_onceToken, ^{
+            s_vendors = @{ @(MediaListLivecenterSRF) : @(SRGVendorSRF),
+                           @(MediaListLivecenterRTS) : @(SRGVendorRTS),
+                           @(MediaListLivecenterRSI) : @(SRGVendorRSI),
+                           @(MediaListMMFTopic) : @(SRGVendorRTS) };
+        });
+        
+        NSNumber *vendorNumber = s_vendors[@(self.mediaListType)];
+        NSAssert(vendorNumber != nil, @"The business unit must be supported");
+        request = [[self.dataProvider liveCenterVideosForVendor:vendorNumber.integerValue withCompletionBlock:completionBlock] requestWithPageSize:100];
     }
     
     [request resume];
@@ -166,8 +165,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *URN = self.medias[indexPath.row].URN;
-    NSURL *serviceURL = (self.mediaListType == MediaListMMFTopicList) ? LetterboxDemoMMFServiceURL() : nil;
-    NSNumber *updateIntervalNumber = (self.mediaListType == MediaListMMFTopicList) ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
+    NSURL *serviceURL = (self.mediaListType == MediaListMMFTopic) ? LetterboxDemoMMFServiceURL() : nil;
+    NSNumber *updateIntervalNumber = (self.mediaListType == MediaListMMFTopic) ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:NO serviceURL:serviceURL updateInterval:updateIntervalNumber];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
