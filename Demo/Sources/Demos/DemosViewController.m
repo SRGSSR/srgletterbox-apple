@@ -651,14 +651,14 @@
                     
                 case 3: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic URN", nil)
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic ID", nil)
                                                                                              message:nil
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
                     [alertController addTextFieldWithConfigurationHandler:nil];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                        [self openMediaListWithType:MediaListMMFTopic URN:alertController.textFields.firstObject.text];
+                        [self openMediaListWithType:MediaListMMFTopic URN:[NSString stringWithFormat:@"urn:rts:topic:tv:%@", alertController.textFields.firstObject.text]];
                         
                     }]];
                     [self presentViewController:alertController animated:YES completion:nil];
