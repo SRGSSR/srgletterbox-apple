@@ -101,7 +101,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 @property (nonatomic) SRGStreamType streamType;
 @property (nonatomic) SRGQuality quality;
 @property (nonatomic) NSInteger startBitRate;
-@property (nonatomic) BOOL chaptersOnly;
+@property (nonatomic, getter=isStandalone) BOOL standalone;
 @property (nonatomic) NSError *error;
 
 // Save the URN sent to the social count view service, to not send it twice
@@ -344,7 +344,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             }
             // Start the player if the blocking reason changed from an not available state to an available one
             else if ([previousError.domain isEqualToString:SRGLetterboxErrorDomain] && previousError.code == SRGLetterboxErrorCodeNotAvailable) {
-                [self playMedia:self.media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                [self playMedia:self.media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
             }
         }];
     }];
@@ -361,7 +361,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     @weakify(self)
     self.channelUpdateTimer = [NSTimer srg_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
-       @strongify(self)
+        @strongify(self)
         
         [self updateChannel];
     }];
@@ -473,7 +473,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     SRGMedia *media = self.nextMedia;
     if (media) {
-        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
         return YES;
     }
     else {
@@ -489,7 +489,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     SRGMedia *media = self.previousMedia;
     if (media) {
-        [self prepareToPlayMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:completionHandler];
+        [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
         return YES;
     }
     else {
@@ -505,7 +505,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     SRGMedia *media = self.nextMedia;
     if (media) {
-        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        [self playMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
         return YES;
     }
     else {
@@ -521,7 +521,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     SRGMedia *media = self.previousMedia;
     if (media) {
-        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        [self playMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
         return YES;
     }
     else {
@@ -533,7 +533,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 {
     SRGMedia *media = self.continuousPlaybackUpcomingMedia;
     if (media) {
-        [self playMedia:media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        [self playMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
         return YES;
     }
     else {
@@ -650,7 +650,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                     [self stop];
                 }
                 else {
-                    [self playMedia:self.media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                    [self playMedia:self.media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                 }
             }];
         }];
@@ -741,7 +741,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         if (error || ! [self.error.domain isEqualToString:SRGLetterboxErrorDomain] || self.error.code != SRGLetterboxErrorCodeNotPlayable) {
             [self updateWithError:error];
         }
-    
+        
         [self notifyLivestreamEndWithMedia:media previousMedia:previousMedia];
         
         self.lastUpdateDate = [NSDate date];
@@ -766,7 +766,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         return;
     }
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:self.chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:self.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         SRGMediaCompositionCompletionBlock mediaCompositionCompletionBlock = ^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
             SRGMediaComposition *previousMediaComposition = self.mediaComposition;
             
@@ -806,10 +806,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         };
         
         if (error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404
-                && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
-            SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.mediaComposition.fullLengthMedia.URN
-                                                                                          chaptersOnly:self.chaptersOnly
-                                                                                       completionBlock:mediaCompositionCompletionBlock];
+            && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+            SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.mediaComposition.fullLengthMedia.URN
+                                                                                           standalone:self.standalone
+                                                                                  withCompletionBlock:mediaCompositionCompletionBlock];
             [self.requestQueue addRequest:fullLengthMediaCompositionRequest resume:YES];
         }
         else {
@@ -880,17 +880,17 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Playback
 
-- (void)prepareToPlayURN:(NSString *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN media:nil withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
+    [self prepareToPlayURN:URN standalone:standalone media:nil withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:nil media:media withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
+    [self prepareToPlayURN:nil standalone:standalone media:media withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayURN:(NSString *)URN media:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone media:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -915,7 +915,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     self.streamType = streamType;
     self.quality = quality;
     self.startBitRate = startBitRate;
-    self.chaptersOnly = chaptersOnly;
+    self.standalone = standalone;
     
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] init];
@@ -979,7 +979,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         }
     }
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionWithURN:self.URN chaptersOnly:chaptersOnly completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         @strongify(self)
         
         if (error) {
@@ -1035,10 +1035,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self.mediaPlayerController play];
     }
     else if (self.media) {
-        [self playMedia:self.media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        [self playMedia:self.media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
     }
     else if (self.URN) {
-        [self playURN:self.URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+        [self playURN:self.URN standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
     };
 }
 
@@ -1074,10 +1074,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self prepareToPlayMedia:self.media withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareToPlayCompletionHandler];
+        [self prepareToPlayMedia:self.media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
     }
     else if (self.URN) {
-        [self prepareToPlayURN:self.URN withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly completionHandler:prepareToPlayCompletionHandler];
+        [self prepareToPlayURN:self.URN standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
@@ -1204,42 +1204,42 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Playback (convenience)
 
-- (void)prepareToPlayURN:(NSString *)URN withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withCompletionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
+    [self prepareToPlayURN:URN standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withCompletionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayMedia:media withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly completionHandler:completionHandler];
+    [self prepareToPlayMedia:media standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
 }
 
-- (void)playURN:(NSString *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
+- (void)playURN:(NSString *)URN standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate
 {
     @weakify(self)
-    [self prepareToPlayURN:URN withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
+    [self prepareToPlayURN:URN standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
         @strongify(self)
         [self play];
     }];
 }
 
-- (void)playMedia:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly
+- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate
 {
     @weakify(self)
-    [self prepareToPlayMedia:media withPreferredStreamType:streamType quality:quality startBitRate:startBitRate chaptersOnly:chaptersOnly completionHandler:^{
+    [self prepareToPlayMedia:media standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
         @strongify(self)
         [self play];
     }];
 }
 
-- (void)playURN:(NSString *)URN withChaptersOnly:(BOOL)chaptersOnly
+- (void)playURN:(NSString *)URN standalone:(BOOL)standalone
 {
-    [self playURN:URN withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
+    [self playURN:URN standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
 }
 
-- (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly
+- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone
 {
-    [self playMedia:media withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate chaptersOnly:chaptersOnly];
+    [self playMedia:media standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
 }
 
 - (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(void (^)(BOOL))completionHandler
@@ -1454,7 +1454,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 self.continuousPlaybackTransitionTimer = [NSTimer srg_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
-                    [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                    [self playMedia:nextMedia standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                     [self resetContinuousPlayback];
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
@@ -1464,7 +1464,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 }];
             }
             else if (nextMedia) {
-                [self playMedia:nextMedia withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate chaptersOnly:self.chaptersOnly];
+                [self playMedia:nextMedia standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                 
                 // Send notification on next run loop, so that other observers of the playback end notification all receive
                 // the notification before the continuous playback notification is emitted.

@@ -106,7 +106,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMedia:self.playlist.medias.lastObject withChaptersOnly:NO];
+    [self.controller playMedia:self.playlist.medias.lastObject standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -137,7 +137,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:MediaURN1 withChaptersOnly:NO];
+    [self.controller playURN:MediaURN1 standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

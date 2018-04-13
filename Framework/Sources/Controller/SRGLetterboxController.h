@@ -157,7 +157,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
 @end
 
 /**
- *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It 
+ *  The Letterbox controller manages media playback, as well as retrieval and updates of the associated metadata. It
  *  also takes care of errors, in particular those related to network issues, and automatically resumes when a connection
  *  becomes available.
  *
@@ -168,7 +168,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *
  *  Letterbox controllers can also be integrated with application-wide features like AirPlay or picture in picture.
  *  Such features can only be enabled for at most one controller at a time by starting the Letterbox service singleton
- *  for this controller (@see `SRGLetterboxService`). Your application is free to use as many controllers as needed, 
+ *  for this controller (@see `SRGLetterboxService`). Your application is free to use as many controllers as needed,
  *  though, and you can change at any time which controller is enabled for such services.
  *
  *  When the `SRGAnalytics` tracker singleton has been properly started, controllers are automatically tracked. This
@@ -183,17 +183,19 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *
  *  @discussion Changing the service URL while playing is possible, but the change is not guaranteed to be applied
  *              immediately, and playback might be interrupted if the new service is not available to provide data
- *              for the media being played. In general, and a different service URL is required, you should therefore 
+ *              for the media being played. In general, and a different service URL is required, you should therefore
  *              set it before starting playback.
  */
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
 /**
- *  Prepare to play the specified URN (Uniform Resource Name) with the preferred (non-guaranteed) settings, and with 
- *  the player paused (if playback is not started in the completion handler). If you want playback to start right after 
+ *  Prepare to play the specified URN (Uniform Resource Name) with the preferred (non-guaranteed) settings, and with
+ *  the player paused (if playback is not started in the completion handler). If you want playback to start right after
  *  preparation, call `-play` from the completion handler.
  *
  *  @param URN               The URN to prepare.
+ *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
+ *                           indenpendtly from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
  *                           type is used.
  *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
@@ -201,19 +203,17 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *                           with no result guarantee, though it should in general be applied. The nearest available
  *                           quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
  *                           ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
- *  @param chaptersOnly      If set to `YES`, only chapters will be played, otherwise a possible mixture of chapters and
- *                           segments.
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
- *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAfterRetry` 
+ *  @discussion Does nothing if the URN is the one currently being played. You might want to set the `resumesAfterRetry`
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(NSString *)URN
+              standalone:(BOOL)standalone
  withPreferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
             startBitRate:(NSInteger)startBitRate
-            chaptersOnly:(BOOL)chaptersOnly
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
@@ -222,14 +222,14 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
+                standalone:(BOOL)standalone
    withPreferredStreamType:(SRGStreamType)streamType
                    quality:(SRGQuality)quality
               startBitRate:(NSInteger)startBitRate
-              chaptersOnly:(BOOL)chaptersOnly
          completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Ask the player to play. 
+ *  Ask the player to play.
  *
  *  @discussion Start playback if a media is available and the player is idle.
  */
@@ -241,7 +241,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
 - (void)pause;
 
 /**
- *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in. 
+ *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
  *
  *  @discussion Start playback if a media is available and the player is idle.
  */
@@ -270,8 +270,8 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  playing. You can use the completion handler to change the player state if needed, e.g. to automatically
  *  resume playback after a seek has been performed on a paused player.
  *
- *  @param time              The time to start at. If the time is invalid it will be set to `kCMTimeZero`. Setting a 
- *                           start time outside the actual media time range will seek to the nearest location (either 
+ *  @param time              The time to start at. If the time is invalid it will be set to `kCMTimeZero`. Setting a
+ *                           start time outside the actual media time range will seek to the nearest location (either
  *                           zero or the end time).
  *  @param toleranceBefore   The tolerance allowed before `time`. Use `kCMTimePositiveInfinity` for no tolerance
  *                           requirements.
@@ -337,13 +337,13 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 /**
  *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss, when the start time of
- *  a previously not available media has been reached, or when the content URL has changed). Default is `YES`. If 
+ *  a previously not available media has been reached, or when the content URL has changed). Default is `YES`. If
  *  set to `NO`, playback will only be prepared, but playback will not actually start.
  */
 @property (nonatomic) BOOL resumesAfterRetry;
 
 /**
- *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is 
+ *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is
  *  unplugged or a Bluetooth headset is switched off abruptly). Default is `NO`.
  */
 @property (nonatomic) BOOL resumesAfterRouteBecomesUnavailable;
@@ -366,7 +366,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 @property (nonatomic, readonly, nullable) NSDate *date;
 
 /**
- *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the 
+ *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the
  *  last 30 seconds of a DVR stream).
  */
 @property (nonatomic, readonly, getter=isLive) BOOL live;
@@ -390,7 +390,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @param queue    The serial queue onto which block should be enqueued (main queue if `NULL`).
  *  @param block	The block to be periodically executed.
  *
- *  @return The time observer. The observer is retained by the controller, you can store a weak reference to it and 
+ *  @return The time observer. The observer is retained by the controller, you can store a weak reference to it and
  *          remove it at a later time if needed.
  */
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(nullable dispatch_queue_t)queue usingBlock:(void (^)(CMTime time))block;
@@ -516,8 +516,8 @@ withToleranceBefore:(CMTime)toleranceBefore
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)prepareToPlayURN:(NSString *)URN
-        withChaptersOnly:(BOOL)chaptersOnly
-       completionHandler:(nullable void (^)(void))completionHandler;
+              standalone:(BOOL)standalone
+   withCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Prepare to play the specified media (Uniform Resource Name).
@@ -526,8 +526,8 @@ withToleranceBefore:(CMTime)toleranceBefore
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
-          withChaptersOnly:(BOOL)chaptersOnly
-         completionHandler:(nullable void (^)(void))completionHandler;
+                standalone:(BOOL)standalone
+     withCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -536,7 +536,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
+- (void)playURN:(NSString *)URN standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified media.
@@ -545,7 +545,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate chaptersOnly:(BOOL)chaptersOnly;
+- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -553,7 +553,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
  *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)playURN:(NSString *)URN withChaptersOnly:(BOOL)chaptersOnly;
+- (void)playURN:(NSString *)URN standalone:(BOOL)standalone;
 
 /**
  *  Play the specified media.
@@ -561,7 +561,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
  *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)playMedia:(SRGMedia *)media withChaptersOnly:(BOOL)chaptersOnly;
+- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone;
 
 /**
  *  Ask the controller to seek to a given location efficiently (the seek might be not perfeclty accurate but will be faster).
@@ -779,7 +779,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Return `YES` iff the URL played by the controller is overridden.
  *
- *  @discussion If no media URN is attached to the controller, the property returns `NO`.  
+ *  @discussion If no media URN is attached to the controller, the property returns `NO`.
  */
 @property (nonatomic, readonly, getter=isContentURLOverridden) BOOL contentURLOverridden;
 
