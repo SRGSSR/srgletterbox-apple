@@ -30,7 +30,7 @@
     _media = media;
     
     if (media) {
-        [self.letterboxController playMedia:media withChaptersOnly:NO];
+        [self.letterboxController playMedia:media standalone:NO];
     }
     else {
         [self.letterboxController reset];

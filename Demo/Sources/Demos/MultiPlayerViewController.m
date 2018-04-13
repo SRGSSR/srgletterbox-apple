@@ -107,15 +107,15 @@
     
     if (! self.letterboxController.pictureInPictureActive) {
         if (self.URN) {
-            [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+            [self.letterboxController playURN:self.URN standalone:NO];
         }
         
         if (self.URN1) {
-            [self.smallLetterboxController1 playURN:self.URN1 withChaptersOnly:NO];
+            [self.smallLetterboxController1 playURN:self.URN1 standalone:NO];
         }
         
         if (self.URN2) {
-            [self.smallLetterboxController2 playURN:self.URN2 withChaptersOnly:NO];
+            [self.smallLetterboxController2 playURN:self.URN2 standalone:NO];
         }
     }
 }

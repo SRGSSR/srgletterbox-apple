@@ -21,20 +21,17 @@ self.controller = [[SRGLetterboxController alloc] init];
 then call one of the play methods on it, passing it a valid media URN (unique identifier of the media):
 
 ```objective-c
-[self.controller playURN:@"urn:swi:video:42844052" withChaptersOnly:NO];
+[self.controller playURN:@"urn:swi:video:42844052" standalone:NO];
 ```
 
 You can also instantiate controllers directly in your xibs or storyboards if you prefer.
 
-Playback methods expect a `chaptersOnly` parameter, with which you can control how subdivided medias are played. Episodes are namely often subdivided in sequences, which can be presented in several ways:
-
-* If `chaptersOnly` is set to `NO`, subdivided medias will be provided as the smallest set of physical streams available (chapters), into which additional logical subdivisions may be defined (segments). When selecting a segment, seeking will occur into the parent chapter stream. This setup thus allows you to play clips in the context of the full episode they belong to, and should be your preferred choice in general.
-* If `chaptersOnly` is set to `YES`, subdivided medias will be provided as the largest amount of chapters available. In comparison to the `chaptersOnly = NO` mode, clips will likely appear as separate short streams, so that playing a sequence will lead to a different stream being played. This setup thus allows you to clips as standalone sequences.
+Playback methods expect a `standalone` parameter, with which you can control how medias are played. If set to `YES`, the media is played in its context (e.g. the full episode if the media is one of its sequences). If set to `NO`, playback is restricted to the media only and no context is provided.
 
 A Letterbox controller can play any media URN from any SRG SSR business unit. You can also play an `SRGMedia` if you have one already, for example if you retrieved some media list from the `SRGDataProvider` library:
 
 ```objective-c
-[self.controller playMedia:media withChaptersOnly:NO];
+[self.controller playMedia:media standalone:NO];
 ```
 
 The controller immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must bind a Letterbox view to your controller (see below).

@@ -111,7 +111,7 @@ static NSURL *MMFServiceURL(void)
             return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
         }];
         
-        [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+        [self.controller playURN:OnDemandVideoURN standalone:NO];
         
         [self waitForExpectationsWithTimeout:30. handler:nil];
         
@@ -144,7 +144,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertFalse(self.controller.loading);
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -185,7 +185,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playMedia:media withChaptersOnly:NO];
+    [self.controller playMedia:media standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -226,7 +226,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playMedia:media withChaptersOnly:NO];
+    [self.controller playMedia:media standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     
@@ -250,7 +250,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
+    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
     [self.controller play];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
@@ -273,7 +273,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -308,7 +308,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -350,7 +350,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:swi:video:_NO_ID_" withChaptersOnly:NO];
+    [self.controller playURN:@"urn:swi:video:_NO_ID_" standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -387,7 +387,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:rts:video:playlist500" withChaptersOnly:NO];
+    [self.controller playURN:@"urn:rts:video:playlist500" standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -423,7 +423,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:@"urn:rts:video:onlyHDS" withChaptersOnly:NO];
+    [self.controller playURN:@"urn:rts:video:onlyHDS" standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     
@@ -448,7 +448,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -475,7 +475,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -507,7 +507,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -538,7 +538,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -565,7 +565,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -592,7 +592,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -632,7 +632,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     // Media and composition not immediately available, fetched by the controller
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -663,7 +663,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -707,7 +707,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -721,7 +721,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -735,7 +735,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -759,7 +759,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
@@ -773,7 +773,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     // TTC
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSkipBackward]);
@@ -824,7 +824,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertFalse([self.controller canSkipBackward]);
@@ -848,7 +848,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveDVRVideoURN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue(self.controller.live);
@@ -893,7 +893,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandLongVideoURN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Pile up skips forward
@@ -958,7 +958,7 @@ static NSURL *MMFServiceURL(void)
         return preparingReceived && playingReceived;
     }];
     
-    [self.controller playURN:OnDemandLongVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandLongVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1013,7 +1013,7 @@ static NSURL *MMFServiceURL(void)
         return preparingReceived && playingReceived;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveDVRVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1068,7 +1068,7 @@ static NSURL *MMFServiceURL(void)
         return preparingReceived && playingReceived;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1102,7 +1102,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:500];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
     
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1151,7 +1151,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:500];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
     
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1197,7 +1197,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:500];
     NSString *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
     
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1223,7 +1223,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1249,7 +1249,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1275,7 +1275,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveDVRVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1314,7 +1314,7 @@ static NSURL *MMFServiceURL(void)
     };
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
-    [self.controller prepareToPlayURN:OnDemandVideoURN withChaptersOnly:NO completionHandler:NULL];
+    [self.controller prepareToPlayURN:OnDemandVideoURN standalone:NO withCompletionHandler:NULL];
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
@@ -1334,7 +1334,7 @@ static NSURL *MMFServiceURL(void)
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"playbackState" expectedValue:@(SRGMediaPlayerPlaybackStatePreparing)];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
@@ -1357,7 +1357,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1413,7 +1413,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.controller.serviceURL];
-    [[dataProvider mediaCompositionWithURN:OnDemand360VideoURN chaptersOnly:NO completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[dataProvider mediaCompositionForURN:OnDemand360VideoURN standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         media = mediaComposition.fullLengthMedia;
         
@@ -1426,7 +1426,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMedia:media withChaptersOnly:NO];
+    [self.controller playMedia:media standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, media.URN);
@@ -1446,7 +1446,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1492,7 +1492,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1539,7 +1539,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1596,7 +1596,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = LiveOnlyVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1645,7 +1645,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
@@ -1717,7 +1717,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1759,7 +1759,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-15];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
@@ -1791,7 +1791,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-1];
     NSDate *endDate = [startDate dateByAddingTimeInterval:20];
     NSString *URN = MMFCachedScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
@@ -1837,7 +1837,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.controller.serviceURL];
-    [[dataProvider mediaCompositionWithURN:URN chaptersOnly:NO completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[dataProvider mediaCompositionForURN:URN standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         media = mediaComposition.fullLengthMedia;
         
@@ -1853,7 +1853,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    [self.controller playMedia:media withChaptersOnly:NO];
+    [self.controller playMedia:media standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
@@ -1914,7 +1914,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFURLChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1957,7 +1957,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFURLChangeVideoURN(startDate, endDate);
-    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
+    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2000,7 +2000,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFURLChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2059,7 +2059,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -2112,7 +2112,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-5];
     NSDate *endDate = [startDate dateByAddingTimeInterval:10];
     NSString *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -2154,7 +2154,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -2175,7 +2175,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -2207,7 +2207,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
@@ -2288,7 +2288,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
@@ -2381,7 +2381,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
@@ -2456,7 +2456,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-10];
     NSDate *endDate = [startDate dateByAddingTimeInterval:5];
     NSString *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
@@ -2483,7 +2483,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
     NSDate *endDate = [startDate dateByAddingTimeInterval:40];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2551,7 +2551,7 @@ static NSURL *MMFServiceURL(void)
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
     NSDate *endDate = [startDate dateByAddingTimeInterval:28];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -2617,7 +2617,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2645,7 +2645,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN withChaptersOnly:YES];
+    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:YES];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2686,7 +2686,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2694,7 +2694,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMediaComposition *fetchedMediaComposition = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[dataProvider mediaCompositionWithURN:@"urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651" chaptersOnly:NO completionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[dataProvider mediaCompositionForURN:@"urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651" standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         fetchedMediaComposition = mediaComposition;
         [expectation fulfill];
@@ -2725,7 +2725,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2755,7 +2755,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2790,7 +2790,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -2827,7 +2827,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:OnDemandAudioWithChaptersURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandAudioWithChaptersURN standalone:NO];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -2869,7 +2869,7 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:MMFOnDemandLongVideoURN withChaptersOnly:YES];
+    [self.controller playURN:MMFOnDemandLongVideoURN standalone:YES];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -2905,7 +2905,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2925,7 +2925,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2953,7 +2953,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -2983,7 +2983,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3020,7 +3020,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller prepareToPlayURN:URN withChaptersOnly:NO completionHandler:nil];
+    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3059,7 +3059,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3089,7 +3089,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN withChaptersOnly:NO];
+    [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3136,7 +3136,7 @@ static NSURL *MMFServiceURL(void)
     
     NSString *URN = OnDemandLongVideoURN;
     NSString *segmentURN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:segmentURN withChaptersOnly:NO];
+    [self.controller playURN:segmentURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3156,7 +3156,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN1 = OnDemandVideoURN;
-    [self.controller playURN:URN1 withChaptersOnly:NO];
+    [self.controller playURN:URN1 standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3165,7 +3165,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN2 = OnDemandLongVideoURN;
-    [self.controller playURN:URN2 withChaptersOnly:NO];
+    [self.controller playURN:URN2 standalone:NO];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3185,7 +3185,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     NSString *URN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:URN withChaptersOnly:YES];
+    [self.controller playURN:URN standalone:YES];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -3239,7 +3239,7 @@ static NSURL *MMFServiceURL(void)
     
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:LiveDVRVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveDVRVideoURN standalone:NO];
     
     XCTAssertTrue(self.controller.loading);
     
@@ -3271,7 +3271,7 @@ static NSURL *MMFServiceURL(void)
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@YES];
     
-    [self.controller playURN:LiveDVRVideoURN withChaptersOnly:NO];
+    [self.controller playURN:LiveDVRVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -3287,7 +3287,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     self.controller.updateInterval = 10.;
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -3313,7 +3313,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     self.controller.updateInterval = 10.;
-    [self.controller playURN:OnDemandVideoURN withChaptersOnly:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
