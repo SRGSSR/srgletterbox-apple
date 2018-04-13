@@ -64,16 +64,14 @@
 
 #pragma mark Players
 
-- (void)openSimplePlayerWithURNString:(NSString *)URNString
+- (void)openSimplePlayerWithURN:(NSString *)URN
 {
-    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
     SimplePlayerViewController *playerViewController = [[SimplePlayerViewController alloc] initWithURN:URN];
     [self.navigationController pushViewController:playerViewController animated:YES];
 }
 
-- (void)openStandalonePlayerWithURNString:(NSString *)URNString
+- (void)openStandalonePlayerWithURN:(NSString *)URN
 {
-    SRGMediaURN *URN = [SRGMediaURN mediaURNWithString:URNString];
     StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -84,15 +82,14 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly
+- (void)openModalPlayerWithURN:(NSString *)URN standalone:(BOOL)chapterOnly
 {
-    [self openModalPlayerWithURNString:URNString chaptersOnly:chapterOnly serviceURL:nil updateInterval:nil];
+    [self openModalPlayerWithURN:URN standalone:chapterOnly serviceURL:nil updateInterval:nil];
 }
 
-- (void)openModalPlayerWithURNString:(NSString *)URNString chaptersOnly:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
+- (void)openModalPlayerWithURN:(NSString *)URN standalone:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
-    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN chaptersOnly:chapterOnly serviceURL:serviceURL updateInterval:updateInterval];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN standalone:chapterOnly serviceURL:serviceURL updateInterval:updateInterval];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -103,23 +100,18 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openMediaListWithType:(MediaListType)mediaListType uid:(NSString *)uid
+- (void)openMediaListWithType:(MediaListType)mediaListType URN:(NSString *)URN
 {
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType uid:uid];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType URN:URN];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
-- (void)openPlaylistForShowWithURNString:(NSString *)URNString
+- (void)openPlaylistForShowWithURN:(NSString *)URN
 {
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
     
-    SRGShowURN *showURN = [SRGShowURN showURNWithString:URNString];
-    if (! showURN) {
-        return;
-    }
-    
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:SRGDataProviderBusinessUnitIdentifierRTS];
-    [[self.dataProvider latestEpisodesForShowWithURN:showURN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
+    [[self.dataProvider latestEpisodesForShowWithURN:URN maximumPublicationMonth:nil completionBlock:^(SRGEpisodeComposition * _Nullable episodeComposition, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
         if (error) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
             [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleDefault handler:nil]];
@@ -152,12 +144,8 @@
     [self presentViewController:playlistViewController animated:YES completion:nil];
 }
 
-- (void)openMultiPlayerWithURNString:(nullable NSString *)URNString URNString1:(nullable NSString *)URNString1 URNString2:(nullable NSString *)URNString2
+- (void)openMultiPlayerWithURN:(NSString *)URN URN1:(NSString *)URN1 URN2:(NSString *)URN2
 {
-    SRGMediaURN *URN = URNString ? [SRGMediaURN mediaURNWithString:URNString] : nil;
-    SRGMediaURN *URN1 = URNString1 ? [SRGMediaURN mediaURNWithString:URNString1] : nil;
-    SRGMediaURN *URN2 = URNString2 ? [SRGMediaURN mediaURNWithString:URNString2] : nil;
-    
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -172,8 +160,8 @@
 {
     NSParameterAssert(completionBlock);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter a media URN", nil)
-                                                                             message:NSLocalizedString(@"The media will be played with the advanced player.\nFormat: urn:[BU]:[video|audio]:[uid]", nil)
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter media URN", nil)
+                                                                             message:NSLocalizedString(@"For example: urn:[BU]:[video|audio]:[uid]", nil)
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -202,8 +190,8 @@
     static NSString * const kVideoOnDemandWithChapters360URNString = @"urn:rts:video:7800215";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
     
-    static NSString * const kVideoOnDemandChaptersOnlyFullLengthURNString = @"urn:srf:video:dc4a4f8c-e83e-46b3-a5e3-ebfde3a29b88";
-    static NSString * const kVideoOnDemandChaptersOnlyStartOnChapterURNString = @"urn:srf:video:519d66ec-b5ac-4373-b916-82c255928351";
+    static NSString * const kVideoOnDemandstandaloneFullLengthURNString = @"urn:srf:video:dc4a4f8c-e83e-46b3-a5e3-ebfde3a29b88";
+    static NSString * const kVideoOnDemandstandaloneStartOnChapterURNString = @"urn:srf:video:519d66ec-b5ac-4373-b916-82c255928351";
     
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
@@ -232,19 +220,19 @@
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openSimplePlayerWithURNString:kVideoOnDemandURNString];
+                    [self openSimplePlayerWithURN:kVideoOnDemandURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openSimplePlayerWithURNString:kVideoOnDemandSegmentsURNString];
+                    [self openSimplePlayerWithURN:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 2: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openSimplePlayerWithURNString:URNString];
+                        [self openSimplePlayerWithURN:URNString];
                     }];
                     break;
                 }
@@ -259,19 +247,19 @@
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openStandalonePlayerWithURNString:kVideoOnDemandURNString];
+                    [self openStandalonePlayerWithURN:kVideoOnDemandURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openStandalonePlayerWithURNString:kVideoOnDemandSegmentsURNString];
+                    [self openStandalonePlayerWithURN:kVideoOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 2: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openStandalonePlayerWithURNString:URNString];
+                        [self openStandalonePlayerWithURN:URNString];
                     }];
                     break;
                 }
@@ -286,104 +274,104 @@
         case 2: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandURNString standalone:NO];
                     break;
                 }
                     
                 case 1: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandShortClipURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandShortClipURNString standalone:NO];
                     break;
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandSegmentsURNString standalone:NO];
                     break;
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandStartOnSegmentURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandStartOnSegmentURNString standalone:NO];
                     break;
                 }
                     
                 case 4: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandWithNoFullLengthURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandWithNoFullLengthURNString standalone:NO];
                     break;
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandBlockedSegmentURNString standalone:NO];
                     break;
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandBlockedSegmentOverlapURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandBlockedSegmentOverlapURNString standalone:NO];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandHybridURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandHybridURNString standalone:NO];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kVideoOnDemand360URNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemand360URNString standalone:NO];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandWithChapters360URNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandWithChapters360URNString standalone:NO];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandNoTokenURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOnDemandNoTokenURNString standalone:NO];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURNString:kVideoDVRURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoDVRURNString standalone:NO];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kVideoLiveURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoLiveURNString standalone:NO];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandSegmentsURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kAudioOnDemandSegmentsURNString standalone:NO];
                     break;
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURNString:kAudioOnDemandStartOnSegmentURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kAudioOnDemandStartOnSegmentURNString standalone:NO];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithURNString:kAudioDVRURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kAudioDVRURNString standalone:NO];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithURNString:kAudioDVRRegionalURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kAudioDVRRegionalURNString standalone:NO];
                     break;
                 }
                     
                 case 17: {
-                    [self openModalPlayerWithURNString:kInvalidURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kInvalidURNString standalone:NO];
                     break;
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURNString:nil chaptersOnly:NO];
+                    [self openModalPlayerWithURN:nil standalone:NO];
                     break;
                 }
                     
                 case 19: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openModalPlayerWithURNString:URNString chaptersOnly:NO];
+                        [self openModalPlayerWithURN:URNString standalone:NO];
                     }];
                     break;
                 }
@@ -398,29 +386,29 @@
         case 3: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandChaptersOnlyFullLengthURNString chaptersOnly:YES];
+                    [self openModalPlayerWithURN:kVideoOnDemandstandaloneFullLengthURNString standalone:YES];
                     break;
                 }
                     
                 case 1: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandChaptersOnlyStartOnChapterURNString chaptersOnly:YES];
+                    [self openModalPlayerWithURN:kVideoOnDemandstandaloneStartOnChapterURNString standalone:YES];
                     break;
                 }
                     
                 case 2: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandSegmentsURNString chaptersOnly:YES];
+                    [self openModalPlayerWithURN:kVideoOnDemandSegmentsURNString standalone:YES];
                     break;
                 }
                     
                 case 3: {
-                    [self openModalPlayerWithURNString:kVideoOnDemandStartOnSegmentURNString chaptersOnly:YES];
+                    [self openModalPlayerWithURN:kVideoOnDemandStartOnSegmentURNString standalone:YES];
                     break;
                 }
                     
                 case 4: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openModalPlayerWithURNString:URNString chaptersOnly:YES];
+                        [self openModalPlayerWithURN:URNString standalone:YES];
                     }];
                     break;
                 }
@@ -435,13 +423,13 @@
         case 4: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURNString:kVideoOverriddenURNString chaptersOnly:NO];
+                    [self openModalPlayerWithURN:kVideoOverriddenURNString standalone:NO];
                     break;
                 }
                     
                 case 1: {
-                    [self openModalPlayerWithURNString:kMMFScheduledLivestreamURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFScheduledLivestreamURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
@@ -460,8 +448,8 @@
                     NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
                     
                     NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
-                    [self openModalPlayerWithURNString:URNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:URNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
@@ -480,8 +468,8 @@
                     NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
                     
                     NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
-                    [self openModalPlayerWithURNString:URNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:URNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
@@ -500,80 +488,80 @@
                     NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
                     
                     NSString *URNString = [NSString stringWithFormat:@"%@_%@_%@", kMMFScheduledLivestreamURNString, @(startTimestamp), @(endTimestamp)];
-                    [self openModalPlayerWithURNString:URNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:URNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 5: {
-                    [self openModalPlayerWithURNString:kMMFCachedScheduledLivestreamURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFCachedScheduledLivestreamURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyGeoblockedURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFTemporarilyGeoblockedURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURNString:kMMFDVRKillSwitchURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFDVRKillSwitchURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStreamURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStreamURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLimitedDVRStreamURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFSwissTxtLimitedDVRStreamURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtLiveOnlyStreamURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFSwissTxtLiveOnlyStreamURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURNString:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURNString:kMMFTemporarilyNotFoundURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFTemporarilyNotFoundURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURNString:kMMFRTSMultipleAudiosURNString
-                                          chaptersOnly:NO
+                    [self openModalPlayerWithURN:kMMFRTSMultipleAudiosURNString
+                                          standalone:NO
                                             serviceURL:LetterboxDemoMMFServiceURL()
                                         updateInterval:@(SRGLetterboxUpdateIntervalDefault)];
                     break;
@@ -589,22 +577,22 @@
         case 5: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608506" URNString1:@"urn:rts:video:3608517" URNString2:kVideoDVRURNString];
+                    [self openMultiPlayerWithURN:@"urn:rts:video:3608506" URN1:@"urn:rts:video:3608517" URN2:kVideoDVRURNString];
                     break;
                 }
                     
                 case 1: {
-                    [self openMultiPlayerWithURNString:kVideoOnDemand360URNString URNString1:kVideoOnDemandSegmentsURNString URNString2:kVideoDVRURNString];
+                    [self openMultiPlayerWithURN:kVideoOnDemand360URNString URN1:kVideoOnDemandSegmentsURNString URN2:kVideoDVRURNString];
                     break;
                 }
                     
                 case 2: {
-                    [self openMultiPlayerWithURNString:@"urn:swi:video:43767184" URNString1:@"urn:swi:video:43767258" URNString2:@"urn:swi:video:43845942"];
+                    [self openMultiPlayerWithURN:@"urn:swi:video:43767184" URN1:@"urn:swi:video:43767258" URN2:@"urn:swi:video:43845942"];
                     break;
                 }
 
                 case 3: {
-                    [self openMultiPlayerWithURNString:@"urn:rts:video:3608517" URNString1:nil URNString2:@"urn:rts:video:1234567"];
+                    [self openMultiPlayerWithURN:@"urn:rts:video:3608517" URN1:nil URN2:@"urn:rts:video:1234567"];
                     break;
                 }
                     
@@ -647,32 +635,30 @@
         case 7: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openMediaListWithType:MediaListLivecenterSRF uid:nil];
+                    [self openMediaListWithType:MediaListLivecenterSRF URN:nil];
                     break;
                 }
                     
                 case 1: {
-                    [self openMediaListWithType:MediaListLivecenterRTS uid:nil];
+                    [self openMediaListWithType:MediaListLivecenterRTS URN:nil];
                     break;
                 }
                     
                 case 2: {
-                    [self openMediaListWithType:MediaListLivecenterRSI uid:nil];
+                    [self openMediaListWithType:MediaListLivecenterRSI URN:nil];
                     break;
                 }
                     
                 case 3: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter a MMF topic list ID", nil)
-                                                                                             message:NSLocalizedString(@"The medias will be played with the advanced player.\nFormat: [topic_id]", nil)
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic ID", nil)
+                                                                                             message:nil
                                                                                       preferredStyle:UIAlertControllerStyleAlert];
                     
-                    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                        textField.placeholder = LetterboxDemoNonLocalizedString(@"demo-id");
-                    }];
+                    [alertController addTextFieldWithConfigurationHandler:nil];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                        [self openMediaListWithType:MediaListMMFTopicList uid:alertController.textFields.firstObject.text];
+                        [self openMediaListWithType:MediaListMMFTopic URN:[NSString stringWithFormat:@"urn:rts:topic:tv:%@", alertController.textFields.firstObject.text]];
                         
                     }]];
                     [self presentViewController:alertController animated:YES completion:nil];
@@ -689,17 +675,17 @@
         case 8: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:105233"];
+                    [self openPlaylistForShowWithURN:@"urn:rts:show:tv:105233"];
                     break;
                 }
                     
                 case 1: {
-                    [self openPlaylistForShowWithURNString:@"urn:rts:show:tv:6454706"];
+                    [self openPlaylistForShowWithURN:@"urn:rts:show:tv:6454706"];
                     break;
                 }
                     
                 case 2: {
-                    [self openPlaylistForShowWithURNString:@"urn:rts:show:radio:8864883"];
+                    [self openPlaylistForShowWithURN:@"urn:rts:show:radio:8864883"];
                     break;
                 }
                     

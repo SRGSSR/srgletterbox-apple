@@ -92,41 +92,40 @@
     self.medias = nil;
     [self.tableView reloadData];
     
-    SRGDataProviderBusinessUnitIdentifier businessUnitIdentifier = nil;
+    SRGVendor vendor = SRGVendorNone;
     switch (self.autoplayList) {
         case AutoplayListSRFTrendingMedias: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierSRF;
+            vendor = SRGVendorSRF;
             break;
         }
             
         case AutoplayListRTSTrendingMedias: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRTS;
+            vendor = SRGVendorRTS;
             break;
         }
             
         case AutoplayListRSITrendingMedias: {
-            businessUnitIdentifier = SRGDataProviderBusinessUnitIdentifierRSI;
+            vendor = SRGVendorRSI;
             break;
         }
             
         default: {
+            return;
             break;
         }
     }
     
-    if (businessUnitIdentifier) {
-        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL() businessUnitIdentifier:businessUnitIdentifier];
-        self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
-        
-        SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-            self.medias = medias;
-            [self.tableView reloadData];
-        };
-        
-        SRGRequest *request = [self.dataProvider tvTrendingMediasWithLimit:@50 completionBlock:completionBlock];
-        [request resume];
-        self.request = request;
-    }
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
+    self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
+    
+    SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.medias = medias;
+        [self.tableView reloadData];
+    };
+    
+    SRGRequest *request = [self.dataProvider tvTrendingMediasForVendor:vendor withLimit:@50 completionBlock:completionBlock];
+    [request resume];
+    self.request = request;
 }
 
 #pragma mark UITableViewDataSource protocol

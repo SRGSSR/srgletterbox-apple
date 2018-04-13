@@ -13,7 +13,7 @@
 
 @interface StandalonePlayerViewController ()
 
-@property (nonatomic) SRGMediaURN *URN;
+@property (nonatomic, copy) NSString *URN;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -30,7 +30,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(SRGMediaURN *)URN
+- (instancetype)initWithURN:(NSString *)URN
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -53,11 +53,16 @@
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+#pragma clang diagnostic pop
 
 #pragma mark View lifecycle
 
@@ -72,7 +77,7 @@
     self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
     if (self.URN) {
-        [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+        [self.letterboxController playURN:self.URN standalone:NO];
     }
 }
 

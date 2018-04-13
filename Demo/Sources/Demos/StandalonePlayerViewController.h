@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface StandalonePlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN;
+- (instancetype)initWithURN:(nullable NSString *)URN;
 
 @end
 

@@ -28,6 +28,8 @@
 {
     [super awakeFromNib];
     
+    self.backgroundColor = [UIColor srg_blueColor];
+    
     // Workaround UIImage view tint color bug
     // See http://stackoverflow.com/a/26042893/760435
     UIImage *image = self.iconImageView.image;

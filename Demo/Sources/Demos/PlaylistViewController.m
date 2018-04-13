@@ -57,11 +57,16 @@
     return viewController;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+#pragma clang diagnostic pop
 
 #pragma mark View lifecycle
 
@@ -92,7 +97,7 @@
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
-        [self.letterboxController playMedia:firstMedia withChaptersOnly:NO];
+        [self.letterboxController playMedia:firstMedia standalone:NO];
     }
 }
 

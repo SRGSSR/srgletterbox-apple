@@ -13,9 +13,9 @@
 
 @interface MultiPlayerViewController ()
 
-@property (nonatomic) SRGMediaURN *URN;
-@property (nonatomic) SRGMediaURN *URN1;
-@property (nonatomic) SRGMediaURN *URN2;
+@property (nonatomic, copy) NSString *URN;
+@property (nonatomic, copy) NSString *URN1;
+@property (nonatomic, copy) NSString *URN2;
 
 @property (nonatomic, getter=isUserInterfaceAlwaysHidden) BOOL userInterfaceAlwaysHidden;
 
@@ -37,7 +37,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(nullable SRGMediaURN *)URN URN1:(nullable SRGMediaURN *)URN1 URN2:(nullable SRGMediaURN *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
+- (instancetype)initWithURN:(NSString *)URN URN1:(NSString *)URN1 URN2:(NSString *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
 {
     id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = [SRGLetterboxService sharedService].pictureInPictureDelegate;
     
@@ -107,15 +107,15 @@
     
     if (! self.letterboxController.pictureInPictureActive) {
         if (self.URN) {
-            [self.letterboxController playURN:self.URN withChaptersOnly:NO];
+            [self.letterboxController playURN:self.URN standalone:NO];
         }
         
         if (self.URN1) {
-            [self.smallLetterboxController1 playURN:self.URN1 withChaptersOnly:NO];
+            [self.smallLetterboxController1 playURN:self.URN1 standalone:NO];
         }
         
         if (self.URN2) {
-            [self.smallLetterboxController2 playURN:self.URN2 withChaptersOnly:NO];
+            [self.smallLetterboxController2 playURN:self.URN2 standalone:NO];
         }
     }
 }

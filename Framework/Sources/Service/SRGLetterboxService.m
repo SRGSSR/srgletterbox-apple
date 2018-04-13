@@ -59,6 +59,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 #pragma mark Object lifecycle
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -79,6 +82,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
     return self;
 }
+
+#pragma clang diagnostic pop
 
 - (void)dealloc
 {
@@ -178,7 +183,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                      name:SRGLetterboxMetadataDidChangeNotification
                                                    object:controller];
         
+        @weakify(self)
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
             [self updateNowPlayingInformationWithController:controller];
             [self updateRemoteCommandCenterWithController:controller];
         }];
@@ -253,7 +260,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         // Since dispatch_after cannot be cancelled, deal with the possibility that services are enabled again while
         // the the block has not been executed yet
-        if (! _disablingAudioServices) {
+        if (! self->_disablingAudioServices) {
             return;
         }
         
@@ -403,7 +410,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (SRGMedia *)nowPlayingMediaForController:(SRGLetterboxController *)controller
 {
-    if (controller.URN.mediaType == SRGMediaTypeVideo) {
+    if (controller.media.mediaType == SRGMediaTypeVideo) {
         return controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
     }
     else {
