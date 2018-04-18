@@ -10,15 +10,18 @@
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxView+Private.h"
+#import "SRGStackView.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGErrorView ()
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
-@property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
+@property (nonatomic, weak) IBOutlet SRGStackView *stackView;
+
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) UILabel *messageLabel;
+@property (nonatomic, weak) UILabel *instructionsLabel;
 
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *retryTapGestureRecognizer;
 
@@ -34,6 +37,40 @@
     
     self.messageLabel.numberOfLines = 3;
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
+    
+    self.stackView.spacing = 8.f;
+    
+    UIView *spacerView1 = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.stackView addSubview:spacerView1];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    imageView.tintColor = UIColor.whiteColor;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.stackView addSubview:imageView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 255;
+    }];
+    self.imageView = imageView;
+    
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    messageLabel.textAlignment = NSTextAlignmentCenter;
+    messageLabel.textColor = UIColor.whiteColor;
+    messageLabel.numberOfLines = 1;
+    [self.stackView addSubview:messageLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 255;
+    }];
+    self.messageLabel = messageLabel;
+    
+    UILabel *instructionsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    instructionsLabel.textAlignment = NSTextAlignmentCenter;
+    instructionsLabel.textColor = UIColor.lightGrayColor;
+    instructionsLabel.numberOfLines = 1;
+    [self.stackView addSubview:instructionsLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 255;
+    }];
+    self.instructionsLabel = instructionsLabel;
+    
+    UIView *spacerView2 = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.stackView addSubview:spacerView2];
 }
 
 - (void)contentSizeCategoryDidChange
