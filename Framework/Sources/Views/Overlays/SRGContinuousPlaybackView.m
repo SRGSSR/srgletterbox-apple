@@ -11,6 +11,8 @@
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGRemainingTimeButton.h"
+#import "SRGStackView.h"
+#import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
@@ -19,12 +21,14 @@
 
 @interface SRGContinuousPlaybackView ()
 
-@property (nonatomic, weak) IBOutlet UILabel *introLabel;
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
-@property (nonatomic, weak) IBOutlet UIButton *cancelButton;
+@property (nonatomic, weak) IBOutlet SRGStackView *stackView;
+
+@property (nonatomic, weak) UILabel *introLabel;
+@property (nonatomic, weak) UILabel *titleLabel;
+@property (nonatomic, weak) UILabel *subtitleLabel;
+@property (nonatomic, weak) SRGRemainingTimeButton *remainingTimeButton;
+@property (nonatomic, weak) UIButton *cancelButton;
 
 @end
 
@@ -36,8 +40,71 @@
 {
     [super awakeFromNib];
     
-    self.introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
-    [self.cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
+    self.stackView.spacing = 2.f;
+    
+    UIView *spacerView1 = [[UIView alloc] init];
+    [self.stackView addSubview:spacerView1];
+    
+    UILabel *introLabel = [[UILabel alloc] init];
+    introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
+    introLabel.textAlignment = NSTextAlignmentCenter;
+    introLabel.textColor = UIColor.lightGrayColor;
+    introLabel.numberOfLines = 1;
+    [self.stackView addSubview:introLabel];
+    self.introLabel = introLabel;
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = UIColor.whiteColor;
+    titleLabel.numberOfLines = 1;
+    [self.stackView addSubview:titleLabel];
+    self.titleLabel = titleLabel;
+    
+    UILabel *subtitleLabel = [[UILabel alloc] init];
+    subtitleLabel.textAlignment = NSTextAlignmentCenter;
+    subtitleLabel.textColor = UIColor.lightGrayColor;
+    subtitleLabel.numberOfLines = 1;
+    [self.stackView addSubview:subtitleLabel];
+    self.subtitleLabel = subtitleLabel;
+    
+    UIView *spacerView2 = [[UIView alloc] init];
+    [self.stackView addSubview:spacerView2 withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 6.f;
+    }];
+    
+    SRGStackView *horizontalStackView = [[SRGStackView alloc] init];
+    horizontalStackView.direction = SRGStackViewDirectionHorizontal;
+    [self.stackView addSubview:horizontalStackView];
+    
+    UIView *horizontalSpacerView1 = [[UIView alloc] init];
+    [horizontalStackView addSubview:horizontalSpacerView1];
+    
+    SRGRemainingTimeButton *remainingTimeButton = [[SRGRemainingTimeButton alloc] init];
+    remainingTimeButton.tintColor = UIColor.whiteColor;
+    [remainingTimeButton setImage:[UIImage srg_letterboxCenteredPlayImage] forState:UIControlStateNormal];
+    [remainingTimeButton addTarget:self action:@selector(playUpcomingMedia:) forControlEvents:UIControlEventTouchUpInside];
+    [horizontalStackView addSubview:remainingTimeButton withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 55.f;
+    }];
+    self.remainingTimeButton = remainingTimeButton;
+    
+    UIView *horizontalSpacerView2 = [[UIView alloc] init];
+    [horizontalStackView addSubview:horizontalSpacerView2];
+    
+    UIView *spacerView3 = [[UIView alloc] init];
+    [self.stackView addSubview:spacerView3 withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 6.f;
+    }];
+    
+    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelButton.titleLabel.textColor = UIColor.whiteColor;
+    [cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
+    [cancelButton addTarget:self action:@selector(cancelContinuousPlayback:) forControlEvents:UIControlEventTouchUpInside];
+    [self.stackView addSubview:cancelButton];
+    self.cancelButton = cancelButton;
+    
+    UIView *spacerView4 = [[UIView alloc] init];
+    [self.stackView addSubview:spacerView4];
 }
 
 - (void)contentSizeCategoryDidChange
@@ -145,7 +212,7 @@
 
 #pragma mark Actions
 
-- (IBAction)cancelContinuousPlayback:(id)sender
+- (void)cancelContinuousPlayback:(id)sender
 {
     // Save media informations since cancelling will change it
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
@@ -153,7 +220,7 @@
     [self.delegate continuousPlaybackView:self didCancelWithUpcomingMedia:upcomingMedia];
 }
 
-- (IBAction)playUpcomingMedia:(id)sender
+- (void)playUpcomingMedia:(id)sender
 {
     // Save media information since playing will change it
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;

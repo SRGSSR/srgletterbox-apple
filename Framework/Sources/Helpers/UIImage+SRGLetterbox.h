@@ -59,6 +59,8 @@ OBJC_EXPORT CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 /**
  *  Playback buttons.
  */
++ (UIImage *)srg_letterboxCenteredPlayImage;
+
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet;
 + (UIImage *)srg_letterboxPauseImageInSet:(SRGImageSet)imageSet;
 + (UIImage *)srg_letterboxStopImageInSet:(SRGImageSet)imageSet;

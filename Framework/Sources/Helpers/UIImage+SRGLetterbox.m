@@ -231,6 +231,11 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return [UIImage imageNamed:imageName inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
 }
 
++ (UIImage *)srg_letterboxCenteredPlayImage
+{
+    return [UIImage srg_letterboxImageNamed:@"play_centered-32"];
+}
+
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet
 {
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-48"] : [UIImage srg_letterboxImageNamed:@"play-64"];

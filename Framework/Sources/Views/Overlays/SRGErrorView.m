@@ -40,10 +40,10 @@
     
     self.stackView.spacing = 8.f;
     
-    UIView *spacerView1 = [[UIView alloc] initWithFrame:CGRectZero];
+    UIView *spacerView1 = [[UIView alloc] init];
     [self.stackView addSubview:spacerView1];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    UIImageView *imageView = [[UIImageView alloc] init];
     imageView.tintColor = UIColor.whiteColor;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self.stackView addSubview:imageView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
@@ -51,7 +51,7 @@
     }];
     self.imageView = imageView;
     
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    UILabel *messageLabel = [[UILabel alloc] init];
     messageLabel.textAlignment = NSTextAlignmentCenter;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.numberOfLines = 1;
@@ -60,7 +60,7 @@
     }];
     self.messageLabel = messageLabel;
     
-    UILabel *instructionsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    UILabel *instructionsLabel = [[UILabel alloc] init];
     instructionsLabel.textAlignment = NSTextAlignmentCenter;
     instructionsLabel.textColor = UIColor.lightGrayColor;
     instructionsLabel.numberOfLines = 1;
@@ -69,7 +69,7 @@
     }];
     self.instructionsLabel = instructionsLabel;
     
-    UIView *spacerView2 = [[UIView alloc] initWithFrame:CGRectZero];
+    UIView *spacerView2 = [[UIView alloc] init];
     [self.stackView addSubview:spacerView2];
 }
 
