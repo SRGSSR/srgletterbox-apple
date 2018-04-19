@@ -49,21 +49,18 @@
     introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
     introLabel.textAlignment = NSTextAlignmentCenter;
     introLabel.textColor = UIColor.lightGrayColor;
-    introLabel.numberOfLines = 1;
     [self.stackView addSubview:introLabel];
     self.introLabel = introLabel;
     
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.textColor = UIColor.whiteColor;
-    titleLabel.numberOfLines = 1;
     [self.stackView addSubview:titleLabel];
     self.titleLabel = titleLabel;
     
     UILabel *subtitleLabel = [[UILabel alloc] init];
     subtitleLabel.textAlignment = NSTextAlignmentCenter;
     subtitleLabel.textColor = UIColor.lightGrayColor;
-    subtitleLabel.numberOfLines = 1;
     [self.stackView addSubview:subtitleLabel];
     self.subtitleLabel = subtitleLabel;
     

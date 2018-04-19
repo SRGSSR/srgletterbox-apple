@@ -54,7 +54,6 @@
     UILabel *messageLabel = [[UILabel alloc] init];
     messageLabel.textAlignment = NSTextAlignmentCenter;
     messageLabel.textColor = UIColor.whiteColor;
-    messageLabel.numberOfLines = 1;
     [self.stackView addSubview:messageLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
         attributes.hugging = 255;
     }];
@@ -63,7 +62,6 @@
     UILabel *instructionsLabel = [[UILabel alloc] init];
     instructionsLabel.textAlignment = NSTextAlignmentCenter;
     instructionsLabel.textColor = UIColor.lightGrayColor;
-    instructionsLabel.numberOfLines = 1;
     [self.stackView addSubview:instructionsLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
         attributes.hugging = 255;
     }];
