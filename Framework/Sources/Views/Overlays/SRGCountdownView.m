@@ -11,6 +11,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGPaddedLabel.h"
+#import "SRGStackView.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -21,36 +22,33 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @property (nonatomic, readonly) NSTimeInterval currentRemainingTimeInterval;
 
-@property (nonatomic, weak) IBOutlet UIStackView *remainingTimeStackView;
+@property (nonatomic, weak) IBOutlet SRGStackView *remainingTimeStackView;
 
-@property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
+@property (nonatomic) NSArray<SRGStackView *>* digitStackViews;
 
-@property (nonatomic, weak) IBOutlet UIStackView *daysStackView;
+@property (nonatomic, weak) SRGStackView *daysStackView;
 
-@property (nonatomic, weak) IBOutlet UILabel *days1Label;
-@property (nonatomic, weak) IBOutlet UILabel *days0Label;
-@property (nonatomic, weak) IBOutlet UILabel *daysTitleLabel;
+@property (nonatomic, weak) UILabel *days1Label;
+@property (nonatomic, weak) UILabel *days0Label;
+@property (nonatomic, weak) UILabel *daysTitleLabel;
 
-@property (nonatomic, weak) IBOutlet UIStackView *hoursStackView;
+@property (nonatomic, weak) SRGStackView *hoursStackView;
 
-@property (nonatomic, weak) IBOutlet UILabel *hoursColonLabel;
-@property (nonatomic, weak) IBOutlet UILabel *hours1Label;
-@property (nonatomic, weak) IBOutlet UILabel *hours0Label;
-@property (nonatomic, weak) IBOutlet UILabel *hoursTitleLabel;
+@property (nonatomic, weak) UILabel *hoursColonLabel;
+@property (nonatomic, weak) UILabel *hours1Label;
+@property (nonatomic, weak) UILabel *hours0Label;
+@property (nonatomic, weak) UILabel *hoursTitleLabel;
 
-@property (nonatomic, weak) IBOutlet UILabel *minutesColonLabel;
-@property (nonatomic, weak) IBOutlet UILabel *minutes1Label;
-@property (nonatomic, weak) IBOutlet UILabel *minutes0Label;
-@property (nonatomic, weak) IBOutlet UILabel *minutesTitleLabel;
+@property (nonatomic, weak) UILabel *minutesColonLabel;
+@property (nonatomic, weak) UILabel *minutes1Label;
+@property (nonatomic, weak) UILabel *minutes0Label;
+@property (nonatomic, weak) UILabel *minutesTitleLabel;
 
-@property (nonatomic, weak) IBOutlet UILabel *seconds1Label;
-@property (nonatomic, weak) IBOutlet UILabel *seconds0Label;
-@property (nonatomic, weak) IBOutlet UILabel *secondsTitleLabel;
+@property (nonatomic, weak) UILabel *seconds1Label;
+@property (nonatomic, weak) UILabel *seconds0Label;
+@property (nonatomic, weak) UILabel *secondsTitleLabel;
 
-@property (nonatomic) IBOutletCollection(UILabel) NSArray *colonLabels;
-
-@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *widthConstraints;
-@property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *heightConstraints;
+@property (nonatomic) NSArray<UILabel *> *colonLabels;
 
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *remainingTimeLabel;
@@ -84,26 +82,263 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 {
     [super awakeFromNib];
     
-    self.days1Label.layer.masksToBounds = YES;
-    self.days0Label.layer.masksToBounds = YES;
+    self.remainingTimeStackView.direction = SRGStackViewDirectionHorizontal;
+    self.remainingTimeStackView.spacing = 3.f;
     
-    self.daysTitleLabel.text = SRGLetterboxLocalizedString(@"Days", @"Short label for countdown display");
+    NSMutableArray<SRGStackView *> *digitsStackViews = [NSMutableArray array];
+    NSMutableArray<UILabel *> *colonLabels = [NSMutableArray array];
     
-    self.hours1Label.layer.masksToBounds = YES;
-    self.hours0Label.layer.masksToBounds = YES;
+    // Header
     
-    self.hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Hours", @"Short label for countdown display");
+    UIView *spacerView1 = [[UIView alloc] init];
+    [self.remainingTimeStackView addSubview:spacerView1];
     
-    self.minutes1Label.layer.masksToBounds = YES;
-    self.minutes0Label.layer.masksToBounds = YES;
+    // Days
     
-    self.minutesTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
+    SRGStackView *daysStackView = [[SRGStackView alloc] init];
+    [self.remainingTimeStackView addSubview:daysStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 70.f;
+    }];
+    self.daysStackView = daysStackView;
     
-    self.seconds1Label.layer.masksToBounds = YES;
-    self.seconds0Label.layer.masksToBounds = YES;
+    UIView *daysSpacerView1 = [[UIView alloc] init];
+    [daysStackView addSubview:daysSpacerView1];
     
-    self.secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
+    SRGStackView *daysDigitsStackView = [[SRGStackView alloc] init];
+    daysDigitsStackView.direction = SRGStackViewDirectionHorizontal;
+    daysDigitsStackView.spacing = 2.f;
+    [daysStackView addSubview:daysDigitsStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 45.f;
+    }];
+    [digitsStackViews addObject:daysDigitsStackView];
     
+    UILabel *daysColonLabel = [[UILabel alloc] init];
+    daysColonLabel.text = @":";
+    daysColonLabel.textAlignment = NSTextAlignmentCenter;
+    daysColonLabel.alpha = 0.f;
+    daysColonLabel.font = [UIFont systemFontOfSize:36.f];
+    [daysDigitsStackView addSubview:daysColonLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    [colonLabels addObject:daysColonLabel];
+    
+    UILabel *days1Label = [[UILabel alloc] init];
+    days1Label.textAlignment = NSTextAlignmentCenter;
+    days1Label.textColor = UIColor.whiteColor;
+    days1Label.backgroundColor = UIColor.blackColor;
+    days1Label.layer.masksToBounds = YES;
+    [daysDigitsStackView addSubview:days1Label];
+    self.days1Label = days1Label;
+    
+    UILabel *days0Label = [[UILabel alloc] init];
+    days0Label.textAlignment = NSTextAlignmentCenter;
+    days0Label.textColor = UIColor.whiteColor;
+    days0Label.backgroundColor = UIColor.blackColor;
+    days0Label.layer.masksToBounds = YES;
+    [daysDigitsStackView addSubview:days0Label];
+    self.days0Label = days0Label;
+    
+    UILabel *daysTitleLabel = [[UILabel alloc] init];
+    daysTitleLabel.text = SRGLetterboxLocalizedString(@"Days", @"Short label for countdown display");
+    daysTitleLabel.textAlignment = NSTextAlignmentCenter;
+    daysTitleLabel.textColor = UIColor.whiteColor;
+    [daysStackView addSubview:daysTitleLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    self.daysTitleLabel = daysTitleLabel;
+    
+    UIView *daysSpacerView2 = [[UIView alloc] init];
+    [daysStackView addSubview:daysSpacerView2];
+    
+    // Hours
+    
+    SRGStackView *hoursStackView = [[SRGStackView alloc] init];
+    [self.remainingTimeStackView addSubview:hoursStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 70.f;
+    }];
+    self.hoursStackView = hoursStackView;
+    
+    UIView *hoursSpacerView1 = [[UIView alloc] init];
+    [hoursStackView addSubview:hoursSpacerView1];
+    
+    SRGStackView *hoursDigitsStackView = [[SRGStackView alloc] init];
+    hoursDigitsStackView.direction = SRGStackViewDirectionHorizontal;
+    hoursDigitsStackView.spacing = 2.f;
+    [hoursStackView addSubview:hoursDigitsStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 45.f;
+    }];
+    [digitsStackViews addObject:hoursStackView];
+    
+    UILabel *hoursColonLabel = [[UILabel alloc] init];
+    hoursColonLabel.text = @":";
+    hoursColonLabel.textAlignment = NSTextAlignmentCenter;
+    hoursColonLabel.textColor = UIColor.whiteColor;
+    hoursColonLabel.font = [UIFont systemFontOfSize:36.f];
+    [hoursDigitsStackView addSubview:hoursColonLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    self.hoursColonLabel = hoursColonLabel;
+    [colonLabels addObject:hoursColonLabel];
+    
+    UILabel *hours1Label = [[UILabel alloc] init];
+    hours1Label.textAlignment = NSTextAlignmentCenter;
+    hours1Label.textColor = UIColor.whiteColor;
+    hours1Label.backgroundColor = UIColor.blackColor;
+    hours1Label.layer.masksToBounds = YES;
+    [hoursDigitsStackView addSubview:hours1Label];
+    self.hours1Label = hours1Label;
+    
+    UILabel *hours0Label = [[UILabel alloc] init];
+    hours0Label.textAlignment = NSTextAlignmentCenter;
+    hours0Label.textColor = UIColor.whiteColor;
+    hours0Label.backgroundColor = UIColor.blackColor;
+    hours0Label.layer.masksToBounds = YES;
+    [hoursDigitsStackView addSubview:hours0Label];
+    self.hours0Label = hours0Label;
+    
+    UILabel *hoursTitleLabel = [[UILabel alloc] init];
+    hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Hours", @"Short label for countdown display");
+    hoursTitleLabel.textAlignment = NSTextAlignmentCenter;
+    hoursTitleLabel.textColor = UIColor.whiteColor;
+    [hoursStackView addSubview:hoursTitleLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    self.hoursTitleLabel = hoursTitleLabel;
+    
+    UIView *hoursSpacerView2 = [[UIView alloc] init];
+    [hoursStackView addSubview:hoursSpacerView2];
+    
+    // Minutes
+    
+    SRGStackView *minutesStackView = [[SRGStackView alloc] init];
+    [self.remainingTimeStackView addSubview:minutesStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 70.f;
+    }];
+    
+    UIView *minutesSpacerView1 = [[UIView alloc] init];
+    [minutesStackView addSubview:minutesSpacerView1];
+    
+    SRGStackView *minutesDigitsStackView = [[SRGStackView alloc] init];
+    minutesDigitsStackView.direction = SRGStackViewDirectionHorizontal;
+    minutesDigitsStackView.spacing = 2.f;
+    [minutesStackView addSubview:minutesDigitsStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 45.f;
+    }];
+    [digitsStackViews addObject:minutesDigitsStackView];
+    
+    UILabel *minutesColonLabel = [[UILabel alloc] init];
+    minutesColonLabel.text = @":";
+    minutesColonLabel.textAlignment = NSTextAlignmentCenter;
+    minutesColonLabel.textColor = UIColor.whiteColor;
+    minutesColonLabel.font = [UIFont systemFontOfSize:36.f];
+    [minutesDigitsStackView addSubview:minutesColonLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    self.minutesColonLabel = minutesColonLabel;
+    [colonLabels addObject:minutesColonLabel];
+    
+    UILabel *minutes1Label = [[UILabel alloc] init];
+    minutes1Label.textAlignment = NSTextAlignmentCenter;
+    minutes1Label.textColor = UIColor.whiteColor;
+    minutes1Label.backgroundColor = UIColor.blackColor;
+    minutes1Label.layer.masksToBounds = YES;
+    [minutesDigitsStackView addSubview:minutes1Label];
+    self.minutes1Label = minutes1Label;
+    
+    UILabel *minutes0Label = [[UILabel alloc] init];
+    minutes0Label.textAlignment = NSTextAlignmentCenter;
+    minutes0Label.textColor = UIColor.whiteColor;
+    minutes0Label.backgroundColor = UIColor.blackColor;
+    minutes0Label.layer.masksToBounds = YES;
+    [minutesDigitsStackView addSubview:minutes0Label];
+    self.minutes0Label = minutes0Label;
+    
+    UILabel *minutesTitleLabel = [[UILabel alloc] init];
+    minutesTitleLabel.textAlignment = NSTextAlignmentCenter;
+    minutesTitleLabel.textColor = UIColor.whiteColor;
+    minutesTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
+    [minutesStackView addSubview:minutesTitleLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    self.minutesTitleLabel = minutesTitleLabel;
+    
+    UIView *minutesSpacerView2 = [[UIView alloc] init];
+    [minutesStackView addSubview:minutesSpacerView2];
+    
+    // Seconds
+    
+    SRGStackView *secondsStackView = [[SRGStackView alloc] init];
+    [self.remainingTimeStackView addSubview:secondsStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 70.f;
+    }];
+    
+    UIView *secondsSpacerView1 = [[UIView alloc] init];
+    [secondsStackView addSubview:secondsSpacerView1];
+    
+    SRGStackView *secondsDigitsStackView = [[SRGStackView alloc] init];
+    secondsDigitsStackView.direction = SRGStackViewDirectionHorizontal;
+    secondsDigitsStackView.spacing = 2.f;
+    [secondsStackView addSubview:secondsDigitsStackView withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.length = 45.f;
+    }];
+    [digitsStackViews addObject:secondsDigitsStackView];
+    
+    UILabel *secondsColonLabel = [[UILabel alloc] init];
+    secondsColonLabel.text = @":";
+    secondsColonLabel.textAlignment = NSTextAlignmentCenter;
+    secondsColonLabel.textColor = UIColor.whiteColor;
+    secondsColonLabel.font = [UIFont systemFontOfSize:36.f];
+    [secondsDigitsStackView addSubview:secondsColonLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    [colonLabels addObject:secondsColonLabel];
+    
+    UILabel *seconds1Label = [[UILabel alloc] init];
+    seconds1Label.textAlignment = NSTextAlignmentCenter;
+    seconds1Label.textColor = UIColor.whiteColor;
+    seconds1Label.backgroundColor = UIColor.blackColor;
+    seconds1Label.layer.masksToBounds = YES;
+    [secondsDigitsStackView addSubview:seconds1Label];
+    self.seconds1Label = seconds1Label;
+    
+    UILabel *seconds0Label = [[UILabel alloc] init];
+    seconds0Label.textAlignment = NSTextAlignmentCenter;
+    seconds0Label.textColor = UIColor.whiteColor;
+    seconds0Label.backgroundColor = UIColor.blackColor;
+    seconds0Label.layer.masksToBounds = YES;
+    [secondsDigitsStackView addSubview:seconds0Label];
+    self.seconds0Label = seconds0Label;
+    
+    UILabel *secondsTitleLabel = [[UILabel alloc] init];
+    secondsTitleLabel.textAlignment = NSTextAlignmentCenter;
+    secondsTitleLabel.textColor = UIColor.whiteColor;
+    secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
+    [secondsStackView addSubview:secondsTitleLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    self.secondsTitleLabel = secondsTitleLabel;
+    
+    UIView *secondsSpacerView2 = [[UIView alloc] init];
+    [secondsStackView addSubview:secondsSpacerView2];
+    
+    // Footer
+    
+    UILabel *trailingColonLabel = [[UILabel alloc] init];
+    trailingColonLabel.text = @":";
+    trailingColonLabel.alpha = 0.f;
+    trailingColonLabel.font = [UIFont systemFontOfSize:36.f];
+    [self.remainingTimeStackView addSubview:trailingColonLabel withAttributes:^(SRGStackAttributes * _Nonnull attributes) {
+        attributes.hugging = 251;
+    }];
+    [colonLabels addObject:trailingColonLabel];
+    
+    UIView *spacerView2 = [[UIView alloc] init];
+    [self.remainingTimeStackView addSubview:spacerView2];
+    
+    // Other
+    self.digitStackViews = [digitsStackViews copy];
+    
+    self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
     self.messageLabel.horizontalMargin = 5.f;
     self.messageLabel.verticalMargin = 2.f;
     self.messageLabel.layer.masksToBounds = YES;
@@ -111,8 +346,6 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     self.remainingTimeLabel.horizontalMargin = 5.f;
     self.remainingTimeLabel.verticalMargin = 2.f;
     self.remainingTimeLabel.layer.masksToBounds = YES;
-    
-    self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -220,9 +453,11 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (void)updateLayout
 {
+    // FIXME: Does not work anymore. The stack needs a mechanism for attributes updates
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
     
     // Appearance
+#if 0
     [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = isLarge ? 88.f : 70.f;
     }];
@@ -230,6 +465,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [self.heightConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
         constraint.constant = isLarge ? 57.f : 45.f;
     }];
+#endif
     
     CGFloat digitSize = isLarge ? 45.f : 36.f;
     CGFloat titleSize = isLarge ? 17.f : 13.f;
@@ -270,7 +506,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     
     self.messageLabel.layer.cornerRadius = digitCornerRadius;
     
-    [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.digitStackViews enumerateObjectsUsingBlock:^(SRGStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
         stackView.spacing = isLarge ? 3.f : 2.f;
     }];
     
