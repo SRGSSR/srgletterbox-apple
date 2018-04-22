@@ -44,50 +44,40 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="adG-9X-AMX" customClass="SRGStackView">
-                    <rect key="frame" x="0.0" y="393" width="599" height="48"/>
+                    <rect key="frame" x="8" y="393" width="583" height="48"/>
                     <subviews>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tho-59-1JB" userLabel="View mode Button" customClass="SRGViewModeButton">
                             <rect key="frame" x="275" y="0.0" width="48" height="48"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="image" keyPath="viewModeMonoscopicImage" value="view_mode_monoscopic-48"/>
                                 <userDefinedRuntimeAttribute type="image" keyPath="viewModeStereoscopicImage" value="view_mode_stereoscopic-48"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="48"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_contentHugging">
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xno-LT-xef" customClass="SRGAirplayButton">
                             <rect key="frame" x="275" y="0.0" width="48" height="48"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="48"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_contentHugging">
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RYB-bE-iGb" customClass="SRGPictureInPictureButton">
                             <rect key="frame" x="275" y="0.0" width="48" height="48"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="48"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </view>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cvo-3Q-WuB" userLabel="Spacer View" customClass="SRGUIView">
-                            <rect key="frame" x="179" y="-40" width="240" height="128"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="8"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_contentHugging">
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
@@ -105,33 +95,18 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </slider>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cIN-4T-wco" userLabel="Spacer View" customClass="SRGUIView">
-                            <rect key="frame" x="179" y="-40" width="240" height="128"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfY-e1-gJs" userLabel="Duration Label">
                             <rect key="frame" x="285" y="15" width="27.5" height="17"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
-                        </label>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gdh-jb-FG7" userLabel="Spacer View" customClass="SRGUIView">
-                            <rect key="frame" x="179" y="-40" width="240" height="128"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="12"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_compressionResistance">
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
-                        </view>
+                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="joB-a5-mWm" userLabel="Live Label" customClass="SRGLiveLabel">
                             <rect key="frame" x="285" y="14" width="29" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -140,16 +115,19 @@
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="srg_alignmentType" value="c"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_compressionResistance">
+                                    <integer key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4v3-Sk-Mrv" customClass="SRGTracksButton">
                             <rect key="frame" x="275" y="0.0" width="48" height="48"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="48"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_contentHugging">
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
@@ -159,8 +137,8 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="srg_length">
-                                    <real key="value" value="48"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="srg_contentHugging">
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </button>
@@ -171,6 +149,9 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="horizontal" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button">
@@ -210,7 +191,7 @@
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="DS9-EZ-6jg" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="adG-9X-AMX" secondAttribute="bottom" id="3As-jw-Uad"/>
-                <constraint firstItem="DS9-EZ-6jg" firstAttribute="trailing" secondItem="adG-9X-AMX" secondAttribute="trailing" id="9n8-ER-lkn"/>
+                <constraint firstItem="DS9-EZ-6jg" firstAttribute="trailing" secondItem="adG-9X-AMX" secondAttribute="trailing" constant="8" id="9n8-ER-lkn"/>
                 <constraint firstItem="bWK-b9-2Ez" firstAttribute="leading" secondItem="sJC-uY-JVi" secondAttribute="trailing" id="C2n-59-Cwy"/>
                 <constraint firstItem="bWK-b9-2Ez" firstAttribute="centerY" secondItem="sJC-uY-JVi" secondAttribute="centerY" id="Ddn-2m-QO1"/>
                 <constraint firstAttribute="bottomMargin" secondItem="adG-9X-AMX" secondAttribute="bottom" priority="750" id="F43-Ru-HXt"/>
@@ -224,7 +205,7 @@
                 <constraint firstItem="sJC-uY-JVi" firstAttribute="leading" secondItem="XsM-fD-Xjk" secondAttribute="trailing" id="eAJ-PX-FFt"/>
                 <constraint firstItem="fsV-iR-Pxo" firstAttribute="centerY" secondItem="XsM-fD-Xjk" secondAttribute="centerY" id="gfv-z3-wa6"/>
                 <constraint firstItem="adG-9X-AMX" firstAttribute="top" secondItem="5yN-2Q-RQa" secondAttribute="bottom" id="ing-qW-vyy"/>
-                <constraint firstItem="adG-9X-AMX" firstAttribute="leading" secondItem="DS9-EZ-6jg" secondAttribute="leading" id="nMZ-Lj-H1N"/>
+                <constraint firstItem="adG-9X-AMX" firstAttribute="leading" secondItem="DS9-EZ-6jg" secondAttribute="leading" constant="8" id="nMZ-Lj-H1N"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
