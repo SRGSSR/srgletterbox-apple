@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -194,7 +193,7 @@
                 <constraint firstItem="DS9-EZ-6jg" firstAttribute="trailing" secondItem="adG-9X-AMX" secondAttribute="trailing" constant="8" id="9n8-ER-lkn"/>
                 <constraint firstItem="bWK-b9-2Ez" firstAttribute="leading" secondItem="sJC-uY-JVi" secondAttribute="trailing" id="C2n-59-Cwy"/>
                 <constraint firstItem="bWK-b9-2Ez" firstAttribute="centerY" secondItem="sJC-uY-JVi" secondAttribute="centerY" id="Ddn-2m-QO1"/>
-                <constraint firstAttribute="bottomMargin" secondItem="adG-9X-AMX" secondAttribute="bottom" priority="750" id="F43-Ru-HXt"/>
+                <constraint firstAttribute="bottom" secondItem="adG-9X-AMX" secondAttribute="bottom" priority="750" id="F43-Ru-HXt"/>
                 <constraint firstItem="XsM-fD-Xjk" firstAttribute="leading" secondItem="fsV-iR-Pxo" secondAttribute="trailing" id="JrM-ym-l0e"/>
                 <constraint firstAttribute="trailing" secondItem="5yN-2Q-RQa" secondAttribute="trailing" id="N6X-ro-O3E"/>
                 <constraint firstItem="XsM-fD-Xjk" firstAttribute="centerY" secondItem="xIx-po-6VE" secondAttribute="centerY" id="QNG-Zw-jZO"/>
