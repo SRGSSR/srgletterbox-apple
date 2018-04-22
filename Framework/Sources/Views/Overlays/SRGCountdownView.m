@@ -14,6 +14,7 @@
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
+#import <SRGStackView/SRGStackView.h>
 
 static const NSInteger SRGCountdownViewDaysLimit = 100;
 
@@ -21,17 +22,17 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @property (nonatomic, readonly) NSTimeInterval currentRemainingTimeInterval;
 
-@property (nonatomic, weak) IBOutlet UIStackView *remainingTimeStackView;
+@property (nonatomic, weak) IBOutlet SRGStackView *remainingTimeStackView;
 
-@property (nonatomic) IBOutletCollection(UIStackView) NSArray* digitStackViews;
+@property (nonatomic) IBOutletCollection(SRGStackView) NSArray* digitStackViews;
 
-@property (nonatomic, weak) IBOutlet UIStackView *daysStackView;
+@property (nonatomic, weak) IBOutlet SRGStackView *daysStackView;
 
 @property (nonatomic, weak) IBOutlet UILabel *days1Label;
 @property (nonatomic, weak) IBOutlet UILabel *days0Label;
 @property (nonatomic, weak) IBOutlet UILabel *daysTitleLabel;
 
-@property (nonatomic, weak) IBOutlet UIStackView *hoursStackView;
+@property (nonatomic, weak) IBOutlet SRGStackView *hoursStackView;
 
 @property (nonatomic, weak) IBOutlet UILabel *hoursColonLabel;
 @property (nonatomic, weak) IBOutlet UILabel *hours1Label;
@@ -270,9 +271,11 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     
     self.messageLabel.layer.cornerRadius = digitCornerRadius;
     
+#if 0
     [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
         stackView.spacing = isLarge ? 3.f : 2.f;
     }];
+#endif
     
     self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
     
