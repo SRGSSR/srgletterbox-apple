@@ -9,7 +9,6 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
-#import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
@@ -22,6 +21,7 @@
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
+#import <SRGStackView/SRGStackView.h>
 
 @interface SRGControlsView ()
 
@@ -30,7 +30,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
 
-@property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
+@property (nonatomic, weak) IBOutlet SRGStackView *bottomStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
@@ -39,9 +39,7 @@
 @property (nonatomic, weak) IBOutlet SRGFullScreenButton *fullScreenPhantomButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *durationLabel;
-@property (nonatomic, weak) IBOutlet SRGControlWrapperView *durationLabelWrapperView;
 @property (nonatomic, weak) IBOutlet SRGLiveLabel *liveLabel;
-@property (nonatomic, weak) IBOutlet SRGControlWrapperView *liveLabelWrapperView;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToBackwardConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
@@ -253,16 +251,16 @@
     self.forwardSeekButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
-    self.durationLabelWrapperView.alwaysHidden = NO;
+    self.durationLabel.hidden = NO;
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = NO;
-    self.liveLabelWrapperView.alwaysHidden = NO;
+    self.liveLabel.hidden = NO;
     self.tracksButton.alwaysHidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 167.f) {
         self.timeSlider.hidden = YES;
-        self.durationLabelWrapperView.alwaysHidden = YES;
+        self.durationLabel.hidden = YES;
     }
     if (height < 120.f) {
         self.backwardSeekButton.hidden = YES;
@@ -270,7 +268,7 @@
         self.skipToLiveButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
-        self.liveLabelWrapperView.alwaysHidden = YES;
+        self.liveLabel.hidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
@@ -278,14 +276,14 @@
     if (width < 296.f) {
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
-        self.durationLabelWrapperView.alwaysHidden = YES;
+        self.durationLabel.hidden = YES;
     }
     if (width < 214.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
-        self.liveLabelWrapperView.alwaysHidden = YES;
+        self.liveLabel.hidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
