@@ -50,6 +50,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @property (nonatomic) IBOutletCollection(UILabel) NSArray *colonLabels;
 
+// FIXME: Restore large size; fix title label centering (check spacing, size, etc.)
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *widthConstraints;
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *heightConstraints;
 
@@ -271,11 +272,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     
     self.messageLabel.layer.cornerRadius = digitCornerRadius;
     
-#if 0
     [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
         stackView.spacing = isLarge ? 3.f : 2.f;
     }];
-#endif
     
     self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
     
