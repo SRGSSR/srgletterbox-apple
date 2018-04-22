@@ -244,8 +244,9 @@
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
-    // Show or hide the phantom button in the controls stack, as the real full-screen button will follow its frame
-    self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShouldHideFullScreenButton:self];
+    BOOL isFullScreenButtonHidden = [self.delegate controlsViewShouldHideFullScreenButton:self];
+    self.fullScreenPhantomButton.hidden = isFullScreenButtonHidden;
+    self.fullScreenButton.hidden = isFullScreenButtonHidden;
     
     // Responsiveness
     self.backwardSeekButton.hidden = NO;
