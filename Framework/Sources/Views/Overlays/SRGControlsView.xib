@@ -138,6 +138,9 @@
                             <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="srg_alignmentType" value="c"/>
+                            </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4v3-Sk-Mrv" customClass="SRGTracksButton">
                             <rect key="frame" x="275" y="0.0" width="48" height="48"/>
