@@ -17,6 +17,7 @@
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
 #import "UIFont+SRGLetterbox.h"
+#import "UIView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <Masonry/Masonry.h>
@@ -251,10 +252,10 @@
     self.forwardSeekButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
-    self.durationLabel.hidden = NO;
+    self.durationLabel.srg_alwaysHidden = NO;
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = NO;
-    self.liveLabel.hidden = NO;
+    self.liveLabel.srg_alwaysHidden = NO;
     self.tracksButton.alwaysHidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
@@ -268,7 +269,7 @@
         self.skipToLiveButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
-        self.liveLabel.hidden = YES;
+        self.liveLabel.srg_alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
@@ -276,14 +277,14 @@
     if (width < 296.f) {
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
-        self.durationLabel.hidden = YES;
+        self.durationLabel.srg_alwaysHidden = YES;
     }
     if (width < 214.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
-        self.liveLabel.hidden = YES;
+        self.liveLabel.srg_alwaysHidden = YES;
         self.tracksButton.alwaysHidden = YES;
     }
     
