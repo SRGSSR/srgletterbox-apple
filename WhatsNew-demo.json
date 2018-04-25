@@ -2,5 +2,6 @@
   "1.8b2-34": "- New design",
   "1.8-35": "- New design: the Letterbox player design has been updated according to the new official specifications.\n- Resizable: the Letterbox player view behaves well for tiny screen sizes.\n- Playlists: supplied by an associated data source.\n- Continuous playback: when media playback ends, applications can optionally provide a delay after which the next item in the playlist will be automatically played.",
   "1.9-36": "- Fix livestream initial erratic behavior on iOS 11.3.",
-  "1.9.1-37": "- Fix notification color."
+  "1.9.1-37": "- Fix notification color.",
+  "1.9.2": "- Maintenance release"
 }
