@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Return YES when the device is locked.
  */
-+ (BOOL)srg_isLocked;
++ (BOOL)srg_letterbox_isLocked;
 
 @end
 
