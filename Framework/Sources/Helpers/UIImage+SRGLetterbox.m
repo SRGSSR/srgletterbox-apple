@@ -312,7 +312,8 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         }
             
         case SRGBlockingReasonStartDate:
-        case SRGBlockingReasonEndDate: {
+        case SRGBlockingReasonEndDate:
+        case SRGBlockingReasonNone: {
             return nil;
             break;
         }

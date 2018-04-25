@@ -384,7 +384,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || [AVAudioSession srg_isAirplayActive]
-                                                                                                            || [UIDevice srg_isLocked])) {
+                                                                                                            || [UIDevice srg_letterbox_isLocked])) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
