@@ -282,7 +282,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || [AVAudioSession srg_isAirplayActive]
-                                                                                                            || [UIDevice srg_isLocked])) {
+                                                                                                            || [UIDevice srg_letterbox_isLocked])) {
         SRGLetterboxCommands availableCommands = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
         if (self.commandDelegate) {
             availableCommands = [self.commandDelegate letterboxAvailableCommands];
