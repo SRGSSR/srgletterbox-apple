@@ -48,6 +48,10 @@
     self.media360ImageView.image = nil;
     self.media360ImageView.image = media360Image;
     
+    self.media360ImageView.layer.shadowOpacity = 0.3f;
+    self.media360ImageView.layer.shadowRadius = 2.f;
+    self.media360ImageView.layer.shadowOffset = CGSizeMake(0.f, 1.f);
+    
     UIImage *favoriteImage = self.favoriteImageView.image;
     self.favoriteImageView.image = nil;
     self.favoriteImageView.image = favoriteImage;
