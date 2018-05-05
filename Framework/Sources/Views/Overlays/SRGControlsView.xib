@@ -84,11 +84,8 @@
                             <rect key="frame" x="179" y="12" width="240.5" height="23"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <color key="maximumTrackTintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="maximumTrackTintColor" white="1" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                    <color key="value" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="color" keyPath="bufferingTrackColor">
                                     <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </userDefinedRuntimeAttribute>
@@ -154,7 +151,7 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button">
-                    <rect key="frame" x="201.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="225.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="backward-48"/>
@@ -163,12 +160,12 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XsM-fD-Xjk" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                    <rect key="frame" x="265.5" y="176.5" width="68" height="88"/>
+                    <rect key="frame" x="289.5" y="189.5" width="20" height="62"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJC-uY-JVi" userLabel="Forward Button">
-                    <rect key="frame" x="333.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="309.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="forward-48"/>
@@ -177,7 +174,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWK-b9-2Ez">
-                    <rect key="frame" x="397.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="373.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="back_live-48"/>
