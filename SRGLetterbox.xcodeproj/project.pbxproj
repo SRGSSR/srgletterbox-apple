@@ -119,6 +119,8 @@
 		6F50597420581CAF00823003 /* SRGLetterboxPlaybackButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */; };
 		6F50597520581CAF00823003 /* SRGFullScreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594D20581CAF00823003 /* SRGFullScreenButton.m */; };
 		6F50597620581CAF00823003 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */; };
+		6F5543EA20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */; };
+		6F5543EB20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */; };
 		6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */; };
 		6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */; };
 		6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */; };
@@ -439,6 +441,8 @@
 		6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxPlaybackButton.h; sourceTree = "<group>"; };
 		6F50594D20581CAF00823003 /* SRGFullScreenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGFullScreenButton.m; sourceTree = "<group>"; };
 		6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGRemainingTimeButton.h; sourceTree = "<group>"; };
+		6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDateComponentsFormatter+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDateComponentsFormatter+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -661,6 +665,8 @@
 				6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */,
 				6FF0D8981F4DABF200B3C1EB /* SRGTimerTarget.h */,
 				6FF0D8991F4DABF200B3C1EB /* SRGTimerTarget.m */,
+				6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */,
+				6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */,
 				087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */,
 				087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */,
 				6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */,
@@ -961,6 +967,7 @@
 				6F50596520581CAF00823003 /* SRGAvailabilityView.h in Headers */,
 				6F50597420581CAF00823003 /* SRGLetterboxPlaybackButton.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
+				6F5543EA20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.h in Headers */,
 				6F50595820581CAF00823003 /* SRGAccessibilityView.h in Headers */,
 				6F50596A20581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h in Headers */,
 				6F50596320581CAF00823003 /* SRGLetterboxSubdivisionCell.h in Headers */,
@@ -1224,6 +1231,7 @@
 				6FB696541F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m in Sources */,
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
 				6F50597220581CAF00823003 /* SRGRemainingTimeButton.m in Sources */,
+				6F5543EB20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.m in Sources */,
 				6F50596F20581CAF00823003 /* SRGLetterboxControllerView.m in Sources */,
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell.m in Sources */,
