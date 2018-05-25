@@ -45,6 +45,11 @@
     }
 }
 
+- (CGRect)accessibilityFrame
+{
+    return UIAccessibilityConvertFrameToScreenCoordinates(self.parentLetterboxView.bounds, self.parentLetterboxView);
+}
+
 #pragma mark Actions
 
 - (void)toggleUserInterface:(id)sender
