@@ -47,7 +47,18 @@
 
 - (CGRect)accessibilityFrame
 {
-    return UIAccessibilityConvertFrameToScreenCoordinates(self.parentLetterboxView.bounds, self.parentLetterboxView);
+    if (self.accessibilityFrameView) {
+        return UIAccessibilityConvertFrameToScreenCoordinates(self.accessibilityFrameView.bounds, self.accessibilityFrameView);
+    }
+    else {
+        return [super accessibilityFrame];
+    }
+}
+
+- (CGPoint)accessibilityActivationPoint
+{
+    CGRect frame = UIAccessibilityConvertFrameToScreenCoordinates(self.bounds, self);
+    return CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
 }
 
 #pragma mark Actions

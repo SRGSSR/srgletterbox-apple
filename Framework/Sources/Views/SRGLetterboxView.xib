@@ -54,13 +54,16 @@
                     <gestureRecognizers/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
-                    <rect key="frame" x="308" y="160" width="1" height="1"/>
+                    <rect key="frame" x="308.5" y="160" width="1" height="1"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="LQa-bm-N9c"/>
                         <constraint firstAttribute="width" constant="1" id="bY5-J7-3d5"/>
                     </constraints>
+                    <connections>
+                        <outlet property="accessibilityFrameView" destination="mae-cR-Ydf" id="bdq-t3-AoR"/>
+                    </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View" customClass="SRGNotificationView">
                     <rect key="frame" x="0.0" y="321" width="617" height="0.0"/>
@@ -102,6 +105,8 @@
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="8YW-uc-lDC"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="N5a-bL-wow" secondAttribute="bottom" id="C1R-um-9Gn"/>
+                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerY" secondItem="mae-cR-Ydf" secondAttribute="centerY" id="CAb-kb-xy5"/>
+                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="CTG-Ol-qfZ"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="CTi-QM-nX4"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="Ceb-TG-tgI"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="CsB-8U-o9j"/>
@@ -111,14 +116,12 @@
                 <constraint firstItem="aun-4y-dBi" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="top" id="IMZ-f5-OZQ"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="Iyn-Yd-qxt"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="Kzh-L7-fal"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerX" secondItem="Feb-b9-W6K" secondAttribute="centerX" id="MET-bB-nOC"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="PZq-fu-r05"/>
                 <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Sv9-qj-ejU"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="trailing" secondItem="ZVz-wN-LVi" secondAttribute="trailing" id="X1L-00-GCo"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
                 <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="d11-V3-ugi"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="eWA-9L-Fie"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerY" secondItem="Feb-b9-W6K" secondAttribute="centerY" id="eai-BZ-bGu"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="gcD-T0-Rwt"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="h8D-fQ-44X"/>
                 <constraint firstItem="diO-OC-keM" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="h9R-St-YFc"/>
