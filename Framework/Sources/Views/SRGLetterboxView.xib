@@ -12,7 +12,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGLetterboxView">
             <connections>
-                <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Vms-yM-ckf"/>
                 <outlet property="continuousPlaybackView" destination="In0-qW-XO1" id="bcF-rC-31c"/>
                 <outlet property="controlsBackgroundView" destination="N5a-bL-wow" id="iJ4-Ue-XNU"/>
