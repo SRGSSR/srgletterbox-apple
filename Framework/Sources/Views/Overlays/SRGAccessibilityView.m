@@ -12,6 +12,16 @@
 
 @implementation SRGAccessibilityView
 
+#pragma mark Overrides
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
+    [self addGestureRecognizer:tapGestureRecognizer];
+}
+
 #pragma mark Accessibility
 
 - (BOOL)isAccessibilityElement
@@ -33,6 +43,13 @@
     else {
         return nil;
     }
+}
+
+#pragma mark Actions
+
+- (void)toggleUserInterface:(id)sender
+{
+    [self.parentLetterboxView setTogglableUserInterfaceHidden:! self.parentLetterboxView.userInterfaceHidden animated:YES];
 }
 
 @end

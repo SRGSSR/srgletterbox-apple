@@ -55,9 +55,13 @@
                     <gestureRecognizers/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
+                    <rect key="frame" x="0.0" y="105.5" width="10" height="10"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="x4d-Mk-Rbm"/>
+                        <constraint firstAttribute="width" constant="10" id="yC6-5r-pEW"/>
+                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View" customClass="SRGNotificationView">
                     <rect key="frame" x="0.0" y="321" width="617" height="0.0"/>
@@ -98,7 +102,6 @@
                 <constraint firstItem="diO-OC-keM" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="66N-1p-69l"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="8YW-uc-lDC"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="9hc-0k-Qe3"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="N5a-bL-wow" secondAttribute="bottom" id="C1R-um-9Gn"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="CTi-QM-nX4"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="Ceb-TG-tgI"/>
@@ -107,14 +110,13 @@
                 <constraint firstAttribute="trailing" secondItem="ysx-Uc-uEb" secondAttribute="trailing" id="D8a-X2-bbV"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="Hch-lI-uFP"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="top" id="IMZ-f5-OZQ"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="IVs-aK-IfE"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="Iyn-Yd-qxt"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="Kzh-L7-fal"/>
+                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerY" secondItem="Feb-b9-W6K" secondAttribute="centerY" constant="-50" id="Ncb-ll-7Qg"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="PZq-fu-r05"/>
                 <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Sv9-qj-ejU"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="trailing" secondItem="ZVz-wN-LVi" secondAttribute="trailing" id="X1L-00-GCo"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="bCe-ds-SiE"/>
                 <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="d11-V3-ugi"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="eWA-9L-Fie"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="gcD-T0-Rwt"/>
@@ -127,7 +129,7 @@
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="sXj-cA-rcx"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="v0q-nr-OXF"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="vUw-lf-qtn"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="y82-XT-rig"/>
+                <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="Feb-b9-W6K" secondAttribute="leading" id="wYC-98-FHm"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="ydA-R8-2qf"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="zFw-U5-vTD"/>
             </constraints>
