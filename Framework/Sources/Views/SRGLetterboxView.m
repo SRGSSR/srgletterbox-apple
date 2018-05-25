@@ -111,7 +111,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super awakeFromNib];
     
-    self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
+    self.accessibilityView.hidden = ! UIAccessibilityIsVoiceOverRunning();
     
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
@@ -186,11 +186,11 @@ static void commonInit(SRGLetterboxView *self);
     [super voiceOverStatusDidChange];
     
     if (UIAccessibilityIsVoiceOverRunning()) {
-        self.accessibilityView.alpha = 1.f;
+        self.accessibilityView.hidden = NO;
         [self setTogglableUserInterfaceHidden:NO animated:YES];
     }
     else {
-        self.accessibilityView.alpha = 0.f;
+        self.accessibilityView.hidden = YES;
     }
     
     [self restartInactivityTracker];
