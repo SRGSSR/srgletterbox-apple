@@ -9,7 +9,6 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
-#import "SRGAccessibilityView.h"
 #import "SRGAvailabilityView.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsBackgroundView.h"
@@ -38,7 +37,6 @@ static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
-@property (nonatomic, weak) IBOutlet SRGAccessibilityView *accessibilityView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *playbackView;
 @property (nonatomic, weak) IBOutlet SRGControlsBackgroundView *controlsBackgroundView;
@@ -110,8 +108,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    self.accessibilityView.alpha = UIAccessibilityIsVoiceOverRunning() ? 1.f : 0.f;
     
     self.controlsView.delegate = self;
     self.timelineView.delegate = self;
@@ -186,11 +182,7 @@ static void commonInit(SRGLetterboxView *self);
     [super voiceOverStatusDidChange];
     
     if (UIAccessibilityIsVoiceOverRunning()) {
-        self.accessibilityView.alpha = 1.f;
         [self setTogglableUserInterfaceHidden:NO animated:YES];
-    }
-    else {
-        self.accessibilityView.alpha = 0.f;
     }
     
     [self restartInactivityTracker];
