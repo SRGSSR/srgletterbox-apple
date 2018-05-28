@@ -2547,7 +2547,7 @@ static NSURL *MMFServiceURL(void)
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
-    // Media started 16 seconds ago and is available 28 seconds // Second higlight will be removed
+    // Media started 16 seconds ago and is available 28 seconds. Second higlight will be removed
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
     NSDate *endDate = [startDate dateByAddingTimeInterval:28];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
@@ -2609,6 +2609,37 @@ static NSURL *MMFServiceURL(void)
     XCTAssertNil(self.controller.error);
     XCTAssertFalse([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
     XCTAssertNotEqual(self.controller.mediaComposition.chapters.count, 4);
+}
+
+- (void)testSwissTXTLimitedDVRPlayHighlightAfterLivestreamEnd
+{
+    self.controller.updateInterval = 10.;
+    self.controller.serviceURL = MMFServiceURL();
+    
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-1000.];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:-30.];
+    NSString *URN = [MMFSwissTXTLimitedDVRURN(startDate, endDate) stringByAppendingString:@"_segment1"];
+    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
+    
+    id livestreamEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"No livestream end notification expected");
+    }];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
+    }];
+    [self expectationForElapsedTimeInterval:4. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:livestreamEndObserver];
+    }];
+    
+    XCTAssertEqualObjects(self.controller.URN, URN);
+    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual(self.controller.media.contentType, SRGContentTypeClip);
+    XCTAssertNil(self.controller.error);
 }
 
 - (void)testSwitchToSegmentURN
