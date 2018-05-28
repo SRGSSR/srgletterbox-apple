@@ -121,7 +121,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 // Timers for single metadata updates at start and end times
 @property (nonatomic) NSTimer *startDateTimer;
 @property (nonatomic) NSTimer *endDateTimer;
-@property (nonatomic) NSTimer *liveStreamEndDateTimer;
+@property (nonatomic) NSTimer *livestreamEndDateTimer;
 @property (nonatomic) NSTimer *socialCountViewTimer;
 
 // Timer for continuous playback
@@ -230,7 +230,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     self.channelUpdateTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
-    self.liveStreamEndDateTimer = nil;
+    self.livestreamEndDateTimer = nil;
     self.socialCountViewTimer = nil;
     self.continuousPlaybackTransitionTimer = nil;
 }
@@ -415,10 +415,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     _endDateTimer = endDateTimer;
 }
 
-- (void)setLiveStreamEndDateTimer:(NSTimer *)liveStreamEndDateTimer
+- (void)setLivestreamEndDateTimer:(NSTimer *)livestreamEndDateTimer
 {
-    [_liveStreamEndDateTimer invalidate];
-    _liveStreamEndDateTimer = liveStreamEndDateTimer;
+    [_livestreamEndDateTimer invalidate];
+    _livestreamEndDateTimer = livestreamEndDateTimer;
 }
 
 - (void)setSocialCountViewTimer:(NSTimer *)socialCountViewTimer
@@ -682,7 +682,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         NSTimeInterval endTimeInterval = [mediaComposition.srgletterbox_liveMedia.endDate timeIntervalSinceNow];
         if (endTimeInterval > 0.) {
             @weakify(self)
-            self.liveStreamEndDateTimer = [NSTimer srg_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+            self.livestreamEndDateTimer = [NSTimer srg_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
                 @strongify(self)
                 
                 [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
@@ -690,11 +690,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             }];
         }
         else {
-            self.liveStreamEndDateTimer = nil;
+            self.livestreamEndDateTimer = nil;
         }
     }
     else {
-        self.liveStreamEndDateTimer = nil;
+        self.livestreamEndDateTimer = nil;
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
@@ -990,10 +990,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
         [self updateChannel];
-        [self notifyLivestreamEndWithMedia:mediaComposition.srgletterbox_liveMedia previousMedia:nil];
+        
+        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+        [self notifyLivestreamEndWithMedia:media previousMedia:nil];
         
         // Do not go further if the content is blocked
-        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
