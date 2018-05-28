@@ -5,5 +5,5 @@
   "1.9.1-37": "- Fix notification color.",
   "1.9.2-38": "- Maintenance release",
   "1.9.3-39": "- Improve time slider design.\n- Update media placeholder and red color for the live only label.\n- When entering picture in picture, the picture in picture button does not toggle erratically between states anymore.",
-  "1.9.4-40": "- An issue sometimes preventing player controls from being toggled when VoiceOver is used has been fixed.\nThe red color associated with livestreams has been updated consistently."
+  "1.9.4-40": "- An issue sometimes preventing player controls from being toggled when VoiceOver is used has been fixed.\n- The red color associated with livestreams has been updated consistently.\n- The \"live ended\" notification isn't display anymore when opening a VOD, linked to an expired livestream."
 }
