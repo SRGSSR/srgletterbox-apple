@@ -990,10 +990,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
         [self updateChannel];
-        [self notifyLivestreamEndWithMedia:mediaComposition.srgletterbox_liveMedia previousMedia:nil];
+        
+        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+        [self notifyLivestreamEndWithMedia:media previousMedia:nil];
         
         // Do not go further if the content is blocked
-        SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
