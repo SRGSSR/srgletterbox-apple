@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface SRGAccessibilityView : SRGLetterboxBaseView
 
+/**
+ *  The view which which the accessibility frame must correspond to. If none specified, the receiver frame is
+ *  used.
+ */
+@property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
+
 @end
 
 NS_ASSUME_NONNULL_END

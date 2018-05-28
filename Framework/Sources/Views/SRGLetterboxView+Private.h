@@ -45,6 +45,11 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
  */
 @property (nonatomic, readonly, getter=isUserInterfaceEnabled) BOOL userInterfaceEnabled;
 
+/**
+ *  Hide or the the user interface if togglable, otherwise do nothing.
+ */
+- (void)setTogglableUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

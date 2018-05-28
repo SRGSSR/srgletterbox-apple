@@ -12,6 +12,16 @@
 
 @implementation SRGAccessibilityView
 
+#pragma mark Overrides
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
+    [self addGestureRecognizer:tapGestureRecognizer];
+}
+
 #pragma mark Accessibility
 
 - (BOOL)isAccessibilityElement
@@ -33,6 +43,29 @@
     else {
         return nil;
     }
+}
+
+- (CGRect)accessibilityFrame
+{
+    if (self.accessibilityFrameView) {
+        return UIAccessibilityConvertFrameToScreenCoordinates(self.accessibilityFrameView.bounds, self.accessibilityFrameView);
+    }
+    else {
+        return [super accessibilityFrame];
+    }
+}
+
+- (CGPoint)accessibilityActivationPoint
+{
+    CGRect frame = UIAccessibilityConvertFrameToScreenCoordinates(self.bounds, self);
+    return CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
+}
+
+#pragma mark Actions
+
+- (void)toggleUserInterface:(id)sender
+{
+    [self.parentLetterboxView setTogglableUserInterfaceHidden:! self.parentLetterboxView.userInterfaceHidden animated:YES];
 }
 
 @end

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGLetterboxView">
             <connections>
-                <outlet property="accessibilityView" destination="q5e-ai-PQA" id="gxa-GN-kGS"/>
                 <outlet property="availabilityView" destination="Ipy-eN-bUs" id="Vms-yM-ckf"/>
                 <outlet property="continuousPlaybackView" destination="In0-qW-XO1" id="bcF-rC-31c"/>
                 <outlet property="controlsBackgroundView" destination="N5a-bL-wow" id="iJ4-Ue-XNU"/>
@@ -34,11 +33,6 @@
             <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
-                    <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <gestureRecognizers/>
-                </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gv4-Rp-xBi">
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                 </imageView>
@@ -58,6 +52,18 @@
                     <rect key="frame" x="0.0" y="0.0" width="617" height="321"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <gestureRecognizers/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5e-ai-PQA" userLabel="Accessibility View" customClass="SRGAccessibilityView">
+                    <rect key="frame" x="308.5" y="160" width="1" height="1"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="LQa-bm-N9c"/>
+                        <constraint firstAttribute="width" constant="1" id="bY5-J7-3d5"/>
+                    </constraints>
+                    <connections>
+                        <outlet property="accessibilityFrameView" destination="mae-cR-Ydf" id="bdq-t3-AoR"/>
+                    </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aun-4y-dBi" userLabel="Notification View" customClass="SRGNotificationView">
                     <rect key="frame" x="0.0" y="321" width="617" height="0.0"/>
@@ -98,8 +104,9 @@
                 <constraint firstItem="diO-OC-keM" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="66N-1p-69l"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="6dW-CP-BPD"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="8YW-uc-lDC"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="9hc-0k-Qe3"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="N5a-bL-wow" secondAttribute="bottom" id="C1R-um-9Gn"/>
+                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerY" secondItem="mae-cR-Ydf" secondAttribute="centerY" id="CAb-kb-xy5"/>
+                <constraint firstItem="q5e-ai-PQA" firstAttribute="centerX" secondItem="mae-cR-Ydf" secondAttribute="centerX" id="CTG-Ol-qfZ"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="CTi-QM-nX4"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="Ceb-TG-tgI"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="CsB-8U-o9j"/>
@@ -107,14 +114,12 @@
                 <constraint firstAttribute="trailing" secondItem="ysx-Uc-uEb" secondAttribute="trailing" id="D8a-X2-bbV"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="Hch-lI-uFP"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="bottom" secondItem="ysx-Uc-uEb" secondAttribute="top" id="IMZ-f5-OZQ"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="IVs-aK-IfE"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="Iyn-Yd-qxt"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="mae-cR-Ydf" secondAttribute="bottom" id="Kzh-L7-fal"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="PZq-fu-r05"/>
                 <constraint firstAttribute="trailing" secondItem="mae-cR-Ydf" secondAttribute="trailing" id="Sv9-qj-ejU"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="trailing" secondItem="ZVz-wN-LVi" secondAttribute="trailing" id="X1L-00-GCo"/>
                 <constraint firstItem="aun-4y-dBi" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="bottom" id="aFB-yy-N6r"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="bCe-ds-SiE"/>
                 <constraint firstItem="mae-cR-Ydf" firstAttribute="top" secondItem="ZVz-wN-LVi" secondAttribute="top" id="d11-V3-ugi"/>
                 <constraint firstItem="ysx-Uc-uEb" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="eWA-9L-Fie"/>
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="trailing" secondItem="diO-OC-keM" secondAttribute="trailing" id="gcD-T0-Rwt"/>
@@ -127,7 +132,6 @@
                 <constraint firstItem="Ipy-eN-bUs" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="sXj-cA-rcx"/>
                 <constraint firstItem="In0-qW-XO1" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="v0q-nr-OXF"/>
                 <constraint firstItem="gv4-Rp-xBi" firstAttribute="bottom" secondItem="diO-OC-keM" secondAttribute="bottom" id="vUw-lf-qtn"/>
-                <constraint firstItem="q5e-ai-PQA" firstAttribute="top" secondItem="diO-OC-keM" secondAttribute="top" id="y82-XT-rig"/>
                 <constraint firstItem="N5a-bL-wow" firstAttribute="leading" secondItem="ZVz-wN-LVi" secondAttribute="leading" id="ydA-R8-2qf"/>
                 <constraint firstItem="aWQ-IF-YZO" firstAttribute="leading" secondItem="diO-OC-keM" secondAttribute="leading" id="zFw-U5-vTD"/>
             </constraints>

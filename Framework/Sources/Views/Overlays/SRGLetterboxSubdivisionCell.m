@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGPaddedLabel.h"
+#import "UIColor+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -111,7 +112,7 @@
         
         [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ●")
                                                                                attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                             NSForegroundColorAttributeName : [UIColor redColor] }]];
+                                                                                             NSForegroundColorAttributeName : [UIColor srg_liveRedColor] }]];
         
         self.durationLabel.attributedText = attributedText.copy;
         self.durationLabel.hidden = NO;
