@@ -82,14 +82,14 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openModalPlayerWithURN:(NSString *)URN standalone:(BOOL)chapterOnly
+- (void)openModalPlayerWithURN:(NSString *)URN standalone:(BOOL)standalone
 {
-    [self openModalPlayerWithURN:URN standalone:chapterOnly serviceURL:nil updateInterval:nil];
+    [self openModalPlayerWithURN:URN standalone:standalone serviceURL:nil updateInterval:nil];
 }
 
-- (void)openModalPlayerWithURN:(NSString *)URN standalone:(BOOL)chapterOnly serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
+- (void)openModalPlayerWithURN:(NSString *)URN standalone:(BOOL)standalone serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN standalone:chapterOnly serviceURL:serviceURL updateInterval:updateInterval];
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN standalone:standalone serviceURL:serviceURL updateInterval:updateInterval];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
