@@ -338,8 +338,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     self.updateTimer = [NSTimer srg_timerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
-        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
-            if (URLChanged || error) {
+        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL resourceChanged, NSError *previousError) {
+            if (resourceChanged || error) {
                 [self stop];
             }
             // Start the player if the blocking reason changed from an not available state to an available one
@@ -645,7 +645,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         @weakify(self)
         self.startDateTimer = [NSTimer srg_timerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL URLChanged, NSError *previousError) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL resourceChanged, NSError *previousError) {
                 if (error) {
                     [self stop];
                 }
@@ -734,9 +734,9 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     }
 }
 
-- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL URLChanged, NSError *previousError))completionBlock
+- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL resourceChanged, NSError *previousError))completionBlock
 {
-    void (^updateCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error, BOOL URLChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
+    void (^updateCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error, BOOL resourceChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
         // Do not erase playback errors with successful metadata updates
         if (error || ! [self.error.domain isEqualToString:SRGLetterboxErrorDomain] || self.error.code != SRGLetterboxErrorCodeNotPlayable) {
             [self updateWithError:error];
@@ -746,7 +746,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         
         self.lastUpdateDate = [NSDate date];
         
-        completionBlock ? completionBlock(error, URLChanged, previousError) : nil;
+        completionBlock ? completionBlock(error, resourceChanged, previousError) : nil;
     };
     
     if (self.contentURLOverridden) {
