@@ -71,9 +71,9 @@ NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
         return nil;
     }
     
-    // Use Cloudinary to create square artwork images if retrieved from an image service (SRG SSR images are 16:9).
+    // Use IL image service to create square artwork images for images delivered remotely (SRG SSR images are 16:9).
     if (! artworkURL.fileURL) {
-        NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://srgssr-prod.apigee.net/image-play-scale-2/image/fetch/w_%.0f,h_%.0f,c_pad,b_black/%@", dimension, dimension, artworkURL.absoluteString];
+        NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://il.srgssr.ch/integrationlayer/2.0/image-scale-one-to-one/%@/scale/width/%.0f", imageURL.absoluteString, dimension];
         artworkURL = [NSURL URLWithString:squareArtworkURLString];
     }
     

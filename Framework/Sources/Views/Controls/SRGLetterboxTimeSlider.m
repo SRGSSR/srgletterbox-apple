@@ -6,6 +6,9 @@
 
 #import "SRGLetterboxTimeSlider.h"
 
+#import "UIColor+SRGLetterbox.h"
+
+#import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 static void commonInit(SRGLetterboxTimeSlider *self);
@@ -91,6 +94,13 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         self.valueLabel.hidden = YES;
         self.tipLayer.hidden = YES;
     }
+    
+    UIColor *backgroundColor = self.live ? [UIColor srg_liveRedColor] : UIColor.whiteColor;
+    UIColor *textColor = self.live ? UIColor.whiteColor  : UIColor.blackColor;
+    
+    self.tipLayer.fillColor = backgroundColor.CGColor;
+    self.valueLabel.backgroundColor = backgroundColor;
+    self.valueLabel.textColor = textColor;
 }
 
 @end
@@ -98,7 +108,6 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 static void commonInit(SRGLetterboxTimeSlider *self)
 {
     UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    valueLabel.backgroundColor = [UIColor whiteColor];
     valueLabel.textAlignment = NSTextAlignmentCenter;
     valueLabel.layer.masksToBounds = YES;
     valueLabel.layer.cornerRadius = 1.f;
@@ -117,9 +126,11 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     
     CAShapeLayer *tipLayer = [CAShapeLayer layer];
     tipLayer.frame = CGRectMake(0.f, 0.f, kTipWidth, kTipHeight);
-    tipLayer.fillColor = [UIColor whiteColor].CGColor;
     tipLayer.path = tipPath.CGPath;
-    tipLayer.actions = @{ @"position" : [NSNull null] };        // Disable implicit position animations so that the tip follows position changes instantaneously
+    tipLayer.actions = @{ @keypath(tipLayer.position) : [NSNull null],
+                          @keypath(tipLayer.fillColor) : [NSNull null] };        // Disable implicit animations so that tip updates are applied instantaneously
     [self.layer addSublayer:tipLayer];
     self.tipLayer = tipLayer;
+    
+    [self updateLayoutForValue:self.value];
 }
