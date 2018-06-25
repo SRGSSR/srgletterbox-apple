@@ -25,6 +25,8 @@
     
     application.accessibilityLanguage = @"en";
     
+    [SRGRequest enableNetworkActivityIndicatorManagement];
+    
 #ifndef DEBUG
     
 #ifdef NIGHTLY
