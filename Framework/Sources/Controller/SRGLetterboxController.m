@@ -447,98 +447,67 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Playlists
 
-- (BOOL)canPlayNextMedia
+- (BOOL)canPlayPlaylistMedia:(SRGMedia *)media
 {
     if (self.pictureInPictureActive) {
         return NO;
     }
     
-    return self.nextMedia != nil;
+    return media != nil;
+}
+
+- (BOOL)canPlayNextMedia
+{
+    return [self canPlayPlaylistMedia:self.nextMedia];
 }
 
 - (BOOL)canPlayPreviousMedia
 {
-    if (self.pictureInPictureActive) {
+    return [self canPlayPlaylistMedia:self.previousMedia];
+}
+
+- (BOOL)prepareToPlayPlaylistMedia:(SRGMedia *)media withCompletionHandler:(void (^)(void))completionHandler
+{
+    if (! [self canPlayPlaylistMedia:media]) {
         return NO;
     }
     
-    return self.previousMedia != nil;
+    if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
+        [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
+    }
+    [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
+    return YES;
 }
 
 - (BOOL)prepareToPlayNextMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
-    if (! [self canPlayNextMedia]) {
-        return NO;
-    }
-    
-    SRGMedia *media = self.nextMedia;
-    if (media) {
-        [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
-        return YES;
-    }
-    else {
-        return NO;
-    }
+    return [self prepareToPlayPlaylistMedia:self.nextMedia withCompletionHandler:completionHandler];
 }
 
 - (BOOL)prepareToPlayPreviousMediaWithCompletionHandler:(void (^)(void))completionHandler
 {
-    if (! [self canPlayPreviousMedia]) {
-        return NO;
-    }
-    
-    SRGMedia *media = self.previousMedia;
-    if (media) {
-        [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
-        return YES;
-    }
-    else {
-        return NO;
-    }
+    return [self prepareToPlayPlaylistMedia:self.previousMedia withCompletionHandler:completionHandler];
 }
 
 - (BOOL)playNextMedia
 {
-    if (! [self canPlayNextMedia]) {
-        return NO;
-    }
-    
-    SRGMedia *media = self.nextMedia;
-    if (media) {
-        [self playMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
-        return YES;
-    }
-    else {
-        return NO;
-    }
+    return [self prepareToPlayNextMediaWithCompletionHandler:^{
+        [self play];
+    }];
 }
 
 - (BOOL)playPreviousMedia
 {
-    if (! [self canPlayPreviousMedia]) {
-        return NO;
-    }
-    
-    SRGMedia *media = self.previousMedia;
-    if (media) {
-        [self playMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
-        return YES;
-    }
-    else {
-        return NO;
-    }
+    return [self prepareToPlayPreviousMediaWithCompletionHandler:^{
+        [self play];
+    }];
 }
 
 - (BOOL)playUpcomingMedia
 {
-    SRGMedia *media = self.continuousPlaybackUpcomingMedia;
-    if (media) {
-        [self playMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
-        return YES;
-    }
-    else {
-        return NO;
-    }
+    return [self prepareToPlayPlaylistMedia:self.continuousPlaybackUpcomingMedia withCompletionHandler:^{
+        [self play];
+    }];
 }
 
 - (SRGMedia *)nextMedia
@@ -1445,6 +1414,16 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             }
         }
         
+        void (^notify)(void) = ^{
+            if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
+                [self.playlistDataSource controller:self didTransitionToMedia:nextMedia automatically:YES];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                                object:self
+                                                              userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                          SRGLetterboxMediaKey : nextMedia }];
+        };
+        
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
             if (continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
@@ -1457,11 +1436,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                     
                     [self playMedia:nextMedia standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                     [self resetContinuousPlayback];
-                    
-                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                                        object:self
-                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                                  SRGLetterboxMediaKey : nextMedia }];
+                    notify();
                 }];
             }
             else if (nextMedia) {
@@ -1470,10 +1445,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 // Send notification on next run loop, so that other observers of the playback end notification all receive
                 // the notification before the continuous playback notification is emitted.
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                                        object:self
-                                                                      userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                                  SRGLetterboxMediaKey : nextMedia }];
+                    notify();
                 });
             }
         }
