@@ -549,16 +549,12 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // Wait for longer than the transition duration. No automatic continuation must take place, the previous media must restart
+    // Wait for longer than the transition duration. -togglePlayPause must interrupt continuous playback.
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
-    
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
     
     [self.controller togglePlayPause];
     
