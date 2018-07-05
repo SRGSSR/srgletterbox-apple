@@ -472,10 +472,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         return NO;
     }
     
+    [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
+    
     if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
         [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
     }
-    [self prepareToPlayMedia:media standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
     return YES;
 }
 
