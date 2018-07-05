@@ -8,7 +8,8 @@
 
 @interface Playlist ()
 
-@property (nonatomic) NSOrderedSet<SRGMedia *> *mediasSet;
+@property (nonatomic) NSArray<SRGMedia *> *medias;
+@property (nonatomic) NSInteger index;
 
 @end
 
@@ -19,61 +20,46 @@
 - (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias
 {
     if (self = [super init]) {
-        self.mediasSet = [NSOrderedSet orderedSetWithArray:medias];
+        self.medias = medias;
+        self.index = NSNotFound;
         self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
     }
     return self;
-}
-
-#pragma mark Getters and setters
-
-- (NSArray<SRGMedia *> *)medias
-{
-    return self.mediasSet.array;
-}
-
-#pragma mark Helpers
-
-- (NSUInteger)currentIndexForMediaPlayedByController:(SRGLetterboxController *)controller
-{
-    NSString *URN = controller.URN;
-    if (URN) {
-        return [self.mediasSet indexOfObjectPassingTest:^BOOL(SRGMedia * _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-            return [media.URN isEqual:URN];
-        }];
-    }
-    else {
-        return NSNotFound;
-    }
 }
 
 #pragma SRGLetterboxControllerPlaylistDataSource protocol
 
 - (SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller
 {
-    NSUInteger index = [self currentIndexForMediaPlayedByController:controller];
-    if (index != NSNotFound) {
-        return (index > 0) ? self.mediasSet[index - 1] : nil;
+    if (self.medias.count == 0 || self.index == NSNotFound) {
+        return nil;
     }
     else {
-        return nil;
+        return self.index > 0 ? self.medias[self.index - 1] : nil;
     }
 }
 
 - (SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller
 {
-    NSUInteger index = [self currentIndexForMediaPlayedByController:controller];
-    if (index != NSNotFound) {
-        return (index < self.mediasSet.count - 1) ? self.mediasSet[index + 1] : nil;
+    if (self.medias.count == 0) {
+        return nil;
+    }
+    else if (self.index == NSNotFound) {
+        return self.medias.firstObject;
     }
     else {
-        return self.mediasSet.firstObject;
+        return self.index < self.medias.count - 1 ? self.medias[self.index + 1] : nil;
     }
 }
 
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
 {
     return self.continuousPlaybackTransitionDuration;
+}
+
+- (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically
+{
+    self.index = [self.medias indexOfObject:media];
 }
 
 @end

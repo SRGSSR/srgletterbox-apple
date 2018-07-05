@@ -154,6 +154,12 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  */
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
 
+/**
+ *  Called when the current media in the playlist changes, either automatically or as a result of explicitly moving
+ *  to a next or previous item.
+ */
+- (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
+
 @end
 
 /**
