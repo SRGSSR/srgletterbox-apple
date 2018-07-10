@@ -40,7 +40,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
 
 #pragma mark Tests
 
-- (void)testPlaylistPlaythrough
+- (void)testPlaylistNavigation
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
@@ -56,70 +56,15 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTAssertNil(self.controller.URN);
     XCTAssertEqualObjects(self.controller.nextMedia, self.playlist.medias.firstObject);
     
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    
     XCTAssertTrue([self.controller canPlayNextMedia]);
+    XCTAssertFalse([self.controller canPlayPreviousMedia]);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertFalse([self.controller playPreviousMedia]);
     XCTAssertTrue([self.controller playNextMedia]);
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    XCTAssertNil(self.controller.previousMedia);
-    XCTAssertEqualObjects(self.controller.media, self.playlist.medias.firstObject);
-    XCTAssertEqualObjects(self.controller.nextMedia, self.playlist.medias.lastObject);
-    
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    
-    XCTAssertTrue([self.controller canPlayNextMedia]);
-    XCTAssertTrue([self.controller playNextMedia]);
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    XCTAssertEqualObjects(self.controller.previousMedia, self.playlist.medias.firstObject);
-    XCTAssertEqualObjects(self.controller.media, self.playlist.medias.lastObject);
-    XCTAssertNil(self.controller.nextMedia);
-    
-    XCTAssertFalse([self.controller canPlayNextMedia]);
-    XCTAssertFalse([self.controller playNextMedia]);
-}
-
-- (void)testReversePlaylistPlaythrough
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
-    
-    [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
-        self.controller.playlistDataSource = self.playlist;
-        [expectation fulfill];
-    }] resume];
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    XCTAssertNil(self.controller.previousMedia);
-    XCTAssertNil(self.controller.URN);
-    XCTAssertEqualObjects(self.controller.nextMedia, self.playlist.medias.firstObject);
-    
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    
-    [self.controller playMedia:self.playlist.medias.lastObject standalone:NO];
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    XCTAssertEqualObjects(self.controller.previousMedia, self.playlist.medias.firstObject);
-    XCTAssertEqualObjects(self.controller.media, self.playlist.medias.lastObject);
-    XCTAssertNil(self.controller.nextMedia);
-    
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    
-    XCTAssertTrue([self.controller canPlayPreviousMedia]);
-    XCTAssertTrue([self.controller playPreviousMedia]);
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -128,7 +73,36 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTAssertEqualObjects(self.controller.nextMedia, self.playlist.medias.lastObject);
     
     XCTAssertFalse([self.controller canPlayPreviousMedia]);
+    XCTAssertTrue([self.controller canPlayNextMedia]);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
     XCTAssertFalse([self.controller playPreviousMedia]);
+    XCTAssertTrue([self.controller playNextMedia]);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqualObjects(self.controller.previousMedia, self.playlist.medias.firstObject);
+    XCTAssertEqualObjects(self.controller.media, self.playlist.medias.lastObject);
+    XCTAssertNil(self.controller.nextMedia);
+    
+    XCTAssertTrue([self.controller canPlayPreviousMedia]);
+    XCTAssertFalse([self.controller canPlayNextMedia]);
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertFalse([self.controller playNextMedia]);
+    XCTAssertTrue([self.controller playPreviousMedia]);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertNil(self.controller.previousMedia);
+    XCTAssertEqualObjects(self.controller.media, self.playlist.medias.firstObject);
+    XCTAssertEqualObjects(self.controller.nextMedia, self.playlist.medias.lastObject);
 }
 
 - (void)testNoPlaylist
@@ -575,16 +549,12 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // Wait for longer than the transition duration. No automatic continuation must take place, the previous media must restart]
+    // Wait for longer than the transition duration. -togglePlayPause must interrupt continuous playback.
     id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
-    
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
     
     [self.controller togglePlayPause];
     
