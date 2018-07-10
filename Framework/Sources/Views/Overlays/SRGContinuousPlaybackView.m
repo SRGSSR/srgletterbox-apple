@@ -97,7 +97,7 @@
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
     if (upcomingMedia) {
         self.titleLabel.text = upcomingMedia.title;
-        self.subtitleLabel.text = upcomingMedia.lead ?: upcomingMedia.summary;
+        self.subtitleLabel.text = upcomingMedia.show.title;
         
         static NSDateComponentsFormatter *s_dateComponentsFormatter;
         static dispatch_once_t s_onceToken;
