@@ -116,6 +116,13 @@ platform :ios do
   private_lane :build_lane do |options|
     scheme = options[:scheme]
     configuration = options[:configuration]
+
+    resetProvisioningProfileContext
+
+    app_identifier = getAppIdentifier(scheme: scheme, configuration: configuration)
+    get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
+    get_provisioning_profile(app_identifier: app_identifier, force: true)
+
     gym(
       configuration: configuration,
       scheme: scheme,
@@ -201,6 +208,13 @@ platform :ios do
      marketing_version
   end
 
+  desc "Return the bundle app identifier"
+  private_lane :getAppIdentifier do |options|
+     app_identifier = sh 'cd ..; xcodebuild -scheme "' + options[:scheme] + '" -configuration "' + options[:configuration] + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d "PRODUCT_BUNDLE_IDENTIFIER ="'
+     app_identifier = app_identifier.lines.last.gsub(/\s+/, "")
+     app_identifier
+  end
+
   desc "Return the what's new text from WhatsNew-demo.json file in the repository"
   private_lane :getWhatsNewForDemo do |options|
     tag_version = options[:tag_version]
@@ -209,6 +223,16 @@ platform :ios do
     file.close
     whatsNew = json[tag_version]
     whatsNew ? whatsNew : ''
+  end
+
+  desc "Reset provisioning profile context to prepare a new build"
+  private_lane :resetProvisioningProfileContext do
+    lane_context.delete(SharedValues::SIGH_PROFILE_PATHS)
+    lane_context.delete(SharedValues::SIGH_PROFILE_PATH)
+    lane_context.delete(SharedValues::SIGH_UDID)
+    lane_context.delete(SharedValues::SIGH_UUID)
+    lane_context.delete(SharedValues::SIGH_NAME)
+    lane_context.delete(SharedValues::SIGH_PROFILE_TYPE)
   end
 
   desc "Try to push new apps on registered devices with Meraki"
