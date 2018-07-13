@@ -203,14 +203,14 @@ platform :ios do
 
   desc "Return the marketing version, without suffix"
   private_lane :getMarketingVersion do
-     marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d "    MARKETING_VERSION = "'
+     marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d " =" | sed "s/MARKETING_VERSION//"'
      marketing_version = marketing_version.lines.last.gsub(/\s+/, "")
      marketing_version
   end
 
   desc "Return the bundle app identifier"
   private_lane :getAppIdentifier do |options|
-     app_identifier = sh 'cd ..; xcodebuild -scheme "' + options[:scheme] + '" -configuration "' + options[:configuration] + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d "PRODUCT_BUNDLE_IDENTIFIER ="'
+     app_identifier = sh 'cd ..; xcodebuild -scheme "' + options[:scheme] + '" -configuration "' + options[:configuration] + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d " =" | sed "s/PRODUCT_BUNDLE_IDENTIFIER//"'
      app_identifier = app_identifier.lines.last.gsub(/\s+/, "")
      app_identifier
   end
