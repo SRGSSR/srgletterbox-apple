@@ -44,6 +44,7 @@ Then run `carthage update --platform iOS` to update the dependencies. You will n
   * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework
   * `SRGAnalytics_DataProvider`: The data provider analytics companion framework
   * `SRGAppearance`: The appearance framework
+  * `SRGLetterbox`: The Letterbox library framework
   * `SRGLogger`: The framework used for internal logging
   * `SRGMediaPlayer`: The media player framework (if not already in your project)
   * `YYWebImage`: A framework for image retrieval
