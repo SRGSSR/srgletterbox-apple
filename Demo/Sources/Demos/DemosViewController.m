@@ -15,6 +15,7 @@
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
+#import "TopicListViewController.h"
 
 #import <libextobjc/libextobjc.h>
 
@@ -100,10 +101,16 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
-- (void)openMediaListWithType:(MediaListType)mediaListType URN:(NSString *)URN
+- (void)openMediaListWithType:(MediaList)MediaList
 {
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaListType:mediaListType URN:URN];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaList topic:nil MMFOverride:NO];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
+}
+
+- (void)openTopicListWithType:(TopicList)TopicList
+{
+    TopicListViewController *topicListViewController = [[TopicListViewController alloc] initWithTopicList:TopicList];
+    [self.navigationController pushViewController:topicListViewController animated:YES];
 }
 
 - (void)openPlaylistForShowWithURN:(NSString *)URN
@@ -635,33 +642,17 @@
         case 7: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openMediaListWithType:MediaListLivecenterSRF URN:nil];
+                    [self openMediaListWithType:MediaListLivecenterSRF];
                     break;
                 }
                     
                 case 1: {
-                    [self openMediaListWithType:MediaListLivecenterRTS URN:nil];
+                    [self openMediaListWithType:MediaListLivecenterRTS];
                     break;
                 }
                     
                 case 2: {
-                    [self openMediaListWithType:MediaListLivecenterRSI URN:nil];
-                    break;
-                }
-                    
-                case 3: {
-                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter MMF topic ID", nil)
-                                                                                             message:nil
-                                                                                      preferredStyle:UIAlertControllerStyleAlert];
-                    
-                    [alertController addTextFieldWithConfigurationHandler:nil];
-                    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
-                    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                        [self openMediaListWithType:MediaListMMFTopic URN:[NSString stringWithFormat:@"urn:rts:topic:tv:%@", alertController.textFields.firstObject.text]];
-                        
-                    }]];
-                    [self presentViewController:alertController animated:YES completion:nil];
+                    [self openMediaListWithType:MediaListLivecenterRSI];
                     break;
                 }
                     
@@ -673,6 +664,40 @@
         }
             
         case 8: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openTopicListWithType:TopicListSRF];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openTopicListWithType:TopicListRTS];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openTopicListWithType:TopicListRSI];
+                    break;
+                }
+                    
+                case 3: {
+                    [self openTopicListWithType:TopicListRTR];
+                    break;
+                }
+                    
+                case 4: {
+                    [self openTopicListWithType:TopicListMMF];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
+            
+        case 9: {
             switch (indexPath.row) {
                 case 0: {
                     [self openPlaylistForShowWithURN:@"urn:rts:show:tv:105233"];

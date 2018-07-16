@@ -6,14 +6,15 @@
 
 #import "DemosViewController.h"
 
+#import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  MediaList types
+ *  Media lists
  */
-typedef NS_ENUM(NSInteger, MediaListType) {
+typedef NS_ENUM(NSInteger, MediaList) {
     /**
      *  Not specified
      */
@@ -31,18 +32,20 @@ typedef NS_ENUM(NSInteger, MediaListType) {
      */
     MediaListLivecenterRSI,
     /**
-     *  MMF topic
+     *  Latest by Topic
      */
-    MediaListMMFTopic
+    MediaListLatestByTopic
 };
 
 @interface MediaListViewController : UITableViewController
 
-- (instancetype)initWithMediaListType:(MediaListType)mediaListType URN:(nullable NSString *)URN;
+- (instancetype)initWithMediaList:(MediaList)MediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride;
 
-@property (nonatomic, readonly) MediaListType mediaListType;
+@property (nonatomic, readonly) MediaList MediaList;
 
-@property (nonatomic, readonly, nullable) NSString *URN;
+@property (nonatomic, readonly, nullable) SRGTopic *topic;
+
+@property (nonatomic, readonly, getter=isMMFOverride) BOOL MMFOverride;
 
 @end
 
