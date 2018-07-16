@@ -9,6 +9,7 @@
 #import "MediaListViewController.h"
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
+#import "TopicItem.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
 
@@ -19,7 +20,7 @@
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
 
-@property (nonatomic) NSArray<SRGTopic *> *topics;
+@property (nonatomic) NSArray<TopicItem *> *topicItems;
 
 @end
 
@@ -98,7 +99,15 @@
             [self.refreshControl endRefreshing];
         }
         
-        self.topics = topics;
+        NSMutableArray<TopicItem *> *topicItems = NSMutableArray.new;
+        for (SRGTopic *topic in topics) {
+            [topicItems addObject:[[TopicItem alloc] initWitTopic:topic indentationLevel:0]];
+            for (SRGTopic *subtopic in topic.subtopics) {
+                [topicItems addObject:[[TopicItem alloc] initWitTopic:subtopic indentationLevel:1]];
+            }
+        }
+        
+        self.topicItems = topicItems.copy;
         [self.tableView reloadData];
     }];
     
@@ -128,7 +137,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.topics.count;
+    return self.topicItems.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -140,14 +149,15 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGTopic *topic = self.topics[indexPath.row];
-    cell.textLabel.text = topic.title;
+    TopicItem *topicItem = self.topicItems[indexPath.row];
+    cell.textLabel.text = topicItem.topic.title;
+    cell.indentationLevel = topicItem.indentationLevel;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGTopic *topic = self.topics[indexPath.row];
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topic MMFOverride:(self.TopicList == TopicListMMF)];
+    TopicItem *topicItem = self.topicItems[indexPath.row];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic MMFOverride:(self.TopicList == TopicListMMF)];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
