@@ -197,9 +197,6 @@
     static NSString * const kVideoOnDemandWithChapters360URNString = @"urn:rts:video:7800215";
     static NSString * const kVideoOnDemandNoTokenURNString = @"urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25";
     
-    static NSString * const kVideoOnDemandstandaloneFullLengthURNString = @"urn:srf:video:dc4a4f8c-e83e-46b3-a5e3-ebfde3a29b88";
-    static NSString * const kVideoOnDemandstandaloneStartOnChapterURNString = @"urn:srf:video:519d66ec-b5ac-4373-b916-82c255928351";
-    
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
@@ -393,43 +390,6 @@
         case 3: {
             switch (indexPath.row) {
                 case 0: {
-                    [self openModalPlayerWithURN:kVideoOnDemandstandaloneFullLengthURNString];
-                    break;
-                }
-                    
-                case 1: {
-                    [self openModalPlayerWithURN:kVideoOnDemandstandaloneStartOnChapterURNString];
-                    break;
-                }
-                    
-                case 2: {
-                    [self openModalPlayerWithURN:kVideoOnDemandSegmentsURNString];
-                    break;
-                }
-                    
-                case 3: {
-                    [self openModalPlayerWithURN:kVideoOnDemandStartOnSegmentURNString];
-                    break;
-                }
-                    
-                case 4: {
-                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                        [self openModalPlayerWithURN:URNString];
-                    }];
-                    break;
-                }
-                    
-                default: {
-                    break;
-                }
-            }
-            break;
-        }
-            
-        case 4: {
-            switch (indexPath.row) {
-                case 0: {
                     [self openModalPlayerWithURN:kVideoOverriddenURNString];
                     break;
                 }
@@ -568,7 +528,7 @@
             break;
         }
             
-        case 5: {
+        case 4: {
             switch (indexPath.row) {
                 case 0: {
                     [self openMultiPlayerWithURN:@"urn:rts:video:3608506" URN1:@"urn:rts:video:3608517" URN2:kVideoDVRURNString];
@@ -597,7 +557,7 @@
             break;
         }
             
-        case 6: {
+        case 5: {
             AutoplayList autoplayList = AutoplayListUnknown;
             switch (indexPath.row) {
                 case 0: {
@@ -626,7 +586,7 @@
             break;
         }
             
-        case 7: {
+        case 6: {
             switch (indexPath.row) {
                 case 0: {
                     [self openMediaListWithType:MediaListLivecenterSRF];
@@ -650,7 +610,7 @@
             break;
         }
             
-        case 8: {
+        case 7: {
             switch (indexPath.row) {
                 case 0: {
                     [self openTopicListWithType:TopicListSRF];
@@ -684,7 +644,7 @@
             break;
         }
             
-        case 9: {
+        case 8: {
             switch (indexPath.row) {
                 case 0: {
                     [self openPlaylistForShowWithURN:@"urn:rts:show:tv:105233"];
