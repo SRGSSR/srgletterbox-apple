@@ -60,6 +60,7 @@
     [self.tableView insertSubview:refreshControl atIndex:0];
     self.refreshControl = refreshControl;
     
+    [self.refreshControl beginRefreshing];
     [self refresh];
 }
 
