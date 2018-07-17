@@ -30,7 +30,7 @@
     _media = media;
     
     if (media) {
-        [self.letterboxController playMedia:media standalone:NO];
+        [self.letterboxController playMedia:media standalone:ApplicationSettingIsStandalone()];
     }
     else {
         [self.letterboxController reset];

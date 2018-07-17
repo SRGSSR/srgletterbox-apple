@@ -55,7 +55,7 @@
     [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
     if (self.URN) {
-        [self.letterboxController playURN:self.URN standalone:NO];
+        [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
     }
 }
 

@@ -16,7 +16,6 @@
 @interface ModalPlayerViewController ()
 
 @property (nonatomic, copy) NSString *URN;
-@property (nonatomic) BOOL standalone;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -48,7 +47,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(NSString *)URN standalone:(BOOL)standalone serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
+- (instancetype)initWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
     SRGLetterboxService *service = [SRGLetterboxService sharedService];
     
@@ -62,7 +61,6 @@
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
 
         viewController.URN = URN;
-        viewController.standalone = standalone;
         viewController.favoritedSubdivisions = [NSMutableArray array];
 
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
@@ -126,7 +124,7 @@
     };
     
     if (self.URN) {
-        [self.letterboxController playURN:self.URN standalone:self.standalone];
+        [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
     }
     
     // Start with a hidden interface. Performed after a URN has been assigned so that no UI is visible at all

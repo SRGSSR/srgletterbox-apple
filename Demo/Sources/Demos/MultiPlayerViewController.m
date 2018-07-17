@@ -107,15 +107,15 @@
     
     if (! self.letterboxController.pictureInPictureActive) {
         if (self.URN) {
-            [self.letterboxController playURN:self.URN standalone:NO];
+            [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
         }
         
         if (self.URN1) {
-            [self.smallLetterboxController1 playURN:self.URN1 standalone:NO];
+            [self.smallLetterboxController1 playURN:self.URN1 standalone:ApplicationSettingIsStandalone()];
         }
         
         if (self.URN2) {
-            [self.smallLetterboxController2 playURN:self.URN2 standalone:NO];
+            [self.smallLetterboxController2 playURN:self.URN2 standalone:ApplicationSettingIsStandalone()];
         }
     }
 }
