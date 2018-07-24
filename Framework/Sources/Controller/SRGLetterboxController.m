@@ -973,7 +973,14 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             return;
         }
         
-        [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil completionHandler:completionHandler];
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
+            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            
+            NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
+                                                 code:SRGDataProviderErrorCodeInvalidData
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
+            [self updateWithError:error];
+        }
     }];
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
