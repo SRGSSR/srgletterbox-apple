@@ -34,20 +34,22 @@ github "SRGSSR/srgletterbox-ios"
 
 Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your project:
 
-  * `ComScore`: The comScore framework
-  * `FXReachability`: A reachability framework
-  * `libextobjc`: A utility framework
-  * `MAKVONotificationCenter`: A safe KVO framework
-  * `Mantle`:  The framework used to parse the data
-  * `Masonry`: An autolayout framework
-  * `SRGAnalytics`: The main analytics framework
-  * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework
-  * `SRGAnalytics_DataProvider`: The data provider analytics companion framework
-  * `SRGAppearance`: The appearance framework
-  * `SRGLetterbox`: The Letterbox library framework
-  * `SRGLogger`: The framework used for internal logging
-  * `SRGMediaPlayer`: The media player framework (if not already in your project)
-  * `YYWebImage`: A framework for image retrieval
+  * `ComScore`: The comScore framework.
+  * `FXReachability`: A reachability framework.
+  * `libextobjc`: A utility framework.
+  * `MAKVONotificationCenter`: A safe KVO framework.
+  * `Mantle`:  The framework used to parse the data.
+  * `Masonry`: An autolayout framework.
+  * `SRGAnalytics`: The main analytics framework.
+  * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework.
+  * `SRGAnalytics_DataProvider`: The data provider analytics companion framework.
+  * `SRGAppearance`: The appearance framework.
+  * `SRGContentProtection`: The framework to enable playback of protected medias.
+  * `SRGLetterbox`: The Letterbox library framework.
+  * `SRGLogger`: The framework used for internal logging.
+  * `SRGMediaPlayer`: The media player framework (if not already in your project).
+  * `SRGNetworking`: A networking framework.
+  * `YYWebImage`: A framework for image retrieval.
 
 For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
 
