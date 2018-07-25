@@ -973,7 +973,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             return;
         }
         
-        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone contentProtection:SRGContentProtectionNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
@@ -1137,7 +1137,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
-            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone contentProtection:SRGContentProtectionNone streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil completionHandler:^{
                 [self.mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];

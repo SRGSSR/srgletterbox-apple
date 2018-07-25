@@ -201,7 +201,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *
  *  @param URN               The URN to prepare.
  *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
- *                           indenpendtly from it.
+ *                           independently from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
  *                           type is used.
  *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
