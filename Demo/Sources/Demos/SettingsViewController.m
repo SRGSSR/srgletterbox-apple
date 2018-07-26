@@ -13,6 +13,7 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
+NSString * const LetterboxDemoSettingStandalone = @"LetterboxDemoSettingStandalone";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 NSString * const LetterboxDemoSettingGlobalHeaders = @"LetterboxDemoSettingGlobalHeaders";
@@ -28,6 +29,17 @@ NSURL *ApplicationSettingServiceURL(void)
 {
     NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
+}
+
+BOOL ApplicationSettingIsStandalone(void)
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingStandalone];
+}
+
+static void ApplicationSettingSetStandalone(BOOL standalone)
+{
+    [[NSUserDefaults standardUserDefaults] setBool:standalone forKey:LetterboxDemoSettingStandalone];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
@@ -101,7 +113,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 5;
+    return 6;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -113,21 +125,26 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 1: {
-            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
+            return NSLocalizedString(@"Playback mode", @"Playback mode header title in settings view");
             break;
         }
             
         case 2: {
-            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
+            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
             break;
         }
             
         case 3: {
-            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
             break;
         }
             
         case 4: {
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            break;
+        }
+            
+        case 5: {
             NSString *buildNumberString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
@@ -162,12 +179,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             
         case 1:
         case 2:
-        case 3: {
+        case 3:
+        case 4: {
             return 2;
             break;
         }
             
-        case 4: {
+        case 5: {
             return 1;
             break;
         }
@@ -204,6 +222,29 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         case 1: {
             switch (indexPath.row) {
                 case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Default (full-length)", @"Label for the defaut standalone mode disabled setting");
+                    cell.accessoryType = ! ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Standalone", @"Label for the standalone mode enabled setting");
+                    cell.accessoryType = ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
                     cell.accessoryType = ! ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
@@ -224,7 +265,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 2: {
+        case 3: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
@@ -247,7 +288,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 3: {
+        case 4: {
             static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -281,7 +322,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 4: {
+        case 5: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -315,16 +356,21 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 1: {
-            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
+            ApplicationSettingSetStandalone(indexPath.row == 1);
             break;
         }
             
         case 2: {
-            [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
             break;
         }
             
         case 3: {
+            [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            break;
+        }
+            
+        case 4: {
             if (indexPath.row == 0) {
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
@@ -337,7 +383,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 4: {
+        case 5: {
             completionBlock = ^{
                 [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
             };

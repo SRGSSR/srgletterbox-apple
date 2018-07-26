@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0849DA5920FCD82E00026F0D /* TopicListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */; };
+		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
+		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
@@ -342,6 +345,11 @@
 /* Begin PBXFileReference section */
 		08152F2A1E9269290053AB34 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Localizable.strings; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
+		0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TopicListViewController.storyboard; sourceTree = "<group>"; };
+		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
+		0849DA5820FCD82D00026F0D /* TopicListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicListViewController.m; sourceTree = "<group>"; };
+		0849DA5B20FD553100026F0D /* TopicItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicItem.h; sourceTree = "<group>"; };
+		0849DA5C20FD553100026F0D /* TopicItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicItem.m; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
@@ -768,6 +776,8 @@
 				6FFAD13D202C89C900FDAA6C /* Playlist.m */,
 				6FCB995B1F56948D00790EAA /* ServerSettings.h */,
 				6FCB995C1F56948D00790EAA /* ServerSettings.m */,
+				0849DA5B20FD553100026F0D /* TopicItem.h */,
+				0849DA5C20FD553100026F0D /* TopicItem.m */,
 				6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */,
 				6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */,
 			);
@@ -884,6 +894,9 @@
 				6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */,
 				6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */,
 				6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */,
+				0849DA5720FCD82D00026F0D /* TopicListViewController.h */,
+				0849DA5820FCD82D00026F0D /* TopicListViewController.m */,
+				0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -1134,6 +1147,7 @@
 				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */,
 				08BA348B1F4ADF1F00D9C204 /* MediaListViewController.storyboard in Resources */,
+				0849DA5920FCD82E00026F0D /* TopicListViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1180,6 +1194,7 @@
 				08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */,
 				6FFAD13A202C889200FDAA6C /* PlaylistViewController.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
+				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
@@ -1190,6 +1205,7 @@
 				6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */,
 				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */,
 				08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */,
+				0849DA5D20FD553100026F0D /* TopicItem.m in Sources */,
 				6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
