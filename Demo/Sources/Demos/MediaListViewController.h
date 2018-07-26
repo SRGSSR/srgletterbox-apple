@@ -32,16 +32,16 @@ typedef NS_ENUM(NSInteger, MediaList) {
      */
     MediaListLivecenterRSI,
     /**
-     *  Latest by Topic
+     *  Latest by topic
      */
     MediaListLatestByTopic
 };
 
 @interface MediaListViewController : UITableViewController
 
-- (instancetype)initWithMediaList:(MediaList)MediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride;
+- (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride;
 
-@property (nonatomic, readonly) MediaList MediaList;
+@property (nonatomic, readonly) MediaList mediaList;
 
 @property (nonatomic, readonly, nullable) SRGTopic *topic;
 

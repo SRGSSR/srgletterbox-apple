@@ -42,9 +42,9 @@ typedef NS_ENUM(NSInteger, TopicList) {
 
 @interface TopicListViewController : UITableViewController
 
-- (instancetype)initWithTopicList:(TopicList)TopicList;
+- (instancetype)initWithTopicList:(TopicList)topicList;
 
-@property (nonatomic, readonly) TopicList TopicList;
+@property (nonatomic, readonly) TopicList topicList;
 
 @end
 

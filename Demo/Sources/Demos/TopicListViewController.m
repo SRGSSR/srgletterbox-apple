@@ -15,7 +15,7 @@
 
 @interface TopicListViewController ()
 
-@property (nonatomic) TopicList TopicList;
+@property (nonatomic) TopicList topicList;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
@@ -28,11 +28,11 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithTopicList:(TopicList)TopicList
+- (instancetype)initWithTopicList:(TopicList)topicList
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     TopicListViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.TopicList = TopicList;
+    viewController.topicList = topicList;
     return viewController;
 }
 
@@ -50,7 +50,7 @@
     
     self.title = [self pageTitle];
     
-    NSURL *serviceURL = (self.TopicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
+    NSURL *serviceURL = (self.topicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
         
@@ -85,7 +85,7 @@
                       @(TopicListRTR) : LetterboxDemoNonLocalizedString(@"RTR Topics"),
                       @(TopicListMMF) : LetterboxDemoNonLocalizedString(@"MMF Topics") };
     });
-    return s_titles[@(self.TopicList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
+    return s_titles[@(self.topicList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
 }
 
 #pragma mark Data
@@ -94,7 +94,7 @@
 {
     [self.request cancel];
     
-    
+    [self.refreshControl beginRefreshing];
     SRGRequest *request = [self.dataProvider tvTopicsForVendor:self.vendor withCompletionBlock:^(NSArray<SRGTopic *> * _Nullable topics, NSError * _Nullable error) {
         if (self.refreshControl.refreshing) {
             [self.refreshControl endRefreshing];
@@ -129,7 +129,7 @@
                        @(TopicListMMF) : @(SRGVendorRTS) };
     });
     
-    NSNumber *vendorNumber = s_vendors[@(self.TopicList)];
+    NSNumber *vendorNumber = s_vendors[@(self.topicList)];
     NSAssert(vendorNumber != nil, @"The business unit must be supported");
     return vendorNumber.integerValue;
 }
@@ -158,7 +158,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TopicItem *topicItem = self.topicItems[indexPath.row];
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic MMFOverride:(self.TopicList == TopicListMMF)];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic MMFOverride:(self.topicList == TopicListMMF)];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 

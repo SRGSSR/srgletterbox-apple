@@ -12,8 +12,8 @@
 
 @interface MediaListViewController ()
 
-@property (nonatomic) MediaList MediaList;
-@property (nonatomic, nullable) SRGTopic *topic;
+@property (nonatomic) MediaList mediaList;
+@property (nonatomic) SRGTopic *topic;
 @property (nonatomic, getter=isMMFOverride) BOOL MMFOverride;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -27,11 +27,11 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMediaList:(MediaList)MediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride
+- (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
     MediaListViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.MediaList = MediaList;
+    viewController.mediaList = mediaList;
     viewController.topic = topic;
     viewController.MMFOverride = MMFOverride;
     return viewController;
@@ -51,7 +51,7 @@
     
     self.title = [self pageTitle];
     
-    NSURL *serviceURL = (self.MMFOverride) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
+    NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
         
@@ -77,7 +77,7 @@
 
 - (NSString *)pageTitle
 {
-    if (self.MediaList == MediaListLatestByTopic) {
+    if (self.mediaList == MediaListLatestByTopic) {
         return self.topic.title ?: LetterboxDemoNonLocalizedString(@"Unknown");
     }
     else {
@@ -88,7 +88,7 @@
                           @(MediaListLivecenterRTS) : LetterboxDemoNonLocalizedString(@"RTS Live center"),
                           @(MediaListLivecenterRSI) : LetterboxDemoNonLocalizedString(@"RSI Live center") };
         });
-        return s_titles[@(self.MediaList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
+        return s_titles[@(self.mediaList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
     }
 }
 
@@ -109,7 +109,7 @@
         [self.tableView reloadData];
     };
     
-    if (self.MediaList == MediaListLatestByTopic) {
+    if (self.mediaList == MediaListLatestByTopic) {
         request = [[self.dataProvider latestMediasForTopicWithURN:self.topic.URN completionBlock:completionBlock] requestWithPageSize:100];
     }
     else {
@@ -121,7 +121,7 @@
                            @(MediaListLivecenterRSI) : @(SRGVendorRSI) };
         });
         
-        NSNumber *vendorNumber = s_vendors[@(self.MediaList)];
+        NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
         NSAssert(vendorNumber != nil, @"The business unit must be supported");
         request = [[self.dataProvider liveCenterVideosForVendor:vendorNumber.integerValue withCompletionBlock:completionBlock] requestWithPageSize:100];
     }
@@ -169,8 +169,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *URN = self.medias[indexPath.row].URN;
-    NSURL *serviceURL = (self.MMFOverride) ? LetterboxDemoMMFServiceURL() : nil;
-    NSNumber *updateIntervalNumber = (self.MMFOverride) ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
+    NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : nil;
+    NSNumber *updateIntervalNumber = self.MMFOverride ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateIntervalNumber];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed

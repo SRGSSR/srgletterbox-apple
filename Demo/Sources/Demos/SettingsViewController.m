@@ -222,13 +222,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default (full-length)", @"Label for a defaut standalone disabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Default (full-length)", @"Label for the defaut standalone mode disabled setting");
                     cell.accessoryType = ! ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Standalone", @"Label for a standalone enabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Standalone", @"Label for the standalone mode enabled setting");
                     cell.accessoryType = ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
