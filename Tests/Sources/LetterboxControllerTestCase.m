@@ -2599,7 +2599,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:nil];
     
-    // Media stops playing because of a kill switch to the full lengh media
+    // Media stops playing because of a kill switch to the full length media
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     XCTAssertEqualObjects(self.controller.URN, URN);
