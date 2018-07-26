@@ -1001,7 +1001,13 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)pause
 {
-    [self.mediaPlayerController pause];
+    // Do not let pause live streams, stop playback
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+        [self stop];
+    }
+    else {
+        [self.mediaPlayerController pause];
+    }
 }
 
 - (void)togglePlayPause
@@ -1355,8 +1361,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 {
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     
-    // Do not let pause live streams, stop playback
-    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
+    // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
+    if (self.pictureInPictureActive && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self stop];
     }
     

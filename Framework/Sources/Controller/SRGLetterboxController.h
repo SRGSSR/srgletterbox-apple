@@ -243,13 +243,16 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
 
 /**
  *  Ask the player to pause playback. Does nothing if the controller is not playing.
+ *
+ *  @discussion Livestreams cannot be paused and will be stopped instead.
  */
 - (void)pause;
 
 /**
  *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
  *
- *  @discussion Start playback if a media is available and the player is idle.
+ *  @discussion Start playback if a media is available and the player is idle. Livestreams cannot be paused and will be
+ *              stopped instead.
  */
 - (void)togglePlayPause;
 
