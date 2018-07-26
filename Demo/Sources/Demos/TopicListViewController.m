@@ -59,7 +59,6 @@
     [self.tableView insertSubview:refreshControl atIndex:0];
     self.refreshControl = refreshControl;
     
-    [self.refreshControl beginRefreshing];
     [self refresh];
 }
 
@@ -94,7 +93,6 @@
 {
     [self.request cancel];
     
-    [self.refreshControl beginRefreshing];
     SRGRequest *request = [self.dataProvider tvTopicsForVendor:self.vendor withCompletionBlock:^(NSArray<SRGTopic *> * _Nullable topics, NSError * _Nullable error) {
         if (self.refreshControl.refreshing) {
             [self.refreshControl endRefreshing];
