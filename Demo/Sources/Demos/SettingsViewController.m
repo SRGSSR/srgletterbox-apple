@@ -36,7 +36,7 @@ BOOL ApplicationSettingIsStandalone(void)
     return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingStandalone];
 }
 
-void ApplicationSettingSetStandalone(BOOL standalone)
+static void ApplicationSettingSetStandalone(BOOL standalone)
 {
     [[NSUserDefaults standardUserDefaults] setBool:standalone forKey:LetterboxDemoSettingStandalone];
     [[NSUserDefaults standardUserDefaults] synchronize];
