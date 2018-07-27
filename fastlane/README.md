@@ -30,7 +30,7 @@ Build a new nightly demo on HockeyApp
 ```
 fastlane ios demo
 ```
-Build a new demo on HockeyApp with the current build number. If we're not in a release process (master or release/*), it bumps the build number. You are responsible to tag the library version.
+Build a new demo on HockeyApp with the current build number. You are responsible to tag the library version and bump the build number after.
 
 ----
 

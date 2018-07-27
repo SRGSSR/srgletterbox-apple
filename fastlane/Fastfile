@@ -72,7 +72,7 @@ platform :ios do
     
   end
 
-  desc "Build a new demo on HockeyApp with the current build number. If we're not in a release process (master or release/*), it bumps the build number. You are responsible to tag the library version."
+  desc "Build a new demo on HockeyApp with the current build number. You are responsible to tag the library version and bump the build number after."
   lane :demo do
 
     build_number = get_build_number
@@ -96,20 +96,7 @@ platform :ios do
 
     merakiPushApps
 
-    #Bump build number and push to the repo only if we're not in a release process
-    
-    branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-    is_in_release_process = (branch_name.include? 'master') || (branch_name.include? 'release')
-
-    if ! is_in_release_process
-      build_number = increment_build_number
-      commit_version_bump(
-        xcodeproj: "SRGLetterbox.xcodeproj",
-        message: "Bump build number to " + build_number
-      )
-      push_to_git_remote
-    end
-    
+    print "You are responsible to tag the library version and bump the build number after."
   end
 
   desc "Build for a scheme and a configuration"
