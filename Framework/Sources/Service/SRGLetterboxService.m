@@ -592,17 +592,17 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)play:(id)sender
 {
-    [self.controller.mediaPlayerController play];
+    [self.controller play];
 }
 
 - (void)pause:(id)sender
 {
-    [self.controller.mediaPlayerController pause];
+    [self.controller pause];
 }
 
 - (void)togglePlayPause:(id)sender
 {
-    [self.controller.mediaPlayerController togglePlayPause];
+    [self.controller togglePlayPause];
 }
 
 - (void)skipForward:(id)sender

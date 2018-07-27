@@ -122,6 +122,16 @@
 		6F50597420581CAF00823003 /* SRGLetterboxPlaybackButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */; };
 		6F50597520581CAF00823003 /* SRGFullScreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594D20581CAF00823003 /* SRGFullScreenButton.m */; };
 		6F50597620581CAF00823003 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */; };
+		6F52DE1E2106F857001EC146 /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
+		6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
+		6F52DE202106F867001EC146 /* SRGContentProtection.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
+		6F52DE212106F867001EC146 /* SRGNetwork.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
+		6F52DE222106F871001EC146 /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
+		6F52DE232106F871001EC146 /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F52DE242106F871001EC146 /* SRGNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
+		6F52DE252106F871001EC146 /* SRGNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F52DE262106F87D001EC146 /* SRGContentProtection.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F52DE272106F87D001EC146 /* SRGNetwork.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F5543EA20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */; };
 		6F5543EB20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */; };
 		6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */; };
@@ -267,6 +277,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				6F52DE202106F867001EC146 /* SRGContentProtection.framework in Copy Framework Dependencies For Xcode View Rendering */,
+				6F52DE212106F867001EC146 /* SRGNetwork.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08EB66A81F34C76D00E9D7CA /* TCCore.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				08EB66A91F34C76D00E9D7CA /* TCSDK.framework in Copy Framework Dependencies For Xcode View Rendering */,
 				6F131A7D1E8CCDDB000D6BEC /* SRGAppearance.framework in Copy Framework Dependencies For Xcode View Rendering */,
@@ -305,11 +317,13 @@
 				6FAB3B6E1E2905CA00CC2197 /* Mantle.framework in Embed Frameworks */,
 				6FAB3B7A1E2905CA00CC2197 /* SRGMediaPlayer.framework in Embed Frameworks */,
 				6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */,
+				6F52DE232106F871001EC146 /* SRGContentProtection.framework in Embed Frameworks */,
 				6FAB3B701E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Embed Frameworks */,
 				6FAB3B6C1E2905CA00CC2197 /* libextobjc.framework in Embed Frameworks */,
 				08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */,
 				6FAB3B761E2905CA00CC2197 /* SRGDataProvider.framework in Embed Frameworks */,
 				6FAB3B6A1E2905CA00CC2197 /* ComScore.framework in Embed Frameworks */,
+				6F52DE252106F871001EC146 /* SRGNetwork.framework in Embed Frameworks */,
 				6FE08CE41E8B80F200EC4716 /* SRGAppearance.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -321,6 +335,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F52DE262106F87D001EC146 /* SRGContentProtection.framework in CopyFiles */,
+				6F52DE272106F87D001EC146 /* SRGNetwork.framework in CopyFiles */,
 				08EB66AA1F34C77F00E9D7CA /* TCCore.framework in CopyFiles */,
 				08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in CopyFiles */,
 				6FE08CE61E8B811500EC4716 /* SRGAppearance.framework in CopyFiles */,
@@ -449,6 +465,8 @@
 		6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxPlaybackButton.h; sourceTree = "<group>"; };
 		6F50594D20581CAF00823003 /* SRGFullScreenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGFullScreenButton.m; sourceTree = "<group>"; };
 		6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGRemainingTimeButton.h; sourceTree = "<group>"; };
+		6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGContentProtection.framework; path = Carthage/Build/iOS/SRGContentProtection.framework; sourceTree = "<group>"; };
+		6F52DE1D2106F857001EC146 /* SRGNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGNetwork.framework; path = Carthage/Build/iOS/SRGNetwork.framework; sourceTree = "<group>"; };
 		6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDateComponentsFormatter+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -546,11 +564,13 @@
 				6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */,
 				6FAB3B6F1E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Frameworks */,
+				6F52DE222106F871001EC146 /* SRGContentProtection.framework in Frameworks */,
 				6FB97FF41E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08FA0D241E30F954000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B6B1E2905CA00CC2197 /* libextobjc.framework in Frameworks */,
 				6FAB3B751E2905CA00CC2197 /* SRGDataProvider.framework in Frameworks */,
 				6FE08CE31E8B80F200EC4716 /* SRGAppearance.framework in Frameworks */,
+				6F52DE242106F871001EC146 /* SRGNetwork.framework in Frameworks */,
 				6FAB3B691E2905CA00CC2197 /* ComScore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -583,6 +603,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F52DE1E2106F857001EC146 /* SRGContentProtection.framework in Frameworks */,
+				6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */,
 				6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */,
@@ -813,9 +835,11 @@
 				6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */,
 				6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */,
 				6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */,
+				6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */,
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
+				6F52DE1D2106F857001EC146 /* SRGNetwork.framework */,
 				08EB669E1F34C6B000E9D7CA /* TCCore.framework */,
 				08EB669F1F34C6B000E9D7CA /* TCSDK.framework */,
 				6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */,

@@ -201,7 +201,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *
  *  @param URN               The URN to prepare.
  *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
- *                           indenpendtly from it.
+ *                           independently from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
  *                           type is used.
  *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
@@ -243,13 +243,16 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
 
 /**
  *  Ask the player to pause playback. Does nothing if the controller is not playing.
+ *
+ *  @discussion Livestreams cannot be paused and will be stopped instead.
  */
 - (void)pause;
 
 /**
  *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
  *
- *  @discussion Start playback if a media is available and the player is idle.
+ *  @discussion Start playback if a media is available and the player is idle. Livestreams cannot be paused and will be
+ *              stopped instead.
  */
 - (void)togglePlayPause;
 

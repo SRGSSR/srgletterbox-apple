@@ -20,6 +20,7 @@
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
+#import <SRGNetwork/SRGNetwork.h>
 
 NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
@@ -775,8 +776,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
         };
         
-        if (error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404
-            && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+        if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404
+                && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.mediaComposition.fullLengthMedia.URN
                                                                                            standalone:self.standalone
                                                                                   withCompletionBlock:mediaCompositionCompletionBlock];
@@ -836,7 +837,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     // Use a friendly error message for all other reasons
     else {
         NSInteger code = (self.dataAvailability == SRGLetterboxDataAvailabilityNone) ? SRGLetterboxErrorCodeNotFound : SRGLetterboxErrorCodeNotPlayable;
-        if ([error.domain isEqualToString:SRGDataProviderErrorDomain] && error.code == SRGDataProviderErrorHTTP && [error.userInfo[SRGDataProviderHTTPStatusCodeKey] integerValue] == 404) {
+        if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404) {
             code = SRGLetterboxErrorCodeNotFound;
         }
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
@@ -972,22 +973,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             return;
         }
         
-        @weakify(self)
-        SRGRequest *playRequest = [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nonnull error) {
-            @strongify(self)
-            
-            if (error) {
-                [self updateWithError:error];
-                return;
-            }
-            
-            completionHandler ? completionHandler() : nil;
-        }];
-        
-        if (playRequest) {
-            [self.requestQueue addRequest:playRequest resume:YES];
-        }
-        else {
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone contentProtection:SRGContentProtectionNone streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
@@ -1015,7 +1001,13 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)pause
 {
-    [self.mediaPlayerController pause];
+    // Do not let pause live streams, stop playback
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+        [self stop];
+    }
+    else {
+        [self.mediaPlayerController pause];
+    }
 }
 
 - (void)togglePlayPause
@@ -1151,11 +1143,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
-            SRGRequest *request = [self.mediaPlayerController playMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil resume:NO completionHandler:^(NSError * _Nullable error) {
-                BOOL finished = (error == nil);
-                completionHandler ? completionHandler(finished) : nil;
+            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone contentProtection:SRGContentProtectionNone streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+                [self.mediaPlayerController play];
+                completionHandler ? completionHandler(YES) : nil;
             }];
-            [self.requestQueue addRequest:request resume:YES];
         }
     }
     // Playing another segment from the same media. Seek
@@ -1370,8 +1361,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 {
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     
-    // Do not let pause live streams, stop playback
-    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
+    // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
+    if (self.pictureInPictureActive && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self stop];
     }
     

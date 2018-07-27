@@ -145,6 +145,14 @@ If you want playback to automatically continue with the next media in a playlist
 
 If needed, the controller `ContinousPlayback` category provides complete information about continuous playback transition (start and end date, and media which will be played next).
 
+## URL overrides and local file playback
+
+You can play any stream URL in place of the one associated with a media composition information. This mechanism is most notably useful if you have downloaded a media and want to play the local file instead of the original stream.
+
+To override the URL to be played for some URN, set the `contentURLOverridingBlock` of the controller playing the media. Please refer to the associated documentation for more information.
+
+Note that Letterbox does not include any download manager. Your application is solely responsible of retrieving and storing the file.
+
 ## Image copyrights
 
 Media sometimes provide image copyright information via the `imageCopyright` property. If your application displays a Letterbox view, you should ensure that this information is somehow displayed in its vicinity.

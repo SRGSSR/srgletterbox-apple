@@ -148,6 +148,9 @@
             self.titleLabel.hidden = YES;
         }
     }
+    else {
+        self.cancelButton.hidden = YES;
+    }
 }
 
 #pragma mark Actions
