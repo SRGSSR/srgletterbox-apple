@@ -25,6 +25,8 @@
 static BOOL s_prefersDRM = NO;
 
 NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
+NSString * const SRGLetterboxSegmentDidStartNotification = @"SRGLetterboxSegmentDidStartNotification";
+NSString * const SRGLetterboxSegmentDidEndNotification = @"SRGLetterboxSegmentDidEndNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
 NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
@@ -1459,11 +1461,19 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:subdivision channel:self.channel];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSegmentDidStartNotification
+                                                        object:self
+                                                      userInfo:notification.userInfo];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
 {
     [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:nil channel:self.channel];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSegmentDidEndNotification
+                                                        object:self
+                                                      userInfo:notification.userInfo];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification

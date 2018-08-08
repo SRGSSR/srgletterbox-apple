@@ -40,6 +40,13 @@ typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(NSString *URN);
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
 
 /**
+ *  Notifications sent when the current segment changes. Use keys available for the equivalent notifications defined
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo`dictionary.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxSegmentDidStartNotification;
+OBJC_EXPORT NSString * const SRGLetterboxSegmentDidEndNotification;
+
+/**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
  *
  *  @discussion The data itself should in general change, but the notification might be posted even if no real change
