@@ -33,15 +33,14 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(NSString *URN);
 
 /**
- *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
- *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
- *  notification `userInfo` dictionary.
+ *  Notification sent when the controller playback state changes. Use keys available for the equivalent notification defined
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo` dictionary.
  */
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
 
 /**
  *  Notifications sent when the current segment changes. Use keys available for the equivalent notifications defined
- *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo`dictionary.
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo` dictionary.
  */
 OBJC_EXPORT NSString * const SRGLetterboxSegmentDidStartNotification;
 OBJC_EXPORT NSString * const SRGLetterboxSegmentDidEndNotification;

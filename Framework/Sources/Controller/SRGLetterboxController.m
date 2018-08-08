@@ -197,12 +197,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.updateInterval = SRGLetterboxUpdateIntervalDefault;
         self.channelUpdateInterval = SRGLetterboxChannelUpdateIntervalDefault;
         
-        // Observe playback state changes
-        [self addObserver:self keyPath:@keypath(self.mediaPlayerController.playbackState) options:NSKeyValueObservingOptionNew block:^(MAKVONotification *notification) {
-            @strongify(self)
-            self.playbackState = [notification.newValue integerValue];
-        }];
-        _playbackState = self.mediaPlayerController.playbackState;          // No setter used on purpose to set the initial value. The setter will notify changes
+        self.playbackState = SRGMediaPlayerPlaybackStateIdle;
         
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
@@ -258,22 +253,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)setPlaybackState:(SRGMediaPlayerPlaybackState)playbackState
 {
-    if (_playbackState == playbackState) {
-        return;
-    }
-    
-    NSDictionary *userInfo = @{ SRGMediaPlayerPlaybackStateKey : @(playbackState),
-                                SRGMediaPlayerPreviousPlaybackStateKey: @(_playbackState) };
-    
     [self willChangeValueForKey:@keypath(self.playbackState)];
     _playbackState = playbackState;
     [self didChangeValueForKey:@keypath(self.playbackState)];
     
     self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
-                                                        object:self
-                                                      userInfo:userInfo];
 }
 
 - (BOOL)isLive
@@ -1373,6 +1357,12 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
+    if (playbackState != self.playbackState) {
+        self.playbackState = playbackState;
+        [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
+                                                            object:self
+                                                          userInfo:notification.userInfo];
+    }
     
     // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
     if (self.pictureInPictureActive && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
