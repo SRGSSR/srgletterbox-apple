@@ -22,7 +22,7 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <SRGNetwork/SRGNetwork.h>
 
-static SRGContentProtection s_defaultContentProtection = SRGContentProtectionAkamaiToken;
+static BOOL s_prefersDRM = NO;
 
 NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
@@ -156,9 +156,9 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Class methods
 
-+ (void)setDefaultContentProtection:(SRGContentProtection)defaultContentProtection
++ (void)setPrefersDRM:(BOOL)prefersDRM;
 {
-    s_defaultContentProtection = defaultContentProtection;
+    s_prefersDRM = prefersDRM;
 }
 
 #pragma mark Object lifecycle
@@ -982,8 +982,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             return;
         }
         
-        // TODO: When removed, replace s_defaultContentProtection with SRGContentProtectionNone
-        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone contentProtection:s_defaultContentProtection streamType:streamType quality:quality startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
+        // TODO: Replace s_prefersDRM with YES when removed
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
@@ -1153,8 +1153,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
         if (! blockingReasonError) {
-            // TODO: When removed, replace s_defaultContentProtection with SRGContentProtectionNone
-            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone contentProtection:s_defaultContentProtection streamType:self.streamType quality:self.quality startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+            // TODO: Replace s_prefersDRM with YES when removed
+            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality DRM:s_prefersDRM startBitRate:self.startBitRate userInfo:nil completionHandler:^{
                 [self.mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];

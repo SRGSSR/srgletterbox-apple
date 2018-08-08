@@ -6,7 +6,6 @@
 
 #import "SRGLetterboxController.h"
 
-#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -59,12 +58,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 - (void)reloadPlayerConfiguration;
 
 /**
- *  Private hook for setting the default content protection to use in Play SRG applications. If not set, defaults to
- *  Akamai token protection.
+ *  Private method to set whether DRM streams must be favored over non-DRM ones when both are available.
  */
 // FIXME: This hook is temporary until 2019 and must only be used by Play SRG applications. It will be removed
 //        afterwards.
-+ (void)setDefaultContentProtection:(SRGContentProtection)defaultContentProtection;
++ (void)setPrefersDRM:(BOOL)prefersDRM;
 
 @end
 
