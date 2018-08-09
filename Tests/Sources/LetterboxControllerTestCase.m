@@ -160,6 +160,19 @@ static NSURL *MMFServiceURL(void)
     XCTAssertFalse(self.controller.loading);
 }
 
+- (void)testPlayURNAtTime
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandVideoURN atTime:CMTimeMakeWithSeconds(15., NSEC_PER_SEC) standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertEqual(CMTimeGetSeconds(self.controller.currentTime), 15.);
+}
+
 - (void)testPlayMedia
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
