@@ -176,6 +176,9 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50. Workaround so that the test passes on iOS 11.3.
         self.mediaPlayerController.minimumDVRWindowLength = 40.;
         
+        self.mediaPlayerController.endTolerance = 10.;
+        self.mediaPlayerController.endToleranceRatio = 0.01;
+        
         @weakify(self)
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
             @strongify(self)
