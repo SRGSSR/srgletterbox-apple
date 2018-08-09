@@ -166,6 +166,13 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  */
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
 
+/**
+ *  An optional time at which playback must resume for the specified media. If not implemented or if the method returns
+ *  `kCMTimeZero`, playback starts at the default location. If a time near or past the end of the media to be played is
+ *  provided, the player will start at its default location.
+ */
+- (CMTime)controller:(SRGLetterboxController *)controller startTimeForMedia:(SRGMedia *)media;
+
 @end
 
 /**
@@ -206,6 +213,8 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  preparation, call `-play` from the completion handler.
  *
  *  @param URN               The URN to prepare.
+ *  @param time              The time to play at. Use `kCMTimeZero` for the default position. If a time near or past the
+ *                           end of the URN to be played is provided, the player will start at its default location.
  *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
  *                           independently from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
@@ -222,6 +231,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(NSString *)URN
+                  atTime:(CMTime)time
               standalone:(BOOL)standalone
  withPreferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
@@ -229,11 +239,13 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Same as `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler`, but for a media.
+ *  Same as `-prepareToPlayURN:atTime:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`, but for a
+ *  media.
  *
  *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
+                    atTime:(CMTime)time
                 standalone:(BOOL)standalone
    withPreferredStreamType:(SRGStreamType)streamType
                    quality:(SRGQuality)quality
@@ -547,11 +559,11 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayURN:atTime:withPreferredStreamType:quality:startBitRate:completionHandler:.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(NSString *)URN atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified media.
@@ -560,7 +572,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playMedia:(SRGMedia *)media atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
