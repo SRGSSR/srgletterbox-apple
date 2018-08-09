@@ -469,12 +469,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         return NO;
     }
     
-    CMTime time = kCMTimeZero;
-    if ([self.playlistDataSource respondsToSelector:@selector(controller:startTimeForMedia:)]) {
-        time = [self.playlistDataSource controller:self startTimeForMedia:media];
-    }
-    
-    [self prepareToPlayMedia:media atTime:time standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
+    CMTime startTime = [self startTimeForMedia:media];
+    [self prepareToPlayMedia:media atTime:startTime standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
     
     if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
         [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
@@ -530,6 +526,16 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     }
     else {
         return nil;
+    }
+}
+
+- (CMTime)startTimeForMedia:(SRGMedia *)media
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(controller:startTimeForMedia:)]) {
+        return [self.playlistDataSource controller:self startTimeForMedia:media];
+    }
+    else {
+        return kCMTimeZero;
     }
 }
 
@@ -1427,6 +1433,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         };
         
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDurationDisabled && ! self.pictureInPictureActive) {
+            CMTime startTime = [self startTimeForMedia:nextMedia];
+            
             if (continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
                 self.continuousPlaybackTransitionEndDate = [NSDate dateWithTimeIntervalSinceNow:continuousPlaybackTransitionDuration];
@@ -1436,15 +1444,13 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 self.continuousPlaybackTransitionTimer = [NSTimer srg_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
-                    // TODO: Use playlist time. Factor out code?
-                    [self playMedia:nextMedia atTime:kCMTimeZero standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+                    [self playMedia:nextMedia atTime:startTime standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                     [self resetContinuousPlayback];
                     notify();
                 }];
             }
-            else if (nextMedia) {
-                // TODO: Use playlist time. Factor out code?
-                [self playMedia:nextMedia atTime:kCMTimeZero standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+            else {
+                [self playMedia:nextMedia atTime:startTime standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                 
                 // Send notification on next run loop, so that other observers of the playback end notification all receive
                 // the notification before the continuous playback notification is emitted.
