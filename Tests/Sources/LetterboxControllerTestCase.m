@@ -1358,6 +1358,7 @@ static NSURL *MMFServiceURL(void)
     
     NSString *URN = OnDemandLongVideoURN;
     [self.controller playURN:URN standalone:NO];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1382,6 +1383,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self.controller pause];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Wait for a while. No playback notifications must be received
@@ -1427,6 +1429,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self.controller playMedia:media standalone:NO];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, media.URN);
@@ -1435,6 +1438,28 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.mediaPlayerController.contentURL, overridingURL);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     XCTAssertEqual(self.controller.mediaPlayerController.view.viewMode, SRGMediaPlayerViewModeMonoscopic);
+}
+
+- (void)testStartTimeForContentURLOverriding
+{
+    NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+    self.controller.updateInterval = 10.;
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(NSString * _Nonnull URN) {
+        return overridingURL;
+    };
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandLongVideoURN atTime:CMTimeMakeWithSeconds(15., NSEC_PER_SEC) standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqual(CMTimeGetSeconds(self.controller.currentTime), 15.);
 }
 
 - (void)testUninterruptedOnDemandFullLengthPlayback
@@ -1469,6 +1494,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self.controller pause];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received

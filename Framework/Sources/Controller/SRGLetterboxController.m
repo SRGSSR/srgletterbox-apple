@@ -917,7 +917,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 else {
                     self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
                 }
-                [self.mediaPlayerController prepareToPlayURL:contentURL withCompletionHandler:completionHandler];
+                [self.mediaPlayerController prepareToPlayURL:contentURL atTime:time withSegments:nil userInfo:nil completionHandler:completionHandler];
             };
             
             // Media readily available. Done
