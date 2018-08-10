@@ -23,6 +23,7 @@
         self.medias = medias;
         self.index = NSNotFound;
         self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
+        self.startTime = kCMTimeZero;
     }
     return self;
 }
@@ -60,6 +61,11 @@
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically
 {
     self.index = [self.medias indexOfObject:media];
+}
+
+- (CMTime)controller:(SRGLetterboxController *)controller startTimeForMedia:(SRGMedia *)media
+{
+    return self.startTime;
 }
 
 @end
