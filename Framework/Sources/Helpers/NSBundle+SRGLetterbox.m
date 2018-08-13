@@ -19,12 +19,14 @@ NSString *SRGLetterboxNonLocalizedString(NSString *string)
 
 + (instancetype)srg_letterboxBundle
 {
-    static NSBundle *bundle;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        bundle = [NSBundle bundleForClass:[SRGLetterboxController class]];
+    static NSBundle *s_bundle;
+    static dispatch_once_t s_once;
+    dispatch_once(&s_once, ^{
+        NSString *bundlePath = [[NSBundle bundleForClass:[SRGLetterboxController class]].bundlePath stringByAppendingPathComponent:@"SRGLetterbox.bundle"];
+        s_bundle = [NSBundle bundleWithPath:bundlePath];
+        NSAssert(s_bundle, @"Please add SRGLetterbox.bundle to your project resources");
     });
-    return bundle;
+    return s_bundle;
 }
 
 + (BOOL)srg_letterbox_isProductionVersion
