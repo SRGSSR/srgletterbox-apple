@@ -35,8 +35,6 @@
 		08EB66A51F34C6B000E9D7CA /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
 		08EB66A61F34C73B00E9D7CA /* TCCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08EB66A71F34C73B00E9D7CA /* TCSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		08EB66A81F34C76D00E9D7CA /* TCCore.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
-		08EB66A91F34C76D00E9D7CA /* TCSDK.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
 		08EB66AA1F34C77F00E9D7CA /* TCCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */; };
@@ -51,7 +49,6 @@
 		08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */; };
 		08FA0CF91E2F6DDF000C94EF /* UIImage+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */; };
 		08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
-		08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D231E30F92F000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D241E30F954000C94EF /* FXReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; };
 		08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -78,21 +75,9 @@
 		6F0C99172121E73400073AB6 /* SRGNotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593620581CAF00823003 /* SRGNotificationView.xib */; };
 		6F0C99182121E73400073AB6 /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
-		6F131A7D1E8CCDDB000D6BEC /* SRGAppearance.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
 		6F1BA9142029E9E8004BB271 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* Playlist.m */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
-		6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
-		6F1F5FDF1E30A6D1000215F3 /* ComScore.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B071E28FB1400CC2197 /* ComScore.framework */; };
-		6F1F5FE01E30A6D1000215F3 /* libextobjc.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B081E28FB1400CC2197 /* libextobjc.framework */; };
-		6F1F5FE11E30A6D1000215F3 /* Mantle.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B091E28FB1400CC2197 /* Mantle.framework */; };
-		6F1F5FE21E30A6D1000215F3 /* SRGAnalytics_DataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */; };
-		6F1F5FE31E30A6D1000215F3 /* SRGAnalytics_MediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */; };
-		6F1F5FE41E30A6D1000215F3 /* SRGAnalytics.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */; };
-		6F1F5FE51E30A6D1000215F3 /* SRGDataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */; };
-		6F1F5FE61E30A6D1000215F3 /* SRGLogger.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */; };
-		6F1F5FE71E30A6D1000215F3 /* SRGMediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
-		6F1F5FE81E30A6D1000215F3 /* YYWebImage.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
 		6F2EB46D2029DF5B00E7ACDC /* PlaylistsTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46C2029DF5B00E7ACDC /* PlaylistsTestCase.m */; };
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
@@ -129,8 +114,6 @@
 		6F50597620581CAF00823003 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */; };
 		6F52DE1E2106F857001EC146 /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
 		6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
-		6F52DE202106F867001EC146 /* SRGContentProtection.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
-		6F52DE212106F867001EC146 /* SRGNetwork.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
 		6F52DE222106F871001EC146 /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
 		6F52DE232106F871001EC146 /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F52DE242106F871001EC146 /* SRGNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
@@ -214,7 +197,6 @@
 		6FB97FF51E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */ = {isa = PBXBuildFile; fileRef = 6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */; };
 		6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
 		6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
@@ -279,34 +261,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		6F1F5FC71E30A65A000215F3 /* Copy Framework Dependencies For Xcode View Rendering */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-				6F52DE202106F867001EC146 /* SRGContentProtection.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F52DE212106F867001EC146 /* SRGNetwork.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				08EB66A81F34C76D00E9D7CA /* TCCore.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				08EB66A91F34C76D00E9D7CA /* TCSDK.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F131A7D1E8CCDDB000D6BEC /* SRGAppearance.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6FB97FFA1E4B28940014C4C2 /* MAKVONotificationCenter.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				08FA0D211E30F84F000C94EF /* FXReachability.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FDE1E30A6D1000215F3 /* Masonry.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FDF1E30A6D1000215F3 /* ComScore.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE01E30A6D1000215F3 /* libextobjc.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE11E30A6D1000215F3 /* Mantle.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE21E30A6D1000215F3 /* SRGAnalytics_DataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE31E30A6D1000215F3 /* SRGAnalytics_MediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE41E30A6D1000215F3 /* SRGAnalytics.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE51E30A6D1000215F3 /* SRGDataProvider.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE61E30A6D1000215F3 /* SRGLogger.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE71E30A6D1000215F3 /* SRGMediaPlayer.framework in Copy Framework Dependencies For Xcode View Rendering */,
-				6F1F5FE81E30A6D1000215F3 /* YYWebImage.framework in Copy Framework Dependencies For Xcode View Rendering */,
-			);
-			name = "Copy Framework Dependencies For Xcode View Rendering";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		6FAB3B681E2905B400CC2197 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1123,7 +1077,7 @@
 				6FE3213D1E28E24E00FD8E42 /* Frameworks */,
 				6FE3213E1E28E24E00FD8E42 /* Headers */,
 				6FE3213F1E28E24E00FD8E42 /* Resources */,
-				6F1F5FC71E30A65A000215F3 /* Copy Framework Dependencies For Xcode View Rendering */,
+				6F0C991E2121F10B00073AB6 /* Copy Framework Dependencies For Xcode View Rendering */,
 			);
 			buildRules = (
 			);
@@ -1254,6 +1208,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6F0C991E2121F10B00073AB6 /* Copy Framework Dependencies For Xcode View Rendering */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Framework Dependencies For Xcode View Rendering";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "// Could be achieved with a Copy Files phase. Must only be made in a dynamic setup,\n// though, thus the need for a script to check the configuration first\nif [ \"${CONFIGURATION}\" == \"Debug\" || \"${CONFIGURATION}\" == \"Release\" ]; then\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/ComScore.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/FXReachability.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/libextobjc.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/MAKVONotificationCenter.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/Mantle.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/Masonry.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAnalytics.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAppearance.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGContentProtection.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGDataProvider.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGLogger.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGMediaPlayer.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGNetwork.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/TCCore.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/TCSDK.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/YYWebImage.framework\" \"${BUILT_PRODUCTS_DIR}\"\nfi\n\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6F0C98FA2121E54700073AB6 /* Sources */ = {
