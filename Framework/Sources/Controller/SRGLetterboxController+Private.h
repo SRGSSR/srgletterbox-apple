@@ -57,6 +57,13 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  */
 - (void)reloadPlayerConfiguration;
 
+/**
+ *  Private method to set whether DRM streams must be favored over non-DRM ones when both are available.
+ */
+// FIXME: This hook is temporary until 2019 and must only be used by Play SRG applications. It will be removed
+//        afterwards.
++ (void)setPrefersDRM:(BOOL)prefersDRM;
+
 @end
 
 NS_ASSUME_NONNULL_END
