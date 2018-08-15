@@ -85,7 +85,7 @@
 - (void)updateProgressWithTime:(CMTime)time
 {
     CMTimeRange timeRange = self.letterboxController.timeRange;
-    if (CMTIMERANGE_IS_VALID(timeRange) && ! CMTIMERANGE_IS_EMPTY(timeRange)) {
+    if (SRG_CMTIMERANGE_IS_NOT_EMPTY(timeRange)) {
         self.progressView.progress = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)) / CMTimeGetSeconds(timeRange.duration);
         self.progressView.hidden = NO;
     }

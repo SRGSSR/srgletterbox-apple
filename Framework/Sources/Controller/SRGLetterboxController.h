@@ -33,11 +33,17 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(NSString *URN);
 
 /**
- *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
- *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
- *  notification `userInfo` dictionary.
+ *  Notification sent when the controller playback state changes. Use keys available for the equivalent notification defined
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo` dictionary.
  */
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
+
+/**
+ *  Notifications sent when the current segment changes. Use keys available for the equivalent notifications defined
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo` dictionary.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxSegmentDidStartNotification;
+OBJC_EXPORT NSString * const SRGLetterboxSegmentDidEndNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -160,6 +166,14 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  */
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
 
+/**
+ *  An optional time at which playback must resume for the specified media. If not implemented or if the method returns
+ *  `kCMTimeZero`, playback starts at the default location. If a time near or past the end of the media to be played is
+ *  provided (see `SRGLetterboxController` `endTolerance` and `endToleranceRatio` properties), the player will start at
+ *  its default location.
+ */
+- (CMTime)controller:(SRGLetterboxController *)controller startTimeForMedia:(SRGMedia *)media;
+
 @end
 
 /**
@@ -200,6 +214,9 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  preparation, call `-play` from the completion handler.
  *
  *  @param URN               The URN to prepare.
+ *  @param time              The time to play at. Use `kCMTimeZero` for the default position. If a time near or past the
+ *                           end of the URN to be played is provided (see `endTolerance` and `endToleranceRatio`), the
+ *                           player will start at its default location.
  *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
  *                           independently from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
@@ -216,6 +233,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(NSString *)URN
+                  atTime:(CMTime)time
               standalone:(BOOL)standalone
  withPreferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
@@ -223,11 +241,13 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Same as `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler`, but for a media.
+ *  Same as `-prepareToPlayURN:atTime:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`, but for a
+ *  media.
  *
  *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
+                    atTime:(CMTime)time
                 standalone:(BOOL)standalone
    withPreferredStreamType:(SRGStreamType)streamType
                    quality:(SRGQuality)quality
@@ -541,11 +561,11 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayURN:atTime:withPreferredStreamType:quality:startBitRate:completionHandler:.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(NSString *)URN atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified media.
@@ -554,7 +574,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playMedia:(SRGMedia *)media atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -695,6 +715,37 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 @end
 
+/**
+ *  Tolerance settings applied at playback start.
+ *
+ *  @discussion If needed, the effective tolerance resulting from these settings can be calculated with the help of the
+ *              `SRGMediaPlayerEffectiveEndTolerance` function.
+ */
+@interface SRGLetterboxController (EndToleranceSettings)
+
+/**
+ *  The absolute tolerance (in seconds) applied when attempting to start playback near the end of a media. Default is 0
+ *  seconds.
+ *
+ *  @discussion If the distance between the desired playback position and the end is smaller than the maximum tolerated
+ *              value according to `endTolerance` and / or `endToleranceRatio`, playback will start at the default position.
+ */
+@property (nonatomic) NSTimeInterval endTolerance;
+
+/**
+ *  The tolerance ratio applied when attempting to start playback near the end of a media. The ratio is multiplied with
+ *  the media duration to calculate the tolerance in seconds. Default is 0.
+ *
+ *  @discussion If the distance between the desired playback position and the end is smaller than the maximum tolerated
+ *              value according to `endTolerance` and / or `endToleranceRatio`, playback will start at the default position.
+ */
+@property (nonatomic) float endToleranceRatio;
+
+@end
+
+/**
+ *  Settings for the server from which metadata is retrieved.
+ */
 @interface SRGLetterboxController (ServerSettings)
 
 /**

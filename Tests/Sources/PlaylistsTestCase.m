@@ -563,4 +563,70 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     }];
 }
 
+- (void)testPlaylistWithStartTime
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
+    
+    [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.startTime = CMTimeMakeWithSeconds(10., NSEC_PER_SEC);
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertTrue([self.controller playNextMedia]);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqual(CMTimeGetSeconds(self.controller.currentTime), 10.);
+}
+
+- (void)testContinuousPlaybackWithStartTime
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
+    
+    [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist.continuousPlaybackTransitionDuration = 1.;
+        self.playlist.startTime = CMTimeMakeWithSeconds(10., NSEC_PER_SEC);
+        self.controller.playlistDataSource = self.playlist;
+        [expectation fulfill];
+    }] resume];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    XCTAssertTrue([self.controller playNextMedia]);
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Seek near the end
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
+    }];
+    
+    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    // Wait until continuous playback starts playback of the next media
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqual(CMTimeGetSeconds(self.controller.currentTime), 10.);
+}
+
 @end
