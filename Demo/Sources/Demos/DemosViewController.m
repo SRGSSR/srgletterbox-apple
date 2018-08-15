@@ -185,7 +185,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * const kVideoOnDemandURNString = @"urn:swi:video:41981254";
+    static NSString * const kVideoOnDemandURNString = @"urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a";
     static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8591082";
     static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8992584";
     static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8992594";
@@ -213,6 +213,7 @@
     
     static NSString * const kVideoOverriddenURNString = @"urn:rts:video:8806790";
     
+    static NSString * const kAudioOnDemandURNString = @"urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a";
     static NSString * const kAudioOnDemandSegmentsURNString = @"urn:rts:audio:9355007";
     static NSString * const kAudioOnDemandStartOnSegmentURNString = @"urn:rts:audio:9355011";
     static NSString * const kAudioDVRURNString = @"urn:rts:audio:3262363";
@@ -343,36 +344,41 @@
                 }
                     
                 case 13: {
-                    [self openModalPlayerWithURN:kAudioOnDemandSegmentsURNString];
+                    [self openModalPlayerWithURN:kAudioOnDemandURNString];
                     break;
                 }
                     
                 case 14: {
-                    [self openModalPlayerWithURN:kAudioOnDemandStartOnSegmentURNString];
+                    [self openModalPlayerWithURN:kAudioOnDemandSegmentsURNString];
                     break;
                 }
                     
                 case 15: {
-                    [self openModalPlayerWithURN:kAudioDVRURNString];
+                    [self openModalPlayerWithURN:kAudioOnDemandStartOnSegmentURNString];
                     break;
                 }
                     
                 case 16: {
-                    [self openModalPlayerWithURN:kAudioDVRRegionalURNString];
+                    [self openModalPlayerWithURN:kAudioDVRURNString];
                     break;
                 }
                     
                 case 17: {
-                    [self openModalPlayerWithURN:kInvalidURNString];
+                    [self openModalPlayerWithURN:kAudioDVRRegionalURNString];
                     break;
                 }
                     
                 case 18: {
-                    [self openModalPlayerWithURN:nil];
+                    [self openModalPlayerWithURN:kInvalidURNString];
                     break;
                 }
                     
                 case 19: {
+                    [self openModalPlayerWithURN:nil];
+                    break;
+                }
+                    
+                case 20: {
                     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
                         [self openModalPlayerWithURN:URNString];
