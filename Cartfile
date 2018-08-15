@@ -1,5 +1,5 @@
 github "ibireme/YYWebImage" "1.0.5"
 github "SnapKit/Masonry" "v1.1.0"
 github "SRGSSR/FXReachability" "557838ebbd4da15c02c565fe9009be416864f27d"
-github "SRGSSR/srganalytics-ios" "fc6d239536f44d38b7892deee18dc05deecff1fa"
-github "SRGSSR/srgappearance-ios" "7290b998e6df38d1d9f799182c2e67527e94a568"
+github "SRGSSR/srganalytics-ios" "6dee6b95dd237abe18cd01c3b1a550d77213f932"
+github "SRGSSR/srgappearance-ios" "899dbe5b80b0c09a33ac50e7e1286ed03faac4b5"
