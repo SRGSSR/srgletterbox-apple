@@ -20,8 +20,8 @@ NSString *SRGLetterboxNonLocalizedString(NSString *string)
 + (instancetype)srg_letterboxBundle
 {
     static NSBundle *s_bundle;
-    static dispatch_once_t s_once;
-    dispatch_once(&s_once, ^{
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
         NSString *bundlePath = [[NSBundle bundleForClass:[SRGLetterboxController class]].bundlePath stringByAppendingPathComponent:@"SRGLetterbox.bundle"];
         s_bundle = [NSBundle bundleWithPath:bundlePath];
         NSAssert(s_bundle, @"Please add SRGLetterbox.bundle to your project resources");
