@@ -94,30 +94,30 @@ OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification;
 
 /**
- *  The default start bit rate to start (800 kbps).
+ *  The default start bit rate to start in kbps.
  */
-OBJC_EXPORT const NSInteger SRGLetterboxDefaultStartBitRate;
+static const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 
 /**
- *  Time interval for stream availability checks. Default is 30 seconds.
+ *  Default time interval for stream availability checks.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxUpdateIntervalDefault;
+static const NSTimeInterval SRGLetterboxUpdateIntervalDefault = 30.;
 
 /**
- *  Time interval to check channel metadata. Default is 30 seconds.
+ *  Default time interval to check channel metadata.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault;
+static const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
 
 /**
  *  Standard skip intervals.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxBackwardSkipInterval;           // 10 seconds
-OBJC_EXPORT const NSTimeInterval SRGLetterboxForwardSkipInterval;            // 30 seconds
+static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
 
 /**
- *  Standard intervals before automatically playing the next item in a playlist.
+ *  Special interval used to disable continuous playback.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled;          // Disable continuous playback
+static const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
 
 /**
  *  Forward declarations.

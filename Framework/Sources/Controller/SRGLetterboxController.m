@@ -53,16 +53,6 @@ NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLett
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
-const NSInteger SRGLetterboxDefaultStartBitRate = 800;
-
-const NSTimeInterval SRGLetterboxUpdateIntervalDefault = 30.;
-const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
-
-const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
-const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
-
-const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
-
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:date];
