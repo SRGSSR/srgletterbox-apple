@@ -4,16 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "Playlist.h"
+#import "TestPlaylist.h"
 
-@interface Playlist ()
+@interface TestPlaylist ()
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 @property (nonatomic) NSInteger index;
 
 @end
 
-@implementation Playlist
+@implementation TestPlaylist
 
 #pragma mark Object lifecycle
 

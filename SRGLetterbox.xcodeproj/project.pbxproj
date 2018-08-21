@@ -75,7 +75,7 @@
 		6F0C99172121E73400073AB6 /* SRGNotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593620581CAF00823003 /* SRGNotificationView.xib */; };
 		6F0C99182121E73400073AB6 /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
-		6F1BA9142029E9E8004BB271 /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* Playlist.m */; };
+		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
@@ -376,8 +376,8 @@
 		6F0AD07C1E5EB224000A61A5 /* AutoplayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoplayTableViewCell.h; sourceTree = "<group>"; };
 		6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoplayTableViewCell.m; sourceTree = "<group>"; };
 		6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SRGLetterbox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F1BA9122029E9E8004BB271 /* Playlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
-		6F1BA9132029E9E8004BB271 /* Playlist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
+		6F1BA9122029E9E8004BB271 /* TestPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPlaylist.h; sourceTree = "<group>"; };
+		6F1BA9132029E9E8004BB271 /* TestPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPlaylist.m; sourceTree = "<group>"; };
 		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
 		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalPlayerViewController.m; sourceTree = "<group>"; };
 		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ModalPlayerViewController.storyboard; sourceTree = "<group>"; };
@@ -930,8 +930,8 @@
 				6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */,
 				6F2EB46E2029DFB100E7ACDC /* LetterboxBaseTestCase.h */,
 				6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */,
-				6F1BA9122029E9E8004BB271 /* Playlist.h */,
-				6F1BA9132029E9E8004BB271 /* Playlist.m */,
+				6F1BA9122029E9E8004BB271 /* TestPlaylist.h */,
+				6F1BA9132029E9E8004BB271 /* TestPlaylist.m */,
 				6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */,
 			);
 			path = Helpers;
@@ -1267,7 +1267,7 @@
 				6FAB3B8F1E29066300CC2197 /* LetterboxControllerTestCase.m in Sources */,
 				6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */,
 				6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */,
-				6F1BA9142029E9E8004BB271 /* Playlist.m in Sources */,
+				6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */,
 				6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */,
 				6F2EB46D2029DF5B00E7ACDC /* PlaylistsTestCase.m in Sources */,
 			);

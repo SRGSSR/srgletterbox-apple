@@ -5,7 +5,7 @@
 //
 
 #import "LetterboxBaseTestCase.h"
-#import "Playlist.h"
+#import "TestPlaylist.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
@@ -17,7 +17,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGLetterboxController *controller;
-@property (nonatomic) Playlist *playlist;
+@property (nonatomic) TestPlaylist *playlist;
 
 @end
 
@@ -45,7 +45,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -137,7 +137,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -199,7 +199,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -259,7 +259,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = 0.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -319,7 +319,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -395,7 +395,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -463,7 +463,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -523,7 +523,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -568,7 +568,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.startTime = CMTimeMakeWithSeconds(10., NSEC_PER_SEC);
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -592,7 +592,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
         self.playlist.continuousPlaybackTransitionDuration = 1.;
         self.playlist.startTime = CMTimeMakeWithSeconds(10., NSEC_PER_SEC);
         self.controller.playlistDataSource = self.playlist;
