@@ -119,7 +119,7 @@ static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
 /**
  *  Special interval used to disable continuous playback.
  */
-static const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled = DBL_MAX;
+static const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDisabled = DBL_MAX;
 
 /**
  *  Forward declarations.
@@ -157,7 +157,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisa
  *  To enable continuous playback, implement this method and return a valid non-negative transition duration. Values
  *  lower than 0 will be fixed to 0. A duration of 0 enables immediate continuation.
  *
- *  You can return `SRGLetterboxContinuousPlaybackTransitionDurationDisabled` to disable continuous playback, which
+ *  You can return `SRGLetterboxContinuousPlaybackTransitionDisabled` to disable continuous playback, which
  *  is equivalent to not having this method implemented.
  */
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
