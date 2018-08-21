@@ -6,7 +6,7 @@
 
 #import "NSTimer+SRGLetterbox.h"
 
-#import "SRGTimerTarget.h"
+#import "SRGLetterboxTimerTarget.h"
 
 @implementation NSTimer (SRGLetterbox)
 
@@ -19,7 +19,7 @@
     }
     else {
         // Do not use self as target, since this would lead to subtle issues when the timer is deallocated
-        SRGTimerTarget *target = [[SRGTimerTarget alloc] initWithBlock:block];
+        SRGLetterboxTimerTarget *target = [[SRGLetterboxTimerTarget alloc] initWithBlock:block];
         timer = [self timerWithTimeInterval:interval target:target selector:@selector(fire:) userInfo:nil repeats:repeats];
     }
     
