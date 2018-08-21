@@ -56,6 +56,8 @@ The library requires the following frameworks to be added to any target requirin
 * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework.
 * `SRGAnalytics_DataProvider`: The data provider analytics companion framework.
 * `SRGAppearance`: The appearance framework.
+* `SRGContentProtection`: The framework to enable playback of protected medias.
+* `SRGDiagnostics`: Framework for collecting diagnostic information.
 * `SRGLetterbox`: The Letterbox library framework.
 * `SRGLogger`: The framework used for internal logging.
 * `SRGMediaPlayer`: The media player framework (if not already in your project).
