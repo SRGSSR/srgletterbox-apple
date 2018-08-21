@@ -22,7 +22,7 @@
     if (self = [super init]) {
         self.medias = medias;
         self.index = NSNotFound;
-        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDisabled;
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
         self.startTime = kCMTimeZero;
     }
     return self;

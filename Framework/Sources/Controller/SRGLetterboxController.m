@@ -1422,7 +1422,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     else if (playbackState == SRGMediaPlayerPlaybackStateEnded) {
         SRGMedia *nextMedia = self.nextMedia;
         
-        NSTimeInterval continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDisabled;
+        NSTimeInterval continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
         if ([self.playlistDataSource respondsToSelector:@selector(continuousPlaybackTransitionDurationForController:)]) {
             continuousPlaybackTransitionDuration = [self.playlistDataSource continuousPlaybackTransitionDurationForController:self];
             if (continuousPlaybackTransitionDuration < 0.) {
@@ -1440,7 +1440,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                                                                           SRGLetterboxMediaKey : nextMedia }];
         };
         
-        if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackTransitionDisabled && ! self.pictureInPictureActive) {
+        if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
             CMTime startTime = [self startTimeForMedia:nextMedia];
             
             if (continuousPlaybackTransitionDuration != 0.) {
