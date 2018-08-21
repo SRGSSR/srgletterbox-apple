@@ -693,7 +693,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (! UIAccessibilityIsVoiceOverRunning()) {
         @weakify(self)
-        self.inactivityTimer = [NSTimer srg_timerWithTimeInterval:4. repeats:YES /* important */ block:^(NSTimer * _Nonnull timer) {
+        self.inactivityTimer = [NSTimer srgletterbox_timerWithTimeInterval:4. repeats:YES /* important */ block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -717,7 +717,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)startPeriodicUpdates
 {
     @weakify(self)
-    self.periodicUpdateTimer = [NSTimer srg_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.periodicUpdateTimer = [NSTimer srgletterbox_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         [self setNeedsLayoutAnimated:YES];
     }];

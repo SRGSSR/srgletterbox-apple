@@ -10,7 +10,7 @@
 
 @implementation NSTimer (SRGLetterbox)
 
-+ (NSTimer *)srg_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer * _Nonnull timer))block
++ (NSTimer *)srgletterbox_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer * _Nonnull timer))block
 {
     NSTimer *timer = nil;
     

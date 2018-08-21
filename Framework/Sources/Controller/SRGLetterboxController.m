@@ -342,7 +342,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     _updateInterval = updateInterval;
     
     @weakify(self)
-    self.updateTimer = [NSTimer srg_timerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.updateTimer = [NSTimer srgletterbox_timerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
         [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL resourceChanged, NSError *previousError) {
@@ -367,7 +367,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     _channelUpdateInterval = channelUpdateInterval;
     
     @weakify(self)
-    self.channelUpdateTimer = [NSTimer srg_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.channelUpdateTimer = [NSTimer srgletterbox_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
         [self updateChannel];
@@ -631,7 +631,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     NSTimeInterval startTimeInterval = [media.startDate timeIntervalSinceNow];
     if (startTimeInterval > 0.) {
         @weakify(self)
-        self.startDateTimer = [NSTimer srg_timerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.startDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL resourceChanged, NSError *previousError) {
                 if (error) {
@@ -651,7 +651,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     NSTimeInterval endTimeInterval = [media.endDate timeIntervalSinceNow];
     if (endTimeInterval > 0.) {
         @weakify(self)
-        self.endDateTimer = [NSTimer srg_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.endDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, [NSDate date])];
@@ -670,7 +670,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         NSTimeInterval endTimeInterval = [mediaComposition.srgletterbox_liveMedia.endDate timeIntervalSinceNow];
         if (endTimeInterval > 0.) {
             @weakify(self)
-            self.livestreamEndDateTimer = [NSTimer srg_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+            self.livestreamEndDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
                 @strongify(self)
                 
                 [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
@@ -1404,7 +1404,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             timerInterval = subdivision.duration * .8;
         }
         @weakify(self)
-        self.socialCountViewTimer = [NSTimer srg_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.socialCountViewTimer = [NSTimer srgletterbox_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
@@ -1451,7 +1451,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 self.continuousPlaybackUpcomingMedia = nextMedia;
                 
                 @weakify(self)
-                self.continuousPlaybackTransitionTimer = [NSTimer srg_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
+                self.continuousPlaybackTransitionTimer = [NSTimer srgletterbox_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
                     [self playMedia:nextMedia atTime:startTime standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
