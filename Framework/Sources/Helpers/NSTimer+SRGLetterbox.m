@@ -14,7 +14,7 @@
 {
     NSTimer *timer = nil;
     
-    if ([[self class] instancesRespondToSelector:@selector(timerWithTimeInterval:repeats:block:)]) {
+    if (@available(iOS 10, *)) {
         timer = [self timerWithTimeInterval:interval repeats:repeats block:block];
     }
     else {

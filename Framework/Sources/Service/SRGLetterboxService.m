@@ -475,7 +475,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     CGSize maximumSize = CGSizeMake(artworkDimension, artworkDimension);
     
     // TODO: Remove when iOS 10 is the minimum supported version
-    if ([MPMediaItemArtwork instancesRespondToSelector:@selector(initWithBoundsSize:requestHandler:)]) {
+    if (@available(iOS 10, *)) {
         // Home artwork retrieval works (because poorly documented):
         // Images are retrieved when needed by the now playing info center by calling -[MPMediaItemArtwork imageWithSize:]`. Sizes
         // larger than the bounds size specified at creation will be fixed to the maximum compatible value. The request block itself
@@ -501,7 +501,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     // Available starting with iOS 10. Only used for non-DVR livestreams (since when this property is set to YES the
     // playback button is replaced with a stop button)
     // TODO: Remove when the minimum required version is iOS 10
-    if (&MPNowPlayingInfoPropertyIsLiveStream) {
+    if (@available(iOS 10, *)) {
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
     }
     
