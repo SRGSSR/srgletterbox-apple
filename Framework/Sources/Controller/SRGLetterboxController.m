@@ -103,6 +103,23 @@ static NSString *SRGLetterboxNetworkType(void)
     }
 }
 
+static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingReason)
+{
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_codes;
+    dispatch_once(&s_onceToken, ^{
+        s_codes = @{ @(SRGBlockingReasonGeoblocking) : @"GEOBLOCK",
+                     @(SRGBlockingReasonLegal) : @"LEGAL",
+                     @(SRGBlockingReasonCommercial) : @"COMMERCIAL",
+                     @(SRGBlockingReasonAgeRating18) : @"AGERATING18",
+                     @(SRGBlockingReasonAgeRating12) : @"AGERATING12",
+                     @(SRGBlockingReasonStartDate) : @"STARTDATE",
+                     @(SRGBlockingReasonEndDate) : @"ENDDATE",
+                     @(SRGBlockingReasonUnknown) : @"UNKNOWN" };
+    });
+    return s_codes[@(blockingReason)];
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -859,9 +876,15 @@ static NSString *SRGLetterboxNetworkType(void)
         return;
     }
     
+    SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:self.URN];
+    
     // Forward Letterbox friendly errors
     if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
         self.error = error;
+        
+        SRGDiagnosticInformation *errorInformation = [report informationForKey:@"ilError"];
+        [errorInformation setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
+        [errorInformation setString:error.localizedDescription forKey:@"message"];
     }
     // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
     else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
@@ -869,6 +892,10 @@ static NSString *SRGLetterboxNetworkType(void)
                                          code:SRGLetterboxErrorCodeNetwork
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
                                                  NSUnderlyingErrorKey : error }];
+        
+        SRGDiagnosticInformation *errorInformation = [report informationForKey:@"networkError"];
+        [errorInformation setString:error.userInfo[NSURLErrorFailingURLStringErrorKey] forKey:@"url"];
+        [errorInformation setString:error.localizedDescription forKey:@"message"];
     }
     // Use a friendly error message for all other reasons
     else {
@@ -880,7 +907,12 @@ static NSString *SRGLetterboxNetworkType(void)
                                          code:code
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
                                                  NSUnderlyingErrorKey : error }];
+        
+        SRGDiagnosticInformation *errorInformation = [report informationForKey:@"genericError"];
+        [errorInformation setString:error.localizedDescription forKey:@"message"];
     }
+    
+    [report finish];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
@@ -929,6 +961,7 @@ static NSString *SRGLetterboxNetworkType(void)
     
     SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:URN];
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
+    [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:UIDevice.currentDevice.model forKey:@"device"];
     [report setString:URN forKey:@"urn"];
     [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
@@ -1039,6 +1072,8 @@ static NSString *SRGLetterboxNetworkType(void)
                                                  code:SRGDataProviderErrorCodeInvalidData
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
             [self updateWithError:error];
+            
+            [report setBool:YES forKey:@"noPlayableResourceFound"];
         }
     }];
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
