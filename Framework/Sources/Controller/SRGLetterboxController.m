@@ -19,6 +19,7 @@
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
+#import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <SRGNetwork/SRGNetwork.h>
 
@@ -80,6 +81,26 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         || playbackState == SRGMediaPlayerPlaybackStateSeeking
         || playbackState == SRGMediaPlayerPlaybackStateStalled;
     return isPlayerLoading || dataAvailability == SRGLetterboxDataAvailabilityLoading;
+}
+
+static NSString *SRGLetterboxNetworkType(void)
+{
+    switch ([FXReachability sharedInstance].status) {
+        case FXReachabilityStatusReachableViaWiFi: {
+            return @"wifi";
+            break;
+        }
+            
+        case FXReachabilityStatusReachableViaWWAN: {
+            return @"mobile_data";
+            break;
+        }
+            
+        default: {
+            return nil;
+            break;
+        }
+    }
 }
 
 @interface SRGLetterboxController ()
@@ -897,6 +918,27 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     [self resetWithURN:URN media:media];
     
+    // Diagnostics
+    static dispatch_once_t s_onceToken;
+    static NSDateFormatter *s_dateFormatter;
+    dispatch_once(&s_onceToken, ^{
+        s_dateFormatter = [[NSDateFormatter alloc] init];
+        [s_dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [s_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"];
+    });
+    
+    SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:URN];
+    [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
+    [report setString:UIDevice.currentDevice.model forKey:@"device"];
+    [report setString:URN forKey:@"urn"];
+    [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
+    [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
+    
+    void (^prepareCompletionHandler)(void) = ^{
+        [report finish];
+        completionHandler ? completionHandler() : nil;
+    };
+    
     // Save the settings for restarting after connection loss
     self.startPosition = position;
     self.streamType = streamType;
@@ -922,7 +964,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 else {
                     self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
                 }
-                [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:completionHandler];
+                [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:prepareCompletionHandler];
             };
             
             // Media readily available. Done
@@ -990,7 +1032,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         }
         
         // TODO: Replace s_prefersDRM with YES when removed
-        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:prepareCompletionHandler]) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
