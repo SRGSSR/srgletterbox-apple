@@ -523,7 +523,7 @@
                 case 13: {
                     [self openModalPlayerWithURN:kMMFRTSMultipleAudiosURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
-                                  updateInterval:@(SRGLetterboxUpdateIntervalDefault)];
+                                  updateInterval:@(SRGLetterboxDefaultUpdateInterval)];
                     break;
                 }
                     

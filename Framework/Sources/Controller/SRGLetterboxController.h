@@ -99,14 +99,16 @@ OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotific
 static const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 
 /**
- *  Default time interval for stream availability checks.
+ *  Standard time intervals for stream availability checks.
  */
-static const NSTimeInterval SRGLetterboxUpdateIntervalDefault = 30.;
+static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
+static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
- *  Default time interval to check channel metadata.
+ *  Standard time intervals for checking channel metadata.
  */
-static const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault = 30.;
+static const NSTimeInterval SRGLetterboxChannelDefaultUpdateInterval = 30.;
+static const NSTimeInterval SRGLetterboxChannelMinimumUpdateInterval = 10.;
 
 /**
  *  Standard skip intervals.
@@ -803,7 +805,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Time interval for controller automatic updates.
  *
- *  Default is `SRGLetterboxUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxDefaultUpdateInterval`, and minimum is `SRGLetterboxMinimumUpdateInterval`.
  */
 @property (nonatomic) NSTimeInterval updateInterval;
 
@@ -811,7 +813,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxChannelDefaultUpdateInterval`, and minimum is `SRGLetterboxChannelMinimumUpdateInterval`.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 

@@ -185,8 +185,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         };
         
         // Also register the associated periodic time observers
-        self.updateInterval = SRGLetterboxUpdateIntervalDefault;
-        self.channelUpdateInterval = SRGLetterboxChannelUpdateIntervalDefault;
+        self.updateInterval = SRGLetterboxDefaultUpdateInterval;
+        self.channelUpdateInterval = SRGLetterboxChannelDefaultUpdateInterval;
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
         
@@ -334,9 +334,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)setUpdateInterval:(NSTimeInterval)updateInterval
 {
-    if (updateInterval < 10.) {
-        SRGLetterboxLogWarning(@"controller", @"The mimimum update interval is 10 seconds. Fixed to 10 seconds.");
-        updateInterval = 10.;
+    if (updateInterval < SRGLetterboxMinimumUpdateInterval) {
+        updateInterval = SRGLetterboxMinimumUpdateInterval;
     }
     
     _updateInterval = updateInterval;
@@ -359,9 +358,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)setChannelUpdateInterval:(NSTimeInterval)channelUpdateInterval
 {
-    if (channelUpdateInterval < 10.) {
-        SRGLetterboxLogWarning(@"controller", @"The mimimum now and next update interval is 10 seconds. Fixed to 10 seconds.");
-        channelUpdateInterval = 10.;
+    if (channelUpdateInterval < SRGLetterboxChannelMinimumUpdateInterval) {
+        channelUpdateInterval = SRGLetterboxChannelMinimumUpdateInterval;
     }
     
     _channelUpdateInterval = channelUpdateInterval;
