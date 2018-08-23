@@ -730,7 +730,8 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  seconds.
  *
  *  @discussion If the distance between the desired playback position and the end is smaller than the maximum tolerated
- *              value according to `endTolerance` and / or `endToleranceRatio`, playback will start at the default position.
+ *              value according to `endTolerance` and / or `endToleranceRatio` (the smallest value wins), playback will
+ *              start at the default position.
  */
 @property (nonatomic) NSTimeInterval endTolerance;
 
@@ -739,7 +740,8 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  the media duration to calculate the tolerance in seconds. Default is 0.
  *
  *  @discussion If the distance between the desired playback position and the end is smaller than the maximum tolerated
- *              value according to `endTolerance` and / or `endToleranceRatio`, playback will start at the default position.
+ *              value according to `endTolerance` and / or `endToleranceRatio` (the smallest value wins), playback will
+ *              start at the default position.
  */
 @property (nonatomic) float endToleranceRatio;
 
