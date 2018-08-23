@@ -1260,12 +1260,12 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self seekBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+    return [self skipBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
 
 - (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self seekForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+    return [self skipForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
 }
 
 #pragma mark Helpers
@@ -1306,7 +1306,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
 }
 
-- (BOOL)seekBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (! [self canSkipBackwardFromTime:time]) {
         return NO;
@@ -1322,7 +1322,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     return YES;
 }
 
-- (BOOL)seekForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     if (! [self canSkipForwardFromTime:time]) {
         return NO;
