@@ -169,12 +169,18 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
 
 /**
- *  An optional time at which playback must resume for the specified media. If not implemented or if the method returns
+ *  An optional time at which playback must start for the specified media. If not implemented or if the method returns
  *  `kCMTimeZero`, playback starts at the default location. If a time near or past the end of the media to be played is
  *  provided (see `SRGLetterboxController` `endTolerance` and `endToleranceRatio` properties), the player will start at
  *  its default location.
  */
 - (CMTime)controller:(SRGLetterboxController *)controller startTimeForMedia:(SRGMedia *)media;
+
+/**
+ *  Optional tolerances for the playback start time. If not implemented, the tolerance will be `kCMTimePositiveInfinity`.
+ */
+- (CMTime)controller:(SRGLetterboxController *)controller toleranceBeforeStartTimeForMedia:(SRGMedia *)media;
+- (CMTime)controller:(SRGLetterboxController *)controller toleranceAfterStartTimeForMedia:(SRGMedia *)media;
 
 @end
 
@@ -237,7 +243,9 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (void)prepareToPlayURN:(NSString *)URN
                   atTime:(CMTime)time
               standalone:(BOOL)standalone
- withPreferredStreamType:(SRGStreamType)streamType
+     withToleranceBefore:(CMTime)toleranceBefore
+          toleranceAfter:(CMTime)toleranceAfter
+     preferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
             startBitRate:(NSInteger)startBitRate
        completionHandler:(nullable void (^)(void))completionHandler;
@@ -251,7 +259,9 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (void)prepareToPlayMedia:(SRGMedia *)media
                     atTime:(CMTime)time
                 standalone:(BOOL)standalone
-   withPreferredStreamType:(SRGStreamType)streamType
+       withToleranceBefore:(CMTime)toleranceBefore
+            toleranceAfter:(CMTime)toleranceAfter
+       preferredStreamType:(SRGStreamType)streamType
                    quality:(SRGQuality)quality
               startBitRate:(NSInteger)startBitRate
          completionHandler:(nullable void (^)(void))completionHandler;
@@ -563,20 +573,34 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:atTime:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayURN:atTime:withToleranceBefore:toleranceAfter:preferredStreamType:quality:startBitRate:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(NSString *)URN
+         atTime:(CMTime)time
+     standalone:(BOOL)standalone
+withToleranceBefore:(CMTime)toleranceBefore
+ toleranceAfter:(CMTime)toleranceAfter
+preferredStreamType:(SRGStreamType)streamType
+        quality:(SRGQuality)quality
+   startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified media.
  *
- *  For more information, @see `-prepareToPlayMedia:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayMedia:withToleranceBefore:toleranceAfter:preferredStreamType:quality:startBitRate:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playMedia:(SRGMedia *)media
+           atTime:(CMTime)time
+       standalone:(BOOL)standalone
+withToleranceBefore:(CMTime)toleranceBefore
+   toleranceAfter:(CMTime)toleranceAfter
+preferredStreamType:(SRGStreamType)streamType
+          quality:(SRGQuality)quality
+     startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified URN (Uniform Resource Name).

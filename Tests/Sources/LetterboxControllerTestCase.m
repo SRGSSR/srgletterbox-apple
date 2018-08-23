@@ -166,7 +166,14 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN atTime:CMTimeMakeWithSeconds(15., NSEC_PER_SEC) standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self.controller playURN:OnDemandVideoURN
+                      atTime:CMTimeMakeWithSeconds(15., NSEC_PER_SEC)
+                  standalone:NO
+         withToleranceBefore:kCMTimeZero
+              toleranceAfter:kCMTimeZero
+         preferredStreamType:SRGStreamTypeNone
+                     quality:SRGQualityNone
+                startBitRate:SRGLetterboxDefaultStartBitRate];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1468,7 +1475,14 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoURN atTime:CMTimeMakeWithSeconds(15., NSEC_PER_SEC) standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self.controller playURN:OnDemandLongVideoURN
+                      atTime:CMTimeMakeWithSeconds(15., NSEC_PER_SEC)
+                  standalone:NO
+         withToleranceBefore:kCMTimeZero
+              toleranceAfter:kCMTimeZero
+         preferredStreamType:SRGStreamTypeNone
+                     quality:SRGQualityNone
+                startBitRate:SRGLetterboxDefaultStartBitRate];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
