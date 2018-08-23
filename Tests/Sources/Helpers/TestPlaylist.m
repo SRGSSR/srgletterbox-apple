@@ -68,4 +68,14 @@
     return self.startTime;
 }
 
+- (CMTime)controller:(SRGLetterboxController *)controller toleranceBeforeStartTimeForMedia:(SRGMedia *)media
+{
+    return kCMTimeZero;
+}
+
+- (CMTime)controller:(SRGLetterboxController *)controller toleranceAfterStartTimeForMedia:(SRGMedia *)media
+{
+    return kCMTimeZero;
+}
+
 @end
