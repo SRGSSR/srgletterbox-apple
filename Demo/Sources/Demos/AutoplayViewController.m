@@ -118,7 +118,7 @@
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
     
-    SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         self.medias = medias;
         [self.tableView reloadData];
     };
