@@ -122,7 +122,7 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *                                  do not actually support picture in picture (the delegate won't be saved, though). 
  *                                  The delegate will be released when a new delegate is set, or when `-disable` is called.
  *
- *  @discussion The 'Audio, Airplay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
+ *  @discussion The 'Audio, AirPlay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
  *              this method will throw an exception when called.
  *
  *              The picture in picture delegate is provided alongside the controller when calling this method, so that 

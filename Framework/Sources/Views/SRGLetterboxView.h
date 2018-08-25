@@ -113,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
  *    - Error display.
  *    - AirPlay, picture in picture and subtitles / audio tracks buttons.
  *    - Optional full screen button (see below).
- *    - Overlay displayed when external Airplay playback is active.
+ *    - Overlay displayed when external AirPlay playback is active.
  *    - Activity indicator.
  *    - Image placeholder when loading or playing on an external display.
  *
@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  controls will be hidden from view so that the error can be properly read.
  */
 IB_DESIGNABLE
-@interface SRGLetterboxView : SRGLetterboxControllerView <SRGAirplayViewDelegate, UIGestureRecognizerDelegate>
+@interface SRGLetterboxView : SRGLetterboxControllerView <SRGAirPlayViewDelegate, UIGestureRecognizerDelegate>
 
 /**
  *  Set the motion manager to use for device tracking when playing 360° videos. At most one motion manager should

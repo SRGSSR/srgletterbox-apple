@@ -93,9 +93,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 @property (nonatomic) SRGMediaComposition *mediaComposition;
 @property (nonatomic) SRGChannel *channel;
 @property (nonatomic) SRGSubdivision *subdivision;
-@property (nonatomic) CMTime startTime;
-@property (nonatomic) CMTime toleranceBefore;
-@property (nonatomic) CMTime toleranceAfter;
+@property (nonatomic) SRGPosition *startPosition;
 @property (nonatomic) SRGStreamType streamType;
 @property (nonatomic) SRGQuality quality;
 @property (nonatomic) NSInteger startBitRate;
@@ -172,7 +170,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
             @strongify(self)
             
-            // Do not allow Airplay video playback by default
+            // Do not allow AirPlay video playback by default
             player.allowsExternalPlayback = NO;
             
             // Only update the audio session if needed to avoid audio hiccups
@@ -352,14 +350,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             }
             // Start the player if the blocking reason changed from an not available state to an available one
             else if ([previousError.domain isEqualToString:SRGLetterboxErrorDomain] && previousError.code == SRGLetterboxErrorCodeNotAvailable) {
-                [self playMedia:self.media
-                         atTime:self.startTime
-                     standalone:self.standalone
-            withToleranceBefore:self.toleranceBefore
-                 toleranceAfter:self.toleranceAfter
-            preferredStreamType:self.streamType
-                        quality:self.quality
-                   startBitRate:self.startBitRate];
+                [self playMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
             }
         }];
     }];
@@ -486,19 +477,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         return NO;
     }
     
-    CMTime startTime = [self startTimeForMedia:media];
-    CMTime toleranceBefore = [self toleranceBeforeStartTimeForMedia:media];
-    CMTime toleranceAfter = [self toleranceAfterStartTimeForMedia:media];
-    
-    [self prepareToPlayMedia:media
-                      atTime:startTime
-                  standalone:self.standalone
-         withToleranceBefore:toleranceBefore
-              toleranceAfter:toleranceAfter
-          preferredStreamType:self.streamType
-                     quality:self.quality
-                startBitRate:self.startBitRate
-           completionHandler:completionHandler];
+    SRGPosition *position = [self startPositionForMedia:media];
+    [self prepareToPlayMedia:media atPosition:position standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
     
     if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
         [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
@@ -557,33 +537,13 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     }
 }
 
-- (CMTime)startTimeForMedia:(SRGMedia *)media
+- (SRGPosition *)startPositionForMedia:(SRGMedia *)media
 {
-    if ([self.playlistDataSource respondsToSelector:@selector(controller:startTimeForMedia:)]) {
-        return [self.playlistDataSource controller:self startTimeForMedia:media];
+    if ([self.playlistDataSource respondsToSelector:@selector(controller:startPositionForMedia:)]) {
+        return [self.playlistDataSource controller:self startPositionForMedia:media];
     }
     else {
-        return kCMTimeZero;
-    }
-}
-
-- (CMTime)toleranceBeforeStartTimeForMedia:(SRGMedia *)media
-{
-    if ([self.playlistDataSource respondsToSelector:@selector(controller:toleranceBeforeStartTimeForMedia:)]) {
-        return [self.playlistDataSource controller:self toleranceBeforeStartTimeForMedia:media];
-    }
-    else {
-        return kCMTimePositiveInfinity;
-    }
-}
-
-- (CMTime)toleranceAfterStartTimeForMedia:(SRGMedia *)media
-{
-    if ([self.playlistDataSource respondsToSelector:@selector(controller:toleranceAfterStartTimeForMedia:)]) {
-        return [self.playlistDataSource controller:self toleranceAfterStartTimeForMedia:media];
-    }
-    else {
-        return kCMTimePositiveInfinity;
+        return nil;
     }
 }
 
@@ -676,14 +636,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                     [self stop];
                 }
                 else {
-                    [self playMedia:self.media
-                             atTime:self.startTime
-                         standalone:self.standalone
-                withToleranceBefore:self.toleranceBefore
-                     toleranceAfter:self.toleranceAfter
-                preferredStreamType:self.streamType
-                            quality:self.quality
-                       startBitRate:self.startBitRate];
+                    [self playMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                 }
             }];
         }];
@@ -913,60 +866,17 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 #pragma mark Playback
 
-- (void)prepareToPlayURN:(NSString *)URN
-                  atTime:(CMTime)time
-              standalone:(BOOL)standalone
-     withToleranceBefore:(CMTime)toleranceBefore
-          toleranceAfter:(CMTime)toleranceAfter
-     preferredStreamType:(SRGStreamType)streamType
-                 quality:(SRGQuality)quality
-            startBitRate:(NSInteger)startBitRate
-       completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN
-                    atTime:time
-                standalone:standalone
-                     media:nil
-       withToleranceBefore:toleranceBefore
-            toleranceAfter:toleranceAfter
-       preferredStreamType:streamType
-                   quality:quality
-              startBitRate:startBitRate
-         completionHandler:completionHandler];
+    [self prepareToPlayURN:URN media:nil atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media
-                    atTime:(CMTime)time
-                standalone:(BOOL)standalone
-   withToleranceBefore:(CMTime)toleranceBefore
-            toleranceAfter:(CMTime)toleranceAfter
-       preferredStreamType:(SRGStreamType)streamType
-                   quality:(SRGQuality)quality
-              startBitRate:(NSInteger)startBitRate
-         completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:nil
-                    atTime:time
-                standalone:standalone
-                     media:media
-       withToleranceBefore:toleranceBefore
-            toleranceAfter:toleranceAfter
-       preferredStreamType:streamType
-                   quality:quality
-              startBitRate:startBitRate
-         completionHandler:completionHandler];
+    [self prepareToPlayURN:nil media:media atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayURN:(NSString *)URN
-                  atTime:(CMTime)time
-              standalone:(BOOL)standalone
-                   media:(SRGMedia *)media
-     withToleranceBefore:(CMTime)toleranceBefore
-          toleranceAfter:(CMTime)toleranceAfter
-     preferredStreamType:(SRGStreamType)streamType
-                 quality:(SRGQuality)quality
-            startBitRate:(NSInteger)startBitRate
-       completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN media:(SRGMedia *)media atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -988,9 +898,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self resetWithURN:URN media:media];
     
     // Save the settings for restarting after connection loss
-    self.startTime = time;
-    self.toleranceBefore = toleranceBefore;
-    self.toleranceAfter = toleranceAfter;
+    self.startPosition = position;
     self.streamType = streamType;
     self.quality = quality;
     self.startBitRate = startBitRate;
@@ -1014,13 +922,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 else {
                     self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
                 }
-                [self.mediaPlayerController prepareToPlayURL:contentURL
-                                                      atTime:time
-                                         withToleranceBefore:toleranceBefore
-                                              toleranceAfter:toleranceAfter
-                                                    segments:nil
-                                                    userInfo:nil
-                                           completionHandler:completionHandler];
+                [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:completionHandler];
             };
             
             // Media readily available. Done
@@ -1088,7 +990,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         }
         
         // TODO: Replace s_prefersDRM with YES when removed
-        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter preferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
@@ -1107,24 +1009,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self.mediaPlayerController play];
     }
     else if (self.media) {
-        [self playMedia:self.media
-                 atTime:self.startTime
-             standalone:self.standalone
-    withToleranceBefore:self.toleranceBefore
-         toleranceAfter:self.toleranceAfter
-    preferredStreamType:self.streamType
-                quality:self.quality
-           startBitRate:self.startBitRate];
+        [self playMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
     }
     else if (self.URN) {
-        [self playURN:self.URN
-               atTime:self.startTime
-           standalone:self.standalone
-  withToleranceBefore:self.toleranceBefore
-       toleranceAfter:self.toleranceAfter
-  preferredStreamType:self.streamType
-              quality:self.quality
-         startBitRate:self.startBitRate];
+        [self playURN:self.URN atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
     };
 }
 
@@ -1166,26 +1054,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self prepareToPlayMedia:self.media
-                          atTime:self.startTime
-                      standalone:self.standalone
-             withToleranceBefore:self.toleranceBefore
-                  toleranceAfter:self.toleranceAfter
-             preferredStreamType:self.streamType
-                         quality:self.quality
-                    startBitRate:self.startBitRate
-               completionHandler:prepareToPlayCompletionHandler];
+        [self prepareToPlayMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
     }
     else if (self.URN) {
-        [self prepareToPlayURN:self.URN
-                        atTime:self.startTime
-                    standalone:self.standalone
-           withToleranceBefore:self.toleranceBefore
-                toleranceAfter:self.toleranceAfter
-           preferredStreamType:self.streamType
-                       quality:self.quality
-                  startBitRate:self.startBitRate
-             completionHandler:prepareToPlayCompletionHandler];
+        [self prepareToPlayURN:self.URN atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
@@ -1218,9 +1090,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
-    self.startTime = kCMTimeZero;
-    self.toleranceBefore = kCMTimeZero;
-    self.toleranceAfter = kCMTimeZero;
+    self.startPosition = nil;
     self.streamType = SRGStreamTypeNone;
     self.quality = SRGQualityNone;
     self.startBitRate = 0;
@@ -1236,9 +1106,9 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     [self.requestQueue cancel];
 }
 
-- (void)seekToTime:(CMTime)time withToleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler
+- (void)seekToPosition:(SRGPosition *)position withCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    [self.mediaPlayerController seekToTime:time withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+    [self.mediaPlayerController seekToPosition:position withCompletionHandler:completionHandler];
 }
 
 - (BOOL)switchToURN:(NSString *)URN withCompletionHandler:(void (^)(BOOL))completionHandler
@@ -1292,7 +1162,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         
         if (! blockingReasonError) {
             // TODO: Replace s_prefersDRM with YES when removed
-            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atTime:kCMTimeZero withToleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero preferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality DRM:s_prefersDRM startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality DRM:s_prefersDRM startBitRate:self.startBitRate userInfo:nil completionHandler:^{
                 [self.mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];
@@ -1301,7 +1171,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     // Playing another segment from the same media. Seek
     else if ([subdivision isKindOfClass:[SRGSegment class]]) {
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
-        [self.mediaPlayerController seekToTime:kCMTimeZero inSegment:(SRGSegment *)subdivision withToleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+        [self.mediaPlayerController seekToPosition:nil inSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
             completionHandler ? completionHandler(finished) : nil;
         }];
@@ -1317,57 +1187,37 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withCompletionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN
-                    atTime:kCMTimeZero
-                standalone:standalone
-       withToleranceBefore:kCMTimePositiveInfinity
-            toleranceAfter:kCMTimePositiveInfinity
-       preferredStreamType:SRGStreamTypeNone
-                   quality:SRGQualityNone
-              startBitRate:SRGLetterboxDefaultStartBitRate
-         completionHandler:completionHandler];
+    [self prepareToPlayURN:URN atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
 }
 
 - (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withCompletionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayMedia:media
-                      atTime:kCMTimeZero
-                  standalone:standalone
-         withToleranceBefore:kCMTimeZero
-              toleranceAfter:kCMTimeZero
-         preferredStreamType:SRGStreamTypeNone
-                     quality:SRGQualityNone
-                startBitRate:SRGLetterboxDefaultStartBitRate
-           completionHandler:completionHandler];
+    [self prepareToPlayMedia:media atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
 }
 
 - (void)playURN:(NSString *)URN
-         atTime:(CMTime)time
+     atPosition:(SRGPosition *)position
      standalone:(BOOL)standalone
-withToleranceBefore:(CMTime)toleranceBefore
- toleranceAfter:(CMTime)toleranceAfter
-preferredStreamType:(SRGStreamType)streamType
+withPreferredStreamType:(SRGStreamType)streamType
         quality:(SRGQuality)quality
    startBitRate:(NSInteger)startBitRate
 {
     @weakify(self)
-    [self prepareToPlayURN:URN atTime:time standalone:standalone withToleranceBefore:toleranceBefore toleranceAfter:toleranceAfter preferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayURN:URN atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
         @strongify(self)
         [self play];
     }];
 }
 
 - (void)playMedia:(SRGMedia *)media
-           atTime:(CMTime)time
+       atPosition:(SRGPosition *)position
        standalone:(BOOL)standalone
-withToleranceBefore:(CMTime)toleranceBefore
-   toleranceAfter:(CMTime)toleranceAfter
-preferredStreamType:(SRGStreamType)streamType
+withPreferredStreamType:(SRGStreamType)streamType
           quality:(SRGQuality)quality
      startBitRate:(NSInteger)startBitRate
 {
     @weakify(self)
-    [self prepareToPlayMedia:media atTime:time standalone:standalone withToleranceBefore:toleranceBefore toleranceAfter:kCMTimeZero preferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayMedia:media atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
         @strongify(self)
         [self play];
     }];
@@ -1375,36 +1225,12 @@ preferredStreamType:(SRGStreamType)streamType
 
 - (void)playURN:(NSString *)URN standalone:(BOOL)standalone
 {
-    [self playURN:URN
-           atTime:kCMTimeZero
-       standalone:standalone
-withToleranceBefore:kCMTimePositiveInfinity
-   toleranceAfter:kCMTimePositiveInfinity
-preferredStreamType:SRGStreamTypeNone
-          quality:SRGQualityNone
-     startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self playURN:URN atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
 }
 
 - (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone
 {
-    [self playMedia:media
-             atTime:kCMTimeZero
-         standalone:standalone
-withToleranceBefore:kCMTimePositiveInfinity
-     toleranceAfter:kCMTimePositiveInfinity
-preferredStreamType:SRGStreamTypeNone
-            quality:SRGQualityNone
-       startBitRate:SRGLetterboxDefaultStartBitRate];
-}
-
-- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(void (^)(BOOL))completionHandler
-{
-    [self seekToTime:time withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:completionHandler];
-}
-
-- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(void (^)(BOOL))completionHandler
-{
-    [self seekToTime:time withToleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completionHandler];
+    [self playMedia:media atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
 }
 
 #pragma mark Standard seeks
@@ -1488,7 +1314,7 @@ preferredStreamType:SRGStreamTypeNone
     }
     
     CMTime targetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSkipInterval, NSEC_PER_SEC));
-    [self seekToTime:targetTime withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+    [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
         if (finished) {
             [self.mediaPlayerController play];
         }
@@ -1504,7 +1330,7 @@ preferredStreamType:SRGStreamTypeNone
     }
     
     CMTime targetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSkipInterval, NSEC_PER_SEC));
-    [self seekToTime:targetTime withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+    [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
         if (finished) {
             [self.mediaPlayerController play];
         }
@@ -1520,7 +1346,8 @@ preferredStreamType:SRGStreamTypeNone
     }
     
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
-        [self seekToTime:CMTimeRangeGetEnd(self.mediaPlayerController.timeRange) withToleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+        CMTime targetTime = CMTimeRangeGetEnd(self.mediaPlayerController.timeRange);
+        [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
             if (finished) {
                 [self.mediaPlayerController play];
             }
@@ -1616,9 +1443,7 @@ preferredStreamType:SRGStreamTypeNone
         };
         
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
-            CMTime startTime = [self startTimeForMedia:nextMedia];
-            CMTime toleranceBefore = [self toleranceBeforeStartTimeForMedia:nextMedia];
-            CMTime toleranceAfter = [self toleranceBeforeStartTimeForMedia:nextMedia];
+            SRGPosition *startPosition = [self startPositionForMedia:nextMedia];
             
             if (continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
@@ -1629,27 +1454,13 @@ preferredStreamType:SRGStreamTypeNone
                 self.continuousPlaybackTransitionTimer = [NSTimer srgletterbox_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
-                    [self playMedia:nextMedia
-                             atTime:startTime
-                         standalone:self.standalone
-                withToleranceBefore:toleranceBefore
-                     toleranceAfter:toleranceAfter
-                preferredStreamType:self.streamType
-                            quality:self.quality
-                       startBitRate:self.startBitRate];
+                    [self playMedia:nextMedia atPosition:startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                     [self resetContinuousPlayback];
                     notify();
                 }];
             }
             else {
-                [self playMedia:nextMedia
-                         atTime:startTime
-                     standalone:self.standalone
-            withToleranceBefore:toleranceBefore
-                 toleranceAfter:toleranceAfter
-            preferredStreamType:self.streamType
-                        quality:self.quality
-                   startBitRate:self.startBitRate];
+                [self playMedia:nextMedia atPosition:startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
                 
                 // Send notification on next run loop, so that other observers of the playback end notification all receive
                 // the notification before the continuous playback notification is emitted.
