@@ -99,7 +99,7 @@
     
     SRGRequest *request = nil;
     
-    void (^completionBlock)(NSArray<SRGMedia *> * _Nullable, SRGPage *, SRGPage * _Nullable, NSError * _Nullable) = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage *page, SRGPage * _Nullable nextPage, NSError * _Nullable error) {
+    SRGPaginatedMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage *page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         if (self.refreshControl.refreshing) {
             [self.refreshControl endRefreshing];
         }
