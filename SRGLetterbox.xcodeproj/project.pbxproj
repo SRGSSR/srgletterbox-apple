@@ -112,10 +112,7 @@
 		6F50597420581CAF00823003 /* SRGLetterboxPlaybackButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */; };
 		6F50597520581CAF00823003 /* SRGFullScreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594D20581CAF00823003 /* SRGFullScreenButton.m */; };
 		6F50597620581CAF00823003 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */; };
-		6F52DE1E2106F857001EC146 /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
 		6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
-		6F52DE222106F871001EC146 /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
-		6F52DE232106F871001EC146 /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F52DE242106F871001EC146 /* SRGNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; };
 		6F52DE252106F871001EC146 /* SRGNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1D2106F857001EC146 /* SRGNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F52DE262106F87D001EC146 /* SRGContentProtection.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -279,7 +276,6 @@
 				6FAB3B6E1E2905CA00CC2197 /* Mantle.framework in Embed Frameworks */,
 				6FAB3B7A1E2905CA00CC2197 /* SRGMediaPlayer.framework in Embed Frameworks */,
 				6FAB3B9D1E291A9700CC2197 /* YYWebImage.framework in Embed Frameworks */,
-				6F52DE232106F871001EC146 /* SRGContentProtection.framework in Embed Frameworks */,
 				6FAB3B701E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Embed Frameworks */,
 				6FAB3B6C1E2905CA00CC2197 /* libextobjc.framework in Embed Frameworks */,
 				08FA0D251E30F954000C94EF /* FXReachability.framework in Embed Frameworks */,
@@ -534,7 +530,6 @@
 				6FAB3B791E2905CA00CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				6FAB3B9C1E291A9700CC2197 /* YYWebImage.framework in Frameworks */,
 				6FAB3B6F1E2905CA00CC2197 /* SRGAnalytics_DataProvider.framework in Frameworks */,
-				6F52DE222106F871001EC146 /* SRGContentProtection.framework in Frameworks */,
 				6FB97FF41E4B09BD0014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08FA0D241E30F954000C94EF /* FXReachability.framework in Frameworks */,
 				6FAB3B6B1E2905CA00CC2197 /* libextobjc.framework in Frameworks */,
@@ -573,7 +568,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F52DE1E2106F857001EC146 /* SRGContentProtection.framework in Frameworks */,
 				6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */,
 				6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
@@ -1226,7 +1220,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAppearance.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGDataProvider.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGMediaPlayer.framework",
