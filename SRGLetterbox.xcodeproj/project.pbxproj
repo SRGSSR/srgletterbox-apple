@@ -1240,7 +1240,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Could be achieved with a Copy Files phase. Must only be made in a dynamic setup,\n# though, thus the need for a script to check the configuration first\nif [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] || [ \"$CONFIGURATION\" == \"Nightly\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] || [ \"$CONFIGURATION\" == \"Nightly\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
