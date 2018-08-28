@@ -1216,13 +1216,31 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/ComScore.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FXReachability.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/libextobjc.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MAKVONotificationCenter.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Masonry.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGAppearance.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGDataProvider.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGLogger.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGMediaPlayer.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGNetwork.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/TCCore.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/TCSDK.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/YYWebImage.framework",
 			);
 			name = "Copy Framework Dependencies For Xcode View Rendering";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Could be achieved with a Copy Files phase. Must only be made in a dynamic setup,\n# though, thus the need for a script to check the configuration first\nif [[ \"${CONFIGURATION}\" = \"Debug\" || \"${CONFIGURATION}\" = \"Release\" || \"${CONFIGURATION}\" = \"Nightly\" ]]; then\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/ComScore.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/FXReachability.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/libextobjc.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/MAKVONotificationCenter.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/Mantle.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/Masonry.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAnalytics.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGAppearance.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGContentProtection.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGDataProvider.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGLogger.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGMediaPlayer.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/SRGNetwork.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/TCCore.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/TCSDK.framework\" \"${BUILT_PRODUCTS_DIR}\"\n  cp -R \"${PROJECT_DIR}/Carthage/Build/iOS/YYWebImage.framework\" \"${BUILT_PRODUCTS_DIR}\"\nfi\n\n\n";
+			shellScript = "# Could be achieved with a Copy Files phase. Must only be made in a dynamic setup,\n# though, thus the need for a script to check the configuration first\nif [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] || [ \"$CONFIGURATION\" == \"Nightly\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
