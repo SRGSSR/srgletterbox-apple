@@ -13,6 +13,13 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <HockeySDK/HockeySDK.h>
 
+static __attribute__((constructor)) void ApplicationInit(void)
+{
+    NSString *contentProtectionFrameworkPath = [[NSBundle mainBundle] pathForResource:@"SRGContentProtection" ofType:@"framework" inDirectory:@"Frameworks"];
+    NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
+    [contentProtectionFramework loadAndReturnError:NULL];
+}
+
 @implementation AppDelegate
 
 #pragma mark Application lifecycle
