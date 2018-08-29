@@ -30,12 +30,14 @@ all: bootstrap
 # Dependency updates without building the project
 
 update_dependencies:
+	@echo "Updating $(CARTFILE_RESOLVED_CLOSED) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
 
 update_dependencies_open:
+	@echo "Updating $(SAVE_CARTFILE_RESOLVED_OPEN) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
@@ -43,9 +45,10 @@ update_dependencies_open:
 
 resolve: update_dependencies update_dependencies_open
 
-# Dependency compilation with proprietary dependencies (remark: Keep all dependencies in sync)
+# Dependency compilation with proprietary dependencies
 
-bootstrap: update_dependencies_open
+bootstrap:
+	@echo "Building dependencies declared in $(SAVE_CARTFILE_RESOLVED_CLOSED)..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	$(RESTORE_CARTFILE_RESOLVED_CLOSED)
 	carthage bootstrap $(CARTHAGE_FLAGS)
@@ -53,14 +56,16 @@ bootstrap: update_dependencies_open
 	$(CLEAN_CARTFILE_PRIVATE)
 
 update: update_dependencies_open
+	@echo "Building dependencies declared in $(SAVE_CARTFILE_RESOLVED_CLOSED)..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	carthage update $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
 
-# Open source dependency compilation (remark: Keep all dependencies in sync)
+# Open source dependency compilation
 
-bootstrap_open: update_dependencies
+bootstrap_open:
+	@echo "Building dependencies declared in $(SAVE_CARTFILE_RESOLVED_OPEN)..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	$(RESTORE_CARTFILE_RESOLVED_OPEN)
 	carthage bootstrap $(CARTHAGE_FLAGS)
