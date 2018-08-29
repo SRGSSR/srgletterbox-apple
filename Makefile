@@ -22,80 +22,105 @@ CREATE_CARTFILE_PRIVATE_OPEN=@cp $(CARTFILE_HIDDEN) $(CARTFILE_PRIVATE)
 
 CLEAN_CARTFILE_PRIVATE=@rm -f $(CARTFILE_PRIVATE)
 
-.PHONY: all update_dependencies update_dependencies_open resolve bootstrap update bootstrap_open update_open package clean
-
+.PHONY: all
 all: bootstrap
-	xcodebuild build
+	@echo "Building the project..."
+	@xcodebuild build
+	@echo ""
 
 # Dependency updates without building the project
 
+.PHONY: update_dependencies
 update_dependencies:
 	@echo "Updating $(CARTFILE_RESOLVED_CLOSED) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
-	carthage update $(CARTHAGE_FLAGS) --no-build
+	@carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
+.PHONY: update_dependencies_open
 update_dependencies_open:
-	@echo "Updating $(SAVE_CARTFILE_RESOLVED_OPEN) dependencies..."
+	@echo "Updating $(CARTFILE_RESOLVED_OPEN) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
-	carthage update $(CARTHAGE_FLAGS) --no-build
+	@carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
+.PHONY: resolve
 resolve: update_dependencies update_dependencies_open
 
 # Dependency compilation with proprietary dependencies
 
+.PHONY: bootstrap
 bootstrap:
-	@echo "Building dependencies declared in $(SAVE_CARTFILE_RESOLVED_CLOSED)..."
+	@echo "Building dependencies declared in $(CARTFILE_RESOLVED_CLOSED)..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	$(RESTORE_CARTFILE_RESOLVED_CLOSED)
-	carthage bootstrap $(CARTHAGE_FLAGS)
+	@carthage bootstrap $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
+# Keep updates in sync
+.PHONY: update
 update: update_dependencies_open
-	@echo "Building dependencies declared in $(SAVE_CARTFILE_RESOLVED_CLOSED)..."
+	@echo "Updating and building $(CARTFILE_RESOLVED_CLOSED) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
-	carthage update $(CARTHAGE_FLAGS)
+	@carthage update $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
 # Open source dependency compilation
 
+.PHONY: bootstrap_open
 bootstrap_open:
-	@echo "Building dependencies declared in $(SAVE_CARTFILE_RESOLVED_OPEN)..."
+	@echo "Building dependencies declared in $(CARTFILE_RESOLVED_OPEN)..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	$(RESTORE_CARTFILE_RESOLVED_OPEN)
-	carthage bootstrap $(CARTHAGE_FLAGS)
+	@carthage bootstrap $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
+# Keep updates in sync
+.PHONY: update_open
 update_open: update_dependencies
+	@echo "Updating and building $(CARTFILE_RESOLVED_OPEN) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
-	carthage update $(CARTHAGE_FLAGS)
+	@carthage update $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
 # Framework package to attach to github releases. Only for proprietary builds (open source builds
 # can use these binaries as well).
 
+.PHONY: package
 package: bootstrap
-	mkdir -p archive
-	carthage build --no-skip-current
-	carthage archive --output archive
+	@echo "Packaging binaries..."
+	@mkdir -p archive
+	@carthage build --no-skip-current
+	@carthage archive --output archive
+	@echo ""
 
 # Cleanup
 
+.PHONY: clean
 clean:
-	xcodebuild clean
-	rm -rf $(CARTHAGE_FOLDER)
+	@echo "Cleaning up build products..."
+	@xcodebuild clean
+	@rm -rf $(CARTHAGE_FOLDER)
 	$(CLEAN_CARTFILE_PRIVATE)
+	@echo ""
 
+.PHONY: help
 help:
 	@echo "The following targets must be used with proprietary builds:"
 	@echo "   all               Build project dependencies and the project"
+	@echo "   resolve           Resolve and sync dependencies"
 	@echo "   bootstrap         Build dependencies as declared in $(CARTFILE_RESOLVED_CLOSED)"
 	@echo "   update            Update and build dependencies"
 	@echo "   package           Build and package the framework for attaching to github releases"
@@ -105,6 +130,5 @@ help:
 	@echo "   update_open       Update and build dependencies"
 	@echo ""
 	@echo "The following targets are widely available:"
-	@echo "   resolve           Resolve dependencies"
 	@echo "   help              Display this message"
 	@echo "   clean             Clean the project and its dependencies"
