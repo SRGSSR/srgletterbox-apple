@@ -27,47 +27,61 @@ CLEAN_CARTFILE_PRIVATE=@rm -f $(CARTFILE_PRIVATE)
 all: bootstrap
 	xcodebuild build
 
-resolve:
+# Dependency updates without building the project
+
+update_dependencies:
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
+	$(CLEAN_CARTFILE_PRIVATE)
 
+update_dependencies_open:
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
-
 	$(CLEAN_CARTFILE_PRIVATE)
 
-bootstrap:
+resolve: update_dependencies update_dependencies_open
+
+# Closed source dependency compilation (remark: Keep open source dependencies in sync)
+
+bootstrap: update_dependencies_open
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	$(RESTORE_CARTFILE_RESOLVED_CLOSED)
 	carthage bootstrap $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
 
-update:
+update: update_dependencies_open
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	carthage update $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
 
-bootstrap_open:
+# Open source dependency compilation (remark: Keep closed source dependencies in sync)
+
+bootstrap_open: update_dependencies
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	$(RESTORE_CARTFILE_RESOLVED_OPEN)
 	carthage bootstrap $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
 
-update_open:
+update_open: update_dependencies
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	carthage update $(CARTHAGE_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
 
+# Framework packaging to attach to github releases. Only for closed source builds (open source builds
+# can use these binaries as well).
+
 package: bootstrap
 	mkdir -p archive
 	carthage build --no-skip-current
 	carthage archive --output archive
+
+# Cleanup
 
 clean:
 	xcodebuild clean
