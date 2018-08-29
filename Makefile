@@ -22,7 +22,7 @@ CREATE_CARTFILE_PRIVATE_OPEN=@cp $(CARTFILE_HIDDEN) $(CARTFILE_PRIVATE)
 
 CLEAN_CARTFILE_PRIVATE=@rm -f $(CARTFILE_PRIVATE)
 
-.PHONY: all resolve bootstrap update bootstrap_open update_open package clean
+.PHONY: all update_dependencies update_dependencies_open resolve bootstrap update bootstrap_open update_open package clean
 
 all: bootstrap
 	xcodebuild build
@@ -43,7 +43,7 @@ update_dependencies_open:
 
 resolve: update_dependencies update_dependencies_open
 
-# Closed source dependency compilation (remark: Keep open source dependencies in sync)
+# Dependency compilation with proprietary dependencies (remark: Keep all dependencies in sync)
 
 bootstrap: update_dependencies_open
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
@@ -58,7 +58,7 @@ update: update_dependencies_open
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
 
-# Open source dependency compilation (remark: Keep closed source dependencies in sync)
+# Open source dependency compilation (remark: Keep all dependencies in sync)
 
 bootstrap_open: update_dependencies
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
@@ -73,7 +73,7 @@ update_open: update_dependencies
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
 
-# Framework packaging to attach to github releases. Only for closed source builds (open source builds
+# Framework package to attach to github releases. Only for proprietary builds (open source builds
 # can use these binaries as well).
 
 package: bootstrap
@@ -87,3 +87,19 @@ clean:
 	xcodebuild clean
 	rm -rf $(CARTHAGE_FOLDER)
 	$(CLEAN_CARTFILE_PRIVATE)
+
+help:
+	@echo "The following targets must be used with proprietary builds:"
+	@echo "   all               Build project dependencies and the project"
+	@echo "   bootstrap         Build dependencies as declared in $(CARTFILE_RESOLVED_CLOSED)"
+	@echo "   update            Update and build dependencies"
+	@echo "   package           Build and package the framework for attaching to github releases"
+	@echo ""
+	@echo "The following targets must be used with open source builds:"
+	@echo "   bootstrap_open    Build dependencies as declared in $(CARTFILE_RESOLVED_OPEN)"
+	@echo "   update_open       Update and build dependencies"
+	@echo ""
+	@echo "The following targets are widely available:"
+	@echo "   resolve           Resolve dependencies"
+	@echo "   help              Display this message"
+	@echo "   clean             Clean the project and its dependencies"
