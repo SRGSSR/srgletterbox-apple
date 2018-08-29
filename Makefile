@@ -1,7 +1,8 @@
 #!/usr/bin/xcrun make -f
 
 CARTHAGE_FOLDER=Carthage
-CARTHAGE_FLAGS=--platform iOS --cache-builds --new-resolver
+CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
+CARTHAGE_BUILD_FLAGS=--platform iOS --cache-builds
 
 CARTFILE_HIDDEN=Cartfile.hidden
 CARTFILE_PROPRIETARY=Cartfile.proprietary
@@ -36,7 +37,7 @@ all: bootstrap
 update_dependencies: update_dependencies_open
 	@echo "Updating $(CARTFILE_RESOLVED_CLOSED) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
-	@carthage update $(CARTHAGE_FLAGS) --no-build
+	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
 	$(CLEAN_CARTFILE_RESOLVED)
@@ -46,7 +47,7 @@ update_dependencies: update_dependencies_open
 update_dependencies_open:
 	@echo "Updating $(CARTFILE_RESOLVED_OPEN) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
-	@carthage update $(CARTHAGE_FLAGS) --no-build
+	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
 	$(CLEAN_CARTFILE_RESOLVED)
@@ -59,8 +60,9 @@ bootstrap:
 	@echo "Building dependencies declared in $(CARTFILE_RESOLVED_CLOSED)..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
 	$(RESTORE_CARTFILE_RESOLVED_CLOSED)
-	@carthage bootstrap $(CARTHAGE_FLAGS)
+	@carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
+	@carthage build $(CARTHAGE_BUILD_FLAGS)
 	$(CLEAN_CARTFILE_PRIVATE)
 	@echo ""
 
@@ -69,9 +71,9 @@ bootstrap:
 update: update_dependencies_open
 	@echo "Updating and building $(CARTFILE_RESOLVED_CLOSED) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
-	@carthage update $(CARTHAGE_FLAGS) --no-build
+	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
-	@carthage build
+	@carthage build $(CARTHAGE_BUILD_FLAGS)
 	$(CLEAN_CARTFILE_PRIVATE)
 	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
@@ -83,8 +85,9 @@ bootstrap_open:
 	@echo "Building dependencies declared in $(CARTFILE_RESOLVED_OPEN)..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
 	$(RESTORE_CARTFILE_RESOLVED_OPEN)
-	@carthage bootstrap $(CARTHAGE_FLAGS)
+	@carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
+	@carthage build $(CARTHAGE_BUILD_FLAGS)
 	$(CLEAN_CARTFILE_PRIVATE)
 	@echo ""
 
@@ -92,9 +95,9 @@ bootstrap_open:
 update_open:
 	@echo "Updating and building $(CARTFILE_RESOLVED_OPEN) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
-	@carthage update $(CARTHAGE_FLAGS) --no-build
+	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
-	@carthage build
+	@carthage build $(CARTHAGE_BUILD_FLAGS)
 	$(CLEAN_CARTFILE_PRIVATE)
 	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
