@@ -14,8 +14,10 @@ CARTFILE_RESOLVED_OPEN=Cartfile.resolved.open
 RESTORE_CARTFILE_RESOLVED_CLOSED=@[ -f $(CARTFILE_RESOLVED_CLOSED) ] && cp $(CARTFILE_RESOLVED_CLOSED) $(CARTFILE_RESOLVED) || true
 RESTORE_CARTFILE_RESOLVED_OPEN=@[ -f $(CARTFILE_RESOLVED_OPEN) ] && cp $(CARTFILE_RESOLVED_OPEN) $(CARTFILE_RESOLVED) || true
 
-SAVE_CARTFILE_RESOLVED_CLOSED=@mv $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED_CLOSED)
-SAVE_CARTFILE_RESOLVED_OPEN=@mv $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED_OPEN)
+SAVE_CARTFILE_RESOLVED_CLOSED=@cp $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED_CLOSED)
+SAVE_CARTFILE_RESOLVED_OPEN=@cp $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED_OPEN)
+
+CLEAN_CARTFILE_RESOLVED=@rm -f $(CARTFILE_RESOLVED)
 
 CREATE_CARTFILE_PRIVATE_CLOSED=@(cat $(CARTFILE_HIDDEN); echo) > $(CARTFILE_PRIVATE); cat $(CARTFILE_PROPRIETARY) >> $(CARTFILE_PRIVATE)
 CREATE_CARTFILE_PRIVATE_OPEN=@cp $(CARTFILE_HIDDEN) $(CARTFILE_PRIVATE)
@@ -37,6 +39,7 @@ update_dependencies: update_dependencies_open
 	@carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
 	$(CLEAN_CARTFILE_PRIVATE)
+	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
 
 .PHONY: update_dependencies_open
@@ -46,6 +49,7 @@ update_dependencies_open:
 	@carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
 	$(CLEAN_CARTFILE_PRIVATE)
+	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
 
 # Dependency compilation with proprietary dependencies
@@ -65,9 +69,11 @@ bootstrap:
 update: update_dependencies_open
 	@echo "Updating and building $(CARTFILE_RESOLVED_CLOSED) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_CLOSED)
-	@carthage update $(CARTHAGE_FLAGS)
+	@carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_CLOSED)
+	@carthage build
 	$(CLEAN_CARTFILE_PRIVATE)
+	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
 
 # Open source dependency compilation
@@ -86,9 +92,11 @@ bootstrap_open:
 update_open:
 	@echo "Updating and building $(CARTFILE_RESOLVED_OPEN) dependencies..."
 	$(CREATE_CARTFILE_PRIVATE_OPEN)
-	@carthage update $(CARTHAGE_FLAGS)
+	@carthage update $(CARTHAGE_FLAGS) --no-build
 	$(SAVE_CARTFILE_RESOLVED_OPEN)
+	@carthage build
 	$(CLEAN_CARTFILE_PRIVATE)
+	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
 
 # Framework package to attach to github releases. Only for proprietary builds (open source builds
@@ -110,6 +118,7 @@ clean:
 	@xcodebuild clean
 	@rm -rf $(CARTHAGE_FOLDER)
 	$(CLEAN_CARTFILE_PRIVATE)
+	$(CLEAN_CARTFILE_RESOLVED)
 	@echo ""
 
 .PHONY: help
