@@ -17,6 +17,15 @@ static __attribute__((constructor)) void LetterboxTestCaseInit(void)
 
 @implementation LetterboxBaseTestCase
 
+#pragma mark Class methods
+    
++ (BOOL)hasContentProtection
+{
+    return s_hasContentProtection;
+}
+
+#pragma mark Helpers
+
 - (XCTestExpectation *)expectationForElapsedTimeInterval:(NSTimeInterval)timeInterval withHandler:(void (^)(void))handler
 {
     XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"Wait for %@ seconds", @(timeInterval)]];

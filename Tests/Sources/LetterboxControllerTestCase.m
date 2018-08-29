@@ -1992,6 +1992,11 @@ static NSURL *MMFServiceURL(void)
 
 - (void)testResourceChangedWhenPaused
 {
+    if (! [LetterboxControllerTestCase hasContentProtection]) {
+        NSLog(@"Test disabled. Test stream not available without SRGContentProtection.framework.");
+        return;
+    }
+    
     self.controller.serviceURL = MMFServiceURL();
     self.controller.updateInterval = 10.;
     
