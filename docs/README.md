@@ -82,6 +82,16 @@ If your target is building an application, a few more steps are required:
 4. Some non-statically built framework dependencies are built in the `Carthage/Build/iOS` folder. Add them by following the _Dynamic framework integration_ instructions above.
 5. Add the `-all_load` flag to your target _Other linker flags_.
 
+## Building the project
+
+A [Makefile](../Makefile) provides several targets to build and package the library. The available targets can be listed by running the following command from the project root folder:
+
+```
+make help
+```
+
+Alternatively, you can of course open the project with Xcode and use the available schemes.
+
 ## Usage
 
 When you want to use classes or functions provided by the library in your code, you must import it from your source files first.
