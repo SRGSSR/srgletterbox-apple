@@ -158,7 +158,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                 @strongify(self)
                 @strongify(pictureInPictureController)
                 
-                // When enabling Airplay from the control center while picture in picture is active, picture in picture will be
+                // When enabling AirPlay from the control center while picture in picture is active, picture in picture will be
                 // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
                 // those methods manually
                 if (mediaPlayerController.player.externalPlaybackActive) {
@@ -217,7 +217,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
         if (! [backgroundModes containsObject:@"audio"]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                           reason:@"You must enable the 'Audio, Airplay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
+                                           reason:@"You must enable the 'Audio, AirPlay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
                                          userInfo:nil];
         }
     });
@@ -227,7 +227,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     _disablingAudioServices = NO;
     
-    // Required for Airplay, picture in picture and control center to work correctly
+    // Required for AirPlay, picture in picture and control center to work correctly
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
@@ -379,11 +379,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    // Videos can only be controlled when the device has been locked (mostly for Airplay playback). We don't allow
-    // video playback while the app is fully in background for the moment (except if Airplay is enabled)
+    // Videos can only be controlled when the device has been locked (mostly for AirPlay playback). We don't allow
+    // video playback while the app is fully in background for the moment (except if AirPlay is enabled)
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
-                                                                                                            || [AVAudioSession srg_isAirplayActive]
+                                                                                                            || [AVAudioSession srg_isAirPlayActive]
                                                                                                             || [UIDevice srg_letterbox_isLocked])) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;

@@ -63,9 +63,9 @@
     self.index = [self.medias indexOfObject:media];
 }
 
-- (CMTime)controller:(SRGLetterboxController *)controller startTimeForMedia:(SRGMedia *)media
+- (SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media
 {
-    return self.startTime;
+    return [SRGPosition positionAtTime:self.startTime];
 }
 
 @end

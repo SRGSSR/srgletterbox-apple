@@ -185,7 +185,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * const kVideoOnDemandURNString = @"urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a";
+    static NSString * const kVideoOnDemandURNString = @"urn:swi:video:41981254";
     static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8591082";
     static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8992584";
     static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8992594";

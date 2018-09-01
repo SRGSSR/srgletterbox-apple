@@ -162,7 +162,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -225,7 +226,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -289,7 +291,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGLetterboxURNKey] isEqual:MediaURN2];
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -351,7 +354,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -421,7 +425,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -494,7 +499,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [controller.continuousPlaybackUpcomingMedia.URN isEqual:MediaURN2];
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -545,7 +551,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -614,7 +621,8 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateEnded;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

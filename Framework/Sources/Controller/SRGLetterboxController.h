@@ -169,12 +169,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
 
 /**
- *  An optional time at which playback must resume for the specified media. If not implemented or if the method returns
- *  `kCMTimeZero`, playback starts at the default location. If a time near or past the end of the media to be played is
+ *  An optional position at which playback must start for the specified media. If not implemented or if the method returns
+ *  `nil`, playback starts at the default location. If a position near or past the end of the media to be played is
  *  provided (see `SRGLetterboxController` `endTolerance` and `endToleranceRatio` properties), the player will start at
- *  its default location.
+ *  its default location as well.
  */
-- (CMTime)controller:(SRGLetterboxController *)controller startTimeForMedia:(SRGMedia *)media;
+- (nullable SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media;
 
 @end
 
@@ -216,9 +216,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  preparation, call `-play` from the completion handler.
  *
  *  @param URN               The URN to prepare.
- *  @param time              The time to play at. Use `kCMTimeZero` for the default position. If a time near or past the
- *                           end of the URN to be played is provided (see `endTolerance` and `endToleranceRatio`), the
- *                           player will start at its default location.
+ *  @param position          The position to start at. If `nil` or if the specified position lies outside the content
+ *                           time range, playback starts at the default position.
  *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
  *                           independently from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
@@ -235,7 +234,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(NSString *)URN
-                  atTime:(CMTime)time
+              atPosition:(nullable SRGPosition *)position
               standalone:(BOOL)standalone
  withPreferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
@@ -243,13 +242,11 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Same as `-prepareToPlayURN:atTime:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`, but for a
+ *  Same as `-prepareToPlayURN:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`, but for a
  *  media.
- *
- *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
-                    atTime:(CMTime)time
+                atPosition:(nullable SRGPosition *)position
                 standalone:(BOOL)standalone
    withPreferredStreamType:(SRGStreamType)streamType
                    quality:(SRGQuality)quality
@@ -301,13 +298,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  playing. You can use the completion handler to change the player state if needed, e.g. to automatically
  *  resume playback after a seek has been performed on a paused player.
  *
- *  @param time              The time to start at. If the time is invalid it will be set to `kCMTimeZero`. Setting a
- *                           start time outside the actual media time range will seek to the nearest location (either
- *                           zero or the end time).
- *  @param toleranceBefore   The tolerance allowed before `time`. Use `kCMTimePositiveInfinity` for no tolerance
- *                           requirements.
- *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
- *                           requirements.
+ *  @param position          The position to start at. If `nil` or if the specified position lies outside the content
+ *                           time range, playback starts at the default position.
  *  @param completionHandler The completion handler called when the seek ends. If the seek has been interrupted by
  *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
  *                           with `finished` set to `YES`.
@@ -316,10 +308,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *              the player will still be in the seeking state. Note that if the media was not ready to play, seeking
  *              won't take place, and the completion handler won't be called.
  */
-- (void)seekToTime:(CMTime)time
-withToleranceBefore:(CMTime)toleranceBefore
-    toleranceAfter:(CMTime)toleranceAfter
- completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (void)seekToPosition:(nullable SRGPosition *)position withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
@@ -546,9 +535,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)prepareToPlayURN:(NSString *)URN
-              standalone:(BOOL)standalone
-   withCompletionHandler:(nullable void (^)(void))completionHandler;
+- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Prepare to play the specified media (Uniform Resource Name).
@@ -556,27 +543,35 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the media is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)prepareToPlayMedia:(SRGMedia *)media
-                standalone:(BOOL)standalone
-     withCompletionHandler:(nullable void (^)(void))completionHandler;
+- (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:atTime:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayURN:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(NSString *)URN
+     atPosition:(nullable SRGPosition *)position
+     standalone:(BOOL)standalone
+withPreferredStreamType:(SRGStreamType)streamType
+        quality:(SRGQuality)quality
+   startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified media.
  *
- *  For more information, @see `-prepareToPlayMedia:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayMedia:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media atTime:(CMTime)time standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playMedia:(SRGMedia *)media
+       atPosition:(nullable SRGPosition *)position
+       standalone:(BOOL)standalone
+withPreferredStreamType:(SRGStreamType)streamType
+          quality:(SRGQuality)quality
+     startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -593,20 +588,6 @@ withToleranceBefore:(CMTime)toleranceBefore
  *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone;
-
-/**
- *  Ask the controller to seek to a given location efficiently (the seek might be not perfeclty accurate but will be faster).
- *
- *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
- */
-- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
-
-/**
- *  Ask the controller to seek to a given location with no tolerance (this might incur some decoding overhead).
- *
- *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
- */
-- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 @end
 
