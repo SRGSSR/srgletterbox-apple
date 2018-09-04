@@ -984,6 +984,13 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             [errorInformation setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
             [errorInformation setNumber:@(HTTPResponse.statusCode) forKey:@"responseCode"];
         }
+        else if ([error.domain isEqualToString:SRGNetworkErrorDomain]) {
+            SRGDiagnosticInformation *errorInformation = [report informationForKey:@"networkError"];
+            [errorInformation setString:[(NSURL *)error.userInfo[NSURLErrorKey] absoluteString] forKey:@"url"];
+            [errorInformation setString:error.localizedDescription forKey:@"message"];
+            [errorInformation setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+            [errorInformation setNumber:@(HTTPResponse.statusCode) forKey:@"responseCode"];
+        }
         else {
             NSInteger code = (self.dataAvailability == SRGLetterboxDataAvailabilityNone) ? SRGLetterboxErrorCodeNotFound : SRGLetterboxErrorCodeNotPlayable;
             if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404) {
