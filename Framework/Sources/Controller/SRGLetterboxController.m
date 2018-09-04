@@ -946,6 +946,11 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     });
     
     SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:URN];
+    
+    [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
+        SRGLetterboxLogInfo(@"controller", @"SRGPlaybackMetrics report: %@", JSONDictionary);
+        completionBlock(YES);
+    };
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
     [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:UIDevice.currentDevice.model forKey:@"device"];
