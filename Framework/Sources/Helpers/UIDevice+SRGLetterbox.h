@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)srg_letterbox_isLocked;
 
+- (NSString *)machine;
+
 @end
 
 NS_ASSUME_NONNULL_END

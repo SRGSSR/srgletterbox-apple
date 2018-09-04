@@ -6,6 +6,8 @@
 
 #import "UIDevice+SRGLetterbox.h"
 
+#import <sys/utsname.h>
+
 static BOOL s_locked = NO;
 
 // Function declarations
@@ -25,6 +27,15 @@ static void lockComplete(CFNotificationCenterRef center, void *observer, CFStrin
 + (void)srg_letterbox_applicationDidBecomeActive:(NSNotification *)notification
 {
     s_locked = NO;
+}
+
+- (NSString *)machine
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    return [NSString stringWithCString:systemInfo.machine
+                              encoding:NSUTF8StringEncoding];
 }
 
 @end
