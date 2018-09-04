@@ -5,90 +5,118 @@ CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
 CARTHAGE_BUILD_FLAGS=--platform iOS --cache-builds
 
 CARTFILE_PRIVATE=Cartfile.private
-CARTFILE_PRIVATE_COMMON=Cartfile.private.common
-CARTFILE_PRIVATE_PROPRIETARY=Cartfile.private.proprietary
-CARTFILE_PRIVATE_PUBLIC=Cartfile.private.public
-
 CARTFILE_RESOLVED=Cartfile.resolved
-CARTFILE_RESOLVED_PROPRIETARY=Cartfile.resolved.proprietary
-CARTFILE_RESOLVED_PUBLIC=Cartfile.resolved.public
 
-RESTORE_CARTFILE_PRIVATE_COMMON=@rm -f $(CARTFILE_PRIVATE);[ -f $(CARTFILE_PRIVATE_COMMON) ] && cat $(CARTFILE_PRIVATE_COMMON) >> $(CARTFILE_PRIVATE) || true
-RESTORE_CARTFILE_PRIVATE_PROPRIETARY=@$(RESTORE_CARTFILE_PRIVATE_COMMON);[ -f $(CARTFILE_PRIVATE_PROPRIETARY) ] && (echo; cat $(CARTFILE_PRIVATE_PROPRIETARY)) >> $(CARTFILE_PRIVATE) || true
-RESTORE_CARTFILE_PRIVATE_PUBLIC=@$(RESTORE_CARTFILE_PRIVATE_COMMON);[ -f $(CARTFILE_PRIVATE_PUBLIC) ] && (echo; cat $(CARTFILE_PRIVATE_PUBLIC)) >> $(CARTFILE_PRIVATE) || true
+# Restore Cartfile.private for the specified type
+#   Syntax: $(call restore_cartfile_private,type)
+define restore_cartfile_private
+	@rm -f $(CARTFILE_PRIVATE); \
+	if [ -f $(CARTFILE_PRIVATE).common ]; then \
+		(cat $(CARTFILE_PRIVATE).common; echo) >> $(CARTFILE_PRIVATE); \
+	fi; \
+	if [ -f $(CARTFILE_PRIVATE).$(1) ]; then \
+		cat $(CARTFILE_PRIVATE).$(1) >> $(CARTFILE_PRIVATE); \
+	fi;
+endef
 
-RESTORE_CARTFILE_RESOLVED_PROPRIETARY=@[ -f $(CARTFILE_RESOLVED_PROPRIETARY) ] && cp $(CARTFILE_RESOLVED_PROPRIETARY) $(CARTFILE_RESOLVED) || true
-RESTORE_CARTFILE_RESOLVED_PUBLIC=@[ -f $(CARTFILE_RESOLVED_PUBLIC) ] && cp $(CARTFILE_RESOLVED_PUBLIC) $(CARTFILE_RESOLVED) || true
+# Save Cartfile.resolved for the specified type
+#   Syntax: $(call save_cartfile,type)
+define save_cartfile_resolved
+	@if [ -f $(CARTFILE_RESOLVED) ]; then \
+		cp $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED).$(1); \
+	fi;
+endef
 
-SAVE_CARTFILE_RESOLVED_PROPRIETARY=@[ -f $(CARTFILE_RESOLVED) ] && cp $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED_PROPRIETARY) || true
-SAVE_CARTFILE_RESOLVED_PUBLIC=@[ -f $(CARTFILE_RESOLVED) ] && cp $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED_PUBLIC) || true
+# Restore Cartfile.resolved for the specified type
+#   Syntax: $(call restore_cartfile_resolved,type)
+define restore_cartfile_resolved
+	@if [ -f $(CARTFILE_RESOLVED).$(1) ]; then \
+		cp $(CARTFILE_RESOLVED).$(1) $(CARTFILE_RESOLVED); \
+	fi;
+endef
+
+# Checkout a commit for a repository in the specified directory. Fails if the repository is dirty of if the
+# commit does not exist.  
+#   Syntax: $(call checkout_repository,directory,commit)
+define checkout_repository
+	@cd $(1); \
+	if [[ `git status --porcelain` ]]; then \
+		echo "The repository '$(1)' contains changes. Please commit or discard these changes and retry."; \
+		exit 1; \
+	elif `git checkout -q $(2)`; then \
+		exit 0; \
+	else \
+		echo "The repository '$(1)' could not be switched to commit $(2). Does this commit exist?"; \
+		exit 1; \
+	fi;
+endef
 
 .PHONY: all
 all: bootstrap
 	@echo "Building the project..."
 	@xcodebuild build
-	@echo ""
+	@echo "... done.\n"
 
 # Resolving dependencies without building the project
 
 .PHONY: dependencies
 dependencies: public.dependencies
-	@echo "Updating $(CARTFILE_RESOLVED_PROPRIETARY) dependencies..."
-	$(RESTORE_CARTFILE_PRIVATE_PROPRIETARY)
+	@echo "Updating proprietary dependencies..."
+	$(call restore_cartfile_private,proprietary)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(SAVE_CARTFILE_RESOLVED_PROPRIETARY)
-	@echo ""
+	$(call save_cartfile_resolved,proprietary)
+	@echo "... done.\n"
 
 .PHONY: public.dependencies
 public.dependencies:
-	@echo "Updating $(CARTFILE_RESOLVED_PUBLIC) dependencies..."
-	$(RESTORE_CARTFILE_PRIVATE_PUBLIC)
+	@echo "Updating public dependencies..."
+	$(call restore_cartfile_private,public)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(SAVE_CARTFILE_RESOLVED_PUBLIC)
-	@echo ""
+	$(call save_cartfile_resolved,public)
+	@echo "... done.\n"
 
 # Dependency compilation with proprietary dependencies
 
 .PHONY: bootstrap
-bootstrap:
-	@echo "Building dependencies declared in $(CARTFILE_RESOLVED_PROPRIETARY)..."
-	$(RESTORE_CARTFILE_PRIVATE_PROPRIETARY)
-	$(RESTORE_CARTFILE_RESOLVED_PROPRIETARY)
+bootstrap: 
+	@echo "Building proprietary dependencies..."
+	$(call restore_cartfile_private,proprietary)
+	$(call restore_cartfile_resolved,proprietary)
 	@carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
-	$(SAVE_CARTFILE_RESOLVED_PROPRIETARY)
+	$(call save_cartfile_resolved,proprietary)
 	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo ""
+	@echo "... done.\n"
 
 # Also keep public build dependencies in sync
 .PHONY: update
 update: public.dependencies
-	@echo "Updating and building $(CARTFILE_RESOLVED_PROPRIETARY) dependencies..."
-	$(RESTORE_CARTFILE_PRIVATE_PROPRIETARY)
+	@echo "Updating and building proprietary dependencies..."
+	$(call restore_cartfile_private,proprietary)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(SAVE_CARTFILE_RESOLVED_PROPRIETARY)
+	$(call save_cartfile_resolved,proprietary)
 	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo ""
+	@echo "... done.\n"
 
 # Public dependency compilation
 
 .PHONY: public.bootstrap
 public.bootstrap:
-	@echo "Building dependencies declared in $(CARTFILE_RESOLVED_PUBLIC)..."
-	$(RESTORE_CARTFILE_PRIVATE_PUBLIC)
-	$(RESTORE_CARTFILE_RESOLVED_PUBLIC)
+	@echo "Building public dependencies..."
+	$(call restore_cartfile_private,public)
+	$(call restore_cartfile_resolved,public)
 	@carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
-	$(SAVE_CARTFILE_RESOLVED_PUBLIC)
+	$(call save_cartfile_resolved,public)
 	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo ""
+	@echo "... done.\n"
 
 .PHONY: public.update
 public.update:
-	@echo "Updating and building $(CARTFILE_RESOLVED_PUBLIC) dependencies..."
-	$(RESTORE_CARTFILE_PRIVATE_PUBLIC)
+	@echo "Updating and building public dependencies..."
+	$(call restore_cartfile_private,public)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(SAVE_CARTFILE_RESOLVED_PUBLIC)
+	$(call save_cartfile_resolved,public)
 	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo ""
+	@echo "... done.\n"
 
 # Framework package to attach to github releases
 
@@ -98,7 +126,7 @@ package: bootstrap
 	@mkdir -p archive
 	@carthage build --no-skip-current
 	@carthage archive --output archive
-	@echo ""
+	@echo "... done.\n"
 
 # Cleanup
 
@@ -107,20 +135,20 @@ clean:
 	@echo "Cleaning up build products..."
 	@xcodebuild clean
 	@rm -rf $(CARTHAGE_FOLDER)
-	@echo ""
+	@echo "... done.\n"
 
 .PHONY: help
 help:
 	@echo "The following targets must be used for proprietary builds:"
 	@echo "   all                         Build project dependencies and the project"
 	@echo "   dependencies                Update dependencies without building them"
-	@echo "   bootstrap                   Build dependencies as declared in $(CARTFILE_RESOLVED_PROPRIETARY)"
+	@echo "   bootstrap                   Build previously resolved dependencies"
 	@echo "   update                      Update and build dependencies"
 	@echo "   package                     Build and package the framework for attaching to github releases"
 	@echo ""
 	@echo "The following targets must be used when building the public source code:"
 	@echo "   public.dependencies         Update dependencies without building them"
-	@echo "   public.bootstrap            Build dependencies as declared in $(CARTFILE_RESOLVED_PUBLIC)"
+	@echo "   public.bootstrap            Build previously resolved dependencies"
 	@echo "   public.update               Update and build dependencies"
 	@echo ""
 	@echo "The following targets are widely available:"
