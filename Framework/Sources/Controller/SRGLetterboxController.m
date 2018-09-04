@@ -1090,6 +1090,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         if (error) {
             self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self updateWithError:error];
+            errorCompletionHandler(HTTPResponse, error);
             return;
         }
         
@@ -1104,6 +1105,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
+            errorCompletionHandler(HTTPResponse, blockingReasonError);
             return;
         }
         
@@ -1117,8 +1119,8 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                                                  code:SRGDataProviderErrorCodeInvalidData
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
             [self updateWithError:error];
-            
             [report setBool:YES forKey:@"noPlayableResourceFound"];
+            errorCompletionHandler(HTTPResponse, error);
         }
     }];
     
