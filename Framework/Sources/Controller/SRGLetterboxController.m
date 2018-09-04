@@ -960,10 +960,10 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
     
     SRGDiagnosticInformation *timeInformation = [report informationForKey:@"time"];
-    [timeInformation startTimeMeasurementForKey:@"bufferingToReadyToPlay"];
+    [timeInformation startTimeMeasurementForKey:@"askToPlay"];
     
     void (^successCompletionHandler)(void) = ^{
-        [timeInformation stopTimeMeasurementForKey:@"bufferingToReadyToPlay"];
+        [timeInformation stopTimeMeasurementForKey:@"askToPlay"];
         [timeInformation stopTimeMeasurementForKey:@"media"];
         [report setString:@"success" forKey:@"result"];
         [report finish];
@@ -993,7 +993,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             [errorInformation setString:error.localizedDescription forKey:@"message"];
         }
         
-        [timeInformation stopTimeMeasurementForKey:@"bufferingToReadyToPlay"];
+        [timeInformation stopTimeMeasurementForKey:@"askToPlay"];
         [report setString:@"error" forKey:@"result"];
         [report finish];
     };
