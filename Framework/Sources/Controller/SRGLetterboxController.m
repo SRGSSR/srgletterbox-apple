@@ -690,7 +690,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         self.endDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
-            [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, [NSDate date]) HTTPResponse:nil];
+            [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, [NSDate date])];
             [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
             [self stop];
             
@@ -763,7 +763,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     void (^updateCompletionBlock)(SRGMedia * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error, BOOL resourceChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
         // Do not erase playback errors with successful metadata updates
         if (error || ! [self.error.domain isEqualToString:SRGLetterboxErrorDomain] || self.error.code != SRGLetterboxErrorCodeNotPlayable) {
-            [self updateWithError:error HTTPResponse:HTTPResponse];
+            [self updateWithError:error];
         }
         
         [self notifyLivestreamEndWithMedia:media previousMedia:previousMedia];
@@ -869,23 +869,16 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     }
 }
 
-- (void)updateWithError:(NSError *)error HTTPResponse:(NSHTTPURLResponse *)HTTPResponse
+- (void)updateWithError:(NSError *)error
 {
     if (! error) {
         self.error = nil;
         return;
     }
     
-    SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:self.URN];
-    
     // Forward Letterbox friendly errors
     if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
         self.error = error;
-        
-        SRGDiagnosticInformation *errorInformation = [report informationForKey:@"ilError"];
-        [errorInformation setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
-        [errorInformation setString:error.localizedDescription forKey:@"message"];
-        [errorInformation setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
     }
     // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
     else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
@@ -893,12 +886,6 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                                          code:SRGLetterboxErrorCodeNetwork
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
                                                  NSUnderlyingErrorKey : error }];
-        
-        SRGDiagnosticInformation *errorInformation = [report informationForKey:@"networkError"];
-        [errorInformation setString:error.userInfo[NSURLErrorFailingURLStringErrorKey] forKey:@"url"];
-        [errorInformation setString:error.localizedDescription forKey:@"message"];
-        [errorInformation setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
-        [errorInformation setNumber:@(HTTPResponse.statusCode) forKey:@"responseCode"];
     }
     // Use a friendly error message for all other reasons
     else {
@@ -910,12 +897,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                                          code:code
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)"),
                                                  NSUnderlyingErrorKey : error }];
-        
-        SRGDiagnosticInformation *errorInformation = [report informationForKey:@"genericError"];
-        [errorInformation setString:error.localizedDescription forKey:@"message"];
     }
-    
-    [report finish];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
@@ -967,12 +949,47 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:UIDevice.currentDevice.model forKey:@"device"];
     [report setString:URN forKey:@"urn"];
+    [report setBool:standalone forKey:@"standalone"];
     [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
     [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
     
-    void (^prepareCompletionHandler)(void) = ^{
+    SRGDiagnosticInformation *timeInformation = [report informationForKey:@"time"];
+    [timeInformation startTimeMeasurementForKey:@"bufferingToReadyToPlay"];
+    
+    void (^successCompletionHandler)(void) = ^{
+        [timeInformation stopTimeMeasurementForKey:@"bufferingToReadyToPlay"];
+        [timeInformation stopTimeMeasurementForKey:@"media"];
+        [report setString:@"success" forKey:@"result"];
         [report finish];
         completionHandler ? completionHandler() : nil;
+    };
+    
+    void (^errorCompletionHandler)(NSHTTPURLResponse * _Nullable, NSError *) = ^(NSHTTPURLResponse * _Nullable HTTPResponse, NSError * error) {
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+            SRGDiagnosticInformation *errorInformation = [report informationForKey:@"ilError"];
+            [errorInformation setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
+            [errorInformation setString:error.localizedDescription forKey:@"message"];
+            [errorInformation setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+        }
+        else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
+            SRGDiagnosticInformation *errorInformation = [report informationForKey:@"networkError"];
+            [errorInformation setString:error.userInfo[NSURLErrorFailingURLStringErrorKey] forKey:@"url"];
+            [errorInformation setString:error.localizedDescription forKey:@"message"];
+            [errorInformation setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+            [errorInformation setNumber:@(HTTPResponse.statusCode) forKey:@"responseCode"];
+        }
+        else {
+            NSInteger code = (self.dataAvailability == SRGLetterboxDataAvailabilityNone) ? SRGLetterboxErrorCodeNotFound : SRGLetterboxErrorCodeNotPlayable;
+            if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404) {
+                code = SRGLetterboxErrorCodeNotFound;
+            }
+            SRGDiagnosticInformation *errorInformation = [report informationForKey:@"genericError"];
+            [errorInformation setString:error.localizedDescription forKey:@"message"];
+        }
+        
+        [timeInformation stopTimeMeasurementForKey:@"bufferingToReadyToPlay"];
+        [report setString:@"error" forKey:@"result"];
+        [report finish];
     };
     
     // Save the settings for restarting after connection loss
@@ -1000,26 +1017,32 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                 else {
                     self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
                 }
-                [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:prepareCompletionHandler];
+                [timeInformation startTimeMeasurementForKey:@"media"];
+                [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:successCompletionHandler];
             };
             
             // Media readily available. Done
             if (media) {
                 self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
                 NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
-                [self updateWithError:blockingReasonError HTTPResponse:nil];
+                [self updateWithError:blockingReasonError];
                 [self notifyLivestreamEndWithMedia:media previousMedia:nil];
                 
-                if (! blockingReasonError) {
+                if (blockingReasonError) {
+                    errorCompletionHandler(nil, blockingReasonError);
+                }
+                else {
                     prepareToPlay(contentURL);
                 }
             }
             // Retrieve the media
             else {
                 SRGMediaCompletionBlock mediaCompletionBlock = ^(SRGMedia * _Nullable media, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+                    [timeInformation stopTimeMeasurementForKey:@"il"];
                     if (error) {
                         self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-                        [self updateWithError:error HTTPResponse:HTTPResponse];
+                        [self updateWithError:error];
+                        errorCompletionHandler(HTTPResponse, error);
                         return;
                     }
                     
@@ -1030,7 +1053,8 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                     
                     NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
                     if (blockingReasonError) {
-                        [self updateWithError:blockingReasonError HTTPResponse:HTTPResponse];
+                        [self updateWithError:blockingReasonError];
+                        errorCompletionHandler(HTTPResponse, blockingReasonError);
                     }
                     else {
                         prepareToPlay(contentURL);
@@ -1038,6 +1062,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                 };
                 
                 SRGRequest *mediaRequest = [self.dataProvider mediaWithURN:URN completionBlock:mediaCompletionBlock];
+                [timeInformation startTimeMeasurementForKey:@"il"];
                 [self.requestQueue addRequest:mediaRequest resume:YES];
             }
             return;
@@ -1047,9 +1072,11 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         @strongify(self)
         
+        [timeInformation stopTimeMeasurementForKey:@"il"];
+        
         if (error) {
             self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-            [self updateWithError:error HTTPResponse:HTTPResponse];
+            [self updateWithError:error];
             return;
         }
         
@@ -1063,22 +1090,26 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-            [self updateWithError:blockingReasonError HTTPResponse:HTTPResponse];
+            [self updateWithError:blockingReasonError];
             return;
         }
         
         // TODO: Replace s_prefersDRM with YES when removed
-        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:prepareCompletionHandler]) {
+        [timeInformation startTimeMeasurementForKey:@"media"];
+        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:successCompletionHandler]) {
+            [timeInformation stopTimeMeasurementForKey:@"media"];
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
             NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
                                                  code:SRGDataProviderErrorCodeInvalidData
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
-            [self updateWithError:error HTTPResponse:HTTPResponse];
+            [self updateWithError:error];
             
             [report setBool:YES forKey:@"noPlayableResourceFound"];
         }
     }];
+    
+    [timeInformation startTimeMeasurementForKey:@"il"];
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
@@ -1229,7 +1260,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
-        [self updateWithError:blockingReasonError HTTPResponse:nil];
+        [self updateWithError:blockingReasonError];
         
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
@@ -1576,7 +1607,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
     }
-    [self updateWithError:notification.userInfo[SRGMediaPlayerErrorKey] HTTPResponse:nil];
+    [self updateWithError:notification.userInfo[SRGMediaPlayerErrorKey]];
 }
 
 - (void)routeDidChange:(NSNotification *)notification
