@@ -134,13 +134,19 @@ platform :ios do
       repository_url = "https://" + repository_url
     end
 
+    build_server_url = ENV['BUILD_URL']
+    if build_server_url == nil
+        build_server_url = `hostname`.strip
+    end
+
     hockey(
       api_token: api_token,
       public_identifier: public_identifier,
       notify: '0',
       notes: notes,
       commit_sha: last_git_commit[:commit_hash],
-      repository_url: repository_url
+      repository_url: repository_url,
+      build_server_url: build_server_url
     )
   end
 
