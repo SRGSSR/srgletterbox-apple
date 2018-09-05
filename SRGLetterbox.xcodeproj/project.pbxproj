@@ -363,6 +363,8 @@
 		08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0D1F1E30F820000C94EF /* FXReachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FXReachability.framework; path = Carthage/Build/iOS/FXReachability.framework; sourceTree = "<group>"; };
+		6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
+		6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -614,6 +616,15 @@
 				6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		6F0136F4213FA39000B95405 /* Xcode */ = {
+			isa = PBXGroup;
+			children = (
+				6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */,
+				6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */,
+			);
+			path = Xcode;
 			sourceTree = "<group>";
 		};
 		6F042D221E28E2D100CFD89B /* Framework */ = {
@@ -938,6 +949,7 @@
 				6F042D221E28E2D100CFD89B /* Framework */,
 				6FAB3B8A1E29066300CC2197 /* Tests */,
 				6FAB3B511E28FFEA00CC2197 /* Demo */,
+				6F0136F4213FA39000B95405 /* Xcode */,
 				6FAB3B061E28FB1400CC2197 /* Frameworks */,
 				6FE321421E28E24E00FD8E42 /* Products */,
 			);
@@ -1488,6 +1500,7 @@
 		};
 		0835627C1E5B332800EE6DB5 /* Nightly */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
@@ -1499,7 +1512,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				HOCKEYAPP_IDENTIFIER = fed0d464bba34c35bbb051f9f517a9d6;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
@@ -1621,7 +1633,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				HOCKEYAPP_IDENTIFIER = "";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
@@ -1736,7 +1747,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				HOCKEYAPP_IDENTIFIER = "";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
@@ -1875,7 +1885,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				HOCKEYAPP_IDENTIFIER = "";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
@@ -1885,6 +1894,7 @@
 		};
 		6FAB3B501E28FE2000CC2197 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_IDENTIFIER_SUFFIX = "";
@@ -1894,7 +1904,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				HOCKEYAPP_IDENTIFIER = 7bf489539f6e44739133ae456c41dc2c;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
