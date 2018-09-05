@@ -92,6 +92,15 @@ make help
 
 Alternatively, you can of course open the project with Xcode and use the available schemes.
 
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/playsrg-configuration-ios), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+
+If you need to make changes to the settings:
+
+1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
+1. Switch to the `Configuration` directory and commit changes there.
+1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
+1. Push all commits when you are ready.
+
 ## Usage
 
 When you want to use classes or functions provided by the library in your code, you must import it from your source files first.
