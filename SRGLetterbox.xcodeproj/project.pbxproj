@@ -1046,7 +1046,7 @@
 				6FAB3B371E28FE2000CC2197 /* Frameworks */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				6FAB3B681E2905B400CC2197 /* Embed Frameworks */,
-				6F8236612136845900C76B86 /* Embed Proprietary Frameworks */,
+				6F8236612136845900C76B86 /* Embed Content Protection */,
 			);
 			buildRules = (
 			);
@@ -1264,19 +1264,20 @@
 			shellPath = /bin/sh;
 			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  cp -R \"$CONTENT_PROTECTION_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH\"\nfi\n";
 		};
-		6F8236612136845900C76B86 /* Embed Proprietary Frameworks */ = {
+		6F8236612136845900C76B86 /* Embed Content Protection */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
 			);
-			name = "Embed Proprietary Frameworks";
+			name = "Embed Content Protection";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  cp -R \"$CONTENT_PROTECTION_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH\"\nfi\n";
+			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
