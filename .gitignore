@@ -6,10 +6,13 @@ xcuserdata
 archive
 build
 
+Configuration
+
 Carthage
 Cartfile.private
 Cartfile.resolved
 
+.env
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png

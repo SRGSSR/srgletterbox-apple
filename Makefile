@@ -1,5 +1,8 @@
 #!/usr/bin/xcrun make -f
 
+CONFIGURATION_FOLDER=Configuration
+CONFIGURATION_COMMIT_SHA1=d644f7c69c4033771ea38100a969de1894ddcea8
+
 CARTHAGE_FOLDER=Carthage
 CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
 CARTHAGE_BUILD_FLAGS=--platform iOS --cache-builds
@@ -60,7 +63,7 @@ all: bootstrap
 # Resolving dependencies without building the project
 
 .PHONY: dependencies
-dependencies: public.dependencies
+dependencies: setup public.dependencies
 	@echo "Updating proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
@@ -78,7 +81,7 @@ public.dependencies:
 # Dependency compilation with proprietary dependencies
 
 .PHONY: bootstrap
-bootstrap: 
+bootstrap: setup
 	@echo "Building proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	$(call restore_cartfile_resolved,proprietary)
@@ -128,6 +131,20 @@ package: bootstrap
 	@carthage archive --output archive
 	@echo "... done.\n"
 
+# Setup
+
+.PHONY: setup
+setup:
+	@echo "Setting up project..."
+
+	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
+		git clone https://github.com/SRGSSR/playsrg-ios-configuration.git $(CONFIGURATION_FOLDER); \
+	fi;
+	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
+	
+	@ln -fs $(CONFIGURATION_FOLDER)/.env
+	@echo "... done.\n"
+
 # Cleanup
 
 .PHONY: clean
@@ -145,6 +162,7 @@ help:
 	@echo "   bootstrap                   Build previously resolved dependencies"
 	@echo "   update                      Update and build dependencies"
 	@echo "   package                     Build and package the framework for attaching to github releases"
+	@echo "   setup                       Setup project"
 	@echo ""
 	@echo "The following targets must be used when building the public source code:"
 	@echo "   public.dependencies         Update dependencies without building them"
