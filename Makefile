@@ -92,7 +92,7 @@ bootstrap: setup
 
 # Also keep public build dependencies in sync
 .PHONY: update
-update: public.dependencies
+update: setup public.dependencies
 	@echo "Updating and building proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
