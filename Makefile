@@ -138,7 +138,7 @@ setup:
 	@echo "Setting up project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
-		git clone https://github.com/SRGSSR/playsrg-ios-configuration.git $(CONFIGURATION_FOLDER); \
+		git clone https://github.com/SRGSSR/srgletterbox-ios-configuration.git $(CONFIGURATION_FOLDER); \
 	fi;
 	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
 	
