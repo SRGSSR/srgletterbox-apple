@@ -14,6 +14,8 @@ default_platform :ios
 platform :ios do
   before_all do |lane|
 
+    ensure_git_status_clean
+
     # For the demo, before all, check if we have a demo release description
     if lane.to_s == "demo"
       build_number = get_build_number
@@ -26,7 +28,6 @@ platform :ios do
       end
     end
 
-    ensure_git_status_clean
     carthage(
       command: "bootstrap",
       platform: "iOS",
@@ -246,7 +247,7 @@ platform :ios do
 
   error do |lane, exception|
     clean_build_artifacts
-    reset_git_repo(skip_clean: true)
+    reset_git_repo(skip_clean: true, force: true)
     # slack(
     #   message: exception.message,
     #   success: false
