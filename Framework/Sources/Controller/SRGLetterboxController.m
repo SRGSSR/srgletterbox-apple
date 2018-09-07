@@ -55,6 +55,11 @@ NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLett
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
 
+/**
+ *  Diagnostics service URL key in bundle information dictionnary.
+ */
+NSString * const SRGLetterboxDiagnosticsServiceURLKey = @"DiagnosticsServiceURL";
+
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:date];
@@ -948,8 +953,22 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:URN];
     
     [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
-        SRGLetterboxLogInfo(@"controller", @"SRGPlaybackMetrics report: %@", JSONDictionary);
-        completionBlock(YES);
+        NSString *diagnosticsServiceURLString = [[NSBundle srg_letterboxBundle] objectForInfoDictionaryKey:SRGLetterboxDiagnosticsServiceURLKey];
+        NSURL *diagnosticsServiceURL = (diagnosticsServiceURLString.length > 0) ? [NSURL URLWithString:diagnosticsServiceURLString] : nil;
+        if (diagnosticsServiceURL) {
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:diagnosticsServiceURL];
+            request.HTTPMethod = @"POST";
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
+            [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                SRGLetterboxLogInfo(@"controller", @"SRGPlaybackMetrics report %@: %@", (error != nil) ? @"sent" : @"not sent", JSONDictionary);
+                completionBlock(error != nil);
+            }] resume];
+        }
+        else {
+            SRGLetterboxLogInfo(@"controller", @"SRGPlaybackMetrics report: %@", JSONDictionary);
+            completionBlock(YES);
+        }
     };
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
     [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
