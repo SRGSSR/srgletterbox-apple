@@ -140,7 +140,7 @@ setup:
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-ios-configuration.git $(CONFIGURATION_FOLDER); \
 	else \
-		echo "The $(CONFIGURATION_FOLDER) folder already exists."; \
+		echo "A $(CONFIGURATION_FOLDER) folder is already available."; \
 	fi;
 	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
 	
