@@ -6,7 +6,25 @@
 
 #import "LetterboxBaseTestCase.h"
 
+static BOOL s_hasContentProtection = NO;
+
+static __attribute__((constructor)) void LetterboxTestCaseInit(void)
+{
+    NSString *contentProtectionFrameworkPath = [[NSBundle mainBundle] pathForResource:@"SRGContentProtection" ofType:@"framework" inDirectory:@"Frameworks"];
+    NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
+    s_hasContentProtection = [contentProtectionFramework loadAndReturnError:NULL];
+}
+
 @implementation LetterboxBaseTestCase
+
+#pragma mark Class methods
+    
++ (BOOL)hasContentProtection
+{
+    return s_hasContentProtection;
+}
+
+#pragma mark Helpers
 
 - (XCTestExpectation *)expectationForElapsedTimeInterval:(NSTimeInterval)timeInterval withHandler:(void (^)(void))handler
 {

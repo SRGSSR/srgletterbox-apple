@@ -32,6 +32,12 @@ The library can be added to a project using [Carthage](https://github.com/Cartha
 github "SRGSSR/srgletterbox-ios"
 ```
 
+If you have access to it, be sure to also add [SRG Content Protection](github "SRGSSR/srgcontentprotection-ios") dependency so that you can play all kinds of streams:
+
+```
+github "SRGSSR/srgcontentprotection-ios"
+```
+
 Until Carthage 0.30, only dynamic frameworks could be integrated. Starting with Carthage 0.30, though, frameworks can be integrated statically as well, which avoids slow application startups usually associated with the use of too many dynamic frameworks.
 
 For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
@@ -50,12 +56,13 @@ The library requires the following frameworks to be added to any target requirin
 * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework.
 * `SRGAnalytics_DataProvider`: The data provider analytics companion framework.
 * `SRGAppearance`: The appearance framework.
-* `SRGContentProtection`: The framework to enable playback of protected medias.
 * `SRGLetterbox`: The Letterbox library framework.
 * `SRGLogger`: The framework used for internal logging.
 * `SRGMediaPlayer`: The media player framework (if not already in your project).
 * `SRGNetworking`: A networking framework.
 * `YYWebImage`: A framework for image retrieval.
+
+If you added SRG Content Protection as dependency, be sure to add `SRGContentProtection` as well.
 
 ### Dynamic framework integration
 
@@ -74,6 +81,25 @@ If your target is building an application, a few more steps are required:
 3. Also add any resource bundle `.bundle` found within the `.framework` folders to your target directly.
 4. Some non-statically built framework dependencies are built in the `Carthage/Build/iOS` folder. Add them by following the _Dynamic framework integration_ instructions above.
 5. Add the `-all_load` flag to your target _Other linker flags_.
+
+## Building the project
+
+A [Makefile](../Makefile) provides several targets to build and package the library. The available targets can be listed by running the following command from the project root folder:
+
+```
+make help
+```
+
+Alternatively, you can of course open the project with Xcode and use the available schemes.
+
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/playsrg-configuration-ios), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+
+If you need to make changes to the settings:
+
+1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
+1. Switch to the `Configuration` directory and commit changes there.
+1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
+1. Push all commits when you are ready.
 
 ## Usage
 
@@ -123,6 +149,12 @@ If rendering does not work properly:
 ## Demo project
 
 To test what the library is capable of, run the associated demo.
+
+## Content protection
+
+Your project must link against [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) to be able to play some content, including livestreams or TV series.
+
+If some content is protected and SRG Content Protection has not been correctly linked, playback will either fail or remain stuck in a loading state.
 
 ## Known issues
 

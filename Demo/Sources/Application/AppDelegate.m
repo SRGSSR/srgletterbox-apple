@@ -13,6 +13,13 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <HockeySDK/HockeySDK.h>
 
+static __attribute__((constructor)) void ApplicationInit(void)
+{
+    NSString *contentProtectionFrameworkPath = [[NSBundle mainBundle] pathForResource:@"SRGContentProtection" ofType:@"framework" inDirectory:@"Frameworks"];
+    NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
+    [contentProtectionFramework loadAndReturnError:NULL];
+}
+
 @implementation AppDelegate
 
 #pragma mark Application lifecycle
@@ -28,16 +35,7 @@
     [SRGRequest enableNetworkActivityIndicatorManagement];
     
 #ifndef DEBUG
-    
-#ifdef NIGHTLY
-    NSString *hockeyIdentifier = @"fed0d464bba34c35bbb051f9f517a9d6";
-#else
-    NSString *hockeyIdentifier = @"7bf489539f6e44739133ae456c41dc2c";
-#endif
-    
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    [self setupHockey];
 #endif
     
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
@@ -54,6 +52,19 @@
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
 
     return YES;
+}
+
+#pragma mark Helpers
+
+- (void)setupHockey
+{
+    NSString *hockeyIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyIdentifier"];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    
+#if defined(BETA) || defined(NIGHTLY)
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+#endif
 }
 
 @end
