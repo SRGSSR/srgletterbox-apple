@@ -84,13 +84,18 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     return isPlayerLoading || dataAvailability == SRGLetterboxDataAvailabilityLoading;
 }
 
+static NSString *SRGDeviceInformation(void)
+{
+    return [NSString stringWithFormat:@"%@ (%@)", UIDevice.currentDevice.hardware, UIDevice.currentDevice.systemVersion];
+}
+
 static NSString *SRGLetterboxNetworkType(void)
 {
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSString *> *s_types;
     dispatch_once(&s_onceToken, ^{
         s_types = @{ @(FXReachabilityStatusReachableViaWiFi) : @"wifi",
-                     @(FXReachabilityStatusReachableViaWWAN) : @"mobile_data" };
+                     @(FXReachabilityStatusReachableViaWWAN) : @"cellular" };
     });
     return s_types[@([FXReachability sharedInstance].status)];
 }
@@ -169,6 +174,8 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 @property (nonatomic) NSDate *lastUpdateDate;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
+
+@property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 @end
 
@@ -466,6 +473,11 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 {
     [_continuousPlaybackTransitionTimer invalidate];
     _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
+}
+
+- (BOOL)isUsingAirPlay
+{
+    return [AVAudioSession srg_isAirPlayActive] && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
 }
 
 #pragma mark Periodic time observers
@@ -939,7 +951,8 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:URN];
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
     [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
-    [report setString:UIDevice.currentDevice.hardware forKey:@"device"];
+    [report setString:SRGDeviceInformation() forKey:@"device"];
+    [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
     [report setString:URN forKey:@"urn"];
     [report setBool:standalone forKey:@"standalone"];
     [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
@@ -951,6 +964,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     void (^successCompletionHandler)(void) = ^{
         [timeInformation stopTimeMeasurementForKey:@"playToFirstFrame"];
         [timeInformation stopTimeMeasurementForKey:@"media"];
+        [report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         [report setString:@"success" forKey:@"result"];
         [report finish];
         completionHandler ? completionHandler() : nil;
@@ -987,6 +1001,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         }
         
         [timeInformation stopTimeMeasurementForKey:@"playToFirstFrame"];
+        [report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         [report setString:@"error" forKey:@"result"];
         [report finish];
     };
