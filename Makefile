@@ -46,7 +46,7 @@ define checkout_repository
 	if [[ `git status --porcelain` ]]; then \
 		echo "The repository '$(1)' contains changes. Please commit or discard these changes and retry."; \
 		exit 1; \
-	elif `git checkout -q $(2)`; then \
+	elif `git fetch; git checkout -q $(2)`; then \
 		exit 0; \
 	else \
 		echo "The repository '$(1)' could not be switched to commit $(2). Does this commit exist?"; \
