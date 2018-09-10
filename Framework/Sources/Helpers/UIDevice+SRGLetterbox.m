@@ -22,20 +22,22 @@ static void lockComplete(CFNotificationCenterRef center, void *observer, CFStrin
     return s_locked;
 }
 
-#pragma mark Notifications
+#pragma mark Getters and setters
 
-+ (void)srg_letterbox_applicationDidBecomeActive:(NSNotification *)notification
-{
-    s_locked = NO;
-}
-
-- (NSString *)machine
+- (NSString *)hardware
 {
     struct utsname systemInfo;
     uname(&systemInfo);
     
     return [NSString stringWithCString:systemInfo.machine
                               encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark Notifications
+
++ (void)srg_letterbox_applicationDidBecomeActive:(NSNotification *)notification
+{
+    s_locked = NO;
 }
 
 @end

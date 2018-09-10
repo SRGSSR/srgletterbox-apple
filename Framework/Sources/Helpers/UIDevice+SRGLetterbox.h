@@ -15,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)srg_letterbox_isLocked;
 
-- (NSString *)machine;
+/**
+ *  Return the kind of hardware the code is running on.
+ */
+@property (nonatomic, readonly, copy) NSString *hardware;
 
 @end
 
