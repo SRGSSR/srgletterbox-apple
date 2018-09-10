@@ -86,22 +86,13 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 static NSString *SRGLetterboxNetworkType(void)
 {
-    switch ([FXReachability sharedInstance].status) {
-        case FXReachabilityStatusReachableViaWiFi: {
-            return @"wifi";
-            break;
-        }
-            
-        case FXReachabilityStatusReachableViaWWAN: {
-            return @"mobile_data";
-            break;
-        }
-            
-        default: {
-            return nil;
-            break;
-        }
-    }
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_types;
+    dispatch_once(&s_onceToken, ^{
+        s_types = @{ @(FXReachabilityStatusReachableViaWiFi) : @"wifi",
+                     @(FXReachabilityStatusReachableViaWWAN) : @"mobile_data" };
+    });
+    return s_types[@([FXReachability sharedInstance].status)];
 }
 
 static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingReason)
