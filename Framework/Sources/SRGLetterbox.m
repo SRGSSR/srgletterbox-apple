@@ -75,7 +75,7 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
             request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
             
             [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                BOOL success = (error != nil);
+                BOOL success = (error == nil);
                 SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
                 completionBlock(success);
             }] resume];
