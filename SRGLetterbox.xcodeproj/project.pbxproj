@@ -78,7 +78,6 @@
 		6F0C99182121E73400073AB6 /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
 		6F191D8421478F7600C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6F191D8521479C7B00C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
@@ -530,7 +529,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08E2E0772146C5EA0098E13B /* SRGDiagnostics.framework in Frameworks */,
 				6FAB3B711E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */,
 				08EB66A41F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
@@ -1468,7 +1466,6 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DIAGNOSTICS_SERVICE_URL = "https://srgsnitch-dev.herokuapp.com/report";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1584,7 +1581,6 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DIAGNOSTICS_SERVICE_URL = "https://srgsnitch-dev.herokuapp.com/report";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1706,7 +1702,6 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DIAGNOSTICS_SERVICE_URL = "https://srgsnitch-dev.herokuapp.com/report";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1988,7 +1983,6 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DIAGNOSTICS_SERVICE_URL = "https://srgsnitch-dev.herokuapp.com/report";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2051,7 +2045,6 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DIAGNOSTICS_SERVICE_URL = "https://srgsnitch-dev.herokuapp.com/report";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
