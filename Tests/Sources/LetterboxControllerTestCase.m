@@ -160,13 +160,27 @@ static NSURL *MMFServiceURL(void)
     XCTAssertFalse(self.controller.loading);
 }
 
+- (void)testPlayURNAtTime
+{
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    SRGPosition *position = [SRGPosition positionAtTimeInSeconds:15.];
+    [self.controller playURN:OnDemandVideoURN atPosition:position standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertEqual(CMTimeGetSeconds(self.controller.currentTime), 15.);
+}
+
 - (void)testPlayMedia
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media retrieved"];
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[dataProvider mediasWithURNs:@[OnDemandVideoURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[dataProvider mediasWithURNs:@[OnDemandVideoURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         media = medias.firstObject;
         [expectation fulfill];
     }] resume];
@@ -208,7 +222,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[dataProvider mediasWithURNs:@[OnDemandLongVideoSegmentURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSError * _Nullable error) {
+    [[dataProvider mediasWithURNs:@[OnDemandLongVideoSegmentURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         media = medias.firstObject;
         [expectation fulfill];
     }] resume];
@@ -691,7 +705,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     // Seek outside the segment
-    [self.controller seekEfficientlyToTime:kCMTimeZero withCompletionHandler:nil];
+    [self.controller seekToPosition:nil withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -784,8 +798,8 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    [mediaPlayerController seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(mediaPlayerController.timeRange), CMTimeMakeWithSeconds(15., NSEC_PER_SEC)) withCompletionHandler:nil];
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(15., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -797,7 +811,8 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
+    CMTime seekTime1 = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime1] withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -809,7 +824,8 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeRangeGetEnd(self.controller.timeRange) withCompletionHandler:^(BOOL finished) {
+    CMTime seekTime2 = CMTimeRangeGetEnd(self.controller.timeRange);
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime2] withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -861,7 +877,8 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
+    CMTime seekTime1 = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime1] withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -876,7 +893,8 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekEfficientlyToTime:CMTimeRangeGetEnd(self.controller.timeRange) withCompletionHandler:^(BOOL finished) {
+    CMTime seekTime2 = CMTimeRangeGetEnd(self.controller.timeRange);
+    [self.controller seekToPosition:[SRGPosition positionAroundTime:seekTime2] withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -966,7 +984,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekEfficientlyToTime:CMTimeMakeWithSeconds(80., NSEC_PER_SEC) withCompletionHandler:nil];
+    [self.controller seekToPosition:[SRGPosition positionAroundTimeInSeconds:80.] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1021,7 +1039,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekEfficientlyToTime:CMTimeMakeWithSeconds(200., NSEC_PER_SEC) withCompletionHandler:nil];
+    [self.controller seekToPosition:[SRGPosition positionAroundTimeInSeconds:200.] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1166,7 +1184,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekEfficientlyToTime:CMTimeMakeWithSeconds(30., NSEC_PER_SEC) withCompletionHandler:nil];
+    [self.controller seekToPosition:[SRGPosition positionAroundTimeInSeconds:30.] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1288,7 +1306,7 @@ static NSURL *MMFServiceURL(void)
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeMakeWithSeconds(30., NSEC_PER_SEC) withCompletionHandler:nil];
+    [self.controller seekToPosition:[SRGPosition positionAtTimeInSeconds:30.] withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1358,6 +1376,7 @@ static NSURL *MMFServiceURL(void)
     
     NSString *URN = OnDemandLongVideoURN;
     [self.controller playURN:URN standalone:NO];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1382,6 +1401,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self.controller pause];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Wait for a while. No playback notifications must be received
@@ -1413,7 +1433,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.controller.serviceURL];
-    [[dataProvider mediaCompositionForURN:OnDemand360VideoURN standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[dataProvider mediaCompositionForURN:OnDemand360VideoURN standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         media = mediaComposition.fullLengthMedia;
         
@@ -1427,6 +1447,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self.controller playMedia:media standalone:NO];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, media.URN);
@@ -1435,6 +1456,29 @@ static NSURL *MMFServiceURL(void)
     XCTAssertEqualObjects(self.controller.mediaPlayerController.contentURL, overridingURL);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     XCTAssertEqual(self.controller.mediaPlayerController.view.viewMode, SRGMediaPlayerViewModeMonoscopic);
+}
+
+- (void)testStartTimeForContentURLOverriding
+{
+    NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+    self.controller.updateInterval = 10.;
+    
+    XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
+    
+    self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(NSString * _Nonnull URN) {
+        return overridingURL;
+    };
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    SRGPosition *position = [SRGPosition positionAtTimeInSeconds:15.];
+    [self.controller playURN:OnDemandLongVideoURN atPosition:position standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    XCTAssertEqual(CMTimeGetSeconds(self.controller.currentTime), 15.);
 }
 
 - (void)testUninterruptedOnDemandFullLengthPlayback
@@ -1469,6 +1513,7 @@ static NSURL *MMFServiceURL(void)
     }];
     
     [self.controller pause];
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
@@ -1837,7 +1882,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.controller.serviceURL];
-    [[dataProvider mediaCompositionForURN:URN standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[dataProvider mediaCompositionForURN:URN standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         media = mediaComposition.fullLengthMedia;
         
@@ -2599,7 +2644,7 @@ static NSURL *MMFServiceURL(void)
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:nil];
     
-    // Media stops playing because of a kill switch to the full lengh media
+    // Media stops playing because of a kill switch to the full length media
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -2725,7 +2770,7 @@ static NSURL *MMFServiceURL(void)
     
     __block SRGMediaComposition *fetchedMediaComposition = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[dataProvider mediaCompositionForURN:@"urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651" standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSError * _Nullable error) {
+    [[dataProvider mediaCompositionForURN:@"urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651" standalone:NO withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         XCTAssertNotNil(mediaComposition);
         fetchedMediaComposition = mediaComposition;
         [expectation fulfill];
@@ -3290,7 +3335,8 @@ static NSURL *MMFServiceURL(void)
         }
     }];
     
-    [self.controller seekPreciselyToTime:CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC)) withCompletionHandler:^(BOOL finished) {
+    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC));
+    [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];

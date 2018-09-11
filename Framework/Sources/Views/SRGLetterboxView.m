@@ -159,7 +159,7 @@ static void commonInit(SRGLetterboxView *self);
             [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
         }
         
-        [self showAirplayNotificationMessageIfNeededAnimated:NO];
+        [self showAirPlayNotificationMessageIfNeededAnimated:NO];
     }
     else {
         [self stopInactivityTracker];
@@ -332,8 +332,8 @@ static void commonInit(SRGLetterboxView *self);
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     
-    BOOL isUsingAirplay = [AVAudioSession srg_isAirplayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    if (self.userInterfaceTogglable && isUsingAirplay) {
+    BOOL isUsingAirPlay = [AVAudioSession srg_isAirPlayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
+    if (self.userInterfaceTogglable && isUsingAirPlay) {
         return SRGLetterboxViewBehaviorForcedVisible;
     }
     
@@ -529,7 +529,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setTogglableUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    if (! self.userInterfaceTogglable) {
+    if (! self.userInterfaceTogglable || [self userInterfaceBehavior] != SRGLetterboxViewBehaviorNormal) {
         return;
     }
     
@@ -603,7 +603,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     if (@available(iOS 11, *)) {
-        if ([NSBundle srg_letterbox_isProductionVersion] && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirplayActive]) {
+        if ([NSBundle srg_letterbox_isProductionVersion] && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirPlayActive]) {
             playerViewVisible = NO;
         }
     }
@@ -693,7 +693,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     if (! UIAccessibilityIsVoiceOverRunning()) {
         @weakify(self)
-        self.inactivityTimer = [NSTimer srg_timerWithTimeInterval:4. repeats:YES /* important */ block:^(NSTimer * _Nonnull timer) {
+        self.inactivityTimer = [NSTimer srgletterbox_timerWithTimeInterval:4. repeats:YES /* important */ block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
             SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
@@ -717,7 +717,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)startPeriodicUpdates
 {
     @weakify(self)
-    self.periodicUpdateTimer = [NSTimer srg_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.periodicUpdateTimer = [NSTimer srgletterbox_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         [self setNeedsLayoutAnimated:YES];
     }];
@@ -759,7 +759,7 @@ static void commonInit(SRGLetterboxView *self);
     [self setNeedsLayoutAnimated:animated];
 }
 
-- (void)showAirplayNotificationMessageIfNeededAnimated:(BOOL)animated
+- (void)showAirPlayNotificationMessageIfNeededAnimated:(BOOL)animated
 {
     if (self.controller.mediaPlayerController.externalNonMirroredPlaybackActive) {
         [self showNotificationMessage:SRGLetterboxLocalizedString(@"Playback on AirPlay", @"Message displayed when broadcasting on an AirPlay device") animated:animated];
@@ -944,7 +944,7 @@ static void commonInit(SRGLetterboxView *self);
     
     if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateIdle) {
         [self.timelineView scrollToSelectedIndexAnimated:YES];
-        [self showAirplayNotificationMessageIfNeededAnimated:YES];
+        [self showAirPlayNotificationMessageIfNeededAnimated:YES];
     }
     
     if (playbackState == SRGMediaPlayerPlaybackStatePaused || playbackState == SRGMediaPlayerPlaybackStateEnded) {
@@ -984,7 +984,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)externalPlaybackStateDidChange:(NSNotification *)notification
 {
-    [self showAirplayNotificationMessageIfNeededAnimated:YES];
+    [self showAirPlayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -995,7 +995,7 @@ static void commonInit(SRGLetterboxView *self);
 // Called when the route is changed from the control center
 - (void)wirelessRouteDidChange:(NSNotification *)notification
 {
-    [self showAirplayNotificationMessageIfNeededAnimated:YES];
+    [self showAirPlayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification

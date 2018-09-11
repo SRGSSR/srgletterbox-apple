@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -17,7 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGControlsView">
             <connections>
-                <outlet property="airplayButton" destination="xno-LT-xef" id="5c8-TN-6ST"/>
+                <outlet property="airPlayButton" destination="xno-LT-xef" id="lNr-v2-IVs"/>
                 <outlet property="backwardSeekButton" destination="fsV-iR-Pxo" id="UWb-1Y-8cg"/>
                 <outlet property="bottomStackView" destination="cGq-uz-ZWW" id="489-97-x2C"/>
                 <outlet property="durationLabel" destination="hfY-e1-gJs" id="6e8-rd-k4R"/>
@@ -64,7 +64,7 @@
                                 <userDefinedRuntimeAttribute type="image" keyPath="viewModeStereoscopicImage" value="view_mode_stereoscopic-48"/>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xno-LT-xef" customClass="SRGAirplayButton">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xno-LT-xef" userLabel="AirPlay Button" customClass="SRGAirPlayButton">
                             <rect key="frame" x="48" y="0.0" width="48" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -108,7 +108,7 @@
                             <rect key="frame" x="402.5" y="0.0" width="49.5" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfY-e1-gJs" userLabel="Duration Label">
-                                    <rect key="frame" x="11" y="16" width="27.5" height="17"/>
+                                    <rect key="frame" x="11" y="16.5" width="27.5" height="16.5"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -128,7 +128,7 @@
                             <rect key="frame" x="452" y="0.0" width="51" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="joB-a5-mWm" userLabel="Live Label" customClass="SRGLiveLabel">
-                                    <rect key="frame" x="11" y="15" width="29" height="19"/>
+                                    <rect key="frame" x="11" y="16.5" width="29" height="16.5"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -166,7 +166,7 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button">
-                    <rect key="frame" x="201.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="225.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="backward-48"/>
@@ -175,12 +175,12 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XsM-fD-Xjk" userLabel="Play Button" customClass="SRGLetterboxPlaybackButton">
-                    <rect key="frame" x="265.5" y="176.5" width="68" height="88"/>
+                    <rect key="frame" x="289.5" y="189.5" width="20" height="62"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJC-uY-JVi" userLabel="Forward Button">
-                    <rect key="frame" x="333.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="309.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="forward-48"/>
@@ -189,7 +189,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWK-b9-2Ez">
-                    <rect key="frame" x="397.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="373.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
                     <state key="normal" image="back_live-48"/>

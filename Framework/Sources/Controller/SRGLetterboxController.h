@@ -33,11 +33,17 @@ typedef NS_ENUM(NSInteger, SRGLetterboxDataAvailability) {
 typedef NSURL * _Nullable (^SRGLetterboxURLOverridingBlock)(NSString *URN);
 
 /**
- *  Notification sent when the controller playback state changes. Use the `SRGMediaPlayerPlaybackStateKey` and
- *  `SRGMediaPlayerPreviousPlaybackStateKey` keys to retrieve the current and previous playback states from the
- *  notification `userInfo` dictionary.
+ *  Notification sent when the controller playback state changes. Use keys available for the equivalent notification defined
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo` dictionary.
  */
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackStateDidChangeNotification;
+
+/**
+ *  Notifications sent when the current segment changes. Use keys available for the equivalent notifications defined
+ *  in <SRGMediaPlayer/SRGMediaPlayerConstants.h> to retrieve information from the notification `userInfo` dictionary.
+ */
+OBJC_EXPORT NSString * const SRGLetterboxSegmentDidStartNotification;
+OBJC_EXPORT NSString * const SRGLetterboxSegmentDidEndNotification;
 
 /**
  *  Notification sent when playback metadata is updated (use the dictionary keys below to get previous and new values).
@@ -88,30 +94,32 @@ OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification;
 
 /**
- *  The default start bit rate to start (800 kbps).
+ *  The default start bit rate to start in kbps.
  */
-OBJC_EXPORT const NSInteger SRGLetterboxDefaultStartBitRate;
+static const NSInteger SRGLetterboxDefaultStartBitRate = 800;
 
 /**
- *  Time interval for stream availability checks. Default is 30 seconds.
+ *  Standard time intervals for stream availability checks.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxUpdateIntervalDefault;
+static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
+static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
- *  Time interval to check channel metadata. Default is 30 seconds.
+ *  Standard time intervals for checking channel metadata.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxChannelUpdateIntervalDefault;
+static const NSTimeInterval SRGLetterboxChannelDefaultUpdateInterval = 30.;
+static const NSTimeInterval SRGLetterboxChannelMinimumUpdateInterval = 10.;
 
 /**
  *  Standard skip intervals.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxBackwardSkipInterval;           // 10 seconds
-OBJC_EXPORT const NSTimeInterval SRGLetterboxForwardSkipInterval;            // 30 seconds
+static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
 
 /**
- *  Standard intervals before automatically playing the next item in a playlist.
+ *  Special interval used to disable continuous playback.
  */
-OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDurationDisabled;          // Disable continuous playback
+static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 /**
  *  Forward declarations.
@@ -149,8 +157,8 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  To enable continuous playback, implement this method and return a valid non-negative transition duration. Values
  *  lower than 0 will be fixed to 0. A duration of 0 enables immediate continuation.
  *
- *  You can return `SRGLetterboxContinuousPlaybackTransitionDurationDisabled` to disable continuous playback, which
- *  is equivalent to not having this method implemented.
+ *  You can return `SRGLetterboxContinuousPlaybackDisabled` to disable continuous playback, which is equivalent to not
+ *  having this method implemented.
  */
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
 
@@ -159,6 +167,14 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  to a next or previous item.
  */
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
+
+/**
+ *  An optional position at which playback must start for the specified media. If not implemented or if the method returns
+ *  `nil`, playback starts at the default location. If a position near or past the end of the media to be played is
+ *  provided (see `SRGLetterboxController` `endTolerance` and `endToleranceRatio` properties), the player will start at
+ *  its default location as well.
+ */
+- (nullable SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media;
 
 @end
 
@@ -200,8 +216,10 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  preparation, call `-play` from the completion handler.
  *
  *  @param URN               The URN to prepare.
+ *  @param position          The position to start at. If `nil` or if the specified position lies outside the content
+ *                           time range, playback starts at the default position.
  *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
- *                           indenpendtly from it.
+ *                           independently from it.
  *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
  *                           type is used.
  *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
@@ -216,6 +234,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *              property to `NO` when only preparing a player to play.
  */
 - (void)prepareToPlayURN:(NSString *)URN
+              atPosition:(nullable SRGPosition *)position
               standalone:(BOOL)standalone
  withPreferredStreamType:(SRGStreamType)streamType
                  quality:(SRGQuality)quality
@@ -223,11 +242,11 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Same as `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler`, but for a media.
- *
- *  @discussion Media metadata is immediately available from the controller and udpates through notifications.
+ *  Same as `-prepareToPlayURN:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`, but for a
+ *  media.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
+                atPosition:(nullable SRGPosition *)position
                 standalone:(BOOL)standalone
    withPreferredStreamType:(SRGStreamType)streamType
                    quality:(SRGQuality)quality
@@ -243,13 +262,16 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
 
 /**
  *  Ask the player to pause playback. Does nothing if the controller is not playing.
+ *
+ *  @discussion Livestreams cannot be paused and will be stopped instead.
  */
 - (void)pause;
 
 /**
  *  Ask the controller to change its status from pause to play or conversely, depending on the state it is in.
  *
- *  @discussion Start playback if a media is available and the player is idle.
+ *  @discussion Start playback if a media is available and the player is idle. Livestreams cannot be paused and will be
+ *              stopped instead.
  */
 - (void)togglePlayPause;
 
@@ -276,13 +298,8 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *  playing. You can use the completion handler to change the player state if needed, e.g. to automatically
  *  resume playback after a seek has been performed on a paused player.
  *
- *  @param time              The time to start at. If the time is invalid it will be set to `kCMTimeZero`. Setting a
- *                           start time outside the actual media time range will seek to the nearest location (either
- *                           zero or the end time).
- *  @param toleranceBefore   The tolerance allowed before `time`. Use `kCMTimePositiveInfinity` for no tolerance
- *                           requirements.
- *  @param toleranceAfter    The tolerance allowed after `time`. Use `kCMTimePositiveInfinity` for no tolerance
- *                           requirements.
+ *  @param position          The position to start at. If `nil` or if the specified position lies outside the content
+ *                           time range, playback starts at the default position.
  *  @param completionHandler The completion handler called when the seek ends. If the seek has been interrupted by
  *                           another seek, the completion handler will be called with `finished` set to `NO`, otherwise
  *                           with `finished` set to `YES`.
@@ -291,10 +308,7 @@ OBJC_EXPORT const NSTimeInterval SRGLetterboxContinuousPlaybackTransitionDuratio
  *              the player will still be in the seeking state. Note that if the media was not ready to play, seeking
  *              won't take place, and the completion handler won't be called.
  */
-- (void)seekToTime:(CMTime)time
-withToleranceBefore:(CMTime)toleranceBefore
-    toleranceAfter:(CMTime)toleranceAfter
- completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+- (void)seekToPosition:(nullable SRGPosition *)position withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
@@ -521,9 +535,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)prepareToPlayURN:(NSString *)URN
-              standalone:(BOOL)standalone
-   withCompletionHandler:(nullable void (^)(void))completionHandler;
+- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Prepare to play the specified media (Uniform Resource Name).
@@ -531,27 +543,35 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  @discussion Does nothing if the media is the one currently being played. The best available quality is automatically
  *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
-- (void)prepareToPlayMedia:(SRGMedia *)media
-                standalone:(BOOL)standalone
-     withCompletionHandler:(nullable void (^)(void))completionHandler;
+- (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withCompletionHandler:(nullable void (^)(void))completionHandler;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayURN:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(NSString *)URN
+     atPosition:(nullable SRGPosition *)position
+     standalone:(BOOL)standalone
+withPreferredStreamType:(SRGStreamType)streamType
+        quality:(SRGQuality)quality
+   startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified media.
  *
- *  For more information, @see `-prepareToPlayMedia:withPreferredStreamType:quality:startBitRate:completionHandler:.
+ *  For more information, @see `-prepareToPlayMedia:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate;
+- (void)playMedia:(SRGMedia *)media
+       atPosition:(nullable SRGPosition *)position
+       standalone:(BOOL)standalone
+withPreferredStreamType:(SRGStreamType)streamType
+          quality:(SRGQuality)quality
+     startBitRate:(NSInteger)startBitRate;
 
 /**
  *  Play the specified URN (Uniform Resource Name).
@@ -568,20 +588,6 @@ withToleranceBefore:(CMTime)toleranceBefore
  *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
  */
 - (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone;
-
-/**
- *  Ask the controller to seek to a given location efficiently (the seek might be not perfeclty accurate but will be faster).
- *
- *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
- */
-- (void)seekEfficientlyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
-
-/**
- *  Ask the controller to seek to a given location with no tolerance (this might incur some decoding overhead).
- *
- *  For more information, @see `-seekToTime:withToleranceBefore:toleranceAfter:completionHandler:`.
- */
-- (void)seekPreciselyToTime:(CMTime)time withCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 @end
 
@@ -692,6 +698,39 @@ withToleranceBefore:(CMTime)toleranceBefore
 
 @end
 
+/**
+ *  Tolerance settings applied at playback start.
+ *
+ *  @discussion If needed, the effective tolerance resulting from these settings can be calculated with the help of the
+ *              `SRGMediaPlayerEffectiveEndTolerance` function.
+ */
+@interface SRGLetterboxController (EndToleranceSettings)
+
+/**
+ *  The absolute tolerance (in seconds) applied when attempting to start playback near the end of a media. Default is 0
+ *  seconds.
+ *
+ *  @discussion If the distance between the desired playback position and the end is smaller than the maximum tolerated
+ *              value according to `endTolerance` and / or `endToleranceRatio` (the smallest value wins), playback will
+ *              start at the default position.
+ */
+@property (nonatomic) NSTimeInterval endTolerance;
+
+/**
+ *  The tolerance ratio applied when attempting to start playback near the end of a media. The ratio is multiplied with
+ *  the media duration to calculate the tolerance in seconds. Default is 0.
+ *
+ *  @discussion If the distance between the desired playback position and the end is smaller than the maximum tolerated
+ *              value according to `endTolerance` and / or `endToleranceRatio` (the smallest value wins), playback will
+ *              start at the default position.
+ */
+@property (nonatomic) float endToleranceRatio;
+
+@end
+
+/**
+ *  Settings for the server from which metadata is retrieved.
+ */
 @interface SRGLetterboxController (ServerSettings)
 
 /**
@@ -749,7 +788,7 @@ withToleranceBefore:(CMTime)toleranceBefore
 /**
  *  Time interval for controller automatic updates.
  *
- *  Default is `SRGLetterboxUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxDefaultUpdateInterval`, and minimum is `SRGLetterboxMinimumUpdateInterval`.
  */
 @property (nonatomic) NSTimeInterval updateInterval;
 
@@ -757,7 +796,7 @@ withToleranceBefore:(CMTime)toleranceBefore
  *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
  *  notification.
  *
- *  Default is `SRGLetterboxChannelUpdateIntervalDefault`, and minimum is 10 seconds.
+ *  Default is `SRGLetterboxChannelDefaultUpdateInterval`, and minimum is `SRGLetterboxChannelMinimumUpdateInterval`.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 

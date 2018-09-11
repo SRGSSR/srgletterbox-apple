@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Helper class used as target for a timer.
  */
 // TODO: Remove when iOS 10 is the minimum required version
-@interface SRGTimerTarget : NSObject
+@interface SRGLetterboxTimerTarget : NSObject
 
 /**
  *  Create the target with the specified to be executed when `-fire:` is called.

@@ -14,6 +14,8 @@ default_platform :ios
 platform :ios do
   before_all do |lane|
 
+    ensure_git_status_clean
+
     # For the demo, before all, check if we have a demo release description
     if lane.to_s == "demo"
       build_number = get_build_number
@@ -26,13 +28,9 @@ platform :ios do
       end
     end
 
-    ensure_git_status_clean
-    carthage(
-      command: "bootstrap",
-      platform: "iOS",
-      cache_builds: true
-    )
-    
+    Dir.chdir("..") do
+      sh "make bootstrap"
+    end
   end
 
   desc "Run library tests"
@@ -59,8 +57,8 @@ platform :ios do
     )
 
     hockey_lane(
-      api_token: "54ee058e9e6248b1b3f7b61cc8d598ff",
-      public_identifier: "fed0d464bba34c35bbb051f9f517a9d6",
+      api_token: ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_TOKEN'],
+      public_identifier: ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_IDENTIFIER'],
       notes: changelog
     )
 
@@ -72,7 +70,7 @@ platform :ios do
     
   end
 
-  desc "Build a new demo on HockeyApp with the current build number. If we're not in a release process (master or release/*), it bumps the build number. You are responsible to tag the library version."
+  desc "Build a new demo on HockeyApp with the current build number. You are responsible to tag the library version and bump the build number after."
   lane :demo do
 
     build_number = get_build_number
@@ -87,8 +85,8 @@ platform :ios do
     )
 
     hockey_lane(
-      api_token: "687ea4742b7a4835ba652c0cfb43eb1e",
-      public_identifier: "7bf489539f6e44739133ae456c41dc2c",
+      api_token: ENV['LETTERBOX_DEMO_RELEASE_HOCKEY_TOKEN'],
+      public_identifier: ENV['LETTERBOX_DEMO_RELEASE_HOCKEY_IDENTIFIER'],
       notes: whatsNewForDemo
     )
 
@@ -96,26 +94,20 @@ platform :ios do
 
     merakiPushApps
 
-    #Bump build number and push to the repo only if we're not in a release process
-    
-    branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-    is_in_release_process = (branch_name.include? 'master') || (branch_name.include? 'release')
-
-    if ! is_in_release_process
-      build_number = increment_build_number
-      commit_version_bump(
-        xcodeproj: "SRGLetterbox.xcodeproj",
-        message: "Bump build number to " + build_number
-      )
-      push_to_git_remote
-    end
-    
+    print "You are responsible to tag the library version and bump the build number after."
   end
 
   desc "Build for a scheme and a configuration"
   private_lane :build_lane do |options|
     scheme = options[:scheme]
     configuration = options[:configuration]
+
+    resetProvisioningProfileContext
+
+    app_identifier = getAppIdentifier(scheme: scheme, configuration: configuration)
+    get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
+    get_provisioning_profile(app_identifier: app_identifier, force: true)
+
     gym(
       configuration: configuration,
       scheme: scheme,
@@ -140,13 +132,19 @@ platform :ios do
       repository_url = "https://" + repository_url
     end
 
+    build_server_url = ENV['BUILD_URL']
+    if build_server_url == nil
+        build_server_url = `hostname`.strip
+    end
+
     hockey(
       api_token: api_token,
       public_identifier: public_identifier,
       notify: '0',
       notes: notes,
       commit_sha: last_git_commit[:commit_hash],
-      repository_url: repository_url
+      repository_url: repository_url,
+      build_server_url: build_server_url
     )
   end
 
@@ -171,7 +169,7 @@ platform :ios do
 
   desc "Return current build number on Hockey App"
   private_lane :getHockeyAppBuildNumber do
-    hockeyAppBuildNumber = (sh "scripts/hockeyapp-build-number.sh fed0d464bba34c35bbb051f9f517a9d6")
+    hockeyAppBuildNumber = (sh "scripts/hockeyapp-build-number.sh -t #{ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_TOKEN']} #{ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_IDENTIFIER']}")
     hockeyAppBuildNumber = Integer(hockeyAppBuildNumber.lines.map(&:chomp).last)
     puts hockeyAppBuildNumber
     hockeyAppBuildNumber
@@ -196,9 +194,16 @@ platform :ios do
 
   desc "Return the marketing version, without suffix"
   private_lane :getMarketingVersion do
-     marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d "    MARKETING_VERSION = "'
+     marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d " =" | sed "s/MARKETING_VERSION//"'
      marketing_version = marketing_version.lines.last.gsub(/\s+/, "")
      marketing_version
+  end
+
+  desc "Return the bundle app identifier"
+  private_lane :getAppIdentifier do |options|
+     app_identifier = sh 'cd ..; xcodebuild -scheme "' + options[:scheme] + '" -configuration "' + options[:configuration] + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d " =" | sed "s/PRODUCT_BUNDLE_IDENTIFIER//"'
+     app_identifier = app_identifier.lines.last.gsub(/\s+/, "")
+     app_identifier
   end
 
   desc "Return the what's new text from WhatsNew-demo.json file in the repository"
@@ -211,9 +216,19 @@ platform :ios do
     whatsNew ? whatsNew : ''
   end
 
+  desc "Reset provisioning profile context to prepare a new build"
+  private_lane :resetProvisioningProfileContext do
+    lane_context.delete(SharedValues::SIGH_PROFILE_PATHS)
+    lane_context.delete(SharedValues::SIGH_PROFILE_PATH)
+    lane_context.delete(SharedValues::SIGH_UDID)
+    lane_context.delete(SharedValues::SIGH_UUID)
+    lane_context.delete(SharedValues::SIGH_NAME)
+    lane_context.delete(SharedValues::SIGH_PROFILE_TYPE)
+  end
+
   desc "Try to push new apps on registered devices with Meraki"
   private_lane :merakiPushApps do
-    file = File.open("scripts/merakiPushApps.sh", "r")
+    file = File.open("../Configuration/Scripts/merakiPushApps.sh", "r")
     merakiPushApps = file.read
     file.close
     sh merakiPushApps
@@ -229,7 +244,7 @@ platform :ios do
 
   error do |lane, exception|
     clean_build_artifacts
-    reset_git_repo(skip_clean: true)
+    reset_git_repo(skip_clean: true, force: true)
     # slack(
     #   message: exception.message,
     #   success: false

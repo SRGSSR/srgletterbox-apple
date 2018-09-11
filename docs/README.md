@@ -26,29 +26,80 @@ The library is suitable for applications running on iOS 9 and above. The project
 
 ## Installation
 
-The library can be added to a project using [Carthage](https://github.com/Carthage/Carthage) by specifying the following dependency in your `Cartfile`:
+The library can be added to a project using [Carthage](https://github.com/Carthage/Carthage) by adding the following dependency to your `Cartfile`:
     
 ```
 github "SRGSSR/srgletterbox-ios"
 ```
 
-Then run `carthage update --platform iOS` to update the dependencies. You will need to manually add the following `.framework`s generated in the `Carthage/Build/iOS` folder to your project:
+If you have access to it, be sure to also add [SRG Content Protection](github "SRGSSR/srgcontentprotection-ios") dependency so that you can play all kinds of streams:
 
-  * `ComScore`: The comScore framework
-  * `FXReachability`: A reachability framework
-  * `libextobjc`: A utility framework
-  * `MAKVONotificationCenter`: A safe KVO framework
-  * `Mantle`:  The framework used to parse the data
-  * `Masonry`: An autolayout framework
-  * `SRGAnalytics`: The main analytics framework
-  * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework
-  * `SRGAnalytics_DataProvider`: The data provider analytics companion framework
-  * `SRGAppearance`: The appearance framework
-  * `SRGLogger`: The framework used for internal logging
-  * `SRGMediaPlayer`: The media player framework (if not already in your project)
-  * `YYWebImage`: A framework for image retrieval
+```
+github "SRGSSR/srgcontentprotection-ios"
+```
+
+Until Carthage 0.30, only dynamic frameworks could be integrated. Starting with Carthage 0.30, though, frameworks can be integrated statically as well, which avoids slow application startups usually associated with the use of too many dynamic frameworks.
 
 For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
+
+### Dependencies
+
+The library requires the following frameworks to be added to any target requiring it:
+
+* `ComScore`: The comScore framework.
+* `FXReachability`: A reachability framework.
+* `libextobjc`: A utility framework.
+* `MAKVONotificationCenter`: A safe KVO framework.
+* `Mantle`:  The framework used to parse the data.
+* `Masonry`: An autolayout framework.
+* `SRGAnalytics`: The main analytics framework.
+* `SRGAnalytics_MediaPlayer`: The media player analytics companion framework.
+* `SRGAnalytics_DataProvider`: The data provider analytics companion framework.
+* `SRGAppearance`: The appearance framework.
+* `SRGLetterbox`: The Letterbox library framework.
+* `SRGLogger`: The framework used for internal logging.
+* `SRGMediaPlayer`: The media player framework (if not already in your project).
+* `SRGNetworking`: A networking framework.
+* `YYWebImage`: A framework for image retrieval.
+
+If you added SRG Content Protection as dependency, be sure to add `SRGContentProtection` as well.
+
+### Dynamic framework integration
+
+1. Run `carthage update` to update the dependencies (which is equivalent to `carthage update --configuration Release`). 
+2. Add the frameworks listed above and generated in the `Carthage/Build/iOS` folder to your target _Embedded binaries_.
+
+If your target is building an application, a few more steps are required:
+
+1. Add a _Run script_ build phase to your target, with `/usr/local/bin/carthage copy-frameworks` as command.
+2. Add each of the required frameworks above as input file `$(SRCROOT)/Carthage/Build/iOS/FrameworkName.framework`.
+
+### Static framework integration
+
+1. Run `carthage update --configuration Release-static` to update the dependencies. 
+2. Add the frameworks listed above and generated in the `Carthage/Build/iOS/Static` folder to the _Linked frameworks and libraries_ list of your target.
+3. Also add any resource bundle `.bundle` found within the `.framework` folders to your target directly.
+4. Some non-statically built framework dependencies are built in the `Carthage/Build/iOS` folder. Add them by following the _Dynamic framework integration_ instructions above.
+5. Add the `-all_load` flag to your target _Other linker flags_.
+
+## Building the project
+
+A [Makefile](../Makefile) provides several targets to build and package the library. The available targets can be listed by running the following command from the project root folder:
+
+```
+make help
+```
+
+Alternatively, you can of course open the project with Xcode and use the available schemes.
+
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/playsrg-configuration-ios), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+
+If you need to make changes to the settings:
+
+1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
+1. Switch to the `Configuration` directory and commit changes there.
+1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
+1. Push all commits when you are ready.
 
 ## Usage
 
@@ -98,6 +149,12 @@ If rendering does not work properly:
 ## Demo project
 
 To test what the library is capable of, run the associated demo.
+
+## Content protection
+
+Your project must link against [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) to be able to play some content, including livestreams or TV series.
+
+If some content is protected and SRG Content Protection has not been correctly linked, playback will either fail or remain stuck in a loading state.
 
 ## Known issues
 

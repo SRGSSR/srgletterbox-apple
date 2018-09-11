@@ -32,7 +32,7 @@
 
 @property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
-@property (nonatomic, weak) IBOutlet SRGAirplayButton *airplayButton;
+@property (nonatomic, weak) IBOutlet SRGAirPlayButton *airPlayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) IBOutlet SRGLetterboxTimeSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
@@ -90,7 +90,7 @@
     // the view hierarchy at runtime.
     self.fullScreenPhantomButton.alpha = 0.f;
     
-    self.airplayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+    self.airPlayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
     self.tracksButton.image = [UIImage imageNamed:@"subtitles_off-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
@@ -152,7 +152,7 @@
     self.playbackButton.controller = nil;
     
     self.pictureInPictureButton.mediaPlayerController = nil;
-    self.airplayButton.mediaPlayerController = nil;
+    self.airPlayButton.mediaPlayerController = nil;
     self.tracksButton.mediaPlayerController = nil;
     self.timeSlider.mediaPlayerController = nil;
     
@@ -168,7 +168,7 @@
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
-    self.airplayButton.mediaPlayerController = mediaPlayerController;
+    self.airPlayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
@@ -302,7 +302,7 @@
 - (void)refresh
 {
     CMTimeRange timeRange = self.controller.timeRange;
-    if (CMTIMERANGE_IS_VALID(timeRange) && ! CMTIMERANGE_IS_EMPTY(timeRange)) {
+    if (SRG_CMTIMERANGE_IS_NOT_EMPTY(timeRange)) {
         NSTimeInterval durationInSeconds = CMTimeGetSeconds(timeRange.duration);
         if (durationInSeconds < 60. * 60.) {
             self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];

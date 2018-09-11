@@ -97,7 +97,7 @@
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
-        [self.letterboxController playMedia:firstMedia standalone:NO];
+        [self.letterboxController playMedia:firstMedia standalone:ApplicationSettingIsStandalone()];
     }
 }
 

@@ -6,20 +6,20 @@
 
 #import "NSTimer+SRGLetterbox.h"
 
-#import "SRGTimerTarget.h"
+#import "SRGLetterboxTimerTarget.h"
 
 @implementation NSTimer (SRGLetterbox)
 
-+ (NSTimer *)srg_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer * _Nonnull timer))block
++ (NSTimer *)srgletterbox_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer * _Nonnull timer))block
 {
     NSTimer *timer = nil;
     
-    if ([[self class] instancesRespondToSelector:@selector(timerWithTimeInterval:repeats:block:)]) {
+    if (@available(iOS 10, *)) {
         timer = [self timerWithTimeInterval:interval repeats:repeats block:block];
     }
     else {
         // Do not use self as target, since this would lead to subtle issues when the timer is deallocated
-        SRGTimerTarget *target = [[SRGTimerTarget alloc] initWithBlock:block];
+        SRGLetterboxTimerTarget *target = [[SRGLetterboxTimerTarget alloc] initWithBlock:block];
         timer = [self timerWithTimeInterval:interval target:target selector:@selector(fire:) userInfo:nil repeats:repeats];
     }
     

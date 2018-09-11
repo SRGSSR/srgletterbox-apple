@@ -4,15 +4,15 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGTimerTarget.h"
+#import "SRGLetterboxTimerTarget.h"
 
-@interface SRGTimerTarget ()
+@interface SRGLetterboxTimerTarget ()
 
 @property (nonatomic, copy) void (^block)(NSTimer *);
 
 @end
 
-@implementation SRGTimerTarget
+@implementation SRGLetterboxTimerTarget
 
 - (instancetype)initWithBlock:(void (^)(NSTimer * _Nonnull))block
 {

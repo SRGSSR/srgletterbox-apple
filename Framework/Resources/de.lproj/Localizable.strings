@@ -28,7 +28,7 @@
 "Next" = "Es folgt";
 
 /* Message displayed when broadcasting on an AirPlay device */
-"Playback on AirPlay" = "Wiedergabe über Airplay";
+"Playback on AirPlay" = "Wiedergabe über AirPlay";
 
 /* Message displayed to inform that playback should start soon. */
 "Playback will begin shortly" = "Die Wiedergabe beginnt in Kürze.";

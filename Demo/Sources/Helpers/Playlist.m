@@ -20,7 +20,7 @@
 {
     if (self = [super init]) {
         self.mediasSet = medias ? [NSOrderedSet orderedSetWithArray:medias] : nil;
-        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
     }
     return self;
 }

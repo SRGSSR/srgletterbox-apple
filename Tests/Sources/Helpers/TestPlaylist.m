@@ -4,16 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "Playlist.h"
+#import "TestPlaylist.h"
 
-@interface Playlist ()
+@interface TestPlaylist ()
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 @property (nonatomic) NSInteger index;
 
 @end
 
-@implementation Playlist
+@implementation TestPlaylist
 
 #pragma mark Object lifecycle
 
@@ -22,7 +22,8 @@
     if (self = [super init]) {
         self.medias = medias;
         self.index = NSNotFound;
-        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackTransitionDurationDisabled;
+        self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
+        self.startTime = kCMTimeZero;
     }
     return self;
 }
@@ -60,6 +61,11 @@
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically
 {
     self.index = [self.medias indexOfObject:media];
+}
+
+- (SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media
+{
+    return [SRGPosition positionAtTime:self.startTime];
 }
 
 @end
