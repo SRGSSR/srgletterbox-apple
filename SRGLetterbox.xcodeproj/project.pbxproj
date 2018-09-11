@@ -28,7 +28,6 @@
 		08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController.m */; };
 		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
 		08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; };
-		08E2E0772146C5EA0098E13B /* SRGDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; };
 		08E2E0782146C6250098E13B /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
 		08EB66A11F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
@@ -78,6 +77,8 @@
 		6F0C99172121E73400073AB6 /* SRGNotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593620581CAF00823003 /* SRGNotificationView.xib */; };
 		6F0C99182121E73400073AB6 /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
+		6F191D8421478F7600C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F191D8521479C7B00C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
@@ -297,6 +298,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F191D8421478F7600C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */,
 				6F82365F2136804C00C76B86 /* FXReachability.framework in Embed Frameworks */,
 				6F52DE272106F87D001EC146 /* SRGNetwork.framework in Embed Frameworks */,
 				08EB66AA1F34C77F00E9D7CA /* TCCore.framework in Embed Frameworks */,
@@ -381,6 +383,7 @@
 		6F0AD07C1E5EB224000A61A5 /* AutoplayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoplayTableViewCell.h; sourceTree = "<group>"; };
 		6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoplayTableViewCell.m; sourceTree = "<group>"; };
 		6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SRGLetterbox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGDiagnostics.framework; path = Carthage/Build/iOS/SRGDiagnostics.framework; sourceTree = "<group>"; };
 		6F1BA9122029E9E8004BB271 /* TestPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPlaylist.h; sourceTree = "<group>"; };
 		6F1BA9132029E9E8004BB271 /* TestPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPlaylist.m; sourceTree = "<group>"; };
 		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
@@ -823,6 +826,7 @@
 				6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */,
 				6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */,
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
+				6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
 				6F52DE1D2106F857001EC146 /* SRGNetwork.framework */,
