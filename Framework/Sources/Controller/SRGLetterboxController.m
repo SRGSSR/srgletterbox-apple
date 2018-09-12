@@ -968,7 +968,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self updateWithError:error];
             
-            [self attachDiagnosticReportDataError:error withHTTPResponse:HTTPResponse];
+            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:error];
             [self finishDiagnosticReport];
             return;
         }
@@ -987,12 +987,13 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
             
-            [self attachDiagnosticReportDataError:blockingReasonError withHTTPResponse:HTTPResponse];
+            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:blockingReasonError];
             [self finishDiagnosticReport];
             return;
         }
         
         void (^prepareToPlayCompletionHandler)(void) = ^{
+            [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:nil];
             [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
             [self finishDiagnosticReport];
             
@@ -1001,6 +1002,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         
         // TODO: Replace s_prefersDRM with YES when removed
         if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
+            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:nil];
             [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
         }
         else {
@@ -1011,7 +1013,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self updateWithError:error];
             
-            [self attachDiagnosticReportDataError:error withHTTPResponse:HTTPResponse];
+            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:error];
             [[[self report] informationForKey:@"ilResult"] setBool:YES forKey:@"noPlayableResourceFound"];
             [self finishDiagnosticReport];
         }
@@ -1381,7 +1383,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     [[report informationForKey:@"time"] startTimeMeasurementForKey:@"playToResult"];
 }
 
-- (void)attachDiagnosticReportDataError:(NSError *)error withHTTPResponse:(NSHTTPURLResponse *)HTTPResponse
+- (void)attachDataDiagnosticReportInformationWithHTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
 {
     SRGDiagnosticInformation *information = [[self report] informationForKey:@"ilResult"];
     [information setURL:HTTPResponse.URL forKey:@"url"];
@@ -1391,7 +1393,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     [information setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
 }
 
-- (void)attachDiagnosticReportPlayerError:(NSError *)error withContentURL:(NSURL *)contentURL
+- (void)attachPlayerDiagnosticReportInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error
 {
     SRGDiagnosticInformation *information = [[self report] informationForKey:@"playerResult"];
     [information setURL:contentURL forKey:@"url"];
@@ -1636,7 +1638,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     NSError *error = notification.userInfo[SRGMediaPlayerErrorKey];
     [self updateWithError:error];
     
-    [self attachDiagnosticReportPlayerError:error withContentURL:self.mediaPlayerController.contentURL];
+    [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:error];
     [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
     [self finishDiagnosticReport];
 }
