@@ -9,5 +9,7 @@
   "1.9.5-41": "- The popup attached to the slider know is now displayed in red when a DVR stream is played in live conditions.\n- The player is now more resilient against playback interruptions due to resource metadata updates.",
   "1.9.6-42": "- Maintenance release.",
   "1.9.7-43": "- Continuous playback UI displays the next media title and its show title, if any.",
-  "1.9.8b1-44": "- DRM streams are now played when available.\n- Performance improvements.\n- AirPlay instability fix for Akamai streams.\n- Fix issue incorrectly leading livestreams to be stopped in some cases.\n- A setting for enabling standalone mode widely has been added.\n- Topics can be accessed directly, even on our mobile team development server (MMF)."
+  "1.9.8b1-44": "- DRM streams are now played when available.\n- Performance improvements.\n- AirPlay instability fix for Akamai streams.\n- Fix issue incorrectly leading livestreams to be stopped in some cases.\n- A setting for enabling standalone mode widely has been added.\n- Topics can be accessed directly, even on our mobile team development server (MMF).",
+  "1.10-45": "### Digital rights management support\n\n- DRM-protected streams can now be played.\n- Performance improvements.\n- AirPlay instability fix for Akamai streams.\n- Fix issue incorrectly leading livestreams to be stopped in some cases.\n- A setting for enabling standalone mode widely has been added.\n- Topics can be accessed directly, even on our mobile team development server (MMF).",
+  "1.10.1-46": "- Fix iTunes Connect binary submission."
 }
