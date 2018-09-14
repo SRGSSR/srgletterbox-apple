@@ -809,7 +809,6 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
@@ -824,6 +823,7 @@
 				6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */,
 				6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */,
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
+				08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */,
 				6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
