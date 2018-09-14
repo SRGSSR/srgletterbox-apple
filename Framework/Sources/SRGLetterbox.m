@@ -61,7 +61,7 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
     //                                                       playback
     //
     [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
-        NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch-dev.herokuapp.com/report"];
+        NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:diagnosticsServiceURL];
         request.HTTPMethod = @"POST";
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
