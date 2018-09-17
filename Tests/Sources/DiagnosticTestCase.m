@@ -85,6 +85,7 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"url"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
         XCTAssertNotNil(JSONDictionary[@"duration"]);
         
@@ -93,13 +94,14 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
         XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
         return YES;
     }];
     
     [self.controller playURN:URN standalone:NO];
     
-    [self waitForExpectationsWithTimeout:60. handler:nil];
+    [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
 @end
