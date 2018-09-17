@@ -108,4 +108,48 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testReportPlayNotFoundURN
+{
+    NSString *URN = @"urn:swi:video:_NO_ID_";
+    
+    [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNil(JSONDictionary[@"playerResult"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"time"]);
+        XCTAssertNotNil(JSONDictionary[@"time"][@"playToResult"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @404);
+        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
 @end
