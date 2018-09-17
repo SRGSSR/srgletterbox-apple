@@ -68,7 +68,9 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
         request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
         
         [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            BOOL success = (error == nil);
+            // Post request returns no error with an 5XX HTTP status code response. HTTP error code?
+            NSHTTPURLResponse *HTTPURLResponse = ([response isKindOfClass:NSHTTPURLResponse.class]) ? (NSHTTPURLResponse *)response : nil;
+            BOOL success = (error == nil && HTTPURLResponse.statusCode < 400);
             SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
             completionBlock(success);
         }] resume];
