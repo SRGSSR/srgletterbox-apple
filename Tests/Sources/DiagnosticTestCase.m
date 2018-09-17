@@ -180,4 +180,52 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testReportPlayUnplayableResource
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    NSString *URN = @"urn:rts:video:playlist500";
+    
+    [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
+    }];
+    
+    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"url"]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, MMFServiceURL().host);
+        XCTAssertNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:60. handler:nil];
+}
+
 @end

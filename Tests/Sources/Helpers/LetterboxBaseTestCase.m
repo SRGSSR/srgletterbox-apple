@@ -15,6 +15,11 @@ static __attribute__((constructor)) void LetterboxTestCaseInit(void)
     s_hasContentProtection = [contentProtectionFramework loadAndReturnError:NULL];
 }
 
+NSURL *MMFServiceURL(void)
+{
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+}
+
 @implementation LetterboxBaseTestCase
 
 #pragma mark Class methods

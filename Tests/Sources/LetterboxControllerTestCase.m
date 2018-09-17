@@ -57,11 +57,6 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     return [NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
-static NSURL *MMFServiceURL(void)
-{
-    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
-}
-
 @interface LetterboxControllerTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGLetterboxController *controller;

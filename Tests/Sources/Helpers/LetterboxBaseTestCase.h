@@ -8,6 +8,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+OBJC_EXPORT NSURL *MMFServiceURL(void);
+
 @interface LetterboxBaseTestCase : XCTestCase
 
 /**
