@@ -1380,7 +1380,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     [report setBool:self.standalone forKey:@"standalone"];
     [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
     [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
-    [[report informationForKey:@"time"] startTimeMeasurementForKey:@"playToResult"];
+    [report startTimeMeasurementForKey:@"duration"];
 }
 
 - (void)attachDataDiagnosticReportInformationWithHTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
@@ -1403,7 +1403,7 @@ withPreferredStreamType:(SRGStreamType)streamType
 - (void)finishDiagnosticReport
 {
     SRGDiagnosticReport *report = [self report];
-    [[report informationForKey:@"time"] stopTimeMeasurementForKey:@"playToResult"];
+    [report stopTimeMeasurementForKey:@"duration"];
     [report finish];
 }
 

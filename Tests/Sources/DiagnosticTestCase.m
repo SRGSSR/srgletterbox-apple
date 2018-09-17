@@ -59,7 +59,8 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
 
 #pragma mark Tests
 
-- (void)testReportPlayURN {
+- (void)testReportPlayURN
+{
     NSString *URN = OnDemandVideoURN;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -80,13 +81,11 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
         
-        
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"url"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
         
-        XCTAssertNotNil(JSONDictionary[@"time"]);
-        XCTAssertNotNil(JSONDictionary[@"time"][@"playToResult"]);
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
