@@ -18,6 +18,7 @@ NSString * const SRGLetterboxDiagnosticSentNotification = @"SRGLetterboxDiagnost
 NSString * const SRGLetterboxDiagnosticBodyKey = @"SRGLetterboxDiagnosticBodyKey";
 
 static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
+static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 @interface DiagnosticTestCase : LetterboxBaseTestCase
 
@@ -275,6 +276,69 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [[NSNotificationCenter defaultCenter] removeObserver:diagnosticSentObserver];
     }];
+}
+
+- (void)testReportPlayTokenURN
+{
+    if (! [LetterboxBaseTestCase hasContentProtection]) {
+        return;
+    }
+    
+    NSString *URN = OnDemandVideoTokenURN;
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]].scheme, @"https");
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        if ([LetterboxBaseTestCase hasContentProtection]) {
+            XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
+            XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
+            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
+            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
+            XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
+        }
+        else {
+            XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        }
+        
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
 @end
