@@ -137,7 +137,7 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
     }];
 }
 
-- (void)testReportPlayNotFoundURN
+- (void)testReportPlayUnknownURN
 {
     NSString *URN = @"urn:swi:video:_NO_ID_";
     
