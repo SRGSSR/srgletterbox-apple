@@ -973,6 +973,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             return;
         }
         
+        // Update screenType value after metadata update.
         [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
@@ -1377,6 +1378,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:SRGDeviceInformation() forKey:@"device"];
     [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
+    [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
     [report setString:self.URN forKey:@"urn"];
     [report setBool:self.standalone forKey:@"standalone"];
     [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
