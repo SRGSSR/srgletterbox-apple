@@ -9,6 +9,7 @@
 #import <libextobjc/libextobjc.h>
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
+#import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const SRGLetterboxDiagnosticSentNotification = @"SRGLetterboxDiagnosticSentNotification";
@@ -32,6 +33,8 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
 - (void)setUp {
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
     self.controller = [[SRGLetterboxController alloc] init];
+    
+    [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionInterval = SRGDiagnosticsMinimumSubmissionInterval;
     
     self.imageStub = [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [request.URL isEqual:[NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"]];
