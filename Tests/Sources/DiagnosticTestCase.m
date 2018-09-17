@@ -12,12 +12,14 @@
 #import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
+#import "LetterboxBaseTestCase.h"
+
 NSString * const SRGLetterboxDiagnosticSentNotification = @"SRGLetterboxDiagnosticSentNotification";
 NSString * const SRGLetterboxDiagnosticBodyKey = @"SRGLetterboxDiagnosticBodyKey";
 
 static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
 
-@interface DiagnosticTestCase : XCTestCase
+@interface DiagnosticTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGLetterboxController *controller;
@@ -106,6 +108,33 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
+- (void)testReportOneOnlyPlayURN
+{
+    NSString *URN = OnDemandVideoURN;
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Play for a while. No other diagnostic sent notifications must be received
+    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxDiagnosticSentNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Controller must not send twice the diagnostic report.");
+    }];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:diagnosticSentObserver];
+    }];
 }
 
 - (void)testReportPlayNotFoundURN
