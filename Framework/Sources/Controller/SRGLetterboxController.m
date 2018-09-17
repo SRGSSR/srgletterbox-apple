@@ -1372,6 +1372,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     });
     
     SRGDiagnosticReport *report = [self report];
+    [report setInteger:1 forKey:@"version"];
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
     [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:SRGDeviceInformation() forKey:@"device"];

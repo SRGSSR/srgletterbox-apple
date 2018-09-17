@@ -933,8 +933,8 @@
 		6FAB3B8C1E29066300CC2197 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				089FC518214C21420013090B /* DiagnosticTestCase.m */,
 				6FD9BA2A1E2FBC770013CC97 /* Helpers */,
+				089FC518214C21420013090B /* DiagnosticTestCase.m */,
 				6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */,
 				6F2EB46C2029DF5B00E7ACDC /* PlaylistsTestCase.m */,
 			);

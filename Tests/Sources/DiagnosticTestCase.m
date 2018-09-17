@@ -70,6 +70,7 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
         NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
         
+        XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
