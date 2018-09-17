@@ -78,6 +78,7 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
 
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
