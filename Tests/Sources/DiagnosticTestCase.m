@@ -102,6 +102,19 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
+        if ([LetterboxBaseTestCase hasContentProtection]) {
+            XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
+            XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
+            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
+            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
+            XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
+        }
+        else {
+            XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        }
+        
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
         return YES;
     }];
     
@@ -172,6 +185,10 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
         
+        XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
         return YES;
     }];
     
@@ -219,6 +236,10 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
         XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, MMFServiceURL().host);
         XCTAssertNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
+        
+        XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
         
         return YES;
     }];
