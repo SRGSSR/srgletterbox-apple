@@ -163,8 +163,7 @@ static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
         
         XCTAssertNil(JSONDictionary[@"playerResult"]);
         
-        XCTAssertNotNil(JSONDictionary[@"time"]);
-        XCTAssertNotNil(JSONDictionary[@"time"][@"playToResult"]);
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
