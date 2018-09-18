@@ -18,8 +18,6 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>35</string>
-	<key>DiagnosticsServiceURL</key>
-	<string>$(DIAGNOSTICS_SERVICE_URL)</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
 </dict>
