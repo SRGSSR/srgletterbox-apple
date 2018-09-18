@@ -1262,6 +1262,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAppearance.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGDataProvider.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGDiagnostics.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGMediaPlayer.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGNetwork.framework",
