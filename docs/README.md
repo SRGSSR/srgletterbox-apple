@@ -32,15 +32,25 @@ The library can be added to a project using [Carthage](https://github.com/Cartha
 github "SRGSSR/srgletterbox-ios"
 ```
 
-If you have access to it, be sure to also add [SRG Content Protection](github "SRGSSR/srgcontentprotection-ios") dependency so that you can play all kinds of streams:
+Until Carthage 0.30, only dynamic frameworks could be integrated. Starting with Carthage 0.30, though, frameworks can be integrated statically as well, which avoids slow application startups usually associated with the use of too many dynamic frameworks.
+
+For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
+
+### Content protection
+
+To play protected content (e.g. livestreams, foreign TV series), and provided you have been granted access to it, an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) framework is available and must be added to your project `Cartfile` as well:
 
 ```
 github "SRGSSR/srgcontentprotection-ios"
 ```
 
-Until Carthage 0.30, only dynamic frameworks could be integrated. Starting with Carthage 0.30, though, frameworks can be integrated statically as well, which avoids slow application startups usually associated with the use of too many dynamic frameworks.
+If you have no access to this repository, use the fake public replacement framework by adding the following dependency instead:
 
-For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
+```
+github "SRGSSR/srgcontentprotection-fake-ios"
+```
+
+When linking against this framework, some content (e.g. livestreams) will not be playable.
 
 ### Dependencies
 
@@ -63,8 +73,6 @@ The library requires the following frameworks to be added to any target requirin
 * `SRGMediaPlayer`: The media player framework (if not already in your project).
 * `SRGNetworking`: A networking framework.
 * `YYWebImage`: A framework for image retrieval.
-
-If you added SRG Content Protection as dependency, be sure to add `SRGContentProtection` as well.
 
 ### Dynamic framework integration
 
@@ -151,12 +159,6 @@ If rendering does not work properly:
 ## Demo project
 
 To test what the library is capable of, run the associated demo.
-
-## Content protection
-
-Your project must link against [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) to be able to play some content, including livestreams or TV series.
-
-If some content is protected and SRG Content Protection has not been correctly linked, playback will either fail or remain stuck in a loading state.
 
 ## Known issues
 
