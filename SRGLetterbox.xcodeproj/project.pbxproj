@@ -85,6 +85,9 @@
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
+		6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
+		6F2E03F92150E78000737B3C /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F2E03FA2150E78F00737B3C /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F2EB46D2029DF5B00E7ACDC /* PlaylistsTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46C2029DF5B00E7ACDC /* PlaylistsTestCase.m */; };
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
@@ -270,6 +273,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F2E03F92150E78000737B3C /* SRGContentProtection.framework in Embed Frameworks */,
 				08E2E0782146C6250098E13B /* SRGDiagnostics.framework in Embed Frameworks */,
 				08EB66A61F34C73B00E9D7CA /* TCCore.framework in Embed Frameworks */,
 				08EB66A71F34C73B00E9D7CA /* TCSDK.framework in Embed Frameworks */,
@@ -300,6 +304,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F2E03FA2150E78F00737B3C /* SRGContentProtection.framework in Embed Frameworks */,
 				089FC517214C20AF0013090B /* OHHTTPStubs.framework in Embed Frameworks */,
 				6F191D8421478F7600C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */,
 				6F82365F2136804C00C76B86 /* FXReachability.framework in Embed Frameworks */,
@@ -586,6 +591,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */,
 				08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */,
 				6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */,
 				6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */,
@@ -1067,7 +1073,6 @@
 				6FAB3B371E28FE2000CC2197 /* Frameworks */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				6FAB3B681E2905B400CC2197 /* Embed Frameworks */,
-				6F8236612136845900C76B86 /* Embed Content Protection */,
 			);
 			buildRules = (
 			);
@@ -1087,7 +1092,6 @@
 				6FAB3B7C1E29060100CC2197 /* Frameworks */,
 				6FAB3B7D1E29060100CC2197 /* Resources */,
 				6FAB3B901E29080400CC2197 /* Embed Frameworks */,
-				6F82365E21367FFB00C76B86 /* Embed Proprietary Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1256,6 +1260,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAppearance.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGDataProvider.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGMediaPlayer.framework",
@@ -1270,35 +1275,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] || [ \"$CONFIGURATION\" == \"Nightly\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
-		};
-		6F82365E21367FFB00C76B86 /* Embed Proprietary Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Proprietary Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  cp -R \"$CONTENT_PROTECTION_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH\"\nfi\n";
-		};
-		6F8236612136845900C76B86 /* Embed Content Protection */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
-			);
-			name = "Embed Content Protection";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

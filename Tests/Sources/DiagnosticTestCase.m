@@ -9,10 +9,9 @@
 #import <libextobjc/libextobjc.h>
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
+#import <SRGContentProtection/SRGContentProtection.h>
 #import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
-
-#import "LetterboxBaseTestCase.h"
 
 NSString * const SRGLetterboxDiagnosticSentNotification = @"SRGLetterboxDiagnosticSentNotification";
 NSString * const SRGLetterboxDiagnosticBodyKey = @"SRGLetterboxDiagnosticBodyKey";
@@ -103,7 +102,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
-        if ([LetterboxBaseTestCase hasContentProtection]) {
+        if (! SRGContentProtectionIsPublic()) {
             XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
             XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
             XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
@@ -280,7 +279,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testReportPlayTokenURN
 {
-    if (! [LetterboxBaseTestCase hasContentProtection]) {
+    if (SRGContentProtectionIsPublic()) {
         return;
     }
     
@@ -320,16 +319,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
-        if ([LetterboxBaseTestCase hasContentProtection]) {
-            XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
-            XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
-            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
-            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
-            XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
-        }
-        else {
-            XCTAssertNil(JSONDictionary[@"tokenResult"]);
-        }
+        XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
+        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
+        XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
+        XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
         
         XCTAssertNil(JSONDictionary[@"drmResult"]);
         
