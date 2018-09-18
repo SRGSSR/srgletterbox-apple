@@ -53,13 +53,6 @@
 - (NSString *)pageTitle
 {
     NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    
-#ifdef DEBUG
-    versionString = [versionString stringByAppendingString:@" 🛠"];
-#elif NIGHTLY
-    versionString = [versionString stringByAppendingString:@" 🌙"];
-#endif
-    
     return [NSString stringWithFormat:@"Letterbox %@", versionString];
 }
 

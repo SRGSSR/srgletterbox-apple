@@ -11,13 +11,15 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(CUSTOM_BUNDLE_NAME)</string>
+	<string>$(BUNDLE_DISPLAY_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>$(BUNDLE_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>${CURRENT_PROJECT_VERSION}</string>
+	<key>HockeyIdentifier</key>
+	<string>${HOCKEYAPP_IDENTIFIER}</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -52,7 +54,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>HockeyIdentifier</key>
-	<string>${HOCKEYAPP_IDENTIFIER}</string>
 </dict>
 </plist>

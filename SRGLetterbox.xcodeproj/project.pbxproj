@@ -1503,10 +1503,12 @@
 			baseConfigurationReference = 6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
 				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(BUNDLE_DISPLAY_NAME_SUFFIX)$(MARKETING_VERSION_SUFFIX)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Schweizerische Radio- und Fernsehgesellschaft";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CUSTOM_BUNDLE_NAME = "Letterbox 🌙";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1514,6 +1516,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1627,8 +1630,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🛠";
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
-				CUSTOM_BUNDLE_NAME = "Letterbox 🛠";
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(BUNDLE_DISPLAY_NAME_SUFFIX)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1636,6 +1641,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1742,8 +1748,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";
-				CUSTOM_BUNDLE_NAME = Letterbox;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(BUNDLE_DISPLAY_NAME_SUFFIX)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1751,6 +1759,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1876,8 +1885,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🛠";
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
-				CUSTOM_BUNDLE_NAME = "Letterbox 🛠";
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(BUNDLE_DISPLAY_NAME_SUFFIX)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1885,6 +1896,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1895,8 +1907,10 @@
 			baseConfigurationReference = 6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";
-				CUSTOM_BUNDLE_NAME = Letterbox;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(BUNDLE_DISPLAY_NAME_SUFFIX)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1904,6 +1918,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
