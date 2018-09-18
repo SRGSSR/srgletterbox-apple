@@ -15,50 +15,42 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
 {
     // SRGPlaybackMetrics anatomy:
     // ---------------------------
-    //                                             ┌─────────────────┐
-    //                                             │                 │
-    //                   ┌─────────────────┐       │  The media URL  │
-    //                   │  The app asks   │       │received from the│                              ┌──────────────────┐
-    //                   │Letterbox to play│       │  IL is played   │                              │  Media playback  │
-    //                   │    the media    │       │                 │                              │      starts      │
-    //                   └─────────────────┘       └─────────────────┘                              └──────────────────┘
-    //                            │                         │                                                 │
-    //   ┌─────────────────┐      │                         │                                                 │
-    //   │ User taps on a  │      │                         │                                                 │
-    //   │      media      │      │                         │    ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─        │
-    //   └─────────────────┘      │                         │                 playerResult            │┌──────┘
-    //            │               │                         │    └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
-    //            └───────┐       │                         │    ┌ ─ ─ ─ ─ ─ ─ ┐                       │
-    //                    │       │   ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐ │      tokenResult                         │
-    //       ─────────────▼───────▼──▲─     ilResult      ──▼───▲┤  drmResult  ├─────▲─────────────────▼──────────────────▶
-    //                    │       │  │└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘     │ ─ ─ ─ ─ ─ ─ ─      └────┐            │                 time
-    //                               │                          │                         │
-    //                    │       │  │                          │                         │            │
-    //                               └────────────┐             └──────────┐     ┌─────────────────┐
-    //                    │       │               │                        │     │ Media buffering │   │
-    //                                            │                        │     │     starts      │
-    //                    │       │               │                        │     └─────────────────┘   │
-    //                                            │                        │
-    //                    │       │      ┌─────────────────┐       ┌───────────────┐                   │
-    //                                   │  The media is   │       │  Token / DRM  │
-    //                    │       │      │ requested from  │       │keys retrieval │                   │
-    //                                   │     the IL      │       │    starts     │
-    //                    │       │      └─────────────────┘       └───────────────┘                   │
+    //                                 ┌─────────────────┐
+    //                                 │                 │
+    //       ┌─────────────────┐       │  The media URL  │
+    //       │  Letterbox is   │       │received from the│                              ┌──────────────────┐
+    //       │ asked to play a │       │  IL is played   │                              │  Media playback  │
+    //       │      media      │       │                 │                              │      starts      │
+    //       └─────────────────┘       └─────────────────┘                              └──────────────────┘
+    //                │                         │                                                 │
+    //                │                         │                                                 │
+    //                │                         │                                                 │
+    //                │                         │    ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─        │
+    //                │                         │            playerResult.duration        │┌──────┘
+    //                │                         │    └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
+    //                │                         │    ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─               │
+    //                │   ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐ │      tokenResult.duration │              │
+    //  ──────────────▼──▲─ ilResult.duration ──▼───▲┤  drmResult.duration  ───────▲───────▼──────────────────▶
+    //                │  │└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘     │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘ ┌────┘       │                 time
+    //                   │                          │                         │
+    //                │  │                          │                         │            │
+    //                   └────────────┐             └──────────┐     ┌─────────────────┐
+    //                │               │                        │     │ Media buffering │   │
+    //                                │                        │     │     starts      │
+    //                │               │                        │     └─────────────────┘   │
+    //                                │                        │
+    //                │      ┌─────────────────┐       ┌───────────────┐                   │
+    //                       │  The media is   │       │  Token / DRM  │
+    //                │      │ requested from  │       │keys retrieval │                   │
+    //                       │     the IL      │       │    starts     │
+    //                │      └─────────────────┘       └───────────────┘                   │
     //
-    //                    │       │                                                                    │
+    //                │                                                                    │
     //
-    //                    │       │                                                                    │
-    //                             ◀──────────────────────────────────────────────────────────────────▶
-    //                    │                                  playToResult in                           │
-    //                                                     case of successful
-    //                    │                                     playback                               │
-    //
-    //                    │                                                                            │
-    //
-    //                    │◀──────────────────────────────────────────────────────────────────────────▶│
-    //                                                   clickToResult in
-    //                                                  case of successful
-    //                                                       playback
+    //                │                                                                    │
+    //                 ◀──────────────────────────────────────────────────────────────────▶
+    //                                         duration in case of
+    //                                         successful playback
     //
     [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
         NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"];
