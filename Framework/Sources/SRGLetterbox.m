@@ -9,6 +9,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxLogger.h"
 
+#import <SRGContentProtection/SRGContentProtection.h>
 #import <SRGDiagnostics/SRGDiagnostics.h>
 
 __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
@@ -52,21 +53,23 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
     //                                         duration in case of
     //                                         successful playback
     //
-    [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
-        NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:diagnosticsServiceURL];
-        request.HTTPMethod = @"POST";
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
-        
-        [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            // Post request returns no error with an 5XX HTTP status code response. HTTP error code?
-            NSHTTPURLResponse *HTTPURLResponse = ([response isKindOfClass:NSHTTPURLResponse.class]) ? (NSHTTPURLResponse *)response : nil;
-            BOOL success = (error == nil && HTTPURLResponse.statusCode < 400);
-            SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
-            completionBlock(success);
-        }] resume];
-    };
+    if (! SRGContentProtectionIsPublic()) {
+        [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
+            NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:diagnosticsServiceURL];
+            request.HTTPMethod = @"POST";
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
+            
+            [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                // Post request returns no error with an 5XX HTTP status code response. HTTP error code?
+                NSHTTPURLResponse *HTTPURLResponse = ([response isKindOfClass:NSHTTPURLResponse.class]) ? (NSHTTPURLResponse *)response : nil;
+                BOOL success = (error == nil && HTTPURLResponse.statusCode < 400);
+                SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
+                completionBlock(success);
+            }] resume];
+        };
+    }
 }
 
 NSString *SRGLetterboxMarketingVersion(void)
