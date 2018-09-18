@@ -89,7 +89,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"device"]);
         
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]].scheme, @"https");
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"url"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
@@ -224,7 +224,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"device"]);
         
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]].scheme, @"https");
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"url"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
