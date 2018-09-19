@@ -355,6 +355,51 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testPlaybackReportForConsecutiveMedias
+{
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandVideoTokenURN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    __block BOOL firstReportSent = NO;
+    __block BOOL secondReportSent = NO;
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        NSString *URN = JSONDictionary[@"urn"];
+        if ([URN isEqualToString:OnDemandVideoURN]) {
+            firstReportSent = YES;
+        }
+        else if ([URN isEqualToString:OnDemandVideoTokenURN]) {
+            secondReportSent = YES;
+        }
+        
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        return firstReportSent && secondReportSent;
+    }];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
 - (void)testDisabledPlaybackReportsInPublicBuilds
 {
     if (! SRGContentProtectionIsPublic()) {
