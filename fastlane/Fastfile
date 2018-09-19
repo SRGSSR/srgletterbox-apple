@@ -54,10 +54,10 @@ platform :ios do
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
 
     bundle_display_name_suffix = " 🌙"
-    marketing_version_suffix = ""
+    marketing_version_suffix = "-nightly"
     if (branch_name.include? 'feature/')
       bundle_display_name_suffix = " 🌿"
-      marketing_version_suffix = ' ' + branch_name.sub('feature/', '').strip
+      marketing_version_suffix = marketing_version_suffix + '-' + branch_name.sub('feature/', '').strip
     end
 
     build_lane(

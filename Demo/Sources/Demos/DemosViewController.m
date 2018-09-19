@@ -52,8 +52,8 @@
 
 - (NSString *)pageTitle
 {
-    NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    return [NSString stringWithFormat:@"Letterbox %@", versionString];
+    NSString *bundleNameSuffix = [[NSBundle mainBundle].infoDictionary objectForKey:@"BundleNameSuffix"];
+    return [NSString stringWithFormat:@"Letterbox %@%@", SRGLetterboxMarketingVersion(), bundleNameSuffix];
 }
 
 #pragma mark Players
