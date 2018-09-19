@@ -66,6 +66,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testPlaybackReportForNonProtectedMedia
 {
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
     NSString *URN = OnDemandVideoURN;
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -124,6 +129,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testSinglePlaybackReportSubmission
 {
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -135,7 +145,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // Play for a while. No other diagnostic sent notification must be received.
+    // Play for a while. No other diagnostic report notification must be received.
     id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send twice the diagnostic report.");
     }];
@@ -149,6 +159,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testPlaybackReportForUnknownMedia
 {
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
     NSString *URN = @"urn:swi:video:_UNKNOWN_ID_";
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -195,6 +210,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testPlaybackReportForUnplayableMedia
 {
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
     self.controller.serviceURL = MMFServiceURL();
     
     NSString *URN = @"urn:rts:video:playlist500";
@@ -246,6 +266,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testPlaybackReportForOverriddenMedia
 {
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     
     self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(NSString * _Nonnull URN) {
@@ -260,9 +285,9 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // Play for a while. No diagnostic sent notifications must be received for content URL overriding.
+    // Play for a while. No diagnostic report notifications must be received for content URL overriding.
     id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Controller must not send the diagnostic report for content URL overriding.");
+        XCTFail(@"Controller must not send diagnostic reports for content URL overriding.");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
@@ -274,6 +299,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 - (void)testPlaybackReportForTokenProtectedMedia
 {
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
     if (SRGContentProtectionIsPublic()) {
         return;
     }
@@ -327,6 +353,32 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
+- (void)testDisabledPlaybackReportsInPublicBuilds
+{
+    if (! SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    // Play for a while. No diagnostic report notifications must be received in public builds
+    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        XCTFail(@"Controller must not send diagnostic reports for public builds.");
+    }];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:diagnosticSentObserver];
+    }];
 }
 
 @end
