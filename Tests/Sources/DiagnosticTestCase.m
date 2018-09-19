@@ -64,7 +64,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 #pragma mark Tests
 
-- (void)testReportPlayURN
+- (void)testPlaybackReportForNonProtectedMedia
 {
     NSString *URN = OnDemandVideoURN;
     
@@ -88,7 +88,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"device"]);
         
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
-        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"url"]);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
@@ -98,12 +98,12 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
         if (! SRGContentProtectionIsPublic()) {
             XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
-            XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
+            XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]]);
             XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
             XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
             XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
@@ -122,10 +122,8 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
-- (void)testReportOneOnlyPlayURN
+- (void)testSinglePlaybackReportSubmission
 {
-    NSString *URN = OnDemandVideoURN;
-    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -133,11 +131,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // Play for a while. No other diagnostic sent notifications must be received.
+    // Play for a while. No other diagnostic sent notification must be received.
     id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send twice the diagnostic report.");
     }];
@@ -149,9 +147,9 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     }];
 }
 
-- (void)testReportPlayUnknownURN
+- (void)testPlaybackReportForUnknownMedia
 {
-    NSString *URN = @"urn:swi:video:_NO_ID_";
+    NSString *URN = @"urn:swi:video:_UNKNOWN_ID_";
     
     [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
@@ -180,7 +178,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @404);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
         
         XCTAssertNil(JSONDictionary[@"tokenResult"]);
@@ -195,7 +193,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
-- (void)testReportPlayUnplayableResource
+- (void)testPlaybackReportForUnplayableMedia
 {
     self.controller.serviceURL = MMFServiceURL();
     
@@ -231,7 +229,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, MMFServiceURL().host);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
         
         XCTAssertNil(JSONDictionary[@"tokenResult"]);
@@ -246,7 +244,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:60. handler:nil];
 }
 
-- (void)testReportContentURLOverriding
+- (void)testPlaybackReportForOverriddenMedia
 {
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     
@@ -274,7 +272,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     }];
 }
 
-- (void)testReportPlayTokenURN
+- (void)testPlaybackReportForTokenProtectedMedia
 {
     if (SRGContentProtectionIsPublic()) {
         return;
@@ -302,7 +300,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"device"]);
         
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]].scheme, @"https");
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
@@ -312,11 +310,11 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]].host, SRGIntegrationLayerProductionServiceURL().host);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
         
         XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
-        XCTAssertEqualObjects([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]].scheme, @"https");
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
         XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
         XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
