@@ -44,6 +44,8 @@ To play protected content (e.g. livestreams, foreign TV series), and provided yo
 github "SRGSSR/srgcontentprotection-ios"
 ```
 
+Check the [wiki](https://github.com/SRGSSR/srgletterbox-ios/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
+
 If you have no access to this repository, use the fake public replacement framework by adding the following dependency instead:
 
 ```
