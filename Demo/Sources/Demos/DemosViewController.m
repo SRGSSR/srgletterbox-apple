@@ -183,7 +183,7 @@
     static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8992584";
     static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8992594";
     static NSString * const kVideoOnDemandWithNoFullLengthURNString = @"urn:rts:video:8686071";
-    static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
+    static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
     static NSString * const kVideoOnDemandBlockedSegmentOverlapURNString = @"urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1";
     static NSString * const kVideoOnDemandHybridURNString = @"urn:rts:audio:8581974";
     static NSString * const kVideoOnDemand360URNString = @"urn:rts:video:8414077";
