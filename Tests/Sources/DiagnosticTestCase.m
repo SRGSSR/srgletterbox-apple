@@ -14,7 +14,7 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const DiagnosticTestDidSendReportNotification = @"DiagnosticTestDidSendReportNotification";
-NSString * const DiagnosticTestBodyKey = @"DiagnosticTestBody";
+NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionary";
 
 static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
 static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
@@ -42,15 +42,13 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     self.reportRequestStub = [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [request.URL isEqual:[NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"]];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:[request OHHTTPStubs_HTTPBody] options:0 error:NULL] ?: @{};
         [[NSNotificationCenter defaultCenter] postNotificationName:DiagnosticTestDidSendReportNotification
                                                             object:nil
-                                                          userInfo:@{ DiagnosticTestBodyKey : [request OHHTTPStubs_HTTPBody] }];
-        
+                                                          userInfo:@{ DiagnosticTestJSONDictionaryKey : JSONDictionary }];
         return [[OHHTTPStubsResponse responseWithData:[NSJSONSerialization dataWithJSONObject:@{ @"success" : @YES } options:0 error:NULL]
                                            statusCode:200
-                                              headers:@{ @"Content-Type" : @"application/json" }]
-                requestTime:0.
-                responseTime:OHHTTPStubsDownloadSpeedWifi];
+                                              headers:@{ @"Content-Type" : @"application/json" }] requestTime:0. responseTime:OHHTTPStubsDownloadSpeedWifi];
     }];
     self.reportRequestStub.name = @"Diagnostic report";
 }
@@ -74,8 +72,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
-        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
         
         XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
@@ -161,8 +158,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     }];
     
     [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
-        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
         
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
@@ -210,8 +206,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     }];
     
     [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
-        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
         
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
@@ -291,8 +286,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
-        NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
         
         XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
