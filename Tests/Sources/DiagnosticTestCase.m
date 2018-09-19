@@ -24,7 +24,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGLetterboxController *controller;
 
-@property (nonatomic, weak) id<OHHTTPStubsDescriptor> imageStub;
+@property (nonatomic, weak) id<OHHTTPStubsDescriptor> reportRequestStub;
 
 @end
 
@@ -32,13 +32,14 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
 #pragma mark Setup and tear down
 
-- (void)setUp {
+- (void)setUp
+{
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
     self.controller = [[SRGLetterboxController alloc] init];
     
     [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionInterval = SRGDiagnosticsMinimumSubmissionInterval;
     
-    self.imageStub = [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    self.reportRequestStub = [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [request.URL isEqual:[NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"]];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxDiagnosticSentNotification
@@ -46,20 +47,21 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
                                                           userInfo:@{ SRGLetterboxDiagnosticBodyKey : [request OHHTTPStubs_HTTPBody] }];
         
         return [[OHHTTPStubsResponse responseWithData:[NSJSONSerialization dataWithJSONObject:@{ @"success" : @YES } options:0 error:NULL]
-                                                 statusCode:200
-                                                    headers:@{@"Content-Type":@"application/json"}]
-                requestTime:0.f
+                                           statusCode:200
+                                              headers:@{ @"Content-Type" : @"application/json" }]
+                requestTime:0.
                 responseTime:OHHTTPStubsDownloadSpeedWifi];
     }];
-    self.imageStub.name = @"Diagnostic report";
+    self.reportRequestStub.name = @"Diagnostic report";
 }
 
-- (void)tearDown {
+- (void)tearDown
+{
     // Always ensure the player gets deallocated between tests
     [self.controller reset];
     self.controller = nil;
     
-    [OHHTTPStubs removeStub:self.imageStub];
+    [OHHTTPStubs removeStub:self.reportRequestStub];
 }
 
 #pragma mark Tests
@@ -84,7 +86,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
-
+        
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
         
