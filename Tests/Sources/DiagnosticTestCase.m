@@ -589,6 +589,46 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testPlaybackReportAfterRestart
+{
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    NSString *URN = OnDemandVideoURN;
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        return YES;
+    }];
+    
+    [self.controller restart];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
 - (void)testDisabledPlaybackReportInPublicBuilds
 {
     if (! SRGContentProtectionIsPublic()) {
