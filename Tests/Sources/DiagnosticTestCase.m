@@ -490,6 +490,58 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testPlaybackReportForSwitchToBlockedChapter
+{
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    NSString *URN1 = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
+    [self.controller playURN:URN1 standalone:YES];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    }];
+    
+    // Blocked. Cannot be played
+    NSString *URN2 = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
+    [self.controller switchToURN:URN2 withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    __block BOOL firstReportSent = NO;
+    __block BOOL secondReportSent = NO;
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        NSString *URN = JSONDictionary[@"urn"];
+        if ([URN isEqualToString:URN1]) {
+            XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+            XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+            firstReportSent = YES;
+        }
+        else if ([URN isEqualToString:URN2]) {
+            XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"LEGAL");
+            XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
+            XCTAssertNil(JSONDictionary[@"playerResult"]);
+            secondReportSent = YES;
+        }
+        
+        return firstReportSent && secondReportSent;
+    }];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
 - (void)testDisabledPlaybackReportInPublicBuilds
 {
     if (! SRGContentProtectionIsPublic()) {
