@@ -664,7 +664,7 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
     
     // Media starts playing automatically, just wait. A new report must be generated when playback starts
     
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
 - (void)testDisabledPlaybackReportInPublicBuilds
