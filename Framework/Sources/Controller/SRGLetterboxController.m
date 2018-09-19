@@ -1246,12 +1246,22 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         self.socialCountViewTimer = nil;
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
+        [self startPlaybackDiagnosticReport];
+        
         if (! blockingReasonError) {
+            [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
             // TODO: Replace s_prefersDRM with YES when removed
             [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality DRM:s_prefersDRM startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+                [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
+                [self finishDiagnosticReport];
+                
                 [self.mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];
+        }
+        else {
+            [self attachDataDiagnosticReportInformationWithHTTPResponse:nil error:blockingReasonError];
+            [self finishDiagnosticReport];
         }
     }
     // Playing another segment from the same media. Seek
