@@ -13,8 +13,8 @@
 #import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-NSString * const SRGLetterboxDiagnosticSentNotification = @"SRGLetterboxDiagnosticSentNotification";
-NSString * const SRGLetterboxDiagnosticBodyKey = @"SRGLetterboxDiagnosticBodyKey";
+NSString * const DiagnosticTestDidSendReportNotification = @"DiagnosticTestDidSendReportNotification";
+NSString * const DiagnosticTestBodyKey = @"DiagnosticTestBody";
 
 static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
 static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
@@ -42,9 +42,9 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     self.reportRequestStub = [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return [request.URL isEqual:[NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"]];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxDiagnosticSentNotification
+        [[NSNotificationCenter defaultCenter] postNotificationName:DiagnosticTestDidSendReportNotification
                                                             object:self.controller
-                                                          userInfo:@{ SRGLetterboxDiagnosticBodyKey : [request OHHTTPStubs_HTTPBody] }];
+                                                          userInfo:@{ DiagnosticTestBodyKey : [request OHHTTPStubs_HTTPBody] }];
         
         return [[OHHTTPStubsResponse responseWithData:[NSJSONSerialization dataWithJSONObject:@{ @"success" : @YES } options:0 error:NULL]
                                            statusCode:200
@@ -73,8 +73,8 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
         NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
         
         XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
@@ -132,7 +132,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
     }];
     
@@ -141,7 +141,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No other diagnostic sent notifications must be received.
-    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxDiagnosticSentNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send twice the diagnostic report.");
     }];
     
@@ -160,8 +160,8 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         return YES;
     }];
     
-    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
         NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
         
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
@@ -209,8 +209,8 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
         return YES;
     }];
     
-    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
         NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
         
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
@@ -268,7 +268,7 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No diagnostic sent notifications must be received for content URL overriding.
-    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxDiagnosticSentNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send the diagnostic report for content URL overriding.");
     }];
     
@@ -290,8 +290,8 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-    [self expectationForNotification:SRGLetterboxDiagnosticSentNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSData *HTTPBody = notification.userInfo[SRGLetterboxDiagnosticBodyKey];
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSData *HTTPBody = notification.userInfo[DiagnosticTestBodyKey];
         NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:HTTPBody options:0 error:NULL];
         
         XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
