@@ -208,6 +208,58 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testPlaybackReportForBlockedMedia
+{
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    NSString *URN = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
+    
+    [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
+    }];
+    
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @YES);
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"LEGAL");
+        
+        XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
+        XCTAssertNil(JSONDictionary[@"playerResult"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:YES];
+    
+    [self waitForExpectationsWithTimeout:60. handler:nil];
+}
+
 - (void)testPlaybackReportForUnplayableMedia
 {
     // Report submission is disabled in public builds (tested once). Nothing to test here.
@@ -506,8 +558,8 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
+    [self expectationForNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
     }];
     
     // Blocked. Cannot be played
