@@ -19,6 +19,11 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
 static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
 static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
 
+static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
 @interface DiagnosticTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -627,6 +632,39 @@ static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
     [self.controller restart];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
+- (void)testPlaybackReportForNotYetAvailableMedia
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:13];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:60];
+    NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
+    
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"STARTDATE");
+        XCTAssertNil(JSONDictionary[@"playerResult"]);
+        return YES;
+    }];
+    
+    [self.controller playURN:URN standalone:NO];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertNil(JSONDictionary[@"ilResult"][@"blockReason"]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        return YES;
+    }];
+    
+    // Media starts playing automatically, just wait. A new report must be generated when playback starts
+    
+    [self waitForExpectationsWithTimeout:10. handler:nil];
 }
 
 - (void)testDisabledPlaybackReportInPublicBuilds
