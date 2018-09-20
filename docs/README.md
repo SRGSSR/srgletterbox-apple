@@ -22,7 +22,7 @@ To ensure a coherent visual player identity throughout SRG SSR applications, **t
 
 ## Compatibility
 
-The library is suitable for applications running on iOS 9 and above. The project is meant to be opened with the latest Xcode version (currently Xcode 9).
+The library is suitable for applications running on iOS 9 and above. The project is meant to be opened with the latest Xcode version (currently Xcode 10).
 
 ## Installation
 
