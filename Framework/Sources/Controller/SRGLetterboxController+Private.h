@@ -45,6 +45,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
 
 /**
+ *  Returns `YES` iff the controller is currently used for external AirPlay playback.
+ */
+@property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
+
+/**
  *  Play the upcoming media currently available.
  *
  *  @return `YES` iff successful.

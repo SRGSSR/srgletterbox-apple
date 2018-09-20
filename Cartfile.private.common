@@ -1,1 +1,3 @@
 github "bitstadium/HockeySDK-iOS" ~> 5.0.0
+# Fork from AliSoftware/OHHTTPStubs to support Xcode 9.x and Swift 4.
+github "rckoenes/OHHTTPStubs" ~> 6.1.1

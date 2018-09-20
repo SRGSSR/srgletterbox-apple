@@ -8,13 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LetterboxBaseTestCase : XCTestCase
+OBJC_EXPORT NSURL *MMFServiceURL(void);
 
-/**
- *  Return `YES` iff content protection is available. Without it, some streams cannot be played (e.g. livestreams)
- *  and therefore some tests cannot work.
- */
-+ (BOOL)hasContentProtection;
+@interface LetterboxBaseTestCase : XCTestCase
 
 /**
  *  Expectation fulfilled after some given time interval (in seconds), calling the optionally provided handler. Can

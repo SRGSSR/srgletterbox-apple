@@ -15,6 +15,9 @@
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
 		087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
 		087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
+		089FC516214C20940013090B /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089FC515214C20940013090B /* OHHTTPStubs.framework */; };
+		089FC517214C20AF0013090B /* OHHTTPStubs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 089FC515214C20940013090B /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		089FC519214C21420013090B /* DiagnosticTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 089FC518214C21420013090B /* DiagnosticTestCase.m */; };
 		08A05B1E20585DD200E80BD6 /* SRGPaddedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */; };
 		08A05B1F20585DD200E80BD6 /* SRGControlWrapperView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */; };
 		08A05B2020585DD200E80BD6 /* SRGControlWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B1C20585DD200E80BD6 /* SRGControlWrapperView.m */; };
@@ -27,6 +30,8 @@
 		08BA348D1F4AF4C900D9C204 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */; };
 		08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController.m */; };
 		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
+		08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; };
+		08E2E0782146C6250098E13B /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
 		08EB66A11F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
 		08EB66A21F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
@@ -75,10 +80,14 @@
 		6F0C99172121E73400073AB6 /* SRGNotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593620581CAF00823003 /* SRGNotificationView.xib */; };
 		6F0C99182121E73400073AB6 /* SRGLetterboxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
+		6F191D8421478F7600C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
+		6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
+		6F2E03F92150E78000737B3C /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F2E03FA2150E78F00737B3C /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F2EB46D2029DF5B00E7ACDC /* PlaylistsTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46C2029DF5B00E7ACDC /* PlaylistsTestCase.m */; };
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
@@ -264,6 +273,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F2E03F92150E78000737B3C /* SRGContentProtection.framework in Embed Frameworks */,
+				08E2E0782146C6250098E13B /* SRGDiagnostics.framework in Embed Frameworks */,
 				08EB66A61F34C73B00E9D7CA /* TCCore.framework in Embed Frameworks */,
 				08EB66A71F34C73B00E9D7CA /* TCSDK.framework in Embed Frameworks */,
 				6FAB3B721E2905CA00CC2197 /* SRGAnalytics_MediaPlayer.framework in Embed Frameworks */,
@@ -293,6 +304,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6F2E03FA2150E78F00737B3C /* SRGContentProtection.framework in Embed Frameworks */,
+				089FC517214C20AF0013090B /* OHHTTPStubs.framework in Embed Frameworks */,
+				6F191D8421478F7600C84BF8 /* SRGDiagnostics.framework in Embed Frameworks */,
 				6F82365F2136804C00C76B86 /* FXReachability.framework in Embed Frameworks */,
 				6F52DE272106F87D001EC146 /* SRGNetwork.framework in Embed Frameworks */,
 				08EB66AA1F34C77F00E9D7CA /* TCCore.framework in Embed Frameworks */,
@@ -330,6 +344,8 @@
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
 		087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+SRGLetterbox.h"; sourceTree = "<group>"; };
 		087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+SRGLetterbox.m"; sourceTree = "<group>"; };
+		089FC515214C20940013090B /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
+		089FC518214C21420013090B /* DiagnosticTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiagnosticTestCase.m; sourceTree = "<group>"; };
 		08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGPaddedLabel.h; sourceTree = "<group>"; };
 		08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlWrapperView.h; sourceTree = "<group>"; };
 		08A05B1C20585DD200E80BD6 /* SRGControlWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGControlWrapperView.m; sourceTree = "<group>"; };
@@ -350,6 +366,7 @@
 		08E0BF621EE05BD7002D4012 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08E0BF631EE05BD9002D4012 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08E0BF641EE05BDA002D4012 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Accessibility.strings; sourceTree = "<group>"; };
+		08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGDiagnostics.framework; path = Carthage/Build/iOS/SRGDiagnostics.framework; sourceTree = "<group>"; };
 		08EB669E1F34C6B000E9D7CA /* TCCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCCore.framework; path = Carthage/Build/iOS/TCCore.framework; sourceTree = "<group>"; };
 		08EB669F1F34C6B000E9D7CA /* TCSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCSDK.framework; path = Carthage/Build/iOS/TCSDK.framework; sourceTree = "<group>"; };
 		08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGMediaComposition+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -376,6 +393,7 @@
 		6F0AD07C1E5EB224000A61A5 /* AutoplayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoplayTableViewCell.h; sourceTree = "<group>"; };
 		6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoplayTableViewCell.m; sourceTree = "<group>"; };
 		6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SRGLetterbox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGDiagnostics.framework; path = Carthage/Build/iOS/SRGDiagnostics.framework; sourceTree = "<group>"; };
 		6F1BA9122029E9E8004BB271 /* TestPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPlaylist.h; sourceTree = "<group>"; };
 		6F1BA9132029E9E8004BB271 /* TestPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPlaylist.m; sourceTree = "<group>"; };
 		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
@@ -557,6 +575,7 @@
 				6FE655D51E2CA3F9000033D4 /* SRGAnalytics_DataProvider.framework in Frameworks */,
 				6FE655D61E2CA3F9000033D4 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FE655D71E2CA3F9000033D4 /* SRGAnalytics.framework in Frameworks */,
+				089FC516214C20940013090B /* OHHTTPStubs.framework in Frameworks */,
 				08EB66A51F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
 				6FE655D81E2CA3F9000033D4 /* SRGDataProvider.framework in Frameworks */,
 				6FE655D91E2CA3F9000033D4 /* SRGLogger.framework in Frameworks */,
@@ -572,6 +591,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */,
+				08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */,
 				6F52DE1F2106F857001EC146 /* SRGNetwork.framework in Frameworks */,
 				6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
@@ -809,12 +830,15 @@
 				6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
 				08FA0CA81E2E325F000C94EF /* Masonry.framework */,
+				089FC515214C20940013090B /* OHHTTPStubs.framework */,
 				6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */,
 				6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */,
 				6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */,
 				6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */,
 				6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */,
 				6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */,
+				08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */,
+				6F191D8321478F7600C84BF8 /* SRGDiagnostics.framework */,
 				6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */,
 				6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */,
 				6F52DE1D2106F857001EC146 /* SRGNetwork.framework */,
@@ -916,6 +940,7 @@
 			isa = PBXGroup;
 			children = (
 				6FD9BA2A1E2FBC770013CC97 /* Helpers */,
+				089FC518214C21420013090B /* DiagnosticTestCase.m */,
 				6FAB3B8D1E29066300CC2197 /* LetterboxControllerTestCase.m */,
 				6F2EB46C2029DF5B00E7ACDC /* PlaylistsTestCase.m */,
 			);
@@ -1048,7 +1073,6 @@
 				6FAB3B371E28FE2000CC2197 /* Frameworks */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				6FAB3B681E2905B400CC2197 /* Embed Frameworks */,
-				6F8236612136845900C76B86 /* Embed Content Protection */,
 			);
 			buildRules = (
 			);
@@ -1068,7 +1092,6 @@
 				6FAB3B7C1E29060100CC2197 /* Frameworks */,
 				6FAB3B7D1E29060100CC2197 /* Resources */,
 				6FAB3B901E29080400CC2197 /* Embed Frameworks */,
-				6F82365E21367FFB00C76B86 /* Embed Proprietary Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1237,7 +1260,9 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAppearance.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGDataProvider.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SRGDiagnostics.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGMediaPlayer.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGNetwork.framework",
@@ -1251,35 +1276,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] || [ \"$CONFIGURATION\" == \"Nightly\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
-		};
-		6F82365E21367FFB00C76B86 /* Embed Proprietary Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Proprietary Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  cp -R \"$CONTENT_PROTECTION_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH\"\nfi\n";
-		};
-		6F8236612136845900C76B86 /* Embed Content Protection */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/SRGContentProtection.framework",
-			);
-			name = "Embed Content Protection";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "CONTENT_PROTECTION_FRAMEWORK=\"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\"\nif [ -d \"$CONTENT_PROTECTION_FRAMEWORK\" ]; then\n  /usr/local/bin/carthage copy-frameworks\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1323,6 +1319,7 @@
 			files = (
 				6FAB3B8F1E29066300CC2197 /* LetterboxControllerTestCase.m in Sources */,
 				6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */,
+				089FC519214C21420013090B /* DiagnosticTestCase.m in Sources */,
 				6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */,
 				6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */,
 				6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */,
@@ -1506,10 +1503,12 @@
 			baseConfigurationReference = 6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
 				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Schweizerische Radio- und Fernsehgesellschaft";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CUSTOM_BUNDLE_NAME = "Letterbox 🌙";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1517,6 +1516,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "-nightly";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1525,6 +1525,7 @@
 		0835627D1E5B332800EE6DB5 /* Nightly */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1629,8 +1630,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🛠";
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
-				CUSTOM_BUNDLE_NAME = "Letterbox 🛠";
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1638,6 +1641,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "-debug";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1646,6 +1650,7 @@
 		6F0C98F52121E4E600073AB6 /* Debug-static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1743,8 +1748,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";
-				CUSTOM_BUNDLE_NAME = Letterbox;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1752,6 +1759,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1760,6 +1768,7 @@
 		6F0C98F92121E4EC00073AB6 /* Release-static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1876,8 +1885,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🛠";
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
-				CUSTOM_BUNDLE_NAME = "Letterbox 🛠";
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1885,6 +1896,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "-debug";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1895,8 +1907,10 @@
 			baseConfigurationReference = 6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";
-				CUSTOM_BUNDLE_NAME = Letterbox;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1904,6 +1918,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1912,6 +1927,7 @@
 		6FAB3B881E29060200CC2197 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1927,6 +1943,7 @@
 		6FAB3B891E29060200CC2197 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

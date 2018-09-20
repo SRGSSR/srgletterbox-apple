@@ -325,15 +325,12 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 - (SRGLetterboxViewBehavior)userInterfaceBehavior
-{
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    
+{    
     if (self.controller.error || ! self.controller.URN) {
         return SRGLetterboxViewBehaviorForcedHidden;
     }
     
-    BOOL isUsingAirPlay = [AVAudioSession srg_isAirPlayActive] && (self.controller.media.mediaType == SRGMediaTypeAudio || mediaPlayerController.player.externalPlaybackActive);
-    if (self.userInterfaceTogglable && isUsingAirPlay) {
+    if (self.userInterfaceTogglable && self.controller.usingAirPlay) {
         return SRGLetterboxViewBehaviorForcedVisible;
     }
     
