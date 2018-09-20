@@ -11,12 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Convenience macro for localized strings associated with the framework.
  */
-#define SRGLetterboxLocalizedString(key, comment) [[NSBundle srg_letterboxBundle] localizedStringForKey:(key) value:@"" table:nil]
+#define SRGLetterboxLocalizedString(key, comment) [NSBundle.srg_letterboxBundle localizedStringForKey:(key) value:@"" table:nil]
 
 /**
  *  Return an accessibility-oriented localized string associated with the framework.
  */
-#define SRGLetterboxAccessibilityLocalizedString(key, comment) [[NSBundle srg_letterboxBundle] localizedStringForKey:(key) value:@"" table:@"Accessibility"]
+#define SRGLetterboxAccessibilityLocalizedString(key, comment) [NSBundle.srg_letterboxBundle localizedStringForKey:(key) value:@"" table:@"Accessibility"]
 
 /**
  *  Use to avoid user-facing text analyzer warnings.
@@ -31,12 +31,12 @@ OBJC_EXPORT NSString *SRGLetterboxNonLocalizedString(NSString *string);
 /**
  *  The SRGLetterbox resource bundle.
  */
-+ (NSBundle *)srg_letterboxBundle;
+@property (class, nonatomic, readonly) NSBundle *srg_letterboxBundle;
 
 /**
  *  Return `YES` iff the application bundle corresponds to an AppStore or TestFlight release.
  */
-+ (BOOL)srg_letterbox_isProductionVersion;
+@property (class, nonatomic, readonly) BOOL srg_letterbox_isProductionVersion;
 
 @end
 

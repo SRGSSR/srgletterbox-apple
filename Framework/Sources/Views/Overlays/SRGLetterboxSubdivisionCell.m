@@ -38,7 +38,7 @@
     [super awakeFromNib];
     
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(longPress:)];
+                                                                                                             action:@selector(longPress:)];
     longPressGestureRecognizer.minimumPressDuration = 1.;
     [self addGestureRecognizer:longPressGestureRecognizer];
     self.longPressGestureRecognizer = longPressGestureRecognizer;
@@ -96,7 +96,7 @@
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:[NSDate date]];
+    SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:NSDate.date];
     if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
         self.durationLabel.text = SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString;
         self.durationLabel.hidden = NO;
@@ -108,11 +108,11 @@
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
         NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"Live", @"Short label identifying a livestream or currently in live condition.").uppercaseString
                                                                                            attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                                         NSForegroundColorAttributeName : [UIColor whiteColor] }];
+                                                                                                         NSForegroundColorAttributeName : UIColor.whiteColor }];
         
         [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ●")
                                                                                attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                             NSForegroundColorAttributeName : [UIColor srg_liveRedColor] }]];
+                                                                                             NSForegroundColorAttributeName : UIColor.srg_liveRedColor }]];
         
         self.durationLabel.attributedText = attributedText.copy;
         self.durationLabel.hidden = NO;
@@ -134,18 +134,18 @@
         self.durationLabel.hidden = YES;
     }
     
-    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:[NSDate date]];
+    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:NSDate.date];
     if (blockingReason == SRGBlockingReasonNone || blockingReason == SRGBlockingReasonStartDate) {
         self.blockingOverlayView.hidden = YES;
         self.blockingReasonImageView.image = nil;
         
-        self.titleLabel.textColor = [UIColor whiteColor];
+        self.titleLabel.textColor = UIColor.whiteColor;
     }
     else {
         self.blockingOverlayView.hidden = NO;
         self.blockingReasonImageView.image = [UIImage srg_letterboxImageForBlockingReason:blockingReason];
         
-        self.titleLabel.textColor = [UIColor lightGrayColor];
+        self.titleLabel.textColor = UIColor.lightGrayColor;
     }
     
     self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
@@ -165,7 +165,7 @@
 - (void)setCurrent:(BOOL)current
 {
     _current = current;
-    self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor blackColor];
+    self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : UIColor.blackColor;
 }
 
 #pragma mark Gesture recognizers

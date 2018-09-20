@@ -33,7 +33,7 @@
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     return [storyboard instantiateInitialViewController];
 }
 
@@ -52,7 +52,7 @@
 
 - (NSString *)pageTitle
 {
-    NSString *bundleNameSuffix = [[NSBundle mainBundle].infoDictionary objectForKey:@"BundleNameSuffix"];
+    NSString *bundleNameSuffix = [NSBundle.mainBundle.infoDictionary objectForKey:@"BundleNameSuffix"];
     return [NSString stringWithFormat:@"Letterbox %@%@", SRGLetterboxMarketingVersion(), bundleNameSuffix];
 }
 

@@ -36,12 +36,12 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
 {
-    return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-180" ofType:@"pdf"];
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-180" ofType:@"pdf"];
 }
 
 NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
 {
-    return [[NSBundle srg_letterboxBundle] pathForResource:@"placeholder_media-320" ofType:@"pdf"];
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-320" ofType:@"pdf"];
 }
 
 NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
@@ -85,7 +85,7 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
     static NSDictionary *s_widths;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
-        if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
             s_widths = @{ @(SRGImageScaleSmall) : @(200.f),
                           @(SRGImageScaleMedium) : @(350.f),
                           @(SRGImageScaleLarge) : @(500.f)};
@@ -165,7 +165,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     });
     
     if (!bundle) {
-        bundle = [NSBundle mainBundle];
+        bundle = NSBundle.mainBundle;
     }
     
     NSString *key = [NSString stringWithFormat:@"%@_%@_%@_%@", imageName, @(size.width), @(size.height), bundle.bundleIdentifier];
@@ -228,7 +228,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxImageNamed:(NSString *)imageName
 {
-    return [UIImage imageNamed:imageName inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:imageName inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
 }
 
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet

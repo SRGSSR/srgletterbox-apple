@@ -39,17 +39,17 @@
 
 - (instancetype)initWithURN:(NSString *)URN URN1:(NSString *)URN1 URN2:(NSString *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden
 {
-    id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = [SRGLetterboxService sharedService].pictureInPictureDelegate;
+    id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate = SRGLetterboxService.sharedService.pictureInPictureDelegate;
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
-    if ([pictureInPictureDelegate isKindOfClass:[self class]]) {
+    if ([pictureInPictureDelegate isKindOfClass:self.class]) {
         MultiPlayerViewController *multiplayerViewController = (MultiPlayerViewController *)pictureInPictureDelegate;
         if ([multiplayerViewController.URN isEqual:URN] && [multiplayerViewController.URN1 isEqual:URN1] && [multiplayerViewController.URN2 isEqual:URN2]) {
             return multiplayerViewController;
         }
     }
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
     
     multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
@@ -81,7 +81,7 @@
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
@@ -100,10 +100,10 @@
     UIGestureRecognizer *tapGestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchToStream2:)];
     [self.smallLetterboxView2 addGestureRecognizer:tapGestureRecognizer2];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationDidBecomeActive:)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(applicationDidBecomeActive:)
+                                               name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
     
     if (! self.letterboxController.pictureInPictureActive) {
         if (self.URN) {
@@ -124,9 +124,9 @@
 {
     [super viewDidDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         if (! self.letterboxController.pictureInPictureActive) {
-            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+            [SRGLetterboxService.sharedService disableForController:self.letterboxController];
         }
     }
 }
@@ -172,7 +172,7 @@
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
-    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    [SRGLetterboxService.sharedService disableForController:self.letterboxController];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
@@ -211,7 +211,7 @@
     self.letterboxController.tracked = YES;
     self.letterboxController.resumesAfterRouteBecomesUnavailable = NO;
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController1.muted = YES;
     self.smallLetterboxController1.tracked = NO;
@@ -233,7 +233,7 @@
     self.letterboxController.tracked = YES;
     self.letterboxController.resumesAfterRouteBecomesUnavailable = NO;
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     self.smallLetterboxController2.muted = YES;
     self.smallLetterboxController2.tracked = NO;

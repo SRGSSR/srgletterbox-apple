@@ -41,7 +41,7 @@
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
-
+    
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 

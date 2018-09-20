@@ -12,7 +12,7 @@
 
 __attribute__((constructor)) static void SRGLetterboxFontInit(void)
 {
-    NSString *fontFilePath = [[NSBundle srg_letterboxBundle] pathForResource:@"FontAwesome" ofType:@"otf"];
+    NSString *fontFilePath = [NSBundle.srg_letterboxBundle pathForResource:@"FontAwesome" ofType:@"otf"];
     SRGAppearanceRegisterFont(fontFilePath);
 }
 

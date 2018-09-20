@@ -50,6 +50,6 @@ static void commonInit(SRGFullScreenButton *self);
 
 static void commonInit(SRGFullScreenButton *self)
 {
-    [self setImage:[UIImage imageNamed:@"fullscreen-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
-    [self setImage:[UIImage imageNamed:@"cancel_fullscreen-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
+    [self setImage:[UIImage imageNamed:@"fullscreen-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+    [self setImage:[UIImage imageNamed:@"cancel_fullscreen-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
 }

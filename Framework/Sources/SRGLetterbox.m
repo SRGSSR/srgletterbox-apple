@@ -73,5 +73,5 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
 
 NSString *SRGLetterboxMarketingVersion(void)
 {
-    return [NSBundle srg_letterboxBundle].infoDictionary[@"CFBundleShortVersionString"];
+    return NSBundle.srg_letterboxBundle.infoDictionary[@"CFBundleShortVersionString"];
 }

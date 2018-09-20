@@ -108,7 +108,7 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
 /**
  *  The service singleton instance.
  */
-+ (SRGLetterboxService *)sharedService;
+@property (class, nonatomic, readonly) SRGLetterboxService *sharedService;
 
 /**
  *  Enable service application-wide features for the specified controller. All services are enabled, except picture

@@ -90,11 +90,11 @@
     // the view hierarchy at runtime.
     self.fullScreenPhantomButton.alpha = 0.f;
     
-    self.airPlayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-    self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-    self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-    self.tracksButton.image = [UIImage imageNamed:@"subtitles_off-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
-    self.tracksButton.selectedImage = [UIImage imageNamed:@"subtitles_on-48" inBundle:[NSBundle srg_letterboxBundle] compatibleWithTraitCollection:nil];
+    self.airPlayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.tracksButton.image = [UIImage imageNamed:@"subtitles_off-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.tracksButton.selectedImage = [UIImage imageNamed:@"subtitles_on-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -121,7 +121,7 @@
         SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
         if (parentLetterboxView) {
             SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] initWithFrame:CGRectZero];
-            fullScreenButton.tintColor = [UIColor whiteColor];
+            fullScreenButton.tintColor = UIColor.whiteColor;
             fullScreenButton.selected = parentLetterboxView.fullScreen;
             [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
             [parentLetterboxView insertSubview:fullScreenButton atIndex:parentLetterboxView.subviews.count];
@@ -140,9 +140,9 @@
 {
     [super willDetachFromController];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxPlaybackStateDidChangeNotification
-                                                  object:self.controller];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGLetterboxPlaybackStateDidChangeNotification
+                                                object:self.controller];
 }
 
 - (void)didDetachFromController
@@ -174,10 +174,10 @@
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackStateDidChange:)
-                                                 name:SRGLetterboxPlaybackStateDidChangeNotification
-                                               object:self.controller];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(playbackStateDidChange:)
+                                               name:SRGLetterboxPlaybackStateDidChangeNotification
+                                             object:self.controller];
     
     [self refresh];
 }
@@ -290,7 +290,7 @@
     }
     
     // Fix incorrect empty space after hiding the full screen button on iOS 9.
-    NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+    NSOperatingSystemVersion operatingSystemVersion = NSProcessInfo.processInfo.operatingSystemVersion;
     if (operatingSystemVersion.majorVersion == 9) {
         [self.bottomStackView setNeedsLayout];
         [self.bottomStackView layoutIfNeeded];
@@ -305,13 +305,13 @@
     if (SRG_CMTIMERANGE_IS_NOT_EMPTY(timeRange)) {
         NSTimeInterval durationInSeconds = CMTimeGetSeconds(timeRange.duration);
         if (durationInSeconds < 60. * 60.) {
-            self.durationLabel.text = [[NSDateComponentsFormatter srg_shortDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+            self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
         }
         else {
-            self.durationLabel.text = [[NSDateComponentsFormatter srg_mediumDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+            self.durationLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
         }
         
-        self.durationLabel.accessibilityLabel = [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:durationInSeconds];
+        self.durationLabel.accessibilityLabel = [NSDateComponentsFormatter.srg_accessibilityDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
     }
     else {
         self.durationLabel.text = nil;
@@ -355,7 +355,7 @@
         return nil;
     }
     else {
-        NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? [NSDateComponentsFormatter srg_shortDateComponentsFormatter] : [NSDateComponentsFormatter srg_mediumDateComponentsFormatter];
+        NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? NSDateComponentsFormatter.srg_shortDateComponentsFormatter : NSDateComponentsFormatter.srg_mediumDateComponentsFormatter;
         NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
         return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }];
     }

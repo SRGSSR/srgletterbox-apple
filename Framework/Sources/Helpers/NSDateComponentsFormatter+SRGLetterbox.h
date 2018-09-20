@@ -13,22 +13,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Standard date components formatter with days, hours, minutes and seconds.
  */
-+ (NSDateComponentsFormatter *)srg_longDateComponentsFormatter;
+@property (class, nonatomic, readonly) NSDateComponentsFormatter *srg_longDateComponentsFormatter;
 
 /**
  *  Standard date components formatter with hours, minutes and seconds.
  */
-+ (NSDateComponentsFormatter *)srg_mediumDateComponentsFormatter;
+@property (class, nonatomic, readonly) NSDateComponentsFormatter *srg_mediumDateComponentsFormatter;
 
 /**
  *  Standard date components formatter with minutes and seconds.
  */
-+ (NSDateComponentsFormatter *)srg_shortDateComponentsFormatter;
+@property (class, nonatomic, readonly) NSDateComponentsFormatter *srg_shortDateComponentsFormatter;
 
 /**
  *  Date components formatter for accessibility purposes.
  */
-+ (NSDateComponentsFormatter *)srg_accessibilityDateComponentsFormatter;
+@property (class, nonatomic, readonly) NSDateComponentsFormatter *srg_accessibilityDateComponentsFormatter;
 
 @end
 

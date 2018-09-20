@@ -27,7 +27,7 @@
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     return [storyboard instantiateInitialViewController];
 }
 
@@ -44,7 +44,7 @@
 {
     [super viewDidDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         [self.request cancel];
     }
 }
@@ -137,7 +137,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([AutoplayTableViewCell class])];
+    return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(AutoplayTableViewCell.class)];
 }
 
 #pragma mark UITableViewDelegate protocol

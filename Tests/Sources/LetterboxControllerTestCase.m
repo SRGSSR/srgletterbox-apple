@@ -490,7 +490,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     // The token expires after 30 seconds. Wait a little bit more to be sure it has expired
     [self expectationForElapsedTimeInterval:40. withHandler:nil];
-
+    
     [self waitForExpectationsWithTimeout:45. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -530,14 +530,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player cannot be restarted with a play after a reset. No event expected");
     }];
     
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -615,14 +615,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player cannot be restarted with a play after a reset. No event expected");
     }];
     
     [self.controller togglePlayPause];
     
     [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -721,10 +721,10 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     // Expect no change when trying to play the same media
-    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id metadataObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"Expect no metadata update when playing the same media");
     }];
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"Expect no playback state change when playing the same media");
     }];
     
@@ -733,8 +733,8 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:metadataObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -758,7 +758,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     // Expect only a player state change notification, no metadata change notification
-    id metadataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id metadataObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"Expect no metadata update when playing the same media");
     }];
     
@@ -771,7 +771,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:OnDemandVideoURN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:metadataObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:metadataObserver];
     }];
 }
 
@@ -787,7 +787,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     XCTAssertTrue([self.controller canSkipBackward]);
     XCTAssertTrue([self.controller canSkipForward]);
-
+    
     // Seek to near the end
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -1214,7 +1214,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"No playback state change must occur");
     }];
     
@@ -1226,7 +1226,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertFalse(skipped);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -1240,7 +1240,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"No playback state change must occur");
     }];
     
@@ -1252,7 +1252,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertFalse(skipped);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -1266,7 +1266,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"No playback state change must occur");
     }];
     
@@ -1278,7 +1278,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertFalse(skipped);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -1352,7 +1352,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
- - (void)testContentURLOverriding
+- (void)testContentURLOverriding
 {
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     self.controller.updateInterval = 10.;
@@ -1381,14 +1381,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
     // Play for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change with an overriding URL, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1400,14 +1400,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Wait for a while. No playback notifications must be received
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change with an overriding URL, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
 }
 
@@ -1493,14 +1493,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
     // Play for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a full length, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1512,14 +1512,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a full length, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
 }
 
@@ -1541,14 +1541,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.mediaComposition.mainSegment.URN, URN);
     
     // Play for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a segment, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1559,14 +1559,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when playing a segment, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
 }
 
@@ -1598,14 +1598,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1616,14 +1616,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when selecting a segment, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
 }
 
@@ -1643,7 +1643,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Livestream did finish notification must not fire for a stop from the user.");
     }];
     
@@ -1656,15 +1656,15 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when stoping playback, even if there is a channel or controller update.");
     }];
     
     [self expectationForElapsedTimeInterval:12. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
 }
 
@@ -1673,7 +1673,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
     }];
     
@@ -1688,13 +1688,13 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonStartDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotAvailable);
@@ -1710,7 +1710,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
@@ -1722,7 +1722,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeNotAvailable);
@@ -1731,7 +1731,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason is here.");
     }];
     
@@ -1740,7 +1740,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
     }];
 }
 
@@ -1763,7 +1763,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
     
@@ -1775,7 +1775,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
@@ -1785,31 +1785,31 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Wait for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available anymore.");
     }];
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Livestream did finish notification must not fire for a not available anymore On Demand media.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
-
+    
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-15];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
@@ -1820,7 +1820,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
     }];
     
@@ -1834,30 +1834,30 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonStartDate);
     XCTAssertNotNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGMediaComposition *mediaComposition = notification.userInfo[SRGLetterboxMediaCompositionKey];
-        return mediaComposition && [mediaComposition.mainChapter blockingReasonAtDate:[NSDate date]] == SRGBlockingReasonNone;
+        return mediaComposition && [mediaComposition.mainChapter blockingReasonAtDate:NSDate.date] == SRGBlockingReasonNone;
     }];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
-
+    
     // Media starts playing after a metadata udpate
-
+    
     [self waitForExpectationsWithTimeout:30. handler:nil];
-
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
 }
 
@@ -1887,7 +1887,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Wait for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
     }];
     
@@ -1896,13 +1896,13 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playMedia:media standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonStartDate);
     XCTAssertNotNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1913,7 +1913,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -1924,10 +1924,10 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason has been received.");
     }];
     
@@ -1938,7 +1938,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
     }];
 }
 
@@ -1974,14 +1974,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertNil(self.controller.mediaPlayerController.contentURL);
     
     // Playback must not restart automatically. Wait for a while to ensure no playback notifications are received anymore.
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change anymore after URL change.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -2003,7 +2003,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-        
+    
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
     }];
@@ -2017,14 +2017,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertNil(self.controller.mediaPlayerController.contentURL);
     
     // Playback must not restart automatically. Wait for a while to ensure no playback notifications are received anymore.
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change anymore after URL change.");
     }];
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -2058,7 +2058,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
     // URL changes while idle must not lead to playback state changes.
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when stopped.");
     }];
     
@@ -2067,7 +2067,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     // A URL change occurs while the player is idle.
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -2105,7 +2105,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     
     // A blocking reason appearing while playing must stop playback
@@ -2120,14 +2120,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqualObjects(self.controller.URN, URN);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonGeoblocking);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonGeoblocking);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeBlocked);
     XCTAssertEqual([self.controller.error.userInfo[SRGLetterboxBlockingReasonKey] integerValue], SRGBlockingReasonGeoblocking);
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason is here.");
     }];
     
@@ -2136,7 +2136,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -2158,7 +2158,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonGeoblocking);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonGeoblocking);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
     XCTAssertEqual(self.controller.error.code, SRGLetterboxErrorCodeBlocked);
@@ -2173,7 +2173,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     
     // Wait until the stream is playing
@@ -2234,10 +2234,10 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
     }];
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Livestream did finish notification must not fire for a not yet available live media.");
     }];
     
@@ -2250,14 +2250,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNotNil(self.controller.error);
     
@@ -2269,7 +2269,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2283,7 +2283,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNotNil(self.controller.error);
@@ -2294,7 +2294,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeEpisode);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2315,10 +2315,10 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
     }];
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Livestream did finish notification must not fire for a not yet available live media.");
     }];
     
@@ -2331,14 +2331,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNotNil(self.controller.error);
     
@@ -2350,7 +2350,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2364,14 +2364,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
     XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
-    id eventObserver3 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver3 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason is here.");
     }];
     
@@ -2380,7 +2380,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver3];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver3];
     }];
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, contentType), @(SRGContentTypeClip)];
@@ -2408,10 +2408,10 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Waiting for a while. No playback notifications must be received
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available yet.");
     }];
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Livestream did finish notification must not fire for a not yet available live media.");
     }];
     
@@ -2424,14 +2424,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonStartDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonStartDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNotNil(self.controller.error);
     
@@ -2443,7 +2443,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNil(self.controller.error);
@@ -2457,14 +2457,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 0);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 1);
     XCTAssertNotNil(self.controller.error);
     
     // Attempt to play again and wait for a while. No playback notifications must be received
-    id eventObserver3 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver3 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when a block reason is here.");
     }];
     
@@ -2473,7 +2473,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller play];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver3];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver3];
     }];
 }
 
@@ -2482,7 +2482,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     self.controller.serviceURL = MMFServiceURL();
     
     // Wait for a while. No playback notifications must be received
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Playback state must not change when media is not available anymore.");
     }];
     
@@ -2499,13 +2499,13 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self.controller playURN:URN standalone:NO];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonEndDate);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonEndDate);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
@@ -2530,7 +2530,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
@@ -2552,11 +2552,11 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.URN, secondHighlightSegment.URN);
     XCTAssertEqualObjects(self.controller.media.URN, secondHighlightSegment.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertTrue([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
     
-    id eventStateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventStateObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"No playback state change is expected");
     }];
     
@@ -2570,13 +2570,13 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self expectationForElapsedTimeInterval:5. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventStateObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventStateObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertFalse([self.controller.mediaComposition.mainChapter.segments containsObject:secondHighlightSegment]);
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
@@ -2602,7 +2602,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePlaying);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeScheduledLivestream);
     XCTAssertNil(self.controller.error);
     XCTAssertEqual(self.controller.mediaComposition.chapters.count, 4);
@@ -2628,7 +2628,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.URN, secondHighlightChapter.URN);
     XCTAssertEqualObjects(self.controller.media.URN, secondHighlightChapter.URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertTrue([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
     
@@ -2645,7 +2645,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertNil(self.controller.error);
     XCTAssertFalse([self.controller.mediaComposition.chapters containsObject:secondHighlightChapter]);
     XCTAssertNotEqual(self.controller.mediaComposition.chapters.count, 4);
@@ -2661,7 +2661,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     NSString *URN = [MMFSwissTXTLimitedDVRURN(startDate, endDate) stringByAppendingString:@"_segment1"];
     [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
     
-    id livestreamEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id livestreamEndObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"No livestream end notification expected");
     }];
     
@@ -2671,13 +2671,13 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:livestreamEndObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:livestreamEndObserver];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
     XCTAssertEqualObjects(self.controller.media.URN, URN);
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStatePaused);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonNone);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonNone);
     XCTAssertEqual(self.controller.media.contentType, SRGContentTypeClip);
     XCTAssertNil(self.controller.error);
 }
@@ -2732,7 +2732,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
         return idleReceived && playingReceived;
     }];
     
-    id segmentStartObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGMediaPlayerSegmentDidStartNotification object:self.controller.mediaPlayerController queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id segmentStartObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGMediaPlayerSegmentDidStartNotification object:self.controller.mediaPlayerController queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"No segment transition is expected");
     }];
     
@@ -2747,7 +2747,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertTrue(switched);
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:segmentStartObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:segmentStartObserver];
     }];
 }
 
@@ -2773,7 +2773,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventStateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventStateObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"No playback state change is expected");
     }];
     
@@ -2785,7 +2785,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     XCTAssertFalse(switched);
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventStateObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventStateObserver];
     }];
 }
 
@@ -2915,7 +2915,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [chapters removeObject:self.controller.mediaComposition.mainChapter];
     SRGChapter *chapter = chapters.firstObject;
     XCTAssertNotNil(chapter);
-
+    
     XCTestExpectation *completionHandlerExpectation = [self expectationWithDescription:@"Completion handler"];
     BOOL switched = [self.controller switchToURN:chapter.URN withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
@@ -2961,7 +2961,7 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     XCTAssertEqual(self.controller.playbackState, SRGMediaPlayerPlaybackStateIdle);
-    XCTAssertEqual([self.controller.media blockingReasonAtDate:[NSDate date]], SRGBlockingReasonGeoblocking);
+    XCTAssertEqual([self.controller.media blockingReasonAtDate:NSDate.date], SRGBlockingReasonGeoblocking);
     XCTAssertNotNil(self.controller.error);
     XCTAssertEqualObjects(self.controller.error.domain, SRGLetterboxErrorDomain);
     
@@ -3036,14 +3036,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not send Social count views after a stop. No event expected");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -3095,14 +3095,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not send Social count views when only prepared. No event expected");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -3142,14 +3142,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not send Social count views after a reset. No event expected");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -3188,14 +3188,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:15. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not send the same social count view twice. No event expected");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 
@@ -3397,14 +3397,14 @@ static NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"No metadata updates must be received after a reset");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 

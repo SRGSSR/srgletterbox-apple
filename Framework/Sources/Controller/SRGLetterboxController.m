@@ -230,30 +230,30 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(reachabilityDidChange:)
-                                                     name:FXReachabilityStatusDidChangeNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(segmentDidStart:)
-                                                     name:SRGMediaPlayerSegmentDidStartNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(segmentDidEnd:)
-                                                     name:SRGMediaPlayerSegmentDidEndNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackDidFail:)
-                                                     name:SRGMediaPlayerPlaybackDidFailNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(routeDidChange:)
-                                                     name:AVAudioSessionRouteChangeNotification
-                                                   object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(reachabilityDidChange:)
+                                                   name:FXReachabilityStatusDidChangeNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackStateDidChange:)
+                                                   name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(segmentDidStart:)
+                                                   name:SRGMediaPlayerSegmentDidStartNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(segmentDidEnd:)
+                                                   name:SRGMediaPlayerSegmentDidEndNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackDidFail:)
+                                                   name:SRGMediaPlayerPlaybackDidFailNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(routeDidChange:)
+                                                   name:AVAudioSessionRouteChangeNotification
+                                                 object:nil];
     }
     return self;
 }
@@ -316,12 +316,12 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 - (BOOL)areBackgroundServicesEnabled
 {
-    return self == [SRGLetterboxService sharedService].controller;
+    return self == SRGLetterboxService.sharedService.controller;
 }
 
 - (BOOL)isPictureInPictureEnabled
 {
-    return self.backgroundServicesEnabled && [SRGLetterboxService sharedService].pictureInPictureDelegate;
+    return self.backgroundServicesEnabled && SRGLetterboxService.sharedService.pictureInPictureDelegate;
 }
 
 - (BOOL)isPictureInPictureActive
@@ -694,7 +694,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         self.endDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
-            [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, [NSDate date])];
+            [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, NSDate.date)];
             [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
             [self stop];
             
@@ -725,7 +725,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         self.livestreamEndDateTimer = nil;
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
 - (void)notifyLivestreamEndWithMedia:(SRGMedia *)media previousMedia:(SRGMedia *)previousMedia
@@ -744,19 +744,19 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         }
         
         if ((media.contentType != SRGContentTypeLivestream && media.contentType != SRGContentTypeScheduledLivestream)
-            || ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
-                    && [media blockingReasonAtDate:[NSDate date]] == SRGBlockingReasonEndDate)) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
-                                                                    object:self
-                                                                  userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
-        }
+                || ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
+                    && [media blockingReasonAtDate:NSDate.date] == SRGBlockingReasonEndDate)) {
+                [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxLivestreamDidFinishNotification
+                                                                  object:self
+                                                                userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
+            }
     }
     else {
         if ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
-                && [media blockingReasonAtDate:[NSDate date]] == SRGBlockingReasonEndDate) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
-                                                                object:self
-                                                              userInfo:@{ SRGLetterboxMediaKey : media }];
+                && [media blockingReasonAtDate:NSDate.date] == SRGBlockingReasonEndDate) {
+            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxLivestreamDidFinishNotification
+                                                              object:self
+                                                            userInfo:@{ SRGLetterboxMediaKey : media }];
         }
         
     }
@@ -772,7 +772,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         
         [self notifyLivestreamEndWithMedia:media previousMedia:previousMedia];
         
-        self.lastUpdateDate = [NSDate date];
+        self.lastUpdateDate = NSDate.date;
         
         completionBlock ? completionBlock(error, resourceChanged, previousError) : nil;
     };
@@ -788,7 +788,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                 media = previousMedia;
             }
             
-            updateCompletionBlock(media, HTTPResponse, SRGBlockingReasonErrorForMedia(media, [NSDate date]), NO, previousMedia, SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate));
+            updateCompletionBlock(media, HTTPResponse, SRGBlockingReasonErrorForMedia(media, NSDate.date), NO, previousMedia, SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate));
         }];
         [self.requestQueue addRequest:mediaRequest resume:YES];
         return;
@@ -813,7 +813,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             if (mediaComposition) {
                 // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
                 SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
-                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
                 if (blockingReasonError) {
                     updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, HTTPResponse, blockingReasonError, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                     return;
@@ -834,7 +834,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         };
         
         if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404
-                && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+            && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.mediaComposition.fullLengthMedia.URN
                                                                                            standalone:self.standalone
                                                                                   withCompletionBlock:mediaCompositionCompletionBlock];
@@ -903,7 +903,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                                                  NSUnderlyingErrorKey : error }];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
 
 #pragma mark Playback
@@ -983,7 +983,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
         
         // Do not go further if the content is blocked
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
@@ -1047,7 +1047,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     // Media readily available. Done
     if (media) {
         self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
         [self updateWithError:blockingReasonError];
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
         
@@ -1072,7 +1072,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             [self updateWithURN:nil media:media mediaComposition:nil subdivision:nil channel:nil];
             [self notifyLivestreamEndWithMedia:media previousMedia:nil];
             
-            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
             if (blockingReasonError) {
                 [self updateWithError:blockingReasonError];
             }
@@ -1146,7 +1146,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         [self prepareToPlayURN:self.URN atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
 }
 
 - (void)restart
@@ -1231,10 +1231,10 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     }
     
     // If playing another media or if the player is not playing, restart
-    if ([subdivision isKindOfClass:[SRGChapter class]]
+    if ([subdivision isKindOfClass:SRGChapter.class]
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], NSDate.date);
         [self updateWithError:blockingReasonError];
         
         if (blockingReasonError) {
@@ -1265,7 +1265,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         }
     }
     // Playing another segment from the same media. Seek
-    else if ([subdivision isKindOfClass:[SRGSegment class]]) {
+    else if ([subdivision isKindOfClass:SRGSegment.class]) {
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         [self.mediaPlayerController seekToPosition:nil inSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
@@ -1348,7 +1348,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     }
     
     if (self.mediaComposition.srgletterbox_liveMedia && ! [self.mediaComposition.srgletterbox_liveMedia isEqual:self.media]) {
-        return [self.mediaComposition.srgletterbox_liveMedia blockingReasonAtDate:[NSDate date]] != SRGBlockingReasonEndDate;
+        return [self.mediaComposition.srgletterbox_liveMedia blockingReasonAtDate:NSDate.date] != SRGBlockingReasonEndDate;
     }
     else {
         return NO;
@@ -1385,7 +1385,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     SRGDiagnosticReport *report = [self report];
     [report setInteger:1 forKey:@"version"];
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
-    [report setString:[NSBundle srg_letterbox_isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
+    [report setString:NSBundle.srg_letterbox_isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:SRGDeviceInformation() forKey:@"device"];
     [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
     [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
@@ -1533,9 +1533,9 @@ withPreferredStreamType:(SRGStreamType)streamType
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     if (playbackState != self.playbackState) {
         self.playbackState = playbackState;
-        [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
-                                                            object:self
-                                                          userInfo:notification.userInfo];
+        [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
+                                                          object:self
+                                                        userInfo:notification.userInfo];
     }
     
     // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
@@ -1558,9 +1558,9 @@ withPreferredStreamType:(SRGStreamType)streamType
         self.socialCountViewTimer = [NSTimer srgletterbox_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
-                                                                object:self
-                                                              userInfo:@{ SRGLetterboxSubdivisionKey : subdivision }];
+            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
+                                                              object:self
+                                                            userInfo:@{ SRGLetterboxSubdivisionKey : subdivision }];
             
             SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView subdivision:subdivision withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
                 self.socialCountViewURN = socialCountOverview.URN;
@@ -1587,10 +1587,10 @@ withPreferredStreamType:(SRGStreamType)streamType
             if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
                 [self.playlistDataSource controller:self didTransitionToMedia:nextMedia automatically:YES];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                                object:self
-                                                              userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                          SRGLetterboxMediaKey : nextMedia }];
+            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                              object:self
+                                                            userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                        SRGLetterboxMediaKey : nextMedia }];
         };
         
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
@@ -1628,18 +1628,18 @@ withPreferredStreamType:(SRGStreamType)streamType
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:subdivision channel:self.channel];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSegmentDidStartNotification
-                                                        object:self
-                                                      userInfo:notification.userInfo];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxSegmentDidStartNotification
+                                                      object:self
+                                                    userInfo:notification.userInfo];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
 {
     [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:nil channel:self.channel];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSegmentDidEndNotification
-                                                        object:self
-                                                      userInfo:notification.userInfo];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxSegmentDidEndNotification
+                                                      object:self
+                                                    userInfo:notification.userInfo];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -1690,7 +1690,7 @@ withPreferredStreamType:(SRGStreamType)streamType
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p; URN: %@; media: %@; mediaComposition: %@; channel: %@; error: %@; mediaPlayerController: %@>",
-            [self class],
+            self.class,
             self,
             self.URN,
             self.media,

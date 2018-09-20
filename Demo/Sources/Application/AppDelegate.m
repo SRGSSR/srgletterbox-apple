@@ -15,7 +15,7 @@
 
 static __attribute__((constructor)) void ApplicationInit(void)
 {
-    NSString *contentProtectionFrameworkPath = [[NSBundle mainBundle] pathForResource:@"SRGContentProtection" ofType:@"framework" inDirectory:@"Frameworks"];
+    NSString *contentProtectionFrameworkPath = [NSBundle.mainBundle pathForResource:@"SRGContentProtection" ofType:@"framework" inDirectory:@"Frameworks"];
     NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
     [contentProtectionFramework loadAndReturnError:NULL];
 }
@@ -27,7 +27,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor blackColor];
+    self.window.backgroundColor = UIColor.blackColor;
     [self.window makeKeyAndVisible];
     
     application.accessibilityLanguage = @"en";
@@ -46,11 +46,11 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
-    [SRGLetterboxService sharedService].mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
+    SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
-
+    
     return YES;
 }
 
@@ -58,7 +58,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 - (void)setupHockey
 {
-    NSString *hockeyIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyIdentifier"];
+    NSString *hockeyIdentifier = [NSBundle.mainBundle objectForInfoDictionaryKey:@"HockeyIdentifier"];
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
     [[BITHockeyManager sharedHockeyManager] startManager];
     

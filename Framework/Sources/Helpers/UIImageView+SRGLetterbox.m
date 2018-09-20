@@ -39,7 +39,7 @@
     while (1) {
         NSString *imageName = [NSString stringWithFormat:@"%@-%@", name, @(count)];
         UIImage *image = [[UIImage imageNamed:imageName
-                                     inBundle:[NSBundle srg_letterboxBundle]
+                                     inBundle:NSBundle.srg_letterboxBundle
                 compatibleWithTraitCollection:nil] srg_imageTintedWithColor:tintColor];
         if (! image) {
             break;

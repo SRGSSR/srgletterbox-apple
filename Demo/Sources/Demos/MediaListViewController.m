@@ -29,7 +29,7 @@
 
 - (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     MediaListViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.mediaList = mediaList;
     viewController.topic = topic;
@@ -54,7 +54,7 @@
     NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
-        
+    
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:refreshControl atIndex:0];
@@ -67,7 +67,7 @@
 {
     [super viewWillDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         [self.request cancel];
     }
 }
@@ -148,7 +148,7 @@
     SRGMedia *media = self.medias[indexPath.row];
     NSString *text = media.title;
     
-    SRGTimeAvailability timeAvailability = [media timeAvailabilityAtDate:[NSDate date]];
+    SRGTimeAvailability timeAvailability = [media timeAvailabilityAtDate:NSDate.date];
     if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
         text = [@"🔜 " stringByAppendingString:text];
     }
