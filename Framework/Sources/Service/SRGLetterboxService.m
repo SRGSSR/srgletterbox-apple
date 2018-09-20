@@ -735,7 +735,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; controller: %@; pictureInPictureDelegate: %@>",
+    return [NSString stringWithFormat:@"<%@: %p; controller = %@; pictureInPictureDelegate = %@>",
             self.class,
             self,
             self.controller,

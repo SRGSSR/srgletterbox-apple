@@ -1689,7 +1689,8 @@ withPreferredStreamType:(SRGStreamType)streamType
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; URN: %@; media: %@; mediaComposition: %@; channel: %@; error: %@; mediaPlayerController: %@>",
+    return [NSString stringWithFormat:@"<%@: %p; URN = %@; media = %@; mediaComposition = %@; channel = %@; error = %@; "
+            "mediaPlayerController = %@>",
             self.class,
             self,
             self.URN,
