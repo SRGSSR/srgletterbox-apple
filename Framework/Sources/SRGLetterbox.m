@@ -11,6 +11,7 @@
 
 #import <SRGContentProtection/SRGContentProtection.h>
 #import <SRGDiagnostics/SRGDiagnostics.h>
+#import <SRGNetwork/SRGNetwork.h>
 
 __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
 {
@@ -61,10 +62,8 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
             
-            [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                // Post request returns no error with an 5XX HTTP status code response. HTTP error code?
-                NSHTTPURLResponse *HTTPURLResponse = ([response isKindOfClass:NSHTTPURLResponse.class]) ? (NSHTTPURLResponse *)response : nil;
-                BOOL success = (error == nil && HTTPURLResponse.statusCode < 400);
+            [[[SRGNetworkRequest alloc] initWithURLRequest:request session:[NSURLSession sharedSession] options:0 completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                BOOL success = (error == nil);
                 SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
                 completionBlock(success);
             }] resume];
