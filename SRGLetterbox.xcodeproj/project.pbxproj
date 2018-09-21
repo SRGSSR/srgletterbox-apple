@@ -205,6 +205,9 @@
 		6FBB27FE2154C9A500071E02 /* SwissTXTTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB27F92154C9A500071E02 /* SwissTXTTestCase.m */; };
 		6FBB27FF2154C9A500071E02 /* DiagnosticTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB27FA2154C9A500071E02 /* DiagnosticTestCase.m */; };
 		6FBB28002154C9A500071E02 /* PlaybackTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB27FB2154C9A500071E02 /* PlaybackTestCase.m */; };
+		6FBB28032154CA6300071E02 /* MetadataTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB28022154CA6300071E02 /* MetadataTestCase.m */; };
+		6FBB28062154CAE600071E02 /* SwitchTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB28052154CAE600071E02 /* SwitchTestCase.m */; };
+		6FBB28092154CAF700071E02 /* SkipTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB28082154CAF700071E02 /* SkipTestCase.m */; };
 		6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
 		6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
@@ -501,6 +504,9 @@
 		6FBB27F92154C9A500071E02 /* SwissTXTTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwissTXTTestCase.m; sourceTree = "<group>"; };
 		6FBB27FA2154C9A500071E02 /* DiagnosticTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiagnosticTestCase.m; sourceTree = "<group>"; };
 		6FBB27FB2154C9A500071E02 /* PlaybackTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackTestCase.m; sourceTree = "<group>"; };
+		6FBB28022154CA6300071E02 /* MetadataTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetadataTestCase.m; sourceTree = "<group>"; };
+		6FBB28052154CAE600071E02 /* SwitchTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwitchTestCase.m; sourceTree = "<group>"; };
+		6FBB28082154CAF700071E02 /* SkipTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SkipTestCase.m; sourceTree = "<group>"; };
 		6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-320.pdf"; sourceTree = "<group>"; };
 		6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGProgram+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGProgram+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -943,12 +949,15 @@
 		6FAB3B8C1E29066300CC2197 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				6FD9BA2A1E2FBC770013CC97 /* Helpers */,
 				6FBB27FA2154C9A500071E02 /* DiagnosticTestCase.m */,
+				6FD9BA2A1E2FBC770013CC97 /* Helpers */,
+				6FBB28022154CA6300071E02 /* MetadataTestCase.m */,
 				6FBB27FB2154C9A500071E02 /* PlaybackTestCase.m */,
 				6FBB27F82154C9A500071E02 /* PlaylistsTestCase.m */,
+				6FBB28082154CAF700071E02 /* SkipTestCase.m */,
 				6FBB27F72154C9A500071E02 /* SocialCountTestCase.m */,
 				6FBB27F92154C9A500071E02 /* SwissTXTTestCase.m */,
+				6FBB28052154CAE600071E02 /* SwitchTestCase.m */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1304,14 +1313,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FBB28032154CA6300071E02 /* MetadataTestCase.m in Sources */,
 				6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */,
 				6FBB27FC2154C9A500071E02 /* SocialCountTestCase.m in Sources */,
 				6FBB27FD2154C9A500071E02 /* PlaylistsTestCase.m in Sources */,
+				6FBB28092154CAF700071E02 /* SkipTestCase.m in Sources */,
 				6FBB27FE2154C9A500071E02 /* SwissTXTTestCase.m in Sources */,
 				6FBB28002154C9A500071E02 /* PlaybackTestCase.m in Sources */,
 				6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */,
 				6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */,
 				6FBB27FF2154C9A500071E02 /* DiagnosticTestCase.m in Sources */,
+				6FBB28062154CAE600071E02 /* SwitchTestCase.m in Sources */,
 				6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1470,6 +1482,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
@@ -1596,6 +1609,7 @@
 			buildSettings = {
 				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
@@ -1716,6 +1730,7 @@
 			buildSettings = {
 				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
@@ -2072,6 +2087,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
@@ -2095,6 +2111,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
