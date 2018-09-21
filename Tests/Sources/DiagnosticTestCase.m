@@ -16,14 +16,6 @@
 NSString * const DiagnosticTestDidSendReportNotification = @"DiagnosticTestDidSendReportNotification";
 NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionary";
 
-static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
-static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
-
-static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
-{
-    return [NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
-}
-
 @interface DiagnosticTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
