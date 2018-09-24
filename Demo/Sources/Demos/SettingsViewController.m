@@ -341,7 +341,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    void (^completionBlock)() = nil;
+    void (^completionBlock)(void) = nil;
     
     switch (indexPath.section) {
         case 0: {
