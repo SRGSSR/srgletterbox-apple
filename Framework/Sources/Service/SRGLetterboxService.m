@@ -68,14 +68,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         self.nowPlayingInfoAndCommandsEnabled = YES;
         self.allowedCommands = SRGLetterboxCommandsDefault;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidEnterBackground:)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidBecomeActive:)
-                                                     name:UIApplicationDidBecomeActiveNotification
-                                                   object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(applicationDidEnterBackground:)
+                                                   name:UIApplicationDidEnterBackgroundNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(applicationDidBecomeActive:)
+                                                   name:UIApplicationDidBecomeActiveNotification
+                                                 object:nil];
         
         _restoreUserInterface = YES;
         _playbackStopped = YES;
@@ -124,9 +124,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
         [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxMetadataDidChangeNotification
-                                                      object:_controller];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGLetterboxMetadataDidChangeNotification
+                                                    object:_controller];
         
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
@@ -178,10 +178,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             };
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(metadataDidChange:)
-                                                     name:SRGLetterboxMetadataDidChangeNotification
-                                                   object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(metadataDidChange:)
+                                                   name:SRGLetterboxMetadataDidChangeNotification
+                                                 object:controller];
         
         @weakify(self)
         self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
@@ -201,7 +201,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     _mirroredOnExternalScreen = mirroredOnExternalScreen;
     [self.controller.mediaPlayerController reloadPlayerConfiguration];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
 #pragma mark Enabling and disabling the service
@@ -214,7 +214,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
-        NSArray<NSString *> *backgroundModes = [NSBundle mainBundle].infoDictionary[@"UIBackgroundModes"];
+        NSArray<NSString *> *backgroundModes = NSBundle.mainBundle.infoDictionary[@"UIBackgroundModes"];
         if (! [backgroundModes containsObject:@"audio"]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                            reason:@"You must enable the 'Audio, AirPlay, and Picture in Picture' flag of your target background modes (under the Capabilities tab) before attempting to use the Letterbox service"
@@ -231,7 +231,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
 - (void)disableForController:(SRGLetterboxController *)controller
@@ -267,7 +267,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:NULL];
     });
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
 #pragma mark Control center and lock screen integration
@@ -384,7 +384,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || [AVAudioSession srg_isAirPlayActive]
-                                                                                                            || [UIDevice srg_letterbox_isLocked])) {
+                                                                                                            || UIDevice.srg_letterbox_isLocked)) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
@@ -735,8 +735,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; controller: %@; pictureInPictureDelegate: %@>",
-            [self class],
+    return [NSString stringWithFormat:@"<%@: %p; controller = %@; pictureInPictureDelegate = %@>",
+            self.class,
             self,
             self.controller,
             self.pictureInPictureDelegate];

@@ -102,7 +102,7 @@ The `SRGLetterboxService` singleton makes it possible to enable AirPlay and pict
 To enable application-wide services for a Letterbox controller, simply call:
 
 ```objective-c
-[[SRGLetterboxService sharedService] enableWithController:controller pictureInPictureDelegate:nil];
+[SRGLetterboxService.sharedService enableWithController:controller pictureInPictureDelegate:nil];
 ```
 
 If a Letterbox view is bound to the controller, its user interface automatically reflects which services are available for the underlying controller, letting you toggle AirPlay or picture in picture directly from it.
@@ -120,7 +120,7 @@ To be able to call the _enable_ method above, you must set the _Audio, AirPlay, 
 To disable services for the currently registered controller, call:
 
 ```objective-c
-[[SRGLetterboxService sharedService] disable];
+[SRGLetterboxService.sharedService disable];
 ```
 
 This will disable all application-wide features, removing the media from the control center and lock screen as well. Any playback currently made via AirPlay and picture in picture will automatically be cancelled.

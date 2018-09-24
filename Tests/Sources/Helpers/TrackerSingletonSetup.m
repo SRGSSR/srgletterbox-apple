@@ -13,6 +13,5 @@ __attribute__((constructor)) static void SetupTestSingletonTracker(void)
                                                                                                        container:7
                                                                                              comScoreVirtualSite:@"rts-app-test-v"
                                                                                              netMetrixIdentifier:@"test"];
-    configuration.unitTesting = YES;
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
 }

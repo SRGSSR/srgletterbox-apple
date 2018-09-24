@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The red color identifying live content.
  */
-+ (UIColor *)srg_liveRedColor;
+@property (class, nonatomic, readonly) UIColor *srg_liveRedColor;
 
 @end
 

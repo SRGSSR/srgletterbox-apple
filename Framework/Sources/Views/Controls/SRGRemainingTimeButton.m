@@ -31,18 +31,18 @@
     UIBezierPath *trackCirclePath = [UIBezierPath bezierPathWithArcCenter:center radius:side / 2.f startAngle:-M_PI_2 endAngle:3 * M_PI_2 clockwise:YES];
     CAShapeLayer *trackCircleLayer = [[CAShapeLayer alloc] init];
     trackCircleLayer.path = trackCirclePath.CGPath;
-    trackCircleLayer.strokeColor = [UIColor redColor].CGColor;
+    trackCircleLayer.strokeColor = UIColor.redColor.CGColor;
     trackCircleLayer.lineWidth = 2.f;
-    trackCircleLayer.fillColor = [UIColor clearColor].CGColor;
+    trackCircleLayer.fillColor = UIColor.clearColor.CGColor;
     trackCircleLayer.strokeEnd = 1.f;
     [self.layer addSublayer:trackCircleLayer];
     
     UIBezierPath *progressCirclePath = [UIBezierPath bezierPathWithArcCenter:center radius:side / 2.f startAngle:-M_PI_2 endAngle:3 * M_PI_2 clockwise:YES];
     CAShapeLayer *progressCircleLayer = [[CAShapeLayer alloc] init];
     progressCircleLayer.path = progressCirclePath.CGPath;
-    progressCircleLayer.strokeColor = [UIColor whiteColor].CGColor;
+    progressCircleLayer.strokeColor = UIColor.whiteColor.CGColor;
     progressCircleLayer.lineWidth = 2.f;
-    progressCircleLayer.fillColor = [UIColor clearColor].CGColor;
+    progressCircleLayer.fillColor = UIColor.clearColor.CGColor;
     progressCircleLayer.strokeEnd = 1.f;
     [self.layer addSublayer:progressCircleLayer];
     
@@ -60,7 +60,7 @@
 {
     NSTimeInterval timeIntervalToTargetDate = [self.targetDate timeIntervalSinceDate:NSDate.date];
     if (timeIntervalToTargetDate > 0) {
-        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Will play in %@", @"Continuous playback Play button label (time parameter)"), [[NSDateComponentsFormatter srg_accessibilityDateComponentsFormatter] stringFromTimeInterval:timeIntervalToTargetDate]];
+        return [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Will play in %@", @"Continuous playback Play button label (time parameter)"), [NSDateComponentsFormatter.srg_accessibilityDateComponentsFormatter stringFromTimeInterval:timeIntervalToTargetDate]];
     }
     else {
         return SRGLetterboxAccessibilityLocalizedString(@"Play", @"Play button label");

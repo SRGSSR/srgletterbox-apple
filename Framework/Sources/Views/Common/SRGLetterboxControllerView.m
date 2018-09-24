@@ -27,12 +27,12 @@
         [self willDetachFromController];
         
         _controller = nil;
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxMetadataDidChangeNotification
-                                                      object:_controller];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxPlaybackDidFailNotification
-                                                      object:_controller];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGLetterboxMetadataDidChangeNotification
+                                                    object:_controller];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGLetterboxPlaybackDidFailNotification
+                                                    object:_controller];
         
         [self didDetachFromController];
     }
@@ -41,14 +41,14 @@
         [self willAttachToController];
         
         _controller = controller;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(srg_letterbox_metadataDidChange:)
-                                                     name:SRGLetterboxMetadataDidChangeNotification
-                                                   object:controller];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(srg_letterbox_playbackDidFail:)
-                                                     name:SRGLetterboxPlaybackDidFailNotification
-                                                   object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(srg_letterbox_metadataDidChange:)
+                                                   name:SRGLetterboxMetadataDidChangeNotification
+                                                 object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(srg_letterbox_playbackDidFail:)
+                                                   name:SRGLetterboxPlaybackDidFailNotification
+                                                 object:controller];
         
         [self didAttachToController];
     }

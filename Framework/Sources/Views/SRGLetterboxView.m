@@ -141,22 +141,22 @@ static void commonInit(SRGLetterboxView *self);
         [self restartInactivityTracker];
         [self startPeriodicUpdates];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidBecomeActive:)
-                                                     name:UIApplicationDidBecomeActiveNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(wirelessRouteDidChange:)
-                                                     name:SRGMediaPlayerWirelessRouteDidChangeNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(serviceSettingsDidChange:)
-                                                     name:SRGLetterboxServiceSettingsDidChangeNotification
-                                                   object:[SRGLetterboxService sharedService]];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(applicationDidBecomeActive:)
+                                                   name:UIApplicationDidBecomeActiveNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(wirelessRouteDidChange:)
+                                                   name:SRGMediaPlayerWirelessRouteDidChangeNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(serviceSettingsDidChange:)
+                                                   name:SRGLetterboxServiceSettingsDidChangeNotification
+                                                 object:SRGLetterboxService.sharedService];
         
         // Automatically resumes in the view when displayed and if picture in picture was active
-        if ([SRGLetterboxService sharedService].controller == self.controller) {
-            [[SRGLetterboxService sharedService] stopPictureInPictureRestoreUserInterface:NO];
+        if (SRGLetterboxService.sharedService.controller == self.controller) {
+            [SRGLetterboxService.sharedService stopPictureInPictureRestoreUserInterface:NO];
         }
         
         [self showAirPlayNotificationMessageIfNeededAnimated:NO];
@@ -165,15 +165,15 @@ static void commonInit(SRGLetterboxView *self);
         [self stopInactivityTracker];
         [self stopPeriodicUpdates];
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIApplicationDidBecomeActiveNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGMediaPlayerWirelessRouteDidChangeNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SRGLetterboxServiceSettingsDidChangeNotification
-                                                      object:[SRGLetterboxService sharedService]];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:UIApplicationDidBecomeActiveNotification
+                                                    object:nil];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGMediaPlayerWirelessRouteDidChangeNotification
+                                                    object:nil];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGLetterboxServiceSettingsDidChangeNotification
+                                                    object:SRGLetterboxService.sharedService];
     }
 }
 
@@ -438,64 +438,64 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGLetterboxController *controller = self.controller;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(livestreamDidFinish:)
-                                                 name:SRGLetterboxLivestreamDidFinishNotification
-                                               object:controller];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackDidContinueAutomatically:)
-                                                 name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                               object:controller];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(livestreamDidFinish:)
+                                               name:SRGLetterboxLivestreamDidFinishNotification
+                                             object:controller];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(playbackDidContinueAutomatically:)
+                                               name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                             object:controller];
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackStateDidChange:)
-                                                 name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(segmentDidStart:)
-                                                 name:SRGMediaPlayerSegmentDidStartNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(segmentDidEnd:)
-                                                 name:SRGMediaPlayerSegmentDidEndNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(willSkipBlockedSegment:)
-                                                 name:SRGMediaPlayerWillSkipBlockedSegmentNotification
-                                               object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(externalPlaybackStateDidChange:)
-                                                 name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
-                                               object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(playbackStateDidChange:)
+                                               name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                             object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(segmentDidStart:)
+                                               name:SRGMediaPlayerSegmentDidStartNotification
+                                             object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(segmentDidEnd:)
+                                               name:SRGMediaPlayerSegmentDidEndNotification
+                                             object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(willSkipBlockedSegment:)
+                                               name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                             object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(externalPlaybackStateDidChange:)
+                                               name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
+                                             object:mediaPlayerController];
 }
 
 - (void)unregisterObservers
 {
     SRGLetterboxController *controller = self.controller;
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxLivestreamDidFinishNotification
-                                                  object:controller];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                  object:controller];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGLetterboxLivestreamDidFinishNotification
+                                                object:controller];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                object:controller];
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerSegmentDidStartNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerSegmentDidEndNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
-                                                  object:mediaPlayerController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
-                                                  object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGMediaPlayerSegmentDidStartNotification
+                                                object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGMediaPlayerSegmentDidEndNotification
+                                                object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                                object:mediaPlayerController];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
+                                                object:mediaPlayerController];
     
     if (mediaPlayerController.view.superview == self.playbackView) {
         [mediaPlayerController.view removeFromSuperview];
@@ -600,7 +600,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     if (@available(iOS 11, *)) {
-        if ([NSBundle srg_letterbox_isProductionVersion] && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirPlayActive]) {
+        if (NSBundle.srg_letterbox_isProductionVersion && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirPlayActive]) {
             playerViewVisible = NO;
         }
     }
@@ -622,7 +622,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)recursivelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    if ([view isKindOfClass:[SRGLetterboxBaseView class]]) {
+    if ([view isKindOfClass:SRGLetterboxBaseView.class]) {
         SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
         [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     }
@@ -634,7 +634,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)recursivelyImmediatelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    if ([view isKindOfClass:[SRGLetterboxBaseView class]]) {
+    if ([view isKindOfClass:SRGLetterboxBaseView.class]) {
         SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
         [baseView immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     }
@@ -673,7 +673,7 @@ static void commonInit(SRGLetterboxView *self);
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
     }
-        
+    
     return timelineHeight;
 }
 
@@ -915,7 +915,7 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
-        return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]] || otherGestureRecognizer == self.showUserInterfaceTapGestureRecognizer;
+        return [otherGestureRecognizer isKindOfClass:SRGActivityGestureRecognizer.class] || otherGestureRecognizer == self.showUserInterfaceTapGestureRecognizer;
     }
     else {
         return NO;
@@ -975,7 +975,7 @@ static void commonInit(SRGLetterboxView *self);
 - (void)willSkipBlockedSegment:(NSNotification *)notification
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
-    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason([subdivision blockingReasonAtDate:[NSDate date]]);
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason([subdivision blockingReasonAtDate:NSDate.date]);
     [self showNotificationMessage:notificationMessage animated:YES];
 }
 
@@ -1007,7 +1007,7 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
-    self.backgroundColor = [UIColor blackColor];
+    self.backgroundColor = UIColor.blackColor;
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {

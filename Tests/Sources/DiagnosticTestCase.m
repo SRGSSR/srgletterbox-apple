@@ -16,14 +16,6 @@
 NSString * const DiagnosticTestDidSendReportNotification = @"DiagnosticTestDidSendReportNotification";
 NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionary";
 
-static NSString * const OnDemandVideoURN = @"urn:swi:video:42844052";
-static NSString * const OnDemandVideoTokenURN = @"urn:rts:video:1967124";
-
-static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
-{
-    return [NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
-}
-
 @interface DiagnosticTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -48,9 +40,9 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
         return [request.URL isEqual:[NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"]];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:[request OHHTTPStubs_HTTPBody] options:0 error:NULL] ?: @{};
-        [[NSNotificationCenter defaultCenter] postNotificationName:DiagnosticTestDidSendReportNotification
-                                                            object:nil
-                                                          userInfo:@{ DiagnosticTestJSONDictionaryKey : JSONDictionary }];
+        [NSNotificationCenter.defaultCenter postNotificationName:DiagnosticTestDidSendReportNotification
+                                                          object:nil
+                                                        userInfo:@{ DiagnosticTestJSONDictionaryKey : JSONDictionary }];
         return [[OHHTTPStubsResponse responseWithData:[NSJSONSerialization dataWithJSONObject:@{ @"success" : @YES } options:0 error:NULL]
                                            statusCode:200
                                               headers:@{ @"Content-Type" : @"application/json" }] requestTime:0. responseTime:OHHTTPStubsDownloadSpeedWifi];
@@ -88,7 +80,7 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
-        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
@@ -151,14 +143,14 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No other diagnostic report notification must be received.
-    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id diagnosticSentObserver = [NSNotificationCenter.defaultCenter addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send twice the diagnostic report.");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:diagnosticSentObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:diagnosticSentObserver];
     }];
 }
 
@@ -181,7 +173,7 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
-        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
@@ -230,7 +222,7 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
-        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
@@ -282,7 +274,7 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
-        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
@@ -338,14 +330,14 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No diagnostic report notifications must be received for content URL overriding.
-    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id diagnosticSentObserver = [NSNotificationCenter.defaultCenter addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send diagnostic reports for content URL overriding.");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:diagnosticSentObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:diagnosticSentObserver];
     }];
 }
 
@@ -368,7 +360,7 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
-        XCTAssertEqualObjects(JSONDictionary[@"browser"], [[NSBundle mainBundle] bundleIdentifier]);
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
@@ -682,14 +674,14 @@ static NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Play for a while. No diagnostic report notifications must be received in public builds
-    id diagnosticSentObserver = [[NSNotificationCenter defaultCenter] addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    id diagnosticSentObserver = [NSNotificationCenter.defaultCenter addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         XCTFail(@"Controller must not send diagnostic reports for public builds.");
     }];
     
     [self expectationForElapsedTimeInterval:15. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:diagnosticSentObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:diagnosticSentObserver];
     }];
 }
 

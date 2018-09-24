@@ -23,11 +23,11 @@
 
 - (instancetype)initWithURN:(NSString *)URN
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
-
+    
     viewController.URN = URN;
-
+    
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
@@ -52,7 +52,7 @@
 {
     [super viewDidLoad];
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:nil];
     
     if (self.URN) {
         [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
@@ -63,8 +63,8 @@
 {
     [super viewDidDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
-        [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    if (self.movingFromParentViewController || self.beingDismissed) {
+        [SRGLetterboxService.sharedService disableForController:self.letterboxController];
     }
 }
 

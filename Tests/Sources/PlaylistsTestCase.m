@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "LetterboxBaseTestCase.h"
-#import "TestPlaylist.h"
-
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+
+#import "LetterboxBaseTestCase.h"
+#import "TestPlaylist.h"
 
 static NSString * const MediaURN1 = @"urn:rts:video:9309820";
 static NSString * const MediaURN2 = @"urn:rts:video:9314051";
@@ -172,19 +172,19 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
     // Wait some time. We don't expect playback to automatically continue with the next item
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must remain in the current state");
     }];
     
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1);
@@ -371,19 +371,19 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTAssertNil(self.controller.continuousPlaybackUpcomingMedia);
     
     // Wait some time. We don't expect playback to automatically continue with the next item
-    id eventObserver1 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must remain in the current state");
     }];
     
-    id eventObserver2 = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver2 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
     [self expectationForElapsedTimeInterval:10. withHandler:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver1];
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver2];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver2];
     }];
     
     XCTAssertEqualObjects(self.controller.URN, MediaURN1);
@@ -557,7 +557,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     // Wait for longer than the transition duration. -togglePlayPause must interrupt continuous playback.
-    id eventObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"The player must not continue automatically");
     }];
     
@@ -566,7 +566,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     [self.controller togglePlayPause];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:eventObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
 }
 

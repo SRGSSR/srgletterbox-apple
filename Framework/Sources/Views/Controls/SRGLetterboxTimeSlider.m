@@ -95,7 +95,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         self.tipLayer.hidden = YES;
     }
     
-    UIColor *backgroundColor = self.live ? [UIColor srg_liveRedColor] : UIColor.whiteColor;
+    UIColor *backgroundColor = self.live ? UIColor.srg_liveRedColor : UIColor.whiteColor;
     UIColor *textColor = self.live ? UIColor.whiteColor  : UIColor.blackColor;
     
     self.tipLayer.fillColor = backgroundColor.CGColor;
