@@ -3,19 +3,19 @@
 *.xcscmblueprint
 xcuserdata
 
-archive
-build
+/archive
+/build
 
-Configuration
+/Configuration
 
-Carthage
-Cartfile.private
-Cartfile.resolved
+/Carthage
+/Cartfile.private
+/Cartfile.resolved
 
-.env
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+/.env
 
-last-nightlies-success-git-commit-hash.txt
+/fastlane/report.xml
+/fastlane/Preview.html
+/fastlane/screenshots/**/*.png
+/fastlane/test_output
+/fastlane/last-nightlies-success-git-commit-hash.txt
