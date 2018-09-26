@@ -968,7 +968,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self updateWithError:error];
             
-            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:error];
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
             [self finishDiagnosticReport];
             return;
         }
@@ -988,7 +988,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
             
-            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:blockingReasonError];
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:blockingReasonError];
             [self finishDiagnosticReport];
             return;
         }
@@ -1003,7 +1003,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         
         // TODO: Replace s_prefersDRM with YES when removed
         if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
-            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:nil];
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
             [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
         }
         else {
@@ -1014,7 +1014,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self updateWithError:error];
             
-            [self attachDataDiagnosticReportInformationWithHTTPResponse:HTTPResponse error:error];
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
             [[[self report] informationForKey:@"ilResult"] setBool:YES forKey:@"noPlayableResourceFound"];
             [self finishDiagnosticReport];
         }
@@ -1260,7 +1260,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             }];
         }
         else {
-            [self attachDataDiagnosticReportInformationWithHTTPResponse:nil error:blockingReasonError];
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:nil error:blockingReasonError];
             [self finishDiagnosticReport];
         }
     }
@@ -1395,7 +1395,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     [report startTimeMeasurementForKey:@"duration"];
 }
 
-- (void)attachDataDiagnosticReportInformationWithHTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
+- (void)attachDataDiagnosticReportInformationWithMediaCompostion:(SRGMediaComposition *)mediaComposition HTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
 {
     SRGDiagnosticInformation *information = [[self report] informationForKey:@"ilResult"];
     [information setURL:HTTPResponse.URL forKey:@"url"];
@@ -1403,6 +1403,10 @@ withPreferredStreamType:(SRGStreamType)streamType
     [information setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
     [information setString:error.localizedDescription forKey:@"errorMessage"];
     [information setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
+    if (mediaComposition) {
+        SRGSubdivision *subdivision = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+        [information setBool:subdivision.playableAbroad forKey:@"playableAbroad"];
+    }
 }
 
 - (void)attachPlayerDiagnosticReportInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error
