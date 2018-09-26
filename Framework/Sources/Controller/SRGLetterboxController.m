@@ -1390,7 +1390,6 @@ withPreferredStreamType:(SRGStreamType)streamType
     [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
     [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
     [report setString:self.URN forKey:@"urn"];
-    [report setBool:self.standalone forKey:@"standalone"];
     [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
     [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
     [report startTimeMeasurementForKey:@"duration"];

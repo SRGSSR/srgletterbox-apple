@@ -84,7 +84,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
-        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -177,7 +176,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
-        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -226,7 +224,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
-        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @YES);
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -278,7 +275,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
-        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -364,7 +360,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
-        XCTAssertEqualObjects(JSONDictionary[@"standalone"], @NO);
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
