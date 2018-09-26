@@ -22,7 +22,9 @@ NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
 NSURL *LetterboxDemoMMFServiceURL(void)
 {
-    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+    NSString *serviceURLString = [NSBundle.mainBundle objectForInfoDictionaryKey:@"PlayMMF"];
+    NSURL *serviceURL = (serviceURLString.length > 0) ? [NSURL URLWithString:serviceURLString] : nil;
+    return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
 }
 
 NSURL *ApplicationSettingServiceURL(void)
