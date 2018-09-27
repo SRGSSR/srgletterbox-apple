@@ -1559,7 +1559,6 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION_SUFFIX = "-nightly";
-				PLAY_MMF_SERVICE_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1687,7 +1686,6 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION_SUFFIX = "-debug";
-				PLAY_MMF_SERVICE_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1808,7 +1806,6 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION_SUFFIX = "";
-				PLAY_MMF_SERVICE_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1946,7 +1943,6 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION_SUFFIX = "-debug";
-				PLAY_MMF_SERVICE_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1969,7 +1965,6 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION_SUFFIX = "";
-				PLAY_MMF_SERVICE_URL = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
