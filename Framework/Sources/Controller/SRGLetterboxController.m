@@ -1398,9 +1398,17 @@ withPreferredStreamType:(SRGStreamType)streamType
 - (void)attachDataDiagnosticReportInformationWithMediaCompostion:(SRGMediaComposition *)mediaComposition HTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
 {
     SRGDiagnosticInformation *information = [[self report] informationForKey:@"ilResult"];
-    [information setURL:HTTPResponse.URL forKey:@"url"];
-    [information setInteger:HTTPResponse.statusCode forKey:@"httpStatusCode"];
-    [information setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+    
+    if (HTTPResponse) {
+        [information setURL:HTTPResponse.URL forKey:@"url"];
+        [information setInteger:HTTPResponse.statusCode forKey:@"httpStatusCode"];
+        [information setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+    }
+    // If the HTTP response is missing (network error typically), extract URL from error information
+    else {
+        [information setURL:error.userInfo[NSURLErrorFailingURLErrorKey] forKey:@"url"];
+    }
+        
     [information setString:error.localizedDescription forKey:@"errorMessage"];
     [information setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
     if (mediaComposition) {
