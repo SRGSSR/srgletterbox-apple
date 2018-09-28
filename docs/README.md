@@ -24,6 +24,10 @@ To ensure a coherent visual player identity throughout SRG SSR applications, **t
 
 The library is suitable for applications running on iOS 9 and above. The project is meant to be opened with the latest Xcode version (currently Xcode 10).
 
+## Contributing
+
+If you want to contribute to the project, have a look at our [contributing guide](CONTRIBUTING.md).
+
 ## Installation
 
 The library can be added to a project using Carthage. For more information about Carthage and its use, refer to its [official documentation](https://github.com/Carthage/Carthage).
