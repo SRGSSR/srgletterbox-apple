@@ -6,23 +6,47 @@
 
 #import "LetterboxBaseTestCase.h"
 
-static BOOL s_hasContentProtection = NO;
-
-static __attribute__((constructor)) void LetterboxTestCaseInit(void)
+NSURL *MMFServiceURL(void)
 {
-    NSString *contentProtectionFrameworkPath = [[NSBundle mainBundle] pathForResource:@"SRGContentProtection" ofType:@"framework" inDirectory:@"Frameworks"];
-    NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
-    s_hasContentProtection = [contentProtectionFramework loadAndReturnError:NULL];
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+}
+
+NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
+NSString *MMFCachedScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_bipbop_basic_cacheddelay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
+NSString *MMFURLChangeVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
+NSString *MMFBlockingReasonChangeVideoURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_geoblocked_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
+NSString *MMFSwissTXTFullDVRURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_rts_info_fulldvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
+NSString *MMFSwissTXTLimitedDVRURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_limiteddvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+}
+
+NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
+{
+    return [NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 @implementation LetterboxBaseTestCase
-
-#pragma mark Class methods
-    
-+ (BOOL)hasContentProtection
-{
-    return s_hasContentProtection;
-}
 
 #pragma mark Helpers
 

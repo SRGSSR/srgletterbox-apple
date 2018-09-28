@@ -43,13 +43,13 @@
 
 - (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     PlaylistViewController *viewController = [storyboard instantiateInitialViewController];
-
+    
     Playlist *playlist = [[Playlist alloc] initWithMedias:medias];
     playlist.continuousPlaybackTransitionDuration = 10.;
     viewController.playlist = playlist;
-
+    
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
@@ -79,7 +79,7 @@
     self.letterboxView.controller = self.letterboxController;
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     [self updatePlaylistButtons];
     @weakify(self)
@@ -90,10 +90,10 @@
     
     self.playbackInformationLabel.text = nil;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playbackDidContinueAutomatically:)
-                                                 name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                               object:self.letterboxController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(playbackDidContinueAutomatically:)
+                                               name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                             object:self.letterboxController];
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
@@ -105,9 +105,9 @@
 {
     [super viewDidDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         if (! self.letterboxController.pictureInPictureActive) {
-            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+            [SRGLetterboxService.sharedService disableForController:self.letterboxController];
         }
     }
 }
@@ -162,7 +162,7 @@
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
-    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    [SRGLetterboxService.sharedService disableForController:self.letterboxController];
 }
 
 - (void)letterboxDidStartPictureInPicture

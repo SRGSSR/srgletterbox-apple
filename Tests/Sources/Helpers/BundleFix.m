@@ -30,7 +30,7 @@
 
 + (NSBundle *)swizzled_mainBundle
 {
-    return [NSBundle bundleForClass:[DummyClass class]];
+    return [NSBundle bundleForClass:DummyClass.class];
 }
 
 @end

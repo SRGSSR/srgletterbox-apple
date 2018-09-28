@@ -32,19 +32,19 @@
 
 - (instancetype)initWithURN:(NSString *)URN
 {
-    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    SRGLetterboxService *service = SRGLetterboxService.sharedService;
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
-    if ([service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
+    if ([service.pictureInPictureDelegate isKindOfClass:self.class] && [service.controller.URN isEqual:URN]) {
         return (StandalonePlayerViewController *)service.pictureInPictureDelegate;
     }
     // Otherwise instantiate a fresh new one
     else {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;
-
+        
         viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
         viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
@@ -72,8 +72,8 @@
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
-    self.serviceEnabled.on = [[SRGLetterboxService sharedService].controller isEqual:self.letterboxController];
-    self.nowPlayingInfoAndCommandsEnabled.on = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
+    self.serviceEnabled.on = [SRGLetterboxService.sharedService.controller isEqual:self.letterboxController];
+    self.nowPlayingInfoAndCommandsEnabled.on = SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled;
     self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
     if (self.URN) {
@@ -85,9 +85,9 @@
 {
     [super viewDidDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         if (! self.letterboxController.pictureInPictureActive) {
-            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+            [SRGLetterboxService.sharedService disableForController:self.letterboxController];
         }
     }
 }
@@ -133,7 +133,7 @@
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
-    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    [SRGLetterboxService.sharedService disableForController:self.letterboxController];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
@@ -157,17 +157,17 @@
 
 - (IBAction)toggleServiceEnabled:(id)sender
 {
-    if ([[SRGLetterboxService sharedService].controller isEqual:self.letterboxController]) {
-        [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    if ([SRGLetterboxService.sharedService.controller isEqual:self.letterboxController]) {
+        [SRGLetterboxService.sharedService disableForController:self.letterboxController];
     }
     else {
-        [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+        [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     }
 }
 
 - (IBAction)toggleNowPlayingInfoAndCommands:(id)sender
 {
-    [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = ! [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled;
+    SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = ! SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled;
 }
 
 - (IBAction)toggleMirrored:(id)sender

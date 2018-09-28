@@ -66,7 +66,7 @@
     [super awakeFromNib];
     
     self.selectedIndex = NSNotFound;
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = UIColor.clearColor;
     
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -76,8 +76,8 @@
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     collectionViewLayout.minimumLineSpacing = 1.f;
     
-    NSString *identifier = NSStringFromClass([SRGLetterboxSubdivisionCell class]);
-    UINib *nib = [UINib nibWithNibName:identifier bundle:[NSBundle srg_letterboxBundle]];
+    NSString *identifier = NSStringFromClass(SRGLetterboxSubdivisionCell.class);
+    UINib *nib = [UINib nibWithNibName:identifier bundle:NSBundle.srg_letterboxBundle];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
 }
 
@@ -133,10 +133,10 @@
     float progress = 0.f;
     
     if (self.chapterURN) {
-        if ([subdivision isKindOfClass:[SRGChapter class]] && [subdivision.URN isEqual:self.chapterURN]) {
+        if ([subdivision isKindOfClass:SRGChapter.class] && [subdivision.URN isEqual:self.chapterURN]) {
             progress = 1000. * CMTimeGetSeconds(self.time) / subdivision.duration;
         }
-        else if ([subdivision isKindOfClass:[SRGSegment class]] && [subdivision.fullLengthURN isEqual:self.chapterURN]) {
+        else if ([subdivision isKindOfClass:SRGSegment.class] && [subdivision.fullLengthURN isEqual:self.chapterURN]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
             progress = (1000. * CMTimeGetSeconds(self.time) - segment.markIn) / segment.duration;
         }
@@ -199,7 +199,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SRGLetterboxSubdivisionCell class]) forIndexPath:indexPath];
+    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class) forIndexPath:indexPath];
 }
 
 #pragma mark UICollectionViewDelegate protocol
@@ -209,7 +209,7 @@
     SRGSubdivision *subdivision = self.subdivisions[indexPath.row];
     
     if ([self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
-        if ([subdivision isKindOfClass:[SRGSegment class]]) {
+        if ([subdivision isKindOfClass:SRGSegment.class]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
             self.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
         }

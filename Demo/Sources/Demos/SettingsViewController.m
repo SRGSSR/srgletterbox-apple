@@ -22,49 +22,51 @@ NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
 NSURL *LetterboxDemoMMFServiceURL(void)
 {
-    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+    NSString *serviceURLString = [NSBundle.mainBundle objectForInfoDictionaryKey:@"PlayMMF"];
+    NSURL *serviceURL = (serviceURLString.length > 0) ? [NSURL URLWithString:serviceURLString] : nil;
+    return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
 }
 
 NSURL *ApplicationSettingServiceURL(void)
 {
-    NSString *URLString = [[NSUserDefaults standardUserDefaults] stringForKey:LetterboxDemoSettingServiceURL];
+    NSString *URLString = [NSUserDefaults.standardUserDefaults stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
 BOOL ApplicationSettingIsStandalone(void)
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingStandalone];
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingStandalone];
 }
 
 static void ApplicationSettingSetStandalone(BOOL standalone)
 {
-    [[NSUserDefaults standardUserDefaults] setBool:standalone forKey:LetterboxDemoSettingStandalone];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [NSUserDefaults.standardUserDefaults setBool:standalone forKey:LetterboxDemoSettingStandalone];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LetterboxDemoSettingMirroredOnExternalScreen];
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingMirroredOnExternalScreen];
 }
 
 void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen)
 {
-    [[NSUserDefaults standardUserDefaults] setBool:mirroredOnExternalScreen forKey:LetterboxDemoSettingMirroredOnExternalScreen];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [NSUserDefaults.standardUserDefaults setBool:mirroredOnExternalScreen forKey:LetterboxDemoSettingMirroredOnExternalScreen];
+    [NSUserDefaults.standardUserDefaults synchronize];
     
-    [SRGLetterboxService sharedService].mirroredOnExternalScreen = mirroredOnExternalScreen;
+    SRGLetterboxService.sharedService.mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
 NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval updateInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:LetterboxDemoSettingUpdateInterval];
+    NSTimeInterval updateInterval = [NSUserDefaults.standardUserDefaults doubleForKey:LetterboxDemoSettingUpdateInterval];
     return (updateInterval > 0.) ? updateInterval : SRGLetterboxDefaultUpdateInterval;
 }
 
 NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:LetterboxDemoSettingGlobalHeaders];
+    return [NSUserDefaults.standardUserDefaults dictionaryForKey:LetterboxDemoSettingGlobalHeaders];
 }
 
 @interface SettingsViewController ()
@@ -79,7 +81,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
     viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL() globalHeaders:nil],
                                       [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL() globalHeaders:nil],
@@ -145,7 +147,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 5: {
-            NSString *buildNumberString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleVersion"];
+            NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
         }
@@ -160,7 +162,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
-        NSString *versionString = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];        
+        NSString *versionString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];        
         return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
                 versionString];
     }
@@ -269,13 +271,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
-                    cell.accessoryType = ! [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = ! SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
                     cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
-                    cell.accessoryType = [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -341,17 +343,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    void (^completionBlock)() = nil;
+    void (^completionBlock)(void) = nil;
     
     switch (indexPath.section) {
         case 0: {
             ServerSettings *serverSettings = self.serverSettings[indexPath.row];
-            [[NSUserDefaults standardUserDefaults] setObject:serverSettings.URL.absoluteString forKey:LetterboxDemoSettingServiceURL];
-            [[NSUserDefaults standardUserDefaults] setObject:serverSettings.globalHeaders forKey:LetterboxDemoSettingGlobalHeaders];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [NSUserDefaults.standardUserDefaults setObject:serverSettings.URL.absoluteString forKey:LetterboxDemoSettingServiceURL];
+            [NSUserDefaults.standardUserDefaults setObject:serverSettings.globalHeaders forKey:LetterboxDemoSettingGlobalHeaders];
+            [NSUserDefaults.standardUserDefaults synchronize];
             
-            [[SRGLetterboxService sharedService].controller reset];
-            [SRGLetterboxService sharedService].controller.serviceURL = ApplicationSettingServiceURL();
+            [SRGLetterboxService.sharedService.controller reset];
+            SRGLetterboxService.sharedService.controller.serviceURL = ApplicationSettingServiceURL();
             break;
         }
             
@@ -366,20 +368,20 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 3: {
-            [SRGLetterboxService sharedService].nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
             break;
         }
             
         case 4: {
             if (indexPath.row == 0) {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LetterboxDemoSettingUpdateInterval];
+                [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
             else {
-                [[NSUserDefaults standardUserDefaults] setDouble:LetterboxDemoSettingUpdateIntervalShort forKey:LetterboxDemoSettingUpdateInterval];
+                [NSUserDefaults.standardUserDefaults setDouble:LetterboxDemoSettingUpdateIntervalShort forKey:LetterboxDemoSettingUpdateInterval];
             }
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [NSUserDefaults.standardUserDefaults synchronize];
             
-            [SRGLetterboxService sharedService].controller.updateInterval = ApplicationSettingUpdateInterval();
+            SRGLetterboxService.sharedService.controller.updateInterval = ApplicationSettingUpdateInterval();
             break;
         }
             

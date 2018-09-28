@@ -13,12 +13,14 @@
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
+#import "UIDevice+SRGLetterbox.h"
 
 #import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
+#import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <SRGNetwork/SRGNetwork.h>
 
@@ -82,6 +84,39 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     return isPlayerLoading || dataAvailability == SRGLetterboxDataAvailabilityLoading;
 }
 
+static NSString *SRGDeviceInformation(void)
+{
+    return [NSString stringWithFormat:@"%@ (%@)", UIDevice.currentDevice.hardware, UIDevice.currentDevice.systemVersion];
+}
+
+static NSString *SRGLetterboxNetworkType(void)
+{
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_types;
+    dispatch_once(&s_onceToken, ^{
+        s_types = @{ @(FXReachabilityStatusReachableViaWiFi) : @"wifi",
+                     @(FXReachabilityStatusReachableViaWWAN) : @"cellular" };
+    });
+    return s_types[@([FXReachability sharedInstance].status)];
+}
+
+static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingReason)
+{
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_codes;
+    dispatch_once(&s_onceToken, ^{
+        s_codes = @{ @(SRGBlockingReasonGeoblocking) : @"GEOBLOCK",
+                     @(SRGBlockingReasonLegal) : @"LEGAL",
+                     @(SRGBlockingReasonCommercial) : @"COMMERCIAL",
+                     @(SRGBlockingReasonAgeRating18) : @"AGERATING18",
+                     @(SRGBlockingReasonAgeRating12) : @"AGERATING12",
+                     @(SRGBlockingReasonStartDate) : @"STARTDATE",
+                     @(SRGBlockingReasonEndDate) : @"ENDDATE",
+                     @(SRGBlockingReasonUnknown) : @"UNKNOWN" };
+    });
+    return s_codes[@(blockingReason)];
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -140,6 +175,8 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
 
+@property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
+
 @end
 
 @implementation SRGLetterboxController
@@ -193,30 +230,30 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(reachabilityDidChange:)
-                                                     name:FXReachabilityStatusDidChangeNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackStateDidChange:)
-                                                     name:SRGMediaPlayerPlaybackStateDidChangeNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(segmentDidStart:)
-                                                     name:SRGMediaPlayerSegmentDidStartNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(segmentDidEnd:)
-                                                     name:SRGMediaPlayerSegmentDidEndNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playbackDidFail:)
-                                                     name:SRGMediaPlayerPlaybackDidFailNotification
-                                                   object:self.mediaPlayerController];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(routeDidChange:)
-                                                     name:AVAudioSessionRouteChangeNotification
-                                                   object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(reachabilityDidChange:)
+                                                   name:FXReachabilityStatusDidChangeNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackStateDidChange:)
+                                                   name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(segmentDidStart:)
+                                                   name:SRGMediaPlayerSegmentDidStartNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(segmentDidEnd:)
+                                                   name:SRGMediaPlayerSegmentDidEndNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackDidFail:)
+                                                   name:SRGMediaPlayerPlaybackDidFailNotification
+                                                 object:self.mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(routeDidChange:)
+                                                   name:AVAudioSessionRouteChangeNotification
+                                                 object:nil];
     }
     return self;
 }
@@ -279,12 +316,12 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (BOOL)areBackgroundServicesEnabled
 {
-    return self == [SRGLetterboxService sharedService].controller;
+    return self == SRGLetterboxService.sharedService.controller;
 }
 
 - (BOOL)isPictureInPictureEnabled
 {
-    return self.backgroundServicesEnabled && [SRGLetterboxService sharedService].pictureInPictureDelegate;
+    return self.backgroundServicesEnabled && SRGLetterboxService.sharedService.pictureInPictureDelegate;
 }
 
 - (BOOL)isPictureInPictureActive
@@ -436,6 +473,11 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 {
     [_continuousPlaybackTransitionTimer invalidate];
     _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
+}
+
+- (BOOL)isUsingAirPlay
+{
+    return [AVAudioSession srg_isAirPlayActive] && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
 }
 
 #pragma mark Periodic time observers
@@ -652,7 +694,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.endDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:endTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
-            [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, [NSDate date])];
+            [self updateWithError:SRGBlockingReasonErrorForMedia(self.media, NSDate.date)];
             [self notifyLivestreamEndWithMedia:self.mediaComposition.srgletterbox_liveMedia previousMedia:self.mediaComposition.srgletterbox_liveMedia];
             [self stop];
             
@@ -683,7 +725,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.livestreamEndDateTimer = nil;
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
 }
 
 - (void)notifyLivestreamEndWithMedia:(SRGMedia *)media previousMedia:(SRGMedia *)previousMedia
@@ -702,19 +744,19 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         }
         
         if ((media.contentType != SRGContentTypeLivestream && media.contentType != SRGContentTypeScheduledLivestream)
-            || ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
-                    && [media blockingReasonAtDate:[NSDate date]] == SRGBlockingReasonEndDate)) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
-                                                                    object:self
-                                                                  userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
-        }
+                || ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
+                    && [media blockingReasonAtDate:NSDate.date] == SRGBlockingReasonEndDate)) {
+                [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxLivestreamDidFinishNotification
+                                                                  object:self
+                                                                userInfo:@{ SRGLetterboxMediaKey : previousMedia }];
+            }
     }
     else {
         if ((media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream)
-                && [media blockingReasonAtDate:[NSDate date]] == SRGBlockingReasonEndDate) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxLivestreamDidFinishNotification
-                                                                object:self
-                                                              userInfo:@{ SRGLetterboxMediaKey : media }];
+                && [media blockingReasonAtDate:NSDate.date] == SRGBlockingReasonEndDate) {
+            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxLivestreamDidFinishNotification
+                                                              object:self
+                                                            userInfo:@{ SRGLetterboxMediaKey : media }];
         }
         
     }
@@ -722,7 +764,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 - (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL resourceChanged, NSError *previousError))completionBlock
 {
-    void (^updateCompletionBlock)(SRGMedia * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSError * _Nullable error, BOOL resourceChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
+    void (^updateCompletionBlock)(SRGMedia * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error, BOOL resourceChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
         // Do not erase playback errors with successful metadata updates
         if (error || ! [self.error.domain isEqualToString:SRGLetterboxErrorDomain] || self.error.code != SRGLetterboxErrorCodeNotPlayable) {
             [self updateWithError:error];
@@ -730,7 +772,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         
         [self notifyLivestreamEndWithMedia:media previousMedia:previousMedia];
         
-        self.lastUpdateDate = [NSDate date];
+        self.lastUpdateDate = NSDate.date;
         
         completionBlock ? completionBlock(error, resourceChanged, previousError) : nil;
     };
@@ -746,7 +788,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                 media = previousMedia;
             }
             
-            updateCompletionBlock(media, SRGBlockingReasonErrorForMedia(media, [NSDate date]), NO, previousMedia, SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate));
+            updateCompletionBlock(media, HTTPResponse, SRGBlockingReasonErrorForMedia(media, NSDate.date), NO, previousMedia, SRGBlockingReasonErrorForMedia(previousMedia, self.lastUpdateDate));
         }];
         [self.requestQueue addRequest:mediaRequest resume:YES];
         return;
@@ -771,9 +813,9 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
             if (mediaComposition) {
                 // Check whether the media is now blocked (conditions might have changed, e.g. user location or time)
                 SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
-                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
                 if (blockingReasonError) {
-                    updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, blockingReasonError, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+                    updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, HTTPResponse, blockingReasonError, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                     return;
                 }
                 
@@ -782,17 +824,17 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                     NSSet<SRGResource *> *previousResources = [NSSet setWithArray:previousMediaComposition.mainChapter.playableResources];
                     NSSet<SRGResource *> *resources = [NSSet setWithArray:mediaComposition.mainChapter.playableResources];
                     if (! [previousResources isEqualToSet:resources]) {
-                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, (self.error) ? error : nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+                        updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, HTTPResponse, (self.error) ? error : nil, YES, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
                         return;
                     }
                 }
             }
             
-            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
+            updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, HTTPResponse, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
         };
         
         if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404
-                && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+            && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.mediaComposition.fullLengthMedia.URN
                                                                                            standalone:self.standalone
                                                                                   withCompletionBlock:mediaCompositionCompletionBlock];
@@ -861,7 +903,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
                                                  NSUnderlyingErrorKey : error }];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
 
 #pragma mark Playback
@@ -907,73 +949,32 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] init];
     
+    if ([self prepareToPlayOverriddenURN:URN media:media atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler]) {
+        return;
+    }
+    
     self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
     
-    // Apply overriding if available. Overriding requires a media to be available. No media composition is retrieved
-    if (self.contentURLOverridingBlock) {
-        NSURL *contentURL = self.contentURLOverridingBlock(URN);
-        if (contentURL) {
-            void (^prepareToPlay)(NSURL *) = ^(NSURL *contentURL) {
-                if (media.presentation == SRGPresentation360) {
-                    if (self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeMonoscopic && self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeStereoscopic) {
-                        self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
-                    }
-                }
-                else {
-                    self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
-                }
-                [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:completionHandler];
-            };
-            
-            // Media readily available. Done
-            if (media) {
-                self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-                NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
-                [self updateWithError:blockingReasonError];
-                [self notifyLivestreamEndWithMedia:media previousMedia:nil];
-                
-                if (! blockingReasonError) {
-                    prepareToPlay(contentURL);
-                }
-            }
-            // Retrieve the media
-            else {
-                SRGMediaCompletionBlock mediaCompletionBlock = ^(SRGMedia * _Nullable media, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-                    if (error) {
-                        self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-                        [self updateWithError:error];
-                        return;
-                    }
-                    
-                    self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
-                    
-                    [self updateWithURN:nil media:media mediaComposition:nil subdivision:nil channel:nil];
-                    [self notifyLivestreamEndWithMedia:media previousMedia:nil];
-                    
-                    NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
-                    if (blockingReasonError) {
-                        [self updateWithError:blockingReasonError];
-                    }
-                    else {
-                        prepareToPlay(contentURL);
-                    }
-                };
-                
-                SRGRequest *mediaRequest = [self.dataProvider mediaWithURN:URN completionBlock:mediaCompletionBlock];
-                [self.requestQueue addRequest:mediaRequest resume:YES];
-            }
-            return;
-        }
-    }
+    [self startPlaybackDiagnosticReport];
+    
+    [[[self report] informationForKey:@"ilResult"] startTimeMeasurementForKey:@"duration"];
     
     SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         @strongify(self)
         
+        [[[self report] informationForKey:@"ilResult"] stopTimeMeasurementForKey:@"duration"];
+        
         if (error) {
             self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self updateWithError:error];
+            
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
+            [self finishDiagnosticReport];
             return;
         }
+        
+        // Update screenType value after metadata update.
+        [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
         [self updateChannel];
@@ -982,24 +983,109 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
         
         // Do not go further if the content is blocked
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, [NSDate date]);
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
+            
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:blockingReasonError];
+            [self finishDiagnosticReport];
             return;
         }
         
+        void (^prepareToPlayCompletionHandler)(void) = ^{
+            [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:nil];
+            [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
+            [self finishDiagnosticReport];
+            
+            completionHandler ? completionHandler() : nil;
+        };
+        
         // TODO: Replace s_prefersDRM with YES when removed
-        if (! [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:completionHandler]) {
+        if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
+            [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
+        }
+        else {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             
-            NSError *error = [NSError errorWithDomain:SRGDataProviderErrorDomain
-                                                 code:SRGDataProviderErrorCodeInvalidData
-                                             userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxNonLocalizedString(@"No recommended streaming resources found") }];
+            NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                                 code:SRGLetterboxErrorCodeNotPlayable
+                                             userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self updateWithError:error];
+            
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
+            [[[self report] informationForKey:@"ilResult"] setBool:YES forKey:@"noPlayableResourceFound"];
+            [self finishDiagnosticReport];
         }
     }];
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+}
+
+// Checks whether an override has been defined for the specified content to be played. Returns `YES` and plays it iff this is the case.
+- (BOOL)prepareToPlayOverriddenURN:(NSString *)URN media:(SRGMedia *)media atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+{
+    NSURL *contentURL = self.contentURLOverridden ? self.contentURLOverridingBlock(URN) : nil;
+    if (! contentURL) {
+        return NO;
+    }
+    
+    void (^prepareToPlay)(NSURL *) = ^(NSURL *contentURL) {
+        if (media.presentation == SRGPresentation360) {
+            if (self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeMonoscopic && self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeStereoscopic) {
+                self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
+            }
+        }
+        else {
+            self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeFlat;
+        }
+        [self.mediaPlayerController prepareToPlayURL:contentURL atPosition:position withSegments:nil userInfo:nil completionHandler:completionHandler];
+    };
+    
+    self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
+    
+    // Media readily available. Done
+    if (media) {
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
+        [self updateWithError:blockingReasonError];
+        [self notifyLivestreamEndWithMedia:media previousMedia:nil];
+        
+        if (blockingReasonError) {
+            
+        }
+        else {
+            prepareToPlay(contentURL);
+        }
+    }
+    // Retrieve the media
+    else {
+        SRGMediaCompletionBlock mediaCompletionBlock = ^(SRGMedia * _Nullable media, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            if (error) {
+                self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+                [self updateWithError:error];
+                return;
+            }
+            
+            self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+            
+            [self updateWithURN:nil media:media mediaComposition:nil subdivision:nil channel:nil];
+            [self notifyLivestreamEndWithMedia:media previousMedia:nil];
+            
+            NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(media, NSDate.date);
+            if (blockingReasonError) {
+                [self updateWithError:blockingReasonError];
+            }
+            else {
+                prepareToPlay(contentURL);
+            }
+        };
+        
+        SRGRequest *mediaRequest = [self.dataProvider mediaWithURN:URN completionBlock:mediaCompletionBlock];
+        [self.requestQueue addRequest:mediaRequest resume:YES];
+    }
+    
+    return YES;
 }
 
 - (void)play
@@ -1060,7 +1146,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         [self prepareToPlayURN:self.URN atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
 }
 
 - (void)restart
@@ -1145,10 +1231,10 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
     }
     
     // If playing another media or if the player is not playing, restart
-    if ([subdivision isKindOfClass:[SRGChapter class]]
+    if ([subdivision isKindOfClass:SRGChapter.class]
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
             || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], [NSDate date]);
+        NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], NSDate.date);
         [self updateWithError:blockingReasonError];
         
         if (blockingReasonError) {
@@ -1160,16 +1246,26 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
         self.socialCountViewTimer = nil;
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
+        [self startPlaybackDiagnosticReport];
+        
         if (! blockingReasonError) {
+            [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
             // TODO: Replace s_prefersDRM with YES when removed
             [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality DRM:s_prefersDRM startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+                [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
+                [self finishDiagnosticReport];
+                
                 [self.mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];
         }
+        else {
+            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:nil error:blockingReasonError];
+            [self finishDiagnosticReport];
+        }
     }
     // Playing another segment from the same media. Seek
-    else if ([subdivision isKindOfClass:[SRGSegment class]]) {
+    else if ([subdivision isKindOfClass:SRGSegment.class]) {
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         [self.mediaPlayerController seekToPosition:nil inSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
             [self.mediaPlayerController play];
@@ -1252,7 +1348,7 @@ withPreferredStreamType:(SRGStreamType)streamType
     }
     
     if (self.mediaComposition.srgletterbox_liveMedia && ! [self.mediaComposition.srgletterbox_liveMedia isEqual:self.media]) {
-        return [self.mediaComposition.srgletterbox_liveMedia blockingReasonAtDate:[NSDate date]] != SRGBlockingReasonEndDate;
+        return [self.mediaComposition.srgletterbox_liveMedia blockingReasonAtDate:NSDate.date] != SRGBlockingReasonEndDate;
     }
     else {
         return NO;
@@ -1267,6 +1363,72 @@ withPreferredStreamType:(SRGStreamType)streamType
 - (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
     return [self skipForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+}
+
+#pragma mark Diagnostics
+
+- (SRGDiagnosticReport *)report
+{
+    return self.URN ? [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:self.URN] : nil;
+}
+
+- (void)startPlaybackDiagnosticReport
+{
+    static dispatch_once_t s_onceToken;
+    static NSDateFormatter *s_dateFormatter;
+    dispatch_once(&s_onceToken, ^{
+        s_dateFormatter = [[NSDateFormatter alloc] init];
+        [s_dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [s_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"];
+    });
+    
+    SRGDiagnosticReport *report = [self report];
+    [report setInteger:1 forKey:@"version"];
+    [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
+    [report setString:NSBundle.srg_letterbox_isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
+    [report setString:SRGDeviceInformation() forKey:@"device"];
+    [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
+    [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
+    [report setString:self.URN forKey:@"urn"];
+    [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
+    [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
+    [report startTimeMeasurementForKey:@"duration"];
+}
+
+- (void)attachDataDiagnosticReportInformationWithMediaCompostion:(SRGMediaComposition *)mediaComposition HTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
+{
+    SRGDiagnosticInformation *information = [[self report] informationForKey:@"ilResult"];
+    
+    if (HTTPResponse) {
+        [information setURL:HTTPResponse.URL forKey:@"url"];
+        [information setInteger:HTTPResponse.statusCode forKey:@"httpStatusCode"];
+        [information setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+    }
+    // If the HTTP response is missing (network error typically), extract URL from error information
+    else {
+        [information setURL:error.userInfo[NSURLErrorFailingURLErrorKey] forKey:@"url"];
+    }
+        
+    [information setString:error.localizedDescription forKey:@"errorMessage"];
+    [information setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
+    if (mediaComposition) {
+        SRGSubdivision *subdivision = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+        [information setBool:subdivision.playableAbroad forKey:@"playableAbroad"];
+    }
+}
+
+- (void)attachPlayerDiagnosticReportInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error
+{
+    SRGDiagnosticInformation *information = [[self report] informationForKey:@"playerResult"];
+    [information setURL:contentURL forKey:@"url"];
+    [information setString:error.localizedDescription forKey:@"errorMessage"];
+}
+
+- (void)finishDiagnosticReport
+{
+    SRGDiagnosticReport *report = [self report];
+    [report stopTimeMeasurementForKey:@"duration"];
+    [report finish];
 }
 
 #pragma mark Helpers
@@ -1382,9 +1544,9 @@ withPreferredStreamType:(SRGStreamType)streamType
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     if (playbackState != self.playbackState) {
         self.playbackState = playbackState;
-        [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
-                                                            object:self
-                                                          userInfo:notification.userInfo];
+        [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackStateDidChangeNotification
+                                                          object:self
+                                                        userInfo:notification.userInfo];
     }
     
     // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
@@ -1407,9 +1569,9 @@ withPreferredStreamType:(SRGStreamType)streamType
         self.socialCountViewTimer = [NSTimer srgletterbox_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
-                                                                object:self
-                                                              userInfo:@{ SRGLetterboxSubdivisionKey : subdivision }];
+            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxSocialCountViewWillIncreaseNotification
+                                                              object:self
+                                                            userInfo:@{ SRGLetterboxSubdivisionKey : subdivision }];
             
             SRGRequest *request = [self.dataProvider increaseSocialCountForType:SRGSocialCountTypeSRGView subdivision:subdivision withCompletionBlock:^(SRGSocialCountOverview * _Nullable socialCountOverview, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
                 self.socialCountViewURN = socialCountOverview.URN;
@@ -1436,10 +1598,10 @@ withPreferredStreamType:(SRGStreamType)streamType
             if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
                 [self.playlistDataSource controller:self didTransitionToMedia:nextMedia automatically:YES];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                                object:self
-                                                              userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                          SRGLetterboxMediaKey : nextMedia }];
+            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                              object:self
+                                                            userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                        SRGLetterboxMediaKey : nextMedia }];
         };
         
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
@@ -1477,18 +1639,18 @@ withPreferredStreamType:(SRGStreamType)streamType
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:subdivision channel:self.channel];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSegmentDidStartNotification
-                                                        object:self
-                                                      userInfo:notification.userInfo];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxSegmentDidStartNotification
+                                                      object:self
+                                                    userInfo:notification.userInfo];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
 {
     [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:nil channel:self.channel];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SRGLetterboxSegmentDidEndNotification
-                                                        object:self
-                                                      userInfo:notification.userInfo];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxSegmentDidEndNotification
+                                                      object:self
+                                                    userInfo:notification.userInfo];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
@@ -1496,7 +1658,13 @@ withPreferredStreamType:(SRGStreamType)streamType
     if (self.dataAvailability == SRGLetterboxDataAvailabilityLoading) {
         self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
     }
-    [self updateWithError:notification.userInfo[SRGMediaPlayerErrorKey]];
+    
+    NSError *error = notification.userInfo[SRGMediaPlayerErrorKey];
+    [self updateWithError:error];
+    
+    [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:error];
+    [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
+    [self finishDiagnosticReport];
 }
 
 - (void)routeDidChange:(NSNotification *)notification
@@ -1532,8 +1700,9 @@ withPreferredStreamType:(SRGStreamType)streamType
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %p; URN: %@; media: %@; mediaComposition: %@; channel: %@; error: %@; mediaPlayerController: %@>",
-            [self class],
+    return [NSString stringWithFormat:@"<%@: %p; URN = %@; media = %@; mediaComposition = %@; channel = %@; error = %@; "
+            "mediaPlayerController = %@>",
+            self.class,
             self,
             self.URN,
             self.media,

@@ -64,8 +64,8 @@ static void commonInit(SRGLiveLabel *self);
 
 static void commonInit(SRGLiveLabel *self)
 {
-    self.backgroundColor = [UIColor srg_liveRedColor];
-    self.textColor = [UIColor whiteColor];
+    self.backgroundColor = UIColor.srg_liveRedColor;
+    self.textColor = UIColor.whiteColor;
     self.attributedText = [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     self.textAlignment = NSTextAlignmentCenter;
     self.numberOfLines = 1;

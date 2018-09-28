@@ -13,7 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Return YES when the device is locked.
  */
-+ (BOOL)srg_letterbox_isLocked;
+@property (class, nonatomic, readonly) BOOL srg_letterbox_isLocked;
+
+/**
+ *  Return the kind of hardware the code is running on.
+ */
+@property (nonatomic, readonly, copy) NSString *hardware;
 
 @end
 

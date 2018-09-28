@@ -44,7 +44,7 @@ static void commonInit(SRGLetterboxBaseView *self);
     // Start with self. The context can namely be the receiver itself
     UIView *parentLetterboxView = self;
     while (parentLetterboxView) {
-        if ([parentLetterboxView isKindOfClass:[SRGLetterboxView class]]) {
+        if ([parentLetterboxView isKindOfClass:SRGLetterboxView.class]) {
             return (SRGLetterboxView *)parentLetterboxView;
         }
         parentLetterboxView = parentLetterboxView.superview;
@@ -62,22 +62,22 @@ static void commonInit(SRGLetterboxBaseView *self);
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(contentSizeCategoryDidChange:)
-                                                     name:UIContentSizeCategoryDidChangeNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(accessibilityVoiceOverStatusChanged:)
-                                                     name:UIAccessibilityVoiceOverStatusChanged
-                                                   object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(contentSizeCategoryDidChange:)
+                                                   name:UIContentSizeCategoryDidChangeNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(accessibilityVoiceOverStatusChanged:)
+                                                   name:UIAccessibilityVoiceOverStatusChanged
+                                                 object:nil];
     }
     else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIContentSizeCategoryDidChangeNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIAccessibilityVoiceOverStatusChanged
-                                                      object:nil];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:UIContentSizeCategoryDidChangeNotification
+                                                    object:nil];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:UIAccessibilityVoiceOverStatusChanged
+                                                    object:nil];
     }
 }
 
@@ -118,12 +118,12 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 static void commonInit(SRGLetterboxBaseView *self)
 {
-    NSString *nibName = NSStringFromClass([self class]);
-    if ([[NSBundle srg_letterboxBundle] pathForResource:nibName ofType:@"nib"]) {
+    NSString *nibName = NSStringFromClass(self.class);
+    if ([NSBundle.srg_letterboxBundle pathForResource:nibName ofType:@"nib"]) {
         // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
         // an instance of the class itself to avoid infinite recursion.
-        UIView *view = [[[NSBundle srg_letterboxBundle] loadNibNamed:nibName owner:self options:nil] firstObject];
-        view.backgroundColor = [UIColor clearColor];
+        UIView *view = [[NSBundle.srg_letterboxBundle loadNibNamed:nibName owner:self options:nil] firstObject];
+        view.backgroundColor = UIColor.clearColor;
         [self addSubview:view];
         [view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);

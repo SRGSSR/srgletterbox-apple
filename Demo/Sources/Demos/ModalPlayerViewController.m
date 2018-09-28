@@ -49,20 +49,20 @@
 
 - (instancetype)initWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
-    SRGLetterboxService *service = [SRGLetterboxService sharedService];
+    SRGLetterboxService *service = SRGLetterboxService.sharedService;
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
-    if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:[self class]] && [service.controller.URN isEqual:URN]) {
+    if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:self.class] && [service.controller.URN isEqual:URN]) {
         return (ModalPlayerViewController *)service.pictureInPictureDelegate;
     }
     // Otherwise instantiate a fresh new one
     else {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
-
+        
         viewController.URN = URN;
         viewController.favoritedSubdivisions = [NSMutableArray array];
-
+        
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
         viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
@@ -107,17 +107,17 @@
     // Use custom modal transition
     self.transitioningDelegate = self;
     
-    [[SRGLetterboxService sharedService] enableWithController:self.letterboxController pictureInPictureDelegate:self];
+    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
     // Always display the full-screen interface in landscape orientation
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    UIDeviceOrientation deviceOrientation = UIDevice.currentDevice.orientation;
     BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
     [self.letterboxView setFullScreen:isLandscape animated:NO];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(metadataDidChange:)
-                                                 name:SRGLetterboxMetadataDidChangeNotification
-                                               object:self.letterboxController];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(metadataDidChange:)
+                                               name:SRGLetterboxMetadataDidChangeNotification
+                                             object:self.letterboxController];
     
     self.letterboxController.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
         return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
@@ -138,9 +138,9 @@
 {
     [super viewDidDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         if (! self.letterboxController.pictureInPictureActive) {
-            [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+            [SRGLetterboxService.sharedService disableForController:self.letterboxController];
         }
     }
 }
@@ -218,7 +218,7 @@
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
 {
-    [[SRGLetterboxService sharedService] disableForController:self.letterboxController];
+    [SRGLetterboxService.sharedService disableForController:self.letterboxController];
 }
 
 #pragma mark SRGLetterboxViewDelegate protocol
@@ -302,17 +302,17 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    return ! [touch.view isKindOfClass:[UISlider class]];
+    return ! [touch.view isKindOfClass:UISlider.class];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]];
+    return [otherGestureRecognizer.view isKindOfClass:UIScrollView.class];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return [otherGestureRecognizer isKindOfClass:[SRGActivityGestureRecognizer class]];
+    return [otherGestureRecognizer isKindOfClass:SRGActivityGestureRecognizer.class];
 }
 
 #pragma mark UIViewControllerTransitioningDelegate protocol

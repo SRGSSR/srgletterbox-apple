@@ -30,7 +30,7 @@
 
 - (instancetype)initWithTopicList:(TopicList)topicList
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([self class]) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     TopicListViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.topicList = topicList;
     return viewController;
@@ -53,7 +53,7 @@
     NSURL *serviceURL = (self.topicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
-        
+    
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:refreshControl atIndex:0];
@@ -66,7 +66,7 @@
 {
     [super viewWillDisappear:animated];
     
-    if ([self isMovingFromParentViewController] || [self isBeingDismissed]) {
+    if (self.movingFromParentViewController || self.beingDismissed) {
         [self.request cancel];
     }
 }

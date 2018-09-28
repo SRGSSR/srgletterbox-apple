@@ -30,7 +30,7 @@
     // to increase control readability and displaying the activity indicator
     self.userInteractionEnabled = NO;
     
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:[UIColor whiteColor]];
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:UIColor.whiteColor];
     [self addSubview:loadingImageView];
     [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.mas_centerX);
