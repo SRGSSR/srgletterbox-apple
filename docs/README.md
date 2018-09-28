@@ -26,33 +26,31 @@ The library is suitable for applications running on iOS 9 and above. The project
 
 ## Installation
 
-The library can be added to a project using [Carthage](https://github.com/Carthage/Carthage) by adding the following dependency to your `Cartfile`:
-    
+The library can be added to a project using Carthage. For more information about Carthage and its use, refer to its [official documentation](https://github.com/Carthage/Carthage).
+
+### Installation with content protection
+
+The ability to play protected content (e.g. livestreams, foreign TV series) is provided by an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) framework. If you have access to it, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
+
 ```
 github "SRGSSR/srgletterbox-ios"
-```
-
-Until Carthage 0.30, only dynamic frameworks could be integrated. Starting with Carthage 0.30, though, frameworks can be integrated statically as well, which avoids slow application startups usually associated with the use of too many dynamic frameworks.
-
-For more information about Carthage and its use, refer to the [official documentation](https://github.com/Carthage/Carthage).
-
-### Content protection
-
-To play protected content (e.g. livestreams, foreign TV series), and provided you have been granted access to it, an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) framework is available and must be added to your project `Cartfile` as well:
-
-```
 github "SRGSSR/srgcontentprotection-ios"
 ```
 
 Check the [wiki](https://github.com/SRGSSR/srgletterbox-ios/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
 
-If you have no access to this repository, use the fake public replacement framework by adding the following dependency instead:
+### Installation without content protection
+
+If you have no access to the internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) framework, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
 
 ```
+github "SRGSSR/srgletterbox-ios"
 github "SRGSSR/srgcontentprotection-fake-ios"
 ```
 
-When linking against this framework, some content (e.g. livestreams) will not be playable.
+Check the [wiki](https://github.com/SRGSSR/srgletterbox-ios/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
+
+With this setup, non-protected content only (e.g. in-house productions or audio content) will be playable.
 
 ### Dependencies
 
