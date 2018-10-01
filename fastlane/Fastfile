@@ -121,7 +121,7 @@ platform :ios do
     get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
     get_provisioning_profile(app_identifier: app_identifier, force: true)
 
-    xcargs = 'ENABLE_BITCODE=NO BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '"'
+    xcargs = 'ENABLE_BITCODE=NO BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" -allowProvisioningUpdates'
 
     gym(
       configuration: configuration,
