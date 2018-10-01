@@ -75,7 +75,7 @@ The library requires the following frameworks to be added to any target requirin
 * `SRGLetterbox`: The Letterbox library framework.
 * `SRGLogger`: The framework used for internal logging.
 * `SRGMediaPlayer`: The media player framework (if not already in your project).
-* `SRGNetworking`: A networking framework.
+* `SRGNetwork`: A networking framework.
 * `YYWebImage`: A framework for image retrieval.
 
 ### Dynamic framework integration
