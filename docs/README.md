@@ -76,6 +76,8 @@ The library requires the following frameworks to be added to any target requirin
 * `SRGLogger`: The framework used for internal logging.
 * `SRGMediaPlayer`: The media player framework (if not already in your project).
 * `SRGNetwork`: A networking framework.
+* `TCCore`: The core TagCommander framework.
+* `TCSDK`: The main TagCommander SDK framework.
 * `YYWebImage`: A framework for image retrieval.
 
 ### Dynamic framework integration
