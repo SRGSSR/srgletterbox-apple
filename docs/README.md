@@ -15,6 +15,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 * Access to all SRG SSR business unit medias.
 * Native AirPlay and picture in picture support.
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
+* ... and [a lot more](FEATURES.md).
 
 <p align="center"><img src="README-images/letterbox.jpg"/></p>
 
@@ -145,7 +146,7 @@ import SRGLetterbox
 
 ### Working with the library
 
-To learn about how the library can be used, have a look at the [getting started guide](Getting-started.md).
+To learn about how the library can be used, have a look at the [getting started guide](GETTING_STARTED.md).
 
 ### Logging
 
