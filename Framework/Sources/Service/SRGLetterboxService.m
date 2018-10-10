@@ -452,16 +452,19 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
             NSString *title = channel.currentProgram.title;
             nowPlayingInfo[MPMediaItemPropertyTitle] = title;
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : @"";
         }
         else {
             nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = @"";
         }
     }
     else {
         nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
     }
+    
+    nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
     
     CGFloat artworkDimension = 256.f * UIScreen.mainScreen.scale;
     CGSize maximumSize = CGSizeMake(artworkDimension, artworkDimension);
