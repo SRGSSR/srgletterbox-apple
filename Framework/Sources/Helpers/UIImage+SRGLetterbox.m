@@ -98,7 +98,7 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
     });
     
     // Use 2x maximum as scale. Sufficient for a good result without having to load very large images
-    CGFloat width = [s_widths[@(imageScale)] floatValue] * fminf([UIScreen mainScreen].scale, 2.f);
+    CGFloat width = [s_widths[@(imageScale)] floatValue] * fminf(UIScreen.mainScreen.scale, 2.f);
     return CGSizeMake(width, width * 9.f / 16.f);
 }
 
