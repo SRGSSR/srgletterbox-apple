@@ -103,7 +103,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
     else {
         [self resetRemoteCommandCenter];
-        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+        MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nil;
     }
 }
 
@@ -375,7 +375,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     // video playback while the app is fully in background for the moment (except if AirPlay is enabled)
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
-                                                                                                            || [AVAudioSession srg_isAirPlayActive]
+                                                                                                            || AVAudioSession.srg_isAirPlayActive
                                                                                                             || UIDevice.srg_letterbox_isLocked)) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
@@ -419,7 +419,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (! media) {
         [self clearArtworkImageCache];
-        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+        MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nil;
         return;
     }
     
@@ -452,10 +452,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
             NSString *title = channel.currentProgram.title;
             nowPlayingInfo[MPMediaItemPropertyTitle] = title;
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : nil;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : @"";
         }
         else {
             nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = @"";
         }
     }
     else {
@@ -463,7 +464,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
     }
     
-    CGFloat artworkDimension = 256.f * [UIScreen mainScreen].scale;
+    nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
+    
+    CGFloat artworkDimension = 256.f * UIScreen.mainScreen.scale;
     CGSize maximumSize = CGSizeMake(artworkDimension, artworkDimension);
     
     // TODO: Remove when iOS 10 is the minimum supported version
@@ -499,7 +502,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.isLive);
     }
     
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [nowPlayingInfo copy];
+    MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = [nowPlayingInfo copy];
 }
 
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
