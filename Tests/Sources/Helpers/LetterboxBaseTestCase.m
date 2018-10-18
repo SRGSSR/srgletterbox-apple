@@ -8,7 +8,7 @@
 
 NSURL *MMFServiceURL(void)
 {
-    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
+    return [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
 }
 
 NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
