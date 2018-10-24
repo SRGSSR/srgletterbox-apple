@@ -596,11 +596,6 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 - (void)cancelContinuousPlayback
 {
-    [self resetContinuousPlayback];
-}
-
-- (void)resetContinuousPlayback
-{
     self.continuousPlaybackTransitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
     self.continuousPlaybackTransitionEndDate = nil;
@@ -1189,7 +1184,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    [self resetContinuousPlayback];
+    [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
     
@@ -1622,7 +1617,7 @@ withPreferredStreamType:(SRGStreamType)streamType
                     @strongify(self)
                     
                     [self playMedia:nextMedia atPosition:startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
-                    [self resetContinuousPlayback];
+                    [self cancelContinuousPlayback];
                     notify();
                 }];
             }
