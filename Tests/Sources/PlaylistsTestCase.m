@@ -463,6 +463,15 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTAssertTrue([NSDate.date timeIntervalSinceDate:playbackEndDate1] - kContinuousPlaybackTransitionDuration < 1);
 }
 
+- (void)testSwitchToSegmentDuringContinuousPlaybackTransition
+{}
+
+- (void)testSwitchToChapterDuringContinuousPlaybackTransition
+{}
+
+- (void)testSeekWithinMediaDuringContinuousPlaybackTransition
+{}
+
 - (void)testContinuousPlaybackTransitionKeyValueObserving
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
