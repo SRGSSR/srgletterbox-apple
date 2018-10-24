@@ -1549,6 +1549,11 @@ withPreferredStreamType:(SRGStreamType)streamType
                                                         userInfo:notification.userInfo];
     }
     
+    // Continuous playback only makes sense while in the ended state
+    if (playbackState != SRGMediaPlayerPlaybackStateEnded) {
+        [self cancelContinuousPlayback];
+    }
+    
     // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
     if (self.pictureInPictureActive && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self stop];
