@@ -1091,7 +1091,6 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 - (void)play
 {
     if (self.mediaPlayerController.contentURL) {
-        [self cancelContinuousPlayback];
         [self.mediaPlayerController play];
     }
     else if (self.media) {
@@ -1622,7 +1621,6 @@ withPreferredStreamType:(SRGStreamType)streamType
                     @strongify(self)
                     
                     [self playMedia:nextMedia atPosition:startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
-                    [self cancelContinuousPlayback];
                     notify();
                 }];
             }
