@@ -27,8 +27,20 @@ NSURL *LetterboxDemoMMFServiceURL(void)
     return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
 }
 
+static void SettingServiceURLReset(void)
+{
+    BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset"];
+    if (! settingServiceURLReset) {
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingServiceURL];
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingGlobalHeaders];
+        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset"];
+        [NSUserDefaults.standardUserDefaults synchronize];
+    }
+}
+
 NSURL *ApplicationSettingServiceURL(void)
 {
+    SettingServiceURLReset();
     NSString *URLString = [NSUserDefaults.standardUserDefaults stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
