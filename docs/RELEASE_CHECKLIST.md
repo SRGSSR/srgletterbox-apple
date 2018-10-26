@@ -12,5 +12,6 @@
 | Push master, develop and tag |||||||||||||||
 | Close milestone and issues on github |||||||||||||||
 | Create github release |||||||||||||||
+| Update demo release note JSON |||||||||||||||
 | Deliver demo on HockeyApp | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |||
 | Update dependency matrix on wiki | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |||
