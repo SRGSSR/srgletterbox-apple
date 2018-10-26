@@ -7,11 +7,11 @@
 | Verify that Cartfile.resolved only contains tagged versions |||||||||||||||
 | Run `make update` |||||||||||||||
 | Run unit tests successfully |||||||||||||||
+| Update demo release note JSON | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A ||
 | Finish git-flow release |||||||||||||||
 | Bump patch / build version numbers in project |||||||||||||||
 | Push master, develop and tag |||||||||||||||
 | Close milestone and issues on github |||||||||||||||
 | Create github release |||||||||||||||
-| Update demo release note JSON | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |||
-| Deliver demo on HockeyApp | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |||
-| Update dependency matrix on wiki | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |||
+| Deliver demo on HockeyApp | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A ||
+| Update dependency matrix on wiki | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A ||
