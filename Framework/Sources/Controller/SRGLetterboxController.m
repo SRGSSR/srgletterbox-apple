@@ -477,7 +477,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 - (BOOL)isUsingAirPlay
 {
-    return [AVAudioSession srg_isAirPlayActive] && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
+    return AVAudioSession.srg_isAirPlayActive && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
 }
 
 #pragma mark Periodic time observers
@@ -834,7 +834,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         };
         
         if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404
-            && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
+                && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.mediaComposition.fullLengthMedia.URN
                                                                                            standalone:self.standalone
                                                                                   withCompletionBlock:mediaCompositionCompletionBlock];

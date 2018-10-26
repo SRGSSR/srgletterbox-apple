@@ -600,7 +600,7 @@ static void commonInit(SRGLetterboxView *self);
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     if (@available(iOS 11, *)) {
-        if (NSBundle.srg_letterbox_isProductionVersion && [UIScreen mainScreen].captured && ! [AVAudioSession srg_isAirPlayActive]) {
+        if (NSBundle.srg_letterbox_isProductionVersion && UIScreen.mainScreen.captured && ! AVAudioSession.srg_isAirPlayActive) {
             playerViewVisible = NO;
         }
     }

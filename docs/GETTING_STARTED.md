@@ -1,6 +1,4 @@
-
-Getting started
-===============
+# Getting started
 
 The SRG Letterbox library is made of three core components:
 

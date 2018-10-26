@@ -15,6 +15,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 * Access to all SRG SSR business unit medias.
 * Native AirPlay and picture in picture support.
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
+* ... and [a lot more](FEATURES.md).
 
 <p align="center"><img src="README-images/letterbox.jpg"/></p>
 
@@ -75,7 +76,9 @@ The library requires the following frameworks to be added to any target requirin
 * `SRGLetterbox`: The Letterbox library framework.
 * `SRGLogger`: The framework used for internal logging.
 * `SRGMediaPlayer`: The media player framework (if not already in your project).
-* `SRGNetworking`: A networking framework.
+* `SRGNetwork`: A networking framework.
+* `TCCore`: The core TagCommander framework.
+* `TCSDK`: The main TagCommander SDK framework.
 * `YYWebImage`: A framework for image retrieval.
 
 ### Dynamic framework integration
@@ -106,7 +109,7 @@ make help
 
 Alternatively, you can of course open the project with Xcode and use the available schemes.
 
-Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/playsrg-configuration-ios), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-ios-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
 
 If you need to make changes to the settings:
 
@@ -143,7 +146,7 @@ import SRGLetterbox
 
 ### Working with the library
 
-To learn about how the library can be used, have a look at the [getting started guide](Getting-started.md).
+To learn about how the library can be used, have a look at the [getting started guide](GETTING_STARTED.md).
 
 ### Logging
 
