@@ -62,7 +62,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
     [[BITHockeyManager sharedHockeyManager] startManager];
     
-#if defined(BETA) || defined(NIGHTLY)
+#if defined(RELEASE) || defined(NIGHTLY)
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
 }
