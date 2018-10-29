@@ -1,3 +1,5 @@
+# Release checklist
+
 | Step | MAKVONotificationCenter | libextobjc | FXReachability | SRG Logger | SRG Appearance | SRG Network | SRG Diagnostics | SRG Identity | SRG Media Player | SRG Data Provider | SRG Content Protection | SRG Content Protection Fake | SRG Analytics | SRG Letterbox |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Start git-flow release branch for new version |||||||||||||||
