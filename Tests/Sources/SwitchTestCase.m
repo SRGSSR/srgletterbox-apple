@@ -38,7 +38,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:NO];
+    [self.controller playURN:OnDemandLongVideoSegmentURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -66,7 +66,10 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:YES];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
+    [self.controller playURN:OnDemandLongVideoSegmentURN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -107,7 +110,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:NO];
+    [self.controller playURN:OnDemandLongVideoSegmentURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -146,7 +149,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -176,7 +179,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -211,7 +214,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:OnDemandLongVideoSegmentURN standalone:NO];
+    [self.controller playURN:OnDemandLongVideoSegmentURN atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -248,7 +251,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:OnDemandAudioWithChaptersURN standalone:NO];
+    [self.controller playURN:OnDemandAudioWithChaptersURN atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -290,7 +293,10 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:MMFOnDemandLongVideoURN standalone:YES];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
+    [self.controller playURN:MMFOnDemandLongVideoURN atPosition:nil withPreferredSettings:settings];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);

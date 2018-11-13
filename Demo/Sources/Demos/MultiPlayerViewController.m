@@ -106,16 +106,19 @@
                                              object:nil];
     
     if (! self.letterboxController.pictureInPictureActive) {
+        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+        settings.standalone = ApplicationSettingIsStandalone();
+        
         if (self.URN) {
-            [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
+            [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
         }
         
         if (self.URN1) {
-            [self.smallLetterboxController1 playURN:self.URN1 standalone:ApplicationSettingIsStandalone()];
+            [self.smallLetterboxController1 playURN:self.URN1 atPosition:nil withPreferredSettings:settings];
         }
         
         if (self.URN2) {
-            [self.smallLetterboxController2 playURN:self.URN2 standalone:ApplicationSettingIsStandalone()];
+            [self.smallLetterboxController2 playURN:self.URN2 atPosition:nil withPreferredSettings:settings];
         }
     }
 }

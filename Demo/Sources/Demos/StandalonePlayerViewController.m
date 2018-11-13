@@ -77,7 +77,10 @@
     self.mirroredSwitch.on = ApplicationSettingIsMirroredOnExternalScreen();
     
     if (self.URN) {
-        [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
+        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+        settings.standalone = ApplicationSettingIsStandalone();
+        
+        [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
     }
 }
 

@@ -8,6 +8,7 @@
 #import "SRGLetterboxController.h"
 #import "SRGLetterboxControllerView.h"
 #import "SRGLetterboxError.h"
+#import "SRGLetterboxPlaybackSettings.h"
 #import "SRGLetterboxService.h"
 #import "SRGLetterboxView.h"
 

@@ -42,7 +42,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -62,7 +62,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -90,7 +90,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -120,7 +120,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -157,7 +157,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
+    [self.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:nil completionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -196,7 +196,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -226,7 +226,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -273,7 +273,7 @@
     
     NSString *URN = OnDemandLongVideoURN;
     NSString *segmentURN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:segmentURN standalone:NO];
+    [self.controller playURN:segmentURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -293,7 +293,7 @@
     }];
     
     NSString *URN1 = OnDemandVideoURN;
-    [self.controller playURN:URN1 standalone:NO];
+    [self.controller playURN:URN1 atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -302,7 +302,7 @@
     }];
     
     NSString *URN2 = OnDemandLongVideoURN;
-    [self.controller playURN:URN2 standalone:NO];
+    [self.controller playURN:URN2 atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -321,8 +321,11 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
     NSString *URN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:URN standalone:YES];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
