@@ -186,9 +186,14 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 #pragma mark Class methods
 
-+ (void)setPrefersDRM:(BOOL)prefersDRM;
++ (void)setPrefersDRM:(BOOL)prefersDRM
 {
     s_prefersDRM = prefersDRM;
+}
+
++ (BOOL)prefersDRM
+{
+    return s_prefersDRM;
 }
 
 #pragma mark Object lifecycle
