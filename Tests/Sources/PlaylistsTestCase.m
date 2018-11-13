@@ -45,7 +45,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -137,7 +137,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
     }] resume];
@@ -200,7 +200,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -261,7 +261,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = 0.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -322,7 +322,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -399,7 +399,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -470,7 +470,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -518,14 +518,6 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     }];
 }
 
-// FIXME: -playNextMedia use previous values, but here it can be incorrectly used to initiate playlist playback with the
-//        first media (and therefore starts with standalone = NO). A few options:
-//          1. Prevent -playNextMedia from being used for initial item playback
-//          2. Make all parameters configurable by the playlist data source
-//          3. Add all parameters to the -playNext / previous / upcoming media calls.
-//        1 is probably simple but confusing. We already have part of 2 (start time), but we should probably wrap all
-//        parameters in a single configuration class to avoid data source methods for each and every parameter. 3 is
-//        not possible since the calls might be made automatically (especially -playUpcomingMedia).
 - (void)testSwitchToChapterDuringContinuousPlaybackTransition
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
@@ -533,7 +525,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:YES];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -564,7 +556,21 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    // TODO:
+    // Switch to another chapter. Continuous playback must be cancelled
+    id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Playback must not continue automatically");
+    }];
+    
+    [self expectationForElapsedTimeInterval:8. withHandler:nil];
+    [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller switchToURN:@"urn:rts:video:9309816" withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
+    }];
 }
 
 - (void)testSeekWithinMediaDuringContinuousPlaybackTransition
@@ -574,7 +580,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -631,7 +637,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     static NSTimeInterval kContinuousPlaybackTransitionDuration = 5.;
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = kContinuousPlaybackTransitionDuration;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -672,7 +678,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:@"urn:rts:video:9943299" standalone:NO];
+    [self.controller playURN:@"urn:rts:video:9943299" atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
@@ -684,7 +690,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -745,7 +751,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = 5.;
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -791,7 +797,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.startTime = CMTimeMakeWithSeconds(10., NSEC_PER_SEC);
         self.controller.playlistDataSource = self.playlist;
         [expectation fulfill];
@@ -815,7 +821,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Media request"];
     
     [[self.dataProvider mediasWithURNs:@[MediaURN1, MediaURN2] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[TestPlaylist alloc] initWithMedias:medias];
+        self.playlist = [[TestPlaylist alloc] initWithMedias:medias standalone:NO];
         self.playlist.continuousPlaybackTransitionDuration = 1.;
         self.playlist.startTime = CMTimeMakeWithSeconds(10., NSEC_PER_SEC);
         self.controller.playlistDataSource = self.playlist;
