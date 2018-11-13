@@ -533,7 +533,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     SRGPosition *position = [self startPositionForMedia:media];
-    [self prepareToPlayMedia:media atPosition:position withPreferredSettings:self.preferredSettings completionHandler:completionHandler];
+    SRGLetterboxPlaybackSettings *preferredSettings = [self preferredSettingsForMedia:media];
+    
+    [self prepareToPlayMedia:media atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler];
     
     if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
         [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
@@ -596,6 +598,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     if ([self.playlistDataSource respondsToSelector:@selector(controller:startPositionForMedia:)]) {
         return [self.playlistDataSource controller:self startPositionForMedia:media];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (SRGLetterboxPlaybackSettings *)preferredSettingsForMedia:(SRGMedia *)media
+{
+    if ([self.playlistDataSource respondsToSelector:@selector(controller:preferredSettingsForMedia:)]) {
+        return [self.playlistDataSource controller:self preferredSettingsForMedia:media];
     }
     else {
         return nil;
@@ -1580,6 +1592,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
             SRGPosition *startPosition = [self startPositionForMedia:nextMedia];
+            SRGLetterboxPlaybackSettings *preferredSettings = [self preferredSettingsForMedia:nextMedia];
             
             if (continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
@@ -1590,12 +1603,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                 self.continuousPlaybackTransitionTimer = [NSTimer srgletterbox_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
-                    [self playMedia:nextMedia atPosition:startPosition withPreferredSettings:self.preferredSettings];
+                    [self playMedia:nextMedia atPosition:startPosition withPreferredSettings:preferredSettings];
                     notify();
                 }];
             }
             else {
-                [self playMedia:nextMedia atPosition:startPosition withPreferredSettings:self.preferredSettings];
+                [self playMedia:nextMedia atPosition:startPosition withPreferredSettings:preferredSettings];
                 
                 // Send notification on next run loop, so that other observers of the playback end notification all receive
                 // the notification before the continuous playback notification is emitted.

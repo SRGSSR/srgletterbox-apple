@@ -173,6 +173,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  */
 - (nullable SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media;
 
+/**
+ *  Optional playback settings to be applied when playing the specified media. If not implemented or if the method returns
+ *  `nil`, default settings are applied.
+ */
+- (nullable SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media;
+
 @end
 
 /**
