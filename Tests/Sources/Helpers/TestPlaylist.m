@@ -10,6 +10,7 @@
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 @property (nonatomic) NSInteger index;
+@property (nonatomic, getter=isStandalone) BOOL standalone;
 
 @end
 
@@ -17,13 +18,14 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias
+- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias standalone:(BOOL)standalone
 {
     if (self = [super init]) {
         self.medias = medias;
         self.index = NSNotFound;
         self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
         self.startTime = kCMTimeZero;
+        self.standalone = standalone;
     }
     return self;
 }
@@ -66,6 +68,13 @@
 - (SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media
 {
     return [SRGPosition positionAtTime:self.startTime];
+}
+
+- (SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media
+{
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = self.standalone;
+    return settings;
 }
 
 @end

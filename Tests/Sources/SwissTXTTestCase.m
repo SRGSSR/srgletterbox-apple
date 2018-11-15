@@ -49,7 +49,7 @@
     NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:500];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -98,7 +98,7 @@
     NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:500];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -144,7 +144,7 @@
     NSDate *endDate = [NSDate dateWithTimeIntervalSinceNow:500];
     NSString *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -183,7 +183,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
@@ -264,7 +264,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
@@ -357,7 +357,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
@@ -432,7 +432,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-10];
     NSDate *endDate = [startDate dateByAddingTimeInterval:5];
     NSString *URN = MMFSwissTXTLiveOnlyURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
@@ -459,7 +459,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
     NSDate *endDate = [startDate dateByAddingTimeInterval:40];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -527,7 +527,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
     NSDate *endDate = [startDate dateByAddingTimeInterval:28];
     NSString *URN = MMFSwissTXTLimitedDVRURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
@@ -595,7 +595,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-1000.];
     NSDate *endDate = [startDate dateByAddingTimeInterval:-30.];
     NSString *URN = [MMFSwissTXTLimitedDVRURN(startDate, endDate) stringByAppendingString:@"_segment1"];
-    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
+    [self.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:nil completionHandler:nil];
     
     id livestreamEndObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         XCTFail(@"No livestream end notification expected");

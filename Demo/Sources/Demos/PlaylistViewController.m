@@ -97,7 +97,10 @@
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
-        [self.letterboxController playMedia:firstMedia standalone:ApplicationSettingIsStandalone()];
+        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+        settings.standalone = ApplicationSettingIsStandalone();
+        
+        [self.letterboxController playMedia:firstMedia atPosition:nil withPreferredSettings:settings];
     }
 }
 

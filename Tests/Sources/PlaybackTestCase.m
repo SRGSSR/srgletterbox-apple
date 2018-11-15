@@ -61,7 +61,7 @@
             return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
         }];
         
-        [self.controller playURN:OnDemandVideoURN standalone:NO];
+        [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
         
         [self waitForExpectationsWithTimeout:30. handler:nil];
         
@@ -94,7 +94,7 @@
     XCTAssertFalse(self.controller.loading);
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -117,7 +117,7 @@
     }];
     
     SRGPosition *position = [SRGPosition positionAtTimeInSeconds:15.];
-    [self.controller playURN:OnDemandVideoURN atPosition:position standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self.controller playURN:OnDemandVideoURN atPosition:position withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -149,7 +149,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playMedia:media standalone:NO];
+    [self.controller playMedia:media atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -190,7 +190,7 @@
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playMedia:media standalone:NO];
+    [self.controller playMedia:media atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     
@@ -214,7 +214,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
+    [self.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:nil completionHandler:nil];
     [self.controller play];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
@@ -237,7 +237,7 @@
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -272,7 +272,7 @@
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -314,7 +314,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:swi:video:_NO_ID_" standalone:NO];
+    [self.controller playURN:@"urn:swi:video:_NO_ID_" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -351,7 +351,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:rts:video:playlist500" standalone:NO];
+    [self.controller playURN:@"urn:rts:video:playlist500" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -387,7 +387,7 @@
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:@"urn:rts:video:onlyHDS" standalone:NO];
+    [self.controller playURN:@"urn:rts:video:onlyHDS" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     
@@ -412,7 +412,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -439,7 +439,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
+    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -471,7 +471,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -502,7 +502,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -529,7 +529,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -556,7 +556,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -596,7 +596,7 @@
     }];
     
     NSString *URN = OnDemandVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     // Media and composition not immediately available, fetched by the controller
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -626,7 +626,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -640,7 +640,7 @@
     
     [self expectationForElapsedTimeInterval:3. withHandler:nil];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:metadataObserver];
@@ -654,7 +654,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -678,7 +678,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:metadataObserver];
@@ -695,7 +695,7 @@
     };
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
-    [self.controller prepareToPlayURN:OnDemandVideoURN standalone:NO withCompletionHandler:NULL];
+    [self.controller prepareToPlayURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil completionHandler:nil];
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:expectationHandler];
@@ -715,7 +715,7 @@
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"playbackState" expectedValue:@(SRGMediaPlayerPlaybackStatePreparing)];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
@@ -738,7 +738,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -809,7 +809,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playMedia:media standalone:NO];
+    [self.controller playMedia:media atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -837,7 +837,7 @@
     }];
     
     SRGPosition *position = [SRGPosition positionAtTimeInSeconds:15.];
-    [self.controller playURN:OnDemandLongVideoURN atPosition:position standalone:NO withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
+    [self.controller playURN:OnDemandLongVideoURN atPosition:position withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -853,7 +853,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -900,7 +900,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoSegmentURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -947,7 +947,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1004,7 +1004,7 @@
     }];
     
     NSString *URN = LiveOnlyVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertEqualObjects(self.controller.URN, URN);
@@ -1053,7 +1053,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
@@ -1125,7 +1125,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:15];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1167,7 +1167,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-15];
     NSDate *endDate = [startDate dateByAddingTimeInterval:7];
     NSString *URN = MMFScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
@@ -1199,7 +1199,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-1];
     NSDate *endDate = [startDate dateByAddingTimeInterval:20];
     NSString *URN = MMFCachedScheduledOnDemandVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
@@ -1261,7 +1261,7 @@
     
     [self expectationForElapsedTimeInterval:4. withHandler:nil];
     
-    [self.controller playMedia:media standalone:NO];
+    [self.controller playMedia:media atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
@@ -1322,7 +1322,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFURLChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1365,7 +1365,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFURLChangeVideoURN(startDate, endDate);
-    [self.controller prepareToPlayURN:URN standalone:NO withCompletionHandler:nil];
+    [self.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:nil completionHandler:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1408,7 +1408,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFURLChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -1467,7 +1467,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:7];
     NSDate *endDate = [startDate dateByAddingTimeInterval:60];
     NSString *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1520,7 +1520,7 @@
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-5];
     NSDate *endDate = [startDate dateByAddingTimeInterval:10];
     NSString *URN = MMFBlockingReasonChangeVideoURN(startDate, endDate);
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1562,7 +1562,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN standalone:NO];
+    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1583,7 +1583,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1604,7 +1604,7 @@
     
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:LiveDVRVideoURN standalone:NO];
+    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     XCTAssertTrue(self.controller.loading);
     
@@ -1637,7 +1637,7 @@
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@YES];
     
-    [self.controller playURN:LiveDVRVideoURN standalone:NO];
+    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

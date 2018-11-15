@@ -30,7 +30,10 @@
     _media = media;
     
     if (media) {
-        [self.letterboxController playMedia:media standalone:ApplicationSettingIsStandalone()];
+        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+        settings.standalone = ApplicationSettingIsStandalone();
+        
+        [self.letterboxController playMedia:media atPosition:nil withPreferredSettings:settings];
     }
     else {
         [self.letterboxController reset];
