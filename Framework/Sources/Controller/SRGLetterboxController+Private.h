@@ -67,8 +67,7 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  */
 // FIXME: This hook is temporary until 2019 and must only be used by Play SRG applications. It will be removed
 //        afterwards.
-+ (void)setPrefersDRM:(BOOL)prefersDRM;
-+ (BOOL)prefersDRM;
+@property (class, nonatomic) BOOL prefersDRM;
 
 @end
 
