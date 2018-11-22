@@ -24,6 +24,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
+@property (nonatomic, weak) IBOutlet UIStackView *cancelStackView;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
 @end
@@ -127,13 +128,13 @@
     self.introLabel.hidden = NO;
     self.titleLabel.hidden = NO;
     self.subtitleLabel.hidden = NO;
-    self.cancelButton.hidden = NO;
+    self.cancelStackView.hidden = NO;
     self.remainingTimeButton.enabled = YES;
     
     if (self.controller.continuousPlaybackUpcomingMedia) {
         if (! self.parentLetterboxView.userInterfaceEnabled) {
             self.remainingTimeButton.enabled = NO;
-            self.cancelButton.hidden = YES;
+            self.cancelStackView.hidden = YES;
         }
         
         CGFloat height = CGRectGetHeight(self.frame);
@@ -142,7 +143,7 @@
             self.subtitleLabel.hidden = YES;
         }
         if (height < 150.f) {
-            self.cancelButton.hidden = YES;
+            self.cancelStackView.hidden = YES;
         }
         if (height < 100.f) {
             self.titleLabel.hidden = YES;
