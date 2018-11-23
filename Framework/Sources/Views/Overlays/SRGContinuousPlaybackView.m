@@ -150,7 +150,7 @@
         }
     }
     else {
-        self.cancelButton.hidden = YES;
+        self.cancelStackView.hidden = YES;
     }
 }
 
