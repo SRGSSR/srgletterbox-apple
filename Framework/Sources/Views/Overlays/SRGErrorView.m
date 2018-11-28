@@ -13,6 +13,17 @@
 #import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
+#import <SRGContentProtection/SRGContentProtection.h>
+
+static NSURL *SRGErrorViewInformationURLForError(NSError *error)
+{
+    if ([error.domain isEqualToString:SRGContentProtectionErrorDomain] && error.code == SRGContentProtectionErrorUnauthorized) {
+        return SRGLetterboxContentProtectionInformationURL();
+    }
+    else {
+        return nil;
+    }
+}
 
 @interface SRGErrorView ()
 
@@ -99,17 +110,35 @@
 - (void)refresh
 {
     NSError *error = self.controller.error;
+    
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
-    self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    
+    if (SRGErrorViewInformationURLForError(error)) {
+        self.instructionsLabel.text = SRGLetterboxLocalizedString(@"Learn more", @"Message displayed when the user has a way to access more information about an error");
+    }
+    else if (error) {
+        self.instructionsLabel.text = SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the user is able to retry");
+    }
+    else {
+        self.instructionsLabel.text = nil;
+    }
 }
 
 #pragma mark Actions
 
-- (IBAction)retry:(id)sender
+- (IBAction)didTap:(id)sender
 {
-    [self.controller restart];
+    NSError *error = self.controller.error;
+    
+    NSURL *informationURL = SRGErrorViewInformationURLForError(error);
+    if (informationURL) {
+        [UIApplication.sharedApplication openURL:informationURL];
+    }
+    else if (error) {
+        [self.controller restart];
+    }
 }
 
 @end

@@ -88,6 +88,7 @@
 		6F2E03F92150E78000737B3C /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F2E03FA2150E78F00737B3C /* SRGContentProtection.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
+		6F338E9421AE995D002FD8A9 /* Constants.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F338E9221AE995D002FD8A9 /* Constants.strings */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
 		6F50594F20581CAF00823003 /* SRGNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592520581CAF00823003 /* SRGNotificationView.h */; };
 		6F50595020581CAF00823003 /* SRGCountdownView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592620581CAF00823003 /* SRGCountdownView.h */; };
@@ -411,6 +412,11 @@
 		6F28BAD11E323F6A004F43DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6F2EB46E2029DFB100E7ACDC /* LetterboxBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LetterboxBaseTestCase.h; sourceTree = "<group>"; };
 		6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxBaseTestCase.m; sourceTree = "<group>"; };
+		6F338E9321AE995D002FD8A9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Constants.strings; sourceTree = "<group>"; };
+		6F338E9521AE9966002FD8A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Constants.strings; sourceTree = "<group>"; };
+		6F338E9621AE9979002FD8A9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Constants.strings; sourceTree = "<group>"; };
+		6F338E9721AE997B002FD8A9 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Constants.strings; sourceTree = "<group>"; };
+		6F338E9821AE997E002FD8A9 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Constants.strings; sourceTree = "<group>"; };
 		6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGMediaPlayerDesignables.m; sourceTree = "<group>"; };
 		6F4855AB1E3A669B00B0141C /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -650,6 +656,7 @@
 		08FA0CB91E2E585B000C94EF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6F338E9221AE995D002FD8A9 /* Constants.strings */,
 				08E0BF5E1EE05BCD002D4012 /* Accessibility.strings */,
 				6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */,
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
@@ -1236,6 +1243,7 @@
 				6F0C990F2121E73400073AB6 /* SRGAvailabilityView.xib in Resources */,
 				6F0C99082121E6FB00073AB6 /* FontAwesome.otf in Resources */,
 				6F0C99142121E73400073AB6 /* SRGErrorView.xib in Resources */,
+				6F338E9421AE995D002FD8A9 /* Constants.strings in Resources */,
 				6F0C99072121E6F800073AB6 /* Accessibility.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1462,6 +1470,18 @@
 				08E0BF641EE05BDA002D4012 /* rm */,
 			);
 			name = Accessibility.strings;
+			sourceTree = "<group>";
+		};
+		6F338E9221AE995D002FD8A9 /* Constants.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6F338E9321AE995D002FD8A9 /* de */,
+				6F338E9521AE9966002FD8A9 /* en */,
+				6F338E9621AE9979002FD8A9 /* fr */,
+				6F338E9721AE997B002FD8A9 /* it */,
+				6F338E9821AE997E002FD8A9 /* rm */,
+			);
+			name = Constants.strings;
 			sourceTree = "<group>";
 		};
 		6F4855AA1E3A669B00B0141C /* Localizable.strings */ = {

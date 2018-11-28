@@ -8,6 +8,18 @@
 
 #import "SRGLetterboxController.h"
 
+NSURL *SRGLetterboxContentProtectionInformationURL(void)
+{
+    static NSString * const kMissingLocalization = @"SRG_LETTERBOX_MISSING_LOCALIZATION";
+    NSString *URLString = [NSBundle.srg_letterboxBundle localizedStringForKey:@"CONTENT_PROTECTION_INFORMATION_URL" value:kMissingLocalization table:@"Constants"];
+    if (! [URLString isEqualToString:kMissingLocalization]) {
+        return [NSURL URLWithString:URLString];
+    }
+    else {
+        return nil;
+    }
+}
+
 NSString *SRGLetterboxNonLocalizedString(NSString *string)
 {
     return string;

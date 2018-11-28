@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 #define SRGLetterboxAccessibilityLocalizedString(key, comment) [NSBundle.srg_letterboxBundle localizedStringForKey:(key) value:@"" table:@"Accessibility"]
 
 /**
+ *  The URL of a webpage providing more information about content protection.
+ */
+OBJC_EXPORT NSURL * _Nullable SRGLetterboxContentProtectionInformationURL(void);
+
+/**
  *  Use to avoid user-facing text analyzer warnings.
  *
  *  See https://clang-analyzer.llvm.org/faq.html.
