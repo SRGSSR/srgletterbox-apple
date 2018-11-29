@@ -1425,12 +1425,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         return NO;
     }
     
-    SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
     if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         return NO;
     }
     
-    SRGMediaPlayerStreamType streamType = self.mediaPlayerController.streamType;
+    SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
     return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
 }
 
@@ -1440,14 +1442,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         return NO;
     }
     
-    SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
     if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         return NO;
     }
     
-    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
-    return (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSkipInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
-        || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
+    SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
+    return (streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSkipInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
+        || (streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
 }
 
 - (BOOL)skipBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
