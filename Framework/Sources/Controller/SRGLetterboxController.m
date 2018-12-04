@@ -213,8 +213,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.mediaPlayerController.analyticsPlayerName = @"SRGLetterbox";
         self.mediaPlayerController.analyticsPlayerVersion = SRGLetterboxMarketingVersion();
         
-        // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50. Workaround so that the test passes on iOS 11.3.
-        self.mediaPlayerController.minimumDVRWindowLength = 40.;
+        // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50 and https://soadist.atlassian.net/browse/LSV-631
+        //        for more information about this choice.
+        self.mediaPlayerController.minimumDVRWindowLength = 45.;
         
         @weakify(self)
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
