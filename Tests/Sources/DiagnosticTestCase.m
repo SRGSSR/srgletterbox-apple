@@ -120,7 +120,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
@@ -139,7 +139,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -199,7 +199,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
@@ -249,7 +249,10 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:YES];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:60. handler:nil];
 }
@@ -304,7 +307,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:60. handler:nil];
 }
@@ -326,7 +329,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -395,7 +398,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
@@ -411,7 +414,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -419,7 +422,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoTokenURN standalone:NO];
+    [self.controller playURN:OnDemandVideoTokenURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -456,7 +459,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:@"urn:rts:video:8992492" standalone:NO];
+    [self.controller playURN:@"urn:rts:video:8992492" atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -495,8 +498,11 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
     NSString *URN1 = @"urn:rts:video:8992492";
-    [self.controller playURN:URN1 standalone:YES];
+    [self.controller playURN:URN1 atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -546,8 +552,11 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
     NSString *URN1 = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
-    [self.controller playURN:URN1 standalone:YES];
+    [self.controller playURN:URN1 atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -607,7 +616,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -643,7 +652,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return YES;
     }];
     
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -670,7 +679,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

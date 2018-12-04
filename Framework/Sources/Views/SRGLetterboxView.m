@@ -650,7 +650,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // The timeline (if other content is available) is displayed when an error has been encountered, so that the user has
     // a chance to pick another media
-    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.timelineAlwaysHidden && (! userInterfaceHidden || self.controller.error)) ? self.preferredTimelineHeight : 0.f;
+    CGFloat timelineHeight = (subdivisions.count != 0 && ! self.timelineAlwaysHidden && ! self.controller.continuousPlaybackUpcomingMedia && (! userInterfaceHidden || self.controller.error)) ? self.preferredTimelineHeight : 0.f;
     BOOL isTimelineVisible = (timelineHeight != 0.f);
     
     // Scroll to selected index when opening the timeline. `shouldFocus` needs to be calculated before the constant is updated

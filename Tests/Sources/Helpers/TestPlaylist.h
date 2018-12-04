@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TestPlaylist : NSObject <SRGLetterboxControllerPlaylistDataSource>
 
-- (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias;
+- (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias standalone:(BOOL)standalone;
 
 @property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
 @property (nonatomic) CMTime startTime;

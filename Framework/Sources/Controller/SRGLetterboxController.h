@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxPlaybackSettings.h"
+
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
@@ -94,11 +96,6 @@ OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidRetryNotification;
 OBJC_EXPORT NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification;
 
 /**
- *  The default start bit rate to start in kbps.
- */
-static const NSInteger SRGLetterboxDefaultStartBitRate = 800;
-
-/**
  *  Standard time intervals for stream availability checks.
  */
 static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
@@ -176,6 +173,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  */
 - (nullable SRGPosition *)controller:(SRGLetterboxController *)controller startPositionForMedia:(SRGMedia *)media;
 
+/**
+ *  Optional playback settings to be applied when playing the specified media. If not implemented or if the method returns
+ *  `nil`, default settings are applied.
+ */
+- (nullable SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media;
+
 @end
 
 /**
@@ -218,15 +221,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  @param URN               The URN to prepare.
  *  @param position          The position to start at. If `nil` or if the specified position lies outside the content
  *                           time range, playback starts at the default position.
- *  @param standalone        If set to `NO`, the content is played in its context. If set to `YES`, the content is played
- *                           independently from it.
- *  @param streamType        The stream type to use. If `SRGStreamTypeNone` or not found, the optimal available stream
- *                           type is used.
- *  @param quality           The quality to use. If `SRGQualityNone` or not found, the best available quality is used.
- *  @param startBitRate      The bit rate the media should start playing with, in kbps. This parameter is a recommendation
- *                           with no result guarantee, though it should in general be applied. The nearest available
- *                           quality (larger or smaller than the requested size) will be used. Usual SRG SSR valid bit
- *                           ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
+ *  @param preferredSettings The settings which should ideally be applied. If `nil`, default settings are used.
  *  @param completionHandler The completion block to be called after the controller has finished preparing the media. This
  *                           block will only be called if the media could be successfully prepared.
  *
@@ -235,22 +230,15 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  */
 - (void)prepareToPlayURN:(NSString *)URN
               atPosition:(nullable SRGPosition *)position
-              standalone:(BOOL)standalone
- withPreferredStreamType:(SRGStreamType)streamType
-                 quality:(SRGQuality)quality
-            startBitRate:(NSInteger)startBitRate
+   withPreferredSettings:(nullable SRGLetterboxPlaybackSettings *)preferredSettings
        completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
- *  Same as `-prepareToPlayURN:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`, but for a
- *  media.
+ *  Same as `-prepareToPlayURN:atPosition:standalone:withPreferredSettings:completionHandler:`, but for a media.
  */
 - (void)prepareToPlayMedia:(SRGMedia *)media
                 atPosition:(nullable SRGPosition *)position
-                standalone:(BOOL)standalone
-   withPreferredStreamType:(SRGStreamType)streamType
-                   quality:(SRGQuality)quality
-              startBitRate:(NSInteger)startBitRate
+     withPreferredSettings:(nullable SRGLetterboxPlaybackSettings *)preferredSettings
          completionHandler:(nullable void (^)(void))completionHandler;
 
 /**
@@ -530,64 +518,22 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @interface SRGLetterboxController (Convenience)
 
 /**
- *  Prepare to play the specified URN (Uniform Resource Name).
- *
- *  @discussion Does nothing if the URN is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
- */
-- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withCompletionHandler:(nullable void (^)(void))completionHandler;
-
-/**
- *  Prepare to play the specified media (Uniform Resource Name).
- *
- *  @discussion Does nothing if the media is the one currently being played. The best available quality is automatically
- *              played. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
- */
-- (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withCompletionHandler:(nullable void (^)(void))completionHandler;
-
-/**
  *  Play the specified URN (Uniform Resource Name).
  *
- *  For more information, @see `-prepareToPlayURN:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`.
+ *  For more information, @see `-prepareToPlayURN:atPosition:withPreferredSettings:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playURN:(NSString *)URN
-     atPosition:(nullable SRGPosition *)position
-     standalone:(BOOL)standalone
-withPreferredStreamType:(SRGStreamType)streamType
-        quality:(SRGQuality)quality
-   startBitRate:(NSInteger)startBitRate;
+- (void)playURN:(NSString *)URN atPosition:(nullable SRGPosition *)position withPreferredSettings:(nullable SRGLetterboxPlaybackSettings *)preferredSettings;
 
 /**
  *  Play the specified media.
  *
- *  For more information, @see `-prepareToPlayMedia:atPosition:standalone:withPreferredStreamType:quality:startBitRate:completionHandler:`.
+ *  For more information, @see `-prepareToPlayMedia:atPosition:withPreferredSettings:completionHandler:`.
  *
  *  @discussion Does nothing if the media is the one currently being played.
  */
-- (void)playMedia:(SRGMedia *)media
-       atPosition:(nullable SRGPosition *)position
-       standalone:(BOOL)standalone
-withPreferredStreamType:(SRGStreamType)streamType
-          quality:(SRGQuality)quality
-     startBitRate:(NSInteger)startBitRate;
-
-/**
- *  Play the specified URN (Uniform Resource Name).
- *
- *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
- *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
- */
-- (void)playURN:(NSString *)URN standalone:(BOOL)standalone;
-
-/**
- *  Play the specified media.
- *
- *  @discussion Does nothing if the URN is the one currently being played. The best available stream type and quality
- *              are automatically used. The start bit rate is set to `SRGLetterboxDefaultStartBitRate`.
- */
-- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone;
+- (void)playMedia:(SRGMedia *)media atPosition:(nullable SRGPosition *)position withPreferredSettings:(nullable SRGLetterboxPlaybackSettings *)preferredSettings;
 
 @end
 

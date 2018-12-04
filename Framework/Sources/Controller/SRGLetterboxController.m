@@ -117,6 +117,17 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     return s_codes[@(blockingReason)];
 }
 
+static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRGLetterboxPlaybackSettings *settings)
+{
+    SRGPlaybackSettings *playbackSettings = [[SRGPlaybackSettings alloc] init];
+    playbackSettings.streamType = settings.streamType;
+    playbackSettings.quality = settings.quality;
+    // TODO: Replace s_prefersDRM at the `SRGAnalytics_DataProvider` level with YES when DRMs are the default choice
+    playbackSettings.DRM = s_prefersDRM;
+    playbackSettings.startBitRate = settings.startBitRate;
+    return playbackSettings;
+}
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -129,10 +140,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 @property (nonatomic) SRGChannel *channel;
 @property (nonatomic) SRGSubdivision *subdivision;
 @property (nonatomic) SRGPosition *startPosition;
-@property (nonatomic) SRGStreamType streamType;
-@property (nonatomic) SRGQuality quality;
-@property (nonatomic) NSInteger startBitRate;
-@property (nonatomic, getter=isStandalone) BOOL standalone;
+@property (nonatomic) SRGLetterboxPlaybackSettings *preferredSettings;
 @property (nonatomic) NSError *error;
 
 // Save the URN sent to the social count view service, to not send it twice
@@ -186,9 +194,14 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 #pragma mark Class methods
 
-+ (void)setPrefersDRM:(BOOL)prefersDRM;
++ (void)setPrefersDRM:(BOOL)prefersDRM
 {
     s_prefersDRM = prefersDRM;
+}
+
++ (BOOL)prefersDRM
+{
+    return s_prefersDRM;
 }
 
 #pragma mark Object lifecycle
@@ -200,8 +213,9 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         self.mediaPlayerController.analyticsPlayerName = @"SRGLetterbox";
         self.mediaPlayerController.analyticsPlayerVersion = SRGLetterboxMarketingVersion();
         
-        // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50. Workaround so that the test passes on iOS 11.3.
-        self.mediaPlayerController.minimumDVRWindowLength = 40.;
+        // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50 and https://soadist.atlassian.net/browse/LSV-631
+        //        for more information about this choice.
+        self.mediaPlayerController.minimumDVRWindowLength = 45.;
         
         @weakify(self)
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
@@ -387,7 +401,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             }
             // Start the player if the blocking reason changed from an not available state to an available one
             else if ([previousError.domain isEqualToString:SRGLetterboxErrorDomain] && previousError.code == SRGLetterboxErrorCodeNotAvailable) {
-                [self playMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+                [self playMedia:self.media atPosition:self.startPosition withPreferredSettings:self.preferredSettings];
             }
         }];
     }];
@@ -520,7 +534,9 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     }
     
     SRGPosition *position = [self startPositionForMedia:media];
-    [self prepareToPlayMedia:media atPosition:position standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:completionHandler];
+    SRGLetterboxPlaybackSettings *preferredSettings = [self preferredSettingsForMedia:media];
+    
+    [self prepareToPlayMedia:media atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler];
     
     if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
         [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
@@ -589,12 +605,17 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     }
 }
 
-- (void)cancelContinuousPlayback
+- (SRGLetterboxPlaybackSettings *)preferredSettingsForMedia:(SRGMedia *)media
 {
-    [self resetContinuousPlayback];
+    if ([self.playlistDataSource respondsToSelector:@selector(controller:preferredSettingsForMedia:)]) {
+        return [self.playlistDataSource controller:self preferredSettingsForMedia:media];
+    }
+    else {
+        return nil;
+    }
 }
 
-- (void)resetContinuousPlayback
+- (void)cancelContinuousPlayback
 {
     self.continuousPlaybackTransitionTimer = nil;
     self.continuousPlaybackTransitionStartDate = nil;
@@ -678,7 +699,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
                     [self stop];
                 }
                 else {
-                    [self playMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+                    [self playMedia:self.media atPosition:self.startPosition withPreferredSettings:self.preferredSettings];
                 }
             }];
         }];
@@ -794,7 +815,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         return;
     }
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:self.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:self.preferredSettings.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         SRGMediaCompositionCompletionBlock mediaCompositionCompletionBlock = ^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
             SRGMediaComposition *previousMediaComposition = self.mediaComposition;
             
@@ -836,7 +857,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         if ([error.domain isEqualToString:SRGNetworkErrorDomain] && error.code == SRGNetworkErrorHTTP && [error.userInfo[SRGNetworkHTTPStatusCodeKey] integerValue] == 404
                 && self.mediaComposition && ! [self.mediaComposition.fullLengthMedia.URN isEqual:self.URN]) {
             SRGRequest *fullLengthMediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.mediaComposition.fullLengthMedia.URN
-                                                                                           standalone:self.standalone
+                                                                                           standalone:self.preferredSettings.standalone
                                                                                   withCompletionBlock:mediaCompositionCompletionBlock];
             [self.requestQueue addRequest:fullLengthMediaCompositionRequest resume:YES];
         }
@@ -908,17 +929,17 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 #pragma mark Playback
 
-- (void)prepareToPlayURN:(NSString *)URN atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN atPosition:(SRGPosition *)position withPreferredSettings:(SRGLetterboxPlaybackSettings *)preferredSettings completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:URN media:nil atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:URN media:nil atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayMedia:(SRGMedia *)media atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayMedia:(SRGMedia *)media atPosition:(SRGPosition *)position withPreferredSettings:(SRGLetterboxPlaybackSettings *)preferredSettings completionHandler:(void (^)(void))completionHandler
 {
-    [self prepareToPlayURN:nil media:media atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler];
+    [self prepareToPlayURN:nil media:media atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler];
 }
 
-- (void)prepareToPlayURN:(NSString *)URN media:(SRGMedia *)media atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (void)prepareToPlayURN:(NSString *)URN media:(SRGMedia *)media atPosition:(SRGPosition *)position withPreferredSettings:(SRGLetterboxPlaybackSettings *)preferredSettings completionHandler:(void (^)(void))completionHandler
 {
     if (media) {
         URN = media.URN;
@@ -926,10 +947,6 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     
     if (! URN) {
         return;
-    }
-    
-    if (startBitRate < 0) {
-        startBitRate = 0;
     }
     
     // If already playing the media, does nothing
@@ -941,15 +958,15 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     
     // Save the settings for restarting after connection loss
     self.startPosition = position;
-    self.streamType = streamType;
-    self.quality = quality;
-    self.startBitRate = startBitRate;
-    self.standalone = standalone;
+    
+    // Deep copy settings to avoid further changes
+    preferredSettings = [preferredSettings copy];
+    self.preferredSettings = preferredSettings;
     
     @weakify(self)
     self.requestQueue = [[SRGRequestQueue alloc] init];
     
-    if ([self prepareToPlayOverriddenURN:URN media:media atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:completionHandler]) {
+    if ([self prepareToPlayOverriddenURN:URN media:media atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler]) {
         return;
     }
     
@@ -959,7 +976,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     
     [[[self report] informationForKey:@"ilResult"] startTimeMeasurementForKey:@"duration"];
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:preferredSettings.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         @strongify(self)
         
         [[[self report] informationForKey:@"ilResult"] stopTimeMeasurementForKey:@"duration"];
@@ -1001,8 +1018,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
             completionHandler ? completionHandler() : nil;
         };
         
-        // TODO: Replace s_prefersDRM with YES when removed
-        if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredStreamingMethod:SRGStreamingMethodNone streamType:streamType quality:quality DRM:s_prefersDRM startBitRate:startBitRate userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
+        if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(preferredSettings) userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
             [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
             [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
         }
@@ -1023,7 +1039,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 }
 
 // Checks whether an override has been defined for the specified content to be played. Returns `YES` and plays it iff this is the case.
-- (BOOL)prepareToPlayOverriddenURN:(NSString *)URN media:(SRGMedia *)media atPosition:(SRGPosition *)position standalone:(BOOL)standalone withPreferredStreamType:(SRGStreamType)streamType quality:(SRGQuality)quality startBitRate:(NSInteger)startBitRate completionHandler:(void (^)(void))completionHandler
+- (BOOL)prepareToPlayOverriddenURN:(NSString *)URN media:(SRGMedia *)media atPosition:(SRGPosition *)position withPreferredSettings:(SRGLetterboxPlaybackSettings *)preferredSettings completionHandler:(void (^)(void))completionHandler
 {
     NSURL *contentURL = self.contentURLOverridden ? self.contentURLOverridingBlock(URN) : nil;
     if (! contentURL) {
@@ -1091,14 +1107,13 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 - (void)play
 {
     if (self.mediaPlayerController.contentURL) {
-        [self cancelContinuousPlayback];
         [self.mediaPlayerController play];
     }
     else if (self.media) {
-        [self playMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+        [self playMedia:self.media atPosition:self.startPosition withPreferredSettings:self.preferredSettings];
     }
     else if (self.URN) {
-        [self playURN:self.URN atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+        [self playURN:self.URN atPosition:self.startPosition withPreferredSettings:self.preferredSettings];
     };
 }
 
@@ -1140,10 +1155,10 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     
     // Reuse the media if available (so that the information already available to clients is not reduced)
     if (self.media) {
-        [self prepareToPlayMedia:self.media atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
+        [self prepareToPlayMedia:self.media atPosition:self.startPosition withPreferredSettings:self.preferredSettings completionHandler:prepareToPlayCompletionHandler];
     }
     else if (self.URN) {
-        [self prepareToPlayURN:self.URN atPosition:self.startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate completionHandler:prepareToPlayCompletionHandler];
+        [self prepareToPlayURN:self.URN atPosition:self.startPosition withPreferredSettings:self.preferredSettings completionHandler:prepareToPlayCompletionHandler];
     }
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidRetryNotification object:self];
@@ -1177,14 +1192,12 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
     self.startPosition = nil;
-    self.streamType = SRGStreamTypeNone;
-    self.quality = SRGQualityNone;
-    self.startBitRate = 0;
+    self.preferredSettings = nil;
     
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
-    [self resetContinuousPlayback];
+    [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
     
@@ -1250,8 +1263,7 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
         
         if (! blockingReasonError) {
             [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
-            // TODO: Replace s_prefersDRM with YES when removed
-            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredStreamingMethod:SRGStreamingMethodNone streamType:self.streamType quality:self.quality DRM:s_prefersDRM startBitRate:self.startBitRate userInfo:nil completionHandler:^{
+            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(self.preferredSettings) userInfo:nil completionHandler:^{
                 [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
                 [self finishDiagnosticReport];
                 
@@ -1281,52 +1293,22 @@ static NSString *SRGLetterboxCodeForBlockingReason(SRGBlockingReason blockingRea
 
 #pragma mark Playback (convenience)
 
-- (void)prepareToPlayURN:(NSString *)URN standalone:(BOOL)standalone withCompletionHandler:(void (^)(void))completionHandler
-{
-    [self prepareToPlayURN:URN atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
-}
-
-- (void)prepareToPlayMedia:(SRGMedia *)media standalone:(BOOL)standalone withCompletionHandler:(void (^)(void))completionHandler
-{
-    [self prepareToPlayMedia:media atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate completionHandler:completionHandler];
-}
-
-- (void)playURN:(NSString *)URN
-     atPosition:(SRGPosition *)position
-     standalone:(BOOL)standalone
-withPreferredStreamType:(SRGStreamType)streamType
-        quality:(SRGQuality)quality
-   startBitRate:(NSInteger)startBitRate
+- (void)playURN:(NSString *)URN atPosition:(SRGPosition *)position withPreferredSettings:(SRGLetterboxPlaybackSettings *)preferredSettings
 {
     @weakify(self)
-    [self prepareToPlayURN:URN atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayURN:URN atPosition:position withPreferredSettings:preferredSettings completionHandler:^{
         @strongify(self)
         [self play];
     }];
 }
 
-- (void)playMedia:(SRGMedia *)media
-       atPosition:(SRGPosition *)position
-       standalone:(BOOL)standalone
-withPreferredStreamType:(SRGStreamType)streamType
-          quality:(SRGQuality)quality
-     startBitRate:(NSInteger)startBitRate
+- (void)playMedia:(SRGMedia *)media atPosition:(SRGPosition *)position withPreferredSettings:(SRGLetterboxPlaybackSettings *)preferredSettings
 {
     @weakify(self)
-    [self prepareToPlayMedia:media atPosition:position standalone:standalone withPreferredStreamType:streamType quality:quality startBitRate:startBitRate completionHandler:^{
+    [self prepareToPlayMedia:media atPosition:position withPreferredSettings:preferredSettings completionHandler:^{
         @strongify(self)
         [self play];
     }];
-}
-
-- (void)playURN:(NSString *)URN standalone:(BOOL)standalone
-{
-    [self playURN:URN atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
-}
-
-- (void)playMedia:(SRGMedia *)media standalone:(BOOL)standalone
-{
-    [self playMedia:media atPosition:nil standalone:standalone withPreferredStreamType:SRGStreamTypeNone quality:SRGQualityNone startBitRate:SRGLetterboxDefaultStartBitRate];
 }
 
 #pragma mark Standard seeks
@@ -1444,12 +1426,14 @@ withPreferredStreamType:(SRGStreamType)streamType
         return NO;
     }
     
-    SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
     if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         return NO;
     }
     
-    SRGMediaPlayerStreamType streamType = self.mediaPlayerController.streamType;
+    SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
     return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
 }
 
@@ -1459,14 +1443,16 @@ withPreferredStreamType:(SRGStreamType)streamType
         return NO;
     }
     
-    SRGMediaPlayerPlaybackState playbackState = self.mediaPlayerController.playbackState;
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    
     if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         return NO;
     }
     
-    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
-    return (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSkipInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
-        || (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
+    SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
+    return (streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSkipInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
+        || (streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
 }
 
 - (BOOL)skipBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -1549,6 +1535,11 @@ withPreferredStreamType:(SRGStreamType)streamType
                                                         userInfo:notification.userInfo];
     }
     
+    // Continuous playback only makes sense while in the ended state
+    if (playbackState != SRGMediaPlayerPlaybackStateEnded) {
+        [self cancelContinuousPlayback];
+    }
+    
     // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
     if (self.pictureInPictureActive && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self stop];
@@ -1606,6 +1597,7 @@ withPreferredStreamType:(SRGStreamType)streamType
         
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
             SRGPosition *startPosition = [self startPositionForMedia:nextMedia];
+            SRGLetterboxPlaybackSettings *preferredSettings = [self preferredSettingsForMedia:nextMedia];
             
             if (continuousPlaybackTransitionDuration != 0.) {
                 self.continuousPlaybackTransitionStartDate = NSDate.date;
@@ -1616,13 +1608,12 @@ withPreferredStreamType:(SRGStreamType)streamType
                 self.continuousPlaybackTransitionTimer = [NSTimer srgletterbox_timerWithTimeInterval:continuousPlaybackTransitionDuration repeats:NO block:^(NSTimer * _Nonnull timer) {
                     @strongify(self)
                     
-                    [self playMedia:nextMedia atPosition:startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
-                    [self resetContinuousPlayback];
+                    [self playMedia:nextMedia atPosition:startPosition withPreferredSettings:preferredSettings];
                     notify();
                 }];
             }
             else {
-                [self playMedia:nextMedia atPosition:startPosition standalone:self.standalone withPreferredStreamType:self.streamType quality:self.quality startBitRate:self.startBitRate];
+                [self playMedia:nextMedia atPosition:startPosition withPreferredSettings:preferredSettings];
                 
                 // Send notification on next run loop, so that other observers of the playback end notification all receive
                 // the notification before the continuous playback notification is emitted.

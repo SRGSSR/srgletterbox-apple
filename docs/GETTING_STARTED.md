@@ -19,17 +19,17 @@ self.controller = [[SRGLetterboxController alloc] init];
 then call one of the play methods on it, passing it a valid media URN (unique identifier of the media):
 
 ```objective-c
-[self.controller playURN:@"urn:swi:video:42844052" standalone:NO];
+[self.controller playURN:@"urn:swi:video:42844052" atPosition:nil withPreferredSettings:nil];
 ```
 
 You can also instantiate controllers directly in your xibs or storyboards if you prefer.
 
-Playback methods expect a `standalone` parameter, with which you can control how medias are played. If set to `NO`, the media is played in its context (e.g. the full episode if the media is one of its sequences). If set to `YES`, playback is restricted to the media only and no context is provided.
+Playback methods optionally support a settings parameter, with which you can control how medias are played, for example the stream type, its quality, or whether the media must be played in the context of its full-length or rather as a standalone media.
 
 A Letterbox controller can play any media URN from any SRG SSR business unit. You can also play an `SRGMedia` if you have one already, for example if you retrieved some media list from the `SRGDataProvider` library:
 
 ```objective-c
-[self.controller playMedia:media standalone:NO];
+[self.controller playMedia:media atPosition:nil withPreferredSettings:nil];
 ```
 
 The controller immediately starts playing the media in the background. If you want to display its contents and manage its playback, you must bind a Letterbox view to your controller (see below).

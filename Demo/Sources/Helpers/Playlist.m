@@ -6,6 +6,8 @@
 
 #import "Playlist.h"
 
+#import "SettingsViewController.h"
+
 @interface Playlist ()
 
 @property (nonatomic) NSOrderedSet<SRGMedia *> *mediasSet;
@@ -74,6 +76,13 @@
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
 {
     return self.continuousPlaybackTransitionDuration;
+}
+
+- (SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media
+{
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = ApplicationSettingIsStandalone();
+    return settings;
 }
 
 @end

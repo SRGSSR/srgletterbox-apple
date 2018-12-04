@@ -124,7 +124,10 @@
     };
     
     if (self.URN) {
-        [self.letterboxController playURN:self.URN standalone:ApplicationSettingIsStandalone()];
+        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+        settings.standalone = ApplicationSettingIsStandalone();
+        
+        [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
     }
     
     // Start with a hidden interface. Performed after a URN has been assigned so that no UI is visible at all

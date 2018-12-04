@@ -39,7 +39,7 @@
     }];
     
     NSString *URN = OnDemandLongVideoURN;
-    [self.controller playURN:URN standalone:NO];
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -84,7 +84,7 @@
     }];
     
     self.controller.updateInterval = 10.;
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -110,7 +110,7 @@
     }];
     
     self.controller.updateInterval = 10.;
-    [self.controller playURN:OnDemandVideoURN standalone:NO];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
