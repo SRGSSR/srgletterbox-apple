@@ -130,7 +130,7 @@
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[dataProvider mediasWithURNs:@[OnDemandVideoURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+    [[dataProvider mediasWithURNs:@[OnDemandVideoURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         media = medias.firstObject;
         [expectation fulfill];
     }] resume];
@@ -172,7 +172,7 @@
     
     __block SRGMedia *media = nil;
     SRGDataProvider *dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[dataProvider mediasWithURNs:@[OnDemandLongVideoSegmentURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+    [[dataProvider mediasWithURNs:@[OnDemandLongVideoSegmentURN] completionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         media = medias.firstObject;
         [expectation fulfill];
     }] resume];
