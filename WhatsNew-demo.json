@@ -15,5 +15,6 @@
   "1.11-47": "- Digital rights management support has been updated.\n- Anonymous diagnostic information is collected in proprietary builds for quality measurement purposes.\n- An issue affecting seeks in DVR streams has been fixed.\n- Xcode 10 support with iOS 12 SDK.",
   "1.11.1-48": "- On iOS 10 devices and above, the control center now displays Live when playing a DVR livestream played in live conditions\n- An issue leading Apple TV receivers to sometimes display information from several medias at the same time has been fixed.",
   "1.11.1-49": "- Fix demo application update detection",
-  "1.12-50": "- Fixes continuous playback interrupting playback of a new media, chapter or segment. Moreover, the Letterbox view now does not display any timeline anymore when the continuous playback screen is visible.\n- Fixes DVR livestreams incorrectly starting at the DVR window beginning."
+  "1.12-50": "- Fixes continuous playback interrupting playback of a new media, chapter or segment. Moreover, the Letterbox view now does not display any timeline anymore when the continuous playback screen is visible.\n- Fixes DVR livestreams incorrectly starting at the DVR window beginning.",
+  "1.12.1-51": "- Maintenance release"
 }
