@@ -455,7 +455,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    // Media started 16 seconds ago and is available 40 seconds // Second higlight will be removed
+    // Media started 16 seconds ago and is available 40 seconds. Second higlight will be removed
     NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-16];
     NSDate *endDate = [startDate dateByAddingTimeInterval:40];
     NSString *URN = MMFSwissTXTFullDVRURN(startDate, endDate);
