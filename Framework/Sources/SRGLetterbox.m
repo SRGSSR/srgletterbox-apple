@@ -62,7 +62,7 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
             
-            [[[SRGNetworkRequest alloc] initWithURLRequest:request session:[NSURLSession sharedSession] options:0 completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            [[SRGRequest dataRequestWithURLRequest:request session:[NSURLSession sharedSession] options:0 completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 BOOL success = (error == nil);
                 SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
                 completionBlock(success);

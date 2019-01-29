@@ -17,7 +17,7 @@
 @property (nonatomic, getter=isMMFOverride) BOOL MMFOverride;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic, weak) SRGRequest *request;
+@property (nonatomic, weak) SRGBaseRequest *request;
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 
@@ -97,7 +97,7 @@
 {
     [self.request cancel];
     
-    SRGRequest *request = nil;
+    SRGBaseRequest *request = nil;
     
     SRGPaginatedMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage *page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         if (self.refreshControl.refreshing) {
