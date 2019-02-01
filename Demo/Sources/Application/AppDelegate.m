@@ -32,7 +32,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     application.accessibilityLanguage = @"en";
     
-    [SRGRequest enableNetworkActivityIndicatorManagement];
+    [SRGNetworkActivityManagement enable];
     
 #ifndef DEBUG
     [self setupHockey];
