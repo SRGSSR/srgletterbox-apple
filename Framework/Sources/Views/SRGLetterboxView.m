@@ -1009,9 +1009,7 @@ static void commonInit(SRGLetterboxView *self)
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
     self.backgroundColor = UIColor.blackColor;
     
-#ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         self.accessibilityIgnoresInvertColors = YES;
     }
-#endif
 }
