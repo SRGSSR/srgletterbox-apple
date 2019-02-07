@@ -133,6 +133,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
 
 @property (nonatomic) NSDictionary<NSString *, NSString *> *globalHeaders;
+@property (nonatomic) NSDictionary<NSString *, NSString *> *globalParameters;
 
 @property (nonatomic, copy) NSString *URN;
 @property (nonatomic) SRGMedia *media;
@@ -190,7 +191,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @implementation SRGLetterboxController
 
 @synthesize serviceURL = _serviceURL;
-@synthesize globalHeaders = _globalHeaders;
 
 #pragma mark Class methods
 
@@ -1180,6 +1180,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     if (URN) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL];
         self.dataProvider.globalHeaders = self.globalHeaders;
+        self.dataProvider.globalParameters = self.globalParameters;
     }
     else {
         self.dataProvider = nil;

@@ -65,7 +65,7 @@
         
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
-        viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+        viewController.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
         
         return viewController;
     }

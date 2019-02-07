@@ -30,7 +30,7 @@
     
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-    viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    viewController.letterboxController.globalHeaders = ApplicationSettingGlobalParameters();
     
     return viewController;
 }

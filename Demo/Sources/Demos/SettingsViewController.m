@@ -13,10 +13,10 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 
 NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
+NSString * const LetterboxDemoSettingAbroadSimulationEnabled = @"LetterboxDemoSettingAbroadSimulationEnabled";
 NSString * const LetterboxDemoSettingStandalone = @"LetterboxDemoSettingStandalone";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
-NSString * const LetterboxDemoSettingGlobalHeaders = @"LetterboxDemoSettingGlobalHeaders";
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
@@ -32,7 +32,7 @@ static void SettingServiceURLReset(void)
     BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset"];
     if (! settingServiceURLReset) {
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingServiceURL];
-        [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingGlobalHeaders];
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingAbroadSimulationEnabled];
         [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset"];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
@@ -43,6 +43,17 @@ NSURL *ApplicationSettingServiceURL(void)
     SettingServiceURLReset();
     NSString *URLString = [NSUserDefaults.standardUserDefaults stringForKey:LetterboxDemoSettingServiceURL];
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
+}
+
+static BOOL ApplicationSettingIsAbroadSimulationEnabled(void)
+{
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingAbroadSimulationEnabled];
+}
+
+static void ApplicationSettingSetAbroadSimulationEnabled(BOOL enabled)
+{
+    [NSUserDefaults.standardUserDefaults setBool:enabled forKey:LetterboxDemoSettingAbroadSimulationEnabled];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 BOOL ApplicationSettingIsStandalone(void)
@@ -76,9 +87,10 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
     return (updateInterval > 0.) ? updateInterval : SRGLetterboxDefaultUpdateInterval;
 }
 
-NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
+NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
-    return [NSUserDefaults.standardUserDefaults dictionaryForKey:LetterboxDemoSettingGlobalHeaders];
+    BOOL abroadSimulationEnabled = [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingAbroadSimulationEnabled];
+    return abroadSimulationEnabled ? @{ @"forceLocation" : @"WW" } : nil;
 }
 
 @interface SettingsViewController ()
@@ -95,13 +107,10 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
-    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL() globalHeaders:nil],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL() globalHeaders:nil],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL() globalHeaders:nil],
-                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Production", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.production.srf.ch/integrationlayer"] globalHeaders:@{ @"X-Location" : @"WW" }],
-                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Stage", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.stage.srf.ch/integrationlayer"] globalHeaders:@{ @"X-Location" : @"WW" }],
-                                      [[ServerSettings alloc] initWithName:[NSString stringWithFormat:@"%@ (outside of CH)", NSLocalizedString(@"Test", @"Server setting")] URL:[NSURL URLWithString:@"http://intlayer.test.srf.ch/integrationlayer"] globalHeaders:@{ @"X-Location" : @"WW" }],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL() globalHeaders:nil]];
+    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
+                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL()]];
     return viewController;
 }
 
@@ -127,7 +136,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 6;
+    return 7;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -139,26 +148,31 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 1: {
-            return NSLocalizedString(@"Playback mode", @"Playback mode header title in settings view");
+            return NSLocalizedString(@"User location", @"User location header title in settings view");
             break;
         }
             
         case 2: {
-            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
+            return NSLocalizedString(@"Playback mode", @"Playback mode header title in settings view");
             break;
         }
             
         case 3: {
-            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
+            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
             break;
         }
             
         case 4: {
-            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
             break;
         }
             
         case 5: {
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            break;
+        }
+            
+        case 6: {
             NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
@@ -194,12 +208,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         case 1:
         case 2:
         case 3:
-        case 4: {
+        case 4:
+        case 5: {
             return 2;
             break;
         }
             
-        case 5: {
+        case 6: {
             return 1;
             break;
         }
@@ -236,6 +251,29 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         case 1: {
             switch (indexPath.row) {
                 case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", @"Label for the defaut location mode setting");
+                    cell.accessoryType = ! ApplicationSettingIsAbroadSimulationEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Outside CH", @"Label for the outside CH location mode setting");
+                    cell.accessoryType = ApplicationSettingIsAbroadSimulationEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Default (full-length)", @"Label for the defaut standalone mode disabled setting");
                     cell.accessoryType = ! ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
@@ -256,7 +294,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 2: {
+        case 3: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
@@ -279,7 +317,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 3: {
+        case 4: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
@@ -302,7 +340,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 4: {
+        case 5: {
             static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -336,7 +374,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 5: {
+        case 6: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -361,7 +399,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         case 0: {
             ServerSettings *serverSettings = self.serverSettings[indexPath.row];
             [NSUserDefaults.standardUserDefaults setObject:serverSettings.URL.absoluteString forKey:LetterboxDemoSettingServiceURL];
-            [NSUserDefaults.standardUserDefaults setObject:serverSettings.globalHeaders forKey:LetterboxDemoSettingGlobalHeaders];
             [NSUserDefaults.standardUserDefaults synchronize];
             
             [SRGLetterboxService.sharedService.controller reset];
@@ -370,21 +407,25 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
         }
             
         case 1: {
+            ApplicationSettingSetAbroadSimulationEnabled(indexPath.row == 1);
+        }
+            
+        case 2: {
             ApplicationSettingSetStandalone(indexPath.row == 1);
             break;
         }
             
-        case 2: {
+        case 3: {
             ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
             break;
         }
             
-        case 3: {
+        case 4: {
             SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
             break;
         }
             
-        case 4: {
+        case 5: {
             if (indexPath.row == 0) {
                 [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
@@ -397,7 +438,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalHeaders(void)
             break;
         }
             
-        case 5: {
+        case 6: {
             completionBlock = ^{
                 [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
             };
