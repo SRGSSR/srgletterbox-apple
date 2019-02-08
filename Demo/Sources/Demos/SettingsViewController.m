@@ -408,6 +408,9 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 1: {
             ApplicationSettingSetAbroadSimulationEnabled(indexPath.row == 1);
+            
+            [SRGLetterboxService.sharedService.controller reset];
+            SRGLetterboxService.sharedService.controller.globalParameters = ApplicationSettingGlobalParameters();
             break;
         }
             
