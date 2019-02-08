@@ -61,11 +61,11 @@ NSURL *LetterboxDemoMMFServiceURL(void)
 
 static void SettingServiceURLReset(void)
 {
-    BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset"];
+    BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset2"];
     if (! settingServiceURLReset) {
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingServiceURL];
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUserLocation];
-        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset"];
+        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset2"];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
