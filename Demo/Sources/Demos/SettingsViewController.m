@@ -12,9 +12,41 @@
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
+/**
+ *  User location options.
+ */
+typedef NS_ENUM(NSInteger, SettingUserLocation) {
+    /**
+     *  Default IP-based location.
+     */
+    SettingUserLocationDefault,
+    /**
+     *  Outside CH.
+     */
+    SettingUserLocationOutsideCH,
+    /**
+     *  Ignore location.
+     */
+    SettingUserLocationIgnored
+};
+
+NSValueTransformer *SettingUserLocationTransformer(void)
+{
+    static NSValueTransformer *s_transformer;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_transformer = [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{ @"IP" : @(SettingUserLocationDefault),
+                                                                                         @"WW" : @(SettingUserLocationOutsideCH),
+                                                                                         @"CH" : @(SettingUserLocationIgnored) }
+                                                                         defaultValue:@(SettingUserLocationDefault)
+                                                                  reverseDefaultValue:@"IP"];
+    });
+    return s_transformer;
+}
+
 NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
-NSString * const LetterboxDemoSettingAbroadSimulationEnabled = @"LetterboxDemoSettingAbroadSimulationEnabled";
 NSString * const LetterboxDemoSettingStandalone = @"LetterboxDemoSettingStandalone";
+NSString * const LetterboxDemoSettingUserLocation = @"LetterboxDemoSettingUserLocation";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 
@@ -32,7 +64,7 @@ static void SettingServiceURLReset(void)
     BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset"];
     if (! settingServiceURLReset) {
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingServiceURL];
-        [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingAbroadSimulationEnabled];
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUserLocation];
         [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset"];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
@@ -45,14 +77,14 @@ NSURL *ApplicationSettingServiceURL(void)
     return [NSURL URLWithString:URLString] ?: SRGIntegrationLayerProductionServiceURL();
 }
 
-static BOOL ApplicationSettingIsAbroadSimulationEnabled(void)
+static SettingUserLocation ApplicationSettingUserLocation(void)
 {
-    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingAbroadSimulationEnabled];
+    return [[SettingUserLocationTransformer() transformedValue:[NSUserDefaults.standardUserDefaults stringForKey:LetterboxDemoSettingUserLocation]] integerValue];
 }
 
-static void ApplicationSettingSetAbroadSimulationEnabled(BOOL enabled)
+static void ApplicationSettingSetUserLocation(SettingUserLocation settingUserLocation)
 {
-    [NSUserDefaults.standardUserDefaults setBool:enabled forKey:LetterboxDemoSettingAbroadSimulationEnabled];
+    [NSUserDefaults.standardUserDefaults setObject:[SettingUserLocationTransformer() reverseTransformedValue:@(settingUserLocation)] forKey:LetterboxDemoSettingUserLocation];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
@@ -89,8 +121,20 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
 
 NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
-    BOOL abroadSimulationEnabled = [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingAbroadSimulationEnabled];
-    return abroadSimulationEnabled ? @{ @"forceLocation" : @"WW" } : nil;
+    switch (ApplicationSettingUserLocation()) {
+        case SettingUserLocationOutsideCH:
+            return @{ @"forceLocation" : @"WW" };
+            break;
+            
+        case SettingUserLocationIgnored:
+            return @{ @"forceLocation" : @"CH" };
+            break;
+            
+        default:
+            break;
+    }
+    
+    return nil;
 }
 
 @interface SettingsViewController ()
@@ -205,7 +249,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 1:
+        case 1: {
+            return 3;
+            break;
+        }
+            
         case 2:
         case 3:
         case 4:
@@ -252,13 +300,19 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", @"Label for the defaut location mode setting");
-                    cell.accessoryType = ! ApplicationSettingIsAbroadSimulationEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationDefault) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
                     cell.textLabel.text = NSLocalizedString(@"Outside CH", @"Label for the outside CH location mode setting");
-                    cell.accessoryType = ApplicationSettingIsAbroadSimulationEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationOutsideCH) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 2: {
+                    cell.textLabel.text = NSLocalizedString(@"Ignore location", @"Label for the ignored location mode setting");
+                    cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationIgnored) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -407,7 +461,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case 1: {
-            ApplicationSettingSetAbroadSimulationEnabled(indexPath.row == 1);
+            ApplicationSettingSetUserLocation(indexPath.row);
             
             [SRGLetterboxService.sharedService.controller reset];
             SRGLetterboxService.sharedService.controller.globalParameters = ApplicationSettingGlobalParameters();
