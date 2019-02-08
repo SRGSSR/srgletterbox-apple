@@ -408,6 +408,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 1: {
             ApplicationSettingSetAbroadSimulationEnabled(indexPath.row == 1);
+            break;
         }
             
         case 2: {
