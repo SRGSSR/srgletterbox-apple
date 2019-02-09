@@ -35,11 +35,10 @@ NSValueTransformer *SettingUserLocationTransformer(void)
     static NSValueTransformer *s_transformer;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
-        s_transformer = [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{ @"IP" : @(SettingUserLocationDefault),
-                                                                                         @"WW" : @(SettingUserLocationOutsideCH),
+        s_transformer = [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{ @"WW" : @(SettingUserLocationOutsideCH),
                                                                                          @"CH" : @(SettingUserLocationIgnored) }
                                                                          defaultValue:@(SettingUserLocationDefault)
-                                                                  reverseDefaultValue:@"IP"];
+                                                                  reverseDefaultValue:nil];
     });
     return s_transformer;
 }
