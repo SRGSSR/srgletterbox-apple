@@ -120,20 +120,15 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
 
 NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
-    switch (ApplicationSettingUserLocation()) {
-        case SettingUserLocationOutsideCH:
-            return @{ @"forceLocation" : @"WW" };
-            break;
-            
-        case SettingUserLocationIgnored:
-            return @{ @"forceLocation" : @"CH" };
-            break;
-            
-        default:
-            break;
-    }
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_locations;
+    dispatch_once(&s_onceToken, ^{
+        s_locations = @{ @(SettingUserLocationOutsideCH) : @"WW",
+                         @(SettingUserLocationIgnored) : @"CH" };
+    });
     
-    return nil;
+    NSString *location = s_locations[@(ApplicationSettingUserLocation())];
+    return location ? @{ @"forceLocation" : location } : nil;
 }
 
 @interface SettingsViewController ()
@@ -298,19 +293,19 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", @"Label for the defaut location mode setting");
+                    cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", @"Label for the defaut location setting");
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationDefault) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Outside CH", @"Label for the outside CH location mode setting");
+                    cell.textLabel.text = NSLocalizedString(@"Outside CH", @"Label for the outside CH location setting");
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationOutsideCH) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 2: {
-                    cell.textLabel.text = NSLocalizedString(@"Ignore location", @"Label for the ignored location mode setting");
+                    cell.textLabel.text = NSLocalizedString(@"Ignore location", @"Label for the ignored location setting");
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationIgnored) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
