@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, SettingUserLocation) {
      */
     SettingUserLocationDefault,
     /**
-     *  Outside CH.
+     *  Outside Switzerland.
      */
     SettingUserLocationOutsideCH,
     /**
@@ -299,7 +299,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Outside CH", @"Label for the outside CH location setting");
+                    cell.textLabel.text = NSLocalizedString(@"Outside Switzerland", @"Label for the outside Switzerland location setting");
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationOutsideCH) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
