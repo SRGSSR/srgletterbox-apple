@@ -10,11 +10,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ServerSettings : NSObject
 
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL globalHeaders:(nullable NSDictionary<NSString *, NSString *> *)globalHeaders;
+- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL;
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSURL *URL;
-@property (nonatomic, readonly, nullable) NSDictionary<NSString *, NSString *> *globalHeaders;
 
 @end
 

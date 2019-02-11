@@ -116,7 +116,7 @@
     }
     
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
-    self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
+    self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
     
     SRGMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         self.medias = medias;

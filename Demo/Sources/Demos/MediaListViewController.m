@@ -53,7 +53,7 @@
     
     NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
-    self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
+    self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
