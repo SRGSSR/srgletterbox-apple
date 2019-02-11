@@ -686,13 +686,13 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
 /**
- *  Optional global headers which will added to all requests performed by the controller. Use with caution, as some
+ *  Optional global headers which will be added to all requests performed by the controller. Use with caution, as some
  *  headers might not be supported and could lead to request failure.
  */
 @property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalHeaders;
 
 /**
- *  Optional global parameters which will added to all requests performed by the controller. Use with caution, as
+ *  Optional global parameters which will be added to all requests performed by the controller. Use with caution, as
  *  some parameters might not be supported and could lead to request failure.
  */
 @property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalParameters;
