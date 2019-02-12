@@ -13,7 +13,6 @@ default_platform :ios
 
 platform :ios do
   before_all do |lane|
-
     ensure_git_status_clean
 
     # For the demo, before all, check if we have a demo release description
@@ -34,11 +33,14 @@ platform :ios do
   end
 
   desc "Run library tests"
-  lane :test do
+  lane :tests do
     scan(
       scheme: "SRGLetterbox",
+      output_types: "",
+      fail_build: false,
       clean: true
-    ) 
+    )
+    trainer(output_directory: "./fastlane")
   end
 
   desc "Build a new nightly demo on HockeyApp"

@@ -14,8 +14,8 @@ xcuserdata
 
 /.env
 
-/fastlane/report.xml
-/fastlane/Preview.html
-/fastlane/screenshots/**/*.png
-/fastlane/test_output
+/fastlane/*.xml
 /fastlane/last-nightlies-success-git-commit-hash.txt
+
+/vendor
+/.bundle
