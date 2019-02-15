@@ -8,6 +8,8 @@
 
 #import "SettingsViewController.h"
 
+#import <SRGLetterbox/SRGLetterbox.h>
+
 @interface SimplePlayerViewController ()
 
 @property (nonatomic, copy) NSString *URN;
