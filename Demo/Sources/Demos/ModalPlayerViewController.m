@@ -35,8 +35,6 @@
 
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
-@property (nonatomic) BOOL wantsFullScreen;
-
 @property (nonatomic) NSMutableArray<SRGSubdivision *> *favoritedSubdivisions;
 
 @property (nonatomic) ModalTransition *interactiveTransition;
@@ -265,8 +263,6 @@
             self.sizeView.alpha = 1.f;
         }
     };
-    
-    self.wantsFullScreen = fullScreen;
     
     if (animated) {
         [self.view layoutIfNeeded];
