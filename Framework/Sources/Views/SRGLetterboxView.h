@@ -234,7 +234,7 @@ IB_DESIGNABLE
  *  @discussion When AirPlay is enabled or an error has been encountered, the UI behavior is overridden. This method
  *              defines the behavior when those overrides have been lifted.
  */
-- (void)setUserInterfaceHidden:(BOOL)userInterfaceHidden animated:(BOOL)animated;
+- (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated;
 
 /**
  *  Change the user interface controls behavior.
