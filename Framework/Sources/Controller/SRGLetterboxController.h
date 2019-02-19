@@ -316,8 +316,9 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
  *  Switching to the currently playing subdivision restarts playback at its beginning.
  *
- *  @param The completion handler called once switching finishes. The block will only be called when switching is performed,
- *         and with `finished` set to `YES` iff playback could successfully resume afterwards.
+ *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
+ *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
+ *                           resume afterwards.
  *
  *  @return `YES` iff switching occurred successfully.
  */
