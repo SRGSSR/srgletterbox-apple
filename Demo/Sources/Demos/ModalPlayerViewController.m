@@ -92,6 +92,15 @@
     self.letterboxController.updateInterval = updateInterval;
 }
 
+#pragma mark Overrides
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.transitioningDelegate = self;
+}
+
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
@@ -101,9 +110,6 @@
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
     self.timelineSwitch.enabled = ! self.letterboxView.timelineAlwaysHidden;
-    
-    // Use custom modal transition
-    self.transitioningDelegate = self;
     
     [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
@@ -404,7 +410,7 @@
         case UIGestureRecognizerStateEnded: {
             // Finish the transition if the view was dragged by 20% and the user is dragging downwards
             CGFloat velocity = [panGestureRecognizer velocityInView:self.view].y;
-            if (progress > 0.2f && velocity >= 0.f) {
+            if ((progress >= 0.5f && velocity >= -10.f) || (progress < 0.5f && velocity >= 10.f)) {
                 [self.interactiveTransition finishInteractiveTransition];
             }
             else {
