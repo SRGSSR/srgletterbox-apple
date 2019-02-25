@@ -30,6 +30,7 @@
     settings.quality = self.quality;
     settings.startBitRate = self.startBitRate;
     settings.standalone = self.standalone;
+    settings.sourceUid = self.sourceUid;
     return settings;
 }
 

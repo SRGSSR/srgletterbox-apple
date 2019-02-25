@@ -125,6 +125,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     // TODO: Replace s_prefersDRM at the `SRGAnalytics_DataProvider` level with YES when DRMs are the default choice
     playbackSettings.DRM = s_prefersDRM;
     playbackSettings.startBitRate = settings.startBitRate;
+    playbackSettings.sourceUid = settings.sourceUid;
     return playbackSettings;
 }
 
