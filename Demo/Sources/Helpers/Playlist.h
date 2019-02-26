@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSTimeInterval continuousPlaybackTransitionDuration;
 
 @property (nonatomic, readonly, nullable) NSArray<SRGMedia *> *medias;
-@property (nonatomic, readonly, nullable) NSString *sourceUid;
+@property (nonatomic, readonly, copy, nullable) NSString *sourceUid;
 
 @end
 

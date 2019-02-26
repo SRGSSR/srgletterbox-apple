@@ -50,9 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isStandalone) BOOL standalone;
 
 /**
- *  Playback source unique id.
+ *  A source unique identifier to be associated with the playback. This can be used to convey information about where
+ *  the media was retrieved from (e.g. a media list identifier).
  */
-@property (nonatomic, nullable) NSString *sourceUid;
+@property (nonatomic, copy, nullable) NSString *sourceUid;
 
 @end
 

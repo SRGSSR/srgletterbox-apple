@@ -41,7 +41,7 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
+- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     PlaylistViewController *viewController = [storyboard instantiateInitialViewController];

@@ -108,7 +108,7 @@
     XCTAssertEqualObjects(self.controller.preferredSettings.sourceUid, @"Source unique id - switch to chapter");
 }
 
-- (void)testPlayTwoURNsWithAndWuthoutSourceUid
+- (void)testPlayTwoURNsWithAndWithoutSourceUid
 {
     [self expectationForNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;

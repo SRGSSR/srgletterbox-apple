@@ -11,7 +11,7 @@
 @interface Playlist ()
 
 @property (nonatomic) NSOrderedSet<SRGMedia *> *mediasSet;
-@property (nonatomic, nullable) NSString *sourceUid;
+@property (nonatomic, copy) NSString *sourceUid;
 
 @end
 
