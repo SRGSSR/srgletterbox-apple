@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isStandalone) BOOL standalone;
 
 /**
- *  Optional playback source unique id.
+ *  Playback source unique id.
  */
 @property (nonatomic, nullable) NSString *sourceUid;
 
