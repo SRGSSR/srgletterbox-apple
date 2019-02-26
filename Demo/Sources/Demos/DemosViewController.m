@@ -127,13 +127,17 @@
             [medias addObjectsFromArray:mediasForEpisode];
         }
         
-        [self openPlaylistWithMedias:[medias copy]];
+        NSString *domain = [[[[HTTPResponse.URL.host componentsSeparatedByString:@"."] reverseObjectEnumerator] allObjects] componentsJoinedByString:@"."];
+        NSString *path = [HTTPResponse.URL.path.stringByDeletingPathExtension substringFromIndex:1];
+        NSString *sourceUid = [NSString stringWithFormat:@"%@:%@/%d", domain, path, @(NSDate.date.timeIntervalSince1970).intValue];
+        
+        [self openPlaylistWithMedias:[medias copy] sourceUid:sourceUid];
     }] resume];
 }
 
-- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias
+- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
-    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias];
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias sourceUid:sourceUid];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)

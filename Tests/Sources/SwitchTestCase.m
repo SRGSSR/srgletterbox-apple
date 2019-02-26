@@ -307,7 +307,7 @@
         return [notification.userInfo[SRGLetterboxURNKey] isEqual:MMFOnDemandLongVideoGeoblockSegmentURN];
     }];
     
-    XCTAssertTrue(self.controller.mediaComposition<.chapters.count > 1);
+    XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
     
     BOOL switched = [self.controller switchToURN:MMFOnDemandLongVideoGeoblockSegmentURN withCompletionHandler:^(BOOL finished) {
         XCTFail(@"Completion handler must not be called");

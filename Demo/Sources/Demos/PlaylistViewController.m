@@ -41,12 +41,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias
+- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     PlaylistViewController *viewController = [storyboard instantiateInitialViewController];
     
-    Playlist *playlist = [[Playlist alloc] initWithMedias:medias];
+    Playlist *playlist = [[Playlist alloc] initWithMedias:medias sourceUid:sourceUid];
     playlist.continuousPlaybackTransitionDuration = 10.;
     viewController.playlist = playlist;
     
@@ -97,9 +97,7 @@
     
     SRGMedia *firstMedia = self.playlist.medias.firstObject;
     if (firstMedia) {
-        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
-        settings.standalone = ApplicationSettingIsStandalone();
-        
+        SRGLetterboxPlaybackSettings *settings = [self.playlist controller:self.letterboxController preferredSettingsForMedia:firstMedia];
         [self.letterboxController playMedia:firstMedia atPosition:nil withPreferredSettings:settings];
     }
 }

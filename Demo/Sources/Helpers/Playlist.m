@@ -11,6 +11,7 @@
 @interface Playlist ()
 
 @property (nonatomic) NSOrderedSet<SRGMedia *> *mediasSet;
+@property (nonatomic, copy) NSString *sourceUid;
 
 @end
 
@@ -18,11 +19,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias
+- (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
     if (self = [super init]) {
         self.mediasSet = medias ? [NSOrderedSet orderedSetWithArray:medias] : nil;
         self.continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
+        self.sourceUid = sourceUid;
     }
     return self;
 }
@@ -82,6 +84,7 @@
 {
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.standalone = ApplicationSettingIsStandalone();
+    settings.sourceUid = self.sourceUid;
     return settings;
 }
 

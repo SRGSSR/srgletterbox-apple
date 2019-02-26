@@ -459,7 +459,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:@"urn:rts:video:8992492" atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:@"urn:rts:video:10248945" atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -467,7 +467,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller switchToURN:@"urn:rts:video:8992594" withCompletionHandler:nil];
+    [self.controller switchToURN:@"urn:rts:video:10248943" withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -476,7 +476,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
     [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
         NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
         
-        XCTAssertEqualObjects(JSONDictionary[@"urn"], @"urn:rts:video:8992492");
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], @"urn:rts:video:10248945");
         
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
@@ -501,7 +501,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.standalone = YES;
     
-    NSString *URN1 = @"urn:rts:video:8992492";
+    NSString *URN1 = @"urn:rts:video:10248945";
     [self.controller playURN:URN1 atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -510,7 +510,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    NSString *URN2 = @"urn:rts:video:8992594";
+    NSString *URN2 = @"urn:rts:video:10248943";
     [self.controller switchToURN:URN2 withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
