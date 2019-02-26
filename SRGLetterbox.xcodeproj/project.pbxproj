@@ -132,6 +132,8 @@
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
 		6F75AF47219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */; };
+		6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */; };
+		6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
 		6F82365F2136804C00C76B86 /* FXReachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0D1F1E30F820000C94EF /* FXReachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
 		6FA562CE1E9BABE400A1344F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FA562CD1E9BABE400A1344F /* HockeySDK.framework */; };
@@ -216,8 +218,6 @@
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
-		6FCE8ED3215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCE8ED1215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.h */; };
-		6FCE8ED4215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE8ED2215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.m */; };
 		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
 		6FD9BA221E2FB2220013CC97 /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */; };
@@ -467,6 +467,8 @@
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxPlaybackSettings.h; sourceTree = "<group>"; };
 		6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxPlaybackSettings.m; sourceTree = "<group>"; };
+		6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPRemoteCommand+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPRemoteCommand+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackSettingsTestCase.m; sourceTree = "<group>"; };
@@ -523,8 +525,6 @@
 		6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlayerViewController.h; sourceTree = "<group>"; };
 		6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiPlayerViewController.m; sourceTree = "<group>"; };
 		6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MultiPlayerViewController.storyboard; sourceTree = "<group>"; };
-		6FCE8ED1215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPRemoteCommand+SRGLetterbox.h"; sourceTree = "<group>"; };
-		6FCE8ED2215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MPRemoteCommand+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerSingletonSetup.m; sourceTree = "<group>"; };
 		6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleFix.m; sourceTree = "<group>"; };
 		6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemosViewController.h; sourceTree = "<group>"; };
@@ -697,6 +697,8 @@
 		6F042D281E28F70500CFD89B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */,
+				6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */,
 				6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */,
 				6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */,
 				6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */,
@@ -991,8 +993,6 @@
 				6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */,
 				6F2EB46E2029DFB100E7ACDC /* LetterboxBaseTestCase.h */,
 				6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */,
-				6FCE8ED1215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.h */,
-				6FCE8ED2215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.m */,
 				6F1BA9122029E9E8004BB271 /* TestPlaylist.h */,
 				6F1BA9132029E9E8004BB271 /* TestPlaylist.m */,
 				6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */,
@@ -1050,7 +1050,6 @@
 				6F50596D20581CAF00823003 /* SRGLetterboxBaseView.h in Headers */,
 				6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */,
 				6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */,
-				6FCE8ED3215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.h in Headers */,
 				08A05B1E20585DD200E80BD6 /* SRGPaddedLabel.h in Headers */,
 				6FB83A8E205AAFE90013928B /* SRGControlsBackgroundView.h in Headers */,
 				6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */,
@@ -1066,6 +1065,7 @@
 				6F50596B20581CAF00823003 /* SRGLetterboxControllerView.h in Headers */,
 				6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */,
 				08A05B1F20585DD200E80BD6 /* SRGControlWrapperView.h in Headers */,
+				6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
 				6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */,
@@ -1390,6 +1390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */,
+				6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */,
 				087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */,
 				08A05B2420585DDF00E80BD6 /* SRGLetterboxTimeSlider.m in Sources */,
 				08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */,
@@ -1415,7 +1416,6 @@
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell.m in Sources */,
 				08A05B2120585DD200E80BD6 /* SRGPaddedLabel.m in Sources */,
-				6FCE8ED4215D1CCF00BC398C /* MPRemoteCommand+SRGLetterbox.m in Sources */,
 				6FB83A8F205AAFE90013928B /* SRGControlsBackgroundView.m in Sources */,
 				6F50596720581CAF00823003 /* SRGErrorView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,

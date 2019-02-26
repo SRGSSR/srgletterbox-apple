@@ -33,6 +33,12 @@ OBJC_EXPORT NSURL *MMFServiceURL(void);
 @interface LetterboxBaseTestCase : XCTestCase
 
 /**
+ *  Replacement for the buggy `-expectationForNotification:object:handler:`, catching notifications only once.
+ *  See http://openradar.appspot.com/radar?id=4976563959365632.
+ */
+- (XCTestExpectation *)expectationForSingleNotification:(NSNotificationName)notificationName object:(nullable id)objectToObserve handler:(nullable XCNotificationExpectationHandler)handler;
+
+/**
  *  Expectation fulfilled after some given time interval (in seconds), calling the optionally provided handler. Can
  *  be useful for ensuring nothing unexpected occurs during some time
  */
