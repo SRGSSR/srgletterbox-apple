@@ -117,11 +117,11 @@ platform :ios do
     bundle_display_name_suffix = options[:bundle_display_name_suffix] ? options[:bundle_display_name_suffix] : ""
     marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
 
-    resetProvisioningProfileContext
+    # resetProvisioningProfileContext
 
-    app_identifier = getAppIdentifier(scheme: scheme, configuration: configuration)
-    get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
-    get_provisioning_profile(app_identifier: app_identifier, force: true)
+    # app_identifier = getAppIdentifier(scheme: scheme, configuration: configuration)
+    # get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
+    # get_provisioning_profile(app_identifier: app_identifier, force: true)
 
     xcargs = 'ENABLE_BITCODE=NO BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" -allowProvisioningUpdates'
 
