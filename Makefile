@@ -71,7 +71,7 @@ dependencies: setup public.dependencies
 	@echo "... done.\n"
 
 .PHONY: public.dependencies
-public.dependencies:
+public.dependencies: public.setup
 	@echo "Updating public dependencies..."
 	$(call restore_cartfile_private,public)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
@@ -103,7 +103,7 @@ update: setup public.dependencies
 # Public dependency compilation
 
 .PHONY: public.bootstrap
-public.bootstrap:
+public.bootstrap: public.setup
 	@echo "Building public dependencies..."
 	$(call restore_cartfile_private,public)
 	$(call restore_cartfile_resolved,public)
@@ -113,7 +113,7 @@ public.bootstrap:
 	@echo "... done.\n"
 
 .PHONY: public.update
-public.update:
+public.update: public.setup
 	@echo "Updating and building public dependencies..."
 	$(call restore_cartfile_private,public)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
@@ -137,6 +137,11 @@ package: bootstrap
 setup:
 	@echo "Setting up project..."
 
+	@if [ -d $(CONFIGURATION_FOLDER) ] && [ ! -d "$(CONFIGURATION_FOLDER)/.git" ]; then \
+		echo "Remove dirty $(CONFIGURATION_FOLDER) folder."; \
+		rm -Rf $(CONFIGURATION_FOLDER); \
+	fi;
+
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-ios-configuration.git $(CONFIGURATION_FOLDER); \
 	else \
@@ -145,6 +150,27 @@ setup:
 	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
 	
 	@ln -fs $(CONFIGURATION_FOLDER)/.env
+	@echo "... done.\n"
+
+# Public setup
+
+.PHONY: public.setup
+public.setup:
+	@echo "Setting up project..."
+
+	@if [ -d $(CONFIGURATION_FOLDER) ] && [ -d "$(CONFIGURATION_FOLDER)/.git" ]; then \
+		echo "Remove dirty $(CONFIGURATION_FOLDER) folder."; \
+		rm -Rf $(CONFIGURATION_FOLDER); \
+	fi;
+
+	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
+		mkdir -p Configuration/Xcode; \
+		touch Configuration/Xcode/SRGLetterbox-demo.debug.xcconfig; \
+		touch Configuration/Xcode/SRGLetterbox-demo.nightly.xcconfig; \
+		touch Configuration/Xcode/SRGLetterbox-demo.release.xcconfig; \
+	else \
+		echo "A $(CONFIGURATION_FOLDER) folder is already available."; \
+	fi;
 	@echo "... done.\n"
 
 # Cleanup
@@ -170,6 +196,7 @@ help:
 	@echo "   public.dependencies         Update dependencies without building them"
 	@echo "   public.bootstrap            Build previously resolved dependencies"
 	@echo "   public.update               Update and build dependencies"
+	@echo "   public.setup                Setup project"
 	@echo ""
 	@echo "The following targets are widely available:"
 	@echo "   help                        Display this message"
