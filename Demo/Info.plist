@@ -31,7 +31,7 @@
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For HockeyApp Feedbacks</string>
-	<key>PlayMMF</key>
+	<key>PlayMMFServiceURL</key>
 	<string>${PLAY_MMF_SERVICE_URL}</string>
 	<key>UIBackgroundModes</key>
 	<array>
