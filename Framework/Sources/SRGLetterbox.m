@@ -66,7 +66,7 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
                 BOOL success = (error == nil);
                 SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
                 completionBlock(success);
-            }] requestWithOptions:SRGNetworkRequestBackgroundThreadCompletionEnabled] resume];
+            }] requestWithOptions:SRGRequestOptionBackgroundCompletionEnabled] resume];
         };
     }
 }
