@@ -144,7 +144,8 @@ setup:
 	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
 	
 	@ln -fs $(CONFIGURATION_FOLDER)/.env
-	@pushd Xcode > /dev/null; ln -fs ../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
+	@mkdir -p Xcode/Links
+	@pushd Xcode/Links > /dev/null; ln -fs ../../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
 
 	@echo "... done.\n"
 
@@ -156,7 +157,8 @@ public.setup:
 
 	@rm -rf $(CONFIGURATION_FOLDER)
 	@rm -rf .env
-	@pushd Xcode > /dev/null; ln -fs Public/*.xcconfig .
+	@mkdir -p Xcode/Links
+	@pushd Xcode/Links > /dev/null; ln -fs ../Public/*.xcconfig .
 	
 	@echo "... done.\n"
 

@@ -13,7 +13,7 @@ xcuserdata
 /Cartfile.resolved
 
 /.env
-/Xcode/*.xcconfig
+/Xcode/Links
 
 /fastlane/*.xml
 /fastlane/last-nightlies-success-git-commit-hash.txt
