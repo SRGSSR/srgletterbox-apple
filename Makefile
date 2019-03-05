@@ -63,7 +63,7 @@ all: bootstrap
 # Resolving dependencies without building the project
 
 .PHONY: dependencies
-dependencies: setup public.dependencies
+dependencies: public.dependencies
 	@echo "Updating proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
@@ -71,17 +71,17 @@ dependencies: setup public.dependencies
 	@echo "... done.\n"
 
 .PHONY: public.dependencies
-public.dependencies: public.setup
+public.dependencies:
 	@echo "Updating public dependencies..."
 	$(call restore_cartfile_private,public)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
 	$(call save_cartfile_resolved,public)
 	@echo "... done.\n"
 
-# Dependency compilation with proprietary dependencies
+# Dependency compilation with proprietary dependencies (keep public dependencies in sync)
 
 .PHONY: bootstrap
-bootstrap: setup
+bootstrap: setup public.dependencies
 	@echo "Building proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	$(call restore_cartfile_resolved,proprietary)
@@ -90,7 +90,6 @@ bootstrap: setup
 	@carthage build $(CARTHAGE_BUILD_FLAGS)
 	@echo "... done.\n"
 
-# Also keep public build dependencies in sync
 .PHONY: update
 update: setup public.dependencies
 	@echo "Updating and building proprietary dependencies..."
@@ -135,12 +134,7 @@ package: bootstrap
 
 .PHONY: setup
 setup:
-	@echo "Setting up project..."
-
-	@if [ -d $(CONFIGURATION_FOLDER) ] && [ ! -d "$(CONFIGURATION_FOLDER)/.git" ]; then \
-		echo "Remove dirty $(CONFIGURATION_FOLDER) folder."; \
-		rm -Rf $(CONFIGURATION_FOLDER); \
-	fi;
+	@echo "Setting up proprietary project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-ios-configuration.git $(CONFIGURATION_FOLDER); \
@@ -150,27 +144,20 @@ setup:
 	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
 	
 	@ln -fs $(CONFIGURATION_FOLDER)/.env
+	@pushd Xcode > /dev/null; ln -fs ../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
+
 	@echo "... done.\n"
 
 # Public setup
 
 .PHONY: public.setup
 public.setup:
-	@echo "Setting up project..."
+	@echo "Setting up public project..."
 
-	@if [ -d $(CONFIGURATION_FOLDER) ] && [ -d "$(CONFIGURATION_FOLDER)/.git" ]; then \
-		echo "Remove dirty $(CONFIGURATION_FOLDER) folder."; \
-		rm -Rf $(CONFIGURATION_FOLDER); \
-	fi;
-
-	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
-		mkdir -p Configuration/Xcode; \
-		touch Configuration/Xcode/SRGLetterbox-demo.debug.xcconfig; \
-		touch Configuration/Xcode/SRGLetterbox-demo.nightly.xcconfig; \
-		touch Configuration/Xcode/SRGLetterbox-demo.release.xcconfig; \
-	else \
-		echo "A $(CONFIGURATION_FOLDER) folder is already available."; \
-	fi;
+	@rm -rf $(CONFIGURATION_FOLDER)
+	@rm -rf .env
+	@pushd Xcode > /dev/null; ln -fs Public/*.xcconfig .
+	
 	@echo "... done.\n"
 
 # Cleanup
