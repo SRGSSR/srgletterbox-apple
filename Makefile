@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_FOLDER=Configuration
-CONFIGURATION_COMMIT_SHA1=fbef871bfb7b6ff140289b53c749702d02372174
+CONFIGURATION_COMMIT_SHA1=8689a57bc79efb6136fee1237d3d5f989beb5938
 
 CARTHAGE_FOLDER=Carthage
 CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
@@ -63,7 +63,7 @@ all: bootstrap
 # Resolving dependencies without building the project
 
 .PHONY: dependencies
-dependencies: setup public.dependencies
+dependencies: public.dependencies
 	@echo "Updating proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
@@ -78,10 +78,10 @@ public.dependencies:
 	$(call save_cartfile_resolved,public)
 	@echo "... done.\n"
 
-# Dependency compilation with proprietary dependencies
+# Dependency compilation with proprietary dependencies (keep public dependencies in sync)
 
 .PHONY: bootstrap
-bootstrap: setup
+bootstrap: setup public.dependencies
 	@echo "Building proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	$(call restore_cartfile_resolved,proprietary)
@@ -90,7 +90,6 @@ bootstrap: setup
 	@carthage build $(CARTHAGE_BUILD_FLAGS)
 	@echo "... done.\n"
 
-# Also keep public build dependencies in sync
 .PHONY: update
 update: setup public.dependencies
 	@echo "Updating and building proprietary dependencies..."
@@ -103,7 +102,7 @@ update: setup public.dependencies
 # Public dependency compilation
 
 .PHONY: public.bootstrap
-public.bootstrap:
+public.bootstrap: public.setup
 	@echo "Building public dependencies..."
 	$(call restore_cartfile_private,public)
 	$(call restore_cartfile_resolved,public)
@@ -113,7 +112,7 @@ public.bootstrap:
 	@echo "... done.\n"
 
 .PHONY: public.update
-public.update:
+public.update: public.setup
 	@echo "Updating and building public dependencies..."
 	$(call restore_cartfile_private,public)
 	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
@@ -135,7 +134,7 @@ package: bootstrap
 
 .PHONY: setup
 setup:
-	@echo "Setting up project..."
+	@echo "Setting up proprietary project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-ios-configuration.git $(CONFIGURATION_FOLDER); \
@@ -145,6 +144,22 @@ setup:
 	$(call checkout_repository,$(CONFIGURATION_FOLDER),$(CONFIGURATION_COMMIT_SHA1))
 	
 	@ln -fs $(CONFIGURATION_FOLDER)/.env
+	@mkdir -p Xcode/Links
+	@pushd Xcode/Links > /dev/null; ln -fs ../../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
+
+	@echo "... done.\n"
+
+# Public setup
+
+.PHONY: public.setup
+public.setup:
+	@echo "Setting up public project..."
+
+	@rm -rf $(CONFIGURATION_FOLDER)
+	@rm -rf .env
+	@mkdir -p Xcode/Links
+	@pushd Xcode/Links > /dev/null; ln -fs ../Public/*.xcconfig .
+	
 	@echo "... done.\n"
 
 # Cleanup
@@ -170,6 +185,7 @@ help:
 	@echo "   public.dependencies         Update dependencies without building them"
 	@echo "   public.bootstrap            Build previously resolved dependencies"
 	@echo "   public.update               Update and build dependencies"
+	@echo "   public.setup                Setup project"
 	@echo ""
 	@echo "The following targets are widely available:"
 	@echo "   help                        Display this message"

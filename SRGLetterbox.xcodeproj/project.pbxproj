@@ -392,8 +392,6 @@
 		08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08FA0D1F1E30F820000C94EF /* FXReachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FXReachability.framework; path = Carthage/Build/iOS/FXReachability.framework; sourceTree = "<group>"; };
 		6F00F7BC2148E09E0016E664 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
-		6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F042D231E28E2D100CFD89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
@@ -471,6 +469,9 @@
 		6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxPlaybackSettings.m; sourceTree = "<group>"; };
 		6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPRemoteCommand+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPRemoteCommand+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
+		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
+		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackSettingsTestCase.m; sourceTree = "<group>"; };
@@ -666,8 +667,9 @@
 		6F0136F4213FA39000B95405 /* Xcode */ = {
 			isa = PBXGroup;
 			children = (
-				6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */,
-				6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */,
+				6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */,
+				6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */,
+				6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */,
 			);
 			path = Xcode;
 			sourceTree = "<group>";
@@ -1566,7 +1568,7 @@
 		};
 		0835627C1E5B332800EE6DB5 /* Nightly */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F0136F6213FA39000B95405 /* SRGLetterbox-demo.nightly.xcconfig */;
+			baseConfigurationReference = 6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
@@ -1953,6 +1955,7 @@
 		};
 		6FAB3B4F1E28FE2000CC2197 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
@@ -1974,7 +1977,7 @@
 		};
 		6FAB3B501E28FE2000CC2197 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F0136F5213FA39000B95405 /* SRGLetterbox-demo.release.xcconfig */;
+			baseConfigurationReference = 6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
