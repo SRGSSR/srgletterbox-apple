@@ -284,7 +284,7 @@
 
 - (void)testSwitchToBlockedChapterURNWhilePreparing
 {
-    self.controller.serviceURL = MMFServiceURL();
+    self.controller.globalParameters = @{ @"forceLocation" : @"WW" };
     
     [self expectationForSingleNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return notification.userInfo[SRGLetterboxMediaCompositionKey] != nil;
@@ -296,7 +296,7 @@
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.standalone = YES;
     
-    [self.controller playURN:MMFOnDemandLongVideoURN atPosition:nil withPreferredSettings:settings];
+    [self.controller playURN:OnDemandLongVideo2URN atPosition:nil withPreferredSettings:settings];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -304,12 +304,12 @@
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
     [self expectationForSingleNotification:SRGLetterboxMetadataDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGLetterboxURNKey] isEqual:MMFOnDemandLongVideoGeoblockSegmentURN];
+        return [notification.userInfo[SRGLetterboxURNKey] isEqual:OnDemandLongVideo2GeoblockedSegmentURN];
     }];
     
     XCTAssertTrue(self.controller.mediaComposition.chapters.count > 1);
     
-    BOOL switched = [self.controller switchToURN:MMFOnDemandLongVideoGeoblockSegmentURN withCompletionHandler:^(BOOL finished) {
+    BOOL switched = [self.controller switchToURN:OnDemandLongVideo2GeoblockedSegmentURN withCompletionHandler:^(BOOL finished) {
         XCTFail(@"Completion handler must not be called");
     }];
     XCTAssertTrue(switched);

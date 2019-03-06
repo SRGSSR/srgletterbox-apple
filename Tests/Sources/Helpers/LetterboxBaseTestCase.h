@@ -16,8 +16,9 @@ static NSString * const OnDemandLongVideoSegmentURN = @"urn:srf:video:5fe1618a-b
 static NSString * const OnDemandAudioWithChaptersURN = @"urn:rts:audio:9355007";
 static NSString * const LiveOnlyVideoURN = @"urn:rts:video:8841634";
 static NSString * const LiveDVRVideoURN = @"urn:rts:video:1967124";
-static NSString * const MMFOnDemandLongVideoURN = @"urn:rts:video:8992584";
-static NSString * const MMFOnDemandLongVideoGeoblockSegmentURN = @"urn:rts:video:8992624";
+
+static NSString * const OnDemandLongVideo2URN = @"urn:rts:video:8992584";
+static NSString * const OnDemandLongVideo2GeoblockedSegmentURN = @"urn:rts:video:8992624";
 
 OBJC_EXPORT NSURL *MMFServiceURL(void);
 OBJC_EXPORT NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate);
