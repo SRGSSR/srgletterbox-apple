@@ -98,18 +98,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"playableAbroad"]);
         
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
-        
-        if (! SRGContentProtectionIsPublic()) {
-            XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
-            XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]]);
-            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
-            XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
-            XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
-        }
-        else {
-            XCTAssertNil(JSONDictionary[@"tokenResult"]);
-        }
-        
+        XCTAssertNil(JSONDictionary[@"tokenResult"]);
         XCTAssertNil(JSONDictionary[@"drmResult"]);
         
         XCTAssertNotNil(JSONDictionary[@"playerResult"]);
