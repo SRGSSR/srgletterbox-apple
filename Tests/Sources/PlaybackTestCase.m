@@ -1636,7 +1636,7 @@
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@YES];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

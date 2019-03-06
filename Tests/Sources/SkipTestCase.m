@@ -6,7 +6,6 @@
 
 #import "LetterboxBaseTestCase.h"
 
-#import <SRGContentProtection/SRGContentProtection.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 @interface SkipTestCase : LetterboxBaseTestCase
@@ -113,16 +112,12 @@
 
 - (void)testDVRStreamSkips
 {
-    if (SRGContentProtectionIsPublic()) {
-        NSLog(@"Test disabled. Test stream not available in a public setup.");
-        return;
-    }
-    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    self.controller.serviceURL = MMFServiceURL();
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue(self.controller.live);
@@ -265,11 +260,6 @@
 
 - (void)testSkipAbilitiesDuringDVRLivestreamPlaybackLifecycle
 {
-    if (SRGContentProtectionIsPublic()) {
-        NSLog(@"Test disabled. Test stream not available in a public setup.");
-        return;
-    }
-    
     XCTAssertFalse([self.controller canSkipForward]);
     XCTAssertFalse([self.controller canSkipBackward]);
     XCTAssertFalse([self.controller canSkipToLive]);
@@ -294,7 +284,8 @@
         return preparingReceived && playingReceived;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    self.controller.serviceURL = MMFServiceURL();
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -424,16 +415,12 @@
 
 - (void)testSkipToLiveForDVRStream
 {
-    if (SRGContentProtectionIsPublic()) {
-        NSLog(@"Test disabled. Test stream not available in a public setup.");
-        return;
-    }
-    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    self.controller.serviceURL = MMFServiceURL();
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
