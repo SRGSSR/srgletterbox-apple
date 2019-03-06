@@ -7,6 +7,7 @@
 #import "LetterboxBaseTestCase.h"
 
 #import <libextobjc/libextobjc.h>
+#import <SRGContentProtection/SRGContentProtection.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 // Imports required to test internals
@@ -38,6 +39,11 @@
 
 - (void)testSkipToLiveForSwissTXTLimitedDVRStream
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -87,6 +93,11 @@
 
 - (void)testSkipToLiveForSwissTXTFullDVRStream
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -133,6 +144,11 @@
 
 - (void)testSkipToLiveForSwissTXTLiveOnlyStream
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -166,6 +182,11 @@
 
 - (void)testSwissTXTFullDVRNotYetAvailable
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -247,6 +268,11 @@
 
 - (void)testSwissTXTLimitedDVRNotYetAvailable
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -340,6 +366,11 @@
 
 - (void)testSwissTXTLiveOnlyNotYetAvailable
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -448,6 +479,11 @@
 
 - (void)testSwissTXTFullDVRWithHighlightRemoved
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -520,6 +556,11 @@
 
 - (void)testSwissTXTLimitedDVRWithHighlightRemoved
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -589,6 +630,11 @@
 
 - (void)testSwissTXTLimitedDVRPlayHighlightAfterLivestreamEnd
 {
+    if (SRGContentProtectionIsPublic()) {
+        NSLog(@"Test disabled. Test stream not available in a public setup.");
+        return;
+    }
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
