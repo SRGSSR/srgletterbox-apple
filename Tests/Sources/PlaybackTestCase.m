@@ -1604,7 +1604,7 @@
     
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
     
     XCTAssertTrue(self.controller.loading);
     
@@ -1612,7 +1612,6 @@
     
     XCTAssertFalse(self.controller.loading);
     
-    // Seek far enough from live conditions
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         if ([notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateSeeking) {
             XCTAssertTrue(self.controller.loading);
@@ -1624,7 +1623,7 @@
         }
     }];
     
-    CMTime seekTime = CMTimeSubtract(CMTimeRangeGetEnd(self.controller.timeRange), CMTimeMakeWithSeconds(60., NSEC_PER_SEC));
+    CMTime seekTime = CMTimeMakeWithSeconds(40., NSEC_PER_SEC);
     [self.controller seekToPosition:[SRGPosition positionAtTime:seekTime] withCompletionHandler:^(BOOL finished) {
         XCTAssertTrue(finished);
     }];
@@ -1637,7 +1636,7 @@
 {
     [self keyValueObservingExpectationForObject:self.controller keyPath:@"loading" expectedValue:@YES];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
     

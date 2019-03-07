@@ -116,7 +116,8 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    self.controller.serviceURL = MMFServiceURL();
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue(self.controller.live);
@@ -283,7 +284,8 @@
         return preparingReceived && playingReceived;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    self.controller.serviceURL = MMFServiceURL();
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -417,7 +419,8 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
+    self.controller.serviceURL = MMFServiceURL();
+    [self.controller playURN:MMFLiveDVRVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     

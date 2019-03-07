@@ -480,6 +480,7 @@
     // Switch to second highlight
     
     [self.controller switchToSubdivision:secondHighlightSegment withCompletionHandler:^(BOOL finished) {
+        XCTAssertEqual(self.controller.mediaPlayerController.streamType, SRGStreamTypeDVR);
         [self.controller pause];
     }];
     
@@ -556,6 +557,7 @@
     // Switch to second highlight
     
     [self.controller switchToSubdivision:secondHighlightChapter withCompletionHandler:^(BOOL finished) {
+        XCTAssertEqual(self.controller.mediaPlayerController.streamType, SRGStreamTypeLive);
         [self.controller pause];
     }];
     
