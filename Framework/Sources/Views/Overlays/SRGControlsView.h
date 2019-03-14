@@ -41,13 +41,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive;
 
+/**
+ *  Method called when the track selection popover is about to be shown.
+ */
+- (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView;
+
+/**
+ *  Method called when the track selection popover has been hidden.
+ */
+- (void)controlsViewDidHideTrackSelectionPopover:(SRGControlsView *)controlsView;
+
 @end
 
 /**
  *  View displaying controls.
  */
 IB_DESIGNABLE
-@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate>
+@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGTracksButtonDelegate>
 
 /**
  *  View optional delegate.
