@@ -365,12 +365,12 @@
 
 #pragma mark SRGTracksButtonDelegate protocol
 
-- (void)tracksButtonWillShowSelectionPopopver:(SRGTracksButton *)tracksButton
+- (void)tracksButtonWillShowSelectionPopover:(SRGTracksButton *)tracksButton
 {
     [self.delegate controlsViewWillShowTrackSelectionPopover:self];
 }
 
-- (void)tracksButtonDidHideSelectionPopopver:(SRGTracksButton *)tracksButton
+- (void)tracksButtonDidHideSelectionPopover:(SRGTracksButton *)tracksButton
 {
     [self.delegate controlsViewDidHideTrackSelectionPopover:self];
 }
