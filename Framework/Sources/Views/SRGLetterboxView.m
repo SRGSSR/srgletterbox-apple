@@ -879,6 +879,16 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImage];
 }
 
+- (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
+{
+    [self stopInactivityTracker];
+}
+
+- (void)controlsViewDidHideTrackSelectionPopover:(SRGControlsView *)controlsView
+{
+    [self restartInactivityTracker];
+}
+
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision

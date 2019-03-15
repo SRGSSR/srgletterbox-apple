@@ -86,6 +86,8 @@
     self.timeSlider.resumingAfterSeek = NO;
     self.timeSlider.delegate = self;
     
+    self.tracksButton.delegate = self;
+    
     // Always hidden from view. Only used to define the frame of the real full screen button, injected at the top of
     // the view hierarchy at runtime.
     self.fullScreenPhantomButton.alpha = 0.f;
@@ -359,6 +361,18 @@
         NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
         return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }];
     }
+}
+
+#pragma mark SRGTracksButtonDelegate protocol
+
+- (void)tracksButtonWillShowSelectionPopover:(SRGTracksButton *)tracksButton
+{
+    [self.delegate controlsViewWillShowTrackSelectionPopover:self];
+}
+
+- (void)tracksButtonDidHideSelectionPopover:(SRGTracksButton *)tracksButton
+{
+    [self.delegate controlsViewDidHideTrackSelectionPopover:self];
 }
 
 #pragma mark Actions
