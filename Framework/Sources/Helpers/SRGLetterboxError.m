@@ -8,5 +8,5 @@
 
 NSString * const SRGLetterboxErrorDomain = @"ch.srgssr.letterbox";
 
-NSString * const SRGLetterboxBlockingReasonKey = @"SRGLetterboxBlockingReasonKey";
-NSString * const SRGLetterboxTimeAvailabilityKey = @"SRGLetterboxTimeAvailabilityKey";
+NSString * const SRGLetterboxBlockingReasonKey = @"SRGLetterboxBlockingReason";
+NSString * const SRGLetterboxTimeAvailabilityKey = @"SRGLetterboxTimeAvailability";

@@ -31,17 +31,17 @@ NSString * const SRGLetterboxSegmentDidStartNotification = @"SRGLetterboxSegment
 NSString * const SRGLetterboxSegmentDidEndNotification = @"SRGLetterboxSegmentDidEndNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
-NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
-NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
-NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
-NSString * const SRGLetterboxSubdivisionKey = @"SRGLetterboxSubdivisionKey";
-NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannelKey";
+NSString * const SRGLetterboxURNKey = @"SRGLetterboxURN";
+NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMedia";
+NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaComposition";
+NSString * const SRGLetterboxSubdivisionKey = @"SRGLetterboxSubdivision";
+NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannel";
 
-NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURNKey";
-NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMediaKey";
-NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaCompositionKey";
-NSString * const SRGLetterboxPreviousSubdivisionKey = @"SRGLetterboxPreviousSubdivisionKey";
-NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannelKey";
+NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURN";
+NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMedia";
+NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaComposition";
+NSString * const SRGLetterboxPreviousSubdivisionKey = @"SRGLetterboxPreviousSubdivision";
+NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannel";
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
 
@@ -53,7 +53,7 @@ NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLiv
 
 NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLetterboxSocialCountViewWillIncreaseNotification";
 
-NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
+NSString * const SRGLetterboxErrorKey = @"SRGLetterboxError";
 
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
