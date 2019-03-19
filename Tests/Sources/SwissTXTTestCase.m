@@ -85,6 +85,7 @@
     XCTAssertEqualObjects(self.controller.URN, URN);
 }
 
+// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved
 - (void)testSkipToLiveForSwissTXTFullDVRStream
 {
     self.controller.updateInterval = 10.;
@@ -164,6 +165,7 @@
     }];
 }
 
+// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved
 - (void)testSwissTXTFullDVRNotYetAvailable
 {
     self.controller.updateInterval = 10.;
@@ -446,6 +448,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
 
+// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved.
 - (void)testSwissTXTFullDVRWithHighlightRemoved
 {
     self.controller.updateInterval = 10.;
@@ -519,6 +522,7 @@
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
 }
 
+// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved
 - (void)testSwissTXTLimitedDVRWithHighlightRemoved
 {
     self.controller.updateInterval = 10.;
