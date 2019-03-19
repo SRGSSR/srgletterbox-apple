@@ -16,5 +16,6 @@
   "1.11.1-48": "- On iOS 10 devices and above, the control center now displays Live when playing a DVR livestream played in live conditions\n- An issue leading Apple TV receivers to sometimes display information from several medias at the same time has been fixed.",
   "1.11.1-49": "- Fix demo application update detection",
   "1.12-50": "- Fixes continuous playback interrupting playback of a new media, chapter or segment. Moreover, the Letterbox view now does not display any timeline anymore when the continuous playback screen is visible.\n- Fixes DVR livestreams incorrectly starting at the DVR window beginning.",
-  "1.12.1-51": "- Maintenance release"
+  "1.12.1-51": "- Maintenance release",
+  "1.12.2-52": "- Subtitle and audio track selection has been improved. For subtitles you can now choose between _Automatic_ (a recommended choice is made based on system settings, content and app languages), an explicit track, or _Off_ (only forced subtitles might be displayed in this case)."
 }
