@@ -33,22 +33,44 @@ NSString *MMFBlockingReasonChangeVideoURN(NSDate *startDate, NSDate *endDate)
 
 NSString *MMFSwissTXTFullDVRURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_rts_info_fulldvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_fulldvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFSwissTXTLimitedDVRURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_limiteddvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_liveonly_limiteddvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_rts_info_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 @implementation LetterboxBaseTestCase
 
 #pragma mark Helpers
+
+- (XCTestExpectation *)expectationForSingleNotification:(NSNotificationName)notificationName object:(id)objectToObserve handler:(XCNotificationExpectationHandler)handler
+{
+    NSString *description = [NSString stringWithFormat:@"Expectation for notification '%@' from object %@", notificationName, objectToObserve];
+    XCTestExpectation *expectation = [self expectationWithDescription:description];
+    __block id observer = [NSNotificationCenter.defaultCenter addObserverForName:notificationName object:objectToObserve queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        void (^fulfill)(void) = ^{
+            [expectation fulfill];
+            [NSNotificationCenter.defaultCenter removeObserver:observer];
+        };
+        
+        if (handler) {
+            if (handler(notification)) {
+                fulfill();
+            }
+        }
+        else {
+            fulfill();
+        }
+    }];
+    return expectation;
+}
 
 - (XCTestExpectation *)expectationForElapsedTimeInterval:(NSTimeInterval)timeInterval withHandler:(void (^)(void))handler
 {

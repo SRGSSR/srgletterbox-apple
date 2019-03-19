@@ -53,13 +53,13 @@
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
     
     multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
-    multiPlayerViewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    multiPlayerViewController.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
     
     multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
-    multiPlayerViewController.smallLetterboxController1.globalHeaders = ApplicationSettingGlobalHeaders();
+    multiPlayerViewController.smallLetterboxController1.globalParameters = ApplicationSettingGlobalParameters();
     
     multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
-    multiPlayerViewController.smallLetterboxController2.globalHeaders = ApplicationSettingGlobalHeaders();
+    multiPlayerViewController.smallLetterboxController2.globalParameters = ApplicationSettingGlobalParameters();
     
     multiPlayerViewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     multiPlayerViewController.smallLetterboxController1.updateInterval = ApplicationSettingUpdateInterval();

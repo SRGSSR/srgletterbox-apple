@@ -229,7 +229,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     _disablingAudioServices = NO;
     
     // Required for AirPlay, picture in picture and control center to work correctly
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
@@ -252,8 +251,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     self.controller = nil;
     self.pictureInPictureDelegate = nil;
-    
-    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     
     // Cancel after some delay to let running audio processes gently terminate (otherwise audio hiccups will be
     // noticeable because of the audio session category change)

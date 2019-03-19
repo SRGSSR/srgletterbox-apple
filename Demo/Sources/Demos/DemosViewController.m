@@ -127,13 +127,17 @@
             [medias addObjectsFromArray:mediasForEpisode];
         }
         
-        [self openPlaylistWithMedias:[medias copy]];
+        NSString *domain = [[[[HTTPResponse.URL.host componentsSeparatedByString:@"."] reverseObjectEnumerator] allObjects] componentsJoinedByString:@"."];
+        NSString *path = [HTTPResponse.URL.path.stringByDeletingPathExtension substringFromIndex:1];
+        NSString *sourceUid = [NSString stringWithFormat:@"%@:%@/%d", domain, path, @(NSDate.date.timeIntervalSince1970).intValue];
+        
+        [self openPlaylistWithMedias:[medias copy] sourceUid:sourceUid];
     }] resume];
 }
 
-- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias
+- (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
-    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias];
+    PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias sourceUid:sourceUid];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -193,7 +197,7 @@
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
-    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_tagesschau24_ard_delay";
     static NSString * const kMMFCachedScheduledLivestreamURNString = @"urn:rts:video:_rts_info_cacheddelay";
     static NSString * const kMMFTemporarilyGeoblockedURNString = @"urn:rts:video:_rts_info_geoblocked";
     static NSString * const kMMFDVRKillSwitchURNString = @"urn:rts:video:_rts_info_killswitch";

@@ -31,17 +31,17 @@ NSString * const SRGLetterboxSegmentDidStartNotification = @"SRGLetterboxSegment
 NSString * const SRGLetterboxSegmentDidEndNotification = @"SRGLetterboxSegmentDidEndNotification";
 NSString * const SRGLetterboxMetadataDidChangeNotification = @"SRGLetterboxMetadataDidChangeNotification";
 
-NSString * const SRGLetterboxURNKey = @"SRGLetterboxURNKey";
-NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMediaKey";
-NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaCompositionKey";
-NSString * const SRGLetterboxSubdivisionKey = @"SRGLetterboxSubdivisionKey";
-NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannelKey";
+NSString * const SRGLetterboxURNKey = @"SRGLetterboxURN";
+NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMedia";
+NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaComposition";
+NSString * const SRGLetterboxSubdivisionKey = @"SRGLetterboxSubdivision";
+NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannel";
 
-NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURNKey";
-NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMediaKey";
-NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaCompositionKey";
-NSString * const SRGLetterboxPreviousSubdivisionKey = @"SRGLetterboxPreviousSubdivisionKey";
-NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannelKey";
+NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURN";
+NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMedia";
+NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaComposition";
+NSString * const SRGLetterboxPreviousSubdivisionKey = @"SRGLetterboxPreviousSubdivision";
+NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannel";
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
 
@@ -53,7 +53,7 @@ NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLiv
 
 NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLetterboxSocialCountViewWillIncreaseNotification";
 
-NSString * const SRGLetterboxErrorKey = @"SRGLetterboxErrorKey";
+NSString * const SRGLetterboxErrorKey = @"SRGLetterboxError";
 
 static NSError *SRGBlockingReasonErrorForMedia(SRGMedia *media, NSDate *date)
 {
@@ -125,6 +125,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     // TODO: Replace s_prefersDRM at the `SRGAnalytics_DataProvider` level with YES when DRMs are the default choice
     playbackSettings.DRM = s_prefersDRM;
     playbackSettings.startBitRate = settings.startBitRate;
+    playbackSettings.sourceUid = settings.sourceUid;
     return playbackSettings;
 }
 
@@ -133,6 +134,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
 
 @property (nonatomic) NSDictionary<NSString *, NSString *> *globalHeaders;
+@property (nonatomic) NSDictionary<NSString *, NSString *> *globalParameters;
 
 @property (nonatomic, copy) NSString *URN;
 @property (nonatomic) SRGMedia *media;
@@ -190,7 +192,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @implementation SRGLetterboxController
 
 @synthesize serviceURL = _serviceURL;
-@synthesize globalHeaders = _globalHeaders;
 
 #pragma mark Class methods
 
@@ -1180,6 +1181,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     if (URN) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL];
         self.dataProvider.globalHeaders = self.globalHeaders;
+        self.dataProvider.globalParameters = self.globalParameters;
     }
     else {
         self.dataProvider = nil;

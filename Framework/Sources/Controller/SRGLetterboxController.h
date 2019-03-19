@@ -316,8 +316,9 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
  *  Switching to the currently playing subdivision restarts playback at its beginning.
  *
- *  @param The completion handler called once switching finishes. The block will only be called when switching is performed,
- *         and with `finished` set to `YES` iff playback could successfully resume afterwards.
+ *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
+ *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
+ *                           resume afterwards.
  *
  *  @return `YES` iff switching occurred successfully.
  */
@@ -686,9 +687,16 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, null_resettable) NSURL *serviceURL;
 
 /**
- *  Optional global headers which will added to all requests performed by the controller when retrieving data.
+ *  Optional global headers which will be added to all requests performed by the controller. Use with caution, as some
+ *  headers might not be supported and could lead to request failure.
  */
 @property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalHeaders;
+
+/**
+ *  Optional global parameters which will be added to all requests performed by the controller. Use with caution, as
+ *  some parameters might not be supported and could lead to request failure.
+ */
+@property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *globalParameters;
 
 @end
 

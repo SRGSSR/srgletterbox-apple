@@ -17,7 +17,7 @@
 @property (nonatomic, getter=isMMFOverride) BOOL MMFOverride;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic, weak) SRGRequest *request;
+@property (nonatomic, weak) SRGBaseRequest *request;
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 
@@ -53,7 +53,7 @@
     
     NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
-    self.dataProvider.globalHeaders = ApplicationSettingGlobalHeaders();
+    self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
@@ -97,7 +97,7 @@
 {
     [self.request cancel];
     
-    SRGRequest *request = nil;
+    SRGBaseRequest *request = nil;
     
     SRGPaginatedMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage *page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         if (self.refreshControl.refreshing) {

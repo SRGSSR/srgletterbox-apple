@@ -10,18 +10,18 @@
 
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSURL *URL;
-@property (nonatomic) NSDictionary<NSString *, NSString *> *globalHeaders;
 
 @end
 
 @implementation ServerSettings
 
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL globalHeaders:(NSDictionary<NSString *,NSString *> *)globalHeaders
+#pragma mark Object lifecycle
+
+- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL
 {
     if (self = [super init]) {
         self.name = name;
         self.URL = URL;
-        self.globalHeaders = globalHeaders;
     }
     return self;
 }

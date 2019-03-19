@@ -15,9 +15,11 @@ static NSString * const OnDemandLongVideoURN = @"urn:srf:video:2c685129-bad8-4ea
 static NSString * const OnDemandLongVideoSegmentURN = @"urn:srf:video:5fe1618a-b710-42aa-ac8a-cb9eabf42426";
 static NSString * const OnDemandAudioWithChaptersURN = @"urn:rts:audio:9355007";
 static NSString * const LiveOnlyVideoURN = @"urn:rts:video:8841634";
-static NSString * const LiveDVRVideoURN = @"urn:rts:video:1967124";
-static NSString * const MMFOnDemandLongVideoURN = @"urn:rts:video:8992584";
-static NSString * const MMFOnDemandLongVideoGeoblockSegmentURN = @"urn:rts:video:8992624";
+
+static NSString * const MMFLiveDVRVideoURN = @"urn:rts:video:_tagesschau24_ard";
+
+static NSString * const OnDemandLongVideo2URN = @"urn:rts:video:8992584";
+static NSString * const OnDemandLongVideo2GeoblockedSegmentURN = @"urn:rts:video:8992624";
 
 OBJC_EXPORT NSURL *MMFServiceURL(void);
 OBJC_EXPORT NSString *MMFScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate);
@@ -31,6 +33,12 @@ OBJC_EXPORT NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
 OBJC_EXPORT NSURL *MMFServiceURL(void);
 
 @interface LetterboxBaseTestCase : XCTestCase
+
+/**
+ *  Replacement for the buggy `-expectationForNotification:object:handler:`, catching notifications only once.
+ *  See http://openradar.appspot.com/radar?id=4976563959365632.
+ */
+- (XCTestExpectation *)expectationForSingleNotification:(NSNotificationName)notificationName object:(nullable id)objectToObserve handler:(nullable XCNotificationExpectationHandler)handler;
 
 /**
  *  Expectation fulfilled after some given time interval (in seconds), calling the optionally provided handler. Can

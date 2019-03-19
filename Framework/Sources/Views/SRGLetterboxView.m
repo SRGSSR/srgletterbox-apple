@@ -879,6 +879,16 @@ static void commonInit(SRGLetterboxView *self);
     [self reloadImage];
 }
 
+- (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
+{
+    [self stopInactivityTracker];
+}
+
+- (void)controlsViewDidHideTrackSelectionPopover:(SRGControlsView *)controlsView
+{
+    [self restartInactivityTracker];
+}
+
 #pragma mark SRGLetterboxTimelineViewDelegate protocol
 
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didSelectSubdivision:(SRGSubdivision *)subdivision
@@ -1009,9 +1019,7 @@ static void commonInit(SRGLetterboxView *self)
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
     self.backgroundColor = UIColor.blackColor;
     
-#ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         self.accessibilityIgnoresInvertColors = YES;
     }
-#endif
 }

@@ -13,7 +13,6 @@ default_platform :ios
 
 platform :ios do
   before_all do |lane|
-
     ensure_git_status_clean
 
     # For the demo, before all, check if we have a demo release description
@@ -34,11 +33,14 @@ platform :ios do
   end
 
   desc "Run library tests"
-  lane :test do
+  lane :tests do
     scan(
       scheme: "SRGLetterbox",
+      output_types: "",
+      fail_build: false,
       clean: true
-    ) 
+    )
+    trainer(output_directory: "./fastlane")
   end
 
   desc "Build a new nightly demo on HockeyApp"
@@ -115,11 +117,11 @@ platform :ios do
     bundle_display_name_suffix = options[:bundle_display_name_suffix] ? options[:bundle_display_name_suffix] : ""
     marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
 
-    resetProvisioningProfileContext
+    # resetProvisioningProfileContext
 
-    app_identifier = getAppIdentifier(scheme: scheme, configuration: configuration)
-    get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
-    get_provisioning_profile(app_identifier: app_identifier, force: true)
+    # app_identifier = getAppIdentifier(scheme: scheme, configuration: configuration)
+    # get_provisioning_profile(app_identifier: app_identifier, force: true, development: true)
+    # get_provisioning_profile(app_identifier: app_identifier, force: true)
 
     xcargs = 'ENABLE_BITCODE=NO BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" -allowProvisioningUpdates'
 

@@ -49,7 +49,7 @@
     self.letterboxController = [[SRGLetterboxController alloc] init];
     self.letterboxController.serviceURL = ApplicationSettingServiceURL();
     self.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-    self.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    self.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
     self.letterboxController.muted = YES;
     self.letterboxController.resumesAfterRouteBecomesUnavailable = YES;
     self.letterboxView.controller = self.letterboxController;

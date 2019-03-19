@@ -8,6 +8,8 @@
 
 #import "SettingsViewController.h"
 
+#import <SRGLetterbox/SRGLetterbox.h>
+
 @interface SimplePlayerViewController ()
 
 @property (nonatomic, copy) NSString *URN;
@@ -30,7 +32,7 @@
     
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
-    viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+    viewController.letterboxController.globalHeaders = ApplicationSettingGlobalParameters();
     
     return viewController;
 }

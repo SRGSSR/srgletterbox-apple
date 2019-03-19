@@ -35,8 +35,6 @@
 
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
-@property (nonatomic) BOOL wantsFullScreen;
-
 @property (nonatomic) NSMutableArray<SRGSubdivision *> *favoritedSubdivisions;
 
 @property (nonatomic) ModalTransition *interactiveTransition;
@@ -65,7 +63,7 @@
         
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
-        viewController.letterboxController.globalHeaders = ApplicationSettingGlobalHeaders();
+        viewController.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
         
         return viewController;
     }
@@ -94,6 +92,15 @@
     self.letterboxController.updateInterval = updateInterval;
 }
 
+#pragma mark Overrides
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.transitioningDelegate = self;
+}
+
 #pragma mark View lifecycle
 
 - (void)viewDidLoad
@@ -103,9 +110,6 @@
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
     self.timelineSwitch.enabled = ! self.letterboxView.timelineAlwaysHidden;
-    
-    // Use custom modal transition
-    self.transitioningDelegate = self;
     
     [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:self];
     
@@ -266,8 +270,6 @@
         }
     };
     
-    self.wantsFullScreen = fullScreen;
-    
     if (animated) {
         [self.view layoutIfNeeded];
         [UIView animateWithDuration:0.2 animations:^{
@@ -408,7 +410,7 @@
         case UIGestureRecognizerStateEnded: {
             // Finish the transition if the view was dragged by 20% and the user is dragging downwards
             CGFloat velocity = [panGestureRecognizer velocityInView:self.view].y;
-            if (progress > 0.2f && velocity >= 0.f) {
+            if (velocity > 0.f || (velocity == 0.f && progress > 0.5f)) {
                 [self.interactiveTransition finishInteractiveTransition];
             }
             else {
