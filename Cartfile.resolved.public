@@ -1,7 +1,7 @@
 github "Mantle/Mantle" "2.1.0"
 github "SRGSSR/FXReachability" "1.3.2_srg2"
 github "SRGSSR/MAKVONotificationCenter" "1.0_srg2"
-github "SRGSSR/Masonry" "c563c924a0c28ef44f602f5e4b6f6128c0cc7b41"
+github "SRGSSR/Masonry" "a183c4b840a8ed4879edbc1ecc914696187ea3d7"
 github "SRGSSR/UICKeyChainStore" "63b2a54c023827188621dadfc27f26ea3c4d60f4"
 github "SRGSSR/YYWebImage" "55704d0c91261f4f066edc93368ff5cc29c88dbe"
 github "SRGSSR/libextobjc" "0.6_srg1"
