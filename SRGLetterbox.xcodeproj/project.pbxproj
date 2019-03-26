@@ -1198,7 +1198,7 @@
 			};
 			buildConfigurationList = 6FE3213B1E28E24E00FD8E42 /* Build configuration list for PBXProject "SRGLetterbox" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
