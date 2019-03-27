@@ -25,14 +25,13 @@
 
 #pragma mark Getters and setters
 
-- (void)setMedia:(SRGMedia *)media
+- (void)setMedia:(SRGMedia *)media withPreferredSubtitleLocalization:(NSString *)preferredSubtitleLocalization
 {
-    _media = media;
-    
     if (media) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
         settings.standalone = ApplicationSettingIsStandalone();
         
+        self.letterboxController.preferredSubtitleLocalization = preferredSubtitleLocalization;
         [self.letterboxController playMedia:media atPosition:nil withPreferredSettings:settings];
     }
     else {
