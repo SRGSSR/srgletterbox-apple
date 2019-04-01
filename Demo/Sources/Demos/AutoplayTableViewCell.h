@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AutoplayTableViewCell : UITableViewCell
 
-@property (nonatomic, nullable) SRGMedia *media;
+- (void)setMedia:(nullable SRGMedia *)media withPreferredSubtitleLocalization:(nullable NSString *)preferredSubtitleLocalization;
 
 @end
 

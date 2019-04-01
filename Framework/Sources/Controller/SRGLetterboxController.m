@@ -507,6 +507,28 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self.mediaPlayerController removePeriodicTimeObserver:observer];
 }
 
+#pragma mark Subtitles
+
+- (NSArray<NSString *> *)availableSubtitleLocalizations
+{
+    return self.mediaPlayerController.availableSubtitleLocalizations;
+}
+
+- (NSString *)preferredSubtitleLocalization
+{
+    return self.mediaPlayerController.preferredSubtitleLocalization;
+}
+
+- (void)setPreferredSubtitleLocalization:(NSString *)preferredSubtitleLocalization
+{
+    self.mediaPlayerController.preferredSubtitleLocalization = preferredSubtitleLocalization;
+}
+
+- (NSString *)subtitleLocalization
+{
+    return self.mediaPlayerController.subtitleLocalization;
+}
+
 #pragma mark Playlists
 
 - (BOOL)canPlayPlaylistMedia:(SRGMedia *)media

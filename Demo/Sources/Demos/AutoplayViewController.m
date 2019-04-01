@@ -92,29 +92,6 @@
     self.medias = nil;
     [self.tableView reloadData];
     
-    SRGVendor vendor = SRGVendorNone;
-    switch (self.autoplayList) {
-        case AutoplayListSRFTrendingMedias: {
-            vendor = SRGVendorSRF;
-            break;
-        }
-            
-        case AutoplayListRTSTrendingMedias: {
-            vendor = SRGVendorRTS;
-            break;
-        }
-            
-        case AutoplayListRSITrendingMedias: {
-            vendor = SRGVendorRSI;
-            break;
-        }
-            
-        default: {
-            return;
-            break;
-        }
-    }
-    
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:ApplicationSettingServiceURL()];
     self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
     
@@ -123,6 +100,15 @@
         [self.tableView reloadData];
     };
     
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
+    dispatch_once(&s_onceToken, ^{
+        s_vendors = @{ @(AutoplayListRSITrendingMedias) : @(SRGVendorRSI),
+                       @(AutoplayListRTSTrendingMedias) : @(SRGVendorRTS),
+                       @(AutoplayListSRFTrendingMedias) : @(SRGVendorSRF) };
+    });
+    
+    SRGVendor vendor = [s_vendors[@(self.autoplayList)] integerValue];
     SRGRequest *request = [self.dataProvider tvTrendingMediasForVendor:vendor withLimit:@50 completionBlock:completionBlock];
     [request resume];
     self.request = request;
@@ -144,12 +130,20 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.media = self.medias[indexPath.row];
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_localizations;
+    dispatch_once(&s_onceToken, ^{
+        s_localizations = @{ @(AutoplayListRSITrendingMedias) : @"it",
+                             @(AutoplayListRTSTrendingMedias) : @"fr",
+                             @(AutoplayListSRFTrendingMedias) : @"de" };
+    });
+    
+    [cell setMedia:self.medias[indexPath.row] withPreferredSubtitleLocalization:s_localizations[@(self.autoplayList)]];
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.media = nil;
+    [cell setMedia:nil withPreferredSubtitleLocalization:nil];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

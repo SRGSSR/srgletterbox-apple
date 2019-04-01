@@ -13,21 +13,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSInteger, AutoplayList) {
     /**
-     *  Unknown list.
-     */
-    AutoplayListUnknown = 0,
-    /**
-     *  SRF trending videos.
-     */
-    AutoplayListSRFTrendingMedias,
-    /**
      *  RTS trending videos.
      */
     AutoplayListRTSTrendingMedias,
     /**
      *  RSI trending videos.
      */
-    AutoplayListRSITrendingMedias
+    AutoplayListRSITrendingMedias,
+    /**
+     *  SRF trending videos.
+     */
+    AutoplayListSRFTrendingMedias
 };
 
 @interface AutoplayViewController : UITableViewController

@@ -412,6 +412,44 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @end
 
 /**
+ *  Subtitle management.
+ */
+@interface SRGLetterboxController (Subtitles)
+
+/**
+ *  The list of available subtitle localizations for the media being played.
+ *
+ *  @discussion Not known while playback is being prepared or if the player is idle.
+ */
+@property (nonatomic) NSArray<NSString *> *availableSubtitleLocalizations;
+
+/**
+ *  The subtitle localization to use, if available. Use `nil` for the default behavior (depends on the previous subtitle
+ *  settings saved for the user).
+ *
+ *  Valid localizations can be retrieved from `availableSubtitleLocalizations` once a media has been prepared for playback.
+ *  If you know the value you want to to use beforehand, though, the preferred localization can be set earlier, even
+ *  right after controller creation.
+ *
+ *  Use `SRGMediaPlayerLocalizationDisabled` to disable subtitles (forced subtitles may still appear, though) or
+ *  `SRGMediaPlayerLocalizationAutomatic` to enable automatic selection based on accessibility settings, content and
+ *  application languages.
+ *
+ *  @discussion This setting only affects the receiver and is not reset between between media playbacks using the same
+ *              controller. If an invalid subtitle localization is provided, automatic selection is applied instead.
+ */
+@property (nonatomic, copy, nullable) NSString *preferredSubtitleLocalization;
+
+/**
+ *  Return the localization of the currently applied subtitles, if any.
+ *
+ *  @discussion A value is returned as well when forced subtitles are being applied.
+ */
+@property (nonatomic, readonly, copy, nullable) NSString *subtitleLocalization;
+
+@end
+
+/**
  *  Playlist support. To use playlists, assign a data source which will supply previous and next medias to be played.
  *
  *  @discussion Playlist navigation is not available when picture in picture is active.
