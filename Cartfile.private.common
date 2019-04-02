@@ -1,4 +1,5 @@
-github "bitstadium/HockeySDK-iOS" ~> 5.0.0
+# Temporary fork to fix build issue with Xcode 10.2 - bitstadium#548
+github "acamill/HockeySDK-iOS" "d1553360577904021cf566fcdd9daa3a10b138fb"
 
 # Fork from AliSoftware/OHHTTPStubs to support Xcode 9.x and Swift 4.
 github "rckoenes/OHHTTPStubs" ~> 6.1.1
