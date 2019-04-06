@@ -387,11 +387,6 @@ static void commonInit(SRGLetterboxView *self);
     return self.timelineView.subdivisions;
 }
 
-- (void)setNeedsSubdivisionFavoritesUpdate
-{
-    [self.timelineView setNeedsSubdivisionFavoritesUpdate];
-}
-
 - (CMTime)time
 {
     return self.controlsView.time;
@@ -902,16 +897,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     if ([self.delegate respondsToSelector:@selector(letterboxView:didLongPressSubdivision:)]) {
         [self.delegate letterboxView:self didLongPressSubdivision:subdivision];
-    }
-}
-
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision
-{
-    if ([self.delegate respondsToSelector:@selector(letterboxView:shouldDisplayFavoriteForSubdivision:)]) {
-        return [self.delegate letterboxView:self shouldDisplayFavoriteForSubdivision:subdivision];
-    }
-    else {
-        return NO;
     }
 }
 

@@ -23,12 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)letterboxSubdivisionCellDidLongPress:(SRGLetterboxSubdivisionCell *)letterboxSubdivisionCell;
 
-/**
- *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been 
- *  set, no favorite icon will be displayed.
- */
-- (BOOL)letterboxSubdivisionCellShouldDisplayFavoriteIcon:(SRGLetterboxSubdivisionCell *)letterboxSubdivisionCell;
-
 @end
 
 /**

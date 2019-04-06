@@ -19,7 +19,6 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *durationLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *media360ImageView;
 
 @property (nonatomic, weak) IBOutlet UIView *blockingOverlayView;
@@ -53,13 +52,6 @@
     self.media360ImageView.layer.shadowRadius = 2.f;
     self.media360ImageView.layer.shadowOffset = CGSizeMake(0.f, 1.f);
     
-    UIImage *favoriteImage = self.favoriteImageView.image;
-    self.favoriteImageView.image = nil;
-    self.favoriteImageView.image = favoriteImage;
-    
-    self.favoriteImageView.backgroundColor = [UIColor srg_redColor];
-    self.favoriteImageView.hidden = YES;
-    
     self.durationLabel.horizontalMargin = 5.f;
     
     self.blockingOverlayView.hidden = YES;
@@ -75,7 +67,6 @@
 {
     [super prepareForReuse];
     
-    self.favoriteImageView.hidden = YES;
     self.blockingOverlayView.hidden = YES;
     
     self.blockingReasonImageView.image = nil;
@@ -148,8 +139,6 @@
         self.titleLabel.textColor = UIColor.lightGrayColor;
     }
     
-    self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
-    
     SRGPresentation presentation = SRGPresentationDefault;
     if ([subdivision isKindOfClass:SRGChapter.class]) {
         presentation = ((SRGChapter *)subdivision).presentation;
@@ -175,7 +164,6 @@
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if (self.delegate) {
             [self.delegate letterboxSubdivisionCellDidLongPress:self];
-            self.favoriteImageView.hidden = ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
         }
     }
 }
