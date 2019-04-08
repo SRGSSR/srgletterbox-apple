@@ -7,6 +7,7 @@
 #import "SRGLetterboxSubdivisionCell.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -109,15 +110,13 @@
         self.durationLabel.hidden = NO;
     }
     else if (subdivision.duration != 0.) {
-        static NSDateComponentsFormatter *s_dateComponentsFormatter;
-        static dispatch_once_t s_onceToken;
-        dispatch_once(&s_onceToken, ^{
-            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-            s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-        });
-        
-        self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
+        NSTimeInterval durationInSeconds = subdivision.duration / 1000.;
+        if (durationInSeconds < 60. * 60.) {
+            self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
+        else {
+            self.durationLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
         self.durationLabel.hidden = NO;
     }
     else {
