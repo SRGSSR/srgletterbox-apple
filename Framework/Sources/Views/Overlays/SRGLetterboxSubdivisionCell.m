@@ -7,6 +7,7 @@
 #import "SRGLetterboxSubdivisionCell.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -19,7 +20,6 @@
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *durationLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *favoriteImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *media360ImageView;
 
 @property (nonatomic, weak) IBOutlet UIView *blockingOverlayView;
@@ -53,13 +53,6 @@
     self.media360ImageView.layer.shadowRadius = 2.f;
     self.media360ImageView.layer.shadowOffset = CGSizeMake(0.f, 1.f);
     
-    UIImage *favoriteImage = self.favoriteImageView.image;
-    self.favoriteImageView.image = nil;
-    self.favoriteImageView.image = favoriteImage;
-    
-    self.favoriteImageView.backgroundColor = [UIColor srg_redColor];
-    self.favoriteImageView.hidden = YES;
-    
     self.durationLabel.horizontalMargin = 5.f;
     
     self.blockingOverlayView.hidden = YES;
@@ -75,7 +68,6 @@
 {
     [super prepareForReuse];
     
-    self.favoriteImageView.hidden = YES;
     self.blockingOverlayView.hidden = YES;
     
     self.blockingReasonImageView.image = nil;
@@ -118,15 +110,13 @@
         self.durationLabel.hidden = NO;
     }
     else if (subdivision.duration != 0.) {
-        static NSDateComponentsFormatter *s_dateComponentsFormatter;
-        static dispatch_once_t s_onceToken;
-        dispatch_once(&s_onceToken, ^{
-            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute;
-            s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
-        });
-        
-        self.durationLabel.text = [s_dateComponentsFormatter stringFromTimeInterval:subdivision.duration / 1000.];
+        NSTimeInterval durationInSeconds = subdivision.duration / 1000.;
+        if (durationInSeconds <= 60. * 60.) {
+            self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
+        else {
+            self.durationLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
         self.durationLabel.hidden = NO;
     }
     else {
@@ -147,8 +137,6 @@
         
         self.titleLabel.textColor = UIColor.lightGrayColor;
     }
-    
-    self.favoriteImageView.hidden = ! self.delegate || ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
     
     SRGPresentation presentation = SRGPresentationDefault;
     if ([subdivision isKindOfClass:SRGChapter.class]) {
@@ -175,7 +163,6 @@
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         if (self.delegate) {
             [self.delegate letterboxSubdivisionCellDidLongPress:self];
-            self.favoriteImageView.hidden = ! [self.delegate letterboxSubdivisionCellShouldDisplayFavoriteIcon:self];
         }
     }
 }

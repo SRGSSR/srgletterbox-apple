@@ -77,15 +77,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
-/**
- *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
- *  set or if this method is not implemented, no favorite icon will be displayed.
- *
- *  The method is called when appropriate, but you can manually trigger a favorite status refresh by calling the
- *  LetterboxView `-setNeedsSubdivisionFavoritesUpdate` method.
- */
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision;
-
 @end
 
 /**
@@ -143,14 +134,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  When setting `fullScreen` to `YES` or if the view frame covers the whole window, content gravity can be changed by
  *  double tapping a video. Video controls are moved accordingly.
  *  
- *  ## Long press on subdivisions and favorites
+ *  ## Long press on subdivisions
  *
- *  Basic non-customizable support for favorites is provided. A long-press `-letterboxView:didLongPressSubdivision:` 
- *  delegate method is called when the user holds her finger still on a timeline cell for a few seconds, providing you 
- *  with the ability to mark the associated subdivision as being (un)favorited. 
- *
- *  A favorite icon can be displayed on favorited cells by implementing the `-letterboxView:shouldDisplayFavoriteForSubdivision:`
- *  delegate method.
+ *  A long-press `-letterboxView:didLongPressSubdivision:` delegate method is called when the user holds her finger still
+ *  on a timeline cell for a few seconds.
  *
  *  ## Full-screen
  *
@@ -312,13 +299,6 @@ IB_DESIGNABLE
  *  The subdivisions currently visible in the timeline (in their display order).
  */
 @property (nonatomic, readonly) NSArray<SRGSubdivision *> *subdivisions;
-
-/**
- *  Call to schedule an update request for subdivision favorites.
- *
- *  For more information, @see `SRGLetterboxViewDelegate`.
- */
-- (void)setNeedsSubdivisionFavoritesUpdate;
 
 /**
  *  The time corresponding to the current slider position.
