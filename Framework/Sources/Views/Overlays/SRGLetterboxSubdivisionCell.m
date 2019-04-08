@@ -111,7 +111,7 @@
     }
     else if (subdivision.duration != 0.) {
         NSTimeInterval durationInSeconds = subdivision.duration / 1000.;
-        if (durationInSeconds < 60. * 60.) {
+        if (durationInSeconds <= 60. * 60.) {
             self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
         }
         else {
