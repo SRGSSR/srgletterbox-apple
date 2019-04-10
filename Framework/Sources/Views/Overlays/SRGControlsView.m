@@ -14,7 +14,6 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxPlaybackButton.h"
-#import "SRGLetterboxTimeSlider.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
 #import "UIFont+SRGLetterbox.h"
@@ -34,7 +33,6 @@
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
 @property (nonatomic, weak) IBOutlet SRGAirPlayButton *airPlayButton;
 @property (nonatomic, weak) IBOutlet SRGPictureInPictureButton *pictureInPictureButton;
-@property (nonatomic, weak) IBOutlet SRGLetterboxTimeSlider *timeSlider;
 @property (nonatomic, weak) IBOutlet SRGTracksButton *tracksButton;
 @property (nonatomic, weak) IBOutlet SRGFullScreenButton *fullScreenPhantomButton;
 
@@ -55,21 +53,6 @@
 
 #pragma mark Getters and setters
 
-- (CMTime)time
-{
-    return self.timeSlider.time;
-}
-
-- (NSDate *)date
-{
-    return self.timeSlider.date;
-}
-
-- (BOOL)isLive
-{
-    return self.timeSlider.live;
-}
-
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -81,10 +64,6 @@
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
     self.skipToLiveButton.alpha = 0.f;
-    
-    self.timeSlider.alpha = 0.f;
-    self.timeSlider.resumingAfterSeek = NO;
-    self.timeSlider.delegate = self;
     
     self.tracksButton.delegate = self;
     
@@ -156,7 +135,6 @@
     self.pictureInPictureButton.mediaPlayerController = nil;
     self.airPlayButton.mediaPlayerController = nil;
     self.tracksButton.mediaPlayerController = nil;
-    self.timeSlider.mediaPlayerController = nil;
     
     self.viewModeButton.mediaPlayerView = nil;
 }
@@ -172,7 +150,6 @@
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airPlayButton.mediaPlayerController = mediaPlayerController;
     self.tracksButton.mediaPlayerController = mediaPlayerController;
-    self.timeSlider.mediaPlayerController = mediaPlayerController;
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
     
@@ -200,7 +177,6 @@
         self.backwardSeekButton.alpha = 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
-        self.timeSlider.alpha = 0.f;
     }
     else {
         self.forwardSeekButton.alpha = [self.controller canSkipForward] ? 1.f : 0.f;
@@ -208,7 +184,6 @@
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
-        self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
@@ -254,7 +229,6 @@
     self.backwardSeekButton.hidden = NO;
     self.forwardSeekButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
-    self.timeSlider.hidden = NO;
     self.durationLabelWrapperView.alwaysHidden = NO;
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = NO;
@@ -263,7 +237,6 @@
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 167.f) {
-        self.timeSlider.hidden = YES;
         self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (height < 120.f) {
@@ -279,7 +252,6 @@
     CGFloat width = CGRectGetWidth(self.frame);
     if (width < 296.f) {
         self.skipToLiveButton.hidden = YES;
-        self.timeSlider.hidden = YES;
         self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (width < 214.f) {
@@ -321,47 +293,6 @@
     }
 }
 
-#pragma mark SRGTimeSliderDelegate protocol
-
-- (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
-{
-    [self.delegate controlsView:self isMovingSliderToPlaybackTime:time withValue:value interactive:interactive];
-}
-
-- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time
-{
-    SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
-    if (slider.isLive) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
-    }
-    else if (streamType == SRGMediaPlayerStreamTypeDVR) {
-        NSDate *date = slider.date;
-        if (date) {
-            static dispatch_once_t s_onceToken;
-            static NSDateFormatter *s_dateFormatter;
-            dispatch_once(&s_onceToken, ^{
-                s_dateFormatter = [[NSDateFormatter alloc] init];
-                s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
-                s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
-            });
-            
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[s_dateFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
-            return [attributedString copy];
-        }
-        else {
-            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }];
-        }
-    }
-    else if (streamType == SRGMediaPlayerStreamTypeLive) {
-        return nil;
-    }
-    else {
-        NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? NSDateComponentsFormatter.srg_shortDateComponentsFormatter : NSDateComponentsFormatter.srg_mediumDateComponentsFormatter;
-        NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
-        return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }];
-    }
-}
 
 #pragma mark SRGTracksButtonDelegate protocol
 
@@ -380,14 +311,14 @@
 - (IBAction)skipBackward:(id)sender
 {
     [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        
     }];
 }
 
 - (IBAction)skipForward:(id)sender
 {
     [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        
     }];
 }
 

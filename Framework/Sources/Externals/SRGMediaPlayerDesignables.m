@@ -35,11 +35,6 @@ IB_DESIGNABLE
 @end
 
 IB_DESIGNABLE
-@interface SRGTimeSlider (Designable)
-
-@end
-
-IB_DESIGNABLE
 @interface SRGTimelineView (Designable)
 
 @end

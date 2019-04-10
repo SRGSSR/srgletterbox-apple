@@ -212,6 +212,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *              set it before starting playback.
  */
 @property (nonatomic, null_resettable) NSURL *serviceURL;
+@property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
 
 /**
  *  Prepare to play the specified URN (Uniform Resource Name) with the preferred (non-guaranteed) settings, and with

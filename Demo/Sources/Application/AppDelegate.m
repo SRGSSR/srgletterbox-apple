@@ -11,7 +11,6 @@
 
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
-#import <HockeySDK/HockeySDK.h>
 
 static __attribute__((constructor)) void ApplicationInit(void)
 {
@@ -34,9 +33,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     [SRGNetworkActivityManagement enable];
     
-#ifndef DEBUG
-    [self setupHockey];
-#endif
     
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
                                                                                                        container:10
@@ -54,17 +50,5 @@ static __attribute__((constructor)) void ApplicationInit(void)
     return YES;
 }
 
-#pragma mark Helpers
-
-- (void)setupHockey
-{
-    NSString *hockeyIdentifier = [NSBundle.mainBundle objectForInfoDictionaryKey:@"HockeyIdentifier"];
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    
-#if defined(RELEASE) || defined(NIGHTLY)
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-#endif
-}
 
 @end

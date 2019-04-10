@@ -122,8 +122,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [_controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
-        [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGLetterboxMetadataDidChangeNotification
@@ -150,34 +148,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [controller reloadPlayerConfiguration];
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         
-        if (pictureInPictureController) {
-            @weakify(self)
-            @weakify(pictureInPictureController)
-            [pictureInPictureController addObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
-                @strongify(self)
-                @strongify(pictureInPictureController)
-                
-                // When enabling AirPlay from the control center while picture in picture is active, picture in picture will be
-                // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
-                // those methods manually
-                if (mediaPlayerController.player.externalPlaybackActive) {
-                    [self pictureInPictureController:pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-                    [self pictureInPictureControllerDidStopPictureInPicture:pictureInPictureController];
-                }
-            }];
-            
-            pictureInPictureController.delegate = self;
-        }
-        else {
-            @weakify(self)
-            mediaPlayerController.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
-                @strongify(self)
-                
-                pictureInPictureController.delegate = self;
-            };
-        }
         
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(metadataDidChange:)
@@ -224,7 +195,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     });
     
     self.controller = controller;
-    self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
     
     _disablingAudioServices = NO;
     
@@ -635,77 +605,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)doNothing:(id)sender
 {}
-
-#pragma mark Picture in picture
-
-- (void)stopPictureInPictureRestoreUserInterface:(BOOL)restoreUserInterface
-{
-    AVPictureInPictureController *pictureInPictureController = self.controller.mediaPlayerController.pictureInPictureController;
-    if (! pictureInPictureController.pictureInPictureActive) {
-        return;
-    }
-    
-    _restoreUserInterface = restoreUserInterface;
-    [pictureInPictureController stopPictureInPicture];
-}
-
-#pragma mark AVPictureInPictureControllerDelegate protocol
-
-- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
-{
-    BOOL dismissed = [self.pictureInPictureDelegate letterboxDismissUserInterfaceForPictureInPicture];
-    _restoreUserInterface = _restoreUserInterface && dismissed;
-    
-    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStartPictureInPicture)]) {
-        [self.pictureInPictureDelegate letterboxDidStartPictureInPicture];
-    }
-}
-
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
-{
-    // If the restoration method gets called, this means playback was not stopped from the picture in picture stop button
-    _playbackStopped = NO;
-    
-    if (! _restoreUserInterface) {
-        completionHandler(YES);
-        return;
-    }
-    
-    // It is very important that the completion handler is called at the very end of the process, otherwise silly
-    // things might happen during the restoration (most notably player rate set to 0)
-    
-    // If stopping picture in picture because of a reset, don't restore anything
-    if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        completionHandler(YES);
-        return;
-    }
-    
-    if ([self.pictureInPictureDelegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
-        [self.pictureInPictureDelegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
-            completionHandler(restored);
-        }];
-    }
-    else {
-        completionHandler(YES);
-    }
-}
-
-- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
-{
-    if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidEndPictureInPicture)]) {
-        [self.pictureInPictureDelegate letterboxDidEndPictureInPicture];
-    }
-    
-    if (_playbackStopped) {
-        if ([self.pictureInPictureDelegate respondsToSelector:@selector(letterboxDidStopPlaybackFromPictureInPicture)]) {
-            [self.pictureInPictureDelegate letterboxDidStopPlaybackFromPictureInPicture];
-        }
-    }
-    
-    // Reset to default values
-    _playbackStopped = YES;
-    _restoreUserInterface = YES;
-}
 
 #pragma mark Notifications
 

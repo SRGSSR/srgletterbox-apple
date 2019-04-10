@@ -131,7 +131,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 @interface SRGLetterboxController ()
 
-@property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
 
 @property (nonatomic) NSDictionary<NSString *, NSString *> *globalHeaders;
 @property (nonatomic) NSDictionary<NSString *, NSString *> *globalParameters;
@@ -192,6 +191,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @implementation SRGLetterboxController
 
 @synthesize serviceURL = _serviceURL;
+@synthesize mediaPlayerController;
 
 #pragma mark Class methods
 
@@ -336,12 +336,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)isPictureInPictureEnabled
 {
-    return self.backgroundServicesEnabled && SRGLetterboxService.sharedService.pictureInPictureDelegate;
+    return false;
 }
 
 - (BOOL)isPictureInPictureActive
 {
-    return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
+    return false;
 }
 
 - (void)setEndTolerance:(NSTimeInterval)endTolerance
@@ -977,7 +977,85 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     [[[self report] informationForKey:@"ilResult"] startTimeMeasurementForKey:@"duration"];
     
-    SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:preferredSettings.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+    
+    
+    
+    
+    
+    
+    
+    NSURLResponse* response=nil;
+    NSError *error = nil;
+    
+    NSString *resourcePath = [NSString stringWithFormat:@"2.0/mediaComposition/byUrn/%@.json?vector=appplay", self.URN];
+    NSURL *URL = [self.serviceURL URLByAppendingPathComponent:resourcePath];
+    
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    NSString *jsonStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"%@", jsonStr);
+    NSDictionary *JSONDictionary = SRGNetworkJSONDictionaryParser(data, &error);
+    SRGMediaComposition * mediaComposition = [MTLJSONAdapter modelOfClass:SRGMediaComposition.class fromJSONDictionary:JSONDictionary error:&error];
+    
+    [[[self report] informationForKey:@"ilResult"] stopTimeMeasurementForKey:@"duration"];
+    
+    if (error) {
+        self.dataAvailability = SRGLetterboxDataAvailabilityNone;
+        [self updateWithError:error];
+        
+        //[self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
+        [self finishDiagnosticReport];
+        return;
+    }
+    
+    // Update screenType value after metadata update.
+    [[self report] setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
+    
+    [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
+    [self updateChannel];
+    
+    SRGMedia *myMedia = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
+    [self notifyLivestreamEndWithMedia:myMedia previousMedia:nil];
+    
+    // Do not go further if the content is blocked
+    NSError *blockingReasonError = SRGBlockingReasonErrorForMedia(myMedia, NSDate.date);
+    if (blockingReasonError) {
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+        [self updateWithError:blockingReasonError];
+        
+        //[self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:blockingReasonError];
+        [self finishDiagnosticReport];
+        return;
+    }
+    
+    void (^prepareToPlayCompletionHandler)(void) = ^{
+        [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:nil];
+        [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
+        [self finishDiagnosticReport];
+        
+        completionHandler ? completionHandler() : nil;
+    };
+    
+    if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(preferredSettings) userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
+        //[self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
+        [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
+    }
+    else {
+        self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+        
+        NSError *error = [NSError errorWithDomain:SRGLetterboxErrorDomain
+                                             code:SRGLetterboxErrorCodeNotPlayable
+                                         userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
+        [self updateWithError:error];
+        
+        //[self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
+        [[[self report] informationForKey:@"ilResult"] setBool:YES forKey:@"noPlayableResourceFound"];
+        [self finishDiagnosticReport];
+    }
+    
+    
+    
+    /*SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:preferredSettings.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         @strongify(self)
         
         [[[self report] informationForKey:@"ilResult"] stopTimeMeasurementForKey:@"duration"];
@@ -1036,7 +1114,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             [self finishDiagnosticReport];
         }
     }];
-    [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
+    [self.requestQueue addRequest:mediaCompositionRequest resume:YES];*/
 }
 
 // Checks whether an override has been defined for the specified content to be played. Returns `YES` and plays it iff this is the case.

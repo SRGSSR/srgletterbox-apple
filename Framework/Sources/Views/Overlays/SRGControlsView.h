@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  View displaying controls.
  */
 IB_DESIGNABLE
-@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGTracksButtonDelegate>
+@interface SRGControlsView : SRGLetterboxControllerView <SRGTracksButtonDelegate>
 
 /**
  *  View optional delegate.

@@ -6,7 +6,6 @@
 
 #import "SRGLetterboxControllerView.h"
 
-#import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
@@ -198,7 +197,6 @@ IB_DESIGNABLE
  *  be used. You should set a motion manager before any playback occurs and not change it afterwards, otherwise the
  *  behavior is undefined.
  */
-+ (void)setMotionManager:(nullable CMMotionManager *)motionManager;
 
 /**
  *  View optional delegate.

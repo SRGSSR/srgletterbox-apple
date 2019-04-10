@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,7 +32,6 @@
                 <outlet property="pictureInPictureButton" destination="RYB-bE-iGb" id="ItI-41-9qv"/>
                 <outlet property="playbackButton" destination="XsM-fD-Xjk" id="4Gh-uk-XcY"/>
                 <outlet property="skipToLiveButton" destination="bWK-b9-2Ez" id="lh6-Fh-Mor"/>
-                <outlet property="timeSlider" destination="1p6-Al-g2u" id="f5W-6U-Zav"/>
                 <outlet property="tracksButton" destination="4v3-Sk-Mrv" id="sCb-V2-5lh"/>
                 <outlet property="viewModeButton" destination="tho-59-1JB" id="WvA-tb-DKI"/>
             </connections>
@@ -82,33 +81,13 @@
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s3j-tc-N2I" userLabel="Time Slider Wrapper View" customClass="SRGControlWrapperView">
                             <rect key="frame" x="144" y="0.0" width="258.5" height="48"/>
-                            <subviews>
-                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="1p6-Al-g2u" customClass="SRGLetterboxTimeSlider">
-                                    <rect key="frame" x="9" y="13" width="240.5" height="23"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="22" id="Iwb-lM-S2E"/>
-                                    </constraints>
-                                    <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="maximumTrackTintColor" white="1" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="color" keyPath="bufferingTrackColor">
-                                            <color key="value" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </slider>
-                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstItem="1p6-Al-g2u" firstAttribute="leading" secondItem="s3j-tc-N2I" secondAttribute="leading" constant="11" id="LLY-jD-h5I"/>
-                                <constraint firstAttribute="trailing" secondItem="1p6-Al-g2u" secondAttribute="trailing" constant="11" id="PhY-G2-HGC"/>
-                                <constraint firstItem="1p6-Al-g2u" firstAttribute="centerY" secondItem="s3j-tc-N2I" secondAttribute="centerY" id="gdL-0E-Ckz"/>
-                            </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eeD-TF-oNL" userLabel="Duration Label Wrapper View" customClass="SRGControlWrapperView">
                             <rect key="frame" x="402.5" y="0.0" width="49.5" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfY-e1-gJs" userLabel="Duration Label">
-                                    <rect key="frame" x="11" y="16.5" width="27.5" height="16.5"/>
+                                    <rect key="frame" x="11" y="16" width="27.5" height="16.5"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -128,7 +107,7 @@
                             <rect key="frame" x="452" y="0.0" width="51" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="joB-a5-mWm" userLabel="Live Label" customClass="SRGLiveLabel">
-                                    <rect key="frame" x="11" y="16.5" width="29" height="16.5"/>
+                                    <rect key="frame" x="11" y="16" width="29" height="16.5"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>

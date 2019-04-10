@@ -8,7 +8,6 @@
 
 #import "ServerSettings.h"
 
-#import <HockeySDK/HockeySDK.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
@@ -167,7 +166,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (BOOL)isCheckForUpdateButtonEnabled
 {
-    return ([BITHockeyManager sharedHockeyManager].updateManager != nil);
+    return NO;
 }
 
 #pragma mark UITableViewDataSource protocol
@@ -492,7 +491,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 6: {
             completionBlock = ^{
-                [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
+                
             };
             break;
         }

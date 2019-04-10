@@ -20,8 +20,6 @@
 	<string>$(BUNDLE_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>${CURRENT_PROJECT_VERSION}</string>
-	<key>HockeyIdentifier</key>
-	<string>${HOCKEYAPP_IDENTIFIER}</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

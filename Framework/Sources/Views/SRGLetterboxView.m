@@ -80,10 +80,6 @@ static void commonInit(SRGLetterboxView *self);
 
 #pragma mark Class methods
 
-+ (void)setMotionManager:(CMMotionManager *)motionManager
-{
-    [SRGMediaPlayerView setMotionManager:motionManager];
-}
 
 #pragma mark Object lifecycle
 
@@ -156,7 +152,7 @@ static void commonInit(SRGLetterboxView *self);
         
         // Automatically resumes in the view when displayed and if picture in picture was active
         if (SRGLetterboxService.sharedService.controller == self.controller) {
-            [SRGLetterboxService.sharedService stopPictureInPictureRestoreUserInterface:NO];
+            
         }
         
         [self showAirPlayNotificationMessageIfNeededAnimated:NO];

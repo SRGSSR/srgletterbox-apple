@@ -15,10 +15,6 @@ OBJC_EXPORT NSString * const SRGLetterboxServiceSettingsDidChangeNotification;
 
 @interface SRGLetterboxService (Private)
 
-/**
- *  Stop picture in picture. If `restoreUserInterface` is set to `NO`, the restoration delegate methods will not be called.
- */
-- (void)stopPictureInPictureRestoreUserInterface:(BOOL)restoreUserInterface;
 
 @end
 
