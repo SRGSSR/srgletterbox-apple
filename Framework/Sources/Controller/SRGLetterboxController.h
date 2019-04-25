@@ -412,40 +412,30 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @end
 
 /**
- *  Subtitle management.
+ *  Media configuration.
  */
-@interface SRGLetterboxController (Subtitles)
+@interface SRGLetterboxController (MediaConfiguration)
 
 /**
- *  The list of available subtitle localizations for the media being played.
- *
- *  @discussion Not known while playback is being prepared or if the player is idle.
+ *  Optional block which gets called once media information has been loaded, and which can be used to customize
+ *  audio or subtitle selection, as well as subtitle appearance.
  */
-@property (nonatomic) NSArray<NSString *> *availableSubtitleLocalizations;
+@property (nonatomic, copy, nullable) void (^mediaConfigurationBlock)(AVPlayerItem *playerItem, AVAsset *asset);
 
 /**
- *  The subtitle localization to use, if available. Use `nil` for the default behavior (depends on the previous subtitle
- *  settings saved for the user).
- *
- *  Valid localizations can be retrieved from `availableSubtitleLocalizations` once a media has been prepared for playback.
- *  If you know the value you want to to use beforehand, though, the preferred localization can be set earlier, even
- *  right after controller creation.
- *
- *  Use `SRGMediaPlayerLocalizationDisabled` to disable subtitles (forced subtitles may still appear, though) or
- *  `SRGMediaPlayerLocalizationAutomatic` to enable automatic selection based on accessibility settings, content and
- *  application languages.
- *
- *  @discussion This setting only affects the receiver and is not reset between between media playbacks using the same
- *              controller. If an invalid subtitle localization is provided, automatic selection is applied instead.
+ *  Reload media configuration by calling the associated block, if any. Does nothing if the media has not been loaded
+ *  yet. If there is no configuration block defined, calling this method applies the default selection options for
+ *  audio and subtitles, and removes any subtitle styling which might have been applied.
  */
-@property (nonatomic, copy, nullable) NSString *preferredSubtitleLocalization;
+- (void)reloadMediaConfiguration;
 
 /**
- *  Return the localization of the currently applied subtitles, if any.
+ *  Reload the player configuration with a new configuration block. Any previously existing configuration block is
+ *  replaced.
  *
- *  @discussion A value is returned as well when forced subtitles are being applied.
+ *  @discussion If the media has not been loaded yet, the block is set but not called.
  */
-@property (nonatomic, readonly, copy, nullable) NSString *subtitleLocalization;
+- (void)reloadMediaConfigurationWithBlock:(nullable void (^)(AVPlayerItem *playerItem, AVAsset *asset))block;
 
 @end
 

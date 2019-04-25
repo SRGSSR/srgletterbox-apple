@@ -303,6 +303,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
 }
 
+- (void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))mediaConfigurationBlock
+{
+    return self.mediaPlayerController.mediaConfigurationBlock;
+}
+
+- (void)setMediaConfigurationBlock:(void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))mediaConfigurationBlock
+{
+    self.mediaPlayerController.mediaConfigurationBlock = mediaConfigurationBlock;
+}
+
 - (BOOL)isLive
 {
     return self.mediaPlayerController.live;
@@ -505,28 +515,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (void)removePeriodicTimeObserver:(id)observer
 {
     [self.mediaPlayerController removePeriodicTimeObserver:observer];
-}
-
-#pragma mark Subtitles
-
-- (NSArray<NSString *> *)availableSubtitleLocalizations
-{
-    return self.mediaPlayerController.availableSubtitleLocalizations;
-}
-
-- (NSString *)preferredSubtitleLocalization
-{
-    return self.mediaPlayerController.preferredSubtitleLocalization;
-}
-
-- (void)setPreferredSubtitleLocalization:(NSString *)preferredSubtitleLocalization
-{
-    self.mediaPlayerController.preferredSubtitleLocalization = preferredSubtitleLocalization;
-}
-
-- (NSString *)subtitleLocalization
-{
-    return self.mediaPlayerController.subtitleLocalization;
 }
 
 #pragma mark Playlists
@@ -1535,9 +1523,21 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
+#pragma mark Configuration
+
 - (void)reloadPlayerConfiguration
 {
     [self.mediaPlayerController reloadPlayerConfiguration];
+}
+
+- (void)reloadMediaConfiguration
+{
+    [self.mediaPlayerController reloadMediaConfiguration];
+}
+
+- (void)reloadMediaConfigurationWithBlock:(void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))block
+{
+    [self.mediaPlayerController reloadMediaConfigurationWithBlock:block];
 }
 
 #pragma mark Notifications
