@@ -19,5 +19,6 @@
   "1.12.1-51": "- Maintenance release",
   "1.13-52": "- Subtitle and audio track selection has been improved. For subtitles you can now choose between _Automatic_ (a recommended choice is made based on system settings, content and app languages), an explicit track, or _Off_ (only forced subtitles might be displayed in this case).",
   "1.14b1-53": "- Add SMDH analytics support with the new ComScore SDK.\n- Subtitles management: an application can force a preferred subtitle localization.\n- Remove subdivision favorites support.\n",
-  "1.14b2-54": "- Fix loading indicator erratic behavior."
+  "1.14b2-54": "- Fix loading indicator erratic behavior.",
+  "1.14b3-55": "- Don't send statistics if no data provided in the chapter."
 }
