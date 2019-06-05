@@ -92,7 +92,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
-        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
         XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"playableAbroad"]);
@@ -175,7 +174,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
-        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @404);
         XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
@@ -224,7 +222,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
-        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
         XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
@@ -365,7 +362,6 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
-        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"varnish"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
         XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
