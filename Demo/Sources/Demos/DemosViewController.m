@@ -561,30 +561,28 @@
         }
             
         case 5: {
-            AutoplayList autoplayList = AutoplayListUnknown;
+            AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
             switch (indexPath.row) {
                 case 0: {
-                    autoplayList = AutoplayListSRFTrendingMedias;
+                    autoplayViewController.autoplayList = AutoplayListSRFTrendingMedias;
                     break;
                 }
                     
                 case 1: {
-                    autoplayList = AutoplayListRTSTrendingMedias;
+                    autoplayViewController.autoplayList = AutoplayListRTSTrendingMedias;
                     break;
                 }
                     
                 case 2: {
-                    autoplayList = AutoplayListRSITrendingMedias;
+                    autoplayViewController.autoplayList = AutoplayListRSITrendingMedias;
                     break;
                 }
                     
                 default: {
+                    autoplayViewController.autoplayList = AutoplayListRTSTrendingMedias;
                     break;
                 }
             }
-            
-            AutoplayViewController *autoplayViewController = [[AutoplayViewController alloc] init];
-            autoplayViewController.autoplayList = autoplayList;
             [self.navigationController pushViewController:autoplayViewController animated:YES];
             break;
         }

@@ -412,6 +412,34 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @end
 
 /**
+ *  Media configuration.
+ */
+@interface SRGLetterboxController (MediaConfiguration)
+
+/**
+ *  Optional block which gets called once media information has been loaded, and which can be used to customize
+ *  audio or subtitle selection, as well as subtitle appearance.
+ */
+@property (nonatomic, copy, nullable) void (^mediaConfigurationBlock)(AVPlayerItem *playerItem, AVAsset *asset);
+
+/**
+ *  Reload media configuration by calling the associated block, if any. Does nothing if the media has not been loaded
+ *  yet. If there is no configuration block defined, calling this method applies the default selection options for
+ *  audio and subtitles, and removes any subtitle styling which might have been applied.
+ */
+- (void)reloadMediaConfiguration;
+
+/**
+ *  Reload the player configuration with a new configuration block. Any previously existing configuration block is
+ *  replaced.
+ *
+ *  @discussion If the media has not been loaded yet, the block is set but not called.
+ */
+- (void)reloadMediaConfigurationWithBlock:(nullable void (^)(AVPlayerItem *playerItem, AVAsset *asset))block;
+
+@end
+
+/**
  *  Playlist support. To use playlists, assign a data source which will supply previous and next medias to be played.
  *
  *  @discussion Playlist navigation is not available when picture in picture is active.

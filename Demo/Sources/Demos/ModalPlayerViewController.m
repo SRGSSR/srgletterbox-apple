@@ -35,8 +35,6 @@
 
 @property (nonatomic) IBOutletCollection(NSLayoutConstraint) NSArray *letterboxMarginConstraints;
 
-@property (nonatomic) NSMutableArray<SRGSubdivision *> *favoritedSubdivisions;
-
 @property (nonatomic) ModalTransition *interactiveTransition;
 
 @end
@@ -59,7 +57,6 @@
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;
-        viewController.favoritedSubdivisions = [NSMutableArray array];
         
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
@@ -286,21 +283,6 @@
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView
 {
     return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
-}
-
-- (BOOL)letterboxView:(SRGLetterboxView *)letterboxView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision
-{
-    return [self.favoritedSubdivisions containsObject:subdivision];
-}
-
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision
-{
-    if ([self.favoritedSubdivisions containsObject:subdivision]) {
-        [self.favoritedSubdivisions removeObject:subdivision];
-    }
-    else {
-        [self.favoritedSubdivisions addObject:subdivision];
-    }
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol

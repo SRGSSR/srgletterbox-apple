@@ -54,21 +54,23 @@ __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
     //                                         duration in case of
     //                                         successful playback
     //
-    if (! SRGContentProtectionIsPublic()) {
-        [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
-            NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"];
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:diagnosticsServiceURL];
-            request.HTTPMethod = @"POST";
-            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
-            
-            [[[SRGRequest dataRequestWithURLRequest:request session:NSURLSession.sharedSession completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                BOOL success = (error == nil);
-                SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
-                completionBlock(success);
-            }] requestWithOptions:SRGRequestOptionBackgroundCompletionEnabled] resume];
-        };
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (! SRGContentProtectionIsPublic()) {
+            [SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"].submissionBlock = ^(NSDictionary * _Nonnull JSONDictionary, void (^ _Nonnull completionBlock)(BOOL)) {
+                NSURL *diagnosticsServiceURL = [NSURL URLWithString:@"https://srgsnitch.herokuapp.com/report"];
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:diagnosticsServiceURL];
+                request.HTTPMethod = @"POST";
+                [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                request.HTTPBody = [NSJSONSerialization dataWithJSONObject:JSONDictionary options:0 error:NULL];
+                
+                [[[SRGRequest dataRequestWithURLRequest:request session:NSURLSession.sharedSession completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    BOOL success = (error == nil);
+                    SRGLetterboxLogInfo(@"diagnostics", @"SRGPlaybackMetrics report %@: %@", success ? @"sent" : @"not sent", JSONDictionary);
+                    completionBlock(success);
+                }] requestWithOptions:SRGRequestOptionBackgroundCompletionEnabled] resume];
+            };
+        }
+    });
 }
 
 NSString *SRGLetterboxMarketingVersion(void)

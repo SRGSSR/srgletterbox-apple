@@ -25,13 +25,23 @@
 
 #pragma mark Getters and setters
 
-- (void)setMedia:(SRGMedia *)media
+- (void)setMedia:(SRGMedia *)media withPreferredSubtitleLocalization:(NSString *)preferredSubtitleLocalization
 {
-    _media = media;
-    
     if (media) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
         settings.standalone = ApplicationSettingIsStandalone();
+        
+        self.letterboxController.mediaConfigurationBlock = ^(AVPlayerItem * _Nonnull playerItem, AVAsset * _Nonnull asset) {
+            AVMediaSelectionGroup *group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(AVMediaSelectionOption * _Nullable option, NSDictionary<NSString *,id> * _Nullable bindings) {
+                return [[option.locale objectForKey:NSLocaleLanguageCode] isEqualToString:preferredSubtitleLocalization];
+            }];
+            NSArray<AVMediaSelectionOption *> *options = [AVMediaSelectionGroup mediaSelectionOptionsFromArray:group.options withoutMediaCharacteristics:@[AVMediaCharacteristicContainsOnlyForcedSubtitles]];
+            AVMediaSelectionOption *option = [options filteredArrayUsingPredicate:predicate].firstObject;
+            if (option) {
+                [playerItem selectMediaOption:option inMediaSelectionGroup:group];
+            }
+        };
         
         [self.letterboxController playMedia:media atPosition:nil withPreferredSettings:settings];
     }

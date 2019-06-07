@@ -54,11 +54,6 @@
     [self updateCellAppearance];
 }
 
-- (void)setNeedsSubdivisionFavoritesUpdate
-{
-    [self.collectionView reloadData];
-}
-
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -183,11 +178,6 @@
 - (void)letterboxSubdivisionCellDidLongPress:(SRGLetterboxSubdivisionCell *)letterboxSubdivisionCell
 {
     [self.delegate letterboxTimelineView:self didLongPressSubdivision:letterboxSubdivisionCell.subdivision];
-}
-
-- (BOOL)letterboxSubdivisionCellShouldDisplayFavoriteIcon:(SRGLetterboxSubdivisionCell *)letterboxSubdivisionCell
-{
-    return [self.delegate letterboxTimelineView:self shouldDisplayFavoriteForSubdivision:letterboxSubdivisionCell.subdivision];
 }
 
 #pragma mark UICollectionViewDataSource protocol

@@ -31,12 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
-/**
- *  Called when the user interface needs to determine whether a favorite icon must be displayed. If no delegate has been
- *  set, no favorite icon will be displayed.
- */
-- (BOOL)letterboxTimelineView:(SRGLetterboxTimelineView *)timelineView shouldDisplayFavoriteForSubdivision:(SRGSubdivision *)subdivision;
-
 @end
 
 /**
@@ -69,11 +63,6 @@ IB_DESIGNABLE
  *  Scroll the timeline to the selected index, if any. Does nothing if the user is actively dragging the timeline.
  */
 - (void)scrollToSelectedIndexAnimated:(BOOL)animated;
-
-/**
- *  Call to ask for a subdivision favorite status update.
- */
-- (void)setNeedsSubdivisionFavoritesUpdate;
 
 @end
 
