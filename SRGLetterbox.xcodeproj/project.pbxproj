@@ -247,6 +247,107 @@
 		6FFAD13A202C889200FDAA6C /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD139202C889200FDAA6C /* PlaylistViewController.m */; };
 		6FFAD13C202C88BE00FDAA6C /* PlaylistViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD13B202C88BD00FDAA6C /* PlaylistViewController.storyboard */; };
 		6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD13D202C89C900FDAA6C /* Playlist.m */; };
+		EB9E7A14228C466F00727725 /* SRGLetterboxPlaybackSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */; };
+		EB9E7A15228C466F00727725 /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */; };
+		EB9E7A16228C466F00727725 /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
+		EB9E7A17228C466F00727725 /* UIImageView+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */; };
+		EB9E7A18228C466F00727725 /* SRGLetterboxTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50592720581CAF00823003 /* SRGLetterboxTimelineView.m */; };
+		EB9E7A19228C466F00727725 /* NSTimer+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */; };
+		EB9E7A1A228C466F00727725 /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
+		EB9E7A1B228C466F00727725 /* UIDevice+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB61B1E291203005DD80B /* UIDevice+SRGLetterbox.m */; };
+		EB9E7A1C228C466F00727725 /* SRGNotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593520581CAF00823003 /* SRGNotificationView.m */; };
+		EB9E7A1D228C466F00727725 /* SRGControlWrapperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B1C20585DD200E80BD6 /* SRGControlWrapperView.m */; };
+		EB9E7A1E228C466F00727725 /* SRGLetterboxPlaybackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594920581CAF00823003 /* SRGLetterboxPlaybackButton.m */; };
+		EB9E7A1F228C466F00727725 /* SRGCountdownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593320581CAF00823003 /* SRGCountdownView.m */; };
+		EB9E7A20228C466F00727725 /* SRGLetterboxBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594720581CAF00823003 /* SRGLetterboxBaseView.m */; };
+		EB9E7A21228C466F00727725 /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */; };
+		EB9E7A22228C466F00727725 /* SRGFullScreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594D20581CAF00823003 /* SRGFullScreenButton.m */; };
+		EB9E7A23228C466F00727725 /* SRGLetterboxService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB97FCB1E49D7240014C4C2 /* SRGLetterboxService.m */; };
+		EB9E7A24228C466F00727725 /* SRGAccessibilityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593E20581CAF00823003 /* SRGAccessibilityView.m */; };
+		EB9E7A25228C466F00727725 /* UIImage+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA0CF71E2F6DDF000C94EF /* UIImage+SRGLetterbox.m */; };
+		EB9E7A26228C466F00727725 /* SRGTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */; };
+		EB9E7A27228C466F00727725 /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
+		EB9E7A28228C466F00727725 /* SRGRemainingTimeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594A20581CAF00823003 /* SRGRemainingTimeButton.m */; };
+		EB9E7A29228C466F00727725 /* UIColor+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */; };
+		EB9E7A2A228C466F00727725 /* SRGLetterboxControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */; };
+		EB9E7A2B228C466F00727725 /* SRGMediaComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */; };
+		EB9E7A2C228C466F00727725 /* SRGLetterboxSubdivisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50592C20581CAF00823003 /* SRGLetterboxSubdivisionCell.m */; };
+		EB9E7A2D228C466F00727725 /* SRGPaddedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B1D20585DD200E80BD6 /* SRGPaddedLabel.m */; };
+		EB9E7A2E228C466F00727725 /* SRGControlsBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB83A8D205AAFE90013928B /* SRGControlsBackgroundView.m */; };
+		EB9E7A2F228C466F00727725 /* SRGErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593D20581CAF00823003 /* SRGErrorView.m */; };
+		EB9E7A30228C466F00727725 /* SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B041E28F7FE00CC2197 /* SRGLetterbox.m */; };
+		EB9E7A31228C466F00727725 /* SRGLiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */; };
+		EB9E7A32228C466F00727725 /* SRGLetterboxTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */; };
+		EB9E7A33228C466F00727725 /* SRGAvailabilityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50592A20581CAF00823003 /* SRGAvailabilityView.m */; };
+		EB9E7A34228C466F00727725 /* SRGLetterboxError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */; };
+		EB9E7A35228C466F00727725 /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
+		EB9E7A36228C466F00727725 /* SRGControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50592920581CAF00823003 /* SRGControlsView.m */; };
+		EB9E7A37228C466F00727725 /* SRGContinuousPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50592B20581CAF00823003 /* SRGContinuousPlaybackView.m */; };
+		EB9E7A38228C466F00727725 /* SRGLetterboxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */; };
+		EB9E7A39228C466F00727725 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */; };
+		EB9E7A40228C466F00727725 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */; };
+		EB9E7A46228C466F00727725 /* SRGAnalytics_DataProvider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0A1E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework */; };
+		EB9E7A47228C466F00727725 /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
+		EB9E7A48228C466F00727725 /* SRGAnalytics_MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0B1E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework */; };
+		EB9E7A49228C466F00727725 /* SRGAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0C1E28FB1400CC2197 /* SRGAnalytics.framework */; };
+		EB9E7A4A228C466F00727725 /* SRGDataProvider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */; };
+		EB9E7A4B228C466F00727725 /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
+		EB9E7A50228C466F00727725 /* SRGLetterboxTimerTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */; };
+		EB9E7A51228C466F00727725 /* SRGLetterboxPlaybackSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A52228C466F00727725 /* UIDevice+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */; };
+		EB9E7A53228C466F00727725 /* SRGRemainingTimeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594E20581CAF00823003 /* SRGRemainingTimeButton.h */; };
+		EB9E7A54228C466F00727725 /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A55228C466F00727725 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */; };
+		EB9E7A56228C466F00727725 /* UIImage+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF61E2F6DDF000C94EF /* UIImage+SRGLetterbox.h */; };
+		EB9E7A57228C466F00727725 /* SRGAvailabilityView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593B20581CAF00823003 /* SRGAvailabilityView.h */; };
+		EB9E7A58228C466F00727725 /* SRGLetterboxPlaybackButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */; };
+		EB9E7A59228C466F00727725 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A5A228C466F00727725 /* UIColor+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */; };
+		EB9E7A5B228C466F00727725 /* SRGAccessibilityView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592E20581CAF00823003 /* SRGAccessibilityView.h */; };
+		EB9E7A5C228C466F00727725 /* SRGLetterboxControllerView+Subclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */; };
+		EB9E7A5D228C466F00727725 /* SRGLetterboxSubdivisionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593920581CAF00823003 /* SRGLetterboxSubdivisionCell.h */; };
+		EB9E7A5E228C466F00727725 /* SRGCountdownView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592620581CAF00823003 /* SRGCountdownView.h */; };
+		EB9E7A5F228C466F00727725 /* SRGLetterboxBaseView+Subclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */; };
+		EB9E7A60228C466F00727725 /* SRGFullScreenButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594B20581CAF00823003 /* SRGFullScreenButton.h */; };
+		EB9E7A61228C466F00727725 /* SRGLetterboxBaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594420581CAF00823003 /* SRGLetterboxBaseView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A62228C466F00727725 /* ModalTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB017981E975F87004CCAF8 /* ModalTransition.h */; };
+		EB9E7A63228C466F00727725 /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
+		EB9E7A64228C466F00727725 /* SRGPaddedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */; };
+		EB9E7A65228C466F00727725 /* SRGControlsBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB83A8C205AAFE90013928B /* SRGControlsBackgroundView.h */; };
+		EB9E7A66228C466F00727725 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
+		EB9E7A67228C466F00727725 /* SRGLetterboxError.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A68228C466F00727725 /* NSTimer+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */; };
+		EB9E7A69228C466F00727725 /* SRGErrorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592F20581CAF00823003 /* SRGErrorView.h */; };
+		EB9E7A6A228C466F00727725 /* SRGContinuousPlaybackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593A20581CAF00823003 /* SRGContinuousPlaybackView.h */; };
+		EB9E7A6B228C466F00727725 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A6C228C466F00727725 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */; };
+		EB9E7A6D228C466F00727725 /* SRGNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592520581CAF00823003 /* SRGNotificationView.h */; };
+		EB9E7A6E228C466F00727725 /* SRGMediaComposition+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */; };
+		EB9E7A6F228C466F00727725 /* SRGLetterboxControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A70228C466F00727725 /* SRGTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */; };
+		EB9E7A71228C466F00727725 /* SRGControlWrapperView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */; };
+		EB9E7A72228C466F00727725 /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
+		EB9E7A73228C466F00727725 /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */; };
+		EB9E7A74228C466F00727725 /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB9E7A75228C466F00727725 /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
+		EB9E7A76228C466F00727725 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
+		EB9E7A77228C466F00727725 /* SRGControlsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593C20581CAF00823003 /* SRGControlsView.h */; };
+		EB9E7A78228C466F00727725 /* SRGLetterboxTimelineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593720581CAF00823003 /* SRGLetterboxTimelineView.h */; };
+		EB9E7A79228C466F00727725 /* SRGLetterboxLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */; };
+		EB9E7A7A228C466F00727725 /* UIImageView+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF21E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h */; };
+		EB9E7A7C228C466F00727725 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
+		EB9E7A91228C47BA00727725 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A86228C47B900727725 /* Mantle.framework */; };
+		EB9E7A92228C47BA00727725 /* SRGLogger-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A87228C47B900727725 /* SRGLogger-tvos.framework */; };
+		EB9E7A93228C47BA00727725 /* SRGMediaPlayer-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A88228C47B900727725 /* SRGMediaPlayer-tvos.framework */; };
+		EB9E7A94228C47BA00727725 /* Masonry-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A89228C47BA00727725 /* Masonry-tvos.framework */; };
+		EB9E7A95228C47BA00727725 /* libextobjc-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A8A228C47BA00727725 /* libextobjc-tvos.framework */; };
+		EB9E7A96228C47BA00727725 /* MAKVONotificationCenter-tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A8B228C47BA00727725 /* MAKVONotificationCenter-tvOS.framework */; };
+		EB9E7A97228C47BA00727725 /* SRGContentProtection-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A8C228C47BA00727725 /* SRGContentProtection-tvos.framework */; };
+		EB9E7A98228C47BA00727725 /* SRGAppearance-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A8D228C47BA00727725 /* SRGAppearance-tvos.framework */; };
+		EB9E7A99228C47BA00727725 /* SRGDiagnostics-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A8E228C47BA00727725 /* SRGDiagnostics-tvos.framework */; };
+		EB9E7A9A228C47BA00727725 /* Comscore_tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A8F228C47BA00727725 /* Comscore_tvos.framework */; };
+		EB9E7A9B228C47BA00727725 /* FXReachability_tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A90228C47BA00727725 /* FXReachability_tvos.framework */; };
+		EB9E7A9D228C483F00727725 /* SRGNetwork-tvos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB9E7A9C228C483F00727725 /* SRGNetwork-tvos.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -270,6 +371,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 6FE321401E28E24E00FD8E42;
 			remoteInfo = SRGLetterbox;
+		};
+		EB9E7A12228C466F00727725 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FE321381E28E24E00FD8E42 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6F0C98FD2121E54700073AB6;
+			remoteInfo = "SRGLetterbox-resources";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -540,6 +648,20 @@
 		6FFAD13B202C88BD00FDAA6C /* PlaylistViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PlaylistViewController.storyboard; sourceTree = "<group>"; };
 		6FFAD13D202C89C900FDAA6C /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
 		6FFAD13E202C89C900FDAA6C /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
+		EB9E7A84228C466F00727725 /* SRGLetterbox-tvos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "SRGLetterbox-tvos.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB9E7A85228C466F00727725 /* SRGLetterbox copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SRGLetterbox copy-Info.plist"; path = "/Users/tiziano/Documents/projects/Xcode/srgletterbox-ios/SRGLetterbox copy-Info.plist"; sourceTree = "<absolute>"; };
+		EB9E7A86228C47B900727725 /* Mantle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mantle.framework; path = Carthage/Build/tvOS/Mantle.framework; sourceTree = "<group>"; };
+		EB9E7A87228C47B900727725 /* SRGLogger-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SRGLogger-tvos.framework"; path = "Carthage/Build/tvOS/SRGLogger-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A88228C47B900727725 /* SRGMediaPlayer-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SRGMediaPlayer-tvos.framework"; path = "Carthage/Build/tvOS/SRGMediaPlayer-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A89228C47BA00727725 /* Masonry-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Masonry-tvos.framework"; path = "Carthage/Build/tvOS/Masonry-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A8A228C47BA00727725 /* libextobjc-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "libextobjc-tvos.framework"; path = "Carthage/Build/tvOS/libextobjc-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A8B228C47BA00727725 /* MAKVONotificationCenter-tvOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "MAKVONotificationCenter-tvOS.framework"; path = "Carthage/Build/tvOS/MAKVONotificationCenter-tvOS.framework"; sourceTree = "<group>"; };
+		EB9E7A8C228C47BA00727725 /* SRGContentProtection-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SRGContentProtection-tvos.framework"; path = "Carthage/Build/tvOS/SRGContentProtection-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A8D228C47BA00727725 /* SRGAppearance-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SRGAppearance-tvos.framework"; path = "Carthage/Build/tvOS/SRGAppearance-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A8E228C47BA00727725 /* SRGDiagnostics-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SRGDiagnostics-tvos.framework"; path = "Carthage/Build/tvOS/SRGDiagnostics-tvos.framework"; sourceTree = "<group>"; };
+		EB9E7A8F228C47BA00727725 /* Comscore_tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Comscore_tvos.framework; path = Carthage/Build/tvOS/Comscore_tvos.framework; sourceTree = "<group>"; };
+		EB9E7A90228C47BA00727725 /* FXReachability_tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FXReachability_tvos.framework; path = Carthage/Build/tvOS/FXReachability_tvos.framework; sourceTree = "<group>"; };
+		EB9E7A9C228C483F00727725 /* SRGNetwork-tvos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SRGNetwork-tvos.framework"; path = "Carthage/Build/tvOS/SRGNetwork-tvos.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -624,6 +746,32 @@
 				6FAB3B171E28FB1400CC2197 /* SRGLogger.framework in Frameworks */,
 				6FAB3B181E28FB1400CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB9E7A3A228C466F00727725 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB9E7A40228C466F00727725 /* CoreText.framework in Frameworks */,
+				EB9E7A46228C466F00727725 /* SRGAnalytics_DataProvider.framework in Frameworks */,
+				EB9E7A47228C466F00727725 /* TCSDK.framework in Frameworks */,
+				EB9E7A48228C466F00727725 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
+				EB9E7A49228C466F00727725 /* SRGAnalytics.framework in Frameworks */,
+				EB9E7A4A228C466F00727725 /* SRGDataProvider.framework in Frameworks */,
+				EB9E7A4B228C466F00727725 /* TCCore.framework in Frameworks */,
+				EB9E7A91228C47BA00727725 /* Mantle.framework in Frameworks */,
+				EB9E7A9D228C483F00727725 /* SRGNetwork-tvos.framework in Frameworks */,
+				EB9E7A92228C47BA00727725 /* SRGLogger-tvos.framework in Frameworks */,
+				EB9E7A93228C47BA00727725 /* SRGMediaPlayer-tvos.framework in Frameworks */,
+				EB9E7A94228C47BA00727725 /* Masonry-tvos.framework in Frameworks */,
+				EB9E7A95228C47BA00727725 /* libextobjc-tvos.framework in Frameworks */,
+				EB9E7A96228C47BA00727725 /* MAKVONotificationCenter-tvOS.framework in Frameworks */,
+				EB9E7A97228C47BA00727725 /* SRGContentProtection-tvos.framework in Frameworks */,
+				EB9E7A98228C47BA00727725 /* SRGAppearance-tvos.framework in Frameworks */,
+				EB9E7A99228C47BA00727725 /* SRGDiagnostics-tvos.framework in Frameworks */,
+				EB9E7A9A228C47BA00727725 /* Comscore_tvos.framework in Frameworks */,
+				EB9E7A9B228C47BA00727725 /* FXReachability_tvos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -836,6 +984,18 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EB9E7A9C228C483F00727725 /* SRGNetwork-tvos.framework */,
+				EB9E7A8F228C47BA00727725 /* Comscore_tvos.framework */,
+				EB9E7A90228C47BA00727725 /* FXReachability_tvos.framework */,
+				EB9E7A8A228C47BA00727725 /* libextobjc-tvos.framework */,
+				EB9E7A8B228C47BA00727725 /* MAKVONotificationCenter-tvOS.framework */,
+				EB9E7A86228C47B900727725 /* Mantle.framework */,
+				EB9E7A89228C47BA00727725 /* Masonry-tvos.framework */,
+				EB9E7A8D228C47BA00727725 /* SRGAppearance-tvos.framework */,
+				EB9E7A8C228C47BA00727725 /* SRGContentProtection-tvos.framework */,
+				EB9E7A8E228C47BA00727725 /* SRGDiagnostics-tvos.framework */,
+				EB9E7A87228C47B900727725 /* SRGLogger-tvos.framework */,
+				EB9E7A88228C47B900727725 /* SRGMediaPlayer-tvos.framework */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
@@ -1000,6 +1160,7 @@
 				6F0136F4213FA39000B95405 /* Xcode */,
 				6FAB3B061E28FB1400CC2197 /* Frameworks */,
 				6FE321421E28E24E00FD8E42 /* Products */,
+				EB9E7A85228C466F00727725 /* SRGLetterbox copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1010,6 +1171,7 @@
 				6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */,
 				6FAB3B7F1E29060100CC2197 /* SRGLetterbox-tests.xctest */,
 				6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */,
+				EB9E7A84228C466F00727725 /* SRGLetterbox-tvos.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1064,6 +1226,56 @@
 				6F50596120581CAF00823003 /* SRGLetterboxTimelineView.h in Headers */,
 				08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */,
 				08FA0CF41E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB9E7A4F228C466F00727725 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB9E7A50228C466F00727725 /* SRGLetterboxTimerTarget.h in Headers */,
+				EB9E7A51228C466F00727725 /* SRGLetterboxPlaybackSettings.h in Headers */,
+				EB9E7A52228C466F00727725 /* UIDevice+SRGLetterbox.h in Headers */,
+				EB9E7A53228C466F00727725 /* SRGRemainingTimeButton.h in Headers */,
+				EB9E7A54228C466F00727725 /* SRGLetterboxController.h in Headers */,
+				EB9E7A55228C466F00727725 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */,
+				EB9E7A56228C466F00727725 /* UIImage+SRGLetterbox.h in Headers */,
+				EB9E7A57228C466F00727725 /* SRGAvailabilityView.h in Headers */,
+				EB9E7A58228C466F00727725 /* SRGLetterboxPlaybackButton.h in Headers */,
+				EB9E7A59228C466F00727725 /* SRGLetterboxService.h in Headers */,
+				EB9E7A5A228C466F00727725 /* UIColor+SRGLetterbox.h in Headers */,
+				EB9E7A5B228C466F00727725 /* SRGAccessibilityView.h in Headers */,
+				EB9E7A5C228C466F00727725 /* SRGLetterboxControllerView+Subclassing.h in Headers */,
+				EB9E7A5D228C466F00727725 /* SRGLetterboxSubdivisionCell.h in Headers */,
+				EB9E7A5E228C466F00727725 /* SRGCountdownView.h in Headers */,
+				EB9E7A5F228C466F00727725 /* SRGLetterboxBaseView+Subclassing.h in Headers */,
+				EB9E7A60228C466F00727725 /* SRGFullScreenButton.h in Headers */,
+				EB9E7A61228C466F00727725 /* SRGLetterboxBaseView.h in Headers */,
+				EB9E7A62228C466F00727725 /* ModalTransition.h in Headers */,
+				EB9E7A63228C466F00727725 /* NSBundle+SRGLetterbox.h in Headers */,
+				EB9E7A64228C466F00727725 /* SRGPaddedLabel.h in Headers */,
+				EB9E7A65228C466F00727725 /* SRGControlsBackgroundView.h in Headers */,
+				EB9E7A66228C466F00727725 /* SRGLetterboxService+Private.h in Headers */,
+				EB9E7A67228C466F00727725 /* SRGLetterboxError.h in Headers */,
+				EB9E7A68228C466F00727725 /* NSTimer+SRGLetterbox.h in Headers */,
+				EB9E7A69228C466F00727725 /* SRGErrorView.h in Headers */,
+				EB9E7A6A228C466F00727725 /* SRGContinuousPlaybackView.h in Headers */,
+				EB9E7A6B228C466F00727725 /* SRGLetterboxView.h in Headers */,
+				EB9E7A6C228C466F00727725 /* SRGLiveLabel.h in Headers */,
+				EB9E7A6D228C466F00727725 /* SRGNotificationView.h in Headers */,
+				EB9E7A6E228C466F00727725 /* SRGMediaComposition+SRGLetterbox.h in Headers */,
+				EB9E7A6F228C466F00727725 /* SRGLetterboxControllerView.h in Headers */,
+				EB9E7A70228C466F00727725 /* SRGTapGestureRecognizer.h in Headers */,
+				EB9E7A71228C466F00727725 /* SRGControlWrapperView.h in Headers */,
+				EB9E7A72228C466F00727725 /* MPRemoteCommand+SRGLetterbox.h in Headers */,
+				EB9E7A73228C466F00727725 /* UIFont+SRGLetterbox.h in Headers */,
+				EB9E7A74228C466F00727725 /* SRGLetterbox.h in Headers */,
+				EB9E7A75228C466F00727725 /* SRGProgram+SRGLetterbox.h in Headers */,
+				EB9E7A76228C466F00727725 /* SRGLetterboxView+Private.h in Headers */,
+				EB9E7A77228C466F00727725 /* SRGControlsView.h in Headers */,
+				EB9E7A78228C466F00727725 /* SRGLetterboxTimelineView.h in Headers */,
+				EB9E7A79228C466F00727725 /* SRGLetterboxLogger.h in Headers */,
+				EB9E7A7A228C466F00727725 /* UIImageView+SRGLetterbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1146,6 +1358,26 @@
 			productReference = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		EB9E7A10228C466F00727725 /* SRGLetterbox-tvos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EB9E7A7E228C466F00727725 /* Build configuration list for PBXNativeTarget "SRGLetterbox-tvos" */;
+			buildPhases = (
+				EB9E7A13228C466F00727725 /* Sources */,
+				EB9E7A3A228C466F00727725 /* Frameworks */,
+				EB9E7A4F228C466F00727725 /* Headers */,
+				EB9E7A7B228C466F00727725 /* Resources */,
+				EB9E7A7D228C466F00727725 /* Copy Framework Dependencies For Xcode View Rendering */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EB9E7A11228C466F00727725 /* PBXTargetDependency */,
+			);
+			name = "SRGLetterbox-tvos";
+			productName = SRGLetterbox;
+			productReference = EB9E7A84228C466F00727725 /* SRGLetterbox-tvos.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1179,6 +1411,9 @@
 						DevelopmentTeam = U2YFT2485E;
 						ProvisioningStyle = Automatic;
 					};
+					EB9E7A10228C466F00727725 = {
+						DevelopmentTeam = U2YFT2485E;
+					};
 				};
 			};
 			buildConfigurationList = 6FE3213B1E28E24E00FD8E42 /* Build configuration list for PBXProject "SRGLetterbox" */;
@@ -1203,6 +1438,7 @@
 				6F0C98FD2121E54700073AB6 /* SRGLetterbox-resources */,
 				6FAB3B391E28FE2000CC2197 /* SRGLetterbox-demo */,
 				6FAB3B7E1E29060100CC2197 /* SRGLetterbox-tests */,
+				EB9E7A10228C466F00727725 /* SRGLetterbox-tvos */,
 			);
 		};
 /* End PBXProject section */
@@ -1265,6 +1501,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EB9E7A7B228C466F00727725 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB9E7A7C228C466F00727725 /* SRGLetterbox.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -1306,6 +1550,20 @@
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		6F0C991E2121F10B00073AB6 /* Copy Framework Dependencies For Xcode View Rendering */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Framework Dependencies For Xcode View Rendering";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] ]; then\n  cp -R \"$SRCROOT/Carthage/Build/iOS/ComScore.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/FXReachability.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/libextobjc.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/MAKVONotificationCenter.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/Mantle.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/Masonry.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAppearance.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGDataProvider.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGDiagnostics.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGLogger.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGMediaPlayer.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGNetwork.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/TCCore.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/TCSDK.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/YYWebImage.framework\" \"$BUILT_PRODUCTS_DIR\"\nfi\n";
+		};
+		EB9E7A7D228C466F00727725 /* Copy Framework Dependencies For Xcode View Rendering */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1421,6 +1679,51 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EB9E7A13228C466F00727725 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB9E7A14228C466F00727725 /* SRGLetterboxPlaybackSettings.m in Sources */,
+				EB9E7A15228C466F00727725 /* MPRemoteCommand+SRGLetterbox.m in Sources */,
+				EB9E7A16228C466F00727725 /* SRGLetterboxController.m in Sources */,
+				EB9E7A17228C466F00727725 /* UIImageView+SRGLetterbox.m in Sources */,
+				EB9E7A18228C466F00727725 /* SRGLetterboxTimelineView.m in Sources */,
+				EB9E7A19228C466F00727725 /* NSTimer+SRGLetterbox.m in Sources */,
+				EB9E7A1A228C466F00727725 /* SRGMediaPlayerDesignables.m in Sources */,
+				EB9E7A1B228C466F00727725 /* UIDevice+SRGLetterbox.m in Sources */,
+				EB9E7A1C228C466F00727725 /* SRGNotificationView.m in Sources */,
+				EB9E7A1D228C466F00727725 /* SRGControlWrapperView.m in Sources */,
+				EB9E7A1E228C466F00727725 /* SRGLetterboxPlaybackButton.m in Sources */,
+				EB9E7A1F228C466F00727725 /* SRGCountdownView.m in Sources */,
+				EB9E7A20228C466F00727725 /* SRGLetterboxBaseView.m in Sources */,
+				EB9E7A21228C466F00727725 /* UIFont+SRGLetterbox.m in Sources */,
+				EB9E7A22228C466F00727725 /* SRGFullScreenButton.m in Sources */,
+				EB9E7A23228C466F00727725 /* SRGLetterboxService.m in Sources */,
+				EB9E7A24228C466F00727725 /* SRGAccessibilityView.m in Sources */,
+				EB9E7A25228C466F00727725 /* UIImage+SRGLetterbox.m in Sources */,
+				EB9E7A26228C466F00727725 /* SRGTapGestureRecognizer.m in Sources */,
+				EB9E7A27228C466F00727725 /* SRGProgram+SRGLetterbox.m in Sources */,
+				EB9E7A28228C466F00727725 /* SRGRemainingTimeButton.m in Sources */,
+				EB9E7A29228C466F00727725 /* UIColor+SRGLetterbox.m in Sources */,
+				EB9E7A2A228C466F00727725 /* SRGLetterboxControllerView.m in Sources */,
+				EB9E7A2B228C466F00727725 /* SRGMediaComposition+SRGLetterbox.m in Sources */,
+				EB9E7A2C228C466F00727725 /* SRGLetterboxSubdivisionCell.m in Sources */,
+				EB9E7A2D228C466F00727725 /* SRGPaddedLabel.m in Sources */,
+				EB9E7A2E228C466F00727725 /* SRGControlsBackgroundView.m in Sources */,
+				EB9E7A2F228C466F00727725 /* SRGErrorView.m in Sources */,
+				EB9E7A30228C466F00727725 /* SRGLetterbox.m in Sources */,
+				EB9E7A31228C466F00727725 /* SRGLiveLabel.m in Sources */,
+				EB9E7A32228C466F00727725 /* SRGLetterboxTimerTarget.m in Sources */,
+				EB9E7A33228C466F00727725 /* SRGAvailabilityView.m in Sources */,
+				EB9E7A34228C466F00727725 /* SRGLetterboxError.m in Sources */,
+				EB9E7A35228C466F00727725 /* NSBundle+SRGLetterbox.m in Sources */,
+				EB9E7A36228C466F00727725 /* SRGControlsView.m in Sources */,
+				EB9E7A37228C466F00727725 /* SRGContinuousPlaybackView.m in Sources */,
+				EB9E7A38228C466F00727725 /* SRGLetterboxView.m in Sources */,
+				EB9E7A39228C466F00727725 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1438,6 +1741,11 @@
 			isa = PBXTargetDependency;
 			target = 6FE321401E28E24E00FD8E42 /* SRGLetterbox */;
 			targetProxy = 6FAB3B851E29060200CC2197 /* PBXContainerItemProxy */;
+		};
+		EB9E7A11228C466F00727725 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6F0C98FD2121E54700073AB6 /* SRGLetterbox-resources */;
+			targetProxy = EB9E7A12228C466F00727725 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1545,7 +1853,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Nightly;
@@ -1674,7 +1982,7 @@
 				MACH_O_TYPE = staticlib;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-static";
@@ -1794,7 +2102,7 @@
 				MACH_O_TYPE = staticlib;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-static";
@@ -2151,7 +2459,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2174,10 +2482,143 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
+		};
+		EB9E7A7F228C466F00727725 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = U2YFT2485E;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				INFOPLIST_FILE = "SRGLetterbox copy-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		EB9E7A80228C466F00727725 /* Debug-static */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = U2YFT2485E;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/iOS/Static",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				INFOPLIST_FILE = "SRGLetterbox copy-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Debug-static";
+		};
+		EB9E7A81228C466F00727725 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = U2YFT2485E;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				INFOPLIST_FILE = "SRGLetterbox copy-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		EB9E7A82228C466F00727725 /* Release-static */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = U2YFT2485E;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/iOS/Static",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				INFOPLIST_FILE = "SRGLetterbox copy-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Release-static";
+		};
+		EB9E7A83228C466F00727725 /* Nightly */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = U2YFT2485E;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				INFOPLIST_FILE = "SRGLetterbox copy-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ch.srgssr.SRGLetterbox;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = NO;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Nightly;
 		};
 /* End XCBuildConfiguration section */
 
@@ -2238,6 +2679,18 @@
 				6FE3214B1E28E24E00FD8E42 /* Release */,
 				6F0C98F72121E4EC00073AB6 /* Release-static */,
 				0835627B1E5B332800EE6DB5 /* Nightly */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Nightly;
+		};
+		EB9E7A7E228C466F00727725 /* Build configuration list for PBXNativeTarget "SRGLetterbox-tvos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB9E7A7F228C466F00727725 /* Debug */,
+				EB9E7A80228C466F00727725 /* Debug-static */,
+				EB9E7A81228C466F00727725 /* Release */,
+				EB9E7A82228C466F00727725 /* Release-static */,
+				EB9E7A83228C466F00727725 /* Nightly */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Nightly;
