@@ -584,57 +584,65 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     self.cachedArtworkImage = nil;
 }
 
-- (void)play:(id)sender
+- (MPRemoteCommandHandlerStatus)play:(MPRemoteCommandEvent *)event
 {
-    [self.controller play];
+    [self.controller.mediaPlayerController play];
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
-- (void)pause:(id)sender
+- (MPRemoteCommandHandlerStatus)pause:(MPRemoteCommandEvent *)event
 {
-    [self.controller pause];
+    [self.controller.mediaPlayerController pause];
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
-- (void)togglePlayPause:(id)sender
+- (MPRemoteCommandHandlerStatus)togglePlayPause:(MPRemoteCommandEvent *)event
 {
-    [self.controller togglePlayPause];
+    [self.controller.mediaPlayerController togglePlayPause];
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
-- (void)skipForward:(id)sender
+- (MPRemoteCommandHandlerStatus)skipForward:(MPRemoteCommandEvent *)event
 {
-    [self.controller skipForwardWithCompletionHandler:nil];
+    return [self.controller skipForwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
 }
 
-- (void)skipBackward:(id)sender
+- (MPRemoteCommandHandlerStatus)skipBackward:(MPRemoteCommandEvent *)event
 {
-    [self.controller skipBackwardWithCompletionHandler:nil];
+    return [self.controller skipBackwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
 }
 
-- (void)seekForward:(MPSeekCommandEvent *)event
-{
-    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
-        [self.controller skipForwardWithCompletionHandler:nil];
-    }
-}
-
-- (void)seekBackward:(MPSeekCommandEvent *)event
+- (MPRemoteCommandHandlerStatus)seekForward:(MPSeekCommandEvent *)event
 {
     if (event.type == MPSeekCommandEventTypeBeginSeeking) {
-        [self.controller skipBackwardWithCompletionHandler:nil];
+        return [self.controller skipForwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
     }
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
-- (void)previousTrack:(id)sender
+- (MPRemoteCommandHandlerStatus)seekBackward:(MPSeekCommandEvent *)event
 {
-    [self.controller playPreviousMedia];
+    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
+        return [self.controller skipBackwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
+    }
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
-- (void)nextTrack:(id)sender
+- (MPRemoteCommandHandlerStatus)previousTrack:(MPRemoteCommandEvent *)event
 {
-    [self.controller playNextMedia];
+    return [self.controller playPreviousMedia] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusNoSuchContent;
 }
 
-- (void)doNothing:(id)sender
-{}
+- (MPRemoteCommandHandlerStatus)nextTrack:(MPRemoteCommandEvent *)event
+{
+    return [self.controller playNextMedia] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusNoSuchContent;
+}
+
+- (MPRemoteCommandHandlerStatus)doNothing:(MPRemoteCommandEvent *) event
+{
+    //Don't know if we have to return success or failed...
+    return MPRemoteCommandHandlerStatusCommandFailed;
+}
 
 #pragma mark Picture in picture
 
