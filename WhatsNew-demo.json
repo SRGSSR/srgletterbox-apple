@@ -23,5 +23,6 @@
   "1.14b3-55": "- Don't send statistics if no data provided in the chapter.",
   "1.14b4-56": "- Set exact DVR window frame for SDH analytic.",
   "1.14b5-57": "- Set exact DVR window frame at stop event for SDH analytics.",
-  "1.14-58": "### SMDH streaming measurements\n\n- Streaming measurements are now performed according to NetMetrix SMDH specifications.\n- API provides a way to customize subtitle and audio tracks programatically.\n- Letterbox view support for favorites has been removed.\n- The framework footprint at application startup time has been reduced."
+  "1.14-58": "### SMDH streaming measurements\n\n- Streaming measurements are now performed according to NetMetrix SMDH specifications.\n- API provides a way to customize subtitle and audio tracks programatically.\n- Letterbox view support for favorites has been removed.\n- The framework footprint at application startup time has been reduced.",
+  "1.14.1-59": "- Maintenance release.\n- (SRGAnalytics) Fix iTunes Connect validation warning."
 }
