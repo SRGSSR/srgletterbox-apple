@@ -638,10 +638,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     return [self.controller playNextMedia] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusNoSuchContent;
 }
 
-- (MPRemoteCommandHandlerStatus)doNothing:(MPRemoteCommandEvent *) event
+- (MPRemoteCommandHandlerStatus)doNothing:(MPRemoteCommandEvent *)event
 {
-    //Don't know if we have to return success or failed...
-    return MPRemoteCommandHandlerStatusCommandFailed;
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
 #pragma mark Picture in picture
