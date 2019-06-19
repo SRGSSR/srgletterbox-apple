@@ -13,6 +13,12 @@
 
 static void commonInit(SRGLetterboxBaseView *self);
 
+@interface SRGLetterboxBaseView ()
+
+@property (nonatomic) UIView *nibView;         // Strong
+
+@end
+
 @implementation SRGLetterboxBaseView
 
 #pragma mark Object lifecycle
@@ -122,10 +128,10 @@ static void commonInit(SRGLetterboxBaseView *self)
     if ([NSBundle.srg_letterboxBundle pathForResource:nibName ofType:@"nib"]) {
         // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
         // an instance of the class itself to avoid infinite recursion.
-        UIView *view = [[NSBundle.srg_letterboxBundle loadNibNamed:nibName owner:self options:nil] firstObject];
-        view.backgroundColor = UIColor.clearColor;
-        [self addSubview:view];
-        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.nibView = [[NSBundle.srg_letterboxBundle loadNibNamed:nibName owner:self options:nil] firstObject];
+        self.nibView.backgroundColor = UIColor.clearColor;
+        [self addSubview:self.nibView];
+        [self.nibView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
     }
