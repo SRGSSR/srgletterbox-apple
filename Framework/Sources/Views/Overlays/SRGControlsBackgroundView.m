@@ -29,14 +29,6 @@
     // Disable all user interactions so that the view does not trap gesture recognizers. Its only purpose is
     // to increase control readability and displaying the activity indicator
     self.userInteractionEnabled = NO;
-    
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:UIColor.whiteColor];
-    [self addSubview:loadingImageView];
-    [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.mas_centerX);
-        make.centerY.equalTo(self.mas_centerY);
-    }];
-    self.loadingImageView = loadingImageView;
 }
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
@@ -52,6 +44,25 @@
     else {
         self.loadingImageView.alpha = 0.f;
         [self.loadingImageView stopAnimating];
+    }
+}
+
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
+    // Lazily add view when needed, mitigating associated costs
+    if (self.controller.loading && ! self.loadingImageView) {
+        UIImageView *loadingImageView = [UIImageView srg_loadingImageView48WithTintColor:UIColor.whiteColor];
+        loadingImageView.alpha = 0.f;
+        [self addSubview:loadingImageView];
+        
+        [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.mas_centerX);
+            make.centerY.equalTo(self.mas_centerY);
+        }];
+        
+        self.loadingImageView = loadingImageView;
     }
 }
 
