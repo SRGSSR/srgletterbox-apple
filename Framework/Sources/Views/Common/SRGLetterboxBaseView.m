@@ -65,6 +65,11 @@ static void commonInit(SRGLetterboxBaseView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
+        [self insertSubview:self.nibView atIndex:0];
+        [self.nibView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+        
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];
         
@@ -78,6 +83,8 @@ static void commonInit(SRGLetterboxBaseView *self);
                                                  object:nil];
     }
     else {
+        [self.nibView removeFromSuperview];
+        
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:UIContentSizeCategoryDidChangeNotification
                                                     object:nil];
@@ -130,9 +137,5 @@ static void commonInit(SRGLetterboxBaseView *self)
         // an instance of the class itself to avoid infinite recursion.
         self.nibView = [[NSBundle.srg_letterboxBundle loadNibNamed:nibName owner:self options:nil] firstObject];
         self.nibView.backgroundColor = UIColor.clearColor;
-        [self addSubview:self.nibView];
-        [self.nibView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self);
-        }];
     }
 }
