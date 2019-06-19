@@ -20,9 +20,9 @@ IB_DESIGNABLE
 @interface SRGCountdownView : SRGLetterboxBaseView
 
 /**
- *  The remaining time to be displayed (in seconds).
+ *  Instantiate a countdown starting with the specified number or remaining seconds.
  */
-@property (nonatomic) NSTimeInterval remainingTimeInterval;
+- (instancetype)initWithRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval;
 
 @end
 
