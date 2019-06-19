@@ -15,16 +15,29 @@
 #import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
+#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGAvailabilityView ()
 
-@property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
+@property (nonatomic, readonly) SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
 
 @end
 
 @implementation SRGAvailabilityView
+
+@synthesize countdownView = _countdownView;
+
+#pragma mark Getters and setters
+
+- (SRGCountdownView *)countdownView
+{
+    if (! _countdownView) {
+        _countdownView = [[SRGCountdownView alloc] init];
+    }
+    return _countdownView;
+}
 
 #pragma mark Overrides
 
@@ -105,6 +118,17 @@
     else {
         self.messageLabel.hidden = YES;
         self.countdownView.hidden = YES;
+    }
+    
+    // The countdown view has a heavy layout. Display it when needed
+    if (! self.countdownView.hidden && ! self.countdownView.superview) {
+        [self insertSubview:self.countdownView atIndex:0];
+        [self.countdownView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+    }
+    else if (self.countdownView.hidden && self.countdownView.superview) {
+        [self.countdownView removeFromSuperview];
     }
 }
 
