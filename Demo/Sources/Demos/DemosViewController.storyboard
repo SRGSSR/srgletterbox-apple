@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4wm-Z9-GrR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4wm-Z9-GrR">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -1306,6 +1306,32 @@
                                                 <constraint firstAttribute="bottom" secondItem="yw4-FH-9iQ" secondAttribute="bottom" constant="8" id="7wS-Lq-zyx"/>
                                                 <constraint firstItem="yw4-FH-9iQ" firstAttribute="leading" secondItem="lMt-rI-0mn" secondAttribute="leading" constant="8" id="GfO-mX-Eca"/>
                                                 <constraint firstItem="yw4-FH-9iQ" firstAttribute="top" secondItem="lMt-rI-0mn" secondAttribute="top" constant="8" id="Jlf-WO-DVQ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Page navigation" footerTitle="Medias displayed in a page navigation." id="D08-sD-XZ8">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Th5-l7-9bm">
+                                        <rect key="frame" x="0.0" y="3435" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Th5-l7-9bm" id="K18-Jt-rxY">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Various medias" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="COL-VA-6ne">
+                                                    <rect key="frame" x="8" y="8" width="359" height="27.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="COL-VA-6ne" secondAttribute="bottom" constant="8" id="B0B-g7-gfy"/>
+                                                <constraint firstItem="COL-VA-6ne" firstAttribute="top" secondItem="K18-Jt-rxY" secondAttribute="top" constant="8" id="Yar-8Y-mWH"/>
+                                                <constraint firstItem="COL-VA-6ne" firstAttribute="leading" secondItem="K18-Jt-rxY" secondAttribute="leading" constant="8" id="pOc-vs-fMj"/>
+                                                <constraint firstAttribute="trailing" secondItem="COL-VA-6ne" secondAttribute="trailing" constant="8" id="t59-B1-soS"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>

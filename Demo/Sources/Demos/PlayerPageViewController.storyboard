@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="g8I-ur-enu">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Delegate-->
+        <scene sceneID="tYQ-Ie-ROQ">
+            <objects>
+                <viewController id="g8I-ur-enu" customClass="PlayerPageViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qPk-mf-g5f">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AbC-oU-DtA" customClass="SRGLetterboxView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="controller" destination="TrO-uJ-e8O" id="KFE-wj-zd7"/>
+                                    <outlet property="delegate" destination="g8I-ur-enu" id="3W8-0n-VkS"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AbC-oU-DtA" firstAttribute="top" secondItem="qPk-mf-g5f" secondAttribute="top" id="3mZ-Fs-yot"/>
+                            <constraint firstAttribute="bottom" secondItem="AbC-oU-DtA" secondAttribute="bottom" id="NJi-wj-lAY"/>
+                            <constraint firstItem="AbC-oU-DtA" firstAttribute="leading" secondItem="qPk-mf-g5f" secondAttribute="leading" id="jZB-P4-9KF"/>
+                            <constraint firstAttribute="trailing" secondItem="AbC-oU-DtA" secondAttribute="trailing" id="ySG-bz-hMS"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="YWb-2D-hAC"/>
+                    </view>
+                    <connections>
+                        <outlet property="letterboxController" destination="TrO-uJ-e8O" id="G03-c4-mq0"/>
+                        <outlet property="letterboxView" destination="AbC-oU-DtA" id="5JL-pB-5At"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Byl-a9-1eL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="TrO-uJ-e8O" customClass="SRGLetterboxController"/>
+            </objects>
+            <point key="canvasLocation" x="45.600000000000001" y="97.601199400299862"/>
+        </scene>
+    </scenes>
+</document>

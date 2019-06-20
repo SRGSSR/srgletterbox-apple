@@ -11,6 +11,7 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "PageViewController.h"
 #import "PlaylistViewController.h"
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
@@ -158,6 +159,12 @@
         return;
     }
     [self presentViewController:playerViewController animated:YES completion:nil];
+}
+
+- (void)openPlayerPagesWithURNs:(NSArray<NSString *> *)URNs
+{
+    PageViewController *pageViewController = [[PageViewController alloc] initWithURNs:URNs];
+    [self.navigationController pushViewController:pageViewController animated:YES];
 }
 
 - (void)openCustomURNEntryAlertWithCompletionBlock:(void (^)(NSString * _Nullable URNString))completionBlock
@@ -666,6 +673,13 @@
                     break;
                 }
             }
+        }
+            
+        case 9: {
+            [self openPlayerPagesWithURNs:@[ kVideoOnDemandURNString,
+                                             kVideoOnDemandShortClipURNString,
+                                             kVideoOnDemandSegmentsURNString ]];
+            break;
         }
             
         default: {
