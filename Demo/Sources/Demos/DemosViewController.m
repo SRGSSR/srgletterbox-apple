@@ -673,6 +673,7 @@
                     break;
                 }
             }
+            break;
         }
             
         case 9: {
