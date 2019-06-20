@@ -146,8 +146,8 @@ static void commonInit(SRGLetterboxView *self);
                                                    name:UIApplicationDidBecomeActiveNotification
                                                  object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self
-                                               selector:@selector(wirelessRouteDidChange:)
-                                                   name:SRGMediaPlayerWirelessRouteDidChangeNotification
+                                               selector:@selector(wirelessRouteActiveDidChange:)
+                                                   name:SRGMediaPlayerWirelessRouteActiveDidChangeNotification
                                                  object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(serviceSettingsDidChange:)
@@ -169,7 +169,7 @@ static void commonInit(SRGLetterboxView *self);
                                                       name:UIApplicationDidBecomeActiveNotification
                                                     object:nil];
         [NSNotificationCenter.defaultCenter removeObserver:self
-                                                      name:SRGMediaPlayerWirelessRouteDidChangeNotification
+                                                      name:SRGMediaPlayerWirelessRouteActiveDidChangeNotification
                                                     object:nil];
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGLetterboxServiceSettingsDidChangeNotification
@@ -985,7 +985,7 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 // Called when the route is changed from the control center
-- (void)wirelessRouteDidChange:(NSNotification *)notification
+- (void)wirelessRouteActiveDidChange:(NSNotification *)notification
 {
     [self showAirPlayNotificationMessageIfNeededAnimated:YES];
 }
