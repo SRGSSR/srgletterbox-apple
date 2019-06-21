@@ -54,6 +54,7 @@
 {
     [super viewDidLoad];
     
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO];
     [self.letterboxView setTimelineAlwaysHidden:YES animated:NO];
 }
 
