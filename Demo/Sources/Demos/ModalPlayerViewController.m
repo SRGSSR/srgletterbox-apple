@@ -8,6 +8,7 @@
 
 #import "ModalTransition.h"
 #import "SettingsViewController.h"
+#import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -98,6 +99,7 @@
     [super awakeFromNib];
     
     self.transitioningDelegate = self;
+    
 }
 
 #pragma mark View lifecycle
@@ -105,6 +107,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.urnLabel.copyingEnabled = YES;
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
