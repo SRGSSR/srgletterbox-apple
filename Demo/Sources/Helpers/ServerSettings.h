@@ -12,6 +12,7 @@ OBJC_EXPORT NSURL *LetterboxDemoMMFServiceURL(void);
 
 OBJC_EXPORT NSURL *LetterboxDemoServiceURLForKey(NSString *key);
 OBJC_EXPORT NSString *LetterboxDemoServiceNameForKey(NSString *key);
+OBJC_EXPORT NSString *LetterboxDemoServiceNameForURL(NSURL *URL);
 
 @interface ServerSettings : NSObject
 

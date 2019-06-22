@@ -6,6 +6,7 @@
 
 #import "ServerSettings.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGDataProvider/SRGDataProvider.h>
 
 NSURL *LetterboxDemoMMFServiceURL(void)
@@ -33,6 +34,12 @@ NSString *LetterboxDemoServiceNameForKey(NSString *key)
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(ServerSettings * _Nullable serverSettings, NSDictionary<NSString *,id> * _Nullable bindings) {
         return [serverSettings.name caseInsensitiveCompare:key] == NSOrderedSame;
     }];
+    return [ServerSettings.serverSettings filteredArrayUsingPredicate:predicate].firstObject.name;
+}
+
+NSString *LetterboxDemoServiceNameForURL(NSURL *URL)
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(ServerSettings.new, URL), URL];
     return [ServerSettings.serverSettings filteredArrayUsingPredicate:predicate].firstObject.name;
 }
 

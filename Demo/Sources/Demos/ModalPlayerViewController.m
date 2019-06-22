@@ -24,6 +24,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nowLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nextLabel;
+@property (nonatomic, weak) IBOutlet UILabel *serverLabel;
+@property (nonatomic, weak) IBOutlet UILabel *urnLabel;
 
 @property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
 
@@ -186,6 +188,8 @@
     SRGChannel *channel = self.letterboxController.channel;
     self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
     self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
+    self.serverLabel.text = media.URN ? [NSString stringWithFormat:@"%@ urn:", LetterboxDemoServiceNameForURL(self.letterboxController.serviceURL)] : nil;
+    self.urnLabel.text = media.URN;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
