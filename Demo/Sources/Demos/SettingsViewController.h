@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
+#include "ServerSettings.h"
+
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-OBJC_EXPORT NSURL *LetterboxDemoMMFServiceURL(void);
 
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 OBJC_EXPORT NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void);

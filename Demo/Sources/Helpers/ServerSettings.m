@@ -6,6 +6,36 @@
 
 #import "ServerSettings.h"
 
+#import <SRGDataProvider/SRGDataProvider.h>
+
+NSURL *LetterboxDemoMMFServiceURL(void)
+{
+    NSString *serviceURLString = [NSBundle.mainBundle objectForInfoDictionaryKey:@"PlayMMFServiceURL"];
+    NSURL *serviceURL = (serviceURLString.length > 0) ? [NSURL URLWithString:serviceURLString] : nil;
+    return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
+}
+
+NSURL *LetterboxDemoServiceURLForKey(NSString *key)
+{
+    NSInteger index = [ServerSettings.serverSettings indexOfObjectPassingTest:^BOOL(ServerSettings * _Nonnull serverSettings, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [serverSettings.name caseInsensitiveCompare:key] == NSOrderedSame;
+    }];
+    if (index != NSNotFound) {
+        return ServerSettings.serverSettings[index].URL;
+    }
+    else {
+        return nil;
+    }
+}
+
+NSString *LetterboxDemoServiceNameForKey(NSString *key)
+{
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(ServerSettings * _Nullable serverSettings, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [serverSettings.name caseInsensitiveCompare:key] == NSOrderedSame;
+    }];
+    return [ServerSettings.serverSettings filteredArrayUsingPredicate:predicate].firstObject.name;
+}
+
 @interface ServerSettings ()
 
 @property (nonatomic) NSString *name;
@@ -14,6 +44,21 @@
 @end
 
 @implementation ServerSettings
+
+#pragma mark Class getter
+
++ (NSArray<ServerSettings *> *)serverSettings
+{
+    static dispatch_once_t s_onceToken;
+    static NSArray<ServerSettings *> *s_serverSettings;
+    dispatch_once(&s_onceToken, ^{
+        s_serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
+                             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
+                             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
+                             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL()]];
+    });
+    return s_serverSettings;
+}
 
 #pragma mark Object lifecycle
 

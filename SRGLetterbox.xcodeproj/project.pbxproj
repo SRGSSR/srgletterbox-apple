@@ -1603,6 +1603,8 @@
 				MARKETING_VERSION_SUFFIX = "-nightly";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-nightly";
 			};
 			name = Nightly;
 		};
@@ -1730,6 +1732,8 @@
 				MARKETING_VERSION_SUFFIX = "-debug";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-debug";
 			};
 			name = "Debug-static";
 		};
@@ -1850,6 +1854,8 @@
 				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)";
 			};
 			name = "Release-static";
 		};
@@ -1988,6 +1994,8 @@
 				MARKETING_VERSION_SUFFIX = "-debug";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-debug";
 			};
 			name = Debug;
 		};
@@ -2010,6 +2018,8 @@
 				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)";
 			};
 			name = Release;
 		};
