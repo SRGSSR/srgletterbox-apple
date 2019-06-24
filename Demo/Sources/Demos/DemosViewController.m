@@ -677,9 +677,9 @@
         }
             
         case 9: {
-            [self openPlayerPagesWithURNs:@[ kVideoOnDemandURNString,
-                                             kVideoOnDemandShortClipURNString,
-                                             kVideoOnDemandSegmentsURNString ]];
+            [self openPlayerPagesWithURNs:@[ kVideoOnDemandURNString, kVideoOnDemandShortClipURNString, kVideoOnDemandSegmentsURNString,
+                                             kVideoOnDemandWithNoFullLengthURNString, kVideoOnDemandNoTokenURNString, kVideoDVRURNString,
+                                             kVideoLiveURNString, kAudioOnDemandURNString, kAudioDVRURNString ]];
             break;
         }
             
