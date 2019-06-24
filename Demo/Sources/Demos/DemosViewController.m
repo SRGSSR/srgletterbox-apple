@@ -206,6 +206,7 @@
     
     static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_tagesschau24_ard_delay";
     static NSString * const kMMFCachedScheduledLivestreamURNString = @"urn:rts:video:_rts_info_cacheddelay";
+    static NSString * const kMMFNeverPlayableLivestreamURNString = @"urn:rts:video:_rts_info_never";
     static NSString * const kMMFTemporarilyGeoblockedURNString = @"urn:rts:video:_rts_info_geoblocked";
     static NSString * const kMMFDVRKillSwitchURNString = @"urn:rts:video:_rts_info_killswitch";
     static NSString * const kMMFSwissTxtFullDVRStreamURNString = @"urn:rts:video:_rts_info_fulldvr";
@@ -476,55 +477,62 @@
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURN:kMMFTemporarilyGeoblockedURNString
+                    [self openModalPlayerWithURN:kMMFNeverPlayableLivestreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURN:kMMFDVRKillSwitchURNString
+                    [self openModalPlayerWithURN:kMMFTemporarilyGeoblockedURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStreamURNString
+                    [self openModalPlayerWithURN:kMMFDVRKillSwitchURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtLimitedDVRStreamURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtLiveOnlyStreamURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtLimitedDVRStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtLiveOnlyStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURN:kMMFTemporarilyNotFoundURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 13: {
+                    [self openModalPlayerWithURN:kMMFTemporarilyNotFoundURNString
+                                      serviceURL:LetterboxDemoMMFServiceURL()
+                                  updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 14: {
                     [self openModalPlayerWithURN:kMMFRTSMultipleAudiosURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(SRGLetterboxDefaultUpdateInterval)];
