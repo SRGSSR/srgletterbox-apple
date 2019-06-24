@@ -20,9 +20,14 @@ IB_DESIGNABLE
 @interface SRGCountdownView : SRGLetterboxBaseView
 
 /**
- *  Instantiate a countdown starting with the specified number or remaining seconds.
+ *  Instantiate a countdown targeting the target date.
  */
-- (instancetype)initWithRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval;
+- (instancetype)initWithTargetDate:(NSDate *)targetDate;
+
+/**
+ *  The target date.
+ */
+@property (nonatomic, readonly) NSDate *targetDate;
 
 @end
 

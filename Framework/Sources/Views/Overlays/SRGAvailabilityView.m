@@ -79,10 +79,16 @@
     if (blockingReason == SRGBlockingReasonStartDate) {
         self.messageLabel.text = nil;
         
+        NSDate *targetDate = media.startDate ?: media.date;
+        
+        // Reset the countdown view if target date changed
+        if (self.countdownView && ! [targetDate isEqual:self.countdownView.targetDate]) {
+            [self.countdownView removeFromSuperview];
+        }
+        
         // Lazily add heavy countdown view when required
         if (! self.countdownView) {
-            NSTimeInterval remainingTimeInterval = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
-            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithRemainingTimeInterval:remainingTimeInterval];
+            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate];
             [self insertSubview:countdownView atIndex:0];
             [countdownView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(self);

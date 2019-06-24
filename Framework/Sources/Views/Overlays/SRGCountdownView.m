@@ -19,7 +19,6 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @interface SRGCountdownView ()
 
-@property (nonatomic) NSTimeInterval initialRemainingTimeInterval;
 @property (nonatomic, readonly) NSTimeInterval currentRemainingTimeInterval;
 
 @property (nonatomic, weak) IBOutlet UIStackView *remainingTimeStackView;
@@ -58,7 +57,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
-@property (nonatomic) NSDate *initialDate;
+@property (nonatomic) NSDate *targetDate;
 @property (nonatomic) NSTimer *updateTimer;
 
 @end
@@ -67,18 +66,17 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval
+- (instancetype)initWithTargetDate:(NSDate *)targetDate
 {
     if (self = [super init]) {
-        self.initialRemainingTimeInterval = remainingTimeInterval;
-        self.initialDate = NSDate.date;
+        self.targetDate = targetDate;
     }
     return self;
 }
 
 - (instancetype)init
 {
-    return [self initWithRemainingTimeInterval:0.];
+    return [self initWithTargetDate:NSDate.date];
 }
 
 #pragma mark Getters and setters
@@ -91,8 +89,8 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (NSTimeInterval)currentRemainingTimeInterval
 {
-    NSTimeInterval elapsedTimeInterval = [NSDate.date timeIntervalSinceDate:self.initialDate];
-    return fmax(self.initialRemainingTimeInterval - elapsedTimeInterval, 0.);
+    NSTimeInterval elapsedTimeInterval = [self.targetDate timeIntervalSinceDate:NSDate.date];
+    return fmax(elapsedTimeInterval, 0.);
 }
 
 #pragma mark Overrides
