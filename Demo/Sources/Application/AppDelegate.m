@@ -9,6 +9,7 @@
 #import "DemosViewController.h"
 #import "SettingsViewController.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 #import <HockeySDK/HockeySDK.h>
@@ -19,6 +20,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
     NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
     [contentProtectionFramework loadAndReturnError:NULL];
 }
+
+@interface AppDelegate ()
+
+@property(nonatomic, weak) DemosViewController *demosViewController;
+
+@end
 
 @implementation AppDelegate
 
@@ -50,8 +57,32 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
+    self.demosViewController = demosViewController;
     
     return YES;
+}
+
+// Open [scheme]://open?media=[media_urn] (optional &server=[server_name])
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
+    if ([URLComponents.host.lowercaseString isEqualToString:@"open"]) {
+        NSString *mediaURN = [self valueFromURLComponents:URLComponents withParameterName:@"media"];
+        if (mediaURN) {
+            NSURL *serviceURL = nil;
+            NSString *server = [self valueFromURLComponents:URLComponents withParameterName:@"server"];
+            if (server) {
+                serviceURL = LetterboxDemoServiceURLForKey(server);
+            }
+            
+            [self.demosViewController openModalPlayerWithURN:mediaURN serviceURL:serviceURL updateInterval:nil];
+            return YES;
+        }
+        
+        return NO;
+    }
+    
+    return NO;
 }
 
 #pragma mark Helpers
@@ -65,6 +96,22 @@ static __attribute__((constructor)) void ApplicationInit(void)
 #if defined(RELEASE) || defined(NIGHTLY)
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
+}
+
+#pragma mark Custom URL scheme support
+
+- (NSString *)valueFromURLComponents:(NSURLComponents *)URLComponents withParameterName:(NSString *)parameterName
+{
+    NSParameterAssert(URLComponents);
+    NSParameterAssert(parameterName);
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(NSURLQueryItem.new, name), parameterName];
+    NSURLQueryItem *queryItem = [URLComponents.queryItems filteredArrayUsingPredicate:predicate].firstObject;
+    if (! queryItem) {
+        return nil;
+    }
+    
+    return queryItem.value;
 }
 
 @end

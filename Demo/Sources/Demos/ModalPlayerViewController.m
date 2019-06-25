@@ -8,6 +8,7 @@
 
 #import "ModalTransition.h"
 #import "SettingsViewController.h"
+#import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
 
 #import <Masonry/Masonry.h>
@@ -24,6 +25,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nowLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nextLabel;
+@property (nonatomic, weak) IBOutlet UILabel *serverLabel;
+@property (nonatomic, weak) IBOutlet UILabel *URNLabel;
 
 @property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
 
@@ -95,7 +98,7 @@
 {
     [super awakeFromNib];
     
-    self.transitioningDelegate = self;
+    self.transitioningDelegate = self;   
 }
 
 #pragma mark View lifecycle
@@ -103,6 +106,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.URNLabel.copyingEnabled = YES;
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
@@ -186,6 +191,8 @@
     SRGChannel *channel = self.letterboxController.channel;
     self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
     self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
+    self.serverLabel.text = media.URN ? [NSString stringWithFormat:@"%@ urn:", LetterboxDemoServiceNameForURL(self.letterboxController.serviceURL)] : nil;
+    self.URNLabel.text = media.URN;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

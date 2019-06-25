@@ -167,6 +167,13 @@ If rendering does not work properly:
 
 To test what the library is capable of, run the associated demo.
 
+#### URL schemes
+
+The demo application can be opened with a custom URL scheme having the following format: `letterbox(-nightly|-debug)`.
+
+* Open a media within the player: `[scheme]://open?media=[media_urn]`.
+* A `&server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
+
 ## Known issues
 
 Control center and lock screen integrations are not working reliably in the iOS simulator. This is a known simulator-only limitation, everything works fine on a device. 

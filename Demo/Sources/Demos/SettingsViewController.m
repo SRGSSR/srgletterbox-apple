@@ -6,10 +6,7 @@
 
 #import "SettingsViewController.h"
 
-#import "ServerSettings.h"
-
 #import <HockeySDK/HockeySDK.h>
-#import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 /**
@@ -50,13 +47,6 @@ NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoS
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
-
-NSURL *LetterboxDemoMMFServiceURL(void)
-{
-    NSString *serviceURLString = [NSBundle.mainBundle objectForInfoDictionaryKey:@"PlayMMFServiceURL"];
-    NSURL *serviceURL = (serviceURLString.length > 0) ? [NSURL URLWithString:serviceURLString] : nil;
-    return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
-}
 
 static void SettingServiceURLReset(void)
 {
@@ -145,10 +135,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
-    viewController.serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", @"Server setting") URL:SRGIntegrationLayerProductionServiceURL()],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", @"Server setting") URL:SRGIntegrationLayerStagingServiceURL()],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", @"Server setting") URL:SRGIntegrationLayerTestServiceURL()],
-                                      [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", @"Server setting") URL:LetterboxDemoMMFServiceURL()]];
+    viewController.serverSettings = ServerSettings.serverSettings;
     return viewController;
 }
 

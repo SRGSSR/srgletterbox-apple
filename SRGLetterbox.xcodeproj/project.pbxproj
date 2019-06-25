@@ -10,6 +10,7 @@
 		0849DA5920FCD82E00026F0D /* TopicListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */; };
 		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
+		086AFBF222BE968E0047FD44 /* UILabel+Copyable.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable.m */; };
 		087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
@@ -353,6 +354,8 @@
 		0849DA5820FCD82D00026F0D /* TopicListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicListViewController.m; sourceTree = "<group>"; };
 		0849DA5B20FD553100026F0D /* TopicItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicItem.h; sourceTree = "<group>"; };
 		0849DA5C20FD553100026F0D /* TopicItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicItem.m; sourceTree = "<group>"; };
+		086AFBF022BE968E0047FD44 /* UILabel+Copyable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Copyable.m"; sourceTree = "<group>"; };
+		086AFBF122BE968E0047FD44 /* UILabel+Copyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Copyable.h"; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
@@ -835,6 +838,8 @@
 				6FCB995C1F56948D00790EAA /* ServerSettings.m */,
 				0849DA5B20FD553100026F0D /* TopicItem.h */,
 				0849DA5C20FD553100026F0D /* TopicItem.m */,
+				086AFBF122BE968E0047FD44 /* UILabel+Copyable.h */,
+				086AFBF022BE968E0047FD44 /* UILabel+Copyable.m */,
 				6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */,
 				6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */,
 			);
@@ -1373,6 +1378,7 @@
 				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
+				086AFBF222BE968E0047FD44 /* UILabel+Copyable.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
 				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController.m in Sources */,
 				6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */,
@@ -1603,6 +1609,8 @@
 				MARKETING_VERSION_SUFFIX = "-nightly";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-nightly";
 			};
 			name = Nightly;
 		};
@@ -1730,6 +1738,8 @@
 				MARKETING_VERSION_SUFFIX = "-debug";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-debug";
 			};
 			name = "Debug-static";
 		};
@@ -1850,6 +1860,8 @@
 				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)";
 			};
 			name = "Release-static";
 		};
@@ -1988,6 +2000,8 @@
 				MARKETING_VERSION_SUFFIX = "-debug";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-debug";
 			};
 			name = Debug;
 		};
@@ -2010,6 +2024,8 @@
 				MARKETING_VERSION_SUFFIX = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.SRGLetterbox-demo$(BUNDLE_IDENTIFIER_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)";
 			};
 			name = Release;
 		};
