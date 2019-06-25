@@ -26,7 +26,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *nowLabel;
 @property (nonatomic, weak) IBOutlet UILabel *nextLabel;
 @property (nonatomic, weak) IBOutlet UILabel *serverLabel;
-@property (nonatomic, weak) IBOutlet UILabel *urnLabel;
+@property (nonatomic, weak) IBOutlet UILabel *URNLabel;
 
 @property (nonatomic, weak) IBOutlet UISwitch *timelineSwitch;
 
@@ -98,8 +98,7 @@
 {
     [super awakeFromNib];
     
-    self.transitioningDelegate = self;
-    
+    self.transitioningDelegate = self;   
 }
 
 #pragma mark View lifecycle
@@ -108,7 +107,7 @@
 {
     [super viewDidLoad];
     
-    self.urnLabel.copyingEnabled = YES;
+    self.URNLabel.copyingEnabled = YES;
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
@@ -193,7 +192,7 @@
     self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
     self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
     self.serverLabel.text = media.URN ? [NSString stringWithFormat:@"%@ urn:", LetterboxDemoServiceNameForURL(self.letterboxController.serviceURL)] : nil;
-    self.urnLabel.text = media.URN;
+    self.URNLabel.text = media.URN;
 }
 
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol

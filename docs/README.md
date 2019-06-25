@@ -172,13 +172,7 @@ To test what the library is capable of, run the associated demo.
 The demo application can be opened with a custom URL scheme having the following format: `letterbox(-nightly|-debug)`.
 
 * Open a media within the player: `[scheme]://open?media=[media_urn]`.
-* `&server=[server_title]` parameter can be added to force a server selection. The available server list can be found in the application section Settings / Server.
-
-## Actions
-
-Available actions are:
-
-* Open a media within the player: `[scheme]://open?media=[media_urn]`.
+* A `&server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
 
 ## Known issues
 
