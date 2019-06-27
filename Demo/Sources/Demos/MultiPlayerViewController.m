@@ -54,12 +54,15 @@
     
     multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     multiPlayerViewController.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
+    multiPlayerViewController.letterboxController.backgroundVideoPlaybackEnabled = ApplicationSettingIsBackgroundVideoPlaybackEnabled();
     
     multiPlayerViewController.smallLetterboxController1.serviceURL = ApplicationSettingServiceURL();
     multiPlayerViewController.smallLetterboxController1.globalParameters = ApplicationSettingGlobalParameters();
+    multiPlayerViewController.smallLetterboxController1.backgroundVideoPlaybackEnabled = ApplicationSettingIsBackgroundVideoPlaybackEnabled();
     
     multiPlayerViewController.smallLetterboxController2.serviceURL = ApplicationSettingServiceURL();
     multiPlayerViewController.smallLetterboxController2.globalParameters = ApplicationSettingGlobalParameters();
+    multiPlayerViewController.smallLetterboxController2.backgroundVideoPlaybackEnabled = ApplicationSettingIsBackgroundVideoPlaybackEnabled();
     
     multiPlayerViewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     multiPlayerViewController.smallLetterboxController1.updateInterval = ApplicationSettingUpdateInterval();

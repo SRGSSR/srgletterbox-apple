@@ -45,6 +45,7 @@ NSString * const LetterboxDemoSettingStandalone = @"LetterboxDemoSettingStandalo
 NSString * const LetterboxDemoSettingUserLocation = @"LetterboxDemoSettingUserLocation";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
+NSString * const LetterboxDemoSettingBackgroundVideoPlaybackEnabled = @"LetterboxDemoSettingBackgroundVideoPlaybackEnabled";
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
@@ -106,6 +107,17 @@ NSTimeInterval ApplicationSettingUpdateInterval(void)
     // Set manually to default value, 5 minutes, if no setting.
     NSTimeInterval updateInterval = [NSUserDefaults.standardUserDefaults doubleForKey:LetterboxDemoSettingUpdateInterval];
     return (updateInterval > 0.) ? updateInterval : SRGLetterboxDefaultUpdateInterval;
+}
+
+BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void)
+{
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingBackgroundVideoPlaybackEnabled];
+}
+
+static void ApplicationSettingSetBackgroundVideoPlaybackEnabled(BOOL backgroundVideoPlaybackEnabled)
+{
+    [NSUserDefaults.standardUserDefaults setBool:backgroundVideoPlaybackEnabled forKey:LetterboxDemoSettingBackgroundVideoPlaybackEnabled];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
@@ -198,6 +210,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case 6: {
+            return NSLocalizedString(@"Background video playback", @"Background video playback header title in settings view");
+            break;
+        }
+            
+        case 7: {
             NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
@@ -238,12 +255,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case 2:
         case 3:
         case 4:
-        case 5: {
+        case 5:
+        case 6: {
             return 2;
             break;
         }
             
-        case 6: {
+        case 7: {
             return 1;
             break;
         }
@@ -410,6 +428,29 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case 6: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.accessoryType = ! ApplicationSettingIsBackgroundVideoPlaybackEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.accessoryType = ApplicationSettingIsBackgroundVideoPlaybackEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case 7: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -478,6 +519,12 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case 6: {
+            ApplicationSettingSetBackgroundVideoPlaybackEnabled(indexPath.row == 1);
+            SRGLetterboxService.sharedService.controller.backgroundVideoPlaybackEnabled = (indexPath.row == 1);
+            break;
+        }
+            
+        case 7: {
             completionBlock = ^{
                 [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
             };

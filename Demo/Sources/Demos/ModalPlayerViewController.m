@@ -64,6 +64,7 @@
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
         viewController.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
+        viewController.letterboxController.backgroundVideoPlaybackEnabled = ApplicationSettingIsBackgroundVideoPlaybackEnabled();
         
         return viewController;
     }
