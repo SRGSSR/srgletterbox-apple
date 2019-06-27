@@ -368,9 +368,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    // Videos can only be controlled when the device has been locked (mostly for AirPlay playback). We don't allow
-    // video playback while the app is fully in background for the moment (except if AirPlay is enabled)
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
+                                                                                                            || controller.backgroundVideoPlaybackEnabled
                                                                                                             || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
                                                                                                             || AVAudioSession.srg_isAirPlayActive
                                                                                                             || UIDevice.srg_letterbox_isLocked)) {
