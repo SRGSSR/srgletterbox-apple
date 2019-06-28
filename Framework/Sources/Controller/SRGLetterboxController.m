@@ -213,7 +213,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.mediaPlayerController = [[SRGMediaPlayerController alloc] init];
         self.mediaPlayerController.analyticsPlayerName = @"SRGLetterbox";
         self.mediaPlayerController.analyticsPlayerVersion = SRGLetterboxMarketingVersion();
-        self.mediaPlayerController.viewBackgroundBehavior = SRGMediaPlayerViewBackgroundBehaviorDetachedIfLocked;
+        self.mediaPlayerController.viewBackgroundBehavior = SRGMediaPlayerViewBackgroundBehaviorDetachedWhenDeviceLocked;
         
         // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50 and https://soadist.atlassian.net/browse/LSV-631
         //        for more information about this choice.
@@ -347,7 +347,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)setBackgroundVideoPlaybackEnabled:(BOOL)backgroundVideoPlaybackEnabled
 {
-    self.mediaPlayerController.viewBackgroundBehavior = backgroundVideoPlaybackEnabled ? SRGMediaPlayerViewBackgroundBehaviorDetached : SRGMediaPlayerViewBackgroundBehaviorDetachedIfLocked;
+    self.mediaPlayerController.viewBackgroundBehavior = backgroundVideoPlaybackEnabled ? SRGMediaPlayerViewBackgroundBehaviorDetached : SRGMediaPlayerViewBackgroundBehaviorDetachedWhenDeviceLocked;
 }
 
 - (BOOL)areBackgroundServicesEnabled
