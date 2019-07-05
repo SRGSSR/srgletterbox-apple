@@ -25,5 +25,6 @@
   "1.14b5-57": "- Set exact DVR window frame at stop event for SDH analytics.",
   "1.14-58": "### SMDH streaming measurements\n\n- Streaming measurements are now performed according to NetMetrix SMDH specifications.\n- API provides a way to customize subtitle and audio tracks programatically.\n- Letterbox view support for favorites has been removed.\n- The framework footprint at application startup time has been reduced.",
   "1.14.1-59": "- Maintenance release.\n- (SRGAnalytics) Fix iTunes Connect validation warning.",
-  "1.14.1-60": "- Maintenance release.\n- (SRGAnalytics) Fix iTunes Connect validation warning."
+  "1.14.1-60": "- Maintenance release.\n- (SRGAnalytics) Fix iTunes Connect validation warning.",
+  "1.14.2-61": "- The time needed to display the Letterbox player view has been significantly reduced, and the view is better suited for use in scroll views.\n- Fix non-working lock screen video playback on devices running iOS 12.3 and above.\n- A new setting can be used to enable full background video playback.\n- Fix crash on iOS 13. Full iOS 13 is not implemented officially yet, though Letterbox should run fine already.\n- Medias can be directly opened in this demo application using the `letterbox` URL scheme."
 }
