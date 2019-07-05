@@ -57,12 +57,27 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 @property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
 
-@property (nonatomic) NSDate *initialDate;
+@property (nonatomic) NSDate *targetDate;
 @property (nonatomic) NSTimer *updateTimer;
 
 @end
 
 @implementation SRGCountdownView
+
+#pragma mark Object lifecycle
+
+- (instancetype)initWithTargetDate:(NSDate *)targetDate
+{
+    if (self = [super init]) {
+        self.targetDate = targetDate;
+    }
+    return self;
+}
+
+- (instancetype)init
+{
+    return [self initWithTargetDate:NSDate.date];
+}
 
 #pragma mark Getters and setters
 
@@ -74,8 +89,8 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (NSTimeInterval)currentRemainingTimeInterval
 {
-    NSTimeInterval elapsedTimeInterval = [NSDate.date timeIntervalSinceDate:self.initialDate];
-    return fmax(self.remainingTimeInterval - elapsedTimeInterval, 0.);
+    NSTimeInterval elapsedTimeInterval = [self.targetDate timeIntervalSinceDate:NSDate.date];
+    return fmax(elapsedTimeInterval, 0.);
 }
 
 #pragma mark Overrides
@@ -136,17 +151,6 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    
-    [self refresh];
-}
-
-#pragma mark Getters and setters
-
-- (void)setRemainingTimeInterval:(NSTimeInterval)remainingTimeInterval
-{
-    _remainingTimeInterval = MAX(remainingTimeInterval, 0);
-    
-    self.initialDate = NSDate.date;
     
     [self refresh];
 }

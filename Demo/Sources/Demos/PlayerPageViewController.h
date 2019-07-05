@@ -8,15 +8,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SimplePlayerViewController : UIViewController
+@interface PlayerPageViewController : UIViewController
 
-- (instancetype)initWithURN:(nullable NSString *)URN;
+- (instancetype)initWithURN:(NSString *)URN;
 
-@property (nonatomic, readonly, copy, nullable) NSString *URN;
+@property (nonatomic, readonly, copy) NSString *URN;
 
 @end
 
-@interface SimplePlayerViewController (Unavailable)
+@interface PlayerPageViewController (Unavailable)
 
 - (instancetype)init NS_UNAVAILABLE;
 

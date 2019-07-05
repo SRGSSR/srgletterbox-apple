@@ -29,6 +29,7 @@
 
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <Masonry/Masonry.h>
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
@@ -141,13 +142,17 @@ static void commonInit(SRGLetterboxView *self);
         [self restartInactivityTracker];
         [self startPeriodicUpdates];
         
+        @weakify(self)
+        [self.controller addObserver:self keyPath:@keypath(SRGLetterboxController.new, mediaPlayerController.player.externalPlaybackActive) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            
+            // Called e.g. when the route is changed from the control center
+            [self showAirPlayNotificationMessageIfNeededAnimated:YES];
+        }];
+        
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(applicationDidBecomeActive:)
                                                    name:UIApplicationDidBecomeActiveNotification
-                                                 object:nil];
-        [NSNotificationCenter.defaultCenter addObserver:self
-                                               selector:@selector(wirelessRouteDidChange:)
-                                                   name:SRGMediaPlayerWirelessRouteDidChangeNotification
                                                  object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(serviceSettingsDidChange:)
@@ -165,11 +170,10 @@ static void commonInit(SRGLetterboxView *self);
         [self stopInactivityTracker];
         [self stopPeriodicUpdates];
         
+        [self.controller removeObserver:self keyPath:@keypath(SRGLetterboxController.new, mediaPlayerController.player.externalPlaybackActive)];
+        
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:UIApplicationDidBecomeActiveNotification
-                                                    object:nil];
-        [NSNotificationCenter.defaultCenter removeObserver:self
-                                                      name:SRGMediaPlayerWirelessRouteDidChangeNotification
                                                     object:nil];
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGLetterboxServiceSettingsDidChangeNotification
@@ -982,12 +986,6 @@ static void commonInit(SRGLetterboxView *self);
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self setNeedsLayoutAnimated:YES];
-}
-
-// Called when the route is changed from the control center
-- (void)wirelessRouteDidChange:(NSNotification *)notification
-{
-    [self showAirPlayNotificationMessageIfNeededAnimated:YES];
 }
 
 - (void)serviceSettingsDidChange:(NSNotification *)notification

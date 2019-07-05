@@ -8,9 +8,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+OBJC_EXPORT NSURL *LetterboxDemoMMFServiceURL(void);
+
+OBJC_EXPORT NSURL *LetterboxDemoServiceURLForKey(NSString *key);
+OBJC_EXPORT NSString *LetterboxDemoServiceNameForKey(NSString *key);
+OBJC_EXPORT NSString *LetterboxDemoServiceNameForURL(NSURL *URL);
+
 @interface ServerSettings : NSObject
 
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL;
+@property (class, nonatomic, readonly) NSArray<ServerSettings *> *serverSettings;
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSURL *URL;

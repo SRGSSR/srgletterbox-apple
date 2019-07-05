@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SimplePlayerViewController.h"
+#import "PlayerPageViewController.h"
 
 #import "SettingsViewController.h"
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
-@interface SimplePlayerViewController ()
+@interface PlayerPageViewController ()
 
 @property (nonatomic, copy) NSString *URN;
 
@@ -19,21 +19,20 @@
 
 @end
 
-@implementation SimplePlayerViewController
+@implementation PlayerPageViewController
 
 #pragma mark Object lifecycle
 
 - (instancetype)initWithURN:(NSString *)URN
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
-    SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
+    PlayerPageViewController *viewController = [storyboard instantiateInitialViewController];
     
     viewController.URN = URN;
     
     viewController.letterboxController.serviceURL = ApplicationSettingServiceURL();
     viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
     viewController.letterboxController.globalHeaders = ApplicationSettingGlobalParameters();
-    viewController.letterboxController.backgroundVideoPlaybackEnabled = ApplicationSettingIsBackgroundVideoPlaybackEnabled();
     
     return viewController;
 }
@@ -55,23 +54,32 @@
 {
     [super viewDidLoad];
     
-    [SRGLetterboxService.sharedService enableWithController:self.letterboxController pictureInPictureDelegate:nil];
+    [self.letterboxView setUserInterfaceHidden:YES animated:NO];
+    [self.letterboxView setTimelineAlwaysHidden:YES animated:NO];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    if (self.URN) {
-        SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
-        settings.standalone = ApplicationSettingIsStandalone();
-        
-        [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
-    }
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = ApplicationSettingIsStandalone();
+    
+    [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.letterboxController stop];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
     
-    if (self.movingFromParentViewController || self.beingDismissed) {
-        [SRGLetterboxService.sharedService disableForController:self.letterboxController];
-    }
+    [self.letterboxController reset];
 }
 
 #pragma mark Home indicator

@@ -15,11 +15,12 @@
 #import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
+#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGAvailabilityView ()
 
-@property (nonatomic, weak) IBOutlet SRGCountdownView *countdownView;
+@property (nonatomic, weak) SRGCountdownView *countdownView;
 @property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
 
 @end
@@ -77,15 +78,31 @@
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
     if (blockingReason == SRGBlockingReasonStartDate) {
         self.messageLabel.text = nil;
-        self.countdownView.remainingTimeInterval = [media.startDate ?: media.date timeIntervalSinceDate:NSDate.date];
+        
+        NSDate *targetDate = media.startDate ?: media.date;
+        
+        // Reset the countdown view if the target date changed
+        if (self.countdownView.superview && ! [targetDate isEqual:self.countdownView.targetDate]) {
+            [self.countdownView removeFromSuperview];
+        }
+        
+        // Lazily add heavy countdown view when required
+        if (! self.countdownView.superview) {
+            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate];
+            [self insertSubview:countdownView atIndex:0];
+            [countdownView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(self);
+            }];
+            self.countdownView = countdownView;
+        }
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {
         self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
-        self.countdownView.remainingTimeInterval = 0.;
+        [self.countdownView removeFromSuperview];
     }
     else {
         self.messageLabel.text = nil;
-        self.countdownView.remainingTimeInterval = 0.;
+        [self.countdownView removeFromSuperview];
     }
 }
 
@@ -96,15 +113,12 @@
     SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
     if (blockingReason == SRGBlockingReasonStartDate) {
         self.messageLabel.hidden = YES;
-        self.countdownView.hidden = NO;
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {
         self.messageLabel.hidden = NO;
-        self.countdownView.hidden = YES;
     }
     else {
         self.messageLabel.hidden = YES;
-        self.countdownView.hidden = YES;
     }
 }
 

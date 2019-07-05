@@ -11,6 +11,7 @@
 #import "ModalPlayerViewController.h"
 #import "MultiPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "PageViewController.h"
 #import "PlaylistViewController.h"
 #import "SettingsViewController.h"
 #import "SimplePlayerViewController.h"
@@ -83,6 +84,10 @@
 
 - (void)openModalPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
 {
+    if (self.presentedViewController) {
+        [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
+    }
+    
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateInterval];
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -160,6 +165,12 @@
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
+- (void)openPlayerPagesWithURNs:(NSArray<NSString *> *)URNs
+{
+    PageViewController *pageViewController = [[PageViewController alloc] initWithURNs:URNs];
+    [self.navigationController pushViewController:pageViewController animated:YES];
+}
+
 - (void)openCustomURNEntryAlertWithCompletionBlock:(void (^)(NSString * _Nullable URNString))completionBlock
 {
     NSParameterAssert(completionBlock);
@@ -197,8 +208,9 @@
     static NSString * const kVideoDVRURNString = @"urn:rts:video:1967124";
     static NSString * const kVideoLiveURNString = @"urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0";
     
-    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_tagesschau24_ard_delay";
+    static NSString * const kMMFScheduledLivestreamURNString = @"urn:rts:video:_rts_info_delay";
     static NSString * const kMMFCachedScheduledLivestreamURNString = @"urn:rts:video:_rts_info_cacheddelay";
+    static NSString * const kMMFNeverPlayableLivestreamURNString = @"urn:rts:video:_rts_info_never";
     static NSString * const kMMFTemporarilyGeoblockedURNString = @"urn:rts:video:_rts_info_geoblocked";
     static NSString * const kMMFDVRKillSwitchURNString = @"urn:rts:video:_rts_info_killswitch";
     static NSString * const kMMFSwissTxtFullDVRStreamURNString = @"urn:rts:video:_rts_info_fulldvr";
@@ -469,55 +481,62 @@
                 }
                     
                 case 6: {
-                    [self openModalPlayerWithURN:kMMFTemporarilyGeoblockedURNString
+                    [self openModalPlayerWithURN:kMMFNeverPlayableLivestreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 7: {
-                    [self openModalPlayerWithURN:kMMFDVRKillSwitchURNString
+                    [self openModalPlayerWithURN:kMMFTemporarilyGeoblockedURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 8: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStreamURNString
+                    [self openModalPlayerWithURN:kMMFDVRKillSwitchURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 9: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtLimitedDVRStreamURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 10: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtLiveOnlyStreamURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtLimitedDVRStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 11: {
-                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtLiveOnlyStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 12: {
-                    [self openModalPlayerWithURN:kMMFTemporarilyNotFoundURNString
+                    [self openModalPlayerWithURN:kMMFSwissTxtFullDVRStartDateChangeStreamURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
                     break;
                 }
                     
                 case 13: {
+                    [self openModalPlayerWithURN:kMMFTemporarilyNotFoundURNString
+                                      serviceURL:LetterboxDemoMMFServiceURL()
+                                  updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                    break;
+                }
+                    
+                case 14: {
                     [self openModalPlayerWithURN:kMMFRTSMultipleAudiosURNString
                                       serviceURL:LetterboxDemoMMFServiceURL()
                                   updateInterval:@(SRGLetterboxDefaultUpdateInterval)];
@@ -666,6 +685,14 @@
                     break;
                 }
             }
+            break;
+        }
+            
+        case 9: {
+            [self openPlayerPagesWithURNs:@[ kVideoOnDemandURNString, kVideoOnDemandShortClipURNString, kVideoOnDemandSegmentsURNString,
+                                             kVideoOnDemandWithNoFullLengthURNString, kVideoOnDemandNoTokenURNString, kVideoDVRURNString,
+                                             kVideoLiveURNString, kAudioOnDemandURNString, kAudioDVRURNString ]];
+            break;
         }
             
         default: {

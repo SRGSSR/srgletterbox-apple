@@ -13,6 +13,12 @@
 
 static void commonInit(SRGLetterboxBaseView *self);
 
+@interface SRGLetterboxBaseView ()
+
+@property (nonatomic) UIView *nibView;         // Strong
+
+@end
+
 @implementation SRGLetterboxBaseView
 
 #pragma mark Object lifecycle
@@ -59,6 +65,11 @@ static void commonInit(SRGLetterboxBaseView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
+        [self insertSubview:self.nibView atIndex:0];
+        [self.nibView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+        
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];
         
@@ -72,6 +83,8 @@ static void commonInit(SRGLetterboxBaseView *self);
                                                  object:nil];
     }
     else {
+        [self.nibView removeFromSuperview];
+        
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:UIContentSizeCategoryDidChangeNotification
                                                     object:nil];
@@ -122,11 +135,7 @@ static void commonInit(SRGLetterboxBaseView *self)
     if ([NSBundle.srg_letterboxBundle pathForResource:nibName ofType:@"nib"]) {
         // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
         // an instance of the class itself to avoid infinite recursion.
-        UIView *view = [[NSBundle.srg_letterboxBundle loadNibNamed:nibName owner:self options:nil] firstObject];
-        view.backgroundColor = UIColor.clearColor;
-        [self addSubview:view];
-        [view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self);
-        }];
+        self.nibView = [[NSBundle.srg_letterboxBundle loadNibNamed:nibName owner:self options:nil] firstObject];
+        self.nibView.backgroundColor = UIColor.clearColor;
     }
 }
