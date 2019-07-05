@@ -1455,7 +1455,7 @@
     XCTAssertNotEqualObjects(self.controller.mediaPlayerController.contentURL, firstURL);
 }
 
-- (void)testBlockingReasonAppeared
+- (void)testBlockingReasonAppearance
 {
     self.controller.serviceURL = MMFServiceURL();
     self.controller.updateInterval = 10.;
