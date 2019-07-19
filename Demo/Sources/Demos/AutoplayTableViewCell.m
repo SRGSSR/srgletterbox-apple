@@ -30,6 +30,7 @@
     if (media) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
         settings.standalone = ApplicationSettingIsStandalone();
+        settings.quality = ApplicationSettingPreferredQuality();
         
         self.letterboxController.mediaConfigurationBlock = ^(AVPlayerItem * _Nonnull playerItem, AVAsset * _Nonnull asset) {
             AVMediaSelectionGroup *group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];

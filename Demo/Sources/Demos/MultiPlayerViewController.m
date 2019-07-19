@@ -111,6 +111,7 @@
     if (! self.letterboxController.pictureInPictureActive) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
         settings.standalone = ApplicationSettingIsStandalone();
+        settings.quality = ApplicationSettingPreferredQuality();
         
         if (self.URN) {
             [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];

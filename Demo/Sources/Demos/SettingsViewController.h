@@ -6,6 +6,7 @@
 
 #include "ServerSettings.h"
 
+#import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -14,6 +15,8 @@ OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 OBJC_EXPORT NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void);
 
 OBJC_EXPORT BOOL ApplicationSettingIsStandalone(void);
+
+OBJC_EXPORT SRGQuality ApplicationSettingPreferredQuality(void);
 
 OBJC_EXPORT BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
 OBJC_EXPORT void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);

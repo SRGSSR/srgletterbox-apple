@@ -42,6 +42,7 @@ NSValueTransformer *SettingUserLocationTransformer(void)
 
 NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
 NSString * const LetterboxDemoSettingStandalone = @"LetterboxDemoSettingStandalone";
+NSString * const LetterboxDemoSettingQuality = @"LetterboxDemoSettingQuality";
 NSString * const LetterboxDemoSettingUserLocation = @"LetterboxDemoSettingUserLocation";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
@@ -86,6 +87,36 @@ BOOL ApplicationSettingIsStandalone(void)
 static void ApplicationSettingSetStandalone(BOOL standalone)
 {
     [NSUserDefaults.standardUserDefaults setBool:standalone forKey:LetterboxDemoSettingStandalone];
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
+
+SRGQuality ApplicationSettingPreferredQuality(void)
+{
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSString *, NSNumber *> *s_strings_qualities;
+    dispatch_once(&s_onceToken, ^{
+        s_strings_qualities = @{ @"SD" : @(SRGQualitySD),
+                                 @"HD" : @(SRGQualityHD),
+                                 @"HQ" : @(SRGQualityHQ) };
+    });
+    
+    NSString *qualityString = [NSUserDefaults.standardUserDefaults stringForKey:LetterboxDemoSettingQuality];
+    NSNumber *qualityNumber = s_strings_qualities[qualityString] ?: @(SRGQualityNone);
+    return qualityNumber.integerValue;
+}
+
+static void ApplicationSettingSetPreferredQuality(SRGQuality quality)
+{
+    static dispatch_once_t s_onceToken;
+    static NSDictionary<NSNumber *, NSString *> *s_qualities_strings;
+    dispatch_once(&s_onceToken, ^{
+        s_qualities_strings = @{ @(SRGQualitySD) : @"SD",
+                                 @(SRGQualityHD) : @"HD",
+                                 @(SRGQualityHQ) : @"HQ" };
+    });
+    
+    NSString *qualityString = s_qualities_strings[@(quality)];
+    [NSUserDefaults.standardUserDefaults setObject:qualityString forKey:LetterboxDemoSettingQuality];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
@@ -173,7 +204,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 7;
+    return 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -195,26 +226,31 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case 3: {
-            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
+            return NSLocalizedString(@"Preferred quality", @"Preferred quality mode header title in settings view");
             break;
         }
             
         case 4: {
-            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
+            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
             break;
         }
             
         case 5: {
-            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
             break;
         }
             
         case 6: {
-            return NSLocalizedString(@"Background video playback", @"Background video playback header title in settings view");
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
             break;
         }
             
         case 7: {
+            return NSLocalizedString(@"Background video playback", @"Background video playback header title in settings view");
+            break;
+        }
+            
+        case 8: {
             NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
@@ -252,16 +288,23 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 2:
-        case 3:
+        case 2: {
+            return 2;
+            break;
+        }
+        case 3: {
+            return 4;
+            break;
+        }
         case 4:
         case 5:
-        case 6: {
+        case 6:
+        case 7: {
             return 2;
             break;
         }
             
-        case 7: {
+        case 8: {
             return 1;
             break;
         }
@@ -350,6 +393,41 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case 3: {
             switch (indexPath.row) {
                 case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Default", @"Label for the defaut quality setting");
+                    cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualityNone ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Standard definition (SD)", @"Label for the SD quality setting");
+                    cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualitySD ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 2: {
+                    cell.textLabel.text = NSLocalizedString(@"High definition (HD)", @"Label for the HD quality setting");
+                    cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualityHD ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 3: {
+                    cell.textLabel.text = NSLocalizedString(@"High quality (HQ)", @"Label for the HQ quality setting");
+                    cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualityHQ ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case 4: {
+            switch (indexPath.row) {
+                case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
                     cell.accessoryType = ! ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
@@ -370,7 +448,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 4: {
+        case 5: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
@@ -393,7 +471,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 5: {
+        case 6: {
             static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -427,7 +505,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 6: {
+        case 7: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
@@ -450,7 +528,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 7: {
+        case 8: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -496,16 +574,21 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case 3: {
-            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
+            ApplicationSettingSetPreferredQuality(indexPath.row);
             break;
         }
             
         case 4: {
-            SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
             break;
         }
             
         case 5: {
+            SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            break;
+        }
+            
+        case 6: {
             if (indexPath.row == 0) {
                 [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
@@ -518,13 +601,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 6: {
+        case 7: {
             ApplicationSettingSetBackgroundVideoPlaybackEnabled(indexPath.row == 1);
             SRGLetterboxService.sharedService.controller.backgroundVideoPlaybackEnabled = (indexPath.row == 1);
             break;
         }
             
-        case 7: {
+        case 8: {
             completionBlock = ^{
                 [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
             };
