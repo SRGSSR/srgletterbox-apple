@@ -26,13 +26,13 @@
     if (_controller) {
         [self willDetachFromController];
         
-        _controller = nil;
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGLetterboxMetadataDidChangeNotification
                                                     object:_controller];
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGLetterboxPlaybackDidFailNotification
                                                     object:_controller];
+        _controller = nil;
         
         [self didDetachFromController];
     }

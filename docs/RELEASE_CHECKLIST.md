@@ -31,8 +31,8 @@ To release an SRG SSR library, perform the following steps sequentially (some st
 
 The libraries must be released in the order given by the table below, which you can use to keep track of version numbers as you release libraries:
 
-|| SRG Logger | SRG Appearance | SRG Network | SRG Diagnostics | SRG Media Player | SRG Data Provider | SRG Identity | SRG Content Protection | SRG Content Protection Fake | SRG Analytics | SRG Letterbox | SRG User Data |
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|| SRG Logger | SRG Logger Swift | SRG Appearance | SRG Network | SRG Diagnostics | SRG Media Player | SRG Data Provider | SRG Identity | SRG Content Protection | SRG Content Protection Fake | SRG Analytics | SRG Letterbox | SRG User Data |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | **Version** ||||||||||||||
 
 
