@@ -170,7 +170,9 @@
     NSString *URN = self.medias[indexPath.row].URN;
     NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : nil;
     NSNumber *updateIntervalNumber = self.MMFOverride ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
+    
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateIntervalNumber];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)

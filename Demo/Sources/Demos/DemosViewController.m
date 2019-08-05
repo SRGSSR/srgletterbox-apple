@@ -68,6 +68,7 @@
 - (void)openStandalonePlayerWithURN:(NSString *)URN
 {
     StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -89,6 +90,7 @@
     }
     
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateInterval];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -143,6 +145,7 @@
 - (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
     PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias sourceUid:sourceUid];
+    playlistViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -156,6 +159,7 @@
 - (void)openMultiPlayerWithURN:(NSString *)URN URN1:(NSString *)URN1 URN2:(NSString *)URN2
 {
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
