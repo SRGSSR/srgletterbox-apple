@@ -79,6 +79,8 @@ static void commonInit(SRGLetterboxView *self);
     BOOL _inWillAnimateUserInterface;
 }
 
+@synthesize userInterfaceStyle = _userInterfaceStyle;
+
 #pragma mark Class methods
 
 + (void)setMotionManager:(CMMotionManager *)motionManager
@@ -389,6 +391,17 @@ static void commonInit(SRGLetterboxView *self);
 - (NSArray<SRGSubdivision *> *)subdivisions
 {
     return self.timelineView.subdivisions;
+}
+
+- (void)setUserInterfaceStyle:(SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+{
+    _userInterfaceStyle = userInterfaceStyle;
+    self.controlsView.userInterfaceStyle = userInterfaceStyle;
+}
+
+- (SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+{
+    return _userInterfaceStyle;
 }
 
 - (CMTime)time

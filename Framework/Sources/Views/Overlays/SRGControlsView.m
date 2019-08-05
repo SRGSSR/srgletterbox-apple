@@ -53,7 +53,20 @@
 
 @implementation SRGControlsView
 
+@synthesize userInterfaceStyle = _userInterfaceStyle;
+
 #pragma mark Getters and setters
+
+- (void)setUserInterfaceStyle:(SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+{
+    _userInterfaceStyle = userInterfaceStyle;
+    self.tracksButton.userInterfaceStyle = userInterfaceStyle;
+}
+
+- (SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+{
+    return _userInterfaceStyle;
+}
 
 - (CMTime)time
 {
