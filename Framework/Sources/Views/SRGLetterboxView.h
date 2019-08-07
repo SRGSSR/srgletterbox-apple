@@ -296,6 +296,14 @@ IB_DESIGNABLE
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
+ *  The style to be applied for the view and views depending on it, like the audio track and subtitle selection popover.
+ *  The default value is `SRGMediaPlayerUserInterfaceStyleUnspecified`.
+ *
+ *  @discussion Style changes might be applied at a later time.
+ */
+@property (nonatomic) SRGMediaPlayerUserInterfaceStyle userInterfaceStyle;
+
+/**
  *  The subdivisions currently visible in the timeline (in their display order).
  */
 @property (nonatomic, readonly) NSArray<SRGSubdivision *> *subdivisions;
