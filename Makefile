@@ -84,7 +84,7 @@ public.dependencies:
 # Dependency compilation with proprietary dependencies (keep public dependencies in sync)
 
 .PHONY: bootstrap
-bootstrap: setup public.dependencies
+bootstrap:
 	@echo "Building proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	$(call restore_cartfile_resolved,proprietary)
