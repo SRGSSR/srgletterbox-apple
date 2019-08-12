@@ -260,7 +260,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
         NSString *versionString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];        
-        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
+        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).", @"Information footer in settings view"),
                 versionString];
     }
     else {
