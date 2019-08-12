@@ -109,7 +109,6 @@
     [super viewDidLoad];
     
     self.URNLabel.copyingEnabled = YES;
-    self.letterboxView.userInterfaceStyle = SRGMediaPlayerUserInterfaceStyleLight;
     
     self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
     
