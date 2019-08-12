@@ -199,8 +199,8 @@
 {
     static NSString * const kVideoOnDemandURNString = @"urn:swi:video:41981254";
     static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8591082";
-    static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8992584";
-    static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8992594";
+    static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:10623665";
+    static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:10623653";
     static NSString * const kVideoOnDemandWithNoFullLengthURNString = @"urn:rts:video:8686071";
     static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
     static NSString * const kVideoOnDemandBlockedSegmentOverlapURNString = @"urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1";
