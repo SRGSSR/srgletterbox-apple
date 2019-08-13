@@ -193,18 +193,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     [self.tableView reloadData];
 }
 
-#pragma mark Getters
-
-- (BOOL)isCheckForUpdateButtonEnabled
-{
-    return ([BITHockeyManager sharedHockeyManager].updateManager != nil);
-}
-
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 8;
+    return ([BITHockeyManager sharedHockeyManager].updateManager != nil) ? 9 : 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -267,7 +260,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
         NSString *versionString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];        
-        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).\n\nIt is only intended for internal SRG SSR use and should not be distributed outside the company.", @"Warning footer in settings view"),
+        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).", @"Information footer in settings view"),
                 versionString];
     }
     else {
@@ -292,10 +285,12 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             return 2;
             break;
         }
+        
         case 3: {
             return 4;
             break;
         }
+        
         case 4:
         case 5:
         case 6:
@@ -326,8 +321,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     cell.textLabel.textAlignment = NSTextAlignmentLeft;
-    cell.userInteractionEnabled = YES;
-    cell.textLabel.textColor = UIColor.blackColor;
     
     switch (indexPath.section) {
         case 0: {
@@ -532,8 +525,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
-            cell.userInteractionEnabled = [self isCheckForUpdateButtonEnabled];
-            cell.textLabel.textColor = [self isCheckForUpdateButtonEnabled] ? UIColor.blackColor : UIColor.lightGrayColor;
             break;
         }
             

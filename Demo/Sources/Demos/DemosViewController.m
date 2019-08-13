@@ -68,6 +68,7 @@
 - (void)openStandalonePlayerWithURN:(NSString *)URN
 {
     StandalonePlayerViewController *playerViewController = [[StandalonePlayerViewController alloc] initWithURN:URN];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -89,6 +90,7 @@
     }
     
     ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateInterval];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -143,6 +145,7 @@
 - (void)openPlaylistWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
     PlaylistViewController *playlistViewController = [[PlaylistViewController alloc] initWithMedias:medias sourceUid:sourceUid];
+    playlistViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -156,6 +159,7 @@
 - (void)openMultiPlayerWithURN:(NSString *)URN URN1:(NSString *)URN1 URN2:(NSString *)URN2
 {
     MultiPlayerViewController *playerViewController = [[MultiPlayerViewController alloc] initWithURN:URN URN1:URN1 URN2:URN2 userInterfaceAlwaysHidden:YES];
+    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
     // (might happen if presenting and dismissing fast)
@@ -195,8 +199,8 @@
 {
     static NSString * const kVideoOnDemandURNString = @"urn:swi:video:41981254";
     static NSString * const kVideoOnDemandShortClipURNString = @"urn:rts:video:8591082";
-    static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:8992584";
-    static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:8992594";
+    static NSString * const kVideoOnDemandSegmentsURNString = @"urn:rts:video:10623665";
+    static NSString * const kVideoOnDemandStartOnSegmentURNString = @"urn:rts:video:10623653";
     static NSString * const kVideoOnDemandWithNoFullLengthURNString = @"urn:rts:video:8686071";
     static NSString * const kVideoOnDemandBlockedSegmentURNString = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
     static NSString * const kVideoOnDemandBlockedSegmentOverlapURNString = @"urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1";

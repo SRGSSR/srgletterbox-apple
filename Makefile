@@ -1,5 +1,8 @@
 #!/usr/bin/xcrun make -f
 
+# Xcode 11 workaround, see https://github.com/Carthage/Carthage/issues/2825#issuecomment-513160923
+export XCODE_XCCONFIG_FILE=../../../xcode11fix.xcconfig
+
 CONFIGURATION_FOLDER=Configuration
 CONFIGURATION_COMMIT_SHA1=dca28dd7789288fb9a7bdbaf198d26b164fee6fe
 
@@ -81,7 +84,7 @@ public.dependencies:
 # Dependency compilation with proprietary dependencies (keep public dependencies in sync)
 
 .PHONY: bootstrap
-bootstrap: setup public.dependencies
+bootstrap:
 	@echo "Building proprietary dependencies..."
 	$(call restore_cartfile_private,proprietary)
 	$(call restore_cartfile_resolved,proprietary)

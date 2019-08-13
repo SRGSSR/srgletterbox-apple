@@ -65,6 +65,14 @@ IB_DESIGNABLE
 @property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
 
 /**
+ *  The style to be applied for the view and views depending on it, like the audio track and subtitle selection popover.
+ *  The default value is `SRGMediaPlayerUserInterfaceStyleUnspecified`.
+ *
+ *  @discussion Style changes might be applied at a later time.
+ */
+@property (nonatomic) SRGMediaPlayerUserInterfaceStyle userInterfaceStyle;
+
+/**
  *  The time corresponding to the current slider position.
  *
  *  @discussion While dragging, this property may not reflect the value current time property of the asset being played.
