@@ -17,6 +17,7 @@ static NSString * const OnDemandAudioWithChaptersURN = @"urn:rts:audio:9355007";
 static NSString * const LiveOnlyVideoURN = @"urn:rts:video:8841634";
 
 static NSString * const MMFLiveDVRVideoURN = @"urn:rts:video:_tagesschau24_ard";
+static NSString * const MMFChangedURN = @"urn:rts:video:mediacompositionChangedURN";
 
 static NSString * const OnDemandLongVideo2URN = @"urn:rts:video:8992584";
 static NSString * const OnDemandLongVideo2GeoblockedSegmentURN = @"urn:rts:video:8992624";

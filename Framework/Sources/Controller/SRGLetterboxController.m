@@ -187,6 +187,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
+@property (nonatomic, copy) NSString *reportName;
+
 @end
 
 @implementation SRGLetterboxController
@@ -1374,7 +1376,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (SRGDiagnosticReport *)report
 {
-    return self.URN ? [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:self.URN] : nil;
+    return self.reportName ? [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:self.reportName] : nil;
 }
 
 - (void)startPlaybackDiagnosticReport
@@ -1386,6 +1388,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [s_dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
         [s_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"];
     });
+    
+    self.reportName = self.URN;
     
     SRGDiagnosticReport *report = [self report];
     [report setInteger:1 forKey:@"version"];
@@ -1434,6 +1438,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     SRGDiagnosticReport *report = [self report];
     [report stopTimeMeasurementForKey:@"duration"];
     [report finish];
+    self.reportName = nil;
 }
 
 #pragma mark Helpers

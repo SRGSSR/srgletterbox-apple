@@ -654,6 +654,52 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
     [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
+- (void)testPlaybackReportForNonProtectedMediaChangedURN
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    NSString *URN = MMFChangedURN;
+    
+    [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"playableAbroad"]);
+        
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
 - (void)testDisabledPlaybackReportInPublicBuilds
 {
     if (! SRGContentProtectionIsPublic()) {
