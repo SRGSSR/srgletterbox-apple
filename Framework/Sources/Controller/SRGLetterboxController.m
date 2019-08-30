@@ -132,6 +132,13 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return playbackSettings;
 }
 
+@interface SRGDiagnosticInformation (SRGLetterboxController)
+
+- (void)srgletterbox_setDataInformationWithMediaCompostion:(SRGMediaComposition *)mediaComposition HTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error;
+- (void)srgletterbox_setPlayerInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error;
+
+@end
+
 @interface SRGLetterboxController ()
 
 @property (nonatomic) SRGMediaPlayerController *mediaPlayerController;
@@ -999,7 +1006,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     self.dataAvailability = SRGLetterboxDataAvailabilityLoading;
     
-    NSDictionary<SRGResourceLoaderOption, id> *options = [self startPlaybackDiagnosticReportForService:SRGLetterboxDiagnosticServiceName withName:URN];
+    NSDictionary<SRGResourceLoaderOption, id> *options = nil;
+    self.report = [self startPlaybackDiagnosticReportForService:SRGLetterboxDiagnosticServiceName withName:URN options:&options];
+    
     [[self.report informationForKey:@"ilResult"] startTimeMeasurementForKey:@"duration"];
     
     SRGRequest *mediaCompositionRequest = [self.dataProvider mediaCompositionForURN:self.URN standalone:preferredSettings.standalone withCompletionBlock:^(SRGMediaComposition * _Nullable mediaComposition, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
@@ -1010,9 +1019,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         if (error) {
             self.dataAvailability = SRGLetterboxDataAvailabilityNone;
             [self updateWithError:error];
-            
-            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
-            [self finishDiagnosticReport];
+
+            [[self.report informationForKey:@"ilResult"] srgletterbox_setDataInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
+            [self.report stopTimeMeasurementForKey:@"duration"];
+            [self.report finish];
             return;
         }
         
@@ -1031,22 +1041,24 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
             [self updateWithError:blockingReasonError];
             
-            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:blockingReasonError];
-            [self finishDiagnosticReport];
+            [[self.report informationForKey:@"ilResult"] srgletterbox_setDataInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:blockingReasonError];
+            [self.report stopTimeMeasurementForKey:@"duration"];
+            [self.report finish];
             return;
         }
         
         void (^prepareToPlayCompletionHandler)(void) = ^{
-            [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:nil];
+            [[self.report informationForKey:@"playerResult"] srgletterbox_setPlayerInformationWithContentURL:self.mediaPlayerController.contentURL error:nil];
             [[self.report informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
-            [self finishDiagnosticReport];
+            [self.report stopTimeMeasurementForKey:@"duration"];
+            [self.report finish];
             
             completionHandler ? completionHandler() : nil;
         };
         
         NSDictionary *userInfo = @{ SRGAnalyticsDataProviderUserInfoResourceLoaderOptionsKey : options };
         if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(preferredSettings) userInfo:userInfo completionHandler:prepareToPlayCompletionHandler]) {
-            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
+            [[self.report informationForKey:@"ilResult"] srgletterbox_setDataInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
             [[self.report informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
         }
         else {
@@ -1057,9 +1069,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                                              userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"The media cannot be played", @"Message displayed when a media cannot be played for some reason (the user should not know about)") }];
             [self updateWithError:error];
             
-            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
+            [[self.report informationForKey:@"ilResult"] srgletterbox_setDataInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:error];
             [[self.report informationForKey:@"ilResult"] setBool:YES forKey:@"noPlayableResourceFound"];
-            [self finishDiagnosticReport];
+            [self.report stopTimeMeasurementForKey:@"duration"];
+            [self.report finish];
         }
     }];
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
@@ -1225,6 +1238,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.socialCountViewURN = nil;
     self.socialCountViewTimer = nil;
     
+    self.report = nil;
+    
     [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1287,22 +1302,25 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.socialCountViewTimer = nil;
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
         
-        NSDictionary<SRGResourceLoaderOption, id> *options = [self startPlaybackDiagnosticReportForService:SRGLetterboxDiagnosticServiceName withName:subdivision.URN];
+        NSDictionary<SRGResourceLoaderOption, id> *options = nil;
+        self.report = [self startPlaybackDiagnosticReportForService:SRGLetterboxDiagnosticServiceName withName:subdivision.URN options:&options];
         
         if (! blockingReasonError) {
             [[self.report informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
             NSDictionary *userInfo = @{ SRGAnalyticsDataProviderUserInfoResourceLoaderOptionsKey : options };
             [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(self.preferredSettings) userInfo:userInfo completionHandler:^{
                 [[self.report informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
-                [self finishDiagnosticReport];
+                [self.report stopTimeMeasurementForKey:@"duration"];
+                [self.report finish];
                 
                 [self.mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];
         }
         else {
-            [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:nil error:blockingReasonError];
-            [self finishDiagnosticReport];
+            [[self.report informationForKey:@"ilResult"] srgletterbox_setDataInformationWithMediaCompostion:mediaComposition HTTPResponse:nil error:blockingReasonError];
+            [self.report stopTimeMeasurementForKey:@"duration"];
+            [self.report finish];
         }
     }
     // Playing another segment from the same media. Seek
@@ -1378,7 +1396,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 #pragma mark Diagnostics
 
-- (NSDictionary<SRGResourceLoaderOption, id> *)startPlaybackDiagnosticReportForService:(NSString *)service withName:(NSString *)name
+- (SRGDiagnosticReport *)startPlaybackDiagnosticReportForService:(NSString *)service withName:(NSString *)name options:(NSDictionary<SRGResourceLoaderOption, id> **)pOptions
 {
     static dispatch_once_t s_onceToken;
     static NSDateFormatter *s_dateFormatter;
@@ -1388,56 +1406,24 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [s_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"];
     });
     
-    self.report = [[SRGDiagnosticsService serviceWithName:service] reportWithName:name];
-    [self.report setInteger:1 forKey:@"version"];
-    [self.report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
-    [self.report setString:NSBundle.srg_letterbox_isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
-    [self.report setString:SRGDeviceInformation() forKey:@"device"];
-    [self.report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
-    [self.report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
-    [self.report setString:self.URN forKey:@"urn"];
-    [self.report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
-    [self.report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
-    [self.report startTimeMeasurementForKey:@"duration"];
+    SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:service] reportWithName:name];
+    [report setInteger:1 forKey:@"version"];
+    [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
+    [report setString:NSBundle.srg_letterbox_isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
+    [report setString:SRGDeviceInformation() forKey:@"device"];
+    [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
+    [report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
+    [report setString:self.URN forKey:@"urn"];
+    [report setString:[s_dateFormatter stringFromDate:NSDate.date] forKey:@"clientTime"];
+    [report setString:SRGLetterboxNetworkType() forKey:@"networkType"];
+    [report startTimeMeasurementForKey:@"duration"];
     
-    return @{ SRGResourceLoaderOptionDiagnosticServiceNameKey : service,
-              SRGResourceLoaderOptionDiagnosticReportNameKey : name };
-}
-
-- (void)attachDataDiagnosticReportInformationWithMediaCompostion:(SRGMediaComposition *)mediaComposition HTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
-{
-    SRGDiagnosticInformation *information = [self.report informationForKey:@"ilResult"];
+    if (pOptions) {
+        *pOptions = @{ SRGResourceLoaderOptionDiagnosticServiceNameKey : service,
+                       SRGResourceLoaderOptionDiagnosticReportNameKey : name };
+    }
     
-    if (HTTPResponse) {
-        [information setURL:HTTPResponse.URL forKey:@"url"];
-        [information setInteger:HTTPResponse.statusCode forKey:@"httpStatusCode"];
-        [information setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
-    }
-    // If the HTTP response is missing (network error typically), extract URL from error information
-    else {
-        [information setURL:error.userInfo[NSURLErrorFailingURLErrorKey] forKey:@"url"];
-    }
-        
-    [information setString:error.localizedDescription forKey:@"errorMessage"];
-    [information setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
-    if (mediaComposition) {
-        SRGSubdivision *subdivision = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
-        [information setBool:subdivision.playableAbroad forKey:@"playableAbroad"];
-    }
-}
-
-- (void)attachPlayerDiagnosticReportInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error
-{
-    SRGDiagnosticInformation *information = [self.report informationForKey:@"playerResult"];
-    [information setURL:contentURL forKey:@"url"];
-    [information setString:error.localizedDescription forKey:@"errorMessage"];
-}
-
-- (void)finishDiagnosticReport
-{
-    [self.report stopTimeMeasurementForKey:@"duration"];
-    [self.report finish];
-    self.report = nil;
+    return report;
 }
 
 #pragma mark Helpers
@@ -1692,9 +1678,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     NSError *error = notification.userInfo[SRGMediaPlayerErrorKey];
     [self updateWithError:error];
     
-    [self attachPlayerDiagnosticReportInformationWithContentURL:self.mediaPlayerController.contentURL error:error];
+    [[self.report informationForKey:@"playerResult"] srgletterbox_setPlayerInformationWithContentURL:self.mediaPlayerController.contentURL error:error];
     [[self.report informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
-    [self finishDiagnosticReport];
+    [self.report stopTimeMeasurementForKey:@"duration"];
+    [self.report finish];
 }
 
 - (void)routeDidChange:(NSNotification *)notification
@@ -1743,3 +1730,34 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 }
 
 @end
+
+@implementation SRGDiagnosticInformation (SRGLetterboxController)
+
+- (void)srgletterbox_setDataInformationWithMediaCompostion:(SRGMediaComposition *)mediaComposition HTTPResponse:(NSHTTPURLResponse *)HTTPResponse error:(NSError *)error
+{
+    if (HTTPResponse) {
+        [self setURL:HTTPResponse.URL forKey:@"url"];
+        [self setInteger:HTTPResponse.statusCode forKey:@"httpStatusCode"];
+        [self setString:HTTPResponse.allHeaderFields[@"X-Varnish"] forKey:@"varnish"];
+    }
+    // If the HTTP response is missing (network error typically), extract URL from error information
+    else {
+        [self setURL:error.userInfo[NSURLErrorFailingURLErrorKey] forKey:@"url"];
+    }
+    
+    [self setString:error.localizedDescription forKey:@"errorMessage"];
+    [self setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
+    if (mediaComposition) {
+        SRGSubdivision *subdivision = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+        [self setBool:subdivision.playableAbroad forKey:@"playableAbroad"];
+    }
+}
+
+- (void)srgletterbox_setPlayerInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error
+{
+    [self setURL:contentURL forKey:@"url"];
+    [self setString:error.localizedDescription forKey:@"errorMessage"];
+}
+
+@end
+
