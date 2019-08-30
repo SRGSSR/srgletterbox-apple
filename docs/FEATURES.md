@@ -30,6 +30,7 @@ The SRG Letterbox library provides an advanced player with several features:
 * True mirroring mode for presentation purposes via AirPlay mirroring.
 
 ## Metadata
+
 * Automatic metadata and error management:
 * Periodic updates.
 * Retrieval of current broadcast information for livestreams.
