@@ -20,6 +20,7 @@
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <SRGAnalytics_MediaPlayer/SRGAnalytics_MediaPlayer.h>
+#import <SRGContentProtection/SRGContentProtection.h>
 #import <SRGDiagnostics/SRGDiagnostics.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <SRGNetwork/SRGNetwork.h>
@@ -188,6 +189,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 @property (nonatomic, copy) NSString *reportName;
+@property (nonatomic, readonly, nullable) NSDictionary<NSString *, NSString *> *reportOptions;
 
 @end
 
@@ -1042,7 +1044,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             completionHandler ? completionHandler() : nil;
         };
         
-        if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(preferredSettings) userInfo:nil completionHandler:prepareToPlayCompletionHandler]) {
+        if ([self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:position withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(preferredSettings) userInfo:self.reportOptions completionHandler:prepareToPlayCompletionHandler]) {
             [self attachDataDiagnosticReportInformationWithMediaCompostion:mediaComposition HTTPResponse:HTTPResponse error:nil];
             [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
         }
@@ -1288,7 +1290,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         
         if (! blockingReasonError) {
             [[[self report] informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
-            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(self.preferredSettings) userInfo:nil completionHandler:^{
+            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(self.preferredSettings) userInfo:self.reportOptions completionHandler:^{
                 [[[self report] informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
                 [self finishDiagnosticReport];
                 
@@ -1377,6 +1379,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (SRGDiagnosticReport *)report
 {
     return self.reportName ? [[SRGDiagnosticsService serviceWithName:@"SRGPlaybackMetrics"] reportWithName:self.reportName] : nil;
+}
+
+- (NSDictionary<NSString *, NSString *> *)reportOptions
+{
+    if (! self.reportName) {
+        return nil;
+    }
+    
+    return @{ SRGResourceLoaderOptionDiagnosticServiceNameKey : @"SRGPlaybackMetrics",
+              SRGResourceLoaderOptionDiagnosticReportNameKey : self.reportName };
 }
 
 - (void)startPlaybackDiagnosticReport
