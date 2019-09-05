@@ -11,6 +11,7 @@
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 @interface AutoplayViewController ()
 
@@ -28,6 +29,9 @@
 - (instancetype)init
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    
+    SRGLetterboxService.sharedService.allowAudioFromOtherApplications = YES;
+
     return [storyboard instantiateInitialViewController];
 }
 
@@ -143,6 +147,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    SRGLetterboxService.sharedService.allowAudioFromOtherApplications = NO;
+    
     AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
     selectedCell.muted = NO;
     

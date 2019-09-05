@@ -149,6 +149,8 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  */
 - (void)disable;
 
+@property (nonatomic) BOOL allowAudioFromOtherApplications;
+
 /**
  *  The controller for which application-wide services are enabled, if any.
  */

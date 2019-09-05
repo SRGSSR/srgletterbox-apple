@@ -229,7 +229,12 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     _disablingAudioServices = NO;
     
     // Required for AirPlay, picture in picture and control center to work correctly
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
+    if (self.allowAudioFromOtherApplications) {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+    }
+    else {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
+    }
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
@@ -266,6 +271,18 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     });
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
+}
+
+- (void)setAllowAudioFromOtherApplications:(BOOL)allowAudioMixWithOthers {
+    _allowAudioFromOtherApplications = allowAudioMixWithOthers;
+    if (allowAudioMixWithOthers) {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+    }
+    else {
+        // Force a plyaback category refresh without `AVAudioSessionCategoryOptionMixWithOthers` option.
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:NULL];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
+    }
 }
 
 #pragma mark Control center and lock screen integration
