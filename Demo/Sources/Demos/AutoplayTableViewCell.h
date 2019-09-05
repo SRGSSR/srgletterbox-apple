@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setMedia:(nullable SRGMedia *)media withPreferredSubtitleLocalization:(nullable NSString *)preferredSubtitleLocalization;
 
+@property (nonatomic, getter=isMuted) BOOL muted;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -23,7 +23,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 @interface AppDelegate ()
 
-@property(nonatomic, weak) DemosViewController *demosViewController;
+@property (nonatomic, weak) DemosViewController *demosViewController;
 
 @end
 

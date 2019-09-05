@@ -51,11 +51,24 @@
     }
 }
 
+- (BOOL)isMuted
+{
+    return self.letterboxController.muted;
+}
+
+- (void)setMuted:(BOOL)muted
+{
+    self.letterboxController.muted = muted;
+}
+
 #pragma mark Overrides
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.letterboxView.userInteractionEnabled = NO;
+    self.progressView.userInteractionEnabled = NO;
     
     self.letterboxController = [[SRGLetterboxController alloc] init];
     self.letterboxController.serviceURL = ApplicationSettingServiceURL();
@@ -77,6 +90,8 @@
     [super prepareForReuse];
     
     self.progressView.hidden = YES;
+    
+    self.letterboxController.muted = YES;
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow

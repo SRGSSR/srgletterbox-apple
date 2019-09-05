@@ -141,9 +141,25 @@
     [cell setMedia:self.medias[indexPath.row] withPreferredSubtitleLocalization:s_localizations[@(self.autoplayList)]];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    selectedCell.muted = NO;
+    
+    [tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (! [cell isEqual:selectedCell]) {
+            cell.muted = YES;
+        }
+    }];
+}
+
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [cell setMedia:nil withPreferredSubtitleLocalization:nil];
+    
+    if (cell.selected) {
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
