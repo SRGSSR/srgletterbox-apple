@@ -252,9 +252,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
-- (void)setAllowAudioFromOtherApplications:(BOOL)allowAudioMixWithOthers {
-    _allowAudioFromOtherApplications = allowAudioMixWithOthers;
-    if (allowAudioMixWithOthers) {
+- (void)setAllowAudioFromOtherApplications:(BOOL)allowAudioFromOtherApplications
+{
+    _allowAudioFromOtherApplications = allowAudioFromOtherApplications;
+    if (allowAudioFromOtherApplications) {
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
     }
     else {
