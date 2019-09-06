@@ -254,14 +254,16 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)setAllowAudioFromOtherApplications:(BOOL)allowAudioFromOtherApplications
 {
-    _allowAudioFromOtherApplications = allowAudioFromOtherApplications;
-    if (allowAudioFromOtherApplications) {
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
-    }
-    else {
-        // Force a plyaback category refresh without `AVAudioSessionCategoryOptionMixWithOthers` option.
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:NULL];
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
+    if (_allowAudioFromOtherApplications != allowAudioFromOtherApplications) {
+        _allowAudioFromOtherApplications = allowAudioFromOtherApplications;
+        if (allowAudioFromOtherApplications) {
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+        }
+        else {
+            // Force a playback category refresh without `AVAudioSessionCategoryOptionMixWithOthers` option.
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
+        }
     }
 }
 

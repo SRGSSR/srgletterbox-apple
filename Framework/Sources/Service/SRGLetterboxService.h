@@ -149,6 +149,12 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  */
 - (void)disable;
 
+/**
+ *  Allow audio from other applications, with audio session is active. By default, `NO`.
+ *
+ *  @discussion: a muted controller has an active audio session in a playing state. Set it to `YES` to not stop other
+ *  audio from other appplications. Set it to `NO` with a controller in a playing state stops other app audios.
+ */
 @property (nonatomic) BOOL allowAudioFromOtherApplications;
 
 /**
