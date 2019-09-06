@@ -260,9 +260,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
         }
         else {
-            // Force a playback category refresh without `AVAudioSessionCategoryOptionMixWithOthers` option.
-            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
-            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
         }
     }
 }
