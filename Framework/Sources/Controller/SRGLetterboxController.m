@@ -197,6 +197,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, getter=isTracked) BOOL tracked;
 
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
+    
+@property (nonatomic) BOOL wasPlayingBeforeInterruption;
 
 @property (nonatomic) SRGDiagnosticReport *report;
 
@@ -1252,6 +1254,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     self.report = nil;
     
+    self.wasPlayingBeforeInterruption = NO;
+    
     [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
@@ -1725,10 +1729,34 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)audioSessionInterruption:(NSNotification *)notification
 {
-    // Do not let pause live streams, stop playback
     AVAudioSessionInterruptionType audioSessionInterruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
-    if (audioSessionInterruptionType == AVAudioSessionInterruptionTypeBegan && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
-        [self stop];
+    switch (audioSessionInterruptionType) {
+        case AVAudioSessionInterruptionTypeBegan: {
+            // Do not let pause live streams, stop playback
+            if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+                [self stop];
+            }
+            else {
+                self.wasPlayingBeforeInterruption = self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
+                    || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking;
+                [self pause];
+            }
+            break;
+        }
+        
+        case AVAudioSessionInterruptionTypeEnded: {
+            if ([notification.userInfo[AVAudioSessionInterruptionOptionKey] integerValue] == AVAudioSessionInterruptionOptionShouldResume) {
+                if (self.wasPlayingBeforeInterruption) {
+                    [self play];
+                }
+            }
+            self.wasPlayingBeforeInterruption = NO;
+            break;
+        }
+        
+        default: {
+            break;
+        }
     }
 }
 
