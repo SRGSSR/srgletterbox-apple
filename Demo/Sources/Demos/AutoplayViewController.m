@@ -157,7 +157,7 @@
     }
     
     AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
-    selectedCell.muted = NO;
+    selectedCell.muted = ! selectedCell.muted;
     
     [tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
         if (! [cell isEqual:selectedCell]) {
