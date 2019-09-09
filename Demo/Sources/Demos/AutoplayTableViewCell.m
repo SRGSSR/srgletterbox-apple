@@ -18,6 +18,7 @@
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UIImageView *soundIndicatorImageView;
 
 @end
 
@@ -59,6 +60,7 @@
 - (void)setMuted:(BOOL)muted
 {
     self.letterboxController.muted = muted;
+    self.soundIndicatorImageView.image = (muted) ? [UIImage imageNamed:@"SoundOffIndicator"] : [UIImage imageNamed:@"SoundOnIndicator"];
 }
 
 #pragma mark Overrides
@@ -92,6 +94,7 @@
     self.progressView.hidden = YES;
     
     self.letterboxController.muted = YES;
+    self.soundIndicatorImageView.image = [UIImage imageNamed:@"SoundOffIndicator"];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
