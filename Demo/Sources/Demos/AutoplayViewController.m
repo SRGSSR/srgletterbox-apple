@@ -30,8 +30,6 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
     
-    SRGLetterboxService.sharedService.allowAudioFromOtherApplications = YES;
-
     return [storyboard instantiateInitialViewController];
 }
 
@@ -40,6 +38,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Allow other applications to play audios, as the view starts only wih muted videos.
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
     
     [self refresh];
 }
@@ -50,6 +51,10 @@
     
     if (self.movingFromParentViewController || self.beingDismissed) {
         [self.request cancel];
+        
+        if ([AVAudioSession sharedInstance].categoryOptions != 0) {
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
+        }
     }
 }
 
@@ -147,7 +152,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRGLetterboxService.sharedService.allowAudioFromOtherApplications = NO;
+    if ([AVAudioSession sharedInstance].categoryOptions != 0) {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
+    }
     
     AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
     selectedCell.muted = NO;

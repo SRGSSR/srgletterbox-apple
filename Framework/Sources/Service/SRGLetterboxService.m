@@ -252,19 +252,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
-- (void)setAllowAudioFromOtherApplications:(BOOL)allowAudioFromOtherApplications
-{
-    if (_allowAudioFromOtherApplications != allowAudioFromOtherApplications) {
-        _allowAudioFromOtherApplications = allowAudioFromOtherApplications;
-        if (allowAudioFromOtherApplications) {
-            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
-        }
-        else {
-            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
-        }
-    }
-}
-
 #pragma mark Control center and lock screen integration
 
 - (void)setupRemoteCommandCenter

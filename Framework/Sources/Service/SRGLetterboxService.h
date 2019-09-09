@@ -99,6 +99,10 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *  method enables service features for a specific controller. If services were already enabled for another controller,
  *  those will be transferred to the new controller.
  *
+ *  At the first initialisation, it sets `AVAudioSessionCategoryPlayback` without options to the AVAudioSession shared
+ *  instance. This category is required for AirPlay, picture in picture and control center to work correctly. If you
+ *  choose to change the category, the AirPlay, picture in picture and control center could be affected.
+ *
  *  If you want to disable background services, you can call `-disable` at any time. This will remove the ability to
  *  use AirPlay or picture in picture, and clear control center and lock screen information. Any AirPlay or picture
  *  in picture playback will be immediately stopped.
@@ -148,14 +152,6 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *  Disable application-wide services (any playback using one of those services will be stopped).
  */
 - (void)disable;
-
-/**
- *  Allow audio from other applications, with audio session is active. By default, `NO`.
- *
- *  @discussion: a muted controller has an active audio session in a playing state. Set it to `YES` to not stop other
- *  audio from other appplications. Set it to `NO` with a controller in a playing state stops other app audios.
- */
-@property (nonatomic) BOOL allowAudioFromOtherApplications;
 
 /**
  *  The controller for which application-wide services are enabled, if any.
