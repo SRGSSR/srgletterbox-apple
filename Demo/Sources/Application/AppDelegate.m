@@ -65,9 +65,10 @@ static __attribute__((constructor)) void ApplicationInit(void)
 // Open [scheme]://open?media=[media_urn] (optional &server=[server_name])
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
-    if ([URLComponents.host.lowercaseString isEqualToString:@"open"]) {
-        NSString *mediaURN = [self valueFromURLComponents:URLComponents withParameterName:@"media"];
+    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:YES];
+    
+    if ([URLComponents.host.lowercaseString isEqualToString:@"media"]) {
+        NSString *mediaURN = URLComponents.path.lastPathComponent;
         if (mediaURN) {
             NSURL *serviceURL = nil;
             NSString *server = [self valueFromURLComponents:URLComponents withParameterName:@"server"];
