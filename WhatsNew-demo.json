@@ -28,5 +28,6 @@
   "1.14.1-60": "- Maintenance release.\n- (SRGAnalytics) Fix iTunes Connect validation warning.",
   "1.14.2-61": "- The time needed to display the Letterbox player view has been significantly reduced, and the view is better suited for use in scroll views.\n- Fix non-working lock screen video playback on devices running iOS 12.3 and above.\n- A new setting can be used to enable full background video playback.\n- Fix crash on iOS 13. Full iOS 13 is not implemented officially yet, though Letterbox should run fine already.\n- Medias can be directly opened in this demo application using the `letterbox` URL scheme.",
   "1.14.3-62": "- Maintenance release.\n- Stream quality can be changed in the application settings.",
-  "1.14.4-63": "- The track selection interface has been updated.\n- iOS 13 preliminary support.\n- Check for application updates button in the settings view restored."
+  "1.14.4-63": "- The track selection interface has been updated.\n- iOS 13 preliminary support.\n- Check for application updates button in the settings view restored.",
+  "1.14.4-64": "- The demo application supports the new scheme url format."
 }
