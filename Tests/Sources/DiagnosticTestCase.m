@@ -654,6 +654,111 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
     [self waitForExpectationsWithTimeout:15. handler:nil];
 }
 
+- (void)testPlaybackReportForNonProtectedMediaChangedURN
+{
+    self.controller.serviceURL = MMFServiceURL();
+    
+    NSString *URN = MMFNonProtectedMediaChangedURN;
+    
+    [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"playableAbroad"]);
+        
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        XCTAssertNil(JSONDictionary[@"tokenResult"]);
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+}
+
+- (void)testPlaybackReportForTokenProtectedMediaChangedURN
+{
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    self.controller.serviceURL = MMFServiceURL();
+    
+    NSString *URN = MMFProtectedMediaChangedURN;
+    
+    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        XCTAssertEqualObjects(JSONDictionary[@"version"], @1);
+        XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
+        XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
+        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
+        XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
+        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
+        
+        XCTAssertNotNil(JSONDictionary[@"clientTime"]);
+        XCTAssertNotNil(JSONDictionary[@"device"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"duration"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
+        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"playableAbroad"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"tokenResult"]);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"tokenResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"httpStatusCode"]);
+        XCTAssertNotNil(JSONDictionary[@"tokenResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"tokenResult"][@"errorMessage"]);
+        
+        XCTAssertNil(JSONDictionary[@"drmResult"]);
+        
+        XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+        XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"playerResult"][@"url"]]);
+        XCTAssertNotNil(JSONDictionary[@"playerResult"][@"duration"]);
+        XCTAssertNil(JSONDictionary[@"playerResult"][@"errorMessage"]);
+        
+        return YES;
+    }];
+    
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
 - (void)testDisabledPlaybackReportInPublicBuilds
 {
     if (! SRGContentProtectionIsPublic()) {
