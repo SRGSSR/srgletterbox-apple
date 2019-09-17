@@ -68,9 +68,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         self.nowPlayingInfoAndCommandsEnabled = YES;
         self.allowedCommands = SRGLetterboxCommandsDefault;
         
-        // Required for AirPlay, picture in picture and control center to work correctly
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
-        
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(applicationDidEnterBackground:)
                                                    name:UIApplicationDidEnterBackgroundNotification

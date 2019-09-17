@@ -39,8 +39,8 @@
 {
     [super viewDidLoad];
     
-    // Allow other applications to play audios, as the view starts only wih muted videos.
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+    // Allow other applications to play audios, as the view starts only with muted videos.
+    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
     
     [self refresh];
 }
@@ -52,8 +52,8 @@
     if (self.movingFromParentViewController || self.beingDismissed) {
         [self.request cancel];
         
-        if ([AVAudioSession sharedInstance].categoryOptions != 0) {
-            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
+        if (AVAudioSession.sharedInstance.categoryOptions != 0) {
+            [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
         }
     }
 }
@@ -152,8 +152,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([AVAudioSession sharedInstance].categoryOptions != 0) {
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
+    if (AVAudioSession.sharedInstance.categoryOptions != 0) {
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
     }
     
     AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
