@@ -29,7 +29,6 @@
 - (instancetype)init
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
-    
     return [storyboard instantiateInitialViewController];
 }
 
@@ -39,10 +38,19 @@
 {
     [super viewDidLoad];
     
-    // Allow other applications to play audios, as the view starts only with muted videos.
-    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(applicationDidBecomeActive:)
+                                               name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
     
     [self refresh];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self updateAudioSession];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -51,10 +59,6 @@
     
     if (self.movingFromParentViewController || self.beingDismissed) {
         [self.request cancel];
-        
-        if (AVAudioSession.sharedInstance.categoryOptions != 0) {
-            [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
-        }
     }
 }
 
@@ -123,6 +127,25 @@
     self.request = request;
 }
 
+#pragma mark Audio session
+
+- (void)updateAudioSession
+{
+    __block BOOL silent = YES;
+    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (! cell.muted) {
+            silent = NO;
+        }
+    }];
+    
+    if (silent) {
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+    }
+    else {
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
+    }
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -152,10 +175,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (AVAudioSession.sharedInstance.categoryOptions != 0) {
-        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
-    }
-    
     AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
     selectedCell.muted = ! selectedCell.muted;
     
@@ -164,6 +183,8 @@
             cell.muted = YES;
         }
     }];
+    
+    [self updateAudioSession];
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -178,6 +199,14 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGRectGetWidth(tableView.frame) * 9.f / 16.f;
+}
+
+#pragma mark Notifications
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self updateAudioSession];
+    [self.tableView reloadData];
 }
 
 @end
