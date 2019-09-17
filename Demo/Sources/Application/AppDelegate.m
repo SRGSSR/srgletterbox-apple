@@ -38,7 +38,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [self.window makeKeyAndVisible];
     
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
-    [AVAudioSession.sharedInstance setMode:AVAudioSessionModeMoviePlayback error:NULL];
     
     application.accessibilityLanguage = @"en";
     

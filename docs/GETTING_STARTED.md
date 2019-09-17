@@ -8,6 +8,30 @@ The SRG Letterbox library is made of three core components:
 
 The following guide describes how these components can be easily combined to add advanced media playback capabilities to your application.
 
+## Audio session management
+
+No audio session specific management is provided by the library. Managing audio sessions is entirely the responsibility of the application, which gives you complete freedom over how playback happens, especially in the background or when switching between applications.
+
+For more information, please refer to the [official documentation](https://developer.apple.com/library/ios/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Introduction/Introduction.html). Audio sessions are a somewhat tricky topic, you should therefore read the documentation well, experiment, and test the behavior of your application on a real device.
+
+In particular, you should ask yourself:
+
+* What should happen when I was playing music with another app and my app is launched? Should the music continue? Maybe resume after my app stops playing?
+* Do I want to be able to control AirPlay playback from the lock screen or the control center?
+* Do I want videos to be _listened to_ when the device is locked, maybe also when the application is in the background?
+
+Moreover, you should check that your application behaves well when receiving phone calls (in particular, audio playback should stop).
+
+### Simple audio session setup
+
+For most applications, offering a standard media playback experience for both audios and videos can be achieved by setuping the audio session as follows, usually in the application delegate:
+
+```objective-c
+[AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
+```
+
+The playback category should be used for applications offering media playback, and is required for picture in picture support. 
+
 ## Playing medias with Letterbox controller
 
 To play a media, instantiate and retain a Letterbox controller somewhere:
@@ -132,6 +156,10 @@ Picture in picture only makes sense when a controller has been bound to a Letter
 Usually, a Letterbox view is part of a view controller view hiearchy. In such cases, providing the view controller itself as picture in picture delegate is a good idea. Unlike usual delegates, the picture in picture delegate is namely retained, providing you with a good way to restore the user interface as it was before picture in picture started.
 
 Refer to the modal view controller demo for a concrete example.
+
+#### Remark
+
+For picture in picture to be available, your audio session must be configured to use the `AVAudioSessionCategoryPlayback` category.
 
 ## Playlists and continuous playback
 
