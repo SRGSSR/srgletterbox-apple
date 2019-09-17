@@ -38,8 +38,6 @@
 
 - (void)testDeallocationWhileIdle
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-unsafe-retained-assign"
     __weak SRGLetterboxController *weakController = self.controller;
     
     @autoreleasepool {
@@ -47,14 +45,11 @@
     }
     
     XCTAssertNil(weakController);
-#pragma clang diagnostic pop
 }
 
 - (void)testDeallocationWhilePlaying
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-unsafe-retained-assign"
-    __weak SRGLetterboxController *weakController = self.controller;    
+    __weak SRGLetterboxController *weakController = self.controller;
     @autoreleasepool {
         // When no reference retains the player, playback must gracefully stop. Deallocation will occur right afterwards.
         [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -78,7 +73,6 @@
     }
     
     XCTAssertNil(weakController);
-#pragma clang diagnostic pop
 }
 
 - (void)testPlayURN
