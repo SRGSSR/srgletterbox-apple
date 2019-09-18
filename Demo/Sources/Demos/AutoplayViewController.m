@@ -185,15 +185,13 @@
     }];
     
     [self updateAudioSession];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [cell setMedia:nil withPreferredSubtitleLocalization:nil];
-    
-    if (cell.selected) {
-        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
