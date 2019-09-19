@@ -27,7 +27,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 @private
     BOOL _restoreUserInterface;
     BOOL _playbackStopped;
-    BOOL _disablingAudioServices;
 }
 
 @property (nonatomic) SRGLetterboxController *controller;
@@ -226,11 +225,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     self.controller = controller;
     self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
     
-    _disablingAudioServices = NO;
-    
-    // Required for AirPlay, picture in picture and control center to work correctly
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:NULL];
-    
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
@@ -251,19 +245,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     self.controller = nil;
     self.pictureInPictureDelegate = nil;
-    
-    // Cancel after some delay to let running audio processes gently terminate (otherwise audio hiccups will be
-    // noticeable because of the audio session category change)
-    _disablingAudioServices = YES;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // Since dispatch_after cannot be cancelled, deal with the possibility that services are enabled again while
-        // the the block has not been executed yet
-        if (! self->_disablingAudioServices) {
-            return;
-        }
-        
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:NULL];
-    });
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }

@@ -238,12 +238,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             // Do not allow AirPlay video playback by default
             player.allowsExternalPlayback = NO;
             
-            // Only update the audio session if needed to avoid audio hiccups
-            NSString *mode = (self.media.mediaType == SRGMediaTypeVideo) ? AVAudioSessionModeMoviePlayback : AVAudioSessionModeDefault;
-            if (! [[AVAudioSession sharedInstance].mode isEqualToString:mode]) {
-                [[AVAudioSession sharedInstance] setMode:mode error:NULL];
-            }
-            
             // Call the configuration block afterwards (so that the above default behavior can be overridden)
             self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
             player.muted = self.muted;
