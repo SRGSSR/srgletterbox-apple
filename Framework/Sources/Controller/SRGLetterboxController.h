@@ -348,7 +348,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  Set to `YES` to enable background video playback if possible (not supported for 360° or when AirPlay or Picture in
  *  picture are active).
  */
-@property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled;
+@property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled __TVOS_PROHIBITED;
 
 /**
  *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss, when the start time of
@@ -742,17 +742,17 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Return `YES` iff the receiver is enabled for background services.
  */
-@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled;
+@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled __TVOS_PROHIBITED;
 
 /**
  *  Return `YES` iff the receiver is enabled for picture in picture.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled;
+@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled __TVOS_PROHIBITED;
 
 /**
  *  Return `YES` iff picture in picture is currently active for the receiver.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive __TVOS_PROHIBITED;
 
 @end
 

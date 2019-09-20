@@ -225,7 +225,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.mediaPlayerController = [[SRGMediaPlayerController alloc] init];
         self.mediaPlayerController.analyticsPlayerName = @"SRGLetterbox";
         self.mediaPlayerController.analyticsPlayerVersion = SRGLetterboxMarketingVersion();
+#if TARGET_OS_IOS
         self.mediaPlayerController.viewBackgroundBehavior = SRGMediaPlayerViewBackgroundBehaviorDetachedWhenDeviceLocked;
+#endif
         
         // FIXME: See https://github.com/SRGSSR/SRGMediaPlayer-iOS/issues/50 and https://soadist.atlassian.net/browse/LSV-631
         //        for more information about this choice.
@@ -346,6 +348,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self.mediaPlayerController reloadPlayerConfiguration];
 }
 
+#if TARGET_OS_IOS
+
 - (BOOL)isBackgroundVideoPlaybackEnabled
 {
     return self.mediaPlayerController.viewBackgroundBehavior == SRGMediaPlayerViewBackgroundBehaviorDetached;
@@ -370,6 +374,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
+
+#endif
 
 - (void)setEndTolerance:(NSTimeInterval)endTolerance
 {
@@ -538,9 +544,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)canPlayPlaylistMedia:(SRGMedia *)media
 {
+#if TARGET_OS_IOS
     if (self.pictureInPictureActive) {
         return NO;
     }
+#endif
     
     return media != nil;
 }
@@ -1082,7 +1090,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     void (^prepareToPlay)(NSURL *) = ^(NSURL *contentURL) {
         if (media.presentation == SRGPresentation360) {
-            if (self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeMonoscopic && self.mediaPlayerController.view.viewMode != SRGMediaPlayerViewModeStereoscopic) {
+            if (self.mediaPlayerController.view.viewMode == SRGMediaPlayerViewModeFlat) {
                 self.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
             }
         }
@@ -1559,10 +1567,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self cancelContinuousPlayback];
     }
     
-    // Do not let pause live streams, also when the state is changed from picture in picture controls. Stop playback instead
+#if TARGET_OS_IOS
+    // Never let pause live streams, including when the state is changed from picture in picture controls. Stop playback instead
     if (self.pictureInPictureActive && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive && playbackState == SRGMediaPlayerPlaybackStatePaused) {
         [self stop];
     }
+#endif
     
     if (playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
@@ -1614,7 +1624,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                                                                         SRGLetterboxMediaKey : nextMedia }];
         };
         
-        if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled && ! self.pictureInPictureActive) {
+        if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled
+#if TARGET_OS_IOS
+            && ! self.pictureInPictureActive
+#endif
+        ) {
             SRGPosition *startPosition = [self startPositionForMedia:nextMedia];
             SRGLetterboxPlaybackSettings *preferredSettings = [self preferredSettingsForMedia:nextMedia];
             

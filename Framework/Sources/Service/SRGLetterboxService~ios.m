@@ -23,7 +23,7 @@ SRGLetterboxCommands SRGLetterboxCommandsDefault = SRGLetterboxCommandSkipForwar
 
 NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterboxServiceSettingsDidChangeNotification";
 
-@interface SRGLetterboxService () {
+@interface SRGLetterboxService () <AVPictureInPictureControllerDelegate> {
 @private
     BOOL _restoreUserInterface;
     BOOL _playbackStopped;

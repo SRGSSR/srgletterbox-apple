@@ -103,7 +103,8 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *  use AirPlay or picture in picture, and clear control center and lock screen information. Any AirPlay or picture
  *  in picture playback will be immediately stopped.
  */
-@interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
+__TVOS_PROHIBITED
+@interface SRGLetterboxService : NSObject
 
 /**
  *  The service singleton instance.
