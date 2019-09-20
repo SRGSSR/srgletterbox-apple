@@ -11,6 +11,7 @@
 #import "SRGLetterboxPlaybackSettings.h"
 #import "SRGLetterboxService.h"
 #import "SRGLetterboxView.h"
+#import "SRGLetterboxViewController.h"
 
 // Official version number.
 FOUNDATION_EXPORT NSString * SRGLetterboxMarketingVersion(void);
