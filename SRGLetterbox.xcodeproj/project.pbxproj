@@ -1564,6 +1564,7 @@
 		};
 		6F0C98F42121E4E600073AB6 /* Debug-static */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
@@ -1587,6 +1588,7 @@
 		};
 		6F0C98F52121E4E600073AB6 /* Debug-static */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6FD5943E2334BE630058DAE7 /* Tests.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
@@ -1685,6 +1687,7 @@
 		};
 		6F0C98F82121E4EC00073AB6 /* Release-static */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
@@ -1708,6 +1711,7 @@
 		};
 		6F0C98F92121E4EC00073AB6 /* Release-static */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6FD5943E2334BE630058DAE7 /* Tests.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = "";
