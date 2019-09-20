@@ -20,7 +20,6 @@
 #import "UIFont+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
-#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGControlsView ()
@@ -140,10 +139,13 @@
             fullScreenButton.selected = parentLetterboxView.fullScreen;
             [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
             [parentLetterboxView insertSubview:fullScreenButton atIndex:parentLetterboxView.subviews.count];
-            [fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self.fullScreenPhantomButton);
-            }];
             self.fullScreenButton = fullScreenButton;
+            
+            fullScreenButton.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[ [fullScreenButton.topAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.topAnchor],
+                                                       [fullScreenButton.bottomAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.bottomAnchor],
+                                                       [fullScreenButton.leftAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.leftAnchor],
+                                                       [fullScreenButton.rightAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.rightAnchor] ]];
         }
     }
     else {

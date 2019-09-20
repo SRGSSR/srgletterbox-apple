@@ -49,9 +49,6 @@
 		08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */; };
 		08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */; };
-		08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
-		08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
-		08FA0CAB1E2E32D6000C94EF /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */; };
 		08FA0CF11E2E92DE000C94EF /* SRGLetterboxLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */; };
 		08FA0CF41E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA0CF21E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h */; };
@@ -225,8 +222,6 @@
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
-		6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; };
-		6FD9BA221E2FB2220013CC97 /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CA81E2E325F000C94EF /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */; };
 		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
 		6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController.m */; };
@@ -329,7 +324,6 @@
 				08EB66AB1F34C77F00E9D7CA /* TCSDK.framework in Embed Frameworks */,
 				6FE08CE61E8B811500EC4716 /* SRGAppearance.framework in Embed Frameworks */,
 				6FB97FF71E4B09DF0014C4C2 /* MAKVONotificationCenter.framework in Embed Frameworks */,
-				6FD9BA221E2FB2220013CC97 /* Masonry.framework in Embed Frameworks */,
 				6FE655DC1E2CA453000033D4 /* SRGLetterbox.framework in Embed Frameworks */,
 				6FAB3B9E1E291A9E00CC2197 /* YYWebImage.framework in Embed Frameworks */,
 				6FAB3B911E29080F00CC2197 /* ComScore.framework in Embed Frameworks */,
@@ -489,7 +483,6 @@
 		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
-		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackSettingsTestCase.m; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
 		6FAB3B011E28F77E00CC2197 /* SRGLetterboxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxView.m; sourceTree = "<group>"; };
@@ -583,7 +576,6 @@
 				08E7C84B234A768E00B2AF4F /* AppCenter.framework in Frameworks */,
 				6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */,
 				08EB66A41F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
-				08FA0CAA1E2E32D6000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B771E2905CA00CC2197 /* SRGLogger.framework in Frameworks */,
 				6FAB3B731E2905CA00CC2197 /* SRGAnalytics.framework in Frameworks */,
 				08E7C84D234A768F00B2AF4F /* AppCenterCrashes.framework in Frameworks */,
@@ -609,7 +601,6 @@
 			files = (
 				6FE08CE51E8B810D00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF61E4B09D70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
-				6FD9BA211E2FB2190013CC97 /* Masonry.framework in Frameworks */,
 				6FE655D21E2CA3F9000033D4 /* ComScore.framework in Frameworks */,
 				6FE655D31E2CA3F9000033D4 /* libextobjc.framework in Frameworks */,
 				6FE655D41E2CA3F9000033D4 /* Mantle.framework in Frameworks */,
@@ -638,7 +629,6 @@
 				6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */,
 				6FB97FF31E4B09B70014C4C2 /* MAKVONotificationCenter.framework in Frameworks */,
 				08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */,
-				08FA0CA91E2E325F000C94EF /* Masonry.framework in Frameworks */,
 				6FAB3B9B1E291A8500CC2197 /* YYWebImage.framework in Frameworks */,
 				6FAB3B101E28FB1400CC2197 /* ComScore.framework in Frameworks */,
 				6FAB3B111E28FB1400CC2197 /* libextobjc.framework in Frameworks */,
@@ -877,7 +867,6 @@
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
-				6FA562CD1E9BABE400A1344F /* HockeySDK.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
 				6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
@@ -1326,7 +1315,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/libextobjc.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MAKVONotificationCenter.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Masonry.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SRGAnalytics.framework",
@@ -1362,7 +1350,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] ]; then\n  cp -R \"$SRCROOT/Carthage/Build/iOS/ComScore.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/FXReachability.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/libextobjc.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/MAKVONotificationCenter.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/Mantle.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/Masonry.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAppearance.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGDataProvider.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGDiagnostics.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGLogger.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGMediaPlayer.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGNetwork.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/TCCore.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/TCSDK.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/YYWebImage.framework\" \"$BUILT_PRODUCTS_DIR\"\nfi\n";
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ] || [ \"$CONFIGURATION\" == \"Release\" ] ]; then\n  cp -R \"$SRCROOT/Carthage/Build/iOS/ComScore.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/FXReachability.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/libextobjc.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/MAKVONotificationCenter.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/Mantle.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics_DataProvider.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAnalytics_MediaPlayer.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGAppearance.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGContentProtection.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGDataProvider.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGDiagnostics.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGLogger.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGMediaPlayer.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/SRGNetwork.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/TCCore.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/TCSDK.framework\" \"$BUILT_PRODUCTS_DIR\"\n  cp -R \"$SRCROOT/Carthage/Build/iOS/YYWebImage.framework\" \"$BUILT_PRODUCTS_DIR\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

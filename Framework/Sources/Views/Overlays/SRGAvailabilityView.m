@@ -15,7 +15,6 @@
 #import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
-#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGAvailabilityView ()
@@ -90,10 +89,13 @@
         if (! self.countdownView.superview) {
             SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
             [self insertSubview:countdownView atIndex:0];
-            [countdownView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self);
-            }];
             self.countdownView = countdownView;
+            
+            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[ [countdownView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                       [countdownView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                       [countdownView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+                                                       [countdownView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
         }
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {

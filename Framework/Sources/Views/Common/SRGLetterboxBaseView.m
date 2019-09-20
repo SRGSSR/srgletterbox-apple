@@ -9,8 +9,6 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxView+Private.h"
 
-#import <Masonry/Masonry.h>
-
 static void commonInit(SRGLetterboxBaseView *self);
 
 @interface SRGLetterboxBaseView ()
@@ -65,10 +63,15 @@ static void commonInit(SRGLetterboxBaseView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        [self insertSubview:self.nibView atIndex:0];
-        [self.nibView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self);
-        }];
+        if (self.nibView) {
+            [self insertSubview:self.nibView atIndex:0];
+            
+            self.nibView.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[ [self.nibView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                       [self.nibView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                       [self.nibView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+                                                       [self.nibView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
+        }
         
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];

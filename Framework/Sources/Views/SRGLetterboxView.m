@@ -30,7 +30,6 @@
 #import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
-#import <Masonry/Masonry.h>
 
 const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
 
@@ -242,9 +241,11 @@ static void commonInit(SRGLetterboxView *self);
         [self.playbackView addSubview:mediaPlayerView];
         
         // Force autolayout to ensure the layout is immediately correct
-        [mediaPlayerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.playbackView);
-        }];
+        mediaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[ [mediaPlayerView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
+                                                   [mediaPlayerView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+                                                   [mediaPlayerView.leftAnchor constraintEqualToAnchor:self.playbackView.leftAnchor],
+                                                   [mediaPlayerView.rightAnchor constraintEqualToAnchor:self.playbackView.rightAnchor] ]];
         
         [self.playbackView layoutIfNeeded];
     }

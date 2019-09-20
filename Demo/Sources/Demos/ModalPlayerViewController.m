@@ -11,7 +11,6 @@
 #import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
 
-#import <Masonry/Masonry.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 
 @interface ModalPlayerViewController ()
