@@ -30,8 +30,6 @@
 		08E03CCA1F47283C008AD461 /* MediaListViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController~ios.m */; };
 		08E03CCE1F475083008AD461 /* SettingsViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController~ios.m */; };
 		08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; };
-		08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
-		08EB66A31F34C6B000E9D7CA /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
 		08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */; };
 		08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */; };
 		08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */; };
@@ -479,11 +477,9 @@
 				6FAB3B111E28FB1400CC2197 /* libextobjc.framework in Frameworks */,
 				6FAB3B121E28FB1400CC2197 /* Mantle.framework in Frameworks */,
 				6FAB3B131E28FB1400CC2197 /* SRGAnalytics_DataProvider.framework in Frameworks */,
-				08EB66A31F34C6B000E9D7CA /* TCSDK.framework in Frameworks */,
 				6FAB3B141E28FB1400CC2197 /* SRGAnalytics_MediaPlayer.framework in Frameworks */,
 				6FAB3B151E28FB1400CC2197 /* SRGAnalytics.framework in Frameworks */,
 				6FAB3B161E28FB1400CC2197 /* SRGDataProvider.framework in Frameworks */,
-				08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */,
 				6FAB3B171E28FB1400CC2197 /* SRGLogger.framework in Frameworks */,
 				6FAB3B181E28FB1400CC2197 /* SRGMediaPlayer.framework in Frameworks */,
 				08FA0D201E30F820000C94EF /* FXReachability.framework in Frameworks */,
