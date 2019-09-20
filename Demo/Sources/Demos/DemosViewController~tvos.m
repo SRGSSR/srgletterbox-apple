@@ -53,7 +53,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
-    [letterboxViewController.letterboxController playURN:@"urn:swi:video:41981254" atPosition:nil withPreferredSettings:nil];
+    [letterboxViewController.controller playURN:@"urn:swi:video:41981254" atPosition:nil withPreferredSettings:nil];
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 }
 
