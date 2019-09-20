@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DemosViewController : UITableViewController <UIPopoverPresentationControllerDelegate>
+@interface DemosViewController : UITableViewController
 
 - (void)openModalPlayerWithURN:(NSString *)URN serviceURL:(nullable NSURL *)serviceURL updateInterval:(nullable NSNumber *)updateInterval;
 

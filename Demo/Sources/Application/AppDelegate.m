@@ -36,15 +36,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    self.window.backgroundColor = UIColor.blackColor;
     [self.window makeKeyAndVisible];
     
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     application.accessibilityLanguage = @"en";
-    
-    [SRGNetworkActivityManagement enable];
-    
+        
 #ifndef DEBUG
     [self setupAppCenter];
 #endif
@@ -57,7 +54,11 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
+#if TARGET_OS_IOS
+    [SRGNetworkActivityManagement enable];
+        
     SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
+#endif
     
     DemosViewController *demosViewController = [[DemosViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
@@ -94,6 +95,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 - (void)setupAppCenter
 {
+<<<<<<< HEAD
     NSString *appCenterSecret = [NSBundle.mainBundle objectForInfoDictionaryKey:@"AppCenterSecret"];
     if (appCenterSecret.length == 0) {
         return;

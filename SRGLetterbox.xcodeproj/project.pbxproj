@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0849DA5920FCD82E00026F0D /* TopicListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */; };
-		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
+		0849DA5920FCD82E00026F0D /* TopicListViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0849DA5620FCD82D00026F0D /* TopicListViewController~ios.storyboard */; };
+		0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
-		086AFBF222BE968E0047FD44 /* UILabel+Copyable.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable.m */; };
+		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
 		087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
@@ -24,11 +24,11 @@
 		08A05B2520585DDF00E80BD6 /* SRGLetterboxTimeSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */; };
 		08A05B2820585DF000E80BD6 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */; };
 		08A05B2920585DF000E80BD6 /* SRGLiveLabel~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2720585DF000E80BD6 /* SRGLiveLabel~ios.m */; };
-		08BA348B1F4ADF1F00D9C204 /* MediaListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */; };
-		08BA348D1F4AF4C900D9C204 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */; };
+		08BA348B1F4ADF1F00D9C204 /* MediaListViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348A1F4ADF1F00D9C204 /* MediaListViewController~ios.storyboard */; };
+		08BA348D1F4AF4C900D9C204 /* SettingsViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348C1F4AF4C900D9C204 /* SettingsViewController~ios.storyboard */; };
 		08C618752225AEAE00F54DA2 /* SourceUidTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C618742225AEAE00F54DA2 /* SourceUidTestCase.m */; };
-		08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController.m */; };
-		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
+		08E03CCA1F47283C008AD461 /* MediaListViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController~ios.m */; };
+		08E03CCE1F475083008AD461 /* SettingsViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController~ios.m */; };
 		08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; };
 		08EB66A01F34C6B000E9D7CA /* TCCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669E1F34C6B000E9D7CA /* TCCore.framework */; };
 		08EB66A31F34C6B000E9D7CA /* TCSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EB669F1F34C6B000E9D7CA /* TCSDK.framework */; };
@@ -44,9 +44,9 @@
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
-		6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController.m */; };
-		6F0AD07B1E5EAB1A000A61A5 /* AutoplayViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController.storyboard */; };
-		6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */; };
+		6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController~ios.m */; };
+		6F0AD07B1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard */; };
+		6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m */; };
 		6F0C99072121E6F800073AB6 /* Accessibility.strings in Resources */ = {isa = PBXBuildFile; fileRef = 08E0BF5E1EE05BCD002D4012 /* Accessibility.strings */; };
 		6F0C99082121E6FB00073AB6 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */; };
 		6F0C99092121E70000073AB6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CBA1E2E5874000C94EF /* Images.xcassets */; };
@@ -65,14 +65,14 @@
 		6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView~ios.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
 		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
-		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */; };
-		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */; };
+		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */; };
+		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
 		6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
-		6F353A6922BB51F00035F656 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6822BB51F00035F656 /* PageViewController.m */; };
-		6F353A6F22BB64AE0035F656 /* PlayerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6D22BB64AE0035F656 /* PlayerPageViewController.m */; };
-		6F353A7222BB64C10035F656 /* PlayerPageViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F353A7122BB64C10035F656 /* PlayerPageViewController.storyboard */; };
+		6F353A6922BB51F00035F656 /* PageViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6822BB51F00035F656 /* PageViewController~ios.m */; };
+		6F353A6F22BB64AE0035F656 /* PlayerPageViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */; };
+		6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
 		6F50594F20581CAF00823003 /* SRGNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592520581CAF00823003 /* SRGNotificationView.h */; };
 		6F50595020581CAF00823003 /* SRGCountdownView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592620581CAF00823003 /* SRGCountdownView.h */; };
@@ -116,6 +116,7 @@
 		6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */; };
 		6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */; };
 		6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
+		6F973EB9233537F60026F54C /* DemosViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EB8233537F60026F54C /* DemosViewController~tvos.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
 		6FAB19C3219AFD76003B27DE /* PlaybackSettingsTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */; };
 		6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -130,11 +131,11 @@
 		6FAB3B161E28FB1400CC2197 /* SRGDataProvider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */; };
 		6FAB3B171E28FB1400CC2197 /* SRGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */; };
 		6FAB3B181E28FB1400CC2197 /* SRGMediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */; };
-		6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FAB3B541E28FFEA00CC2197 /* LaunchScreen.storyboard */; };
+		6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FAB3B541E28FFEA00CC2197 /* LaunchScreen~ios.storyboard */; };
 		6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B581E28FFEA00CC2197 /* AppDelegate.m */; };
 		6FAB3B601E28FFEA00CC2197 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B591E28FFEA00CC2197 /* main.m */; };
-		6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */; };
-		6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */; };
+		6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController~ios.m */; };
+		6FAB3B631E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FAB3B621E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard */; };
 		6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */; };
 		6FAB3B651E2905B400CC2197 /* SRGLetterbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAB3B841E29060200CC2197 /* SRGLetterbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */; };
@@ -142,9 +143,9 @@
 		6FB0179A1E975F87004CCAF8 /* ModalTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB017981E975F87004CCAF8 /* ModalTransition.h */; };
 		6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */; };
 		6FB696541F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */; };
-		6FB6BB031EC2E103006672EC /* ModalTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB017991E975F87004CCAF8 /* ModalTransition.m */; };
-		6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */; };
-		6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */; };
+		6FB6BB031EC2E103006672EC /* ModalTransition~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB017991E975F87004CCAF8 /* ModalTransition~ios.m */; };
+		6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m */; };
+		6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard */; };
 		6FB83A8E205AAFE90013928B /* SRGControlsBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB83A8C205AAFE90013928B /* SRGControlsBackgroundView.h */; };
 		6FB83A8F205AAFE90013928B /* SRGControlsBackgroundView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB83A8D205AAFE90013928B /* SRGControlsBackgroundView~ios.m */; };
 		6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FB97FCA1E49D7240014C4C2 /* SRGLetterboxService.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -161,12 +162,12 @@
 		6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */; };
 		6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */; };
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
-		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */; };
-		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */; };
+		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */; };
+		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */; };
 		6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */; };
 		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
-		6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController.m */; };
-		6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */; };
+		6FD9BA311E3095F00013CC97 /* DemosViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */; };
+		6FD9BA331E3096010013CC97 /* DemosViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FD9BA321E3096010013CC97 /* DemosViewController~ios.storyboard */; };
 		6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
 		6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */; };
 		6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */; };
@@ -175,8 +176,8 @@
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
 		6FF0D89A1F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */; };
 		6FF0D89B1F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */; };
-		6FFAD13A202C889200FDAA6C /* PlaylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD139202C889200FDAA6C /* PlaylistViewController.m */; };
-		6FFAD13C202C88BE00FDAA6C /* PlaylistViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD13B202C88BD00FDAA6C /* PlaylistViewController.storyboard */; };
+		6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */; };
+		6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD13B202C88BD00FDAA6C /* PlaylistViewController~ios.storyboard */; };
 		6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD13D202C89C900FDAA6C /* Playlist.m */; };
 /* End PBXBuildFile section */
 
@@ -221,12 +222,12 @@
 /* Begin PBXFileReference section */
 		08152F2A1E9269290053AB34 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Localizable.strings; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
-		0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TopicListViewController.storyboard; sourceTree = "<group>"; };
+		0849DA5620FCD82D00026F0D /* TopicListViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "TopicListViewController~ios.storyboard"; sourceTree = "<group>"; };
 		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
-		0849DA5820FCD82D00026F0D /* TopicListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicListViewController.m; sourceTree = "<group>"; };
+		0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TopicListViewController~ios.m"; sourceTree = "<group>"; };
 		0849DA5B20FD553100026F0D /* TopicItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicItem.h; sourceTree = "<group>"; };
 		0849DA5C20FD553100026F0D /* TopicItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicItem.m; sourceTree = "<group>"; };
-		086AFBF022BE968E0047FD44 /* UILabel+Copyable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Copyable.m"; sourceTree = "<group>"; };
+		086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Copyable~ios.m"; sourceTree = "<group>"; };
 		086AFBF122BE968E0047FD44 /* UILabel+Copyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Copyable.h"; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
@@ -241,14 +242,14 @@
 		08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimeSlider.h; sourceTree = "<group>"; };
 		08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLiveLabel.h; sourceTree = "<group>"; };
 		08A05B2720585DF000E80BD6 /* SRGLiveLabel~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLiveLabel~ios.m"; sourceTree = "<group>"; };
-		08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MediaListViewController.storyboard; sourceTree = "<group>"; };
-		08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
+		08BA348A1F4ADF1F00D9C204 /* MediaListViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "MediaListViewController~ios.storyboard"; sourceTree = "<group>"; };
+		08BA348C1F4AF4C900D9C204 /* SettingsViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "SettingsViewController~ios.storyboard"; sourceTree = "<group>"; };
 		08C618742225AEAE00F54DA2 /* SourceUidTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SourceUidTestCase.m; sourceTree = "<group>"; };
 		08D97F031E2D09F100521A6B /* SRGLetterboxView~ios.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SRGLetterboxView~ios.xib"; sourceTree = "<group>"; };
 		08E03CC81F47283C008AD461 /* MediaListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaListViewController.h; sourceTree = "<group>"; };
-		08E03CC91F47283C008AD461 /* MediaListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaListViewController.m; sourceTree = "<group>"; };
+		08E03CC91F47283C008AD461 /* MediaListViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MediaListViewController~ios.m"; sourceTree = "<group>"; };
 		08E03CCB1F475083008AD461 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		08E03CCC1F475083008AD461 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		08E03CCC1F475083008AD461 /* SettingsViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SettingsViewController~ios.m"; sourceTree = "<group>"; };
 		08E0BF5F1EE05BCD002D4012 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08E0BF611EE05BD5002D4012 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Accessibility.strings; sourceTree = "<group>"; };
 		08E0BF621EE05BD7002D4012 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Accessibility.strings; sourceTree = "<group>"; };
@@ -273,24 +274,24 @@
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F0AD0751E5EAB0D000A61A5 /* AutoplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoplayViewController.h; sourceTree = "<group>"; };
-		6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoplayViewController.m; sourceTree = "<group>"; };
-		6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AutoplayViewController.storyboard; sourceTree = "<group>"; };
+		6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AutoplayViewController~ios.m"; sourceTree = "<group>"; };
+		6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "AutoplayViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6F0AD07C1E5EB224000A61A5 /* AutoplayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoplayTableViewCell.h; sourceTree = "<group>"; };
-		6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoplayTableViewCell.m; sourceTree = "<group>"; };
+		6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AutoplayTableViewCell~ios.m"; sourceTree = "<group>"; };
 		6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SRGLetterbox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1BA9122029E9E8004BB271 /* TestPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPlaylist.h; sourceTree = "<group>"; };
 		6F1BA9132029E9E8004BB271 /* TestPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPlaylist.m; sourceTree = "<group>"; };
 		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
-		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalPlayerViewController.m; sourceTree = "<group>"; };
-		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ModalPlayerViewController.storyboard; sourceTree = "<group>"; };
+		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ModalPlayerViewController~ios.m"; sourceTree = "<group>"; };
+		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "ModalPlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6F28BAD11E323F6A004F43DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6F2EB46E2029DFB100E7ACDC /* LetterboxBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LetterboxBaseTestCase.h; sourceTree = "<group>"; };
 		6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxBaseTestCase.m; sourceTree = "<group>"; };
 		6F353A6722BB51F00035F656 /* PageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
-		6F353A6822BB51F00035F656 /* PageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
+		6F353A6822BB51F00035F656 /* PageViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PageViewController~ios.m"; sourceTree = "<group>"; };
 		6F353A6C22BB64AE0035F656 /* PlayerPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPageViewController.h; sourceTree = "<group>"; };
-		6F353A6D22BB64AE0035F656 /* PlayerPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerPageViewController.m; sourceTree = "<group>"; };
-		6F353A7122BB64C10035F656 /* PlayerPageViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PlayerPageViewController.storyboard; sourceTree = "<group>"; };
+		6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlayerPageViewController~ios.m"; sourceTree = "<group>"; };
+		6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "PlayerPageViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGMediaPlayerDesignables.m; sourceTree = "<group>"; };
 		6F4855AB1E3A669B00B0141C /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -352,6 +353,7 @@
 		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
 		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
+		6F973EB8233537F60026F54C /* DemosViewController~tvos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DemosViewController~tvos.m"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackSettingsTestCase.m; sourceTree = "<group>"; };
@@ -369,23 +371,23 @@
 		6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGMediaPlayer.framework; path = Carthage/Build/iOS/SRGMediaPlayer.framework; sourceTree = "<group>"; };
 		6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SRGLetterbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FAB3B521E28FFEA00CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FAB3B541E28FFEA00CC2197 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6FAB3B541E28FFEA00CC2197 /* LaunchScreen~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "LaunchScreen~ios.storyboard"; sourceTree = "<group>"; };
 		6FAB3B571E28FFEA00CC2197 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6FAB3B581E28FFEA00CC2197 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6FAB3B591E28FFEA00CC2197 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePlayerViewController.h; sourceTree = "<group>"; };
-		6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimplePlayerViewController.m; sourceTree = "<group>"; };
-		6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SimplePlayerViewController.storyboard; sourceTree = "<group>"; };
+		6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SimplePlayerViewController~ios.m"; sourceTree = "<group>"; };
+		6FAB3B621E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "SimplePlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6FAB3B7F1E29060100CC2197 /* SRGLetterbox-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SRGLetterbox-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
 		6FB017981E975F87004CCAF8 /* ModalTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalTransition.h; sourceTree = "<group>"; };
-		6FB017991E975F87004CCAF8 /* ModalTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalTransition.m; sourceTree = "<group>"; };
+		6FB017991E975F87004CCAF8 /* ModalTransition~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ModalTransition~ios.m"; sourceTree = "<group>"; };
 		6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGTapGestureRecognizer.h; sourceTree = "<group>"; };
 		6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGTapGestureRecognizer.m; sourceTree = "<group>"; };
 		6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandalonePlayerViewController.h; sourceTree = "<group>"; };
-		6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandalonePlayerViewController.m; sourceTree = "<group>"; };
-		6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StandalonePlayerViewController.storyboard; sourceTree = "<group>"; };
+		6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "StandalonePlayerViewController~ios.m"; sourceTree = "<group>"; };
+		6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "StandalonePlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6FB83A8C205AAFE90013928B /* SRGControlsBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGControlsBackgroundView.h; sourceTree = "<group>"; };
 		6FB83A8D205AAFE90013928B /* SRGControlsBackgroundView~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SRGControlsBackgroundView~ios.m"; sourceTree = "<group>"; };
 		6FB83A90205AAFFE0013928B /* SRGControlsBackgroundView~ios.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SRGControlsBackgroundView~ios.xib"; sourceTree = "<group>"; };
@@ -406,8 +408,8 @@
 		6FCB995B1F56948D00790EAA /* ServerSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerSettings.h; sourceTree = "<group>"; };
 		6FCB995C1F56948D00790EAA /* ServerSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerSettings.m; sourceTree = "<group>"; };
 		6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlayerViewController.h; sourceTree = "<group>"; };
-		6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiPlayerViewController.m; sourceTree = "<group>"; };
-		6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MultiPlayerViewController.storyboard; sourceTree = "<group>"; };
+		6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MultiPlayerViewController~ios.m"; sourceTree = "<group>"; };
+		6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "MultiPlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6FD5943C2334BE4A0058DAE7 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		6FD5943D2334BE560058DAE7 /* Framework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Framework.xcconfig; sourceTree = "<group>"; };
 		6FD5943E2334BE630058DAE7 /* Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
@@ -418,8 +420,8 @@
 		6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerSingletonSetup.m; sourceTree = "<group>"; };
 		6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleFix.m; sourceTree = "<group>"; };
 		6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemosViewController.h; sourceTree = "<group>"; };
-		6FD9BA301E3095F00013CC97 /* DemosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemosViewController.m; sourceTree = "<group>"; };
-		6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DemosViewController.storyboard; sourceTree = "<group>"; };
+		6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DemosViewController~ios.m"; sourceTree = "<group>"; };
+		6FD9BA321E3096010013CC97 /* DemosViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "DemosViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGAppearance.framework; path = Carthage/Build/iOS/SRGAppearance.framework; sourceTree = "<group>"; };
 		6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -432,8 +434,8 @@
 		6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimerTarget.h; sourceTree = "<group>"; };
 		6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxTimerTarget.m; sourceTree = "<group>"; };
 		6FFAD138202C889200FDAA6C /* PlaylistViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistViewController.h; sourceTree = "<group>"; };
-		6FFAD139202C889200FDAA6C /* PlaylistViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaylistViewController.m; sourceTree = "<group>"; };
-		6FFAD13B202C88BD00FDAA6C /* PlaylistViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PlaylistViewController.storyboard; sourceTree = "<group>"; };
+		6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaylistViewController~ios.m"; sourceTree = "<group>"; };
+		6FFAD13B202C88BD00FDAA6C /* PlaylistViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "PlaylistViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6FFAD13D202C89C900FDAA6C /* Playlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playlist.m; sourceTree = "<group>"; };
 		6FFAD13E202C89C900FDAA6C /* Playlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playlist.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -670,7 +672,7 @@
 			isa = PBXGroup;
 			children = (
 				6FB017981E975F87004CCAF8 /* ModalTransition.h */,
-				6FB017991E975F87004CCAF8 /* ModalTransition.m */,
+				6FB017991E975F87004CCAF8 /* ModalTransition~ios.m */,
 				084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */,
 				6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */,
 				6FFAD13E202C89C900FDAA6C /* Playlist.h */,
@@ -680,7 +682,7 @@
 				0849DA5B20FD553100026F0D /* TopicItem.h */,
 				0849DA5C20FD553100026F0D /* TopicItem.m */,
 				086AFBF122BE968E0047FD44 /* UILabel+Copyable.h */,
-				086AFBF022BE968E0047FD44 /* UILabel+Copyable.m */,
+				086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */,
 				6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */,
 				6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */,
 			);
@@ -746,7 +748,7 @@
 			isa = PBXGroup;
 			children = (
 				6F28BAD11E323F6A004F43DD /* Images.xcassets */,
-				6FAB3B541E28FFEA00CC2197 /* LaunchScreen.storyboard */,
+				6FAB3B541E28FFEA00CC2197 /* LaunchScreen~ios.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -775,42 +777,43 @@
 			isa = PBXGroup;
 			children = (
 				6F0AD07C1E5EB224000A61A5 /* AutoplayTableViewCell.h */,
-				6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell.m */,
+				6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m */,
 				6F0AD0751E5EAB0D000A61A5 /* AutoplayViewController.h */,
-				6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController.m */,
-				6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController.storyboard */,
+				6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController~ios.m */,
+				6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard */,
 				6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */,
-				6FD9BA301E3095F00013CC97 /* DemosViewController.m */,
-				6FD9BA321E3096010013CC97 /* DemosViewController.storyboard */,
+				6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */,
+				6FD9BA321E3096010013CC97 /* DemosViewController~ios.storyboard */,
+				6F973EB8233537F60026F54C /* DemosViewController~tvos.m */,
 				08E03CC81F47283C008AD461 /* MediaListViewController.h */,
-				08E03CC91F47283C008AD461 /* MediaListViewController.m */,
-				08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */,
+				08E03CC91F47283C008AD461 /* MediaListViewController~ios.m */,
+				08BA348A1F4ADF1F00D9C204 /* MediaListViewController~ios.storyboard */,
 				6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */,
-				6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController.m */,
-				6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController.storyboard */,
+				6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */,
+				6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */,
 				6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */,
-				6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController.m */,
-				6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard */,
+				6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */,
+				6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */,
 				6F353A6722BB51F00035F656 /* PageViewController.h */,
-				6F353A6822BB51F00035F656 /* PageViewController.m */,
+				6F353A6822BB51F00035F656 /* PageViewController~ios.m */,
 				6F353A6C22BB64AE0035F656 /* PlayerPageViewController.h */,
-				6F353A6D22BB64AE0035F656 /* PlayerPageViewController.m */,
-				6F353A7122BB64C10035F656 /* PlayerPageViewController.storyboard */,
+				6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */,
+				6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */,
 				6FFAD138202C889200FDAA6C /* PlaylistViewController.h */,
-				6FFAD139202C889200FDAA6C /* PlaylistViewController.m */,
-				6FFAD13B202C88BD00FDAA6C /* PlaylistViewController.storyboard */,
+				6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */,
+				6FFAD13B202C88BD00FDAA6C /* PlaylistViewController~ios.storyboard */,
 				08E03CCB1F475083008AD461 /* SettingsViewController.h */,
-				08E03CCC1F475083008AD461 /* SettingsViewController.m */,
-				08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */,
+				08E03CCC1F475083008AD461 /* SettingsViewController~ios.m */,
+				08BA348C1F4AF4C900D9C204 /* SettingsViewController~ios.storyboard */,
 				6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */,
-				6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController.m */,
-				6FAB3B621E2900D200CC2197 /* SimplePlayerViewController.storyboard */,
+				6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController~ios.m */,
+				6FAB3B621E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard */,
 				6FB78F881E4B2C5F0053D2A6 /* StandalonePlayerViewController.h */,
-				6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController.m */,
-				6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard */,
+				6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m */,
+				6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard */,
 				0849DA5720FCD82D00026F0D /* TopicListViewController.h */,
-				0849DA5820FCD82D00026F0D /* TopicListViewController.m */,
-				0849DA5620FCD82D00026F0D /* TopicListViewController.storyboard */,
+				0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */,
+				0849DA5620FCD82D00026F0D /* TopicListViewController~ios.storyboard */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -1110,19 +1113,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController.storyboard in Resources */,
-				6F353A7222BB64C10035F656 /* PlayerPageViewController.storyboard in Resources */,
-				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController.storyboard in Resources */,
-				6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController.storyboard in Resources */,
-				6F0AD07B1E5EAB1A000A61A5 /* AutoplayViewController.storyboard in Resources */,
-				6FFAD13C202C88BE00FDAA6C /* PlaylistViewController.storyboard in Resources */,
-				08BA348D1F4AF4C900D9C204 /* SettingsViewController.storyboard in Resources */,
+				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard in Resources */,
+				6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */,
+				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */,
+				6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard in Resources */,
+				6F0AD07B1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard in Resources */,
+				6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */,
+				08BA348D1F4AF4C900D9C204 /* SettingsViewController~ios.storyboard in Resources */,
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
-				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController.storyboard in Resources */,
-				6FD9BA331E3096010013CC97 /* DemosViewController.storyboard in Resources */,
-				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen.storyboard in Resources */,
-				08BA348B1F4ADF1F00D9C204 /* MediaListViewController.storyboard in Resources */,
-				0849DA5920FCD82E00026F0D /* TopicListViewController.storyboard in Resources */,
+				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard in Resources */,
+				6FD9BA331E3096010013CC97 /* DemosViewController~ios.storyboard in Resources */,
+				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen~ios.storyboard in Resources */,
+				08BA348B1F4ADF1F00D9C204 /* MediaListViewController~ios.storyboard in Resources */,
+				0849DA5920FCD82E00026F0D /* TopicListViewController~ios.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1209,26 +1212,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F353A6F22BB64AE0035F656 /* PlayerPageViewController.m in Sources */,
-				6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell.m in Sources */,
-				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController.m in Sources */,
-				6F353A6922BB51F00035F656 /* PageViewController.m in Sources */,
-				6FB6BB031EC2E103006672EC /* ModalTransition.m in Sources */,
-				08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */,
-				6FFAD13A202C889200FDAA6C /* PlaylistViewController.m in Sources */,
+				6F353A6F22BB64AE0035F656 /* PlayerPageViewController~ios.m in Sources */,
+				6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m in Sources */,
+				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m in Sources */,
+				6F353A6922BB51F00035F656 /* PageViewController~ios.m in Sources */,
+				6F973EB9233537F60026F54C /* DemosViewController~tvos.m in Sources */,
+				6FB6BB031EC2E103006672EC /* ModalTransition~ios.m in Sources */,
+				08E03CCA1F47283C008AD461 /* MediaListViewController~ios.m in Sources */,
+				6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
-				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
+				0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
-				086AFBF222BE968E0047FD44 /* UILabel+Copyable.m in Sources */,
+				086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
-				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController.m in Sources */,
-				6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController.m in Sources */,
-				6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */,
-				6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController.m in Sources */,
+				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController~ios.m in Sources */,
+				6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m in Sources */,
+				6FD9BA311E3095F00013CC97 /* DemosViewController~ios.m in Sources */,
+				6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController~ios.m in Sources */,
 				6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */,
-				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController.m in Sources */,
-				08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */,
+				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController~ios.m in Sources */,
+				08E03CCE1F475083008AD461 /* SettingsViewController~ios.m in Sources */,
 				0849DA5D20FD553100026F0D /* TopicItem.m in Sources */,
 				6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */,
 			);

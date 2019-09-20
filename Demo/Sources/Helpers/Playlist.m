@@ -83,8 +83,10 @@
 - (SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media
 {
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+#if TARGET_OS_IOS
     settings.standalone = ApplicationSettingIsStandalone();
     settings.quality = ApplicationSettingPreferredQuality();
+#endif
     settings.sourceUid = self.sourceUid;
     return settings;
 }

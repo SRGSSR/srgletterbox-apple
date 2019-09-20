@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Media lists
  */
-typedef NS_ENUM(NSInteger, MediaList) {
+typedef __TVOS_PROHIBITED NS_ENUM(NSInteger, MediaList) {
     /**
      *  Not specified
      */
@@ -37,6 +37,7 @@ typedef NS_ENUM(NSInteger, MediaList) {
     MediaListLatestByTopic
 };
 
+__TVOS_PROHIBITED
 @interface MediaListViewController : UITableViewController
 
 - (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride;

@@ -9,6 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+__TVOS_PROHIBITED
 @interface PageViewController : UIPageViewController <UIPageViewControllerDataSource>
 
 - (instancetype)initWithURNs:(nullable NSArray<NSString *> *)URNs;

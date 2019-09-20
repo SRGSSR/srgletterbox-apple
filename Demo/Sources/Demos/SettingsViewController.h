@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#if TARGET_OS_IOS
+
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 OBJC_EXPORT NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void);
 
@@ -27,6 +29,9 @@ OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 
 OBJC_EXPORT BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
 
+#endif
+
+__TVOS_PROHIBITED
 @interface SettingsViewController : UITableViewController
 
 @end

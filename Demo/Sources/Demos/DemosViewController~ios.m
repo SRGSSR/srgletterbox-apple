@@ -20,7 +20,7 @@
 
 #import <libextobjc/libextobjc.h>
 
-@interface DemosViewController ()
+@interface DemosViewController () <UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *settingsBarButtonItem;
 
