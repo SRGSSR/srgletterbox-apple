@@ -116,7 +116,7 @@
 		6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
 		6F973EB9233537F60026F54C /* DemosViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EB8233537F60026F54C /* DemosViewController~tvos.m */; };
 		6F973EBC233547B10026F54C /* SRGLetterboxViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6F973EBD233547B10026F54C /* SRGLetterboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EBB233547B10026F54C /* SRGLetterboxViewController.m */; };
+		6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
 		6FAB19C3219AFD76003B27DE /* PlaybackSettingsTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */; };
 		6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -355,7 +355,7 @@
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
 		6F973EB8233537F60026F54C /* DemosViewController~tvos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DemosViewController~tvos.m"; sourceTree = "<group>"; };
 		6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxViewController.h; sourceTree = "<group>"; };
-		6F973EBB233547B10026F54C /* SRGLetterboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxViewController.m; sourceTree = "<group>"; };
+		6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxViewController~tvos.m"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackSettingsTestCase.m; sourceTree = "<group>"; };
@@ -500,7 +500,7 @@
 				087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */,
 				6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */,
 				6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */,
-				6F973EBB233547B10026F54C /* SRGLetterboxViewController.m */,
+				6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1277,7 +1277,7 @@
 				087EB61D1E291203005DD80B /* UIDevice+SRGLetterbox.m in Sources */,
 				6F50595F20581CAF00823003 /* SRGNotificationView~ios.m in Sources */,
 				08A05B2020585DD200E80BD6 /* SRGControlWrapperView~ios.m in Sources */,
-				6F973EBD233547B10026F54C /* SRGLetterboxViewController.m in Sources */,
+				6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */,
 				6F50597120581CAF00823003 /* SRGLetterboxPlaybackButton~ios.m in Sources */,
 				6F50595D20581CAF00823003 /* SRGCountdownView~ios.m in Sources */,
 				6F50597020581CAF00823003 /* SRGLetterboxBaseView~ios.m in Sources */,

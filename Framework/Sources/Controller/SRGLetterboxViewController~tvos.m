@@ -9,6 +9,7 @@
 #import "SRGLetterboxController+Private.h"
 #import "UIImage+SRGLetterbox.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
@@ -19,6 +20,8 @@
 @property (nonatomic) SRGMediaPlayerViewController *playerViewController;
 
 @property (nonatomic) NSMutableDictionary<NSURL *, YYWebImageOperation *> *imageOperations;
+
+@property (nonatomic, weak) id periodicTimeObserver;
 
 @end
 
@@ -39,6 +42,27 @@
         
         self.imageOperations = [NSMutableDictionary dictionary];
         
+        @weakify(controller)
+        self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(controller);
+            
+            AVPlayerItem *playerItem = controller.mediaPlayerController.player.currentItem;
+            
+            if (@available(tvOS 10, *)) {
+                // TODO: Maybe not the best place for correct refreshes. Periodic?
+                SRGMedia *nextMedia = controller.nextMedia;
+                if (nextMedia) {
+                    // TODO: clamp time
+                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC))
+                                                                                                           title:nextMedia.title
+                                                                                                    previewImage:nil];
+                }
+                else {
+                    playerItem.nextContentProposal = nil;
+                }
+            }
+        }];
+        
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(metadataDidChange:)
                                                    name:SRGLetterboxMetadataDidChangeNotification
@@ -57,6 +81,7 @@
     [self.imageOperations enumerateKeysAndObjectsUsingBlock:^(NSURL * _Nonnull URL, YYWebImageOperation * _Nonnull operation, BOOL * _Nonnull stop) {
         [operation cancel];
     }];
+    [self.controller removePeriodicTimeObserver:self.periodicTimeObserver];
 }
 
 #pragma mark View lifecycle
