@@ -38,7 +38,7 @@
         }
         
         self.controller = controller;
-        self.playerViewController = [[SRGMediaPlayerViewController alloc] initWithController:self.controller.mediaPlayerController];
+        self.playerViewController = [[SRGMediaPlayerViewController alloc] initWithController:controller.mediaPlayerController];
         self.playerViewController.delegate = self;
         
         self.imageOperations = [NSMutableDictionary dictionary];
@@ -60,7 +60,7 @@
                 // `automaticAcceptanceInterval` on the `AVContentProposal`.
                 SRGMedia *nextMedia = controller.nextMedia;
                 if (transitionDuration != SRGLetterboxContinuousPlaybackDisabled && nextMedia) {
-                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), kCMTimeZero)
+                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:kCMTimeIndefinite
                                                                                                            title:nextMedia.title
                                                                                                     previewImage:nil];
                 }
