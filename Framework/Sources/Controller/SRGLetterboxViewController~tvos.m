@@ -55,15 +55,14 @@
                     transitionDuration = [controller.playlistDataSource continuousPlaybackTransitionDurationForController:controller];
                 }
                 
+                // Continuous playback transition is managed at the controller level when playback end is reached. We therefore
+                // dusplay the content proposal at the very end of the media. For the same reason we must also not set any
+                // `automaticAcceptanceInterval` on the `AVContentProposal`.
                 SRGMedia *nextMedia = controller.nextMedia;
                 if (transitionDuration != SRGLetterboxContinuousPlaybackDisabled && nextMedia) {
-                    // TODO: clamp time?
-                    AVContentProposal *contentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), CMTimeMakeWithSeconds(transitionDuration, NSEC_PER_SEC))
-                                                                                                               title:nextMedia.title
-                                                                                                        previewImage:nil];
-                    
-                    
-                    playerItem.nextContentProposal = contentProposal;
+                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), kCMTimeZero)
+                                                                                                           title:nextMedia.title
+                                                                                                    previewImage:nil];
                 }
                 else {
                     playerItem.nextContentProposal = nil;
