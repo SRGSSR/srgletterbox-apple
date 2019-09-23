@@ -74,12 +74,16 @@
 
 - (IBAction)playNext:(id)sender
 {
-    [self dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:nil];
+    [self dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
+        self.playerViewController.contentProposalViewController = nil;
+    }];
 }
 
 - (IBAction)cancel:(id)sender
 {
-    [self dismissContentProposalForAction:AVContentProposalActionReject animated:YES completion:nil];
+    [self dismissContentProposalForAction:AVContentProposalActionReject animated:YES completion:^{
+        self.playerViewController.contentProposalViewController = nil;
+    }];
 }
 
 @end

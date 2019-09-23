@@ -148,13 +148,11 @@
 
 - (void)playerViewController:(AVPlayerViewController *)playerViewController didAcceptContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
 {
-    playerViewController.contentProposalViewController = nil;
     [self.controller playNextMedia];
 }
 
 - (void)playerViewController:(AVPlayerViewController *)playerViewController didRejectContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
 {
-    playerViewController.contentProposalViewController = nil;
     [self.controller cancelContinuousPlayback];
 }
 
@@ -231,7 +229,9 @@
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
     if (@available(tvOS 10, *)) {
-        [self.playerViewController.contentProposalViewController dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:nil];
+        [self.playerViewController.contentProposalViewController dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
+            self.playerViewController.contentProposalViewController = nil;
+        }];
     }
 }
 
