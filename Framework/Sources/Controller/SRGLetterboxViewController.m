@@ -71,7 +71,7 @@
 
 - (NSArray<AVMetadataItem *> *)playerViewControllerExternalMetadata:(SRGMediaPlayerViewController *)playerViewController
 {
-    SRGMedia *media = self.controller.subdivisionMedia ?: self.controller.fullLengthMedia;
+    SRGMedia *media = self.controller.fullLengthMedia;
     if (media) {
         AVMutableMetadataItem *titleItem = [[AVMutableMetadataItem alloc] init];
             titleItem.identifier = AVMetadataCommonIdentifierTitle;
