@@ -74,23 +74,23 @@
     SRGMedia *media = self.controller.fullLengthMedia;
     if (media) {
         AVMutableMetadataItem *titleItem = [[AVMutableMetadataItem alloc] init];
-            titleItem.identifier = AVMetadataCommonIdentifierTitle;
-            titleItem.value = media.title;
-            titleItem.extendedLanguageTag = @"und";
-            
-            AVMutableMetadataItem *descriptionItem = [[AVMutableMetadataItem alloc] init];
-            descriptionItem.identifier = AVMetadataCommonIdentifierDescription;
-            descriptionItem.value = media.summary;
-            descriptionItem.extendedLanguageTag = @"und";
-            
-        #if 0
-            AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
-            artworkItem.identifier = AVMetadataCommonIdentifierArtwork;
-            artworkItem.value = UIImagePNGRepresentation([UIImage imageNamed:@"artwork"]);
-            artworkItem.extendedLanguageTag = @"und";
-        #endif
-            
-            return @[ titleItem.copy, descriptionItem.copy /*, artworkItem.copy */ ];
+        titleItem.identifier = AVMetadataCommonIdentifierTitle;
+        titleItem.value = media.title;
+        titleItem.extendedLanguageTag = @"und";
+        
+        AVMutableMetadataItem *descriptionItem = [[AVMutableMetadataItem alloc] init];
+        descriptionItem.identifier = AVMetadataCommonIdentifierDescription;
+        descriptionItem.value = media.summary;
+        descriptionItem.extendedLanguageTag = @"und";
+        
+        // TODO: Off the main thread
+        AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
+        artworkItem.identifier = AVMetadataCommonIdentifierArtwork;
+        NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:500.f type:SRGImageTypeDefault];
+        artworkItem.value = [NSData dataWithContentsOfURL:imageURL];
+        artworkItem.extendedLanguageTag = @"und";
+        
+        return @[ titleItem.copy, descriptionItem.copy, artworkItem.copy ];
     }
     else {
         return nil;
@@ -112,14 +112,14 @@
         descriptionItem.value = segment.summary;
         descriptionItem.extendedLanguageTag = @"und";
         
-#if 0
+        // TODO: Off the main thread
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
         artworkItem.identifier = AVMetadataCommonIdentifierArtwork;
-        artworkItem.value = UIImagePNGRepresentation([UIImage imageNamed:@"artwork"]);
+        NSURL *imageURL = [segment imageURLForDimension:SRGImageDimensionWidth withValue:500.f type:SRGImageTypeDefault];
+        artworkItem.value = [NSData dataWithContentsOfURL:imageURL];
         artworkItem.extendedLanguageTag = @"und";
-#endif
         
-        AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy /*, artworkItem.copy */ ] timeRange:segment.srg_timeRange];
+        AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy, artworkItem.copy ] timeRange:segment.srg_timeRange];
         [navigationMarkers addObject:navigationMarker];
     }
     
