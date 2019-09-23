@@ -11,7 +11,7 @@
 
 @interface SRGLettterboxContentProposalViewController ()
 
-@property (nonatomic) SRGMedia *media;
+@property (nonatomic, weak) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -26,11 +26,11 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedia:(SRGMedia *)media
+- (instancetype)initWithController:(SRGLetterboxController *)controller
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
     SRGLettterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.media = media;
+    viewController.controller = controller;
     return viewController;
 }
 
@@ -40,7 +40,7 @@
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
-    return [self initWithMedia:SRGMedia.new];
+    return [self initWithController:SRGLetterboxController.new];
 }
 
 #pragma clang diagnostic pop
@@ -52,9 +52,10 @@
     [super viewDidLoad];
     
     // TODO: Use a stack view for layout
-    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
-    self.titleLabel.text = self.media.title;
-    self.summaryLabel.text = self.media.summary;
+    SRGMedia *nextMedia = self.controller.nextMedia;
+    [self.thumbnailImageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    self.titleLabel.text = nextMedia.title;
+    self.summaryLabel.text = nextMedia.summary;
 }
 
 #pragma mark Overrides
@@ -74,7 +75,8 @@
 
 - (IBAction)playNext:(id)sender
 {
-    [self dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
+    [self.controller playNextMedia];
+    [self dismissContentProposalForAction:AVContentProposalActionDefer animated:YES completion:^{
         self.playerViewController.contentProposalViewController = nil;
     }];
 }
