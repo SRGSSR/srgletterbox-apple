@@ -51,7 +51,6 @@
 {
     [super viewDidLoad];
     
-    // TODO: Use a stack view for layout
     SRGMedia *nextMedia = self.controller.nextMedia;
     [self.thumbnailImageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     self.titleLabel.text = nextMedia.title;
