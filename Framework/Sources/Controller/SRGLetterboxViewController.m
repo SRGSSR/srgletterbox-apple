@@ -75,7 +75,7 @@
         descriptionItem.value = media.summary;
         descriptionItem.extendedLanguageTag = @"und";
         
-        // TODO: Off the main thread
+        // TODO: Off the main thread + dimensions + default image if none
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
         artworkItem.identifier = AVMetadataCommonIdentifierArtwork;
         NSURL *imageURL = [media imageURLForDimension:SRGImageDimensionWidth withValue:500.f type:SRGImageTypeDefault];
@@ -104,7 +104,7 @@
         descriptionItem.value = segment.summary;
         descriptionItem.extendedLanguageTag = @"und";
         
-        // TODO: Off the main thread
+        // TODO: Off the main thread + dimensions + default image if none
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
         artworkItem.identifier = AVMetadataCommonIdentifierArtwork;
         NSURL *imageURL = [segment imageURLForDimension:SRGImageDimensionWidth withValue:500.f type:SRGImageTypeDefault];
