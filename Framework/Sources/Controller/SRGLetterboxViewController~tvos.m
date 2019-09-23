@@ -7,6 +7,7 @@
 #import "SRGLetterboxViewController.h"
 
 #import "SRGLetterboxController+Private.h"
+#import "SRGLettterboxContentProposalViewController.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
@@ -49,13 +50,20 @@
             AVPlayerItem *playerItem = controller.mediaPlayerController.player.currentItem;
             
             if (@available(tvOS 10, *)) {
-                // TODO: Maybe not the best place for correct refreshes. Periodic?
+                NSTimeInterval transitionDuration = SRGLetterboxContinuousPlaybackDisabled;
+                if ([controller.playlistDataSource respondsToSelector:@selector(continuousPlaybackTransitionDurationForController:)]) {
+                    transitionDuration = [controller.playlistDataSource continuousPlaybackTransitionDurationForController:controller];
+                }
+                
                 SRGMedia *nextMedia = controller.nextMedia;
-                if (nextMedia) {
-                    // TODO: clamp time
-                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), CMTimeMakeWithSeconds(5., NSEC_PER_SEC))
-                                                                                                           title:nextMedia.title
-                                                                                                    previewImage:nil];
+                if (transitionDuration != SRGLetterboxContinuousPlaybackDisabled && nextMedia) {
+                    // TODO: clamp time?
+                    AVContentProposal *contentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:CMTimeSubtract(CMTimeRangeGetEnd(controller.timeRange), CMTimeMakeWithSeconds(transitionDuration, NSEC_PER_SEC))
+                                                                                                               title:nextMedia.title
+                                                                                                        previewImage:nil];
+                    
+                    
+                    playerItem.nextContentProposal = contentProposal;
                 }
                 else {
                     playerItem.nextContentProposal = nil;
@@ -66,6 +74,10 @@
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(metadataDidChange:)
                                                    name:SRGLetterboxMetadataDidChangeNotification
+                                                 object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackDidContinueAutomatically:)
+                                                   name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                  object:controller];
     }
     return self;
@@ -125,6 +137,26 @@
     }
     
     return [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+}
+
+#pragma mark AVPlayerViewControllerDelegate protocol
+
+- (BOOL)playerViewController:(AVPlayerViewController *)playerViewController shouldPresentContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
+{
+    playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithMedia:self.controller.nextMedia];
+    return YES;
+}
+
+- (void)playerViewController:(AVPlayerViewController *)playerViewController didAcceptContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
+{
+    playerViewController.contentProposalViewController = nil;
+    [self.controller playNextMedia];
+}
+
+- (void)playerViewController:(AVPlayerViewController *)playerViewController didRejectContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
+{
+    playerViewController.contentProposalViewController = nil;
+    [self.controller cancelContinuousPlayback];
 }
 
 #pragma mark SRGMediaPlayerViewControllerDelegate protocol
@@ -195,6 +227,13 @@
 - (void)metadataDidChange:(NSNotification *)notification
 {
     [self.playerViewController reloadData];
+}
+
+- (void)playbackDidContinueAutomatically:(NSNotification *)notification
+{
+    if (@available(tvOS 10, *)) {
+        [self.playerViewController.contentProposalViewController dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:nil];
+    }
 }
 
 @end

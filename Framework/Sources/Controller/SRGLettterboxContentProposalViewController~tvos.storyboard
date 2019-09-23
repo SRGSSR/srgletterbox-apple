@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14868" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jiF-Qr-yCb">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <deployment identifier="tvOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Lettterbox Content Proposal View Controller-->
+        <scene sceneID="PS8-fC-Bzd">
+            <objects>
+                <viewController id="jiF-Qr-yCb" customClass="SRGLettterboxContentProposalViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YzI-61-JEi"/>
+                        <viewControllerLayoutGuide type="bottom" id="k80-o3-v6X"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lOW-f1-GJ6">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaE-2K-C4S">
+                                <rect key="frame" x="1073" y="737" width="232" height="86"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Play next"/>
+                                <connections>
+                                    <action selector="playNext:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="PSG-rr-yWV"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wgZ-mQ-KL6">
+                                <rect key="frame" x="1073" y="260" width="480" height="270"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="wgZ-mQ-KL6" secondAttribute="height" multiplier="16:9" id="HJf-uq-0K2"/>
+                                    <constraint firstAttribute="width" constant="480" id="SXC-o5-mop"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Mb-Mu-JRU">
+                                <rect key="frame" x="1073" y="580" width="707" height="46"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;summary&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gAc-Bf-xd3">
+                                <rect key="frame" x="1073" y="652" width="707" height="35"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mMK-fJ-4mr">
+                                <rect key="frame" x="1356" y="737" width="197" height="86"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancel:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="Wde-bI-VO7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="gAc-Bf-xd3" firstAttribute="top" secondItem="5Mb-Mu-JRU" secondAttribute="bottom" constant="26" id="87H-SC-lhx"/>
+                            <constraint firstItem="wgZ-mQ-KL6" firstAttribute="top" secondItem="ISI-sS-glE" secondAttribute="top" constant="200" id="AmI-mj-Fr7"/>
+                            <constraint firstItem="gAc-Bf-xd3" firstAttribute="leading" secondItem="5Mb-Mu-JRU" secondAttribute="leading" id="FvV-XT-qhL"/>
+                            <constraint firstItem="ISI-sS-glE" firstAttribute="trailing" secondItem="5Mb-Mu-JRU" secondAttribute="trailing" constant="50" id="K7k-0O-9Sf"/>
+                            <constraint firstItem="ISI-sS-glE" firstAttribute="trailing" secondItem="wgZ-mQ-KL6" secondAttribute="trailing" constant="277" id="Q0G-h0-ark"/>
+                            <constraint firstItem="mMK-fJ-4mr" firstAttribute="centerY" secondItem="zaE-2K-C4S" secondAttribute="centerY" id="bjg-c7-7go"/>
+                            <constraint firstItem="5Mb-Mu-JRU" firstAttribute="top" secondItem="wgZ-mQ-KL6" secondAttribute="bottom" constant="50" id="c2R-Hb-u1V"/>
+                            <constraint firstItem="zaE-2K-C4S" firstAttribute="leading" secondItem="gAc-Bf-xd3" secondAttribute="leading" id="dEw-1U-tdJ"/>
+                            <constraint firstItem="ISI-sS-glE" firstAttribute="trailing" secondItem="gAc-Bf-xd3" secondAttribute="trailing" constant="50" id="gL6-8a-oJk"/>
+                            <constraint firstItem="zaE-2K-C4S" firstAttribute="top" secondItem="gAc-Bf-xd3" secondAttribute="bottom" constant="50" id="hSm-9l-9Th"/>
+                            <constraint firstItem="mMK-fJ-4mr" firstAttribute="leading" secondItem="zaE-2K-C4S" secondAttribute="trailing" constant="51" id="iOk-o2-2dU"/>
+                            <constraint firstItem="5Mb-Mu-JRU" firstAttribute="leading" secondItem="wgZ-mQ-KL6" secondAttribute="leading" id="ioM-xE-aX9"/>
+                            <constraint firstItem="gAc-Bf-xd3" firstAttribute="leading" secondItem="ISI-sS-glE" secondAttribute="leading" constant="983" id="yuU-xm-JQ0"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ISI-sS-glE"/>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="mMK-fJ-4mr" id="aOK-vI-kTf"/>
+                        <outlet property="nextButton" destination="zaE-2K-C4S" id="TAI-et-584"/>
+                        <outlet property="summaryLabel" destination="gAc-Bf-xd3" id="sYt-Ef-fTX"/>
+                        <outlet property="thumbnailImageView" destination="wgZ-mQ-KL6" id="bhm-60-43g"/>
+                        <outlet property="titleLabel" destination="5Mb-Mu-JRU" id="kQ8-Aa-tCU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="z76-g0-YXi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="51" y="65"/>
+        </scene>
+    </scenes>
+</document>

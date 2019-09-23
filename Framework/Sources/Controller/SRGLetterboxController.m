@@ -1614,21 +1614,21 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             }
         }
         
-        void (^notify)(void) = ^{
-            if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
-                [self.playlistDataSource controller:self didTransitionToMedia:nextMedia automatically:YES];
-            }
-            [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
-                                                              object:self
-                                                            userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
-                                                                        SRGLetterboxMediaKey : nextMedia }];
-        };
-        
         if (nextMedia && continuousPlaybackTransitionDuration != SRGLetterboxContinuousPlaybackDisabled
 #if TARGET_OS_IOS
             && ! self.pictureInPictureActive
 #endif
         ) {
+            void (^notify)(void) = ^{
+                if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
+                    [self.playlistDataSource controller:self didTransitionToMedia:nextMedia automatically:YES];
+                }
+                [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
+                                                                  object:self
+                                                                userInfo:@{ SRGLetterboxURNKey : nextMedia.URN,
+                                                                            SRGLetterboxMediaKey : nextMedia }];
+            };
+            
             SRGPosition *startPosition = [self startPositionForMedia:nextMedia];
             SRGLetterboxPlaybackSettings *preferredSettings = [self preferredSettingsForMedia:nextMedia];
             

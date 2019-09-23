@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 __attribute__((annotate("returns_localized_nsstring")))
 OBJC_EXPORT NSString *SRGLetterboxNonLocalizedString(NSString *string);
 
+OBJC_EXPORT NSString *SRGLetterboxResourceNameForUIClass(Class cls);
+
 @interface NSBundle (SRGLetterbox)
 
 /**
