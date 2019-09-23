@@ -47,13 +47,13 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = NSLocalizedString(@"SWI VOD", nil);
+    cell.textLabel.text = NSLocalizedString(@"12h45", nil);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
-    [letterboxViewController.controller playURN:@"urn:swi:video:41981254" atPosition:nil withPreferredSettings:nil];
+    [letterboxViewController.controller playURN:@"urn:rts:video:10716081" atPosition:nil withPreferredSettings:nil];
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 }
 

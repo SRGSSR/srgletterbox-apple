@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly, nullable) SRGMedia *srgletterbox_liveMedia;
 
+/**
+ *  Consolidate segments and sibling chapters (segments from sibling chapters are omitted).
+ */
 @property (nonatomic, readonly, nullable) NSArray<SRGSubdivision *> *srgletterbox_subdivisions;
 
 @end
