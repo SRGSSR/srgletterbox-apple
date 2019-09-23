@@ -36,14 +36,6 @@
                                                selector:@selector(metadataDidChange:)
                                                    name:SRGLetterboxMetadataDidChangeNotification
                                                  object:controller];
-        [NSNotificationCenter.defaultCenter addObserver:self
-                                               selector:@selector(segmentDidStart:)
-                                                   name:SRGMediaPlayerSegmentDidStartNotification
-                                                 object:controller.mediaPlayerController];
-        [NSNotificationCenter.defaultCenter addObserver:self
-                                               selector:@selector(segmentDidEnd:)
-                                                   name:SRGMediaPlayerSegmentDidEndNotification
-                                                 object:controller.mediaPlayerController];
     }
     return self;
 }
@@ -129,16 +121,6 @@
 #pragma mark Notifications
 
 - (void)metadataDidChange:(NSNotification *)notification
-{
-    [self.playerViewController reloadData];
-}
-
-- (void)segmentDidStart:(NSNotification *)notification
-{
-    [self.playerViewController reloadData];
-}
-
-- (void)segmentDidEnd:(NSNotification *)notification
 {
     [self.playerViewController reloadData];
 }
