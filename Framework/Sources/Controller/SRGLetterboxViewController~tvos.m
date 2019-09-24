@@ -213,11 +213,6 @@
         titleItem.value = segment.title;
         titleItem.extendedLanguageTag = @"und";
         
-        AVMutableMetadataItem *descriptionItem = [[AVMutableMetadataItem alloc] init];
-        descriptionItem.identifier = AVMetadataCommonIdentifierDescription;
-        descriptionItem.value = segment.summary;
-        descriptionItem.extendedLanguageTag = @"und";
-        
         UIImage *image = [self imageForMetadata:segment withCompletion:^{
             [self.playerViewController reloadData];
         }];
