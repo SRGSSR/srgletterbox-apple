@@ -7,18 +7,22 @@
 #import "SRGLettterboxContentProposalViewController.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 @interface SRGLettterboxContentProposalViewController ()
 
-@property (nonatomic) SRGMedia *media;
+@property (nonatomic) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *summaryLabel;
+@property (nonatomic, weak) IBOutlet UILabel *remainingTimeLabel;
 
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
+
+@property (nonatomic) NSTimer *timer;
 
 @end
 
@@ -26,11 +30,11 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedia:(SRGMedia *)media
+- (instancetype)initWithController:(SRGLetterboxController *)controller
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
     SRGLettterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.media = media;
+    viewController.controller = controller;
     return viewController;
 }
 
@@ -40,10 +44,18 @@
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
-    return [self initWithMedia:SRGMedia.new];
+    return [self initWithController:SRGLetterboxController.new];
 }
 
 #pragma clang diagnostic pop
+
+#pragma mark Getters and setters
+
+- (void)setTimer:(NSTimer *)timer
+{
+    [_timer invalidate];
+    _timer = timer;
+}
 
 #pragma mark View lifecycle
 
@@ -51,9 +63,41 @@
 {
     [super viewDidLoad];
     
-    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
-    self.titleLabel.text = self.media.title;
-    self.summaryLabel.text = self.media.summary;
+    [self reloadData];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.movingToParentViewController || self.beingPresented) {
+        self.timer = [NSTimer srgletterbox_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+            [self reloadData];
+        }];
+        [self reloadData];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if (self.movingFromParentViewController || self.beingDismissed) {
+        self.timer = nil;
+    }
+}
+
+#pragma mar UI
+
+- (void)reloadData
+{
+    SRGMedia *nextMedia = self.controller.nextMedia;
+    [self.thumbnailImageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    self.titleLabel.text = nextMedia.title;
+    self.summaryLabel.text = nextMedia.summary;
+    
+    NSTimeInterval remainingTime = round([self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:NSDate.date]);
+    self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@ seconds", nil), @(remainingTime)];
 }
 
 #pragma mark Overrides

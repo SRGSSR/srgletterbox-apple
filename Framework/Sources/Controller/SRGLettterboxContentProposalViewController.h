@@ -5,14 +5,14 @@
 //
 
 #import <AVKit/AVKit.h>
-#import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 API_AVAILABLE(tvos(10.0))
 @interface SRGLettterboxContentProposalViewController : AVContentProposalViewController
 
-- (instancetype)initWithMedia:(SRGMedia *)media;
+- (instancetype)initWithController:(SRGLetterboxController *)controller;
 
 @end
 

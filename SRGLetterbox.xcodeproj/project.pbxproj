@@ -42,6 +42,7 @@
 		6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D251E28E2D100CFD89B /* SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F042D2B1E28F70500CFD89B /* NSBundle+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */; };
 		6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */; };
+		6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */; };
 		6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController~ios.m */; };
 		6F0AD07B1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard */; };
 		6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD07D1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m */; };
@@ -276,6 +277,7 @@
 		6F042D251E28E2D100CFD89B /* SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterbox.h; sourceTree = "<group>"; };
 		6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SRGLetterbox.m"; sourceTree = "<group>"; };
+		6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxDesignables.m; sourceTree = "<group>"; };
 		6F0AD0751E5EAB0D000A61A5 /* AutoplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoplayViewController.h; sourceTree = "<group>"; };
 		6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AutoplayViewController~ios.m"; sourceTree = "<group>"; };
 		6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "AutoplayViewController~ios.storyboard"; sourceTree = "<group>"; };
@@ -601,6 +603,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		6F06A6A0233A203C00BB4B4A /* Designables */ = {
+			isa = PBXGroup;
+			children = (
+				6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */,
+			);
+			path = Designables;
+			sourceTree = "<group>";
+		};
 		6F48559D1E3A311C00B0141C /* Externals */ = {
 			isa = PBXGroup;
 			children = (
@@ -886,6 +896,7 @@
 				6FD5943C2334BE4A0058DAE7 /* Common.xcconfig */,
 				6F042D221E28E2D100CFD89B /* Framework */,
 				6FAB3B8A1E29066300CC2197 /* Tests */,
+				6F06A6A0233A203C00BB4B4A /* Designables */,
 				6FAB3B511E28FFEA00CC2197 /* Demo */,
 				6F0136F4213FA39000B95405 /* Xcode */,
 				6FAB3B061E28FB1400CC2197 /* Frameworks */,
@@ -1236,6 +1247,7 @@
 				6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
 				0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */,
+				6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
 				086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */,

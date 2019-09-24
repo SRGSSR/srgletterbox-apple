@@ -142,7 +142,7 @@
 
 - (BOOL)playerViewController:(AVPlayerViewController *)playerViewController shouldPresentContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
 {
-    playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithMedia:self.controller.nextMedia];
+    playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithController:self.controller];
     return YES;
 }
 
