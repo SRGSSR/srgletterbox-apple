@@ -129,7 +129,7 @@
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
     [[self.dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         self.playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-        self.playlist.continuousPlaybackTransitionDuration = 5.;
+        self.playlist.continuousPlaybackTransitionDuration = 30.;
         letterboxViewController.controller.playlistDataSource = self.playlist;
     }] resume];
 }
