@@ -138,6 +138,7 @@
 
 - (IBAction)playNext:(id)sender
 {
+    [self.controller playNextMedia];
     [self dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
         self.playerViewController.contentProposalViewController = nil;
     }];

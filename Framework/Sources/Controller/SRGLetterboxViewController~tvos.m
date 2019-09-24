@@ -158,8 +158,6 @@
     if ([self.delegate respondsToSelector:@selector(letterboxViewController:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
         [self.delegate letterboxViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.controller.nextMedia];
     }
-    
-    [self.controller playNextMedia];
 }
 
 - (void)playerViewController:(AVPlayerViewController *)playerViewController didRejectContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
