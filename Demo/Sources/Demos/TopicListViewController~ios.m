@@ -30,7 +30,7 @@
 
 - (instancetype)initWithTopicList:(TopicList)topicList
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
     TopicListViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.topicList = topicList;
     return viewController;

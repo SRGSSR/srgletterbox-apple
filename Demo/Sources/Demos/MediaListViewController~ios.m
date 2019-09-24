@@ -29,7 +29,7 @@
 
 - (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
     MediaListViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.mediaList = mediaList;
     viewController.topic = topic;

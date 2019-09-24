@@ -16,4 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 __attribute__((annotate("returns_localized_nsstring")))
 OBJC_EXPORT NSString *LetterboxDemoNonLocalizedString(NSString *string);
 
+/**
+ *  Return the recommended resource name for the main resource (xib, storyboard) associated with a class.
+ */
+OBJC_EXPORT NSString *LetterboxDemoResourceNameForUIClass(Class cls);
+
 NS_ASSUME_NONNULL_END

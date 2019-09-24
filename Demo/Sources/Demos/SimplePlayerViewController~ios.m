@@ -6,6 +6,7 @@
 
 #import "SimplePlayerViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 
 #import <SRGLetterbox/SRGLetterbox.h>
@@ -25,7 +26,7 @@
 
 - (instancetype)initWithURN:(NSString *)URN
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
     SimplePlayerViewController *viewController = [storyboard instantiateInitialViewController];
     
     viewController.URN = URN;

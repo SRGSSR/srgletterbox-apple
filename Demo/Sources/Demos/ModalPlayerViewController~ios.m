@@ -7,6 +7,7 @@
 #import "ModalPlayerViewController.h"
 
 #import "ModalTransition.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
@@ -55,7 +56,7 @@
     }
     // Otherwise instantiate a fresh new one
     else {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
         ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;

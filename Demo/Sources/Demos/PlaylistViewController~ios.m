@@ -6,6 +6,7 @@
 
 #import "PlaylistViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "Playlist.h"
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
@@ -43,7 +44,7 @@
 
 - (instancetype)initWithMedias:(NSArray<SRGMedia *> *)medias sourceUid:(NSString *)sourceUid
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
     PlaylistViewController *viewController = [storyboard instantiateInitialViewController];
     
     Playlist *playlist = [[Playlist alloc] initWithMedias:medias sourceUid:sourceUid];

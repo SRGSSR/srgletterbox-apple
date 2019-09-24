@@ -6,6 +6,7 @@
 
 #import "StandalonePlayerViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
@@ -40,7 +41,7 @@
     }
     // Otherwise instantiate a fresh new one
     else {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
         StandalonePlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;

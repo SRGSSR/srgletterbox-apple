@@ -6,6 +6,7 @@
 
 #import "MultiPlayerViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
@@ -49,7 +50,7 @@
         }
     }
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
     MultiPlayerViewController *multiPlayerViewController = [storyboard instantiateInitialViewController];
     
     multiPlayerViewController.letterboxController.serviceURL = ApplicationSettingServiceURL();

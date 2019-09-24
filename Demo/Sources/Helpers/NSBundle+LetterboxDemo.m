@@ -10,3 +10,13 @@ NSString *LetterboxDemoNonLocalizedString(NSString *string)
 {
     return string;
 }
+
+NSString *LetterboxDemoResourceNameForUIClass(Class cls)
+{
+    NSString *name = NSStringFromClass(cls);
+#if TARGET_OS_TV
+    return [name stringByAppendingString:@"~tvos"];
+#else
+    return [name stringByAppendingString:@"~ios"];
+#endif
+}

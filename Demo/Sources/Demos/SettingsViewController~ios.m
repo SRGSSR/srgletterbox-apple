@@ -6,6 +6,8 @@
 
 #import "SettingsViewController.h"
 
+#import "NSBundle+LetterboxDemo.h"
+
 #import <AppCenterDistribute/AppCenterDistribute.h>
 #import <SafariServices/SafariServices.h>
 #import <SRGLetterbox/SRGLetterbox.h>
@@ -187,7 +189,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
     SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
     viewController.serverSettings = ServerSettings.serverSettings;
     return viewController;
