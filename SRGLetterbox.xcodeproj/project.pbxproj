@@ -379,7 +379,7 @@
 		6FAB3B0D1E28FB1400CC2197 /* SRGDataProvider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGDataProvider.framework; path = Carthage/Build/iOS/SRGDataProvider.framework; sourceTree = "<group>"; };
 		6FAB3B0E1E28FB1400CC2197 /* SRGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGLogger.framework; path = Carthage/Build/iOS/SRGLogger.framework; sourceTree = "<group>"; };
 		6FAB3B0F1E28FB1400CC2197 /* SRGMediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGMediaPlayer.framework; path = Carthage/Build/iOS/SRGMediaPlayer.framework; sourceTree = "<group>"; };
-		6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox_demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SRGLetterbox_demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SRGLetterbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FAB3B521E28FFEA00CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B541E28FFEA00CC2197 /* LaunchScreen~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "LaunchScreen~ios.storyboard"; sourceTree = "<group>"; };
 		6FAB3B571E28FFEA00CC2197 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -388,7 +388,7 @@
 		6FAB3B5B1E28FFEA00CC2197 /* SimplePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePlayerViewController.h; sourceTree = "<group>"; };
 		6FAB3B5C1E28FFEA00CC2197 /* SimplePlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SimplePlayerViewController~ios.m"; sourceTree = "<group>"; };
 		6FAB3B621E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "SimplePlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
-		6FAB3B7F1E29060100CC2197 /* SRGLetterbox_tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SRGLetterbox_tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FAB3B7F1E29060100CC2197 /* SRGLetterbox-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SRGLetterbox-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FAB3B8B1E29066300CC2197 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAB3B9A1E291A8500CC2197 /* YYWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYWebImage.framework; path = Carthage/Build/iOS/YYWebImage.framework; sourceTree = "<group>"; };
 		6FB017981E975F87004CCAF8 /* ModalTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalTransition.h; sourceTree = "<group>"; };
@@ -908,8 +908,8 @@
 			isa = PBXGroup;
 			children = (
 				6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */,
-				6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox_demo.app */,
-				6FAB3B7F1E29060100CC2197 /* SRGLetterbox_tests.xctest */,
+				6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */,
+				6FAB3B7F1E29060100CC2197 /* SRGLetterbox-tests.xctest */,
 				6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */,
 			);
 			name = Products;
@@ -1008,7 +1008,7 @@
 			);
 			name = "SRGLetterbox-demo";
 			productName = "SRGLetterbox-demo";
-			productReference = 6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox_demo.app */;
+			productReference = 6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		6FAB3B7E1E29060100CC2197 /* SRGLetterbox-tests */ = {
@@ -1026,7 +1026,7 @@
 			);
 			name = "SRGLetterbox-tests";
 			productName = "SRGLetterbox-tests";
-			productReference = 6FAB3B7F1E29060100CC2197 /* SRGLetterbox_tests.xctest */;
+			productReference = 6FAB3B7F1E29060100CC2197 /* SRGLetterbox-tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		6FE321401E28E24E00FD8E42 /* SRGLetterbox */ = {
@@ -1433,7 +1433,7 @@
 				MARKETING_VERSION = 1.14.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
-				PRODUCT_NAME = "${TARGET_NAME:c99extidentifier}";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
 				VERSION_INFO_PREFIX = "";
@@ -1557,7 +1557,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
-				PRODUCT_NAME = "${TARGET_NAME:c99extidentifier}";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1676,7 +1676,7 @@
 				MARKETING_VERSION = 1.14.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
-				PRODUCT_NAME = "${TARGET_NAME:c99extidentifier}";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
 				VERSION_INFO_PREFIX = "";
@@ -1976,7 +1976,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
-				PRODUCT_NAME = "${TARGET_NAME:c99extidentifier}";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2034,7 +2034,7 @@
 				MARKETING_VERSION = 1.14.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
-				PRODUCT_NAME = "${TARGET_NAME:c99extidentifier}";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
 				VERSION_INFO_PREFIX = "";

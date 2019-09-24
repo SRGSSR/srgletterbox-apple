@@ -44,7 +44,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FAB3B7E1E29060100CC2197"
-               BuildableName = "SRGLetterbox_tests.xctest"
+               BuildableName = "SRGLetterbox-tests.xctest"
                BlueprintName = "SRGLetterbox-tests"
                ReferencedContainer = "container:SRGLetterbox.xcodeproj">
             </BuildableReference>
