@@ -106,8 +106,14 @@
     
     NSDate *endDate = self.controller.continuousPlaybackTransitionEndDate;
     if (endDate) {
-        NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:endDate];
-        self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
+        NSTimeInterval remainingTimeInterval = floor([endDate timeIntervalSinceDate:NSDate.date]);
+        if (remainingTimeInterval != 0.) {
+            NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:endDate];
+            self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
+        }
+        else {
+            self.remainingTimeLabel.text = NSLocalizedString(@"Starting...", nil);
+        }
     }
     else {
         self.remainingTimeLabel.text = nil;
@@ -119,7 +125,7 @@
 - (CGRect)preferredPlayerViewFrame
 {
     static const CGFloat kWidth = 720.f;
-    return CGRectMake(100.f, 100.f, kWidth, kWidth * 9.f / 16.f);
+    return CGRectMake(80.f, 80.f, kWidth, kWidth * 9.f / 16.f);
 }
 
 - (NSArray<id<UIFocusEnvironment>> *)preferredFocusEnvironments
