@@ -11,7 +11,7 @@
 
 @interface SRGLettterboxContentProposalViewController ()
 
-@property (nonatomic, weak) SRGLetterboxController *controller;
+@property (nonatomic) SRGMedia *media;
 
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -26,11 +26,11 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithController:(SRGLetterboxController *)controller
+- (instancetype)initWithMedia:(SRGMedia *)media
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
     SRGLettterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.controller = controller;
+    viewController.media = media;
     return viewController;
 }
 
@@ -40,7 +40,7 @@
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
-    return [self initWithController:SRGLetterboxController.new];
+    return [self initWithMedia:SRGMedia.new];
 }
 
 #pragma clang diagnostic pop
@@ -51,10 +51,9 @@
 {
     [super viewDidLoad];
     
-    SRGMedia *nextMedia = self.controller.nextMedia;
-    [self.thumbnailImageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
-    self.titleLabel.text = nextMedia.title;
-    self.summaryLabel.text = nextMedia.summary;
+    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    self.titleLabel.text = self.media.title;
+    self.summaryLabel.text = self.media.summary;
 }
 
 #pragma mark Overrides
@@ -74,8 +73,7 @@
 
 - (IBAction)playNext:(id)sender
 {
-    [self.controller playNextMedia];
-    [self dismissContentProposalForAction:AVContentProposalActionDefer animated:YES completion:^{
+    [self dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
         self.playerViewController.contentProposalViewController = nil;
     }];
 }

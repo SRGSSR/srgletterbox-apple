@@ -142,7 +142,7 @@
 
 - (BOOL)playerViewController:(AVPlayerViewController *)playerViewController shouldPresentContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
 {
-    playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithController:self.controller];
+    playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithMedia:self.controller.nextMedia];
     return YES;
 }
 
@@ -229,7 +229,7 @@
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
     if (@available(tvOS 10, *)) {
-        [self.playerViewController.contentProposalViewController dismissContentProposalForAction:AVContentProposalActionDefer animated:YES completion:^{
+        [self.playerViewController.contentProposalViewController dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
             self.playerViewController.contentProposalViewController = nil;
         }];
     }
