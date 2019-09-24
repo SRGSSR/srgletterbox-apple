@@ -96,8 +96,22 @@
     self.titleLabel.text = nextMedia.title;
     self.summaryLabel.text = nextMedia.summary;
     
-    NSTimeInterval remainingTime = round([self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:NSDate.date]);
-    self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@ seconds", nil), @(remainingTime)];
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+        s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+    });
+    
+    NSDate *endDate = self.controller.continuousPlaybackTransitionEndDate;
+    if (endDate) {
+        NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:endDate];
+        self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
+    }
+    else {
+        self.remainingTimeLabel.text = nil;
+    }
 }
 
 #pragma mark Overrides
