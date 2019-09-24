@@ -13,6 +13,7 @@
 @interface SRGLettterboxContentProposalViewController ()
 
 @property (nonatomic) SRGLetterboxController *controller;
+@property (nonatomic) SRGMedia *media;
 
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -34,6 +35,7 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
     SRGLettterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
+    viewController.media = controller.nextMedia;
     viewController.controller = controller;
     return viewController;
 }
@@ -91,10 +93,9 @@
 
 - (void)reloadData
 {
-    SRGMedia *nextMedia = self.controller.nextMedia;
-    [self.thumbnailImageView srg_requestImageForObject:nextMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
-    self.titleLabel.text = nextMedia.title;
-    self.summaryLabel.text = nextMedia.summary;
+    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    self.titleLabel.text = self.media.title;
+    self.summaryLabel.text = self.media.summary;
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;

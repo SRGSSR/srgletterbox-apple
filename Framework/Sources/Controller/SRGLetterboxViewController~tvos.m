@@ -142,8 +142,15 @@
 
 - (BOOL)playerViewController:(AVPlayerViewController *)playerViewController shouldPresentContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
 {
-    playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithController:self.controller];
-    return YES;
+    SRGLetterboxController *controller = self.controller;
+    if (controller.nextMedia) {
+        playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithController:controller];
+        return YES;
+    }
+    else {
+        playerViewController.contentProposalViewController = nil;
+        return NO;
+    }
 }
 
 - (void)playerViewController:(AVPlayerViewController *)playerViewController didAcceptContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
