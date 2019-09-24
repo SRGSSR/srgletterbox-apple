@@ -37,6 +37,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // TODO: Dark mode compatibility. Cell backgrounds? (also update other SRG SSR library demos)
     return 19;
 }
 
