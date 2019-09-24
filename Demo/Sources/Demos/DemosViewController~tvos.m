@@ -10,7 +10,7 @@
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
-@interface DemosViewController ()
+@interface DemosViewController () <SRGLetterboxViewControllerDelegate>
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) Playlist *playlist;
@@ -51,6 +51,13 @@
     }
     
     return cell;
+}
+
+#pragma mark SRGLetterboxViewControllerDelegate protocol
+
+- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark UITableViewDelegate protocol
@@ -115,6 +122,7 @@
     
     NSString *URN = s_URNs[@(indexPath.row)];
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
+    letterboxViewController.delegate = self;
     [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self presentViewController:letterboxViewController animated:YES completion:nil];
     

@@ -8,6 +8,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class SRGLetterboxViewController;
+
+@protocol SRGLetterboxViewControllerDelegate <NSObject>
+
+@optional
+
+/**
+*  This method is called when the user proactively plays the media suggested during continuous playback.
+*/
+- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
+
+/**
+*  This method is called when the user cancels continuous playback of the suggested media.
+*/
+- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
+
+@end
+
 @interface SRGLetterboxViewController : UIViewController
 
 /**
@@ -20,6 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  The controller used for playback.
  */
 @property (nonatomic, readonly) SRGLetterboxController *controller;
+
+/**
+ *  The view controller delegate.
+ */
+@property (nonatomic, weak) id<SRGLetterboxViewControllerDelegate> delegate;
 
 @end
 
