@@ -134,7 +134,7 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 static void commonInit(SRGLetterboxBaseView *self)
 {
-    NSString *nibName = NSStringFromClass(self.class);
+    NSString *nibName = SRGLetterboxResourceNameForUIClass(self.class);
     if ([NSBundle.srg_letterboxBundle pathForResource:nibName ofType:@"nib"]) {
         // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
         // an instance of the class itself to avoid infinite recursion.
