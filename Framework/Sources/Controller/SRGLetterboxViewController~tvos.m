@@ -60,7 +60,7 @@
                 // `automaticAcceptanceInterval` on the `AVContentProposal`.
                 SRGMedia *nextMedia = controller.nextMedia;
                 if (transitionDuration != SRGLetterboxContinuousPlaybackDisabled && nextMedia) {
-                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:kCMTimeIndefinite
+                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:kCMTimeZero
                                                                                                            title:nextMedia.title
                                                                                                     previewImage:nil];
                 }
