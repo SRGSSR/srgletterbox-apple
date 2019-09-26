@@ -64,6 +64,7 @@ OBJC_EXPORT NSString * const SRGLetterboxMediaKey;
 OBJC_EXPORT NSString * const SRGLetterboxMediaCompositionKey;
 OBJC_EXPORT NSString * const SRGLetterboxSubdivisionKey;
 OBJC_EXPORT NSString * const SRGLetterboxChannelKey;
+OBJC_EXPORT NSString * const SRGLetterboxProgramCompositionKey;
 
 /**
  *  Previous metadata.
@@ -73,6 +74,7 @@ OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaCompositionKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousSubdivisionKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousChannelKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousProgramCompositionKey;
 
 /**
  *  Notification sent when an error has been encountered.
@@ -648,9 +650,14 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
 
 /**
- *  Channel information (contains information about current and next programs).
+ *  Channel information.
  */
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
+
+/**
+*  Program information (contains channel and latest programs).
+*/
+@property (nonatomic, readonly, nullable) SRGProgramComposition *programComposition;
 
 /**
  *  The current subdivision being played.

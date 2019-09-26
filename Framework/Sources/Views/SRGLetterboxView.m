@@ -428,10 +428,15 @@ static void commonInit(SRGLetterboxView *self);
     if (media.contentType == SRGContentTypeLivestream && self.controller.channel) {
         SRGChannel *channel = self.controller.channel;
         
-        // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
+        // Display program artwork (if any) when the slider position is within the program list, otherwise channel artwork.
         NSDate *date = self.controlsView.date;
-        if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault unavailabilityHandler:^{
+        NSPredicate *predicate = (date) ? [NSPredicate predicateWithBlock:^BOOL(SRGProgram * _Nullable program, NSDictionary<NSString *,id> * _Nullable bindings) {
+            return [program srgletterbox_containsDate:date];
+        }] : nil;
+        SRGProgram *currentProgram = (predicate) ? [self.controller.programComposition.programs filteredArrayUsingPredicate:predicate].firstObject : nil;
+        
+        if (currentProgram) {
+            [self.imageView srg_requestImageForObject:currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault unavailabilityHandler:^{
                 [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
             }];
         }
