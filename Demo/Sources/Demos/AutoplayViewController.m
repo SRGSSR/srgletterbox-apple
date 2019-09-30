@@ -11,6 +11,7 @@
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 @interface AutoplayViewController ()
 
@@ -37,7 +38,19 @@
 {
     [super viewDidLoad];
     
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(applicationDidBecomeActive:)
+                                               name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
+    
     [self refresh];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self updateAudioSession];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -114,6 +127,25 @@
     self.request = request;
 }
 
+#pragma mark Audio session
+
+- (void)updateAudioSession
+{
+    __block BOOL silent = YES;
+    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (! cell.muted) {
+            silent = NO;
+        }
+    }];
+    
+    if (silent) {
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:NULL];
+    }
+    else {
+        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:NULL];
+    }
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -141,6 +173,22 @@
     [cell setMedia:self.medias[indexPath.row] withPreferredSubtitleLocalization:s_localizations[@(self.autoplayList)]];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    selectedCell.muted = ! selectedCell.muted;
+    
+    [tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (! [cell isEqual:selectedCell]) {
+            cell.muted = YES;
+        }
+    }];
+    
+    [self updateAudioSession];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [cell setMedia:nil withPreferredSubtitleLocalization:nil];
@@ -149,6 +197,14 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGRectGetWidth(tableView.frame) * 9.f / 16.f;
+}
+
+#pragma mark Notifications
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self updateAudioSession];
+    [self.tableView reloadData];
 }
 
 @end

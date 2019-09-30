@@ -23,7 +23,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 @interface AppDelegate ()
 
-@property(nonatomic, weak) DemosViewController *demosViewController;
+@property (nonatomic, weak) DemosViewController *demosViewController;
 
 @end
 
@@ -36,6 +36,8 @@ static __attribute__((constructor)) void ApplicationInit(void)
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     self.window.backgroundColor = UIColor.blackColor;
     [self.window makeKeyAndVisible];
+    
+    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     application.accessibilityLanguage = @"en";
     

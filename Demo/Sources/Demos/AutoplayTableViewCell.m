@@ -18,6 +18,7 @@
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UIImageView *soundIndicatorImageView;
 
 @end
 
@@ -51,11 +52,25 @@
     }
 }
 
+- (BOOL)isMuted
+{
+    return self.letterboxController.muted;
+}
+
+- (void)setMuted:(BOOL)muted
+{
+    self.letterboxController.muted = muted;
+    self.soundIndicatorImageView.image = (muted) ? [UIImage imageNamed:@"SoundOffIndicator"] : [UIImage imageNamed:@"SoundOnIndicator"];
+}
+
 #pragma mark Overrides
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.letterboxView.userInteractionEnabled = NO;
+    self.progressView.userInteractionEnabled = NO;
     
     self.letterboxController = [[SRGLetterboxController alloc] init];
     self.letterboxController.serviceURL = ApplicationSettingServiceURL();
@@ -77,6 +92,9 @@
     [super prepareForReuse];
     
     self.progressView.hidden = YES;
+    
+    self.letterboxController.muted = YES;
+    self.soundIndicatorImageView.image = [UIImage imageNamed:@"SoundOffIndicator"];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
