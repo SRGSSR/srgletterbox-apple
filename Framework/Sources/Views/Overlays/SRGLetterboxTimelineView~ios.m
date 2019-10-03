@@ -71,9 +71,8 @@
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     collectionViewLayout.minimumLineSpacing = 1.f;
     
-    NSString *identifier = NSStringFromClass(SRGLetterboxSubdivisionCell.class);
-    UINib *nib = [UINib nibWithNibName:identifier bundle:NSBundle.srg_letterboxBundle];
-    [self.collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
+    UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
+    [self.collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
 }
 
 - (void)layoutSubviews
