@@ -38,7 +38,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // TODO: Dark mode compatibility. Cell backgrounds? (also update other SRG SSR library demos)
-    return 19;
+    return 20;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,7 +86,8 @@
                       @15 : NSLocalizedString(@"RTS AOD (start on segment)", nil),
                       @16 : NSLocalizedString(@"Couleur 3 DVR", nil),
                       @17 : NSLocalizedString(@"SRF 1 (Region Zurich) DVR", nil),
-                      @18 : NSLocalizedString(@"Invalid media", nil)
+                      @18 : NSLocalizedString(@"Invalid media", nil),
+                      @19 : NSLocalizedString(@"Square video", nil)
         };
     });
     cell.textLabel.text = s_titles[@(indexPath.row)];
@@ -116,7 +117,8 @@
                     @15 : @"urn:rts:audio:9355011",
                     @16 : @"urn:rts:audio:3262363",
                     @17 : @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106",
-                    @18 : @"urn:swi:video:1234567"
+                    @18 : @"urn:swi:video:1234567",
+                    @19 : @"urn:rts:video:10438517"
         };
     });
     
