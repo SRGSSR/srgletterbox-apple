@@ -23,7 +23,6 @@
 #import "SRGLetterboxTimelineView.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGNotificationView.h"
-#import "SRGProgram+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -424,25 +423,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadImage
 {
-    // For livestreams, rely on channel information when available
-    SRGMedia *media = self.controller.subdivisionMedia ?: self.controller.media;
-    if (media.contentType == SRGContentTypeLivestream && self.controller.channel) {
-        SRGChannel *channel = self.controller.channel;
-        
-        // Display program artwork (if any) when the slider position is within the current program, otherwise channel artwork.
-        NSDate *date = self.controlsView.date;
-        if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self.imageView srg_requestImageForObject:channel.currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault unavailabilityHandler:^{
-                [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
-            }];
-        }
-        else {
-            [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
-        }
-    }
-    else {
-        [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
-    }
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controlsView.date];
 }
 
 #pragma mark Observer management

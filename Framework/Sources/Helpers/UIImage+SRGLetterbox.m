@@ -85,6 +85,11 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
     static NSDictionary *s_widths;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
+#if TARGET_OS_TV
+        s_widths = @{ @(SRGImageScaleSmall) : @(400.f),
+                      @(SRGImageScaleMedium) : @(800.f),
+                      @(SRGImageScaleLarge) : @(1920.f)};
+#else
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
             s_widths = @{ @(SRGImageScaleSmall) : @(200.f),
                           @(SRGImageScaleMedium) : @(350.f),
@@ -95,6 +100,7 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
                           @(SRGImageScaleMedium) : @(500.f),
                           @(SRGImageScaleLarge) : @(1000.f)};
         }
+#endif
     });
     
     // Use 2x maximum as scale. Sufficient for a good result without having to load very large images

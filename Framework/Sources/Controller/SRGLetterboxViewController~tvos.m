@@ -9,6 +9,7 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLettterboxContentProposalViewController.h"
 #import "UIImage+SRGLetterbox.h"
+#import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -21,6 +22,8 @@
 @property (nonatomic) SRGMediaPlayerViewController *playerViewController;
 
 @property (nonatomic) NSMutableDictionary<NSURL *, YYWebImageOperation *> *imageOperations;
+
+@property (nonatomic, weak) UIImageView *imageView;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -43,8 +46,10 @@
         
         self.imageOperations = [NSMutableDictionary dictionary];
         
+        @weakify(self)
         @weakify(controller)
         self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
             @strongify(controller);
             
             AVPlayerItem *playerItem = controller.mediaPlayerController.player.currentItem;
@@ -68,6 +73,8 @@
                     playerItem.nextContentProposal = nil;
                 }
             }
+            
+            [self reloadImage];
         }];
         
         [NSNotificationCenter.defaultCenter addObserver:self
@@ -106,6 +113,12 @@
     playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:playerView];
     
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [playerView insertSubview:imageView atIndex:0];
+    self.imageView = imageView;
+    
     [self addChildViewController:self.playerViewController];
 }
 
@@ -136,6 +149,19 @@
     }
     
     return [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+}
+
+#pragma mark Data
+
+- (void)reloadData
+{
+    [self.playerViewController reloadData];
+    [self reloadImage];
+}
+
+- (void)reloadImage
+{
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol
@@ -231,7 +257,7 @@
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self.playerViewController reloadData];
+    [self reloadData];
 }
 
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
