@@ -74,12 +74,17 @@
                 }
             }
             
+            [self updateMainLayout];
             [self reloadImage];
         }];
         
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(metadataDidChange:)
                                                    name:SRGLetterboxMetadataDidChangeNotification
+                                                 object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackStateDidChange:)
+                                                   name:SRGLetterboxPlaybackStateDidChangeNotification
                                                  object:controller];
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(playbackDidContinueAutomatically:)
@@ -120,6 +125,7 @@
     self.imageView = imageView;
     
     [self addChildViewController:self.playerViewController];
+    [self updateMainLayout];
 }
 
 #pragma mark Image retrieval
@@ -162,6 +168,15 @@
 - (void)reloadImage
 {
     [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
+}
+
+#pragma mark Layout
+
+- (void)updateMainLayout
+{
+    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+    self.imageView.alpha = ! playerViewVisible;
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol
@@ -212,7 +227,7 @@
         descriptionItem.extendedLanguageTag = @"und";
         
         UIImage *image = [self imageForMetadata:media withCompletion:^{
-            [self.playerViewController reloadData];
+            [self reloadData];
         }];
         
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
@@ -238,7 +253,7 @@
         titleItem.extendedLanguageTag = @"und";
         
         UIImage *image = [self imageForMetadata:segment withCompletion:^{
-            [self.playerViewController reloadData];
+            [self reloadData];
         }];
         
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
@@ -258,6 +273,11 @@
 - (void)metadataDidChange:(NSNotification *)notification
 {
     [self reloadData];
+}
+
+- (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self updateMainLayout];
 }
 
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
