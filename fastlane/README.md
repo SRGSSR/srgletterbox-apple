@@ -25,7 +25,7 @@ Run library tests
 ```
 fastlane ios nightly
 ```
-Build a new nightly demo on HockeyApp
+Build a new nightly demo on App Center
 ### ios demo
 ```
 fastlane ios demo

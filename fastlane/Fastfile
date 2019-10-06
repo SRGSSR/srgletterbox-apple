@@ -43,12 +43,12 @@ platform :ios do
     trainer(output_directory: "./fastlane")
   end
 
-  desc "Build a new nightly demo on HockeyApp"
+  desc "Build a new nightly demo on App Center"
   lane :nightly do
 
-    hockeyAppBuildNumber = getHockeyAppBuildNumber
+    appCenterBuildNumber = getAppCenterBuildNumber
     increment_build_number(
-      build_number: hockeyAppBuildNumber + 1
+      build_number: appCenterBuildNumber + 1
     )
 
     changelog = default_changelog_for_nightlies
@@ -69,9 +69,8 @@ platform :ios do
       marketing_version_suffix: marketing_version_suffix
     )
 
-    hockey_lane(
-      api_token: ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_TOKEN'],
-      public_identifier: ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_IDENTIFIER'],
+    appcenter_lane(
+      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
       notes: changelog
     )
 
@@ -165,6 +164,23 @@ platform :ios do
     )
   end
 
+  desc "Upload a build on App Center"
+  private_lane :appcenter_lane do |options|
+    appname = options[:appname]
+    notes = options[:notes]
+
+    appcenter_upload(
+      api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
+      owner_type: "organization",
+      owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
+      app_name: appname,
+      release_notes: notes,
+      destination_type: "group",
+      destinations: ENV['LETTERBOX_DEMO_APPCENTER_DESTINATIONS'],
+      notify_testers: false
+    )
+  end
+
   desc "Returns a default changelog for nightlies"
   private_lane :default_changelog_for_nightlies do
 
@@ -184,12 +200,12 @@ platform :ios do
     changelog
   end
 
-  desc "Return current build number on Hockey App"
-  private_lane :getHockeyAppBuildNumber do
-    hockeyAppBuildNumber = (sh "scripts/hockeyapp-build-number.sh -t #{ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_TOKEN']} #{ENV['LETTERBOX_DEMO_NIGHTLY_HOCKEY_IDENTIFIER']}")
-    hockeyAppBuildNumber = Integer(hockeyAppBuildNumber.lines.map(&:chomp).last)
-    puts hockeyAppBuildNumber
-    hockeyAppBuildNumber
+  desc "Return current build number on App Center"
+  private_lane :getAppCenterBuildNumber do
+    appCenterBuildNumber = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} #{ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_SECRET']}")
+    appCenterBuildNumber = Integer(appCenterBuildNumber.lines.map(&:chomp).last)
+    puts appCenterBuildNumber
+    appCenterBuildNumber
   end
 
   desc "Save the git commit hash in a local text file for nightlies"
