@@ -6,7 +6,7 @@
 
 #import "SettingsViewController.h"
 
-#import <HockeySDK/HockeySDK.h>
+#import <AppCenterDistribute/AppCenterDistribute.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 /**
@@ -197,7 +197,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return ([BITHockeyManager sharedHockeyManager].updateManager != nil) ? 9 : 8;
+    return (MSDistribute.isEnabled) ? 9 : 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -600,7 +600,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 8: {
             completionBlock = ^{
-                [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
+                //TODO: Display AppCenter update page.
             };
             break;
         }
