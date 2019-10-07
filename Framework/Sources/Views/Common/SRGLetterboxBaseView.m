@@ -43,6 +43,8 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 #pragma mark Getters and setters
 
+#if TARGET_OS_IOS
+
 - (SRGLetterboxView *)parentLetterboxView
 {
     // Start with self. The context can namely be the receiver itself
@@ -55,6 +57,8 @@ static void commonInit(SRGLetterboxBaseView *self);
     }
     return nil;
 }
+
+#endif
 
 #pragma mark Overrides
 
@@ -125,10 +129,14 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 #pragma mark Layout
 
+#if TARGET_OS_IOS
+
 - (void)setNeedsLayoutAnimated:(BOOL)animated
 {
     [self.parentLetterboxView setNeedsLayoutAnimated:animated];
 }
+
+#endif
 
 @end
 

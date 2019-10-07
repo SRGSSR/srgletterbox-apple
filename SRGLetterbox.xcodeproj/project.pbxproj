@@ -95,8 +95,8 @@
 		6F50596B20581CAF00823003 /* SRGLetterboxControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F50596C20581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */; };
 		6F50596D20581CAF00823003 /* SRGLetterboxBaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594420581CAF00823003 /* SRGLetterboxBaseView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6F50596F20581CAF00823003 /* SRGLetterboxControllerView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594620581CAF00823003 /* SRGLetterboxControllerView~ios.m */; };
-		6F50597020581CAF00823003 /* SRGLetterboxBaseView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594720581CAF00823003 /* SRGLetterboxBaseView~ios.m */; };
+		6F50596F20581CAF00823003 /* SRGLetterboxControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */; };
+		6F50597020581CAF00823003 /* SRGLetterboxBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594720581CAF00823003 /* SRGLetterboxBaseView.m */; };
 		6F50597120581CAF00823003 /* SRGLetterboxPlaybackButton~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594920581CAF00823003 /* SRGLetterboxPlaybackButton~ios.m */; };
 		6F50597220581CAF00823003 /* SRGRemainingTimeButton~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50594A20581CAF00823003 /* SRGRemainingTimeButton~ios.m */; };
 		6F50597320581CAF00823003 /* SRGFullScreenButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594B20581CAF00823003 /* SRGFullScreenButton.h */; };
@@ -332,8 +332,8 @@
 		6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxControllerView.h; sourceTree = "<group>"; };
 		6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxBaseView+Subclassing.h"; sourceTree = "<group>"; };
 		6F50594420581CAF00823003 /* SRGLetterboxBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxBaseView.h; sourceTree = "<group>"; };
-		6F50594620581CAF00823003 /* SRGLetterboxControllerView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxControllerView~ios.m"; sourceTree = "<group>"; };
-		6F50594720581CAF00823003 /* SRGLetterboxBaseView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxBaseView~ios.m"; sourceTree = "<group>"; };
+		6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxControllerView.m; sourceTree = "<group>"; };
+		6F50594720581CAF00823003 /* SRGLetterboxBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxBaseView.m; sourceTree = "<group>"; };
 		6F50594920581CAF00823003 /* SRGLetterboxPlaybackButton~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxPlaybackButton~ios.m"; sourceTree = "<group>"; };
 		6F50594A20581CAF00823003 /* SRGRemainingTimeButton~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGRemainingTimeButton~ios.m"; sourceTree = "<group>"; };
 		6F50594B20581CAF00823003 /* SRGFullScreenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGFullScreenButton.h; sourceTree = "<group>"; };
@@ -663,10 +663,10 @@
 				08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */,
 				08A05B1C20585DD200E80BD6 /* SRGControlWrapperView~ios.m */,
 				6F50594420581CAF00823003 /* SRGLetterboxBaseView.h */,
-				6F50594720581CAF00823003 /* SRGLetterboxBaseView~ios.m */,
+				6F50594720581CAF00823003 /* SRGLetterboxBaseView.m */,
 				6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */,
 				6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */,
-				6F50594620581CAF00823003 /* SRGLetterboxControllerView~ios.m */,
+				6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */,
 				6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */,
 				08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */,
 				08A05B1D20585DD200E80BD6 /* SRGPaddedLabel~ios.m */,
@@ -1303,7 +1303,7 @@
 				6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */,
 				6F50597120581CAF00823003 /* SRGLetterboxPlaybackButton~ios.m in Sources */,
 				6F50595D20581CAF00823003 /* SRGCountdownView~ios.m in Sources */,
-				6F50597020581CAF00823003 /* SRGLetterboxBaseView~ios.m in Sources */,
+				6F50597020581CAF00823003 /* SRGLetterboxBaseView.m in Sources */,
 				6F72A81223391395008AA908 /* SRGLettterboxContentProposalViewController~tvos.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
 				6F50597520581CAF00823003 /* SRGFullScreenButton~ios.m in Sources */,
@@ -1314,7 +1314,7 @@
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
 				6F50597220581CAF00823003 /* SRGRemainingTimeButton~ios.m in Sources */,
 				6F5543EB20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.m in Sources */,
-				6F50596F20581CAF00823003 /* SRGLetterboxControllerView~ios.m in Sources */,
+				6F50596F20581CAF00823003 /* SRGLetterboxControllerView.m in Sources */,
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.m in Sources */,
 				08A05B2120585DD200E80BD6 /* SRGPaddedLabel~ios.m in Sources */,

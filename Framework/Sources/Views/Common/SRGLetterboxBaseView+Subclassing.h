@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion The parent of an `SRGLetterboxView` is the view itself.
  */
-@property (nonatomic, readonly, nullable) SRGLetterboxView *parentLetterboxView;
+@property (nonatomic, readonly, nullable) SRGLetterboxView *parentLetterboxView __TVOS_UNAVAILABLE;
 
 /**
  *  Method called when the content size category changes. Subclasses can e.g. implement this method if needed to adjust
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Call to trigger a layout update on the parent context.
  */
-- (void)setNeedsLayoutAnimated:(BOOL)animated;
+- (void)setNeedsLayoutAnimated:(BOOL)animated __TVOS_UNAVAILABLE;
 
 @end
 
