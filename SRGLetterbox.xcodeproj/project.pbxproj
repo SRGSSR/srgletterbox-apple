@@ -66,6 +66,7 @@
 		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
 		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */; };
 		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */; };
+		6F223C64234B6BB3002F93A1 /* SRGErrorView~tvos.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F223C63234B6BB3002F93A1 /* SRGErrorView~tvos.xib */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
 		6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
 		6F2EB4702029DFB300E7ACDC /* LetterboxBaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */; };
@@ -89,7 +90,7 @@
 		6F50596420581CAF00823003 /* SRGContinuousPlaybackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593A20581CAF00823003 /* SRGContinuousPlaybackView.h */; };
 		6F50596520581CAF00823003 /* SRGAvailabilityView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593B20581CAF00823003 /* SRGAvailabilityView.h */; };
 		6F50596620581CAF00823003 /* SRGControlsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50593C20581CAF00823003 /* SRGControlsView.h */; };
-		6F50596720581CAF00823003 /* SRGErrorView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593D20581CAF00823003 /* SRGErrorView~ios.m */; };
+		6F50596720581CAF00823003 /* SRGErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593D20581CAF00823003 /* SRGErrorView.m */; };
 		6F50596820581CAF00823003 /* SRGAccessibilityView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50593E20581CAF00823003 /* SRGAccessibilityView~ios.m */; };
 		6F50596A20581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */; };
 		6F50596B20581CAF00823003 /* SRGLetterboxControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -110,9 +111,9 @@
 		6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */; };
 		6F6EA9041F4DA2D900844199 /* NSTimer+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */; };
 		6F6EA9051F4DA2D900844199 /* NSTimer+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */; };
-		6F72A81123391395008AA908 /* SRGLettterboxContentProposalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F72A80E23391395008AA908 /* SRGLettterboxContentProposalViewController.h */; };
-		6F72A81223391395008AA908 /* SRGLettterboxContentProposalViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F72A80F23391395008AA908 /* SRGLettterboxContentProposalViewController~tvos.m */; };
-		6F72A81523391490008AA908 /* SRGLettterboxContentProposalViewController~tvos.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F72A81423391490008AA908 /* SRGLettterboxContentProposalViewController~tvos.storyboard */; };
+		6F72A81123391395008AA908 /* SRGLetterboxContentProposalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F72A80E23391395008AA908 /* SRGLetterboxContentProposalViewController.h */; };
+		6F72A81223391395008AA908 /* SRGLetterboxContentProposalViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F72A80F23391395008AA908 /* SRGLetterboxContentProposalViewController~tvos.m */; };
+		6F72A81523391490008AA908 /* SRGLetterboxContentProposalViewController~tvos.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F72A81423391490008AA908 /* SRGLetterboxContentProposalViewController~tvos.storyboard */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
 		6F75AF47219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */; };
@@ -289,6 +290,7 @@
 		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
 		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ModalPlayerViewController~ios.m"; sourceTree = "<group>"; };
 		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "ModalPlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
+		6F223C63234B6BB3002F93A1 /* SRGErrorView~tvos.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SRGErrorView~tvos.xib"; sourceTree = "<group>"; };
 		6F28BAD11E323F6A004F43DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6F2EB46E2029DFB100E7ACDC /* LetterboxBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LetterboxBaseTestCase.h; sourceTree = "<group>"; };
 		6F2EB46F2029DFB300E7ACDC /* LetterboxBaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterboxBaseTestCase.m; sourceTree = "<group>"; };
@@ -326,7 +328,7 @@
 		6F50593A20581CAF00823003 /* SRGContinuousPlaybackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGContinuousPlaybackView.h; sourceTree = "<group>"; };
 		6F50593B20581CAF00823003 /* SRGAvailabilityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGAvailabilityView.h; sourceTree = "<group>"; };
 		6F50593C20581CAF00823003 /* SRGControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlsView.h; sourceTree = "<group>"; };
-		6F50593D20581CAF00823003 /* SRGErrorView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGErrorView~ios.m"; sourceTree = "<group>"; };
+		6F50593D20581CAF00823003 /* SRGErrorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGErrorView.m; sourceTree = "<group>"; };
 		6F50593E20581CAF00823003 /* SRGAccessibilityView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGAccessibilityView~ios.m"; sourceTree = "<group>"; };
 		6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxControllerView+Subclassing.h"; sourceTree = "<group>"; };
 		6F50594220581CAF00823003 /* SRGLetterboxControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxControllerView.h; sourceTree = "<group>"; };
@@ -349,9 +351,9 @@
 		6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxController+Private.h"; sourceTree = "<group>"; };
-		6F72A80E23391395008AA908 /* SRGLettterboxContentProposalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLettterboxContentProposalViewController.h; sourceTree = "<group>"; };
-		6F72A80F23391395008AA908 /* SRGLettterboxContentProposalViewController~tvos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SRGLettterboxContentProposalViewController~tvos.m"; sourceTree = "<group>"; };
-		6F72A81423391490008AA908 /* SRGLettterboxContentProposalViewController~tvos.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "SRGLettterboxContentProposalViewController~tvos.storyboard"; sourceTree = "<group>"; };
+		6F72A80E23391395008AA908 /* SRGLetterboxContentProposalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxContentProposalViewController.h; sourceTree = "<group>"; };
+		6F72A80F23391395008AA908 /* SRGLetterboxContentProposalViewController~tvos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxContentProposalViewController~tvos.m"; sourceTree = "<group>"; };
+		6F72A81423391490008AA908 /* SRGLetterboxContentProposalViewController~tvos.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "SRGLetterboxContentProposalViewController~tvos.storyboard"; sourceTree = "<group>"; };
 		6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+LetterboxDemo.h"; sourceTree = "<group>"; };
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxPlaybackSettings.h; sourceTree = "<group>"; };
@@ -509,9 +511,9 @@
 				6F721E141E41BAD8003B698D /* SRGLetterboxController+Private.h */,
 				6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */,
 				6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */,
-				6F72A80E23391395008AA908 /* SRGLettterboxContentProposalViewController.h */,
-				6F72A80F23391395008AA908 /* SRGLettterboxContentProposalViewController~tvos.m */,
-				6F72A81423391490008AA908 /* SRGLettterboxContentProposalViewController~tvos.storyboard */,
+				6F72A80E23391395008AA908 /* SRGLetterboxContentProposalViewController.h */,
+				6F72A80F23391395008AA908 /* SRGLetterboxContentProposalViewController~tvos.m */,
+				6F72A81423391490008AA908 /* SRGLetterboxContentProposalViewController~tvos.storyboard */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -640,8 +642,9 @@
 				6F50593320581CAF00823003 /* SRGCountdownView~ios.m */,
 				6F50593820581CAF00823003 /* SRGCountdownView~ios.xib */,
 				6F50592F20581CAF00823003 /* SRGErrorView.h */,
-				6F50593D20581CAF00823003 /* SRGErrorView~ios.m */,
+				6F50593D20581CAF00823003 /* SRGErrorView.m */,
 				6F50593120581CAF00823003 /* SRGErrorView~ios.xib */,
+				6F223C63234B6BB3002F93A1 /* SRGErrorView~tvos.xib */,
 				6F50593920581CAF00823003 /* SRGLetterboxSubdivisionCell.h */,
 				6F50592C20581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.m */,
 				6F50592820581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.xib */,
@@ -927,7 +930,7 @@
 				087EB61C1E291203005DD80B /* UIDevice+SRGLetterbox.h in Headers */,
 				6F50597620581CAF00823003 /* SRGRemainingTimeButton.h in Headers */,
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
-				6F72A81123391395008AA908 /* SRGLettterboxContentProposalViewController.h in Headers */,
+				6F72A81123391395008AA908 /* SRGLetterboxContentProposalViewController.h in Headers */,
 				6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				6F50596520581CAF00823003 /* SRGAvailabilityView.h in Headers */,
@@ -1120,9 +1123,10 @@
 				6F0C99132121E73400073AB6 /* SRGCountdownView~ios.xib in Resources */,
 				6F0C99162121E73400073AB6 /* SRGLetterboxTimelineView~ios.xib in Resources */,
 				6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */,
-				6F72A81523391490008AA908 /* SRGLettterboxContentProposalViewController~tvos.storyboard in Resources */,
+				6F72A81523391490008AA908 /* SRGLetterboxContentProposalViewController~tvos.storyboard in Resources */,
 				6F0C99122121E73400073AB6 /* SRGControlsView~ios.xib in Resources */,
 				6F0C99152121E73400073AB6 /* SRGLetterboxSubdivisionCell~ios.xib in Resources */,
+				6F223C64234B6BB3002F93A1 /* SRGErrorView~tvos.xib in Resources */,
 				6F0C99172121E73400073AB6 /* SRGNotificationView~ios.xib in Resources */,
 				6F0C99102121E73400073AB6 /* SRGContinuousPlaybackView~ios.xib in Resources */,
 				6F0C99112121E73400073AB6 /* SRGControlsBackgroundView~ios.xib in Resources */,
@@ -1304,7 +1308,7 @@
 				6F50597120581CAF00823003 /* SRGLetterboxPlaybackButton~ios.m in Sources */,
 				6F50595D20581CAF00823003 /* SRGCountdownView~ios.m in Sources */,
 				6F50597020581CAF00823003 /* SRGLetterboxBaseView.m in Sources */,
-				6F72A81223391395008AA908 /* SRGLettterboxContentProposalViewController~tvos.m in Sources */,
+				6F72A81223391395008AA908 /* SRGLetterboxContentProposalViewController~tvos.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
 				6F50597520581CAF00823003 /* SRGFullScreenButton~ios.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService~ios.m in Sources */,
@@ -1319,7 +1323,7 @@
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.m in Sources */,
 				08A05B2120585DD200E80BD6 /* SRGPaddedLabel~ios.m in Sources */,
 				6FB83A8F205AAFE90013928B /* SRGControlsBackgroundView~ios.m in Sources */,
-				6F50596720581CAF00823003 /* SRGErrorView~ios.m in Sources */,
+				6F50596720581CAF00823003 /* SRGErrorView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
 				08A05B2920585DF000E80BD6 /* SRGLiveLabel~ios.m in Sources */,
 				6FF0D89B1F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m in Sources */,

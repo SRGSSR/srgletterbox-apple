@@ -80,10 +80,12 @@
     self.instructionsLabel.hidden = NO;
     self.retryTapGestureRecognizer.enabled = YES;
     
+#if TARGET_OS_IOS
     if (! self.parentLetterboxView.userInterfaceEnabled) {
         self.instructionsLabel.hidden = YES;
         self.retryTapGestureRecognizer.enabled = NO;
     }
+#endif
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 170.f) {

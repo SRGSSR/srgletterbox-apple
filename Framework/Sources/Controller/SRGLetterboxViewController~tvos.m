@@ -6,8 +6,9 @@
 
 #import "SRGLetterboxViewController.h"
 
+#import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
-#import "SRGLettterboxContentProposalViewController.h"
+#import "SRGLetterboxContentProposalViewController.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -24,6 +25,7 @@
 @property (nonatomic) NSMutableDictionary<NSURL *, YYWebImageOperation *> *imageOperations;
 
 @property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) SRGErrorView *errorView;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -117,6 +119,11 @@
     playerView.frame = self.view.bounds;
     playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:playerView];
+    [self addChildViewController:self.playerViewController];
+    
+    SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
+    [playerView insertSubview:errorView atIndex:0];
+    self.errorView = errorView;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -124,7 +131,6 @@
     [playerView insertSubview:imageView atIndex:0];
     self.imageView = imageView;
     
-    [self addChildViewController:self.playerViewController];
     [self updateMainLayout];
 }
 
@@ -185,7 +191,7 @@
 {
     SRGLetterboxController *controller = self.controller;
     if (controller.nextMedia) {
-        playerViewController.contentProposalViewController = [[SRGLettterboxContentProposalViewController alloc] initWithController:controller];
+        playerViewController.contentProposalViewController = [[SRGLetterboxContentProposalViewController alloc] initWithController:controller];
         return YES;
     }
     else {

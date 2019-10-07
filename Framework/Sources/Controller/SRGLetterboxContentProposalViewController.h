@@ -10,13 +10,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 API_AVAILABLE(tvos(10.0))
-@interface SRGLettterboxContentProposalViewController : AVContentProposalViewController
+@interface SRGLetterboxContentProposalViewController : AVContentProposalViewController
 
 - (instancetype)initWithController:(SRGLetterboxController *)controller;
 
 @end
 
-@interface SRGLettterboxContentProposalViewController (Unavailable)
+@interface SRGLetterboxContentProposalViewController (Unavailable)
 
 - (instancetype)init NS_UNAVAILABLE;
 

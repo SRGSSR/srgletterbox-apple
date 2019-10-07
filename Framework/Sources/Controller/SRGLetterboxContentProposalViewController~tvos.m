@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLettterboxContentProposalViewController.h"
+#import "SRGLetterboxContentProposalViewController.h"
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
-@interface SRGLettterboxContentProposalViewController ()
+@interface SRGLetterboxContentProposalViewController ()
 
 @property (nonatomic) SRGLetterboxController *controller;
 @property (nonatomic) SRGMedia *media;
@@ -27,14 +27,14 @@
 
 @end
 
-@implementation SRGLettterboxContentProposalViewController
+@implementation SRGLetterboxContentProposalViewController
 
 #pragma mark Object lifecycle
 
 - (instancetype)initWithController:(SRGLetterboxController *)controller
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
-    SRGLettterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
+    SRGLetterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.media = controller.nextMedia;
     viewController.controller = controller;
     return viewController;

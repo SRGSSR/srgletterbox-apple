@@ -7,10 +7,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Lettterbox Content Proposal View Controller-->
+        <!--Letterbox Content Proposal View Controller-->
         <scene sceneID="PS8-fC-Bzd">
             <objects>
-                <viewController id="jiF-Qr-yCb" customClass="SRGLettterboxContentProposalViewController" sceneMemberID="viewController">
+                <viewController id="jiF-Qr-yCb" customClass="SRGLetterboxContentProposalViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YzI-61-JEi"/>
                         <viewControllerLayoutGuide type="bottom" id="k80-o3-v6X"/>
