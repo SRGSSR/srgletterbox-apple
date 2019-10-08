@@ -38,7 +38,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // TODO: Dark mode compatibility. Cell backgrounds? (also update other SRG SSR library demos)
-    return 21;
+    return 32;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,9 +86,21 @@
                       @15 : NSLocalizedString(@"RTS AOD (start on segment)", nil),
                       @16 : NSLocalizedString(@"Couleur 3 DVR", nil),
                       @17 : NSLocalizedString(@"SRF 1 (Region Zurich) DVR", nil),
-                      @18 : NSLocalizedString(@"Invalid media", nil),
-                      @19 : NSLocalizedString(@"Square video", nil),
-                      @20 : NSLocalizedString(@"No media", nil)
+                      @18 : NSLocalizedString(@"Square video", nil),
+                      @19 : NSLocalizedString(@"Invalid media", nil),
+                      @20 : NSLocalizedString(@"No media", nil),
+                      @21 : NSLocalizedString(@"Scheduled livestream (1 hour transition)", nil),
+                      @22 : NSLocalizedString(@"Scheduled livestream with server cache", nil),
+                      @23 : NSLocalizedString(@"Scheduled livestream never playable", nil),
+                      @24 : NSLocalizedString(@"Temporary geoblocking", nil),
+                      @25 : NSLocalizedString(@"Temporary live-only restriction", nil),
+                      @26 : NSLocalizedString(@"SwissTXT Full DVR", nil),
+                      @27 : NSLocalizedString(@"SwissTXT Limited DVR", nil),
+                      @28 : NSLocalizedString(@"SwissTXT Live Only DVR", nil),
+                      @29 : NSLocalizedString(@"SwissTXT Full DVR (start date change)", nil),
+                      @30 : NSLocalizedString(@"Temporarily not found", nil),
+                      @31 : NSLocalizedString(@"RTS VOD with multiple audio channels", nil)
+                      
         };
     });
     cell.textLabel.text = s_titles[@(indexPath.row)];
@@ -118,8 +130,20 @@
                     @15 : @"urn:rts:audio:9355011",
                     @16 : @"urn:rts:audio:3262363",
                     @17 : @"urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106",
-                    @18 : @"urn:swi:video:1234567",
-                    @19 : @"urn:rts:video:10438517"
+                    @18: @"urn:rts:video:10438517",
+                    @19 : @"urn:swi:video:1234567",
+                    // @20 omitted
+                    @21 : @"urn:rts:video:_rts_info_delay",
+                    @22 : @"urn:rts:video:_rts_info_cacheddelay",
+                    @23 : @"urn:rts:video:_rts_info_never",
+                    @24 : @"urn:rts:video:_rts_info_geoblocked",
+                    @25 : @"urn:rts:video:_rts_info_killswitch",
+                    @26 : @"urn:rts:video:_rts_info_fulldvr",
+                    @27 : @"urn:rts:video:_rts_info_liveonly_limiteddvr",
+                    @28 : @"urn:rts:video:_rts_info_liveonly_delay",
+                    @29 : @"urn:rts:video:_rts_info_fulldvrstartdate",
+                    @30 : @"urn:rts:video:_rts_info_notfound",
+                    @31 : @"urn:swi:video:1234567"
         };
     });
     
@@ -128,6 +152,7 @@
     
     NSString *URN = s_URNs[@(indexPath.row)];
     if (URN) {
+        letterboxViewController.controller.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
         [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
         
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
