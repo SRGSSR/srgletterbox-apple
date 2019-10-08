@@ -149,10 +149,11 @@
     
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
     letterboxViewController.delegate = self;
+    letterboxViewController.controller.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
+    letterboxViewController.controller.updateInterval = 10.;
     
     NSString *URN = s_URNs[@(indexPath.row)];
     if (URN) {
-        letterboxViewController.controller.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
         [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
         
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
