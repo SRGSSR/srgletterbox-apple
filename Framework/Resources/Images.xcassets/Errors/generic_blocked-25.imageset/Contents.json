@@ -7,6 +7,10 @@
     {
       "idiom" : "ipad",
       "filename" : "nomedia-1.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "nomedia-100.pdf"
     }
   ],
   "info" : {

@@ -7,6 +7,10 @@
     {
       "idiom" : "ipad",
       "filename" : "network-1.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "network-2.pdf"
     }
   ],
   "info" : {
