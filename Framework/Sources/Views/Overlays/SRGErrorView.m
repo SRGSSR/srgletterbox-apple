@@ -40,8 +40,13 @@
 {
     [super contentSizeCategoryDidChange];
     
+#if TARGET_OS_IOS
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+#else
+    self.messageLabel.font = [UIFont srg_mediumFontWithSize:54.f];
+    self.instructionsLabel.font = [UIFont srg_mediumFontWithSize:42.f];
+#endif
 }
 
 - (void)metadataDidChange

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="14868" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15400" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
         <deployment identifier="tvOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGErrorView">
             <connections>
-                <outlet property="messageLabel" destination="Qg8-g8-m3G" id="zO2-nE-Bcy"/>
+                <outlet property="messageLabel" destination="Rku-Ta-Ql5" id="Xvp-9o-9b5"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -18,15 +18,43 @@
             <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="&lt;error&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qg8-g8-m3G">
-                    <rect key="frame" x="914" y="517" width="127" height="46"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LI4-TQ-bTG" userLabel="Dimming View">
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="nRb-Os-N9Q">
+                    <rect key="frame" x="90" y="60" width="1740" height="960"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Yf-sc-ova" userLabel="Spacer View">
+                            <rect key="frame" x="0.0" y="0.0" width="1740" height="448.5"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;error&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rku-Ta-Ql5">
+                            <rect key="frame" x="0.0" y="448.5" width="1740" height="63"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="54"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pfV-y7-gP2" userLabel="Spacer View">
+                            <rect key="frame" x="0.0" y="511.5" width="1740" height="448.5"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="pfV-y7-gP2" firstAttribute="height" secondItem="6Yf-sc-ova" secondAttribute="height" id="lFS-Tq-gjV"/>
+                    </constraints>
+                </stackView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="LI4-TQ-bTG" secondAttribute="trailing" id="Bne-Y4-Le6"/>
+                <constraint firstAttribute="bottom" secondItem="LI4-TQ-bTG" secondAttribute="bottom" id="OFg-3c-k5L"/>
+                <constraint firstItem="LI4-TQ-bTG" firstAttribute="leading" secondItem="jZW-br-ui1" secondAttribute="leading" id="RdD-AM-tbY"/>
+                <constraint firstItem="nRb-Os-N9Q" firstAttribute="top" secondItem="AYr-AU-7JW" secondAttribute="top" id="W2F-8o-dKb"/>
+                <constraint firstItem="AYr-AU-7JW" firstAttribute="trailing" secondItem="nRb-Os-N9Q" secondAttribute="trailing" id="W9m-4G-O9n"/>
+                <constraint firstItem="nRb-Os-N9Q" firstAttribute="leading" secondItem="AYr-AU-7JW" secondAttribute="leading" id="czs-b4-J93"/>
+                <constraint firstItem="AYr-AU-7JW" firstAttribute="bottom" secondItem="nRb-Os-N9Q" secondAttribute="bottom" id="k6X-HK-sVQ"/>
+                <constraint firstItem="LI4-TQ-bTG" firstAttribute="top" secondItem="jZW-br-ui1" secondAttribute="top" id="noB-bt-45W"/>
+            </constraints>
             <viewLayoutGuide key="safeArea" id="AYr-AU-7JW"/>
             <point key="canvasLocation" x="51" y="103"/>
         </view>

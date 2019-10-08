@@ -89,6 +89,10 @@
                                                    name:SRGLetterboxPlaybackStateDidChangeNotification
                                                  object:controller];
         [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackDidFail:)
+                                                   name:SRGLetterboxPlaybackDidFailNotification
+                                                 object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(playbackDidContinueAutomatically:)
                                                    name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                  object:controller];
@@ -122,6 +126,7 @@
     [self addChildViewController:self.playerViewController];
     
     SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
+    errorView.controller = self.controller;
     [playerView insertSubview:errorView atIndex:0];
     self.errorView = errorView;
     
@@ -132,6 +137,7 @@
     self.imageView = imageView;
     
     [self updateMainLayout];
+    [self reloadData];
 }
 
 #pragma mark Image retrieval
@@ -182,7 +188,11 @@
 {
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
-    self.imageView.alpha = ! playerViewVisible;
+    self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
+    
+    BOOL hasError = (self.controller.error != nil);
+    self.errorView.alpha = hasError ? 1.f : 0.f;
+    self.playerViewController.showsPlaybackControls = ! hasError;
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol
@@ -282,6 +292,11 @@
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self updateMainLayout];
+}
+
+- (void)playbackDidFail:(NSNotification *)notification
 {
     [self updateMainLayout];
 }
