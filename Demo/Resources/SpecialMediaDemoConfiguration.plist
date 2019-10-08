@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>medias</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>URL overriding</string>
+			<key>urn</key>
+			<string>urn:rts:video:8806790</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Scheduled livestream</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_delay</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Scheduled livestream (100 days transition)</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_delay_ADD100DAYS_</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Scheduled livestream (1 day transition)</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_delay_ADD1DAY_</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Scheduled livestream (1 hour transition)</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_delay_ADD1HOUR_</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Scheduled livestream with server cache</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_cacheddelay</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Scheduled livestream never playable</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_never</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Temporary geoblocking</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_geoblocked</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Temporary live-only restriction</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_killswitch</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SwissTXT Full DVR</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_fulldvr</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SwissTXT Limited DVR</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_liveonly_limiteddvr</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SwissTXT Live Only</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_liveonly_delay</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SwissTXT Full DVR (start date change)</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_fulldvrstartdate</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Temporarily not found</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rts_info_notfound</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS VOD with multiple audio channels</string>
+			<key>urn</key>
+			<string>urn:rts:video:_rtsvo_multipleaudios_staging</string>
+			<key>onMMF</key>
+			<true/>
+		</dict>
+	</array>
+</dict>
+</plist>

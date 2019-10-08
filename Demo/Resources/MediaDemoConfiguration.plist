@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>medias</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>SWI VOD</string>
+			<key>urn</key>
+			<string>urn:swi:video:41981254</string>
+			<key>basic</key>
+			<true/>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS VOD (short clip)</string>
+			<key>urn</key>
+			<string>urn:rts:video:8591082</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS VOD (segments)</string>
+			<key>urn</key>
+			<string>urn:rts:video:10623665</string>
+			<key>basic</key>
+			<true/>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS VOD (start on segment)</string>
+			<key>urn</key>
+			<string>urn:rts:video:10623653</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS VODs with no full-length</string>
+			<key>urn</key>
+			<string>urn:rts:video:8686071</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SRF VOD (blocked segment at 29:26)</string>
+			<key>urn</key>
+			<string>urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SRF VOD (blocked overlap)</string>
+			<key>urn</key>
+			<string>urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Hybrid VOD (audio / video)</string>
+			<key>urn</key>
+			<string>urn:rts:audio:8581974</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS Le Gotthard 360 VOD</string>
+			<key>urn</key>
+			<string>urn:rts:video:8414077</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS Le Goût du risque 360 VOD</string>
+			<key>urn</key>
+			<string>urn:rts:video:7800215</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SRF VOD (no token protection)</string>
+			<key>urn</key>
+			<string>urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS Info DVR</string>
+			<key>urn</key>
+			<string>urn:rts:video:1967124</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SRF Info LIVE</string>
+			<key>urn</key>
+			<string>urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SRF AOD</string>
+			<key>urn</key>
+			<string>urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS AOD (segments)</string>
+			<key>urn</key>
+			<string>urn:rts:audio:9355007</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>RTS AOD (start on segment)</string>
+			<key>urn</key>
+			<string>urn:rts:audio:9355011</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Couleur 3 DVR</string>
+			<key>urn</key>
+			<string>urn:rts:audio:3262363</string>
+			<key>pageNagivation</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>SRF 1 (Region Zurich) DVR</string>
+			<key>urn</key>
+			<string>urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Square video</string>
+			<key>urn</key>
+			<string>urn:rts:video:10438517</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Invalid media</string>
+			<key>urn</key>
+			<string>urn:swi:video:1234567</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>No media</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -11,6 +11,9 @@
 		0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
+		086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */; };
+		086B944C234CEDA3003D6BAA /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B944B234CEDA3003D6BAA /* Media.m */; };
+		086B944E234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */; };
 		087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
@@ -235,6 +238,10 @@
 		0849DA5C20FD553100026F0D /* TopicItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicItem.m; sourceTree = "<group>"; };
 		086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Copyable~ios.m"; sourceTree = "<group>"; };
 		086AFBF122BE968E0047FD44 /* UILabel+Copyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Copyable.h"; sourceTree = "<group>"; };
+		086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MediaDemoConfiguration.plist; sourceTree = "<group>"; };
+		086B944A234CEDA3003D6BAA /* Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Media.h; sourceTree = "<group>"; };
+		086B944B234CEDA3003D6BAA /* Media.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Media.m; sourceTree = "<group>"; };
+		086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SpecialMediaDemoConfiguration.plist; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
@@ -505,6 +512,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		086B9449234CEDA3003D6BAA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				086B944A234CEDA3003D6BAA /* Media.h */,
+				086B944B234CEDA3003D6BAA /* Media.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		087EB6091E290A14005DD80B /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -776,6 +792,8 @@
 			children = (
 				6F28BAD11E323F6A004F43DD /* Images.xcassets */,
 				6FAB3B541E28FFEA00CC2197 /* LaunchScreen~ios.storyboard */,
+				086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */,
+				086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -784,8 +802,9 @@
 			isa = PBXGroup;
 			children = (
 				6FAB3B561E28FFEA00CC2197 /* Application */,
-				6F73FB0A1E4C6F01000986C2 /* Helpers */,
 				6FAB3B5A1E28FFEA00CC2197 /* Demos */,
+				6F73FB0A1E4C6F01000986C2 /* Helpers */,
+				086B9449234CEDA3003D6BAA /* Models */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -1154,8 +1173,10 @@
 				08BA348D1F4AF4C900D9C204 /* SettingsViewController~ios.storyboard in Resources */,
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard in Resources */,
+				086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */,
 				6FD9BA331E3096010013CC97 /* DemosViewController~ios.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen~ios.storyboard in Resources */,
+				086B944E234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist in Resources */,
 				08BA348B1F4ADF1F00D9C204 /* MediaListViewController~ios.storyboard in Resources */,
 				0849DA5920FCD82E00026F0D /* TopicListViewController~ios.storyboard in Resources */,
 			);
@@ -1255,6 +1276,7 @@
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
 				0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */,
 				6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */,
+				086B944C234CEDA3003D6BAA /* Media.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
 				086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */,
