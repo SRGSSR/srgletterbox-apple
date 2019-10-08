@@ -190,9 +190,10 @@
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     
-    BOOL hasError = (self.controller.error != nil);
+    NSError *error = self.controller.error;
+    BOOL hasError = error && (! [error.domain isEqualToString:SRGLetterboxErrorDomain] || error.code != SRGLetterboxErrorCodeNotAvailable);
     self.errorView.alpha = hasError ? 1.f : 0.f;
-    self.playerViewController.showsPlaybackControls = ! hasError;
+    self.playerViewController.showsPlaybackControls = ! hasError && self.controller.URN;
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol

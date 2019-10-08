@@ -18,11 +18,9 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UILabel *messageLabel;
-
-#if TARGET_OS_IOS
 @property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
+
 @property (nonatomic, weak) UITapGestureRecognizer *retryTapGestureRecognizer;
-#endif
 
 @end
 
@@ -36,26 +34,19 @@
     
     self.messageLabel.numberOfLines = 3;
     
-#if TARGET_OS_IOS
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     
     UITapGestureRecognizer *retryTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(retry:)];
     [self addGestureRecognizer:retryTapGestureRecognizer];
     self.retryTapGestureRecognizer = retryTapGestureRecognizer;
-#endif
 }
 
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
     
-#if TARGET_OS_IOS
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-#else
-    // TODO: SRG SSR font size?
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:UIFontTextStyleTitle2];
-#endif
 }
 
 - (void)metadataDidChange
@@ -92,7 +83,6 @@
     self.imageView.hidden = NO;
     self.messageLabel.hidden = NO;
     
-#if TARGET_OS_IOS
     self.instructionsLabel.hidden = NO;
     self.retryTapGestureRecognizer.enabled = YES;
     
@@ -108,7 +98,6 @@
     if (height < 140.f) {
         self.messageLabel.hidden = YES;
     }
-#endif
 }
 
 #pragma mark UI
@@ -119,21 +108,14 @@
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
-    
-#if TARGET_OS_IOS
     self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
-#endif
 }
 
 #pragma mark Actions
-
-#if TARGET_OS_IOS
 
 - (void)retry:(id)sender
 {
     [self.controller restart];
 }
-
-#endif
 
 @end
