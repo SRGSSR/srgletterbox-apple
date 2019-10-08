@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "forbidden-12.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "forbidden-13.pdf"
     }
   ],
   "info" : {

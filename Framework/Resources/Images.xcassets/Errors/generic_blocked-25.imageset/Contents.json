@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "nomedia.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "nomedia-1.pdf"
     }
   ],
   "info" : {

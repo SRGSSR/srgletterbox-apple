@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "outofswitzerlandv2.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "outofswitzerlandv2-1.pdf"
     }
   ],
   "info" : {

@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "notification.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "notification-1.pdf"
     }
   ],
   "info" : {

@@ -127,9 +127,13 @@
 
 #pragma mark Actions
 
+#if TARGET_OS_IOS
+
 - (void)retry:(id)sender
 {
     [self.controller restart];
 }
+
+#endif
 
 @end

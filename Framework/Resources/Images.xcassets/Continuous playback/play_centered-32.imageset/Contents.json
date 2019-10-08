@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "play_centered-32v2.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "play_centered-32v2-1.pdf"
     }
   ],
   "info" : {

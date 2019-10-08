@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "loading-48-46.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "loading-48-47.pdf"
     }
   ],
   "info" : {
