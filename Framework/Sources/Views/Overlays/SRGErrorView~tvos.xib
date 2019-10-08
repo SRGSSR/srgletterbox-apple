@@ -49,10 +49,10 @@
                 <constraint firstAttribute="trailing" secondItem="LI4-TQ-bTG" secondAttribute="trailing" id="Bne-Y4-Le6"/>
                 <constraint firstAttribute="bottom" secondItem="LI4-TQ-bTG" secondAttribute="bottom" id="OFg-3c-k5L"/>
                 <constraint firstItem="LI4-TQ-bTG" firstAttribute="leading" secondItem="jZW-br-ui1" secondAttribute="leading" id="RdD-AM-tbY"/>
-                <constraint firstItem="nRb-Os-N9Q" firstAttribute="top" secondItem="AYr-AU-7JW" secondAttribute="top" id="W2F-8o-dKb"/>
-                <constraint firstItem="AYr-AU-7JW" firstAttribute="trailing" secondItem="nRb-Os-N9Q" secondAttribute="trailing" id="W9m-4G-O9n"/>
-                <constraint firstItem="nRb-Os-N9Q" firstAttribute="leading" secondItem="AYr-AU-7JW" secondAttribute="leading" id="czs-b4-J93"/>
-                <constraint firstItem="AYr-AU-7JW" firstAttribute="bottom" secondItem="nRb-Os-N9Q" secondAttribute="bottom" id="k6X-HK-sVQ"/>
+                <constraint firstItem="nRb-Os-N9Q" firstAttribute="top" secondItem="jZW-br-ui1" secondAttribute="top" constant="60" id="W2F-8o-dKb"/>
+                <constraint firstAttribute="trailing" secondItem="nRb-Os-N9Q" secondAttribute="trailing" constant="90" id="W9m-4G-O9n"/>
+                <constraint firstItem="nRb-Os-N9Q" firstAttribute="leading" secondItem="jZW-br-ui1" secondAttribute="leading" constant="90" id="czs-b4-J93"/>
+                <constraint firstAttribute="bottom" secondItem="nRb-Os-N9Q" secondAttribute="bottom" constant="60" id="k6X-HK-sVQ"/>
                 <constraint firstItem="LI4-TQ-bTG" firstAttribute="top" secondItem="jZW-br-ui1" secondAttribute="top" id="noB-bt-45W"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="AYr-AU-7JW"/>

@@ -18,9 +18,11 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UILabel *messageLabel;
-@property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
 
-@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *retryTapGestureRecognizer;
+#if TARGET_OS_IOS
+@property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
+@property (nonatomic, weak) UITapGestureRecognizer *retryTapGestureRecognizer;
+#endif
 
 @end
 
@@ -33,7 +35,14 @@
     [super awakeFromNib];
     
     self.messageLabel.numberOfLines = 3;
+    
+#if TARGET_OS_IOS
     self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
+    
+    UITapGestureRecognizer *retryTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(retry:)];
+    [self addGestureRecognizer:retryTapGestureRecognizer];
+    self.retryTapGestureRecognizer = retryTapGestureRecognizer;
+#endif
 }
 
 - (void)contentSizeCategoryDidChange
@@ -44,8 +53,8 @@
     self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     self.instructionsLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
 #else
-    self.messageLabel.font = [UIFont srg_mediumFontWithSize:54.f];
-    self.instructionsLabel.font = [UIFont srg_mediumFontWithSize:42.f];
+    // TODO: SRG SSR font size?
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:UIFontTextStyleTitle2];
 #endif
 }
 
@@ -82,15 +91,15 @@
     
     self.imageView.hidden = NO;
     self.messageLabel.hidden = NO;
+    
+#if TARGET_OS_IOS
     self.instructionsLabel.hidden = NO;
     self.retryTapGestureRecognizer.enabled = YES;
     
-#if TARGET_OS_IOS
     if (! self.parentLetterboxView.userInterfaceEnabled) {
         self.instructionsLabel.hidden = YES;
         self.retryTapGestureRecognizer.enabled = NO;
     }
-#endif
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 170.f) {
@@ -99,6 +108,7 @@
     if (height < 140.f) {
         self.messageLabel.hidden = YES;
     }
+#endif
 }
 
 #pragma mark UI
@@ -109,12 +119,15 @@
     UIImage *image = [UIImage srg_letterboxImageForError:error];
     self.imageView.image = image;
     self.messageLabel.text = error.localizedDescription;
+    
+#if TARGET_OS_IOS
     self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+#endif
 }
 
 #pragma mark Actions
 
-- (IBAction)retry:(id)sender
+- (void)retry:(id)sender
 {
     [self.controller restart];
 }
