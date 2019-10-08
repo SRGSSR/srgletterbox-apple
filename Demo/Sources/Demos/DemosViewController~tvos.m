@@ -38,7 +38,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // TODO: Dark mode compatibility. Cell backgrounds? (also update other SRG SSR library demos)
-    return 20;
+    return 21;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -87,7 +87,8 @@
                       @16 : NSLocalizedString(@"Couleur 3 DVR", nil),
                       @17 : NSLocalizedString(@"SRF 1 (Region Zurich) DVR", nil),
                       @18 : NSLocalizedString(@"Invalid media", nil),
-                      @19 : NSLocalizedString(@"Square video", nil)
+                      @19 : NSLocalizedString(@"Square video", nil),
+                      @20 : NSLocalizedString(@"No media", nil)
         };
     });
     cell.textLabel.text = s_titles[@(indexPath.row)];
@@ -122,18 +123,21 @@
         };
     });
     
-    NSString *URN = s_URNs[@(indexPath.row)];
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
     letterboxViewController.delegate = self;
-    [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
-    [self presentViewController:letterboxViewController animated:YES completion:nil];
     
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-    [[self.dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        self.playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-        self.playlist.continuousPlaybackTransitionDuration = 30.;
-        letterboxViewController.controller.playlistDataSource = self.playlist;
-    }] resume];
+    NSString *URN = s_URNs[@(indexPath.row)];
+    if (URN) {
+        [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+        
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
+        [[self.dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            self.playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
+            self.playlist.continuousPlaybackTransitionDuration = 30.;
+            letterboxViewController.controller.playlistDataSource = self.playlist;
+        }] resume];
+    }
+    [self presentViewController:letterboxViewController animated:YES completion:nil];
 }
 
 // TODO: Not for tvOS
