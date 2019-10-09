@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Topic lists
  */
-typedef __TVOS_PROHIBITED NS_ENUM(NSInteger, TopicList) {
+typedef NS_ENUM(NSInteger, TopicList) {
     /**
      *  Not specified
      */
@@ -35,12 +35,15 @@ typedef __TVOS_PROHIBITED NS_ENUM(NSInteger, TopicList) {
      */
     TopicListRTR,
     /**
+     *  SWI Topics
+     */
+    TopicListSWI,
+    /**
      *  MMF topics
      */
     TopicListMMF
 };
 
-__TVOS_PROHIBITED
 @interface TopicListViewController : UITableViewController
 
 - (instancetype)initWithTopicList:(TopicList)topicList;

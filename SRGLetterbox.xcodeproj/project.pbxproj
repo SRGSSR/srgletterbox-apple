@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08104137234E0D2F00A3C021 /* UIViewController+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08104136234E0D2F00A3C021 /* UIViewController+LetterboxDemo.m */; };
-		0849DA5920FCD82E00026F0D /* TopicListViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0849DA5620FCD82D00026F0D /* TopicListViewController~ios.storyboard */; };
-		0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */; };
+		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
 		086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */; };
@@ -236,9 +235,8 @@
 		08104136234E0D2F00A3C021 /* UIViewController+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LetterboxDemo.m"; sourceTree = "<group>"; };
 		08152F2A1E9269290053AB34 /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Localizable.strings; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
-		0849DA5620FCD82D00026F0D /* TopicListViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "TopicListViewController~ios.storyboard"; sourceTree = "<group>"; };
 		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
-		0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TopicListViewController~ios.m"; sourceTree = "<group>"; };
+		0849DA5820FCD82D00026F0D /* TopicListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicListViewController.m; sourceTree = "<group>"; };
 		0849DA5B20FD553100026F0D /* TopicItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicItem.h; sourceTree = "<group>"; };
 		0849DA5C20FD553100026F0D /* TopicItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicItem.m; sourceTree = "<group>"; };
 		086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Copyable~ios.m"; sourceTree = "<group>"; };
@@ -871,8 +869,7 @@
 				6FB78F891E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m */,
 				6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard */,
 				0849DA5720FCD82D00026F0D /* TopicListViewController.h */,
-				0849DA5820FCD82D00026F0D /* TopicListViewController~ios.m */,
-				0849DA5620FCD82D00026F0D /* TopicListViewController~ios.storyboard */,
+				0849DA5820FCD82D00026F0D /* TopicListViewController.m */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -1191,7 +1188,6 @@
 				6FD9BA331E3096010013CC97 /* DemosViewController~ios.storyboard in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen~ios.storyboard in Resources */,
 				086B944E234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist in Resources */,
-				0849DA5920FCD82E00026F0D /* TopicListViewController~ios.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1287,7 +1283,7 @@
 				08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */,
 				6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
-				0849DA5A20FCD82E00026F0D /* TopicListViewController~ios.m in Sources */,
+				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
 				6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */,
 				086B944C234CEDA3003D6BAA /* Media.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,

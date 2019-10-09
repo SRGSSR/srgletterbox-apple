@@ -269,7 +269,7 @@
         }
             
         case 7: {
-            count = 5;
+            count = 6;
             break;
         }
             
@@ -372,6 +372,7 @@
                                   NSLocalizedString(@"RTS topics", nil),
                                   NSLocalizedString(@"RSI topics", nil),
                                   NSLocalizedString(@"RTR topics", nil),
+                                  NSLocalizedString(@"SWI topics", nil),
                                   NSLocalizedString(@"Play MMF topics", nil)];
             });
             
@@ -551,6 +552,11 @@
                 }
                     
                 case 4: {
+                    [self openTopicListWithType:TopicListSWI];
+                    break;
+                }
+                    
+                case 5: {
                     [self openTopicListWithType:TopicListMMF];
                     break;
                 }

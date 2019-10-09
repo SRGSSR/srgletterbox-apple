@@ -11,6 +11,7 @@
 #import "MediaListViewController.h"
 #import "Playlist.h"
 #import "SettingsViewController.h"
+#import "TopicListViewController.h"
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
@@ -97,6 +98,11 @@
             break;
         }
             
+        case 3: {
+            count = 6;
+            break;
+        }
+            
         default:
             break;
     }
@@ -142,6 +148,22 @@
             });
             
             name = s_mediaLists[indexPath.row];
+            break;
+        }
+            
+        case 3: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSString *> *s_topicLists;
+            dispatch_once(&s_onceToken, ^{
+                s_topicLists = @[ NSLocalizedString(@"SRF topics", nil),
+                                  NSLocalizedString(@"RTS topics", nil),
+                                  NSLocalizedString(@"RSI topics", nil),
+                                  NSLocalizedString(@"RTR topics", nil),
+                                  NSLocalizedString(@"SWI topics", nil),
+                                  NSLocalizedString(@"Play MMF topics", nil)];
+            });
+            
+            name = s_topicLists[indexPath.row];
             break;
         }
             
@@ -196,6 +218,45 @@
             break;
         }
             
+        case 3: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openTopicListWithType:TopicListSRF];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openTopicListWithType:TopicListRTS];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openTopicListWithType:TopicListRSI];
+                    break;
+                }
+                    
+                case 3: {
+                    [self openTopicListWithType:TopicListRTR];
+                    break;
+                }
+                    
+                case 4: {
+                    [self openTopicListWithType:TopicListSWI];
+                    break;
+                }
+                    
+                case 5: {
+                    [self openTopicListWithType:TopicListMMF];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
+            
         default:
             break;
     }
@@ -207,6 +268,12 @@
 {
     MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaList topic:nil MMFOverride:NO];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
+}
+
+- (void)openTopicListWithType:(TopicList)TopicList
+{
+    TopicListViewController *topicListViewController = [[TopicListViewController alloc] initWithTopicList:TopicList];
+    [self.navigationController pushViewController:topicListViewController animated:YES];
 }
 
 - (void)openModalPlayerWithURN:(NSString *)URN
