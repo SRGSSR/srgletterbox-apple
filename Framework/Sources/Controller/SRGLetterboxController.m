@@ -1410,7 +1410,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     SRGDiagnosticReport *report = [[SRGDiagnosticsService serviceWithName:service] reportWithName:name];
     [report setInteger:1 forKey:@"version"];
+#if TARGET_OS_TV
+    [report setString:[NSString stringWithFormat:@"Letterbox/tvOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
+#else
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
+#endif
     [report setString:NSBundle.srg_letterbox_isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:SRGDeviceInformation() forKey:@"device"];
     [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];

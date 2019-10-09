@@ -346,7 +346,7 @@
 - (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
-    if (slider.isLive) {
+    if (slider.live) {
         return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
