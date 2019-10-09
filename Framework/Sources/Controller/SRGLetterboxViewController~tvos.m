@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxViewController.h"
 
+#import "SRGAvailabilityView.h"
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxContentProposalViewController.h"
@@ -25,6 +26,7 @@
 @property (nonatomic) NSMutableDictionary<NSURL *, YYWebImageOperation *> *imageOperations;
 
 @property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) SRGAvailabilityView *availabilityView;
 @property (nonatomic, weak) SRGErrorView *errorView;
 
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -130,6 +132,11 @@
     [playerView insertSubview:errorView atIndex:0];
     self.errorView = errorView;
     
+    SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] initWithFrame:playerView.bounds];
+    availabilityView.controller = self.controller;
+    [playerView insertSubview:availabilityView atIndex:0];
+    self.availabilityView = availabilityView;
+    
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -191,9 +198,21 @@
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     
     NSError *error = self.controller.error;
-    BOOL hasError = error && (! [error.domain isEqualToString:SRGLetterboxErrorDomain] || error.code != SRGLetterboxErrorCodeNotAvailable);
-    self.errorView.alpha = hasError ? 1.f : 0.f;
-    self.playerViewController.showsPlaybackControls = ! hasError && self.controller.URN;
+    if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+        self.errorView.alpha = 0.f;
+        self.availabilityView.alpha = 1.f;
+        self.playerViewController.showsPlaybackControls = NO;
+    }
+    else if (error) {
+        self.errorView.alpha = 1.f;
+        self.availabilityView.alpha = 0.f;
+        self.playerViewController.showsPlaybackControls = NO;
+    }
+    else {
+        self.errorView.alpha = 0.f;
+        self.availabilityView.alpha = 0.f;
+        self.playerViewController.showsPlaybackControls = (self.controller.URN != nil);
+    }
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol

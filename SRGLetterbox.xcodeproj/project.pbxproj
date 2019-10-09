@@ -177,6 +177,8 @@
 		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
 		6FD9BA311E3095F00013CC97 /* DemosViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */; };
 		6FD9BA331E3096010013CC97 /* DemosViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FD9BA321E3096010013CC97 /* DemosViewController~ios.storyboard */; };
+		6FDC2EB1234E11EE0044E83B /* SRGAvailabilityView~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC2EB0234E11EE0044E83B /* SRGAvailabilityView~tvos.m */; };
+		6FDC2EB3234E129D0044E83B /* SRGAvailabilityView~tvos.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FDC2EB2234E129D0044E83B /* SRGAvailabilityView~tvos.xib */; };
 		6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
 		6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */; };
 		6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */; };
@@ -443,6 +445,8 @@
 		6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemosViewController.h; sourceTree = "<group>"; };
 		6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DemosViewController~ios.m"; sourceTree = "<group>"; };
 		6FD9BA321E3096010013CC97 /* DemosViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "DemosViewController~ios.storyboard"; sourceTree = "<group>"; };
+		6FDC2EB0234E11EE0044E83B /* SRGAvailabilityView~tvos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGAvailabilityView~tvos.m"; sourceTree = "<group>"; };
+		6FDC2EB2234E129D0044E83B /* SRGAvailabilityView~tvos.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SRGAvailabilityView~tvos.xib"; sourceTree = "<group>"; };
 		6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGAppearance.framework; path = Carthage/Build/iOS/SRGAppearance.framework; sourceTree = "<group>"; };
 		6FE08CE71E8B81B000EC4716 /* UIFont+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
@@ -647,6 +651,8 @@
 				6F50593B20581CAF00823003 /* SRGAvailabilityView.h */,
 				6F50592A20581CAF00823003 /* SRGAvailabilityView~ios.m */,
 				6F50593020581CAF00823003 /* SRGAvailabilityView~ios.xib */,
+				6FDC2EB0234E11EE0044E83B /* SRGAvailabilityView~tvos.m */,
+				6FDC2EB2234E129D0044E83B /* SRGAvailabilityView~tvos.xib */,
 				6F50593A20581CAF00823003 /* SRGContinuousPlaybackView.h */,
 				6F50592B20581CAF00823003 /* SRGContinuousPlaybackView~ios.m */,
 				6F50593420581CAF00823003 /* SRGContinuousPlaybackView~ios.xib */,
@@ -1153,6 +1159,7 @@
 				6F0C99102121E73400073AB6 /* SRGContinuousPlaybackView~ios.xib in Resources */,
 				6F0C99112121E73400073AB6 /* SRGControlsBackgroundView~ios.xib in Resources */,
 				6F0C990C2121E70800073AB6 /* placeholder_media-320.pdf in Resources */,
+				6FDC2EB3234E129D0044E83B /* SRGAvailabilityView~tvos.xib in Resources */,
 				6F0C990F2121E73400073AB6 /* SRGAvailabilityView~ios.xib in Resources */,
 				6F0C99082121E6FB00073AB6 /* FontAwesome.otf in Resources */,
 				6F0C99142121E73400073AB6 /* SRGErrorView~ios.xib in Resources */,
@@ -1321,6 +1328,7 @@
 				6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */,
 				6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */,
 				087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */,
+				6FDC2EB1234E11EE0044E83B /* SRGAvailabilityView~tvos.m in Sources */,
 				08A05B2420585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m in Sources */,
 				08FA0CF51E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m in Sources */,
 				6F50595120581CAF00823003 /* SRGLetterboxTimelineView~ios.m in Sources */,
