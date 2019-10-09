@@ -114,14 +114,6 @@
 			<key>onMMF</key>
 			<true/>
 		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS VOD with multiple audio channels</string>
-			<key>urn</key>
-			<string>urn:rts:video:_rtsvo_multipleaudios_staging</string>
-			<key>onMMF</key>
-			<true/>
-		</dict>
 	</array>
 </dict>
 </plist>

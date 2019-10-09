@@ -66,6 +66,12 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>RTS VOD with multiple audio channels</string>
+			<key>urn</key>
+			<string>urn:rts:video:8806923</string>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>RTS Le Gotthard 360 VOD</string>
 			<key>urn</key>
 			<string>urn:rts:video:8414077</string>
