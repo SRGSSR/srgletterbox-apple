@@ -7,6 +7,7 @@
 #import "DemosViewController.h"
 
 #import "AutoplayViewController.h"
+#import "DemoSection.h"
 #import "Media.h"
 #import "MediaListViewController.h"
 #import "ModalPlayerViewController.h"
@@ -221,47 +222,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 10;
+    return DemoSection.homeSections.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    static dispatch_once_t s_onceToken;
-    static NSArray<NSString *> *s_sectionHeaders;
-    dispatch_once(&s_onceToken, ^{
-        s_sectionHeaders = @[ NSLocalizedString(@"Basic player", nil),
-                              NSLocalizedString(@"Standalone player", nil),
-                              NSLocalizedString(@"Advanced player", nil),
-                              NSLocalizedString(@"Advanced player (special cases)", nil),
-                              NSLocalizedString(@"Multiple player", nil),
-                              NSLocalizedString(@"Autoplay", nil),
-                              NSLocalizedString(@"Media lists", nil),
-                              NSLocalizedString(@"Topic lists", nil),
-                              NSLocalizedString(@"Playlists", nil),
-                              NSLocalizedString(@"Page navigation", nil)];
-    });
-    
-    return s_sectionHeaders[section];
+    return DemoSection.homeSections[section].headerTitle;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    static dispatch_once_t s_onceToken;
-    static NSArray<NSString *> *s_sectionFooters;
-    dispatch_once(&s_onceToken, ^{
-        s_sectionFooters = @[ NSLocalizedString(@"This basic player can be used with AirPlay but does not implement full screen or picture in picture.", nil),
-                              NSLocalizedString(@"This player is not enabled for AirPlay playback or picture in picture by default. You can enable or disable these features on the fly.", nil),
-                              NSLocalizedString(@"This player implements full screen and picture in picture and can be used with AirPlay. It starts with hidden controls, and a close button has been added as custom control. You can also play with various user interface configurations.", nil),
-                              NSLocalizedString(@"Same features as the advanced player, but in special cases.", nil),
-                              NSLocalizedString(@"This player plays three streams at the same time, and can be used with AirPlay and picture in picture. You can tap on a smaller stream to play it as main stream.", nil),
-                              NSLocalizedString(@"Lists of medias played automatically as they are scrolled.", nil),
-                              NSLocalizedString(@"Lists of medias played with the advanced player.", nil),
-                              NSLocalizedString(@"Lists of topics, whose medias are played with the advanced player.", nil),
-                              NSLocalizedString(@"Medias opened in the context of a playlist.", nil),
-                              NSLocalizedString(@"Medias displayed in a page navigation.", nil) ];
-    });
-    
-    return s_sectionFooters[section];
+    return DemoSection.homeSections[section].footerTitle;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

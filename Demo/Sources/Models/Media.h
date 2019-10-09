@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray<Media *> *)mediasFromFileAtPath:(NSString *)filePath;
 
-@property (nonatomic, readonly, copy) NSString *uid;
 @property (nonatomic, readonly, copy) NSString *name;
 @property (nonatomic, readonly, copy) NSString *URN;
 @property (nonatomic, readonly, getter=forBasic) BOOL basic;

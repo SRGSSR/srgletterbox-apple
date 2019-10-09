@@ -8,7 +8,6 @@
 
 @interface Media ()
 
-@property (nonatomic, copy) NSString *uid;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *URN;
 @property (nonatomic, getter=forBasic) BOOL basic;

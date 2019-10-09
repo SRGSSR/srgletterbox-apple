@@ -6,6 +6,7 @@
 
 #import "DemosViewController.h"
 
+#import "DemoSection.h"
 #import "Media.h"
 #import "Playlist.h"
 
@@ -61,7 +62,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return DemoSection.homeSections.count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return DemoSection.homeSections[section].headerTitle;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    return DemoSection.homeSections[section].footerTitle;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

@@ -14,6 +14,7 @@
 		086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */; };
 		086B944C234CEDA3003D6BAA /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B944B234CEDA3003D6BAA /* Media.m */; };
 		086B944E234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */; };
+		086B9451234DE14A003D6BAA /* DemoSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B9450234DE14A003D6BAA /* DemoSection.m */; };
 		087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
@@ -244,6 +245,8 @@
 		086B944A234CEDA3003D6BAA /* Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Media.h; sourceTree = "<group>"; };
 		086B944B234CEDA3003D6BAA /* Media.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Media.m; sourceTree = "<group>"; };
 		086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SpecialMediaDemoConfiguration.plist; sourceTree = "<group>"; };
+		086B944F234DE14A003D6BAA /* DemoSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoSection.h; sourceTree = "<group>"; };
+		086B9450234DE14A003D6BAA /* DemoSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoSection.m; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
@@ -519,6 +522,8 @@
 		086B9449234CEDA3003D6BAA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				086B944F234DE14A003D6BAA /* DemoSection.h */,
+				086B9450234DE14A003D6BAA /* DemoSection.m */,
 				086B944A234CEDA3003D6BAA /* Media.h */,
 				086B944B234CEDA3003D6BAA /* Media.m */,
 			);
@@ -1286,6 +1291,7 @@
 				086B944C234CEDA3003D6BAA /* Media.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
+				086B9451234DE14A003D6BAA /* DemoSection.m in Sources */,
 				086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,
 				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController~ios.m in Sources */,
