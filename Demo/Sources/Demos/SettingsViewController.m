@@ -12,6 +12,10 @@
 #import <SafariServices/SafariServices.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
+#if TARGET_OS_IOS
+#import <HockeySDK/HockeySDK.h>
+#endif
+
 /**
  *  Private App Center implementation details.
  */
@@ -133,6 +137,7 @@ static void ApplicationSettingSetPreferredQuality(SRGQuality quality)
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
+#if TARGET_OS_IOS
 BOOL ApplicationSettingIsMirroredOnExternalScreen(void)
 {
     return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingMirroredOnExternalScreen];
@@ -146,13 +151,6 @@ void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen
     SRGLetterboxService.sharedService.mirroredOnExternalScreen = mirroredOnExternalScreen;
 }
 
-NSTimeInterval ApplicationSettingUpdateInterval(void)
-{
-    // Set manually to default value, 5 minutes, if no setting.
-    NSTimeInterval updateInterval = [NSUserDefaults.standardUserDefaults doubleForKey:LetterboxDemoSettingUpdateInterval];
-    return (updateInterval > 0.) ? updateInterval : SRGLetterboxDefaultUpdateInterval;
-}
-
 BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void)
 {
     return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingBackgroundVideoPlaybackEnabled];
@@ -162,6 +160,14 @@ static void ApplicationSettingSetBackgroundVideoPlaybackEnabled(BOOL backgroundV
 {
     [NSUserDefaults.standardUserDefaults setBool:backgroundVideoPlaybackEnabled forKey:LetterboxDemoSettingBackgroundVideoPlaybackEnabled];
     [NSUserDefaults.standardUserDefaults synchronize];
+}
+#endif
+
+NSTimeInterval ApplicationSettingUpdateInterval(void)
+{
+    // Set manually to default value, 5 minutes, if no setting.
+    NSTimeInterval updateInterval = [NSUserDefaults.standardUserDefaults doubleForKey:LetterboxDemoSettingUpdateInterval];
+    return (updateInterval > 0.) ? updateInterval : SRGLetterboxDefaultUpdateInterval;
 }
 
 NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
@@ -176,6 +182,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     NSString *location = s_locations[@(ApplicationSettingUserLocation())];
     return location ? @{ @"forceLocation" : location } : nil;
 }
+
+#if TARGET_OS_IOS
 
 @interface SettingsViewController ()
 
@@ -642,3 +650,5 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 }
 
 @end
+
+#endif

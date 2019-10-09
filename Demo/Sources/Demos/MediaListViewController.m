@@ -9,6 +9,7 @@
 #import "ModalPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
+#import "UIViewController+LetterboxDemo.h"
 
 @interface MediaListViewController ()
 
@@ -29,12 +30,13 @@
 
 - (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
-    MediaListViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.mediaList = mediaList;
-    viewController.topic = topic;
-    viewController.MMFOverride = MMFOverride;
-    return viewController;
+    self = [super initWithStyle:UITableViewStylePlain];
+    if (self) {
+        self.mediaList = mediaList;
+        self.topic = topic;
+        self.MMFOverride = MMFOverride;
+    }
+    return self;
 }
 
 - (instancetype)init
@@ -49,16 +51,21 @@
 {
     [super viewDidLoad];
     
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    
     self.title = [self pageTitle];
     
     NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
     self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
     
+#if TARGET_OS_IOS
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:refreshControl atIndex:0];
     self.refreshControl = refreshControl;
+#endif
     
     [self refresh];
 }
@@ -100,9 +107,11 @@
     SRGBaseRequest *request = nil;
     
     SRGPaginatedMediaListCompletionBlock completionBlock = ^(NSArray<SRGMedia *> * _Nullable medias, SRGPage *page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+#if TARGET_OS_IOS
         if (self.refreshControl.refreshing) {
             [self.refreshControl endRefreshing];
         }
+#endif
         
         self.medias = medias;
         [self.tableView reloadData];
@@ -138,7 +147,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [tableView dequeueReusableCellWithIdentifier:@"MediaListCell" forIndexPath:indexPath];
+    static NSString * const kCellIdentifier = @"MediaListCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
+    if (! cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
+    }
+    
+    return cell;
 }
 
 #pragma mark UITableViewDelegate protocol
@@ -171,16 +187,7 @@
     NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : nil;
     NSNumber *updateIntervalNumber = self.MMFOverride ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
     
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateIntervalNumber];
-    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    
-    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-    // (might happen if presenting and dismissing fast)
-    if (playerViewController.presentingViewController) {
-        return;
-    }
-    
-    [self presentViewController:playerViewController animated:YES completion:nil];
+    [self openPlayerWithURN:URN serviceURL:serviceURL updateInterval:updateIntervalNumber];
 }
 
 #pragma mark Actions

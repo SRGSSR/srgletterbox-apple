@@ -8,7 +8,9 @@
 
 #import "DemoSection.h"
 #import "Media.h"
+#import "MediaListViewController.h"
 #import "Playlist.h"
+#import "SettingsViewController.h"
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
@@ -90,6 +92,11 @@
             break;
         }
             
+        case 2: {
+            count = 3;
+            break;
+        }
+            
         default:
             break;
     }
@@ -108,13 +115,6 @@
     return cell;
 }
 
-#pragma mark SRGLetterboxViewControllerDelegate protocol
-
-- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 #pragma mark UITableViewDelegate protocol
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -131,6 +131,19 @@
             name = self.specialMedias[indexPath.row].name;
             break;
         }
+        
+        case 2: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSString *> *s_mediaLists;
+            dispatch_once(&s_onceToken, ^{
+                s_mediaLists = @[ NSLocalizedString(@"SRF live center", nil),
+                                  NSLocalizedString(@"RTS live center", nil),
+                                  NSLocalizedString(@"RSI live center", nil)];
+            });
+            
+            name = s_mediaLists[indexPath.row];
+            break;
+        }
             
         default:
             break;
@@ -140,20 +153,71 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Media *media = nil;
     switch (indexPath.section) {
         case 0: {
-            media = self.medias[indexPath.row];
+            [self openModalPlayerWithURN:self.medias[indexPath.row].URN];
             break;
         }
             
         case 1: {
-            media = self.specialMedias[indexPath.row];
+            Media *media = self.specialMedias[indexPath.row];
+            if (media.onMMF) {
+                [self openModalPlayerWithURN:media.URN
+                                  serviceURL:LetterboxDemoMMFServiceURL()
+                              updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+            }
+            else {
+                [self openModalPlayerWithURN:media.URN];
+            }
+            break;
+        }
+            
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self openMediaListWithType:MediaListLivecenterSRF];
+                    break;
+                }
+                    
+                case 1: {
+                    [self openMediaListWithType:MediaListLivecenterRTS];
+                    break;
+                }
+                    
+                case 2: {
+                    [self openMediaListWithType:MediaListLivecenterRSI];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
             break;
         }
             
         default:
             break;
+    }
+}
+
+#pragma Actions
+
+- (void)openMediaListWithType:(MediaList)MediaList
+{
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaList topic:nil MMFOverride:NO];
+    [self.navigationController pushViewController:mediaListViewController animated:YES];
+}
+
+- (void)openModalPlayerWithURN:(NSString *)URN
+{
+    [self openModalPlayerWithURN:URN serviceURL:nil updateInterval:nil];
+}
+
+- (void)openModalPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
+{
+    if (self.presentedViewController) {
+        [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
     }
     
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
@@ -161,16 +225,16 @@
     letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
         return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
-    if (media.onMMF) {
-        letterboxViewController.controller.serviceURL = [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
-        letterboxViewController.controller.updateInterval = 10.;
-    }
     
-    if (media.URN) {
-        [letterboxViewController.controller playURN:media.URN atPosition:nil withPreferredSettings:nil];
+    letterboxViewController.controller.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
+    letterboxViewController.controller.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
+    letterboxViewController.controller.globalParameters = ApplicationSettingGlobalParameters();
+    
+    if (URN) {
+        [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
         
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
-        [[self.dataProvider recommendedMediasForURN:media.URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+        [[self.dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
             self.playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
             self.playlist.continuousPlaybackTransitionDuration = 30.;
             letterboxViewController.controller.playlistDataSource = self.playlist;
@@ -178,9 +242,5 @@
     }
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 }
-
-// TODO: Not for tvOS
-- (void)openModalPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
-{}
 
 @end

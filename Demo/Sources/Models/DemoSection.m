@@ -35,6 +35,7 @@
 #else
             NSLocalizedString(@"Various medias", nil),
             NSLocalizedString(@"Special cases", nil),
+            NSLocalizedString(@"Media lists", nil)
 #endif
         ];
         
@@ -53,6 +54,7 @@
 #else
             NSLocalizedString(@"This media list has various SRG SSR contents.", nil),
             NSLocalizedString(@"This media list has special cases that the player support.", nil),
+            NSLocalizedString(@"Lists of medias", nil)
 #endif
         ];
         
