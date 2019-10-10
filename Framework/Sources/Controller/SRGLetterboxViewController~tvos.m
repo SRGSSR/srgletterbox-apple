@@ -113,6 +113,7 @@
         [operation cancel];
     }];
     [self.controller removePeriodicTimeObserver:self.periodicTimeObserver];
+    [self.playerViewController removeFromParentViewController];
 }
 
 #pragma mark View lifecycle
