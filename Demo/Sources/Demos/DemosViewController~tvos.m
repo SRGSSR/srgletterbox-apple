@@ -18,8 +18,7 @@
 
 @interface DemosViewController () <SRGLetterboxViewControllerDelegate>
 
-@property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic) Playlist *playlist;
+@property (nonatomic, weak) UIBarButtonItem *settingsBarButtonItem;
 
 @property (nonatomic) NSArray<Media *> *medias;
 @property (nonatomic) NSArray<Media *> *specialMedias;
@@ -35,11 +34,28 @@
     return [self initWithStyle:UITableViewStyleGrouped];
 }
 
+#pragma mark View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.title = [self pageTitle];
+    
+    UIBarButtonItem * settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings-22"]
+                                                                               style:UIBarButtonItemStylePlain
+                                                                              target:self
+                                                                              action:@selector(showSettings:)];
+    settingsBarButtonItem.accessibilityLabel = NSLocalizedString(@"Settings", @"Settings button label on main view");
+    self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
+}
+
 #pragma mark Getters and setters
 
-- (NSString *)title
+- (NSString *)pageTitle
 {
-    return NSLocalizedString(@"Demos", nil);
+    NSString *bundleNameSuffix = [NSBundle.mainBundle.infoDictionary objectForKey:@"BundleNameSuffix"];
+    return [NSString stringWithFormat:@"Letterbox %@%@", SRGLetterboxMarketingVersion(), bundleNameSuffix];
 }
 
 #pragma mark Media extraction
@@ -275,6 +291,12 @@
 {
     TopicListViewController *topicListViewController = [[TopicListViewController alloc] initWithTopicList:TopicList];
     [self.navigationController pushViewController:topicListViewController animated:YES];
+}
+
+- (IBAction)showSettings:(id)sender
+{
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    [self.navigationController pushViewController:settingsViewController animated:YES];
 }
 
 @end

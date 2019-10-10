@@ -67,7 +67,11 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
     letterboxViewController.controller.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
     letterboxViewController.controller.globalParameters = ApplicationSettingGlobalParameters();
     
-    [letterboxViewController.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:nil completionHandler:^{
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = ApplicationSettingIsStandalone();
+    settings.quality = ApplicationSettingPreferredQuality();
+        
+    [letterboxViewController.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:settings completionHandler:^{
         letterboxViewController.controller.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
         [letterboxViewController.controller togglePlayPause];
     }];

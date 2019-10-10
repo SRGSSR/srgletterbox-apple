@@ -17,14 +17,24 @@
 #endif
 
 /**
- *  Private App Center implementation details.
+ *  Setting sections
  */
-@interface MSDistribute (Private)
+typedef NS_ENUM(NSInteger, SettingSection) {
+    SettingSectionServer = 0,
+    SettingSectionUserLocation,
+    SettingSectionPlaybackMode,
+    SettingSectionPreferredQuality,
+    SettingSectionUpdateInterval,
+#if TARGET_OS_IOS
+    SettingSectionScreenMirroring,
+    SettingSectionControlCenterIntegration,
+    SettingSectionBackgroundVideoPlayback,
+    SettingSectionApplicationVersion,
+#endif
+    SettingSectionMax
+};
 
-+ (id)sharedInstance;
-- (void)startUpdate;
-
-@end
+NSUInteger const SettingSectionCount = SettingSectionMax;
 
 /**
  *  User location options.
@@ -183,7 +193,15 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     return location ? @{ @"forceLocation" : location } : nil;
 }
 
-#if TARGET_OS_IOS
+/**
+ *  Private App Center implementation details.
+ */
+@interface MSDistribute (Private)
+
++ (id)sharedInstance;
+- (void)startUpdate;
+
+@end
 
 @interface SettingsViewController ()
 
@@ -197,10 +215,12 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
-    SettingsViewController *viewController = [storyboard instantiateInitialViewController];    
-    viewController.serverSettings = ServerSettings.serverSettings;
-    return viewController;
+    self = [super initWithStyle:UITableViewStyleGrouped];
+    if (self) {
+        self.serverSettings = ServerSettings.serverSettings;
+        self.title = NSLocalizedString(@"Settings", @"Settings view title");
+    }
+    return self;
 }
 
 #pragma mark View lifecycle
@@ -218,57 +238,63 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+#if TARGET_OS_IOS
     return MSDistribute.isEnabled ? 9 : 8;
+#else
+    return SettingSectionCount;
+#endif
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     switch (section) {
-        case 0: {
+        case SettingSectionServer: {
             return NSLocalizedString(@"Server", @"Server header title in settings view");
             break;
         }
             
-        case 1: {
+        case SettingSectionUserLocation: {
             return NSLocalizedString(@"User location", @"User location header title in settings view");
             break;
         }
             
-        case 2: {
+        case SettingSectionPlaybackMode: {
             return NSLocalizedString(@"Playback mode", @"Playback mode header title in settings view");
             break;
         }
             
-        case 3: {
+        case SettingSectionPreferredQuality: {
             return NSLocalizedString(@"Preferred quality", @"Preferred quality mode header title in settings view");
             break;
         }
-            
-        case 4: {
+        
+        case SettingSectionUpdateInterval: {
+            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            break;
+        }
+        
+#if TARGET_OS_IOS
+        case SettingSectionScreenMirroring: {
             return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
             break;
         }
             
-        case 5: {
+        case SettingSectionControlCenterIntegration: {
             return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
             break;
         }
             
-        case 6: {
-            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
-            break;
-        }
-            
-        case 7: {
+        case SettingSectionBackgroundVideoPlayback: {
             return NSLocalizedString(@"Background video playback", @"Background video playback header title in settings view");
             break;
         }
             
-        case 8: {
+        case SettingSectionApplicationVersion: {
             NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
             return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
             break;
         }
+#endif
             
         default: {
             break;
@@ -292,38 +318,44 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     switch (section) {
-        case 0: {
+        case SettingSectionServer: {
             return self.serverSettings.count;
             break;
         }
             
-        case 1: {
+        case SettingSectionUserLocation: {
             return 3;
             break;
         }
             
-        case 2: {
+        case SettingSectionPlaybackMode: {
             return 2;
             break;
         }
         
-        case 3: {
+        case SettingSectionPreferredQuality: {
             return 4;
             break;
         }
+            
+        case SettingSectionUpdateInterval: {
+            return 2;
+            break;
+        }
         
-        case 4:
-        case 5:
-        case 6:
-        case 7: {
+#if TARGET_OS_IOS
+        case SettingSectionScreenMirroring:
+        case SettingSectionControlCenterIntegration:
+        case SettingSectionBackgroundVideoPlayback: {
             return 2;
             break;
         }
             
-        case 8: {
+        case SettingSectionApplicationVersion: {
             return 1;
             break;
         }
+#endif
             
         default: {
             return 0;
@@ -334,7 +366,14 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [tableView dequeueReusableCellWithIdentifier:@"SettingsCell" forIndexPath:indexPath];
+    static NSString * const kCellIdentifier = @"SettingsCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
+    if (! cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
+    }
+    
+    return cell;
 }
 
 #pragma mark UITableViewDelegate protocol
@@ -344,7 +383,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     cell.textLabel.textAlignment = NSTextAlignmentLeft;
     
     switch (indexPath.section) {
-        case 0: {
+        case SettingSectionServer: {
             cell.textLabel.text = self.serverSettings[indexPath.row].name;
             
             NSURL *serverURL = ApplicationSettingServiceURL();
@@ -352,7 +391,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 1: {
+        case SettingSectionUserLocation: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", @"Label for the defaut location setting");
@@ -381,7 +420,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 2: {
+        case SettingSectionPlaybackMode: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Default (full-length)", @"Label for the defaut standalone mode disabled setting");
@@ -404,7 +443,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 3: {
+        case SettingSectionPreferredQuality: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Default", @"Label for the defaut quality setting");
@@ -439,53 +478,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 4: {
-            switch (indexPath.row) {
-                case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
-                    cell.accessoryType = ! ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-                    break;
-                };
-                    
-                case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
-                    cell.accessoryType = ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-                    break;
-                };
-                    
-                default: {
-                    cell.textLabel.text = nil;
-                    cell.accessoryType = UITableViewCellAccessoryNone;
-                    break;
-                };
-            }
-            break;
-        }
-            
-        case 5: {
-            switch (indexPath.row) {
-                case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
-                    cell.accessoryType = ! SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-                    break;
-                };
-                    
-                case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
-                    cell.accessoryType = SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-                    break;
-                };
-                    
-                default: {
-                    cell.textLabel.text = nil;
-                    cell.accessoryType = UITableViewCellAccessoryNone;
-                    break;
-                };
-            }
-            break;
-        }
-            
-        case 6: {
+        case SettingSectionUpdateInterval: {
             static NSDateComponentsFormatter *s_dateComponentsFormatter;
             static dispatch_once_t s_onceToken;
             dispatch_once(&s_onceToken, ^{
@@ -518,8 +511,55 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             }
             break;
         }
+
+#if TARGET_OS_IOS
+        case SettingSectionScreenMirroring: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.accessoryType = ! ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.accessoryType = ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
             
-        case 7: {
+        case SettingSectionControlCenterIntegration: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.accessoryType = ! SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.accessoryType = SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case SettingSectionBackgroundVideoPlayback: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
@@ -542,12 +582,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case 8: {
+        case SettingSectionApplicationVersion: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
             cell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
+#endif
             
         default: {
             cell.textLabel.text = nil;
@@ -559,48 +600,44 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+#if TARGET_OS_IOS
     void (^completionBlock)(void) = nil;
+#endif
     
     switch (indexPath.section) {
-        case 0: {
+        case SettingSectionServer: {
             ServerSettings *serverSettings = self.serverSettings[indexPath.row];
             [NSUserDefaults.standardUserDefaults setObject:serverSettings.URL.absoluteString forKey:LetterboxDemoSettingServiceURL];
             [NSUserDefaults.standardUserDefaults synchronize];
             
+#if TARGET_OS_IOS
             [SRGLetterboxService.sharedService.controller reset];
             SRGLetterboxService.sharedService.controller.serviceURL = ApplicationSettingServiceURL();
+#endif
             break;
         }
             
-        case 1: {
+        case SettingSectionUserLocation: {
             ApplicationSettingSetUserLocation(indexPath.row);
             
+#if TARGET_OS_IOS
             [SRGLetterboxService.sharedService.controller reset];
             SRGLetterboxService.sharedService.controller.globalParameters = ApplicationSettingGlobalParameters();
+#endif
             break;
         }
             
-        case 2: {
+        case SettingSectionPlaybackMode: {
             ApplicationSettingSetStandalone(indexPath.row == 1);
             break;
         }
             
-        case 3: {
+        case SettingSectionPreferredQuality: {
             ApplicationSettingSetPreferredQuality(indexPath.row);
             break;
         }
             
-        case 4: {
-            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
-            break;
-        }
-            
-        case 5: {
-            SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
-            break;
-        }
-            
-        case 6: {
+        case SettingSectionUpdateInterval: {
             if (indexPath.row == 0) {
                 [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUpdateInterval];
             }
@@ -609,17 +646,30 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             }
             [NSUserDefaults.standardUserDefaults synchronize];
             
+#if TARGET_OS_IOS
             SRGLetterboxService.sharedService.controller.updateInterval = ApplicationSettingUpdateInterval();
+#endif
             break;
         }
             
-        case 7: {
+#if TARGET_OS_IOS
+        case SettingSectionScreenMirroring: {
+            ApplicationSettingSetMirroredOnExternalScreen(indexPath.row == 1);
+            break;
+        }
+            
+        case SettingSectionControlCenterIntegration: {
+            SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled = (indexPath.row == 1);
+            break;
+        }
+            
+        case SettingSectionBackgroundVideoPlayback: {
             ApplicationSettingSetBackgroundVideoPlaybackEnabled(indexPath.row == 1);
             SRGLetterboxService.sharedService.controller.backgroundVideoPlaybackEnabled = (indexPath.row == 1);
             break;
         }
             
-        case 8: {
+        case SettingSectionApplicationVersion: {
             completionBlock = ^{
                 // Clear internal App Center timestamp to force a new update request
                 [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
@@ -636,6 +686,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             };
             break;
         }
+#endif
             
         default: {
             break;
@@ -646,9 +697,9 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     
     [self.tableView reloadData];
     
+#if TARGET_OS_IOS
     [self.presentingViewController dismissViewControllerAnimated:YES completion:completionBlock];
+#endif
 }
 
 @end
-
-#endif

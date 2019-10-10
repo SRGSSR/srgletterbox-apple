@@ -27,7 +27,6 @@ OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 
 OBJC_EXPORT __TVOS_PROHIBITED BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
 
-__TVOS_PROHIBITED
 @interface SettingsViewController : UITableViewController
 
 @end
