@@ -81,7 +81,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
                 serviceURL = LetterboxDemoServiceURLForKey(server);
             }
             
-            [self.demosViewController openModalPlayerWithURN:mediaURN serviceURL:serviceURL updateInterval:nil];
+            [self.demosViewController openPlayerWithURN:mediaURN serviceURL:serviceURL updateInterval:nil];
             return YES;
         }
         

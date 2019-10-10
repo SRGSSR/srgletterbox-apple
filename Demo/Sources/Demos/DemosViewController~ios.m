@@ -19,7 +19,6 @@
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 #import "TopicListViewController.h"
-#import "UIViewController+LetterboxDemo.h"
 
 #import <libextobjc/libextobjc.h>
 
