@@ -15,6 +15,12 @@
 
 #import <SRGLetterbox/SRGLetterbox.h>
 
+@interface SRGLetterboxController (Priv)
+
+@property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
+
+@end
+
 @interface DemosViewController () <SRGLetterboxViewControllerDelegate>
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -298,7 +304,10 @@
     letterboxViewController.controller.globalParameters = ApplicationSettingGlobalParameters();
     
     if (URN) {
-        [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+        [letterboxViewController.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:nil completionHandler:^{
+            letterboxViewController.controller.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
+            [letterboxViewController.controller togglePlayPause];
+        }];
         
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:SRGIntegrationLayerProductionServiceURL()];
         [[self.dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
