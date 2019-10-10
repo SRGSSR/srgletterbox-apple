@@ -9,6 +9,7 @@
 #import "DemoSection.h"
 #import "Media.h"
 #import "MediaListViewController.h"
+#import "NSBundle+LetterboxDemo.h"
 #import "Playlist.h"
 #import "SettingsViewController.h"
 #import "TopicListViewController.h"
@@ -101,7 +102,7 @@
     NSInteger count = 0;
     switch (section) {
         case 0: {
-            count = self.medias.count;
+            count = self.medias.count + 1;
             break;
         }
             
@@ -146,7 +147,12 @@
 
     switch (indexPath.section) {
         case 0: {
-            name = self.medias[indexPath.row].name;
+            if (indexPath.row < self.medias.count) {
+                name = self.medias[indexPath.row].name;
+            }
+            else {
+                name = NSLocalizedString(@"Other media", nil);
+            }
             break;
         }
             
@@ -194,7 +200,15 @@
 {
     switch (indexPath.section) {
         case 0: {
-            [self openPlayerWithURN:self.medias[indexPath.row].URN];
+            if (indexPath.row < self.medias.count) {
+                [self openPlayerWithURN:self.medias[indexPath.row].URN];
+            }
+            else {
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
+                    [self openPlayerWithURN:URNString];
+                }];
+            }
             break;
         }
             
@@ -280,6 +294,24 @@
 }
 
 #pragma Actions
+
+- (void)openCustomURNEntryAlertWithCompletionBlock:(void (^)(NSString * _Nullable URNString))completionBlock
+{
+    NSParameterAssert(completionBlock);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter media URN", nil)
+                                                                             message:NSLocalizedString(@"For example: urn:[BU]:[video|audio]:[uid]", nil)
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = LetterboxDemoNonLocalizedString(@"urn:swi:video:41981254");
+    }];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Play", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        completionBlock(alertController.textFields.firstObject.text);
+    }]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
 
 - (void)openMediaListWithType:(MediaList)MediaList
 {
