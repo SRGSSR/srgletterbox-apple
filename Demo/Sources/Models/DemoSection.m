@@ -25,8 +25,8 @@
             NSLocalizedString(@"Basic player", nil),
             NSLocalizedString(@"Standalone player", nil),
 #endif
-            NSLocalizedString(@"Player with SRGSSR content", nil),
-            NSLocalizedString(@"Player with special cases", nil),
+            NSLocalizedString(@"SRGSSR content", nil),
+            NSLocalizedString(@"Special cases", nil),
 #if TARGET_OS_IOS
             NSLocalizedString(@"Multiple player", nil),
             NSLocalizedString(@"Autoplay", nil),
@@ -43,9 +43,9 @@
 #if TARGET_OS_IOS
             NSLocalizedString(@"This basic player can be used with AirPlay but does not implement full screen or picture in picture.", nil),
             NSLocalizedString(@"This player is not enabled for AirPlay playback or picture in picture by default. You can enable or disable these features on the fly.", nil),
-            NSLocalizedString(@"This player implements full screen and picture in picture and can be used with AirPlay. It starts with hidden controls, and a close button has been added as custom control. You can also play with various user interface configurations.", nil),
+            NSLocalizedString(@"The player implements full screen and picture in picture and can be used with AirPlay. It starts with hidden controls, and a close button has been added as custom control. You can also play with various user interface configurations.", nil),
 #else
-            NSLocalizedString(@"This media list use the player designed for the SRGSSR tvOS experience.", nil),
+            NSLocalizedString(@"It uses the SRGSSR player designed for the tvOS experience.", nil),
 #endif
             NSLocalizedString(@"The player in special cases that can occured.", nil),
 #if TARGET_OS_IOS
