@@ -122,7 +122,6 @@
 		6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */; };
 		6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */; };
 		6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
-		6F973EB9233537F60026F54C /* DemosViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EB8233537F60026F54C /* DemosViewController~tvos.m */; };
 		6F973EBC233547B10026F54C /* SRGLetterboxViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
@@ -174,7 +173,7 @@
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */; };
 		6FD9BA2C1E2FBC770013CC97 /* TrackerSingletonSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */; };
 		6FD9BA2E1E2FBCC70013CC97 /* BundleFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */; };
-		6FD9BA311E3095F00013CC97 /* DemosViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */; };
+		6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD9BA301E3095F00013CC97 /* DemosViewController.m */; };
 		6FDC2EB1234E11EE0044E83B /* SRGAvailabilityView~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC2EB0234E11EE0044E83B /* SRGAvailabilityView~tvos.m */; };
 		6FDC2EB3234E129D0044E83B /* SRGAvailabilityView~tvos.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FDC2EB2234E129D0044E83B /* SRGAvailabilityView~tvos.xib */; };
 		6FE08CE21E8B80EB00EC4716 /* SRGAppearance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */; };
@@ -373,7 +372,6 @@
 		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
 		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
-		6F973EB8233537F60026F54C /* DemosViewController~tvos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DemosViewController~tvos.m"; sourceTree = "<group>"; };
 		6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxViewController.h; sourceTree = "<group>"; };
 		6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxViewController~tvos.m"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
@@ -442,7 +440,7 @@
 		6FD9BA2B1E2FBC770013CC97 /* TrackerSingletonSetup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerSingletonSetup.m; sourceTree = "<group>"; };
 		6FD9BA2D1E2FBCC70013CC97 /* BundleFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleFix.m; sourceTree = "<group>"; };
 		6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemosViewController.h; sourceTree = "<group>"; };
-		6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DemosViewController~ios.m"; sourceTree = "<group>"; };
+		6FD9BA301E3095F00013CC97 /* DemosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemosViewController.m; sourceTree = "<group>"; };
 		6FDC2EB0234E11EE0044E83B /* SRGAvailabilityView~tvos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGAvailabilityView~tvos.m"; sourceTree = "<group>"; };
 		6FDC2EB2234E129D0044E83B /* SRGAvailabilityView~tvos.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SRGAvailabilityView~tvos.xib"; sourceTree = "<group>"; };
 		6FE08CE11E8B80EB00EC4716 /* SRGAppearance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGAppearance.framework; path = Carthage/Build/iOS/SRGAppearance.framework; sourceTree = "<group>"; };
@@ -836,8 +834,7 @@
 				6F0AD0761E5EAB0D000A61A5 /* AutoplayViewController~ios.m */,
 				6F0AD07A1E5EAB1A000A61A5 /* AutoplayViewController~ios.storyboard */,
 				6FD9BA2F1E3095F00013CC97 /* DemosViewController.h */,
-				6FD9BA301E3095F00013CC97 /* DemosViewController~ios.m */,
-				6F973EB8233537F60026F54C /* DemosViewController~tvos.m */,
+				6FD9BA301E3095F00013CC97 /* DemosViewController.m */,
 				08E03CC81F47283C008AD461 /* MediaListViewController.h */,
 				08E03CC91F47283C008AD461 /* MediaListViewController.m */,
 				6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */,
@@ -1270,7 +1267,6 @@
 				6F0AD07E1E5EB224000A61A5 /* AutoplayTableViewCell~ios.m in Sources */,
 				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m in Sources */,
 				6F353A6922BB51F00035F656 /* PageViewController~ios.m in Sources */,
-				6F973EB9233537F60026F54C /* DemosViewController~tvos.m in Sources */,
 				6FB6BB031EC2E103006672EC /* ModalTransition~ios.m in Sources */,
 				08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */,
 				6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */,
@@ -1286,7 +1282,7 @@
 				6FAB3B611E28FFEA00CC2197 /* SimplePlayerViewController~ios.m in Sources */,
 				6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m in Sources */,
 				08104137234E0D2F00A3C021 /* UIViewController+LetterboxDemo.m in Sources */,
-				6FD9BA311E3095F00013CC97 /* DemosViewController~ios.m in Sources */,
+				6FD9BA311E3095F00013CC97 /* DemosViewController.m in Sources */,
 				6F0AD0781E5EAB0D000A61A5 /* AutoplayViewController~ios.m in Sources */,
 				6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */,
 				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController~ios.m in Sources */,

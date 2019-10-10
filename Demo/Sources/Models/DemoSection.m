@@ -8,6 +8,7 @@
 
 @interface DemoSection ()
 
+@property (nonatomic) DemoSectionId sectionId;
 @property (nonatomic, copy) NSString *headerTitle;
 @property (nonatomic, copy) NSString *footerTitle;
 
@@ -61,8 +62,9 @@
         ];
         
         NSMutableArray<DemoSection *> *demoSections = [NSMutableArray array];
-        for (NSUInteger i=0; i < sectionHeaders.count; i++) {
+        for (NSUInteger i=0; i < DemoSectionIdMax; i++) {
             DemoSection *demoSection = [[DemoSection alloc] init];
+            demoSection.sectionId = i;
             demoSection.headerTitle = sectionHeaders[i];
             demoSection.footerTitle = sectionFooters[i];
             [demoSections addObject:demoSection];

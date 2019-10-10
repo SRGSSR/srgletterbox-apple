@@ -32,6 +32,14 @@
     return [medias copy];
 }
 
+#pragma mark Object lifecycle
+
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
 {
     if (self = [super init]) {
