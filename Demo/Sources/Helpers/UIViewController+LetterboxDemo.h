@@ -10,18 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
-*  Protocol to support tvOS continuous playback at the end of a plack media.
-*/
-@protocol SRGLetterboxDemoTVOSContinuePlayback <NSObject>
-
-@property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic) Playlist *playlist;
-
-@end
-
 @interface UIViewController (LetterboxDemo)
 
+- (void)openPlayerWithURN:(NSString *)URN;
 - (void)openPlayerWithURN:(NSString *)URN serviceURL:(nullable NSURL *)serviceURL updateInterval:(nullable NSNumber *)updateInterval;
 
 @end
