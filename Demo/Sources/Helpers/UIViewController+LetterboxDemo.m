@@ -24,12 +24,6 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 
 @end
 
-@interface SRGLetterboxController (Priv)
-
-@property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
-
-@end
-
 @implementation UIViewController (LetterboxDemo)
 
 - (void)openPlayerWithURN:(NSString *)URN
@@ -70,11 +64,8 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.standalone = ApplicationSettingIsStandalone();
     settings.quality = ApplicationSettingPreferredQuality();
-        
-    [letterboxViewController.controller prepareToPlayURN:URN atPosition:nil withPreferredSettings:settings completionHandler:^{
-        letterboxViewController.controller.mediaPlayerController.view.viewMode = SRGMediaPlayerViewModeMonoscopic;
-        [letterboxViewController.controller togglePlayPause];
-    }];
+    
+    [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
     
     if (URN) {
         self.continuePlaybackDataProvider = [[SRGDataProvider alloc] initWithServiceURL:letterboxViewController.controller.serviceURL];
