@@ -39,8 +39,7 @@
 
 - (instancetype)init
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
-    return [storyboard instantiateInitialViewController];
+    return [self initWithStyle:UITableViewStyleGrouped];
 }
 
 #pragma mark View lifecycle
@@ -51,7 +50,12 @@
     
     self.title = [self pageTitle];
     
-    self.settingsBarButtonItem.accessibilityLabel = NSLocalizedString(@"Settings", @"Settings button label on main view");
+    UIBarButtonItem * settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings-22"]
+                                                                               style:UIBarButtonItemStylePlain
+                                                                              target:self
+                                                                              action:@selector(showSettingsPopup:)];
+    settingsBarButtonItem.accessibilityLabel = NSLocalizedString(@"Settings", @"Settings button label on main view");
+    self.navigationItem.rightBarButtonItem = self.settingsBarButtonItem = settingsBarButtonItem;
 }
 
 #pragma mark Getters and setters
