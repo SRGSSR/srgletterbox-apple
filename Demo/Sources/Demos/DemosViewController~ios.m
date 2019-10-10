@@ -19,6 +19,7 @@
 #import "SimplePlayerViewController.h"
 #import "StandalonePlayerViewController.h"
 #import "TopicListViewController.h"
+#import "UIViewController+LetterboxDemo.h"
 
 #import <libextobjc/libextobjc.h>
 
@@ -80,29 +81,6 @@
     if (playerViewController.presentingViewController) {
         return;
     }
-    [self presentViewController:playerViewController animated:YES completion:nil];
-}
-
-- (void)openModalPlayerWithURN:(NSString *)URN
-{
-    [self openModalPlayerWithURN:URN serviceURL:nil updateInterval:nil];
-}
-
-- (void)openModalPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
-{
-    if (self.presentedViewController) {
-        [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
-    }
-    
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateInterval];
-    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    
-    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-    // (might happen if presenting and dismissing fast)
-    if (playerViewController.presentingViewController) {
-        return;
-    }
-    
     [self presentViewController:playerViewController animated:YES completion:nil];
 }
 
@@ -425,12 +403,12 @@
         case 2: {
             if (indexPath.row < self.medias.count) {
                 NSString *URN = self.medias[indexPath.row].URN;
-                [self openModalPlayerWithURN:URN];
+                [self openPlayerWithURN:URN];
             }
             else {
                 [tableView deselectRowAtIndexPath:indexPath animated:YES];
                 [self openCustomURNEntryAlertWithCompletionBlock:^(NSString * _Nullable URNString) {
-                    [self openModalPlayerWithURN:URNString];
+                    [self openPlayerWithURN:URNString];
                 }];
             }
             break;
@@ -439,12 +417,12 @@
         case 3: {
             Media *media = self.specialMedias[indexPath.row];
             if (media.onMMF) {
-                [self openModalPlayerWithURN:media.URN
-                                  serviceURL:LetterboxDemoMMFServiceURL()
-                              updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
+                [self openPlayerWithURN:media.URN
+                             serviceURL:LetterboxDemoMMFServiceURL()
+                         updateInterval:@(LetterboxDemoSettingUpdateIntervalShort)];
             }
             else {
-                [self openModalPlayerWithURN:media.URN];
+                [self openPlayerWithURN:media.URN];
             }
             break;
         }
