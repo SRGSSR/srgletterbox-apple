@@ -86,6 +86,7 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 
 - (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
+    [letterboxViewController.controller reset];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
