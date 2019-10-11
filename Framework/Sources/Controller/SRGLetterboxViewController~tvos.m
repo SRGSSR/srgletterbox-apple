@@ -161,6 +161,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [playerView insertSubview:imageView atIndex:0];
     self.imageView = imageView;
     
+    // FIXME: Still visible when starting a scheduled livestream, for example. Fix
     UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
     loadingIndicatorView.alpha = 0.f;
     

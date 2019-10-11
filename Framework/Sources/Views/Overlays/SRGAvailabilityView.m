@@ -92,7 +92,7 @@
         // Lazily add heavy countdown view when required
         if (! self.countdownView.superview) {
             SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
-            [self insertSubview:countdownView atIndex:0];
+            [self addSubview:countdownView];
             self.countdownView = countdownView;
             
             countdownView.translatesAutoresizingMaskIntoConstraints = NO;
