@@ -230,6 +230,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 {
 #if TARGET_OS_IOS
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
+#else
+    BOOL isLarge = YES;
+#endif
     
     // Appearance
     [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -293,11 +296,13 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
         self.remainingTimeStackView.hidden = YES;
         self.messageLabel.hidden = YES;
     }
+#if TARGET_OS_IOS
     else if (CGRectGetWidth(self.frame) < 300.f || CGRectGetHeight(self.frame) < 145.f) {
         self.remainingTimeLabel.hidden = NO;
         self.remainingTimeStackView.hidden = YES;
         self.messageLabel.hidden = YES;
     }
+#endif
     else {
         self.remainingTimeLabel.hidden = YES;
         self.remainingTimeStackView.hidden = NO;
@@ -325,7 +330,6 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
             self.minutesColonLabel.hidden = NO;
         }
     }
-#endif
 }
 
 #pragma mark Accessibility

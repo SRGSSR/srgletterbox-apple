@@ -23,7 +23,7 @@
 		08A05B1E20585DD200E80BD6 /* SRGPaddedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */; };
 		08A05B1F20585DD200E80BD6 /* SRGControlWrapperView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */; };
 		08A05B2020585DD200E80BD6 /* SRGControlWrapperView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B1C20585DD200E80BD6 /* SRGControlWrapperView~ios.m */; };
-		08A05B2120585DD200E80BD6 /* SRGPaddedLabel~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B1D20585DD200E80BD6 /* SRGPaddedLabel~ios.m */; };
+		08A05B2120585DD200E80BD6 /* SRGPaddedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B1D20585DD200E80BD6 /* SRGPaddedLabel.m */; };
 		08A05B2420585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2220585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m */; };
 		08A05B2520585DDF00E80BD6 /* SRGLetterboxTimeSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */; };
 		08A05B2820585DF000E80BD6 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */; };
@@ -251,7 +251,7 @@
 		08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGPaddedLabel.h; sourceTree = "<group>"; };
 		08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGControlWrapperView.h; sourceTree = "<group>"; };
 		08A05B1C20585DD200E80BD6 /* SRGControlWrapperView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGControlWrapperView~ios.m"; sourceTree = "<group>"; };
-		08A05B1D20585DD200E80BD6 /* SRGPaddedLabel~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGPaddedLabel~ios.m"; sourceTree = "<group>"; };
+		08A05B1D20585DD200E80BD6 /* SRGPaddedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGPaddedLabel.m; sourceTree = "<group>"; };
 		08A05B2220585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxTimeSlider~ios.m"; sourceTree = "<group>"; };
 		08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimeSlider.h; sourceTree = "<group>"; };
 		08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLiveLabel.h; sourceTree = "<group>"; };
@@ -692,7 +692,7 @@
 				6F50594620581CAF00823003 /* SRGLetterboxControllerView.m */,
 				6F50594120581CAF00823003 /* SRGLetterboxControllerView+Subclassing.h */,
 				08A05B1A20585DD100E80BD6 /* SRGPaddedLabel.h */,
-				08A05B1D20585DD200E80BD6 /* SRGPaddedLabel~ios.m */,
+				08A05B1D20585DD200E80BD6 /* SRGPaddedLabel.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1343,7 +1343,7 @@
 				6F50596F20581CAF00823003 /* SRGLetterboxControllerView.m in Sources */,
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.m in Sources */,
-				08A05B2120585DD200E80BD6 /* SRGPaddedLabel~ios.m in Sources */,
+				08A05B2120585DD200E80BD6 /* SRGPaddedLabel.m in Sources */,
 				6FB83A8F205AAFE90013928B /* SRGControlsBackgroundView~ios.m in Sources */,
 				6F50596720581CAF00823003 /* SRGErrorView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
