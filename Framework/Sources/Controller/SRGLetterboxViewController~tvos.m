@@ -18,6 +18,22 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
+static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
+{
+    if ([NSStringFromClass(view.class) containsString:@"LoadingIndicator"]) {
+        return view;
+    }
+    
+    for (UIView *subview in view.subviews) {
+        UIView *loadingView = SRGLetterboxViewControllerLoadingIndicatorSubview(subview);
+        if (loadingView) {
+            return loadingView;
+        }
+    }
+    
+    return nil;
+}
+
 @interface SRGLetterboxViewController () <SRGMediaPlayerViewControllerDelegate>
 
 @property (nonatomic) SRGLetterboxController *controller;
@@ -28,6 +44,7 @@
 @property (nonatomic, weak) UIImageView *imageView;
 @property (nonatomic, weak) SRGAvailabilityView *availabilityView;
 @property (nonatomic, weak) SRGErrorView *errorView;
+@property (nonatomic, weak) UIImageView *loadingImageView;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -144,6 +161,18 @@
     [playerView insertSubview:imageView atIndex:0];
     self.imageView = imageView;
     
+    UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
+    loadingIndicatorView.alpha = 0.f;
+    
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageView90WithTintColor:UIColor.whiteColor];
+    loadingImageView.alpha = 0.f;
+    [playerView addSubview:loadingImageView];
+    self.loadingImageView = loadingImageView;
+    
+    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+                                               [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
+    
     [self updateMainLayout];
     [self reloadData];
 }
@@ -213,6 +242,15 @@
         self.errorView.alpha = 0.f;
         self.availabilityView.alpha = 0.f;
         self.playerViewController.showsPlaybackControls = (self.controller.URN != nil);
+    }
+    
+    if (self.controller.loading) {
+        self.loadingImageView.alpha = 1.f;
+        [self.loadingImageView startAnimating];
+    }
+    else {
+        self.loadingImageView.alpha = 0.f;
+        [self.loadingImageView stopAnimating];
     }
 }
 

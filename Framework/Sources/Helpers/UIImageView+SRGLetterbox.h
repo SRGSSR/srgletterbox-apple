@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Standard loading indicator. Call `-startAnimating` to animate.
  */
 + (UIImageView *)srg_loadingImageView48WithTintColor:(nullable UIColor *)tintColor;
++ (UIImageView *)srg_loadingImageView90WithTintColor:(nullable UIColor *)tintColor;
 
 /**
  *  Request an image of the specified object. Use `SRGImageTypeDefault` for the default image.

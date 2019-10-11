@@ -22,6 +22,11 @@
     return [self srg_animatedImageViewNamed:@"loading-48" withTintColor:tintColor duration:1.];
 }
 
++ (UIImageView *)srg_loadingImageView90WithTintColor:(UIColor *)tintColor
+{
+    return [self srg_animatedImageViewNamed:@"loading-90" withTintColor:tintColor duration:1.];
+}
+
 // Expect a sequence of images named "name-N", where N must begin at 0. Stops when no image is found for some N
 + (UIImageView *)srg_animatedImageViewNamed:(NSString *)name withTintColor:(UIColor *)tintColor duration:(NSTimeInterval)duration
 {
