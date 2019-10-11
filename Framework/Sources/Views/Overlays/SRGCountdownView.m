@@ -224,6 +224,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (void)updateLayout
 {
+#if TARGET_OS_IOS
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
     
     // Appearance
@@ -320,6 +321,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
             self.minutesColonLabel.hidden = NO;
         }
     }
+#endif
 }
 
 #pragma mark Accessibility
