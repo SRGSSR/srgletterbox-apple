@@ -63,6 +63,8 @@
     [self refresh];
 }
 
+#if TARGET_OS_IOS
+
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
@@ -99,6 +101,8 @@
         self.messageLabel.hidden = YES;
     }
 }
+
+#endif
 
 #pragma mark UI
 

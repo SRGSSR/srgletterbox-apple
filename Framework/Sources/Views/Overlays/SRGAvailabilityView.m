@@ -7,14 +7,20 @@
 #import "SRGAvailabilityView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGLetterboxControllerView+Subclassing.h"
-
+#import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "NSTimer+SRGLetterbox.h"
 #import "SRGCountdownView.h"
+#import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGLetterboxError.h"
+#import "SRGPaddedLabel.h"
+
+#import <libextobjc/libextobjc.h>
+#import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGAvailabilityView ()
 
-@property (nonatomic, weak) UILabel *messageLabel;
 @property (nonatomic, weak) SRGCountdownView *countdownView;
+@property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
 
 @end
 
@@ -22,11 +28,21 @@
 
 #pragma mark Overrides
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.messageLabel.horizontalMargin = 5.f;
+    self.messageLabel.verticalMargin = 2.f;
+    self.messageLabel.layer.cornerRadius = 4.f;
+    self.messageLabel.layer.masksToBounds = YES;
+}
+
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
     
-    // TODO:
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
 }
 
 - (void)metadataDidChange
@@ -34,14 +50,27 @@
     [super metadataDidChange];
     
     [self refresh];
+    [self updateLayout];
 }
 
-- (void)playbackDidFail
+#if TARGET_OS_IOS
+
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    [super playbackDidFail];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
-    [self refresh];
+    NSError *error = self.controller.error;
+    self.alpha = ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) ? 1.f : 0.f;
 }
+
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    
+    [self updateLayout];
+}
+
+#endif
 
 #pragma mark UI
 
@@ -62,7 +91,7 @@
         
         // Lazily add heavy countdown view when required
         if (! self.countdownView.superview) {
-            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate];
+            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
             [self insertSubview:countdownView atIndex:0];
             self.countdownView = countdownView;
             
@@ -80,6 +109,22 @@
     else {
         self.messageLabel.text = nil;
         [self.countdownView removeFromSuperview];
+    }
+}
+
+- (void)updateLayout
+{
+    SRGMedia *media = self.controller.media;
+    
+    SRGBlockingReason blockingReason = [media blockingReasonAtDate:NSDate.date];
+    if (blockingReason == SRGBlockingReasonStartDate) {
+        self.messageLabel.hidden = YES;
+    }
+    else if (blockingReason == SRGBlockingReasonEndDate) {
+        self.messageLabel.hidden = NO;
+    }
+    else {
+        self.messageLabel.hidden = YES;
     }
 }
 

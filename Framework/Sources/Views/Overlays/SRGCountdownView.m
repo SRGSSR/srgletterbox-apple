@@ -148,12 +148,16 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     }
 }
 
+#if TARGET_OS_IOS
+
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     [self refresh];
 }
+
+#endif
 
 #pragma mark UI
 

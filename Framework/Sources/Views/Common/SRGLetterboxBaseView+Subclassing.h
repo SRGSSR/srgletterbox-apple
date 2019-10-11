@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @discussion The parent of an `SRGLetterboxView` is the view itself.
  */
-@property (nonatomic, readonly, nullable) SRGLetterboxView *parentLetterboxView __TVOS_UNAVAILABLE;
+@property (nonatomic, readonly, nullable) SRGLetterboxView *parentLetterboxView __TVOS_UNAVAILABLE __TVOS_UNAVAILABLE;
 
 /**
  *  Method called when the content size category changes. Subclasses can e.g. implement this method if needed to adjust
@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @discussion Never call this method directly. If your subclass needs to ask for a layout, call `-setNeedsLayoutAnimated:`
  *              instead.
  */
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER __TVOS_UNAVAILABLE;
 
 /**
  *  Method called when the parent Letterbox context view is required to perform a layout update. Subclasses can implement
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @discussion Never call this method directly. If your subclass needs to ask for a layout, call `-setNeedsLayoutAnimated:`
  *              instead.
  */
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER;
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER __TVOS_UNAVAILABLE;
 
 /**
  *  Call to trigger a layout update on the parent context.
