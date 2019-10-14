@@ -17,7 +17,11 @@
 static void *s_continuePlaybackDataProviderKey = &s_continuePlaybackDataProviderKey;
 static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 
+#if TARGET_OS_IOS
+@interface UIViewController (LetterboxDemoPrivate)
+#else
 @interface UIViewController (LetterboxDemoPrivate) <SRGLetterboxViewControllerDelegate>
+#endif
 
 @property (nonatomic) SRGDataProvider *continuePlaybackDataProvider;
 @property (nonatomic) Playlist *continuePlaybackPlaylist;
@@ -82,6 +86,8 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
+#if TARGET_OS_TV
+
 #pragma mark SRGLetterboxViewControllerDelegate protocol
 
 - (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
@@ -89,6 +95,8 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
     [letterboxViewController.controller reset];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#endif
 
 #pragma mark Getters and setters
 
