@@ -10,6 +10,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class SRGLetterboxViewController;
 
+/**
+ *  Letterbox view controller delegate.
+ */
 @protocol SRGLetterboxViewControllerDelegate <NSObject>
 
 @optional
@@ -26,6 +29,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ *  Letterbox view controller is a full-fledged tvOS Letterbox-based playback experience. It provides tight integration
+ *  with the system standard player and its features (metadata and segment support, interstitials for blocked content,
+ *  thumbnails, continuous playback, etc.). Unlike Letterbox iOS support, where your application is supposed to display
+ *  a Letterbox view, on tvOS you should simply present a Letterbox view controller to play some content.
+ */
 @interface SRGLetterboxViewController : UIViewController
 
 /**
