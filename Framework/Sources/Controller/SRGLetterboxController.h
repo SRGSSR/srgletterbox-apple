@@ -346,9 +346,9 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 /**
  *  Set to `YES` to enable background video playback if possible (not supported for 360° or when AirPlay or Picture in
- *  picture are active).
+ *  picture are active). Default is `NO`.
  */
-@property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled __TVOS_PROHIBITED;
+@property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled;
 
 /**
  *  Set to `YES` so that a retry automatically resumes playback (e.g. after a network loss, when the start time of

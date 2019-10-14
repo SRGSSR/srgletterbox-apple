@@ -348,8 +348,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self.mediaPlayerController reloadPlayerConfiguration];
 }
 
-#if TARGET_OS_IOS
-
 - (BOOL)isBackgroundVideoPlaybackEnabled
 {
     return self.mediaPlayerController.viewBackgroundBehavior == SRGMediaPlayerViewBackgroundBehaviorDetached;
@@ -357,8 +355,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)setBackgroundVideoPlaybackEnabled:(BOOL)backgroundVideoPlaybackEnabled
 {
+#if TARGET_OS_IOS
     self.mediaPlayerController.viewBackgroundBehavior = backgroundVideoPlaybackEnabled ? SRGMediaPlayerViewBackgroundBehaviorDetached : SRGMediaPlayerViewBackgroundBehaviorDetachedWhenDeviceLocked;
+#else
+    self.mediaPlayerController.viewBackgroundBehavior = backgroundVideoPlaybackEnabled ? SRGMediaPlayerViewBackgroundBehaviorDetached : SRGMediaPlayerViewBackgroundBehaviorAttached;
+#endif
 }
+
+#if TARGET_OS_IOS
 
 - (BOOL)areBackgroundServicesEnabled
 {
