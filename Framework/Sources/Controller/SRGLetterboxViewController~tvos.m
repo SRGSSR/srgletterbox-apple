@@ -232,17 +232,17 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
         self.errorView.alpha = 0.f;
         self.availabilityView.alpha = 1.f;
-        self.playerViewController.showsPlaybackControls = NO;
+        self.view.userInteractionEnabled = NO;
     }
     else if (error) {
         self.errorView.alpha = 1.f;
         self.availabilityView.alpha = 0.f;
-        self.playerViewController.showsPlaybackControls = NO;
+        self.view.userInteractionEnabled = NO;
     }
     else {
         self.errorView.alpha = 0.f;
         self.availabilityView.alpha = 0.f;
-        self.playerViewController.showsPlaybackControls = (self.controller.URN != nil);
+        self.view.userInteractionEnabled = (self.controller.URN != nil);
     }
     
     if (self.controller.loading) {
