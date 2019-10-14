@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Letterbox view delegate protocol for optional full-screen support and view animations.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGLetterboxViewDelegate <NSObject>
 
 @optional
@@ -176,7 +177,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The Letterbox view automatically displays errors of the underlying controller. When an error is displayed, the
  *  controls will be hidden from view so that the error can be properly read.
  */
-IB_DESIGNABLE
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGLetterboxView : SRGLetterboxControllerView <UIGestureRecognizerDelegate>
 
 /**

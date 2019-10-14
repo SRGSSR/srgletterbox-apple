@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  A simple notification banner.
  */
-IB_DESIGNABLE
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGNotificationView : SRGLetterboxBaseView
 
 /**

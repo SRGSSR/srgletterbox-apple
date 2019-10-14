@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Subdivision cell delegate protocol.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGLetterboxSubdivisionCellDelegate <NSObject>
 
 /**
@@ -28,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Cell for displaying a subdivision (chapter or segment). Values are set by the caller.
  */
+API_UNAVAILABLE(tvos)
 @interface SRGLetterboxSubdivisionCell : UICollectionViewCell
 
 /**

@@ -23,17 +23,18 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
     SRGLetterboxCommandSeekForward          = 1 << 3,           // Seek forward.
     SRGLetterboxCommandPreviousTrack        = 1 << 4,           // Previous track.
     SRGLetterboxCommandNextTrack            = 1 << 5            // Next track.
-};
+} API_UNAVAILABLE(tvos);
 
 /**
  *  Default set of commands. Seeks and skips are available.
  */
-OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
+OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault API_UNAVAILABLE(tvos);
 
 /**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
  *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGLetterboxPictureInPictureDelegate <NSObject>
 
 /**

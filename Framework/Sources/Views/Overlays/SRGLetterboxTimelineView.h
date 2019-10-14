@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Timeline delegate protocol.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGLetterboxTimelineViewDelegate <NSObject>
 
 /**
@@ -36,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Timeline displaying subdivisions (segments and chapters) associated with a media.
  */
-IB_DESIGNABLE
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGLetterboxTimelineView : SRGLetterboxControllerView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSubdivisionCellDelegate>
 
 /**

@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Controls view delegate protocol.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGControlsViewDelegate <NSObject>
 
 /**
@@ -56,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  View displaying controls.
  */
-IB_DESIGNABLE
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGTracksButtonDelegate>
 
 /**

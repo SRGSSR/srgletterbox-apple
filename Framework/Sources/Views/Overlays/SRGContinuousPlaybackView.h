@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  View delegate.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGContinuousPlaybackViewDelegate <NSObject>
 
 /**
@@ -31,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  View displayed during a continuous playback transition between two medias.
  */
-IB_DESIGNABLE
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGContinuousPlaybackView : SRGLetterboxControllerView
 
 /**

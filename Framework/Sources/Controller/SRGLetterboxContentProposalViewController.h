@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-API_AVAILABLE(tvos(10.0))
+API_AVAILABLE(tvos(10.0)) API_UNAVAILABLE(ios)
 @interface SRGLetterboxContentProposalViewController : AVContentProposalViewController
 
 - (instancetype)initWithController:(SRGLetterboxController *)controller;
