@@ -82,7 +82,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                 }
                 
                 // Continuous playback transition is managed at the controller level when playback end is reached. We therefore
-                // dusplay the content proposal at the very end of the media. For the same reason we must also not set any
+                // display the content proposal at the very end of the media. For the same reason we must also not set any
                 // `automaticAcceptanceInterval` on the `AVContentProposal`.
                 SRGMedia *nextMedia = controller.nextMedia;
                 if (transitionDuration != SRGLetterboxContinuousPlaybackDisabled && nextMedia) {
