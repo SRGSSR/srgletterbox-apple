@@ -18,6 +18,8 @@
 
 @implementation Media
 
+#pragma mark Class methods
+
 + (NSArray<Media *> *)mediasFromFileAtPath:(NSString *)filePath
 {
     NSArray<NSDictionary *> *mediaDictionaries = [NSDictionary dictionaryWithContentsOfFile:filePath][@"medias"];
@@ -57,6 +59,7 @@
 }
 
 #pragma mark Getters
+
 - (NSString *)URN
 {
     NSString *tmpURN = _URN;
