@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__TVOS_PROHIBITED
+API_UNAVAILABLE(tvos)
 @interface PlayerPageViewController : UIViewController
 
 - (instancetype)initWithURN:(NSString *)URN;

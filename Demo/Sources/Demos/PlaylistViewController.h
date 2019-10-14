@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__TVOS_PROHIBITED
+API_UNAVAILABLE(tvos)
 @interface PlaylistViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
 - (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias sourceUid:(nullable NSString *)sourceUid;

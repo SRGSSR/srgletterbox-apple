@@ -742,17 +742,17 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Return `YES` iff the receiver is enabled for background services.
  */
-@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled __TVOS_PROHIBITED;
+@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled API_UNAVAILABLE(tvos);
 
 /**
  *  Return `YES` iff the receiver is enabled for picture in picture.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled __TVOS_PROHIBITED;
+@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled API_UNAVAILABLE(tvos);
 
 /**
  *  Return `YES` iff picture in picture is currently active for the receiver.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive __TVOS_PROHIBITED;
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive API_UNAVAILABLE(tvos);
 
 @end
 

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__TVOS_PROHIBITED
+API_UNAVAILABLE(tvos)
 @interface StandalonePlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
 - (instancetype)initWithURN:(nullable NSString *)URN;

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Letterbox view controller delegate.
  */
-API_AVAILABLE(tvos(9.0)) __IOS_PROHIBITED
+API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @protocol SRGLetterboxViewControllerDelegate <NSObject>
 
 @optional
@@ -36,7 +36,7 @@ API_AVAILABLE(tvos(9.0)) __IOS_PROHIBITED
  *  thumbnails, continuous playback, etc.). Unlike Letterbox iOS support, where your application is supposed to display
  *  a Letterbox view, on tvOS you should simply present a Letterbox view controller to play some content.
  */
-API_AVAILABLE(tvos(9.0)) __IOS_PROHIBITED
+API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @interface SRGLetterboxViewController : UIViewController
 
 /**

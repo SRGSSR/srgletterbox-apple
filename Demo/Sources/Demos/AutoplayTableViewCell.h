@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__TVOS_PROHIBITED
+API_UNAVAILABLE(tvos)
 @interface AutoplayTableViewCell : UITableViewCell
 
 - (void)setMedia:(nullable SRGMedia *)media withPreferredSubtitleLocalization:(nullable NSString *)preferredSubtitleLocalization;

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Autoplay lists.
  */
-typedef __TVOS_PROHIBITED NS_ENUM(NSInteger, AutoplayList) {
+typedef API_UNAVAILABLE(tvos) NS_ENUM(NSInteger, AutoplayList) {
     /**
      *  RTS trending videos.
      */
@@ -26,7 +26,7 @@ typedef __TVOS_PROHIBITED NS_ENUM(NSInteger, AutoplayList) {
     AutoplayListSRFTrendingMedias
 };
 
-__TVOS_PROHIBITED
+API_UNAVAILABLE(tvos)
 @interface AutoplayViewController : UITableViewController
 
 @property (nonatomic) AutoplayList autoplayList;

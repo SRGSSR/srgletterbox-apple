@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Manage a custom modal transition.
  */
-__TVOS_PROHIBITED
+API_UNAVAILABLE(tvos)
 @interface ModalTransition : NSObject <UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning>
 
 /**

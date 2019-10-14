@@ -18,14 +18,14 @@ OBJC_EXPORT BOOL ApplicationSettingIsStandalone(void);
 
 OBJC_EXPORT SRGQuality ApplicationSettingPreferredQuality(void);
 
-OBJC_EXPORT __TVOS_PROHIBITED BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
-OBJC_EXPORT __TVOS_PROHIBITED void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);
+OBJC_EXPORT API_UNAVAILABLE(tvos) BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
+OBJC_EXPORT API_UNAVAILABLE(tvos) void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);
 
 OBJC_EXPORT NSTimeInterval ApplicationSettingUpdateInterval(void);
 
 OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 
-OBJC_EXPORT __TVOS_PROHIBITED BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
+OBJC_EXPORT API_UNAVAILABLE(tvos) BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
 
 @interface SettingsViewController : UITableViewController
 
