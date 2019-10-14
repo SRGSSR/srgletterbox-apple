@@ -146,11 +146,13 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self addChildViewController:self.playerViewController];
     
     SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
+    errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     errorView.controller = self.controller;
     [playerView insertSubview:errorView atIndex:0];
     self.errorView = errorView;
     
     SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] initWithFrame:playerView.bounds];
+    availabilityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     availabilityView.controller = self.controller;
     [playerView insertSubview:availabilityView atIndex:0];
     self.availabilityView = availabilityView;
