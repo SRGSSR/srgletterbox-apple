@@ -59,7 +59,7 @@
     
     self.title = [self pageTitle];
     
-    UIBarButtonItem * settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings-22"]
+    UIBarButtonItem * settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings"]
                                                                                style:UIBarButtonItemStylePlain
                                                                               target:self
                                                                               action:@selector(showSettings:)];

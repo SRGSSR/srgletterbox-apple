@@ -18,6 +18,7 @@
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
 #import "UIFont+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGAppearance/SRGAppearance.h>
@@ -104,11 +105,11 @@
     // the view hierarchy at runtime.
     self.fullScreenPhantomButton.alpha = 0.f;
     
-    self.airPlayButton.image = [UIImage imageNamed:@"airplay-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
-    self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
-    self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
-    self.tracksButton.image = [UIImage imageNamed:@"subtitles_off-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
-    self.tracksButton.selectedImage = [UIImage imageNamed:@"subtitles_on-48" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.airPlayButton.image = [UIImage imageNamed:@"airplay" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.tracksButton.image = [UIImage imageNamed:@"subtitles_off" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.tracksButton.selectedImage = [UIImage imageNamed:@"subtitles_on" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -261,6 +262,9 @@
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
+    
+    self.viewModeButton.viewModeMonoscopicImage = [UIImage srg_letterboxImageNamed:@"view_mode_monoscopic"];
+    self.viewModeButton.viewModeStereoscopicImage = [UIImage srg_letterboxImageNamed:@"view_mode_stereoscopic"];
     
     // Show or hide the phantom button in the controls stack, as the real full-screen button will follow its frame
     self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShouldHideFullScreenButton:self];

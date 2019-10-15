@@ -57,6 +57,11 @@ OBJC_EXPORT CGSize SRGSizeForImageScale(SRGImageScale imageScale);
 @interface UIImage (SRGLetterboxImages)
 
 /**
+ *  Return the specified image from the Letterbox bundle, `nil` if not found.
+ */
++ (nullable UIImage *)srg_letterboxImageNamed:(NSString *)imageName;
+
+/**
  *  Playback buttons.
  */
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet;

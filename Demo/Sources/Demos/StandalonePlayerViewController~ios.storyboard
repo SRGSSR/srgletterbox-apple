@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14845" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="A6A-Ps-0a8">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="A6A-Ps-0a8">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14799.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,11 +11,11 @@
             <objects>
                 <viewController id="A6A-Ps-0a8" customClass="StandalonePlayerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xul-ZD-b56">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJc-Y6-KTE" customClass="SRGLetterboxView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="337.5"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" secondItem="LJc-Y6-KTE" secondAttribute="width" multiplier="9:16" id="dLS-h7-FwA"/>
@@ -34,49 +32,49 @@
                                     <constraint firstAttribute="width" secondItem="z05-5d-RZc" secondAttribute="height" multiplier="1:1" id="Vfk-rL-fG3"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="close-48"/>
+                                <state key="normal" image="close"/>
                                 <connections>
                                     <action selector="close:" destination="A6A-Ps-0a8" eventType="touchUpInside" id="C9C-a7-pJC"/>
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fKR-hu-Q2e">
-                                <rect key="frame" x="310" y="543" width="51" height="31"/>
+                                <rect key="frame" x="535" y="476" width="51" height="31"/>
                                 <connections>
                                     <action selector="toggleServiceEnabled:" destination="A6A-Ps-0a8" eventType="valueChanged" id="PaG-YT-6hx"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Service enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nJu-tJ-1Lh" userLabel="Service enabled">
-                                <rect key="frame" x="16" y="548" width="122.5" height="21"/>
+                                <rect key="frame" x="16" y="481" width="122.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Control center integration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qhc-si-4ds">
-                                <rect key="frame" x="16" y="587" width="196.5" height="21"/>
+                                <rect key="frame" x="16" y="520" width="196.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H5a-8y-rtj">
-                                <rect key="frame" x="310" y="582" width="51" height="31"/>
+                                <rect key="frame" x="535" y="515" width="51" height="31"/>
                                 <connections>
                                     <action selector="toggleNowPlayingInfoAndCommands:" destination="A6A-Ps-0a8" eventType="valueChanged" id="zFW-mP-5dj"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mirrored" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E7m-CS-gyh">
-                                <rect key="frame" x="16" y="626" width="65.5" height="21"/>
+                                <rect key="frame" x="16" y="559" width="65.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g2T-7b-725">
-                                <rect key="frame" x="310" y="621" width="51" height="31"/>
+                                <rect key="frame" x="535" y="554" width="51" height="31"/>
                                 <connections>
                                     <action selector="toggleMirrored:" destination="A6A-Ps-0a8" eventType="valueChanged" id="nPV-Hi-Zz5"/>
                                 </connections>
                             </switch>
                         </subviews>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="z05-5d-RZc" firstAttribute="leading" secondItem="QiQ-Iq-6zS" secondAttribute="leading" id="45V-sy-zvJ"/>
                             <constraint firstItem="QiQ-Iq-6zS" firstAttribute="trailing" secondItem="LJc-Y6-KTE" secondAttribute="trailing" id="4dc-bt-t41"/>
@@ -115,6 +113,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="close-48" width="48" height="48"/>
+        <image name="close" width="16" height="16"/>
     </resources>
 </document>

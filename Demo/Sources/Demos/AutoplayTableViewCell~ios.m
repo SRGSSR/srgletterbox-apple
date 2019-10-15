@@ -60,7 +60,7 @@
 - (void)setMuted:(BOOL)muted
 {
     self.letterboxController.muted = muted;
-    self.soundIndicatorImageView.image = (muted) ? [UIImage imageNamed:@"SoundOffIndicator"] : [UIImage imageNamed:@"SoundOnIndicator"];
+    self.soundIndicatorImageView.image = (muted) ? [UIImage imageNamed:@"sound_off"] : [UIImage imageNamed:@"sound_on"];
 }
 
 #pragma mark Overrides
@@ -94,7 +94,7 @@
     self.progressView.hidden = YES;
     
     self.letterboxController.muted = YES;
-    self.soundIndicatorImageView.image = [UIImage imageNamed:@"SoundOffIndicator"];
+    self.soundIndicatorImageView.image = [UIImage imageNamed:@"sound_off"];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow

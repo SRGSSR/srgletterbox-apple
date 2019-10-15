@@ -17,14 +17,9 @@
 
 #pragma mark Class methods
 
-+ (UIImageView *)srg_loadingImageView48WithTintColor:(UIColor *)tintColor
++ (UIImageView *)srg_loadingImageViewWithTintColor:(UIColor *)tintColor
 {
-    return [self srg_animatedImageViewNamed:@"loading-48" withTintColor:tintColor duration:1.];
-}
-
-+ (UIImageView *)srg_loadingImageView90WithTintColor:(UIColor *)tintColor
-{
-    return [self srg_animatedImageViewNamed:@"loading-90" withTintColor:tintColor duration:1.];
+    return [self srg_animatedImageViewNamed:@"loading" withTintColor:tintColor duration:1.];
 }
 
 // Expect a sequence of images named "name-N", where N must begin at 0. Stops when no image is found for some N

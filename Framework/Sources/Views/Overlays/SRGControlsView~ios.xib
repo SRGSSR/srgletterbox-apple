@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -108,7 +104,7 @@
                             <rect key="frame" x="402.5" y="0.0" width="49.5" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfY-e1-gJs" userLabel="Duration Label">
-                                    <rect key="frame" x="11" y="16.5" width="27.5" height="16.5"/>
+                                    <rect key="frame" x="11" y="16" width="27.5" height="16.5"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -128,7 +124,7 @@
                             <rect key="frame" x="452" y="0.0" width="51" height="48"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LIVE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="joB-a5-mWm" userLabel="Live Label" customClass="SRGLiveLabel">
-                                    <rect key="frame" x="11" y="16.5" width="29" height="16.5"/>
+                                    <rect key="frame" x="11" y="16" width="29" height="16.5"/>
                                     <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="14"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -166,10 +162,10 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button">
-                    <rect key="frame" x="225.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="241.5" y="184.5" width="48" height="72"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
-                    <state key="normal" image="backward-48"/>
+                    <state key="normal" image="backward"/>
                     <connections>
                         <action selector="skipBackward:" destination="-1" eventType="touchUpInside" id="87I-Na-qL5"/>
                     </connections>
@@ -180,19 +176,19 @@
                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJC-uY-JVi" userLabel="Forward Button">
-                    <rect key="frame" x="309.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="309.5" y="184.5" width="48" height="72"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
-                    <state key="normal" image="forward-48"/>
+                    <state key="normal" image="forward"/>
                     <connections>
                         <action selector="skipForward:" destination="-1" eventType="touchUpInside" id="cZc-nZ-4B9"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWK-b9-2Ez">
-                    <rect key="frame" x="373.5" y="176.5" width="64" height="88"/>
+                    <rect key="frame" x="357.5" y="184.5" width="48" height="72"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
-                    <state key="normal" image="back_live-48"/>
+                    <state key="normal" image="back_live"/>
                     <connections>
                         <action selector="skipToLive:" destination="-1" eventType="touchUpInside" id="BFf-dV-DW4"/>
                     </connections>
@@ -231,9 +227,9 @@
         </tapGestureRecognizer>
     </objects>
     <resources>
-        <image name="back_live-48" width="48" height="48"/>
-        <image name="backward-48" width="48" height="48"/>
-        <image name="forward-48" width="48" height="48"/>
+        <image name="back_live" width="16" height="16"/>
+        <image name="backward" width="16" height="16"/>
+        <image name="forward" width="16" height="16"/>
         <image name="view_mode_monoscopic-48" width="48" height="48"/>
         <image name="view_mode_stereoscopic-48" width="48" height="48"/>
     </resources>

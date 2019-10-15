@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jxl-Jc-tdC">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jxl-Jc-tdC">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,27 +10,27 @@
             <objects>
                 <tableViewController id="jxl-Jc-tdC" customClass="AutoplayViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="185" sectionHeaderHeight="28" sectionFooterHeight="28" id="a3B-hA-p0L">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AutoplayTableViewCell" rowHeight="212" id="838-HX-Muy" customClass="AutoplayTableViewCell">
-                                <rect key="frame" x="0.0" y="28" width="375" height="212"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="212"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="838-HX-Muy" id="biV-rX-1zW">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="211.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="212"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2F0-qR-bO6" customClass="SRGLetterboxView">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="211.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="212"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Lc6-DR-gyf">
-                                            <rect key="frame" x="0.0" y="209.5" width="375" height="2"/>
+                                            <rect key="frame" x="0.0" y="210" width="600" height="2"/>
                                             <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         </progressView>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SoundOffIndicator" translatesAutoresizingMaskIntoConstraints="NO" id="SSB-Kb-X95" userLabel="Sound Image View">
-                                            <rect key="frame" x="337" y="171.5" width="28" height="28"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sound_off" translatesAutoresizingMaskIntoConstraints="NO" id="SSB-Kb-X95" userLabel="Sound Image View">
+                                            <rect key="frame" x="558" y="168" width="32" height="32"/>
                                         </imageView>
                                     </subviews>
                                     <constraints>
@@ -68,6 +64,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SoundOffIndicator" width="28" height="28"/>
+        <image name="sound_off" width="16" height="16"/>
     </resources>
 </document>

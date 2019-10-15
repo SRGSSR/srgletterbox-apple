@@ -167,7 +167,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
     loadingIndicatorView.alpha = 0.f;
     
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageView90WithTintColor:UIColor.whiteColor];
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
     loadingImageView.alpha = 0.f;
     [playerView addSubview:loadingImageView];
     self.loadingImageView = loadingImageView;

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -33,8 +29,8 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FIC-tI-Av6" userLabel="Blocking Overlay View">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="90"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked-25" translatesAutoresizingMaskIntoConstraints="NO" id="aDw-g0-vQ2" userLabel="Blocking Reason Image View">
-                                <rect key="frame" x="67.5" y="32.5" width="25" height="25"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked" translatesAutoresizingMaskIntoConstraints="NO" id="aDw-g0-vQ2" userLabel="Blocking Reason Image View">
+                                <rect key="frame" x="64" y="29" width="32" height="32"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -44,8 +40,8 @@
                             <constraint firstItem="aDw-g0-vQ2" firstAttribute="centerX" secondItem="FIC-tI-Av6" secondAttribute="centerX" id="qqK-Bc-byq"/>
                         </constraints>
                     </view>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="360_media-25" translatesAutoresizingMaskIntoConstraints="NO" id="644-JY-sxq">
-                        <rect key="frame" x="5" y="60" width="25" height="25"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="360_media" translatesAutoresizingMaskIntoConstraints="NO" id="644-JY-sxq">
+                        <rect key="frame" x="5" y="53" width="32" height="32"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" 00:00 " textAlignment="center" lineBreakMode="wordWrap" minimumFontSize="10" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="xPG-fm-CkX" userLabel="Duration Label" customClass="SRGPaddedLabel">
@@ -117,7 +113,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="360_media-25" width="25" height="25"/>
-        <image name="geoblocked-25" width="25" height="25"/>
+        <image name="360_media" width="16" height="16"/>
+        <image name="geoblocked" width="16" height="16"/>
     </resources>
 </document>
