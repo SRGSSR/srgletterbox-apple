@@ -19,10 +19,10 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="MYC-IE-u18">
                                 <rect key="frame" x="67.5" y="253.5" width="240" height="160"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="srgssr_logo" translatesAutoresizingMaskIntoConstraints="NO" id="cMf-yo-Ntz">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_srgssr" translatesAutoresizingMaskIntoConstraints="NO" id="cMf-yo-Ntz">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="84"/>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="letterbox" translatesAutoresizingMaskIntoConstraints="NO" id="GWs-yD-ann">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_letterbox" translatesAutoresizingMaskIntoConstraints="NO" id="GWs-yD-ann">
                                         <rect key="frame" x="0.0" y="124" width="240" height="36"/>
                                     </imageView>
                                 </subviews>
@@ -42,7 +42,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="letterbox" width="200" height="36"/>
-        <image name="srgssr_logo" width="240" height="84"/>
+        <image name="logo_letterbox" width="200" height="36"/>
+        <image name="logo_srgssr" width="240" height="84"/>
     </resources>
 </document>
