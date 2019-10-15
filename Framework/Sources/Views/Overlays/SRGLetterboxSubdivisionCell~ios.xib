@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -30,7 +32,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="160" height="90"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geoblocked" translatesAutoresizingMaskIntoConstraints="NO" id="aDw-g0-vQ2" userLabel="Blocking Reason Image View">
-                                <rect key="frame" x="64" y="29" width="32" height="32"/>
+                                <rect key="frame" x="67.5" y="32.5" width="25" height="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -41,16 +43,16 @@
                         </constraints>
                     </view>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="360_media" translatesAutoresizingMaskIntoConstraints="NO" id="644-JY-sxq">
-                        <rect key="frame" x="5" y="53" width="32" height="32"/>
+                        <rect key="frame" x="5" y="60" width="25" height="25"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" 00:00 " textAlignment="center" lineBreakMode="wordWrap" minimumFontSize="10" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="xPG-fm-CkX" userLabel="Duration Label" customClass="SRGPaddedLabel">
-                        <rect key="frame" x="121" y="65" width="34" height="18"/>
+                        <rect key="frame" x="114" y="65" width="41" height="18"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="18" id="qMm-JZ-lFC"/>
                         </constraints>
-                        <fontDescription key="fontDescription" name="SRGSSRType-Regular" family="SRG SSR Type" pointSize="11"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
@@ -113,7 +115,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="360_media" width="16" height="16"/>
-        <image name="geoblocked" width="16" height="16"/>
+        <image name="360_media" width="25" height="25"/>
+        <image name="geoblocked" width="25" height="25"/>
     </resources>
 </document>
