@@ -4,16 +4,17 @@
 
 ## About
 
-The SRG Letterbox library defines the official SRG SSR media player experience, packed into a single library, providing:
+The SRG Letterbox library defines the official SRG SSR media player experience, packed into a single library providing:
 
 * A controller to play audios and videos, which supports on-demand, live and DVR streams.
-* A service to manage application-wide playback. 
-* A responsive player view with the official SRG SSR look and feel.
-* Support for 360° videos.
+* A service to manage application-wide playback (iOS).
+* A responsive player view with the official SRG SSR look and feel (iOS).
+* A standard `AVPlayerViewController`-based player for straightforward integration (tvOS).
+* Support for 360° videos (iOS).
 * Support for chapter and segment browsing and selection. 
 * Playlist support.
 * Access to all SRG SSR business unit medias.
-* Native AirPlay and picture in picture support.
+* Native AirPlay and picture in picture support (iOS)
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
 * ... and [a lot more](FEATURES.md).
 
@@ -23,7 +24,7 @@ To ensure a coherent visual player identity throughout SRG SSR applications, **t
 
 ## Compatibility
 
-The library is suitable for applications running on iOS 9 and above. The project is meant to be opened with the latest Xcode version.
+The library is suitable for applications running on iOS 9, tvOS 9 and above. The project is meant to be opened with the latest Xcode version.
 
 ## Contributing
 
@@ -66,7 +67,6 @@ The library requires the following frameworks to be added to any target requirin
 * `libextobjc`: A utility framework.
 * `MAKVONotificationCenter`: A safe KVO framework.
 * `Mantle`:  The framework used to parse the data.
-* `Masonry`: An autolayout framework.
 * `SRGAnalytics`: The main analytics framework.
 * `SRGAnalytics_MediaPlayer`: The media player analytics companion framework.
 * `SRGAnalytics_DataProvider`: The data provider analytics companion framework.
@@ -84,19 +84,19 @@ The library requires the following frameworks to be added to any target requirin
 ### Dynamic framework integration
 
 1. Run `carthage update` to update the dependencies (which is equivalent to `carthage update --configuration Release`). 
-2. Add the frameworks listed above and generated in the `Carthage/Build/iOS` folder to your target _Embedded binaries_.
+2. Add the frameworks listed above and generated in the `Carthage/Build/(iOS|tvOS)` folder to your target _Embedded binaries_.
 
 If your target is building an application, a few more steps are required:
 
 1. Add a _Run script_ build phase to your target, with `/usr/local/bin/carthage copy-frameworks` as command.
-2. Add each of the required frameworks above as input file `$(SRCROOT)/Carthage/Build/iOS/FrameworkName.framework`.
+2. Add each of the required frameworks above as input file `$(SRCROOT)/Carthage/Build/(iOS|tvOS)/FrameworkName.framework`.
 
 ### Static framework integration
 
 1. Run `carthage update --configuration Release-static` to update the dependencies. 
-2. Add the frameworks listed above and generated in the `Carthage/Build/iOS/Static` folder to the _Linked frameworks and libraries_ list of your target.
+2. Add the frameworks listed above and generated in the `Carthage/Build/(iOS|tvOS)/Static` folder to the _Linked frameworks and libraries_ list of your target.
 3. Also add any resource bundle `.bundle` found within the `.framework` folders to your target directly.
-4. Some non-statically built framework dependencies are built in the `Carthage/Build/iOS` folder. Add them by following the _Dynamic framework integration_ instructions above.
+4. Some non-statically built framework dependencies are built in the `Carthage/Build/(iOS|tvOS)` folder. Add them by following the _Dynamic framework integration_ instructions above.
 5. Add the `-all_load` flag to your target _Other linker flags_.
 
 ## Building the project
@@ -167,9 +167,9 @@ If rendering does not work properly:
 
 To test what the library is capable of, run the associated demo.
 
-#### URL schemes
+#### URL schemes (iOS)
 
-The demo application can be opened with a custom URL scheme having the following format: `letterbox(-nightly|-debug)`.
+The iOS demo application can be opened with a custom URL scheme having the following format: `letterbox(-nightly|-debug)`.
 
 * Open a media within the player: `[scheme]://open?media=[media_urn]`.
 * A `&server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
@@ -182,7 +182,7 @@ Moreover, standard view controller transitions (e.g. screen edge pan in a naviga
 
 ## Standard system behaviors
 
-If playback is paused from the application and the device is locked afterwards, the lock screen will surprisingly not display playback controls. This is standard iOS behavior (Apple Podcasts application works the same). Playback can be restarted from the control center, though.
+If playback is paused from the iOS application and the device is locked afterwards, the lock screen will surprisingly not display playback controls. This is standard behavior (Apple Podcasts application works the same). Playback can be restarted from the control center, though.
 
 Moreover, video playback is paused by the system automatically when putting the application in the background, except when picture in picture is used.
 
