@@ -6,6 +6,7 @@
 
 #import "SRGLetterboxViewController.h"
 
+#import "NSBundle+SRGLetterbox.h"
 #import "SRGAvailabilityView.h"
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
@@ -216,6 +217,22 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self reloadImage];
 }
 
+- (NSString *)fullSummaryForMedia:(SRGMedia *)media
+{
+    NSParameterAssert(media);
+    
+    if (media.summary && media.imageCopyright) {
+        NSString *imageCopyright = [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Image credit: %@", @"Image copyright introductory label"), media.imageCopyright];
+        return [NSString stringWithFormat:@"%@\n\n%@", media.summary, imageCopyright];
+    }
+    else if (media.imageCopyright) {
+        return [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Image credit: %@", @"Image copyright introductory label"), media.imageCopyright];
+    }
+    else {
+        return media.summary;
+    }
+}
+
 - (void)reloadImage
 {
     [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
@@ -300,7 +317,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         
         AVMutableMetadataItem *descriptionItem = [[AVMutableMetadataItem alloc] init];
         descriptionItem.identifier = AVMetadataCommonIdentifierDescription;
-        descriptionItem.value = media.summary;
+        descriptionItem.value = [self fullSummaryForMedia:media];
         descriptionItem.extendedLanguageTag = @"und";
         
         UIImage *image = [self imageForMetadata:media withCompletion:^{
