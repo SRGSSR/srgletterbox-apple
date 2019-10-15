@@ -10,6 +10,8 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
+#import <SRGAppearance/SRGAppearance.h>
+
 @interface SRGLetterboxContentProposalViewController ()
 
 @property (nonatomic) SRGLetterboxController *controller;
@@ -65,6 +67,13 @@
 {
     [super viewDidLoad];
     
+    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    self.summaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    
+    self.nextButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+    
     [self reloadData];
 }
 
@@ -94,6 +103,7 @@
 - (void)reloadData
 {
     [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    
     self.titleLabel.text = self.media.title;
     self.summaryLabel.text = self.media.summary;
     
