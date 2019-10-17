@@ -26,8 +26,6 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <SRGNetwork/SRGNetwork.h>
 
-static BOOL s_prefersDRM = NO;
-
 NSString * const SRGLetterboxPlaybackStateDidChangeNotification = @"SRGLetterboxPlaybackStateDidChangeNotification";
 NSString * const SRGLetterboxSegmentDidStartNotification = @"SRGLetterboxSegmentDidStartNotification";
 NSString * const SRGLetterboxSegmentDidEndNotification = @"SRGLetterboxSegmentDidEndNotification";
@@ -126,8 +124,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     SRGPlaybackSettings *playbackSettings = [[SRGPlaybackSettings alloc] init];
     playbackSettings.streamType = settings.streamType;
     playbackSettings.quality = settings.quality;
-    // TODO: Replace s_prefersDRM at the `SRGAnalytics_DataProvider` level with YES when DRMs are the default choice
-    playbackSettings.DRM = s_prefersDRM;
     playbackSettings.startBitRate = settings.startBitRate;
     playbackSettings.sourceUid = settings.sourceUid;
     return playbackSettings;
@@ -212,18 +208,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @implementation SRGLetterboxController
 
 @synthesize serviceURL = _serviceURL;
-
-#pragma mark Class methods
-
-+ (void)setPrefersDRM:(BOOL)prefersDRM
-{
-    s_prefersDRM = prefersDRM;
-}
-
-+ (BOOL)prefersDRM
-{
-    return s_prefersDRM;
-}
 
 #pragma mark Object lifecycle
 
