@@ -52,8 +52,6 @@
 		6F0C99082121E6FB00073AB6 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */; };
 		6F0C99092121E70000073AB6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08FA0CBA1E2E5874000C94EF /* Images.xcassets */; };
 		6F0C990A2121E70300073AB6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F4855AA1E3A669B00B0141C /* Localizable.strings */; };
-		6F0C990B2121E70800073AB6 /* placeholder_media-180.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */; };
-		6F0C990C2121E70800073AB6 /* placeholder_media-320.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */; };
 		6F0C990F2121E73400073AB6 /* SRGAvailabilityView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593020581CAF00823003 /* SRGAvailabilityView~ios.xib */; };
 		6F0C99102121E73400073AB6 /* SRGContinuousPlaybackView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593420581CAF00823003 /* SRGContinuousPlaybackView~ios.xib */; };
 		6F0C99112121E73400073AB6 /* SRGControlsBackgroundView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FB83A90205AAFFE0013928B /* SRGControlsBackgroundView~ios.xib */; };
@@ -121,6 +119,9 @@
 		6F75AF48219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */; };
 		6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */; };
 		6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
+		6F8211922358ED3500B047FF /* placeholder_media~tvos.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211912358ED3500B047FF /* placeholder_media~tvos.pdf */; };
+		6F8211952358ED4300B047FF /* placeholder_media-square.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211932358ED4200B047FF /* placeholder_media-square.pdf */; };
+		6F8211962358ED4300B047FF /* placeholder_media~ios.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211942358ED4200B047FF /* placeholder_media~ios.pdf */; };
 		6F973EBC233547B10026F54C /* SRGLetterboxViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
@@ -367,6 +368,9 @@
 		6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxPlaybackSettings.m; sourceTree = "<group>"; };
 		6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPRemoteCommand+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPRemoteCommand+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6F8211912358ED3500B047FF /* placeholder_media~tvos.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media~tvos.pdf"; sourceTree = "<group>"; };
+		6F8211932358ED4200B047FF /* placeholder_media-square.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-square.pdf"; sourceTree = "<group>"; };
+		6F8211942358ED4200B047FF /* placeholder_media~ios.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media~ios.pdf"; sourceTree = "<group>"; };
 		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
 		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -420,7 +424,6 @@
 		6FBB28022154CA6300071E02 /* MetadataTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetadataTestCase.m; sourceTree = "<group>"; };
 		6FBB28052154CAE600071E02 /* SwitchTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwitchTestCase.m; sourceTree = "<group>"; };
 		6FBB28082154CAF700071E02 /* SkipTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SkipTestCase.m; sourceTree = "<group>"; };
-		6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-320.pdf"; sourceTree = "<group>"; };
 		6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGProgram+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGProgram+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6FCB995B1F56948D00790EAA /* ServerSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerSettings.h; sourceTree = "<group>"; };
@@ -446,7 +449,6 @@
 		6FE08CE81E8B81B000EC4716 /* UIFont+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6FE08CEB1E8B845F00EC4716 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
 		6FE321411E28E24E00FD8E42 /* SRGLetterbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SRGLetterbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-180.pdf"; sourceTree = "<group>"; };
 		6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxError.h; sourceTree = "<group>"; };
 		6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxError.m; sourceTree = "<group>"; };
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
@@ -544,8 +546,9 @@
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
 				6F00F7BC2148E09E0016E664 /* Info.plist */,
 				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
-				6FE89DD31EBD043D00CE3069 /* placeholder_media-180.pdf */,
-				6FC886631EC57BD7000BC3FF /* placeholder_media-320.pdf */,
+				6F8211932358ED4200B047FF /* placeholder_media-square.pdf */,
+				6F8211942358ED4200B047FF /* placeholder_media~ios.pdf */,
+				6F8211912358ED3500B047FF /* placeholder_media~tvos.pdf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1137,22 +1140,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F0C990B2121E70800073AB6 /* placeholder_media-180.pdf in Resources */,
 				6F0C99092121E70000073AB6 /* Images.xcassets in Resources */,
 				6F0C990A2121E70300073AB6 /* Localizable.strings in Resources */,
 				6F0C99132121E73400073AB6 /* SRGCountdownView~ios.xib in Resources */,
 				6F0C99162121E73400073AB6 /* SRGLetterboxTimelineView~ios.xib in Resources */,
+				6F8211952358ED4300B047FF /* placeholder_media-square.pdf in Resources */,
 				6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */,
 				6F72A81523391490008AA908 /* SRGLetterboxContentProposalViewController~tvos.storyboard in Resources */,
 				6F0C99122121E73400073AB6 /* SRGControlsView~ios.xib in Resources */,
 				6F0C99152121E73400073AB6 /* SRGLetterboxSubdivisionCell~ios.xib in Resources */,
+				6F8211962358ED4300B047FF /* placeholder_media~ios.pdf in Resources */,
 				6F223C64234B6BB3002F93A1 /* SRGErrorView~tvos.xib in Resources */,
 				6F0C99172121E73400073AB6 /* SRGNotificationView~ios.xib in Resources */,
 				6F0C99102121E73400073AB6 /* SRGContinuousPlaybackView~ios.xib in Resources */,
 				6FDCE9DE23507ED5002B46F9 /* SRGCountdownView~tvos.xib in Resources */,
 				6F0C99112121E73400073AB6 /* SRGControlsBackgroundView~ios.xib in Resources */,
-				6F0C990C2121E70800073AB6 /* placeholder_media-320.pdf in Resources */,
 				6FDC2EB3234E129D0044E83B /* SRGAvailabilityView~tvos.xib in Resources */,
+				6F8211922358ED3500B047FF /* placeholder_media~tvos.pdf in Resources */,
 				6F0C990F2121E73400073AB6 /* SRGAvailabilityView~ios.xib in Resources */,
 				6F0C99082121E6FB00073AB6 /* FontAwesome.otf in Resources */,
 				6F0C99142121E73400073AB6 /* SRGErrorView~ios.xib in Resources */,

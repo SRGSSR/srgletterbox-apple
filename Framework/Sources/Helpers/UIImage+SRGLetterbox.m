@@ -36,12 +36,16 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 
 NSString *SRGLetterboxMediaPlaceholderFilePath(void)
 {
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-180" ofType:@"pdf"];
+#if TARGET_OS_TV
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media~tvos" ofType:@"pdf"];
+#else
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media~ios" ofType:@"pdf"];
+#endif
 }
 
 NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
 {
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-320" ofType:@"pdf"];
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-square" ofType:@"pdf"];
 }
 
 NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
