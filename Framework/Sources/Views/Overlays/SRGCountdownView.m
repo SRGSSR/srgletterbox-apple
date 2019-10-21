@@ -66,9 +66,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithTargetDate:(NSDate *)targetDate
+- (instancetype)initWithTargetDate:(NSDate *)targetDate frame:(CGRect)frame
 {
-    if (self = [super init]) {
+    if (self = [super initWithFrame:frame]) {
         self.targetDate = targetDate;
     }
     return self;
@@ -76,7 +76,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (instancetype)init
 {
-    return [self initWithTargetDate:NSDate.date];
+    return [self initWithTargetDate:NSDate.date frame:CGRectZero];
 }
 
 #pragma mark Getters and setters
