@@ -9,12 +9,12 @@
 #import "DemosViewController.h"
 #import "SettingsViewController.h"
 
-#import <libextobjc/libextobjc.h>
-#import <SRGAnalytics/SRGAnalytics.h>
-#import <SRGLetterbox/SRGLetterbox.h>
 #import <AppCenter/AppCenter.h>
 #import <AppCenterCrashes/AppCenterCrashes.h>
 #import <AppCenterDistribute/AppCenterDistribute.h>
+#import <libextobjc/libextobjc.h>
+#import <SRGAnalytics/SRGAnalytics.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 static __attribute__((constructor)) void ApplicationInit(void)
 {
@@ -92,12 +92,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 #pragma mark Helpers
 
-- (void)setupAppcenter
+- (void)setupAppCenter
 {
     [MSCrashes setUserConfirmationHandler:^BOOL(NSArray<MSErrorReport *> * _Nonnull errorReports) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Sorry about that!", nil)
-                                                                                     message:NSLocalizedString(@"Do you want to send an anonymous crash report so we can fix the issue?", nil)
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"The application unexpectedly quit", nil)
+                                                                                 message:NSLocalizedString(@"Do you want to send an anonymous crash report so we can fix the issue?", nil)
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Don't send", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             [MSCrashes notifyWithUserConfirmation:MSUserConfirmationDontSend];
         }]];

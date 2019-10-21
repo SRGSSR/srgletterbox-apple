@@ -197,7 +197,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return (MSDistribute.isEnabled) ? 9 : 8;
+    return MSDistribute.isEnabled ? 9 : 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
