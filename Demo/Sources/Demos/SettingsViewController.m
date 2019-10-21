@@ -7,6 +7,7 @@
 #import "SettingsViewController.h"
 
 #import <AppCenterDistribute/AppCenterDistribute.h>
+#import <SafariServices/SafariServices.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 /**
@@ -600,7 +601,22 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 8: {
             completionBlock = ^{
-                //TODO: Display AppCenter update page.
+                UIViewController *viewController = UIApplication.sharedApplication.delegate.window.rootViewController;
+                NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
+                NSURL *defaultURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
+                
+                NSString *message = (defaultURL) ? [NSString stringWithFormat:NSLocalizedString(@"The current version is %@.", @"Check for updates alert message"), [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"]] : NSLocalizedString(@"No information.", @"Check for updates alert message with no update url.");
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Check for updates", @"Check for updates alert title")
+                                                                                         message:message
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleCancel handler:nil]];
+                if (defaultURL) {
+                    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open release notes", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:defaultURL];
+                        [viewController presentViewController:safariViewController animated:YES completion:nil];
+                    }]];
+                }
+                [viewController presentViewController:alertController animated:YES completion:nil];
             };
             break;
         }

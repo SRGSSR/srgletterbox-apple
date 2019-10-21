@@ -4,6 +4,8 @@
 <dict>
 	<key>AppCenterSecret</key>
 	<string>${APPCENTER_SECRET}</string>
+	<key>AppCenterURL</key>
+	<string>${APPCENTER_URL}</string>
 	<key>BundleNameSuffix</key>
 	<string>$(BUNDLE_DISPLAY_NAME_SUFFIX)</string>
 	<key>CFBundleDevelopmentRegion</key>

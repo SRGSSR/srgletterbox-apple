@@ -1603,6 +1603,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */;
 			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(LETTERBOX_DEMO_APPCENTER_OWNER)/apps/$(LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
@@ -1856,6 +1857,7 @@
 		6F0C98F82121E4EC00073AB6 /* Release-static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(LETTERBOX_DEMO_APPCENTER_OWNER)/apps/$(LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -2020,6 +2022,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */;
 			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(LETTERBOX_DEMO_APPCENTER_OWNER)/apps/$(LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
