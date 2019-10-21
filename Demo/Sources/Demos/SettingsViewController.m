@@ -605,17 +605,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
                 NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
                 NSURL *defaultURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
                 
-                NSString *message = (defaultURL) ? [NSString stringWithFormat:NSLocalizedString(@"The current version is %@.", @"Check for updates alert message"), [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"]] : NSLocalizedString(@"No information.", @"Check for updates alert message with no update url.");
+                NSString *message = (defaultURL) ? [NSString stringWithFormat:NSLocalizedString(@"The current version is %@ (%@).", @"Check for updates alert message"), [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"]] : NSLocalizedString(@"No information.", @"Check for updates alert message with no update url.");
                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Check for updates", @"Check for updates alert title")
                                                                                          message:message
                                                                                   preferredStyle:UIAlertControllerStyleAlert];
-                [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleCancel handler:nil]];
                 if (defaultURL) {
                     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open release notes", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                         SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:defaultURL];
                         [viewController presentViewController:safariViewController animated:YES completion:nil];
                     }]];
                 }
+                [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleCancel handler:nil]];
                 [viewController presentViewController:alertController animated:YES completion:nil];
             };
             break;
