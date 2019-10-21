@@ -46,7 +46,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [SRGNetworkActivityManagement enable];
     
 #ifndef DEBUG
-    [self setupAppcenter];
+    [self setupAppCenter];
 #endif
     
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
