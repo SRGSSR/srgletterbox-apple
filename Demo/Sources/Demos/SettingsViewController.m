@@ -611,8 +611,18 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 8: {
             completionBlock = ^{
+                // Clear internal App Center timestamp to force a new update request
                 [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
                 [[MSDistribute sharedInstance] startUpdate];
+                
+                // Display version history
+                NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
+                NSURL *appCenterURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
+                if (appCenterURL) {
+                    SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:appCenterURL];
+                    UIViewController *rootViewController = UIApplication.sharedApplication.delegate.window.rootViewController;
+                    [rootViewController presentViewController:safariViewController animated:YES completion:nil];
+                }
             };
             break;
         }
