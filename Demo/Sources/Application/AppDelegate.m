@@ -9,10 +9,12 @@
 #import "DemosViewController.h"
 #import "SettingsViewController.h"
 
+#import <AppCenter/AppCenter.h>
+#import <AppCenterCrashes/AppCenterCrashes.h>
+#import <AppCenterDistribute/AppCenterDistribute.h>
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
-#import <HockeySDK/HockeySDK.h>
 
 static __attribute__((constructor)) void ApplicationInit(void)
 {
@@ -44,7 +46,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [SRGNetworkActivityManagement enable];
     
 #ifndef DEBUG
-    [self setupHockey];
+    [self setupAppCenter];
 #endif
     
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
@@ -90,15 +92,28 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 #pragma mark Helpers
 
-- (void)setupHockey
+- (void)setupAppCenter
 {
-    NSString *hockeyIdentifier = [NSBundle.mainBundle objectForInfoDictionaryKey:@"HockeyIdentifier"];
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyIdentifier];
-    [[BITHockeyManager sharedHockeyManager] startManager];
+    [MSCrashes setUserConfirmationHandler:^BOOL(NSArray<MSErrorReport *> * _Nonnull errorReports) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"The application unexpectedly quit", nil)
+                                                                                 message:NSLocalizedString(@"Do you want to send an anonymous crash report so we can fix the issue?", nil)
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Don't send", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [MSCrashes notifyWithUserConfirmation:MSUserConfirmationDontSend];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Send", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [MSCrashes notifyWithUserConfirmation:MSUserConfirmationSend];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Always send", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [MSCrashes notifyWithUserConfirmation:MSUserConfirmationAlways];
+        }]];
+        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+        
+        return YES;
+    }];
     
-#if defined(RELEASE) || defined(NIGHTLY)
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-#endif
+    NSString *appCenterSecret = [NSBundle.mainBundle objectForInfoDictionaryKey:@"AppCenterSecret"];
+    [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class, MSDistribute.class ]];
 }
 
 #pragma mark Custom URL scheme support
