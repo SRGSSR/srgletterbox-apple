@@ -11,6 +11,16 @@
 #import <SRGLetterbox/SRGLetterbox.h>
 
 /**
+ *  Private App Center implementation details.
+ */
+@interface MSDistribute (Private)
+
++ (id)sharedInstance;
+- (void)startUpdate;
+
+@end
+
+/**
  *  User location options.
  */
 typedef NS_ENUM(NSInteger, SettingUserLocation) {
@@ -601,22 +611,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 8: {
             completionBlock = ^{
-                UIViewController *viewController = UIApplication.sharedApplication.delegate.window.rootViewController;
-                NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
-                NSURL *defaultURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
-                
-                NSString *message = (defaultURL) ? [NSString stringWithFormat:NSLocalizedString(@"The current version is %@ (%@).", @"Check for updates alert message"), [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"]] : NSLocalizedString(@"No information.", @"Check for updates alert message with no update url.");
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Check for updates", @"Check for updates alert title")
-                                                                                         message:message
-                                                                                  preferredStyle:UIAlertControllerStyleAlert];
-                if (defaultURL) {
-                    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open release notes", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:defaultURL];
-                        [viewController presentViewController:safariViewController animated:YES completion:nil];
-                    }]];
-                }
-                [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleCancel handler:nil]];
-                [viewController presentViewController:alertController animated:YES completion:nil];
+                [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
+                [[MSDistribute sharedInstance] startUpdate];
             };
             break;
         }
