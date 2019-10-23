@@ -94,6 +94,11 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 - (void)setupAppCenter
 {
+    NSString *appCenterSecret = [NSBundle.mainBundle objectForInfoDictionaryKey:@"AppCenterSecret"];
+    if (appCenterSecret.length == 0) {
+        return;
+    }
+    
     [MSCrashes setUserConfirmationHandler:^BOOL(NSArray<MSErrorReport *> * _Nonnull errorReports) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"The application unexpectedly quit", nil)
                                                                                  message:NSLocalizedString(@"Do you want to send an anonymous crash report so we can fix the issue?", nil)
@@ -111,8 +116,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
         
         return YES;
     }];
-    
-    NSString *appCenterSecret = [NSBundle.mainBundle objectForInfoDictionaryKey:@"AppCenterSecret"];
     [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class, MSDistribute.class ]];
 }
 
