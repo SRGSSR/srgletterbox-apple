@@ -176,7 +176,6 @@ platform :ios do
   private_lane :getAppCenterBuildNumber do
     appCenterBuildNumber = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} #{ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_SECRET']}")
     appCenterBuildNumber = Integer(appCenterBuildNumber.lines.map(&:chomp).last)
-    puts appCenterBuildNumber
     appCenterBuildNumber
   end
 
