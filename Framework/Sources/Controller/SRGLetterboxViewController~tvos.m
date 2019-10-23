@@ -257,10 +257,15 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.availabilityView.alpha = 0.f;
         self.view.userInteractionEnabled = NO;
     }
-    else {
+    else if (self.controller.URN) {
         self.errorView.alpha = 0.f;
         self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = (self.controller.URN != nil);
+        self.view.userInteractionEnabled = YES;
+    }
+    else {
+        self.errorView.alpha = 1.f;
+        self.availabilityView.alpha = 0.f;
+        self.view.userInteractionEnabled = NO;
     }
     
     if (self.controller.loading) {

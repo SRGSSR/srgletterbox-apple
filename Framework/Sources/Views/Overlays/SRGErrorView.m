@@ -109,10 +109,23 @@
 - (void)refresh
 {
     NSError *error = self.controller.error;
-    UIImage *image = [UIImage srg_letterboxImageForError:error];
-    self.imageView.image = image;
-    self.messageLabel.text = error.localizedDescription;
-    self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    if (error) {
+        self.imageView.image = [UIImage srg_letterboxImageForError:error];
+        self.messageLabel.text = error.localizedDescription;
+        self.instructionsLabel.text = (error != nil) ? SRGLetterboxLocalizedString(@"Tap to retry", @"Message displayed when an error has occurred and the ability to retry") : nil;
+    }
+#if TARGET_OS_TV
+    else if (! self.controller.URN) {
+        self.imageView.image = [UIImage srg_letterboxImageNamed:@"generic_error"];
+        self.messageLabel.text = SRGLetterboxLocalizedString(@"No content", @"Message displayed when no content is being played");
+        self.instructionsLabel.text = nil;
+    }
+#endif
+    else {
+        self.imageView.image = nil;
+        self.messageLabel.text = nil;
+        self.instructionsLabel.text = nil;
+    }
 }
 
 #pragma mark Actions
