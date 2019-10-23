@@ -72,7 +72,8 @@ platform :ios do
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
-      notes: changelog
+      notes: changelog,
+      notify_testers: false
     )
 
     clean_build_artifacts
@@ -98,7 +99,8 @@ platform :ios do
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_DESTINATIONS'],
-      notes: whatsNewForDemo
+      notes: whatsNewForDemo,
+      notify_testers: true
     )
 
     clean_build_artifacts
@@ -137,6 +139,7 @@ platform :ios do
     appname = options[:appname]
     destinations = options[:destinations]
     notes = options[:notes]
+    notify_testers = options[:notify_testers]
 
     appcenter_upload(
       api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
@@ -146,7 +149,7 @@ platform :ios do
       release_notes: notes,
       destination_type: "group",
       destinations: destinations,
-      notify_testers: false
+      notify_testers: notify_testers
     )
   end
 
