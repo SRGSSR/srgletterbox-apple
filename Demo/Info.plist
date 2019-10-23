@@ -45,8 +45,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>For App Center Feedbacks</string>
 	<key>PlayMMFServiceURL</key>
 	<string>${PLAY_MMF_SERVICE_URL}</string>
 	<key>UIBackgroundModes</key>
