@@ -73,7 +73,6 @@ platform :ios do
       appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
       notes: changelog,
-      notify_testers: false
     )
 
     clean_build_artifacts
@@ -139,7 +138,7 @@ platform :ios do
     appname = options[:appname]
     destinations = options[:destinations]
     notes = options[:notes]
-    notify_testers = options[:notify_testers]
+    notify_testers = options[:notify_testers] ? options[:notify_testers] : false
 
     appcenter_upload(
       api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
