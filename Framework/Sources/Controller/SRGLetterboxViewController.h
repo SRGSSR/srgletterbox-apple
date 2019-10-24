@@ -21,12 +21,12 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 /**
 *  This method is called when the user proactively plays the media suggested during continuous playback.
 */
-- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia API_AVAILABLE(tvos(10.0));
+- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
 *  This method is called when the user cancels continuous playback of the suggested media.
 */
-- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia API_AVAILABLE(tvos(10.0));
+- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 @end
 
@@ -35,6 +35,9 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
  *  with the system standard player and its features (metadata and segment support, interstitials for blocked content,
  *  thumbnails, continuous playback, etc.). Unlike Letterbox iOS support, where your application is supposed to display
  *  a Letterbox view, on tvOS you should simply present a Letterbox view controller to play some content.
+ *
+ *  This view controller is intended to be presented modally. Attempting to presesnt it in any other way results in
+ *  undefined behavior.
  */
 API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @interface SRGLetterboxViewController : UIViewController

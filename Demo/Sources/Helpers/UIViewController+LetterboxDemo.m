@@ -17,11 +17,7 @@
 static void *s_continuePlaybackDataProviderKey = &s_continuePlaybackDataProviderKey;
 static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 
-#if TARGET_OS_IOS
 @interface UIViewController (LetterboxDemoPrivate)
-#else
-@interface UIViewController (LetterboxDemoPrivate) <SRGLetterboxViewControllerDelegate>
-#endif
 
 @property (nonatomic) SRGDataProvider *continuePlaybackDataProvider;
 @property (nonatomic) Playlist *continuePlaybackPlaylist;
@@ -29,6 +25,30 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 @end
 
 @implementation UIViewController (LetterboxDemo)
+
+#pragma mark Getters and setters
+
+- (SRGDataProvider *)continuePlaybackDataProvider
+{
+    return objc_getAssociatedObject(self, s_continuePlaybackDataProviderKey);
+}
+
+- (void)setContinuePlaybackDataProvider:(SRGDataProvider *)continuePlaybackDataProvider
+{
+    objc_setAssociatedObject(self, s_continuePlaybackDataProviderKey, continuePlaybackDataProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (Playlist *)continuePlaybackPlaylist
+{
+    return objc_getAssociatedObject(self, s_continuePlaybackPlaylistKey);
+}
+
+- (void)setContinuePlaybackPlaylist:(Playlist *)continuePlaybackPlaylist
+{
+    objc_setAssociatedObject(self, s_continuePlaybackPlaylistKey, continuePlaybackPlaylist, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+#pragma mark Player presentation
 
 - (void)openPlayerWithURN:(NSString *)URN
 {
@@ -56,7 +76,6 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
     viewController = playerViewController;
 #else
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
-    letterboxViewController.delegate = self;
     letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
         return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
     };
@@ -75,7 +94,7 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
         self.continuePlaybackDataProvider = [[SRGDataProvider alloc] initWithServiceURL:letterboxViewController.controller.serviceURL];
         [[self.continuePlaybackDataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
             self.continuePlaybackPlaylist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-            self.continuePlaybackPlaylist.continuousPlaybackTransitionDuration = 30.;
+            self.continuePlaybackPlaylist.continuousPlaybackTransitionDuration = 15.;
             letterboxViewController.controller.playlistDataSource = self.continuePlaybackPlaylist;
         }] resume];
     }
@@ -84,40 +103,6 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 #endif
     
     [self presentViewController:viewController animated:YES completion:nil];
-}
-
-#if TARGET_OS_TV
-
-#pragma mark SRGLetterboxViewControllerDelegate protocol
-
-- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    [letterboxViewController.controller reset];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#endif
-
-#pragma mark Getters and setters
-
-- (SRGDataProvider *)continuePlaybackDataProvider
-{
-    return objc_getAssociatedObject(self, s_continuePlaybackDataProviderKey);
-}
-
-- (void)setContinuePlaybackDataProvider:(SRGDataProvider *)continuePlaybackDataProvider
-{
-    objc_setAssociatedObject(self, s_continuePlaybackDataProviderKey, continuePlaybackDataProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (Playlist *)continuePlaybackPlaylist
-{
-    return objc_getAssociatedObject(self, s_continuePlaybackPlaylistKey);
-}
-
-- (void)setContinuePlaybackPlaylist:(Playlist *)continuePlaybackPlaylist
-{
-    objc_setAssociatedObject(self, s_continuePlaybackPlaylistKey, continuePlaybackPlaylist, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

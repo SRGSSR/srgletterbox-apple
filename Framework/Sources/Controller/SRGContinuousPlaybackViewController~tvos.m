@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "SRGLetterboxContentProposalViewController.h"
+#import "SRGContinuousPlaybackViewController.h"
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
@@ -13,9 +13,10 @@
 
 #import <SRGAppearance/SRGAppearance.h>
 
-@interface SRGLetterboxContentProposalViewController ()
+@interface SRGContinuousPlaybackViewController ()
 
-@property (nonatomic) SRGLetterboxController *controller;
+@property (nonatomic) SRGMedia *media;
+@property (nonatomic) NSDate *endDate;
 
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -29,15 +30,16 @@
 
 @end
 
-@implementation SRGLetterboxContentProposalViewController
+@implementation SRGContinuousPlaybackViewController
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithController:(SRGLetterboxController *)controller
+- (instancetype)initWithMedia:(SRGMedia *)media endDate:(NSDate *)endDate
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
-    SRGLetterboxContentProposalViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.controller = controller;
+    SRGContinuousPlaybackViewController *viewController = [storyboard instantiateInitialViewController];
+    viewController.media = media;
+    viewController.endDate = endDate;
     return viewController;
 }
 
@@ -47,7 +49,7 @@
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
-    return [self initWithController:SRGLetterboxController.new];
+    return [self initWithMedia:SRGMedia.new endDate:NSDate.new];
 }
 
 #pragma clang diagnostic pop
@@ -72,6 +74,10 @@
     
     self.nextButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
     self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(menuPressed:)];
+    tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
+    [self.view addGestureRecognizer:tapGestureRecognizer];
     
     [self reloadData];
 }
@@ -101,36 +107,26 @@
 
 - (void)reloadData
 {
-    // Only update with valid upcoming information
-    SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
-    if (upcomingMedia) {
-        [self.thumbnailImageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
-        
-        self.titleLabel.text = upcomingMedia.title;
-        self.summaryLabel.text = upcomingMedia.summary;
-        
-        static NSDateComponentsFormatter *s_dateComponentsFormatter;
-        static dispatch_once_t s_onceToken;
-        dispatch_once(&s_onceToken, ^{
-            s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-            s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
-            s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-        });
-        
-        NSDate *endDate = self.controller.continuousPlaybackTransitionEndDate;
-        if (endDate) {
-            NSTimeInterval remainingTimeInterval = floor([endDate timeIntervalSinceDate:NSDate.date]);
-            if (remainingTimeInterval != 0.) {
-                NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:endDate];
-                self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
-            }
-            else {
-                self.remainingTimeLabel.text = NSLocalizedString(@"Starting...", nil);
-            }
-        }
-        else {
-            self.remainingTimeLabel.text = nil;
-        }
+    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    
+    self.titleLabel.text = self.media.title;
+    self.summaryLabel.text = self.media.summary;
+    
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+        s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+    });
+    
+    NSTimeInterval remainingTimeInterval = floor([self.endDate timeIntervalSinceDate:NSDate.date]);
+    if (remainingTimeInterval != 0.) {
+        NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:self.endDate];
+        self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
+    }
+    else {
+        self.remainingTimeLabel.text = NSLocalizedString(@"Starting...", nil);
     }
 }
 
@@ -149,19 +145,19 @@
 
 #pragma mark Actions
 
-- (IBAction)playNext:(id)sender
+- (IBAction)engage:(id)sender
 {
-    [self.controller playUpcomingMedia];
-    [self dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
-        self.playerViewController.contentProposalViewController = nil;
-    }];
+    [self.delegate continuousPlaybackViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.media];
 }
 
 - (IBAction)cancel:(id)sender
 {
-    [self dismissContentProposalForAction:AVContentProposalActionReject animated:YES completion:^{
-        self.playerViewController.contentProposalViewController = nil;
-    }];
+    [self.delegate continuousPlaybackViewController:self didCancelContinuousPlaybackWithUpcomingMedia:self.media];
+}
+
+- (IBAction)menuPressed:(id)sender
+{
+    [self.delegate continuousPlaybackViewControllerDidDismissView:self];
 }
 
 @end

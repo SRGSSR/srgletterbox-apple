@@ -10,12 +10,14 @@
 #import "SRGAvailabilityView.h"
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
-#import "SRGLetterboxContentProposalViewController.h"
+#import "SRGContinuousPlaybackViewController.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAppearance/SRGAppearance.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
@@ -35,7 +37,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     return nil;
 }
 
-@interface SRGLetterboxViewController () <SRGMediaPlayerViewControllerDelegate>
+@interface SRGLetterboxViewController () <SRGContinuousPlaybackViewControllerDelegate, SRGMediaPlayerViewControllerDelegate>
 
 @property (nonatomic) SRGLetterboxController *controller;
 @property (nonatomic) SRGMediaPlayerViewController *playerViewController;
@@ -69,35 +71,24 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.imageOperations = [NSMutableDictionary dictionary];
         
         @weakify(self)
-        @weakify(controller)
         self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
-            @strongify(controller);
-            
-            AVPlayerItem *playerItem = controller.mediaPlayerController.player.currentItem;
-            
-            if (@available(tvOS 10, *)) {
-                NSTimeInterval transitionDuration = SRGLetterboxContinuousPlaybackDisabled;
-                if ([controller.playlistDataSource respondsToSelector:@selector(continuousPlaybackTransitionDurationForController:)]) {
-                    transitionDuration = [controller.playlistDataSource continuousPlaybackTransitionDurationForController:controller];
-                }
-                
-                // Continuous playback transition is managed at the controller level when playback end is reached. We therefore
-                // display the content proposal at the very end of the media. For the same reason we must also not set any
-                // `automaticAcceptanceInterval` on the `AVContentProposal`.
-                SRGMedia *nextMedia = controller.nextMedia;
-                if (transitionDuration != SRGLetterboxContinuousPlaybackDisabled && nextMedia) {
-                    playerItem.nextContentProposal = [[AVContentProposal alloc] initWithContentTimeForTransition:kCMTimeZero
-                                                                                                           title:nextMedia.title
-                                                                                                    previewImage:nil];
-                }
-                else {
-                    playerItem.nextContentProposal = nil;
-                }
-            }
             
             [self updateMainLayout];
             [self reloadImage];
+        }];
+        
+        @weakify(controller)
+        [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
+            @strongify(controller)
+            @strongify(self)
+            
+            SRGMedia *upcomingMedia = controller.continuousPlaybackUpcomingMedia;
+            if (upcomingMedia) {
+                SRGContinuousPlaybackViewController *continuousPlaybackViewController = [[SRGContinuousPlaybackViewController alloc] initWithMedia:upcomingMedia endDate:controller.continuousPlaybackTransitionEndDate];
+                continuousPlaybackViewController.delegate = self;
+                [self presentViewController:continuousPlaybackViewController animated:YES completion:nil];
+            }
         }];
         
         [NSNotificationCenter.defaultCenter addObserver:self
@@ -243,8 +234,9 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 - (void)updateMainLayout
 {
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
-    BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
-    self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
+    
+    BOOL thumbnailHidden = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+    self.imageView.alpha = thumbnailHidden ? 0.f : 1.f;
     
     NSError *error = self.controller.error;
     if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
@@ -278,35 +270,37 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     }
 }
 
-#pragma mark AVPlayerViewControllerDelegate protocol
+#pragma mark SRGContinuousPlaybackViewControllerDelegate protocol
 
-- (BOOL)playerViewController:(AVPlayerViewController *)playerViewController shouldPresentContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
-    SRGLetterboxController *controller = self.controller;
-    if (controller.nextMedia) {
-        playerViewController.contentProposalViewController = [[SRGLetterboxContentProposalViewController alloc] initWithController:controller];
-        return YES;
-    }
-    else {
-        playerViewController.contentProposalViewController = nil;
-        return NO;
-    }
-}
-
-- (void)playerViewController:(AVPlayerViewController *)playerViewController didAcceptContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
-{
+    [self.controller playUpcomingMedia];
+    
     if ([self.delegate respondsToSelector:@selector(letterboxViewController:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
-        [self.delegate letterboxViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.controller.nextMedia];
-    }
-}
-
-- (void)playerViewController:(AVPlayerViewController *)playerViewController didRejectContentProposal:(AVContentProposal *)proposal API_AVAILABLE(tvos(10.0))
-{
-    if ([self.delegate respondsToSelector:@selector(letterboxViewController:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
-        [self.delegate letterboxViewController:self didCancelContinuousPlaybackWithUpcomingMedia:self.controller.nextMedia];
+        [self.delegate letterboxViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
     }
     
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
     [self.controller cancelContinuousPlayback];
+    
+    if ([self.delegate respondsToSelector:@selector(letterboxViewController:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxViewController:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+    
+    [self dismissViewControllerAnimated:NO completion:^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+}
+
+- (void)continuousPlaybackViewControllerDidDismissView:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController
+{
+    [self dismissViewControllerAnimated:NO completion:^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
 }
 
 #pragma mark SRGMediaPlayerViewControllerDelegate protocol
@@ -375,7 +369,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
-{
+{   
     [self updateMainLayout];
 }
 
@@ -386,11 +380,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
-    if (@available(tvOS 10, *)) {
-        [self.playerViewController.contentProposalViewController dismissContentProposalForAction:AVContentProposalActionAccept animated:YES completion:^{
-            self.playerViewController.contentProposalViewController = nil;
-        }];
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
