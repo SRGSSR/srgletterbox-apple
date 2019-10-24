@@ -21,18 +21,15 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *backgroundImageView;
 
-@property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 
-@property (nonatomic, weak) IBOutlet UIImageView *upcomingThumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *upcomingTitleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *upcomingSummaryLabel;
 
 @property (nonatomic, weak) IBOutlet UILabel *remainingTimeLabel;
 
-// TODO: Will be removed
-@property (nonatomic, weak) IBOutlet UIButton *nextButton;
-@property (nonatomic, weak) IBOutlet UIButton *cancelButton;
+@property (nonatomic, weak) IBOutlet UIButton *replayButton;
+@property (nonatomic, weak) IBOutlet UIButton *engageButton;
 
 @property (nonatomic) NSTimer *timer;
 
@@ -85,9 +82,6 @@
     
     self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
-    self.nextButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
-    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
-    
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancel:)];
     tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
     [self.view addGestureRecognizer:tapGestureRecognizer];
@@ -121,11 +115,11 @@
 - (void)reloadData
 {
     self.titleLabel.text = self.media.title;
-    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    // TODO: Load thumbnail
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
     self.upcomingSummaryLabel.text = self.upcomingMedia.summary;
-    [self.upcomingThumbnailImageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    // TODO: Load thumbnail
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -155,7 +149,7 @@
 
 - (NSArray<id<UIFocusEnvironment>> *)preferredFocusEnvironments
 {
-    return @[ self.nextButton ];
+    return @[ self.engageButton ];
 }
 
 #pragma mark Actions

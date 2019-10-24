@@ -29,12 +29,17 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="jpA-G4-ggq">
                                 <rect key="frame" x="80" y="80" width="400" height="860"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XZv-Dz-RlD">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnt-9h-LTZ">
                                         <rect key="frame" x="0.0" y="0.0" width="400" height="225"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="XZv-Dz-RlD" secondAttribute="height" multiplier="16:9" id="WSD-62-bJL"/>
+                                            <constraint firstAttribute="width" secondItem="wnt-9h-LTZ" secondAttribute="height" multiplier="16:9" id="aaF-5s-WlV"/>
                                         </constraints>
-                                    </imageView>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Replay"/>
+                                        <connections>
+                                            <action selector="restart:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="Mry-CR-yj4"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AbB-JM-as5">
                                         <rect key="frame" x="0.0" y="267" width="111" height="46"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -47,19 +52,24 @@
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="wnt-9h-LTZ" firstAttribute="width" secondItem="jpA-G4-ggq" secondAttribute="width" id="0Q6-Pa-GHU"/>
                                     <constraint firstAttribute="width" constant="400" id="GLC-CV-sBq"/>
-                                    <constraint firstItem="XZv-Dz-RlD" firstAttribute="width" secondItem="jpA-G4-ggq" secondAttribute="width" id="oXT-Ku-S9C"/>
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="DvL-Eq-ksO">
                                 <rect key="frame" x="1240" y="80" width="600" height="860"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wgZ-mQ-KL6">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-jF-e54">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="337.5"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="wgZ-mQ-KL6" secondAttribute="height" multiplier="16:9" id="HJf-uq-0K2"/>
+                                            <constraint firstAttribute="width" secondItem="uRP-jF-e54" secondAttribute="height" multiplier="16:9" id="hZa-M0-Mjd"/>
                                         </constraints>
-                                    </imageView>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Engage"/>
+                                        <connections>
+                                            <action selector="engage:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="7Xb-bD-en8"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Mb-Mu-JRU">
                                         <rect key="frame" x="0.0" y="379.5" width="111" height="46"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -84,28 +94,10 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="wgZ-mQ-KL6" firstAttribute="width" secondItem="DvL-Eq-ksO" secondAttribute="width" id="Ih7-nL-Z89"/>
+                                    <constraint firstItem="uRP-jF-e54" firstAttribute="width" secondItem="DvL-Eq-ksO" secondAttribute="width" id="DOT-l2-5Mt"/>
                                     <constraint firstAttribute="width" constant="600" id="NK0-nu-69A"/>
                                 </constraints>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mMK-fJ-4mr">
-                                <rect key="frame" x="696" y="886" width="195" height="86"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Replay"/>
-                                <connections>
-                                    <action selector="restart:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="XMA-QO-26r"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaE-2K-C4S">
-                                <rect key="frame" x="1072" y="886" width="152" height="86"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Play"/>
-                                <connections>
-                                    <action selector="engage:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="PSG-rr-yWV"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -127,13 +119,11 @@
                     </view>
                     <connections>
                         <outlet property="backgroundImageView" destination="uMI-43-fAx" id="q68-wv-c2C"/>
-                        <outlet property="cancelButton" destination="mMK-fJ-4mr" id="aOK-vI-kTf"/>
-                        <outlet property="nextButton" destination="zaE-2K-C4S" id="TAI-et-584"/>
+                        <outlet property="engageButton" destination="uRP-jF-e54" id="Dkk-y2-WOs"/>
                         <outlet property="remainingTimeLabel" destination="kPV-wa-POg" id="Bna-KM-BjR"/>
-                        <outlet property="thumbnailImageView" destination="XZv-Dz-RlD" id="A96-jU-fm9"/>
+                        <outlet property="replayButton" destination="wnt-9h-LTZ" id="uX0-q7-Mui"/>
                         <outlet property="titleLabel" destination="AbB-JM-as5" id="7EK-Yv-sQP"/>
                         <outlet property="upcomingSummaryLabel" destination="gAc-Bf-xd3" id="tGK-D1-Az3"/>
-                        <outlet property="upcomingThumbnailImageView" destination="wgZ-mQ-KL6" id="m3L-bB-lu6"/>
                         <outlet property="upcomingTitleLabel" destination="5Mb-Mu-JRU" id="ko6-fr-xbF"/>
                     </connections>
                 </viewController>
