@@ -296,11 +296,11 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     }];
 }
 
-- (void)continuousPlaybackViewControllerDidDismissView:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController
+- (void)continuousPlaybackViewControllerDidRestart:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController
 {
-    [self dismissViewControllerAnimated:NO completion:^{
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }];
+    [self.controller restart];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark SRGMediaPlayerViewControllerDelegate protocol

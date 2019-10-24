@@ -75,7 +75,7 @@
     self.nextButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
     self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(menuPressed:)];
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancel:)];
     tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
     [self.view addGestureRecognizer:tapGestureRecognizer];
     
@@ -150,14 +150,14 @@
     [self.delegate continuousPlaybackViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.media];
 }
 
-- (IBAction)cancel:(id)sender
+- (IBAction)restart:(id)sender
 {
-    [self.delegate continuousPlaybackViewController:self didCancelContinuousPlaybackWithUpcomingMedia:self.media];
+    [self.delegate continuousPlaybackViewControllerDidRestart:self];
 }
 
-- (IBAction)menuPressed:(id)sender
+- (void)cancel:(id)sender
 {
-    [self.delegate continuousPlaybackViewControllerDidDismissView:self];
+    [self.delegate continuousPlaybackViewController:self didCancelContinuousPlaybackWithUpcomingMedia:self.media];
 }
 
 @end

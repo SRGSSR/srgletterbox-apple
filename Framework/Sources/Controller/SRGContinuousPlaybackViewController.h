@@ -13,19 +13,19 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGContinuousPlaybackViewControllerDelegate <NSObject>
 
 /**
-*  This method is called when the user proactively plays the media suggested during continuous playback.
-*/
+ *  This method is called when the user proactively plays the media suggested during continuous playback.
+ */
 - (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
-*  This method is called when the user cancels continuous playback of the suggested media.
-*/
+ *  This method is called when the user cancels continuous playback of the suggested media.
+ */
 - (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
- *  This method is called when the view was simply dismissed.
+ *  This method is called when the users chooses to restart playback of the media which just finished.
  */
-- (void)continuousPlaybackViewControllerDidDismissView:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController;
+- (void)continuousPlaybackViewControllerDidRestart:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController;
 
 @end
 

@@ -19,13 +19,13 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @optional
 
 /**
-*  This method is called when the user proactively plays the media suggested during continuous playback.
-*/
+ *  This method is called when the user proactively plays the media suggested during continuous playback.
+ */
 - (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
-*  This method is called when the user cancels continuous playback of the suggested media.
-*/
+ *  This method is called when the user cancels continuous playback of the suggested media.
+ */
 - (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 @end
