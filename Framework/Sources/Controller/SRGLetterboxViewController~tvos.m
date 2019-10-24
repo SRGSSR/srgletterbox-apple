@@ -85,7 +85,9 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
             
             SRGMedia *upcomingMedia = controller.continuousPlaybackUpcomingMedia;
             if (upcomingMedia) {
-                SRGContinuousPlaybackViewController *continuousPlaybackViewController = [[SRGContinuousPlaybackViewController alloc] initWithMedia:upcomingMedia endDate:controller.continuousPlaybackTransitionEndDate];
+                SRGContinuousPlaybackViewController *continuousPlaybackViewController = [[SRGContinuousPlaybackViewController alloc] initWithMedia:controller.media
+                                                                                                                                     upcomingMedia:upcomingMedia
+                                                                                                                                           endDate:controller.continuousPlaybackTransitionEndDate];
                 continuousPlaybackViewController.delegate = self;
                 [self presentViewController:continuousPlaybackViewController animated:YES completion:nil];
             }
@@ -296,7 +298,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     }];
 }
 
-- (void)continuousPlaybackViewControllerDidRestart:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didRestartPlaybackWithMedia:(SRGMedia *)media
 {
     [self.controller restart];
     

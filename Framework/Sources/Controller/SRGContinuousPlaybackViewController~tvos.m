@@ -16,6 +16,7 @@
 @interface SRGContinuousPlaybackViewController ()
 
 @property (nonatomic) SRGMedia *media;
+@property (nonatomic) SRGMedia *upcomingMedia;
 @property (nonatomic) NSDate *endDate;
 
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
@@ -34,11 +35,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedia:(SRGMedia *)media endDate:(NSDate *)endDate
+- (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:SRGLetterboxResourceNameForUIClass(self.class) bundle:NSBundle.srg_letterboxBundle];
     SRGContinuousPlaybackViewController *viewController = [storyboard instantiateInitialViewController];
     viewController.media = media;
+    viewController.upcomingMedia = upcomingMedia;
     viewController.endDate = endDate;
     return viewController;
 }
@@ -49,7 +51,7 @@
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
-    return [self initWithMedia:SRGMedia.new endDate:NSDate.new];
+    return [self initWithMedia:SRGMedia.new upcomingMedia:SRGMedia.new endDate:NSDate.new];
 }
 
 #pragma clang diagnostic pop
@@ -107,10 +109,10 @@
 
 - (void)reloadData
 {
-    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    [self.thumbnailImageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
-    self.titleLabel.text = self.media.title;
-    self.summaryLabel.text = self.media.summary;
+    self.titleLabel.text = self.upcomingMedia.title;
+    self.summaryLabel.text = self.upcomingMedia.summary;
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -147,17 +149,17 @@
 
 - (IBAction)engage:(id)sender
 {
-    [self.delegate continuousPlaybackViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.media];
+    [self.delegate continuousPlaybackViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.upcomingMedia];
 }
 
 - (IBAction)restart:(id)sender
 {
-    [self.delegate continuousPlaybackViewControllerDidRestart:self];
+    [self.delegate continuousPlaybackViewController:self didRestartPlaybackWithMedia:self.media];
 }
 
 - (void)cancel:(id)sender
 {
-    [self.delegate continuousPlaybackViewController:self didCancelContinuousPlaybackWithUpcomingMedia:self.media];
+    [self.delegate continuousPlaybackViewController:self didCancelContinuousPlaybackWithUpcomingMedia:self.upcomingMedia];
 }
 
 @end

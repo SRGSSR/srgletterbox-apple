@@ -13,26 +13,26 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SRGContinuousPlaybackViewControllerDelegate <NSObject>
 
 /**
- *  This method is called when the user proactively plays the media suggested during continuous playback.
+ *  This method is called when the user proactively plays the upcoming media suggested during continuous playback.
  */
 - (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
- *  This method is called when the user cancels continuous playback of the suggested media.
+ *  This method is called when the user cancels continuous playback of the suggested upcoming media.
  */
 - (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 /**
- *  This method is called when the users chooses to restart playback of the media which just finished.
+ *  This method is called when the users chooses to restart playback of the current media.
  */
-- (void)continuousPlaybackViewControllerDidRestart:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController;
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController  didRestartPlaybackWithMedia:(SRGMedia *)media;
 
 @end
 
 API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @interface SRGContinuousPlaybackViewController : UIViewController
 
-- (instancetype)initWithMedia:(SRGMedia *)media endDate:(NSDate *)endDate;
+- (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate;
 
 @property (nonatomic, weak) id<SRGContinuousPlaybackViewControllerDelegate> delegate;
 
