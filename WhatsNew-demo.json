@@ -30,5 +30,7 @@
   "1.14.3-62": "- Maintenance release.\n- Stream quality can be changed in the application settings.",
   "1.14.4-63": "- The track selection interface has been updated.\n- iOS 13 preliminary support.\n- Check for application updates button in the settings view restored.",
   "1.14.4-64": "- The demo application supports the new scheme url format.",
-  "1.14.5-65": "- Fix partial diagnostics performance reports sent when playing some medias.\n- Demo application supports iOS 13 dark mode."
+  "1.14.5-65": "- Fix partial diagnostics performance reports sent when playing some medias.\n- Demo application supports iOS 13 dark mode.",
+  "1.15-66": "- Audio session management removal.\n- Autoplay with muted videos example added in this demonstration application.",
+  "1.15-67": "- Update demo application with the new App Center distribution service."
 }

@@ -6,8 +6,19 @@
 
 #import "SettingsViewController.h"
 
-#import <HockeySDK/HockeySDK.h>
+#import <AppCenterDistribute/AppCenterDistribute.h>
+#import <SafariServices/SafariServices.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+
+/**
+ *  Private App Center implementation details.
+ */
+@interface MSDistribute (Private)
+
++ (id)sharedInstance;
+- (void)startUpdate;
+
+@end
 
 /**
  *  User location options.
@@ -197,7 +208,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return ([BITHockeyManager sharedHockeyManager].updateManager != nil) ? 9 : 8;
+    return MSDistribute.isEnabled ? 9 : 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -600,7 +611,18 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case 8: {
             completionBlock = ^{
-                [[BITHockeyManager sharedHockeyManager].updateManager showUpdateView];
+                // Clear internal App Center timestamp to force a new update request
+                [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
+                [[MSDistribute sharedInstance] startUpdate];
+                
+                // Display version history
+                NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
+                NSURL *appCenterURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
+                if (appCenterURL) {
+                    SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:appCenterURL];
+                    UIViewController *rootViewController = UIApplication.sharedApplication.delegate.window.rootViewController;
+                    [rootViewController presentViewController:safariViewController animated:YES completion:nil];
+                }
             };
             break;
         }

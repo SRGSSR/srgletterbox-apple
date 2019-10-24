@@ -1,3 +1,2 @@
-# Temporary fork to fix build issue with Xcode 10.2 - bitstadium#548
-github "acamill/HockeySDK-iOS" "d1553360577904021cf566fcdd9daa3a10b138fb"
 github "AliSoftware/OHHTTPStubs" ~> 8.0.0
+github "microsoft/appcenter-sdk-apple" ~> 2.5.0

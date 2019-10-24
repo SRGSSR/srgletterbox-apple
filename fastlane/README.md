@@ -25,12 +25,12 @@ Run library tests
 ```
 fastlane ios nightly
 ```
-Build a new nightly demo on HockeyApp
+Build a new nightly demo on App Center
 ### ios demo
 ```
 fastlane ios demo
 ```
-Build a new demo on HockeyApp with the current build number. You are responsible to tag the library version and bump the build number after.
+Build a new demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after.
 
 ----
 
