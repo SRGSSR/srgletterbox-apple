@@ -19,11 +19,18 @@
 @property (nonatomic) SRGMedia *upcomingMedia;
 @property (nonatomic) NSDate *endDate;
 
+@property (nonatomic, weak) IBOutlet UIImageView *backgroundImageView;
+
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *summaryLabel;
+
+@property (nonatomic, weak) IBOutlet UIImageView *upcomingThumbnailImageView;
+@property (nonatomic, weak) IBOutlet UILabel *upcomingTitleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *upcomingSummaryLabel;
+
 @property (nonatomic, weak) IBOutlet UILabel *remainingTimeLabel;
 
+// TODO: Will be removed
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
 
@@ -70,8 +77,12 @@
 {
     [super viewDidLoad];
     
+    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:self.backgroundImageView.frame.size];
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
-    self.summaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    
+    self.upcomingTitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    self.upcomingSummaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    
     self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
     self.nextButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
@@ -109,10 +120,12 @@
 
 - (void)reloadData
 {
-    [self.thumbnailImageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    self.titleLabel.text = self.media.title;
+    [self.thumbnailImageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
-    self.titleLabel.text = self.upcomingMedia.title;
-    self.summaryLabel.text = self.upcomingMedia.summary;
+    self.upcomingTitleLabel.text = self.upcomingMedia.title;
+    self.upcomingSummaryLabel.text = self.upcomingMedia.summary;
+    [self.upcomingThumbnailImageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
