@@ -22,6 +22,10 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uMI-43-fAx">
                                 <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jw6-uy-rKh" userLabel="Dimming View">
+                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="jpA-G4-ggq">
                                 <rect key="frame" x="80" y="80" width="400" height="860"/>
                                 <subviews>
@@ -105,6 +109,8 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Jw6-uy-rKh" firstAttribute="trailing" secondItem="uMI-43-fAx" secondAttribute="trailing" id="4O3-i8-Rzo"/>
+                            <constraint firstItem="Jw6-uy-rKh" firstAttribute="bottom" secondItem="uMI-43-fAx" secondAttribute="bottom" id="4Vw-xO-7qm"/>
                             <constraint firstAttribute="trailing" secondItem="uMI-43-fAx" secondAttribute="trailing" id="9p5-Aa-rGO"/>
                             <constraint firstAttribute="trailing" secondItem="DvL-Eq-ksO" secondAttribute="trailing" constant="80" id="BrJ-3L-dHV"/>
                             <constraint firstItem="uMI-43-fAx" firstAttribute="leading" secondItem="lOW-f1-GJ6" secondAttribute="leading" id="D5e-gp-4jJ"/>
@@ -114,6 +120,8 @@
                             <constraint firstItem="k80-o3-v6X" firstAttribute="top" secondItem="DvL-Eq-ksO" secondAttribute="bottom" constant="80" id="NYB-w9-HTs"/>
                             <constraint firstItem="jpA-G4-ggq" firstAttribute="top" secondItem="YzI-61-JEi" secondAttribute="bottom" constant="20" id="lk5-Sf-j5m"/>
                             <constraint firstAttribute="bottom" secondItem="uMI-43-fAx" secondAttribute="bottom" id="nz7-zB-7Z4"/>
+                            <constraint firstItem="Jw6-uy-rKh" firstAttribute="leading" secondItem="uMI-43-fAx" secondAttribute="leading" id="qg1-th-crY"/>
+                            <constraint firstItem="Jw6-uy-rKh" firstAttribute="top" secondItem="uMI-43-fAx" secondAttribute="top" id="tcL-Jh-elS"/>
                             <constraint firstItem="jpA-G4-ggq" firstAttribute="leading" secondItem="lOW-f1-GJ6" secondAttribute="leading" constant="80" id="xcx-x2-MUD"/>
                         </constraints>
                     </view>
