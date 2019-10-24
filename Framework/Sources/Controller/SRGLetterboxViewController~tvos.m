@@ -382,7 +382,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    // Only dismiss continuous playback overlay when presented (i.e. when the transition duration is not 0)
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 @end
