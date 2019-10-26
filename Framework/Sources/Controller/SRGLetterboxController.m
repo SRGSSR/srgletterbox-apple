@@ -13,6 +13,7 @@
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
+#import "SRGProgramComposition+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 
 #import <FXReachability/FXReachability.h>
@@ -37,6 +38,7 @@ NSString * const SRGLetterboxMediaKey = @"SRGLetterboxMedia";
 NSString * const SRGLetterboxMediaCompositionKey = @"SRGLetterboxMediaComposition";
 NSString * const SRGLetterboxSubdivisionKey = @"SRGLetterboxSubdivision";
 NSString * const SRGLetterboxChannelKey = @"SRGLetterboxChannel";
+NSString * const SRGLetterboxCurrentProgramKey = @"SRGLetterboxCurrentProgram";
 NSString * const SRGLetterboxProgramCompositionKey = @"SRGLetterboxProgramComposition";
 
 NSString * const SRGLetterboxPreviousURNKey = @"SRGLetterboxPreviousURN";
@@ -44,6 +46,7 @@ NSString * const SRGLetterboxPreviousMediaKey = @"SRGLetterboxPreviousMedia";
 NSString * const SRGLetterboxPreviousMediaCompositionKey = @"SRGLetterboxPreviousMediaComposition";
 NSString * const SRGLetterboxPreviousSubdivisionKey = @"SRGLetterboxPreviousSubdivision";
 NSString * const SRGLetterboxPreviousChannelKey = @"SRGLetterboxPreviousChannel";
+NSString * const SRGLetterboxPreviousCurrentProgramKey = @"SRGLetterboxPreviousCurrentProgram";
 NSString * const SRGLetterboxPreviousProgramCompositionKey = @"SRGLetterboxPreviousProgramComposition";
 
 NSString * const SRGLetterboxPlaybackDidFailNotification = @"SRGLetterboxPlaybackDidFailNotification";
@@ -152,6 +155,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
 @property (nonatomic) SRGChannel *channel;
+@property (nonatomic, nullable) SRGProgram *currentProgram;
 @property (nonatomic) SRGProgramComposition *programComposition;
 @property (nonatomic) SRGSubdivision *subdivision;
 @property (nonatomic) SRGPosition *startPosition;
@@ -171,6 +175,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 // Use timers (not time observers) so that updates are performed also when the controller is idle
 @property (nonatomic) NSTimer *updateTimer;
 @property (nonatomic) NSTimer *channelUpdateTimer;
+@property (nonatomic) NSTimer *currentProgramTimer;
 
 // Timers for single metadata updates at start and end times
 @property (nonatomic) NSTimer *startDateTimer;
@@ -249,6 +254,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         // Also register the associated periodic time observers
         self.updateInterval = SRGLetterboxDefaultUpdateInterval;
         self.channelUpdateInterval = SRGLetterboxChannelDefaultUpdateInterval;
+        self.currentProgramTimer = [NSTimer srgletterbox_timerWithTimeInterval:1. repeats:YES block:^(NSTimer * _Nonnull timer) {
+            @strongify(self)
+            [self updateCurrentProgramIfNeeded];
+        }];
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
         
@@ -288,6 +297,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     // Invalidate timers
     self.updateTimer = nil;
     self.channelUpdateTimer = nil;
+    self.currentProgramTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
     self.livestreamEndDateTimer = nil;
@@ -490,6 +500,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     _channelUpdateTimer = channelUpdateTimer;
 }
 
+- (void)setCurrentProgramTimer:(NSTimer *)currentProgramTimer
+{
+    [_currentProgramTimer invalidate];
+    _currentProgramTimer = currentProgramTimer;
+}
+
 - (void)setStartDateTimer:(NSTimer *)startDateTimer
 {
     [_startDateTimer invalidate];
@@ -680,6 +696,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     SRGMediaComposition *previousMediaComposition = self.mediaComposition;
     SRGSubdivision *previousSubdivision = self.subdivision;
     SRGChannel *previousChannel = self.channel;
+    SRGProgram *previousCurrentProgram = self.currentProgram;
     SRGProgramComposition *previousProgramComposition = self.programComposition;
     
     self.URN = URN;
@@ -687,6 +704,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.mediaComposition = mediaComposition;
     self.subdivision = subdivision ?: self.mediaComposition.mainChapter;
     self.channel = programComposition.channel ?: media.channel;
+    self.currentProgram = [programComposition letterbox_programAtDate:self.date];
     self.programComposition = programComposition;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
@@ -699,11 +717,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     if (mediaComposition) {
         userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
     }
-    if (subdivision) {
-        userInfo[SRGLetterboxSubdivisionKey] = subdivision;
+    if (self.subdivision) {
+        userInfo[SRGLetterboxSubdivisionKey] = self.subdivision;
     }
-    if (programComposition.channel) {
-        userInfo[SRGLetterboxChannelKey] = programComposition.channel;
+    if (self.channel) {
+        userInfo[SRGLetterboxChannelKey] = self.channel;
+    }
+    if (self.currentProgram) {
+        userInfo[SRGLetterboxCurrentProgramKey] = self.currentProgram;
     }
     if (programComposition) {
         userInfo[SRGLetterboxProgramCompositionKey] = programComposition;
@@ -722,6 +743,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     if (previousChannel) {
         userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
+    }
+    if (previousCurrentProgram) {
+        userInfo[SRGLetterboxPreviousCurrentProgramKey] = previousCurrentProgram;
     }
     if(previousProgramComposition) {
         userInfo[SRGLetterboxPreviousProgramCompositionKey] = previousProgramComposition;
@@ -1523,6 +1547,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
+- (void)updateCurrentProgramIfNeeded
+{
+    if (! self.programComposition) {
+        return;
+    }
+    
+    SRGProgram *currentProgram = [self.programComposition letterbox_programAtDate:self.date];
+    if ((self.currentProgram && ![self.currentProgram isEqual:currentProgram]) || (!self.currentProgram && currentProgram)) {
+        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:self.subdivision programComposition:self.programComposition];
+    }
+}
+
 #pragma mark Configuration
 
 - (void)reloadPlayerConfiguration
@@ -1647,6 +1683,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             }
         }
     }
+    
+    [self updateCurrentProgramIfNeeded];
 }
 
 - (void)segmentDidStart:(NSNotification *)notification

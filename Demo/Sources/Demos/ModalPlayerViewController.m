@@ -23,8 +23,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *nowLabel;
-@property (nonatomic, weak) IBOutlet UILabel *nextLabel;
+@property (nonatomic, weak) IBOutlet UILabel *currentProgramLabel;
 @property (nonatomic, weak) IBOutlet UILabel *serverLabel;
 @property (nonatomic, weak) IBOutlet UILabel *URNLabel;
 
@@ -190,9 +189,7 @@
     
     self.titleLabel.text = media.title;
     
-    SRGChannel *channel = self.letterboxController.channel;
-    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
-    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
+    self.currentProgramLabel.text = self.letterboxController.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Currently: %@", nil), self.letterboxController.currentProgram.title] : nil;
     self.serverLabel.text = media.URN ? [NSString stringWithFormat:@"%@ urn:", LetterboxDemoServiceNameForURL(self.letterboxController.serviceURL)] : nil;
     self.URNLabel.text = media.URN;
 }

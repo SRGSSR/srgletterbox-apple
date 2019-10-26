@@ -26,6 +26,8 @@
 		08A05B2520585DDF00E80BD6 /* SRGLetterboxTimeSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */; };
 		08A05B2820585DF000E80BD6 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */; };
 		08A05B2920585DF000E80BD6 /* SRGLiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */; };
+		08B5194C2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08B5194A2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.h */; };
+		08B5194D2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08B5194B2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.m */; };
 		08BA348B1F4ADF1F00D9C204 /* MediaListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */; };
 		08BA348D1F4AF4C900D9C204 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */; };
 		08C618752225AEAE00F54DA2 /* SourceUidTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C618742225AEAE00F54DA2 /* SourceUidTestCase.m */; };
@@ -371,6 +373,8 @@
 		08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimeSlider.h; sourceTree = "<group>"; };
 		08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLiveLabel.h; sourceTree = "<group>"; };
 		08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLiveLabel.m; sourceTree = "<group>"; };
+		08B5194A2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SRGProgramComposition+SRGLetterbox.h"; sourceTree = "<group>"; };
+		08B5194B2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SRGProgramComposition+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08BA348A1F4ADF1F00D9C204 /* MediaListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MediaListViewController.storyboard; sourceTree = "<group>"; };
 		08BA348C1F4AF4C900D9C204 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		08C618742225AEAE00F54DA2 /* SourceUidTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SourceUidTestCase.m; sourceTree = "<group>"; };
@@ -738,6 +742,8 @@
 				08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */,
 				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
 				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
+				08B5194A2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.h */,
+				08B5194B2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.m */,
 				6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */,
 				6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */,
 				6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */,
@@ -1072,6 +1078,7 @@
 				6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				6F50596520581CAF00823003 /* SRGAvailabilityView.h in Headers */,
+				08B5194C2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.h in Headers */,
 				6F50597420581CAF00823003 /* SRGLetterboxPlaybackButton.h in Headers */,
 				6FB97FCC1E49D7240014C4C2 /* SRGLetterboxService.h in Headers */,
 				6F5543EA20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.h in Headers */,
@@ -1451,6 +1458,7 @@
 				6FC886681EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m in Sources */,
 				6F50597220581CAF00823003 /* SRGRemainingTimeButton.m in Sources */,
 				6F5543EB20AD9D0E0049ECB2 /* UIColor+SRGLetterbox.m in Sources */,
+				08B5194D2364A6B50086B47C /* SRGProgramComposition+SRGLetterbox.m in Sources */,
 				6F50596F20581CAF00823003 /* SRGLetterboxControllerView.m in Sources */,
 				08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */,
 				6F50595620581CAF00823003 /* SRGLetterboxSubdivisionCell.m in Sources */,

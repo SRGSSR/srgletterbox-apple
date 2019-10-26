@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14845" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14799.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,7 +28,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="MmD-0t-QA7">
-                                <rect key="frame" x="18" y="221" width="339" height="118.5"/>
+                                <rect key="frame" x="18" y="221" width="339" height="94"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fbH-pV-VxN">
                                         <rect key="frame" x="0.0" y="0.0" width="339" height="20.5"/>
@@ -36,26 +36,20 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;now&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oxw-uk-Eue">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;currentProgram&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oxw-uk-Eue">
                                         <rect key="frame" x="0.0" y="24.5" width="339" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;next&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XDA-ee-aQO">
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;server&gt; urn:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8PH-GF-jBu">
                                         <rect key="frame" x="0.0" y="49" width="339" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;server&gt; urn:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8PH-GF-jBu">
-                                        <rect key="frame" x="0.0" y="73.5" width="339" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;urn&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iV-dG-OJy" userLabel="URN Label">
-                                        <rect key="frame" x="0.0" y="98" width="339" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="73.5" width="339" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -75,42 +69,42 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md4-t4-5he">
-                                <rect key="frame" x="0.0" y="349.5" width="179.5" height="30"/>
+                                <rect key="frame" x="0.0" y="325" width="179.5" height="30"/>
                                 <state key="normal" title="Hide controls"/>
                                 <connections>
                                     <action selector="hideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="Cx0-DG-7VH"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-r1-Pgs">
-                                <rect key="frame" x="195.5" y="349.5" width="179.5" height="30"/>
+                                <rect key="frame" x="195.5" y="325" width="179.5" height="30"/>
                                 <state key="normal" title="Show controls"/>
                                 <connections>
                                     <action selector="showControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="DC9-QM-IKK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
-                                <rect key="frame" x="0.0" y="387.5" width="179.5" height="30.5"/>
+                                <rect key="frame" x="0.0" y="363" width="179.5" height="30.5"/>
                                 <state key="normal" title="Always hide controls"/>
                                 <connections>
                                     <action selector="forceHideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="ENm-2M-VN0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
-                                <rect key="frame" x="195.5" y="387.5" width="179.5" height="30"/>
+                                <rect key="frame" x="195.5" y="363" width="179.5" height="30"/>
                                 <state key="normal" title="Always show controls"/>
                                 <connections>
                                     <action selector="forceShowControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="wb8-e8-gnS"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
-                                <rect key="frame" x="0.0" y="426" width="179.5" height="30"/>
+                                <rect key="frame" x="0.0" y="401.5" width="179.5" height="30"/>
                                 <state key="normal" title="Full screen"/>
                                 <connections>
                                     <action selector="toggleFullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="LgO-pO-ZZe"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xXK-rE-ke9">
-                                <rect key="frame" x="230" y="425.5" width="111" height="31"/>
+                                <rect key="frame" x="230" y="401" width="111" height="31"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timeline " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NfO-XD-8ic" userLabel="Timeline">
                                         <rect key="frame" x="0.0" y="0.0" width="62" height="31"/>
@@ -188,7 +182,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Md4-t4-5he" firstAttribute="width" secondItem="gMD-r1-Pgs" secondAttribute="width" id="2w0-CJ-uZv"/>
@@ -231,13 +225,12 @@
                     <connections>
                         <outlet property="URNLabel" destination="1iV-dG-OJy" id="NeY-n8-5zA"/>
                         <outlet property="closeButton" destination="ePn-4e-JbK" id="6zr-y2-lcG"/>
+                        <outlet property="currentProgramLabel" destination="oxw-uk-Eue" id="fue-hN-kxF"/>
                         <outlet property="heightOffsetSlider" destination="CDc-iR-c7p" id="eDh-rv-OiO"/>
                         <outlet property="letterboxAspectRatioConstraint" destination="nYf-MQ-bSx" id="b4g-qt-TY5"/>
                         <outlet property="letterboxBottomConstraint" destination="gAz-aw-sDx" id="m7u-If-sWt"/>
                         <outlet property="letterboxController" destination="V5l-nr-tDL" id="po7-Q3-coI"/>
                         <outlet property="letterboxView" destination="5VB-3F-wwv" id="4BD-Be-qIP"/>
-                        <outlet property="nextLabel" destination="XDA-ee-aQO" id="rwp-mh-ICO"/>
-                        <outlet property="nowLabel" destination="oxw-uk-Eue" id="fue-hN-kxF"/>
                         <outlet property="serverLabel" destination="8PH-GF-jBu" id="LJD-BX-1gT"/>
                         <outlet property="sizeView" destination="BkI-ST-6lq" id="awX-yO-qOd"/>
                         <outlet property="timelineSwitch" destination="jec-Hp-ASJ" id="hlN-FI-Qgr"/>

@@ -64,6 +64,7 @@ OBJC_EXPORT NSString * const SRGLetterboxMediaKey;
 OBJC_EXPORT NSString * const SRGLetterboxMediaCompositionKey;
 OBJC_EXPORT NSString * const SRGLetterboxSubdivisionKey;
 OBJC_EXPORT NSString * const SRGLetterboxChannelKey;
+OBJC_EXPORT NSString * const SRGLetterboxCurrentProgramKey;
 OBJC_EXPORT NSString * const SRGLetterboxProgramCompositionKey;
 
 /**
@@ -74,6 +75,7 @@ OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousMediaCompositionKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousSubdivisionKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousChannelKey;
+OBJC_EXPORT NSString * const SRGLetterboxPreviousCurrentProgramKey;
 OBJC_EXPORT NSString * const SRGLetterboxPreviousProgramCompositionKey;
 
 /**
@@ -337,7 +339,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Return `YES` iff the controller is loading data (either retrieving metadata or buffering).
  *
- *  KVO-observable.
+ *  ne-observable.
  */
 @property (nonatomic, readonly, getter=isLoading) BOOL loading;
 
@@ -655,8 +657,13 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
 /**
-*  Program information (contains channel and latest programs).
-*/
+ *  Information about the program at the current position.
+ */
+@property (nonatomic, readonly, nullable) SRGProgram *currentProgram;
+
+/**
+ *  Programs information (contains channel and latest programs).
+ */
 @property (nonatomic, readonly, nullable) SRGProgramComposition *programComposition;
 
 /**

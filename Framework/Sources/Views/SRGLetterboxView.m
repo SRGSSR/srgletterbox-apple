@@ -23,7 +23,7 @@
 #import "SRGLetterboxTimelineView.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 #import "SRGNotificationView.h"
-#import "SRGProgram+SRGLetterbox.h"
+#import "SRGProgramComposition+SRGLetterbox.h"
 #import "SRGTapGestureRecognizer.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -429,12 +429,7 @@ static void commonInit(SRGLetterboxView *self);
         SRGChannel *channel = self.controller.channel;
         
         // Display program artwork (if any) when the slider position is within the program list, otherwise channel artwork.
-        NSDate *date = self.controlsView.date;
-        NSPredicate *predicate = (date) ? [NSPredicate predicateWithBlock:^BOOL(SRGProgram * _Nullable program, NSDictionary<NSString *,id> * _Nullable bindings) {
-            return [program srgletterbox_containsDate:date];
-        }] : nil;
-        SRGProgram *currentProgram = (predicate) ? [self.controller.programComposition.programs filteredArrayUsingPredicate:predicate].firstObject : nil;
-        
+        SRGProgram *currentProgram = [self.controller.programComposition letterbox_programAtDate:self.controlsView.date];
         if (currentProgram) {
             [self.imageView srg_requestImageForObject:currentProgram withScale:SRGImageScaleLarge type:SRGImageTypeDefault unavailabilityHandler:^{
                 [self.imageView srg_requestImageForObject:channel withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
