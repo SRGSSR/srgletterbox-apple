@@ -43,7 +43,7 @@ platform :ios do
     trainer(output_directory: "./fastlane")
   end
 
-  desc "Build a new nightly demo on App Center"
+  desc "Build a new iOS nightly demo on App Center"
   lane :nightly do
 
     appCenterBuildNumber = getAppCenterBuildNumber
@@ -66,7 +66,8 @@ platform :ios do
       configuration: "Nightly",
       scheme: "SRGLetterbox-demo",
       bundle_display_name_suffix: bundle_display_name_suffix,
-      marketing_version_suffix: marketing_version_suffix
+      marketing_version_suffix: marketing_version_suffix,
+      platform: "iOS"
     )
 
     appcenter_lane(
@@ -81,7 +82,7 @@ platform :ios do
     
   end
 
-  desc "Build a new demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after."
+  desc "Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after."
   lane :demo do
 
     build_number = get_build_number
@@ -92,7 +93,8 @@ platform :ios do
 
     build_lane(
       configuration: "Release",
-      scheme: "SRGLetterbox-demo"
+      scheme: "SRGLetterbox-demo",
+      platform: "iOS"
     )
 
     appcenter_lane(
@@ -113,6 +115,7 @@ platform :ios do
     configuration = options[:configuration]
     bundle_display_name_suffix = options[:bundle_display_name_suffix] ? options[:bundle_display_name_suffix] : ""
     marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
+    platform = options[:platform] ? options[:platform] : "iOS"
 
     # resetProvisioningProfileContext
 
@@ -121,6 +124,7 @@ platform :ios do
     # get_provisioning_profile(app_identifier: app_identifier, force: true)
 
     xcargs = 'ENABLE_BITCODE=NO BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" -allowProvisioningUpdates'
+    destination = "generic/platform=" + platform
 
     gym(
       configuration: configuration,
@@ -129,7 +133,8 @@ platform :ios do
       clean: true,
       xcargs: xcargs,
       export_method: "enterprise",
-      include_bitcode: false
+      include_bitcode: false,
+      destination: destination
     )
   end
 
