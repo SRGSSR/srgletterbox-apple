@@ -279,6 +279,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                                                selector:@selector(routeDidChange:)
                                                    name:AVAudioSessionRouteChangeNotification
                                                  object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(audioSessionInterruption:)
+                                                   name:AVAudioSessionInterruptionNotification
+                                                 object:nil];
+        
     }
     return self;
 }
@@ -1715,6 +1720,15 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                 [self play];
             }
         });
+    }
+}
+
+- (void)audioSessionInterruption:(NSNotification *)notification
+{
+    // Do not let pause live streams, stop playback
+    AVAudioSessionInterruptionType audioSessionInterruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
+    if (audioSessionInterruptionType == AVAudioSessionInterruptionTypeBegan && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+        [self stop];
     }
 }
 
