@@ -8,12 +8,11 @@
 
 #import "NSBundle+LetterboxDemo.h"
 
-#import <AppCenterDistribute/AppCenterDistribute.h>
-#import <SafariServices/SafariServices.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
 #if TARGET_OS_IOS
-#import <HockeySDK/HockeySDK.h>
+#import <AppCenterDistribute/AppCenterDistribute.h>
+#import <SafariServices/SafariServices.h>
 #endif
 
 /**
@@ -193,6 +192,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     return location ? @{ @"forceLocation" : location } : nil;
 }
 
+#if TARGET_OS_IOS
 /**
  *  Private App Center implementation details.
  */
@@ -202,6 +202,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (void)startUpdate;
 
 @end
+#endif
 
 @interface SettingsViewController ()
 

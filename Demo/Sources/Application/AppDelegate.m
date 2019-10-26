@@ -11,10 +11,13 @@
 
 #import <AppCenter/AppCenter.h>
 #import <AppCenterCrashes/AppCenterCrashes.h>
-#import <AppCenterDistribute/AppCenterDistribute.h>
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+
+#if TARGET_OS_IOS
+#import <AppCenterDistribute/AppCenterDistribute.h>
+#endif
 
 static __attribute__((constructor)) void ApplicationInit(void)
 {
@@ -95,7 +98,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 - (void)setupAppCenter
 {
-<<<<<<< HEAD
     NSString *appCenterSecret = [NSBundle.mainBundle objectForInfoDictionaryKey:@"AppCenterSecret"];
     if (appCenterSecret.length == 0) {
         return;
@@ -118,7 +120,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
         
         return YES;
     }];
+    
+#if TARGET_OS_IOS
     [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class, MSDistribute.class ]];
+#else
+    [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class ]];
+#endif
 }
 
 #pragma mark Custom URL scheme support

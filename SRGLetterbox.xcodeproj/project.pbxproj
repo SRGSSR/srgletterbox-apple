@@ -15,6 +15,11 @@
 		086B944C234CEDA3003D6BAA /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B944B234CEDA3003D6BAA /* Media.m */; };
 		086B944E234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */; };
 		086B9451234DE14A003D6BAA /* DemoSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B9450234DE14A003D6BAA /* DemoSection.m */; };
+		087874982364F0A200F4F40C /* AppCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.framework */; };
+		087874992364F0A200F4F40C /* AppCenterAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */; };
+		0878749A2364F0A200F4F40C /* AppCenterCrashes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */; };
+		0878749C2364F0A200F4F40C /* AppCenterDistribute.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */; };
+		087874A02364F6C100F4F40C /* AppCenterDistributeResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */; };
 		087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */; };
 		087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */ = {isa = PBXBuildFile; fileRef = 087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087EB6111E290AC4005DD80B /* SRGLetterboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */; };
@@ -244,6 +249,14 @@
 		086B944D234D083B003D6BAA /* SpecialMediaDemoConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SpecialMediaDemoConfiguration.plist; sourceTree = "<group>"; };
 		086B944F234DE14A003D6BAA /* DemoSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoSection.h; sourceTree = "<group>"; };
 		086B9450234DE14A003D6BAA /* DemoSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoSection.m; sourceTree = "<group>"; };
+		0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = Carthage/Build/iOS/AppCenterAnalytics.framework; sourceTree = "<group>"; };
+		0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = Carthage/Build/iOS/AppCenterCrashes.framework; sourceTree = "<group>"; };
+		0878748E2364EE6700F4F40C /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = Carthage/Build/iOS/AppCenter.framework; sourceTree = "<group>"; };
+		087874922364EEC200F4F40C /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = Carthage/Build/tvOS/AppCenterCrashes.framework; sourceTree = "<group>"; };
+		087874932364EEC300F4F40C /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = Carthage/Build/tvOS/AppCenter.framework; sourceTree = "<group>"; };
+		087874942364EEC300F4F40C /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = Carthage/Build/tvOS/AppCenterAnalytics.framework; sourceTree = "<group>"; };
+		0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterDistribute.framework; path = Carthage/Build/iOS/AppCenterDistribute.framework; sourceTree = "<group>"; };
+		0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AppCenterDistributeResources.bundle; path = Carthage/Build/iOS/AppCenterDistribute.framework/AppCenterDistributeResources.bundle; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
 		087EB60E1E290AC4005DD80B /* SRGLetterboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxController.h; sourceTree = "<group>"; };
 		087EB60F1E290AC4005DD80B /* SRGLetterboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxController.m; sourceTree = "<group>"; };
@@ -377,7 +390,6 @@
 		6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxViewController.h; sourceTree = "<group>"; };
 		6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxViewController~tvos.m"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
-		6FA562CD1E9BABE400A1344F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Carthage/Build/iOS/HockeySDK.framework; sourceTree = "<group>"; };
 		6FAB19C2219AFD76003B27DE /* PlaybackSettingsTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackSettingsTestCase.m; sourceTree = "<group>"; };
 		6FAB3B001E28F77E00CC2197 /* SRGLetterboxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxView.h; sourceTree = "<group>"; };
 		6FAB3B011E28F77E00CC2197 /* SRGLetterboxView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxView~ios.m"; sourceTree = "<group>"; };
@@ -473,6 +485,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0878749C2364F0A200F4F40C /* AppCenterDistribute.framework in Frameworks */,
+				087874982364F0A200F4F40C /* AppCenter.framework in Frameworks */,
+				087874992364F0A200F4F40C /* AppCenterAnalytics.framework in Frameworks */,
+				0878749A2364F0A200F4F40C /* AppCenterCrashes.framework in Frameworks */,
 				6FAB3B641E2905B400CC2197 /* SRGLetterbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -755,10 +771,17 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0878748E2364EE6700F4F40C /* AppCenter.framework */,
+				087874932364EEC300F4F40C /* AppCenter.framework */,
+				0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */,
+				087874942364EEC300F4F40C /* AppCenterAnalytics.framework */,
+				0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */,
+				087874922364EEC200F4F40C /* AppCenterCrashes.framework */,
+				0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */,
+				0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 				08FA0D1F1E30F820000C94EF /* FXReachability.framework */,
-				6FA562CD1E9BABE400A1344F /* HockeySDK.framework */,
 				6FAB3B081E28FB1400CC2197 /* libextobjc.framework */,
 				6FB97FF21E4B09B70014C4C2 /* MAKVONotificationCenter.framework */,
 				6FAB3B091E28FB1400CC2197 /* Mantle.framework */,
@@ -1168,6 +1191,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				087874A02364F6C100F4F40C /* AppCenterDistributeResources.bundle in Resources */,
 				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard in Resources */,
 				6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */,
 				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */,
@@ -1210,7 +1234,6 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/$(CARTHAGE_PLATFORM)/ComScore.framework",
 				"$(SRCROOT)/Carthage/Build/$(CARTHAGE_PLATFORM)/FXReachability.framework",
-				"$(SRCROOT)/Carthage/Build/$(CARTHAGE_PLATFORM)/HockeySDK.framework",
 				"$(SRCROOT)/Carthage/Build/$(CARTHAGE_PLATFORM)/libextobjc.framework",
 				"$(SRCROOT)/Carthage/Build/$(CARTHAGE_PLATFORM)/MAKVONotificationCenter.framework",
 				"$(SRCROOT)/Carthage/Build/$(CARTHAGE_PLATFORM)/Mantle.framework",
@@ -1444,7 +1467,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1460,7 +1483,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.14.6;
+				MARKETING_VERSION = 1.15.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1494,6 +1517,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6FD594412334D3A70058DAE7 /* Demo.nightly.xcconfig */;
 			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
@@ -1503,6 +1527,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1562,7 +1588,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1583,7 +1609,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.14.6;
+				MARKETING_VERSION = 1.15.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
@@ -1629,6 +1655,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1688,7 +1716,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1703,7 +1731,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.14.6;
+				MARKETING_VERSION = 1.15.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1740,6 +1768,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */;
 			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -1749,6 +1778,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1883,6 +1914,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1898,6 +1931,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */;
 			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -1907,6 +1941,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1981,7 +2017,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2002,7 +2038,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.14.6;
+				MARKETING_VERSION = 1.15.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
@@ -2045,7 +2081,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2061,7 +2097,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.14.6;
+				MARKETING_VERSION = 1.15.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
 				PRODUCT_NAME = "${TARGET_NAME}";
