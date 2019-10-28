@@ -7,7 +7,7 @@
 # All lines starting with a # are ignored when running `fastlane`
 
 # This is the minimum version number required.
-fastlane_version "1.95.0"
+fastlane_version "2.96.0"
 
 default_platform :ios
 
@@ -76,18 +76,13 @@ platform :ios do
     platform = "tvOS"
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
-    # apple_id = CredentialsManager::AppfileConfig.try_fetch_value(:apple_id)
-    # itunes_connect_id = CredentialsManager::AppfileConfig.try_fetch_value(:itunes_connect_id)
-    # app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
-    # apple_dev_portal_id = CredentialsManager::AppfileConfig.try_fetch_value(:apple_dev_portal_id)
+    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
 
-    # puts "team_id " + team_id
-    # puts "apple_id " + apple_id
-    # puts "itunes_connect_id " + itunes_connect_id
-    # puts "app_identifier " + app_identifier
-    # puts "apple_dev_portal_id " + apple_dev_portal_id
-
-    appStoreBuildNumber = latest_testflight_build_number(team_id: team_id)
+    appStoreBuildNumber = latest_testflight_build_number(
+      team_id: team_id,
+      app_identifier: app_identifier,
+      platform: "appletvos"
+    )
     increment_build_number(
       build_number: appStoreBuildNumber + 1
     )
