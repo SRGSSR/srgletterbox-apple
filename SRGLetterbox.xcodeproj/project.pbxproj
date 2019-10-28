@@ -254,9 +254,6 @@
 		0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = Carthage/Build/iOS/AppCenterAnalytics.framework; sourceTree = "<group>"; };
 		0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = Carthage/Build/iOS/AppCenterCrashes.framework; sourceTree = "<group>"; };
 		0878748E2364EE6700F4F40C /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = Carthage/Build/iOS/AppCenter.framework; sourceTree = "<group>"; };
-		087874922364EEC200F4F40C /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = Carthage/Build/tvOS/AppCenterCrashes.framework; sourceTree = "<group>"; };
-		087874932364EEC300F4F40C /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = Carthage/Build/tvOS/AppCenter.framework; sourceTree = "<group>"; };
-		087874942364EEC300F4F40C /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = Carthage/Build/tvOS/AppCenterAnalytics.framework; sourceTree = "<group>"; };
 		0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterDistribute.framework; path = Carthage/Build/iOS/AppCenterDistribute.framework; sourceTree = "<group>"; };
 		0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AppCenterDistributeResources.bundle; path = Carthage/Build/iOS/AppCenterDistribute.framework/AppCenterDistributeResources.bundle; sourceTree = "<group>"; };
 		087C58D21F5EA9CA0058D310 /* SRGLetterboxView+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxView+Private.h"; sourceTree = "<group>"; };
@@ -778,11 +775,8 @@
 			isa = PBXGroup;
 			children = (
 				0878748E2364EE6700F4F40C /* AppCenter.framework */,
-				087874932364EEC300F4F40C /* AppCenter.framework */,
 				0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */,
-				087874942364EEC300F4F40C /* AppCenterAnalytics.framework */,
 				0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */,
-				087874922364EEC200F4F40C /* AppCenterCrashes.framework */,
 				0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */,
 				0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */,
 				6FAB3B071E28FB1400CC2197 /* ComScore.framework */,
