@@ -29,13 +29,12 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="jpA-G4-ggq">
                                 <rect key="frame" x="80" y="80" width="400" height="860"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnt-9h-LTZ">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnt-9h-LTZ">
                                         <rect key="frame" x="0.0" y="0.0" width="400" height="225"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="wnt-9h-LTZ" secondAttribute="height" multiplier="16:9" id="aaF-5s-WlV"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <state key="normal" title="Replay"/>
                                         <connections>
                                             <action selector="restart:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="Mry-CR-yj4"/>
                                         </connections>
@@ -59,13 +58,12 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="DvL-Eq-ksO">
                                 <rect key="frame" x="1240" y="80" width="600" height="860"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-jF-e54">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-jF-e54">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="337.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="uRP-jF-e54" secondAttribute="height" multiplier="16:9" id="hZa-M0-Mjd"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <state key="normal" title="Engage"/>
                                         <connections>
                                             <action selector="engage:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="7Xb-bD-en8"/>
                                         </connections>
@@ -119,11 +117,11 @@
                     </view>
                     <connections>
                         <outlet property="backgroundImageView" destination="uMI-43-fAx" id="q68-wv-c2C"/>
-                        <outlet property="engageButton" destination="uRP-jF-e54" id="Dkk-y2-WOs"/>
                         <outlet property="remainingTimeLabel" destination="kPV-wa-POg" id="Bna-KM-BjR"/>
-                        <outlet property="replayButton" destination="wnt-9h-LTZ" id="uX0-q7-Mui"/>
+                        <outlet property="thumbnailButton" destination="wnt-9h-LTZ" id="cAQ-EK-PH0"/>
                         <outlet property="titleLabel" destination="AbB-JM-as5" id="7EK-Yv-sQP"/>
                         <outlet property="upcomingSummaryLabel" destination="gAc-Bf-xd3" id="tGK-D1-Az3"/>
+                        <outlet property="upcomingThumbnailButton" destination="uRP-jF-e54" id="5ft-tr-ODF"/>
                         <outlet property="upcomingTitleLabel" destination="5Mb-Mu-JRU" id="ko6-fr-xbF"/>
                     </connections>
                 </viewController>

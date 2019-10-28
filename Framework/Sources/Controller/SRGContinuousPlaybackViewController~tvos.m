@@ -12,6 +12,7 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
+#import <YYWebImage/YYWebImage.h>
 
 @interface SRGContinuousPlaybackViewController ()
 
@@ -21,15 +22,14 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *backgroundImageView;
 
+@property (nonatomic, weak) IBOutlet UIButton *thumbnailButton;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 
+@property (nonatomic, weak) IBOutlet UIButton *upcomingThumbnailButton;
 @property (nonatomic, weak) IBOutlet UILabel *upcomingTitleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *upcomingSummaryLabel;
 
 @property (nonatomic, weak) IBOutlet UILabel *remainingTimeLabel;
-
-@property (nonatomic, weak) IBOutlet UIButton *replayButton;
-@property (nonatomic, weak) IBOutlet UIButton *engageButton;
 
 @property (nonatomic) NSTimer *timer;
 
@@ -110,16 +110,18 @@
     }
 }
 
-#pragma mar UI
+#pragma mark UI
 
 - (void)reloadData
 {
+    NSURL *URL = [NSURL URLWithString:@"https://www.rts.ch/2019/10/27/16/28/10813484.image/16x9/scale/width/688"];
+    
     self.titleLabel.text = self.media.title;
-    // TODO: Load thumbnail
+    [self.thumbnailButton yy_setImageWithURL:URL forState:UIControlStateNormal options:0];
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
     self.upcomingSummaryLabel.text = self.upcomingMedia.summary;
-    // TODO: Load thumbnail
+    [self.upcomingThumbnailButton yy_setImageWithURL:URL forState:UIControlStateNormal options:0];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -149,7 +151,7 @@
 
 - (NSArray<id<UIFocusEnvironment>> *)preferredFocusEnvironments
 {
-    return @[ self.engageButton ];
+    return @[ self.upcomingThumbnailButton ];
 }
 
 #pragma mark Actions
