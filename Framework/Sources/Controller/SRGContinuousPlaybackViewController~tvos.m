@@ -75,6 +75,7 @@
     [super viewDidLoad];
     
     self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:self.backgroundImageView.frame.size];
+    
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     
     self.upcomingTitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
@@ -86,6 +87,7 @@
     tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
     [self.view addGestureRecognizer:tapGestureRecognizer];
     
+    [self setupFocusGuides];
     [self reloadData];
 }
 
@@ -138,6 +140,42 @@
     }
     else {
         self.remainingTimeLabel.text = NSLocalizedString(@"Starting...", nil);
+    }
+}
+
+- (void)setupFocusGuides
+{
+    // Navigation here requires focus guides. For focus to be able to move from a focused button (slightly larger than
+    // its official frame), we need the focus guides (each associated with the corresponding button) to be anchored with
+    // an offset so that the focus engine can find them.
+    UIFocusGuide *focusGuide1 = [[UIFocusGuide alloc] init];
+    [self.view addLayoutGuide:focusGuide1];
+    [NSLayoutConstraint activateConstraints:@[
+        [focusGuide1.leadingAnchor constraintEqualToAnchor:self.thumbnailButton.trailingAnchor constant:30.f],
+        [focusGuide1.topAnchor constraintEqualToAnchor:self.thumbnailButton.topAnchor],
+        [focusGuide1.bottomAnchor constraintEqualToAnchor:self.thumbnailButton.bottomAnchor],
+        [focusGuide1.widthAnchor constraintEqualToConstant:10.f]
+    ]];
+    if (@available(tvOS 10, *)) {
+        focusGuide1.preferredFocusEnvironments = @[ self.upcomingThumbnailButton ];
+    }
+    else {
+        focusGuide1.preferredFocusedView = self.upcomingThumbnailButton;
+    }
+    
+    UIFocusGuide *focusGuide2 = [[UIFocusGuide alloc] init];
+    [self.view addLayoutGuide:focusGuide2];
+    [NSLayoutConstraint activateConstraints:@[
+        [focusGuide2.trailingAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.leadingAnchor constant:-30.f],
+        [focusGuide2.topAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.topAnchor],
+        [focusGuide2.bottomAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.bottomAnchor],
+        [focusGuide2.widthAnchor constraintEqualToConstant:10.f]
+    ]];
+    if (@available(tvOS 10, *)) {
+        focusGuide2.preferredFocusEnvironments = @[ self.thumbnailButton ];
+    }
+    else {
+        focusGuide2.preferredFocusedView = self.thumbnailButton;
     }
 }
 

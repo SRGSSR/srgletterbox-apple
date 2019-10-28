@@ -6,7 +6,7 @@
 
 #import "SRGFocusableButton.h"
 
-static CGFloat kFocusedScaleFactor = 1.2f;
+static CGFloat kFocusedScaleFactor = 1.05f;
 
 @interface SRGFocusableButton ()
 
@@ -19,6 +19,15 @@ static CGFloat kFocusedScaleFactor = 1.2f;
 
 static void commonInit(SRGFocusableButton *self)
 {
+    self.backgroundColor = UIColor.redColor;
+    
+    // Fill the frame
+    self.contentEdgeInsets = UIEdgeInsetsZero;
+    
+    // Fill the button with images by default
+    self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
+    self.contentVerticalAlignment = UIControlContentVerticalAlignmentFill;
+    
     // The focus effect alone is sufficient, no need for highlighting by default
     self.adjustsImageWhenHighlighted = NO;
     self.clipsToBounds = NO;
