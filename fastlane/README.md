@@ -21,11 +21,16 @@ or alternatively using `brew cask install fastlane`
 fastlane ios tests
 ```
 Run library tests
-### ios nightly
+### ios iOSnightly
 ```
-fastlane ios nightly
+fastlane ios iOSnightly
 ```
 Build a new iOS nightly demo on App Center
+### ios tvOSnightly
+```
+fastlane ios tvOSnightly
+```
+Build a new tvOS nightly demo on AppStore Connect
 ### ios demo
 ```
 fastlane ios demo

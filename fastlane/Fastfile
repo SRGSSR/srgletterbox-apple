@@ -44,14 +44,78 @@ platform :ios do
   end
 
   desc "Build a new iOS nightly demo on App Center"
-  lane :nightly do
+  lane :iOSnightly do
+
+    platform = "iOS"
 
     appCenterBuildNumber = getAppCenterBuildNumber
     increment_build_number(
       build_number: appCenterBuildNumber + 1
     )
 
-    changelog = default_changelog_for_nightlies
+    nightly(
+      platform: platform
+    )
+
+    changelog = default_changelog_for_nightlies(platform)
+
+    appcenter_lane(
+      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
+      notes: changelog,
+    )
+
+    clean_build_artifacts
+
+    saveLastNightliesSuccessGitCommitHash
+  end
+
+  desc "Build a new tvOS nightly demo on AppStore Connect"
+  lane :tvOSnightly do
+
+    platform = "tvOS"
+
+    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+    # apple_id = CredentialsManager::AppfileConfig.try_fetch_value(:apple_id)
+    # itunes_connect_id = CredentialsManager::AppfileConfig.try_fetch_value(:itunes_connect_id)
+    # app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+    # apple_dev_portal_id = CredentialsManager::AppfileConfig.try_fetch_value(:apple_dev_portal_id)
+
+    # puts "team_id " + team_id
+    # puts "apple_id " + apple_id
+    # puts "itunes_connect_id " + itunes_connect_id
+    # puts "app_identifier " + app_identifier
+    # puts "apple_dev_portal_id " + apple_dev_portal_id
+
+    appStoreBuildNumber = latest_testflight_build_number(team_id: team_id)
+    increment_build_number(
+      build_number: appStoreBuildNumber + 1
+    )
+
+    nightly(
+      platform: platform,
+      export_to_appstore: true,
+      product_bundle_identifier: ENV['NIGHLTY_APP_IDENTIFIER']
+    )
+
+    changelog = default_changelog_for_nightlies(platform)
+    
+
+    pilot(
+      skip_waiting_for_build_processing: true
+    )
+
+    clean_build_artifacts
+
+    saveLastNightliesSuccessGitCommitHash
+
+  end
+
+  desc "Build a new iOS nightly demo on App Center"
+  private_lane :nightly do |options|
+    platform = options[:platform]
+    export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
+    product_bundle_identifier= options[:product_bundle_identifier]
 
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
 
@@ -67,19 +131,10 @@ platform :ios do
       scheme: "SRGLetterbox-demo",
       bundle_display_name_suffix: bundle_display_name_suffix,
       marketing_version_suffix: marketing_version_suffix,
-      platform: "iOS"
+      platform: platform,
+      export_to_appstore: export_to_appstore,
+      product_bundle_identifier: product_bundle_identifier
     )
-
-    appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
-      notes: changelog,
-    )
-
-    clean_build_artifacts
-
-    saveLastNightliesSuccessGitCommitHash
-    
   end
 
   desc "Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after."
@@ -113,11 +168,27 @@ platform :ios do
   private_lane :build_lane do |options|
     scheme = options[:scheme]
     configuration = options[:configuration]
+    export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
     bundle_display_name_suffix = options[:bundle_display_name_suffix] ? options[:bundle_display_name_suffix] : ""
     marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
     platform = options[:platform] ? options[:platform] : "iOS"
+    product_bundle_identifier= options[:product_bundle_identifier]
+
+    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+
+    puts "team_id " + team_id;
+    puts "export_to_appstore " + (export_to_appstore ? "true" : "false");
+    puts "bundle_display_name_suffix " + bundle_display_name_suffix;
+    puts "marketing_version_suffix " + marketing_version_suffix;
+    puts "platform " + platform;
+    puts "product_bundle_identifier " + product_bundle_identifier;
+    puts "configuration " + configuration;
+    puts "scheme " + scheme;
 
     xcargs = 'ENABLE_BITCODE=NO BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" -allowProvisioningUpdates'
+    if product_bundle_identifier
+      xcargs += ' PRODUCT_BUNDLE_IDENTIFIER=' + product_bundle_identifier
+    end
     destination = "generic/platform=" + platform
 
     gym(
@@ -126,8 +197,9 @@ platform :ios do
       silent: true,
       clean: true,
       xcargs: xcargs,
-      export_method: "enterprise",
+      export_method: export_to_appstore ? "app-store" : "enterprise",
       include_bitcode: false,
+      export_team_id: team_id,
       destination: destination
     )
   end
@@ -152,9 +224,9 @@ platform :ios do
   end
 
   # Returns a default changelog for nightlies
-  def default_changelog_for_nightlies()
+  def default_changelog_for_nightlies(platform)
 
-    lastNightliesGitCommitHash = getLastNightliesSuccessGitCommitHash
+    lastNightliesGitCommitHash = getLastNightliesSuccessGitCommitHash(platform)
     if lastNightliesGitCommitHash.length < 12
       lastNightliesGitCommitHash = "HEAD^^^^^"
     end
@@ -186,8 +258,9 @@ platform :ios do
   end
 
   # Read the git commit hash in a local text file for nightlies
-  def getLastNightliesSuccessGitCommitHash()
-    file = File.open("last-nightlies-success-git-commit-hash.txt", "a+")
+  def getLastNightliesSuccessGitCommitHash(platform)
+    platformPrefix = platform ? platform.downcase + "-" : ""
+    file = File.open("last-" + platformPrefix + "nightlies-success-git-commit-hash.txt", "a+")
     lastNightliesSuccessGitCommitHash = file.read
     file.close
     lastNightliesSuccessGitCommitHash
