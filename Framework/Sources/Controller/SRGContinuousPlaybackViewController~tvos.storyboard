@@ -29,7 +29,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="jpA-G4-ggq">
                                 <rect key="frame" x="80" y="80" width="400" height="860"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnt-9h-LTZ">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnt-9h-LTZ" customClass="SRGFocusableButton">
                                         <rect key="frame" x="0.0" y="0.0" width="400" height="225"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="wnt-9h-LTZ" secondAttribute="height" multiplier="16:9" id="aaF-5s-WlV"/>
@@ -58,7 +58,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="DvL-Eq-ksO">
                                 <rect key="frame" x="1240" y="80" width="600" height="860"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-jF-e54">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-jF-e54" customClass="SRGFocusableButton">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="337.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="uRP-jF-e54" secondAttribute="height" multiplier="16:9" id="hZa-M0-Mjd"/>

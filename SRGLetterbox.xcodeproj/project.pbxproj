@@ -189,6 +189,8 @@
 		6FEA9DA51E4DBDEF007DED52 /* SRGLetterboxService+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */; };
 		6FF0D89A1F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */; };
 		6FF0D89B1F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */; };
+		6FFA54A82366BEF6004709BF /* SRGFocusableButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FFA54A62366BEF6004709BF /* SRGFocusableButton.h */; };
+		6FFA54A92366BEF6004709BF /* SRGFocusableButton~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA54A72366BEF6004709BF /* SRGFocusableButton~tvos.m */; };
 		6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */; };
 		6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD13B202C88BD00FDAA6C /* PlaylistViewController~ios.storyboard */; };
 		6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD13D202C89C900FDAA6C /* Playlist.m */; };
@@ -466,6 +468,8 @@
 		6FEA9DA31E4DBDEF007DED52 /* SRGLetterboxService+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGLetterboxService+Private.h"; sourceTree = "<group>"; };
 		6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimerTarget.h; sourceTree = "<group>"; };
 		6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxTimerTarget.m; sourceTree = "<group>"; };
+		6FFA54A62366BEF6004709BF /* SRGFocusableButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGFocusableButton.h; sourceTree = "<group>"; };
+		6FFA54A72366BEF6004709BF /* SRGFocusableButton~tvos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SRGFocusableButton~tvos.m"; sourceTree = "<group>"; };
 		6FFAD138202C889200FDAA6C /* PlaylistViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistViewController.h; sourceTree = "<group>"; };
 		6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaylistViewController~ios.m"; sourceTree = "<group>"; };
 		6FFAD13B202C88BD00FDAA6C /* PlaylistViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "PlaylistViewController~ios.storyboard"; sourceTree = "<group>"; };
@@ -704,6 +708,8 @@
 			children = (
 				08A05B1B20585DD200E80BD6 /* SRGControlWrapperView.h */,
 				08A05B1C20585DD200E80BD6 /* SRGControlWrapperView~ios.m */,
+				6FFA54A62366BEF6004709BF /* SRGFocusableButton.h */,
+				6FFA54A72366BEF6004709BF /* SRGFocusableButton~tvos.m */,
 				6F50594420581CAF00823003 /* SRGLetterboxBaseView.h */,
 				6F50594720581CAF00823003 /* SRGLetterboxBaseView.m */,
 				6F50594320581CAF00823003 /* SRGLetterboxBaseView+Subclassing.h */,
@@ -1011,6 +1017,7 @@
 				6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */,
 				6FE08CE91E8B81B000EC4716 /* UIFont+SRGLetterbox.h in Headers */,
 				6F042D271E28E2D100CFD89B /* SRGLetterbox.h in Headers */,
+				6FFA54A82366BEF6004709BF /* SRGFocusableButton.h in Headers */,
 				6FC886671EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h in Headers */,
 				087C58D31F5EA9CA0058D310 /* SRGLetterboxView+Private.h in Headers */,
 				6F50596620581CAF00823003 /* SRGControlsView.h in Headers */,
@@ -1359,6 +1366,7 @@
 				6F50597020581CAF00823003 /* SRGLetterboxBaseView.m in Sources */,
 				6F72A81223391395008AA908 /* SRGContinuousPlaybackViewController~tvos.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
+				6FFA54A92366BEF6004709BF /* SRGFocusableButton~tvos.m in Sources */,
 				6F50597520581CAF00823003 /* SRGFullScreenButton~ios.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService~ios.m in Sources */,
 				6F50596820581CAF00823003 /* SRGAccessibilityView~ios.m in Sources */,
