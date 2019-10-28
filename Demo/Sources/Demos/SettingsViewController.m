@@ -585,7 +585,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case SettingSectionApplicationVersion: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            cell.textLabel.text = NSLocalizedString(@"Check for updates", @"Check for updates button in settings view");
+            cell.textLabel.text = NSLocalizedString(@"Versions and release notes", @"Button to access versions and release notes");
             cell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
