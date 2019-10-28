@@ -18,5 +18,7 @@ xcuserdata
 /fastlane/*.xml
 /fastlane/last-nightlies-success-git-commit-hash.txt
 
+/Scripts/generate-icons-caches
+
 /vendor
 /.bundle
