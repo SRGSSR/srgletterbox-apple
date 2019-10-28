@@ -8,10 +8,42 @@
 
 static CGFloat kFocusedScaleFactor = 1.2f;
 
+@interface SRGFocusableButton ()
+
+@property (nonatomic, weak) UIView *unfocusedShadowView;
+@property (nonatomic, weak) UIView *focusedShadowView;
+
+- (void)updateAppearanceFocused:(BOOL)focused;
+
+@end
+
 static void commonInit(SRGFocusableButton *self)
 {
     // The focus effect alone is sufficient, no need for highlighting by default
     self.adjustsImageWhenHighlighted = NO;
+    self.clipsToBounds = NO;
+    
+    // Avoid seeing shadows through the image
+    self.imageView.opaque = YES;
+    
+    // Use two separate transparent views to hold shadows, which we can the animate.
+    UIView *unfocusedShadowView = [[UIView alloc] init];
+    unfocusedShadowView.backgroundColor = UIColor.clearColor;
+    unfocusedShadowView.layer.shadowOffset = CGSizeMake(0.f, 10.f);
+    unfocusedShadowView.layer.shadowRadius = 5.f;
+    unfocusedShadowView.layer.shadowOpacity = 0.3f;
+    [self insertSubview:unfocusedShadowView atIndex:0];
+    self.unfocusedShadowView = unfocusedShadowView;
+    
+    UIView *focusedShadowView = [[UIView alloc] init];
+    focusedShadowView.backgroundColor = UIColor.clearColor;
+    focusedShadowView.layer.shadowOffset = CGSizeMake(0.f, 20.f);
+    focusedShadowView.layer.shadowRadius = 10.f;
+    focusedShadowView.layer.shadowOpacity = 0.3f;
+    [self insertSubview:focusedShadowView atIndex:0];
+    self.focusedShadowView = focusedShadowView;
+    
+    [self updateAppearanceFocused:NO];
 }
 
 @implementation SRGFocusableButton
@@ -35,6 +67,21 @@ static void commonInit(SRGFocusableButton *self)
 }
 
 #pragma mark Overrides
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGRect imageViewFrame = self.imageView.frame;
+    if (! CGRectIsNull(imageViewFrame)) {
+        self.unfocusedShadowView.layer.shadowPath = [UIBezierPath bezierPathWithRect:imageViewFrame].CGPath;
+        self.focusedShadowView.layer.shadowPath = [UIBezierPath bezierPathWithRect:imageViewFrame].CGPath;
+    }
+    else {
+        self.unfocusedShadowView.layer.shadowPath = nil;
+        self.focusedShadowView.layer.shadowPath = nil;
+    }
+}
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 {    
@@ -84,16 +131,14 @@ static void commonInit(SRGFocusableButton *self)
 - (void)updateAppearanceFocused:(BOOL)focused
 {
     if (focused) {
+        self.unfocusedShadowView.alpha = 0.f;
+        self.focusedShadowView.alpha = 1.f;
         self.transform = CGAffineTransformMakeScale(kFocusedScaleFactor, kFocusedScaleFactor);
-        self.layer.shadowRadius = 10.f;
-        self.layer.shadowOpacity = 0.3f;
-        self.layer.shadowOffset = CGSizeMake(0.f, 20.f);
     }
     else {
+        self.unfocusedShadowView.alpha = 1.f;
+        self.focusedShadowView.alpha = 0.f;
         self.transform = CGAffineTransformIdentity;
-        self.layer.shadowRadius = 0.f;
-        self.layer.shadowOpacity = 0.f;
-        self.layer.shadowOffset = CGSizeZero;
     }
 }
 
