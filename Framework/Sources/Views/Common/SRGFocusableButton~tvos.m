@@ -96,7 +96,12 @@ static void commonInit(SRGFocusableButton *self)
 {    
     [coordinator addCoordinatedAnimations:^{
         [UIView animateWithDuration:UIView.inheritedAnimationDuration animations:^{
-            [self updateAppearanceFocused:self.focused];
+            if (context.previouslyFocusedView == self) {
+                [self updateAppearanceFocused:NO];
+            }
+            else if (context.nextFocusedView == self) {
+                [self updateAppearanceFocused:YES];
+            }
         }];
     } completion:nil];
 }
