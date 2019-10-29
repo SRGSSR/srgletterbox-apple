@@ -11,7 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Live label for the control stack view.
  */
-IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGLiveLabel : UILabel
 
 @end

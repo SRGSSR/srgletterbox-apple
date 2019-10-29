@@ -8,9 +8,10 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGAvailabilityView.h"
+#import "SRGContinuousPlaybackViewController.h"
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
-#import "SRGContinuousPlaybackViewController.h"
+#import "SRGLiveLabel.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -48,6 +49,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 @property (nonatomic, weak) SRGAvailabilityView *availabilityView;
 @property (nonatomic, weak) SRGErrorView *errorView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
+
+@property (nonatomic, weak) SRGLiveLabel *liveLabel;
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
@@ -169,6 +172,21 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
                                                [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
     
+    // Content overlay animations (to show or hide UI elements alongside player controls) are only available since tvOS 11.
+    // On tvOS 10 and below, do not display any live label.
+    if (@available(tvOS 11, *)) {
+        UIView *contentOverlayView = self.playerViewController.contentOverlayView;
+        SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
+        [contentOverlayView addSubview:liveLabel];
+        self.liveLabel = liveLabel;
+        
+        liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[ [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
+                                                   [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
+                                                   [liveLabel.widthAnchor constraintEqualToConstant:75.f],
+                                                   [liveLabel.heightAnchor constraintEqualToConstant:45.f] ]];
+    }
+    
     [self updateMainLayout];
     [self reloadData];
 }
@@ -270,6 +288,17 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.loadingImageView.alpha = 0.f;
         [self.loadingImageView stopAnimating];
     }
+    
+    self.liveLabel.alpha = self.controller.live ? 1.f : 0.f;
+}
+
+#pragma mark AVPlayerViewControllerDelegate protocol
+
+- (void)playerViewController:(AVPlayerViewController *)playerViewController willTransitionToVisibilityOfTransportBar:(BOOL)visible withAnimationCoordinator:(id<AVPlayerViewControllerAnimationCoordinator>)coordinator API_AVAILABLE(tvos(11.0))
+{
+    [coordinator addCoordinatedAnimations:^{
+        self.liveLabel.hidden = ! visible;
+    } completion:nil];
 }
 
 #pragma mark SRGContinuousPlaybackViewControllerDelegate protocol

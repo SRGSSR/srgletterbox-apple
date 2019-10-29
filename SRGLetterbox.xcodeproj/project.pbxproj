@@ -32,7 +32,7 @@
 		08A05B2420585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2220585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m */; };
 		08A05B2520585DDF00E80BD6 /* SRGLetterboxTimeSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */; };
 		08A05B2820585DF000E80BD6 /* SRGLiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */; };
-		08A05B2920585DF000E80BD6 /* SRGLiveLabel~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2720585DF000E80BD6 /* SRGLiveLabel~ios.m */; };
+		08A05B2920585DF000E80BD6 /* SRGLiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */; };
 		08C618752225AEAE00F54DA2 /* SourceUidTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C618742225AEAE00F54DA2 /* SourceUidTestCase.m */; };
 		08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController.m */; };
 		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
@@ -268,7 +268,7 @@
 		08A05B2220585DDF00E80BD6 /* SRGLetterboxTimeSlider~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxTimeSlider~ios.m"; sourceTree = "<group>"; };
 		08A05B2320585DDF00E80BD6 /* SRGLetterboxTimeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxTimeSlider.h; sourceTree = "<group>"; };
 		08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLiveLabel.h; sourceTree = "<group>"; };
-		08A05B2720585DF000E80BD6 /* SRGLiveLabel~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLiveLabel~ios.m"; sourceTree = "<group>"; };
+		08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLiveLabel.m; sourceTree = "<group>"; };
 		08C618742225AEAE00F54DA2 /* SourceUidTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SourceUidTestCase.m; sourceTree = "<group>"; };
 		08D97F031E2D09F100521A6B /* SRGLetterboxView~ios.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SRGLetterboxView~ios.xib"; sourceTree = "<group>"; };
 		08E03CC81F47283C008AD461 /* MediaListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaListViewController.h; sourceTree = "<group>"; };
@@ -692,7 +692,7 @@
 				6F50592720581CAF00823003 /* SRGLetterboxTimelineView~ios.m */,
 				6F50593220581CAF00823003 /* SRGLetterboxTimelineView~ios.xib */,
 				08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */,
-				08A05B2720585DF000E80BD6 /* SRGLiveLabel~ios.m */,
+				08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */,
 				6F50592520581CAF00823003 /* SRGNotificationView.h */,
 				6F50593520581CAF00823003 /* SRGNotificationView~ios.m */,
 				6F50593620581CAF00823003 /* SRGNotificationView~ios.xib */,
@@ -1433,7 +1433,7 @@
 				6FB83A8F205AAFE90013928B /* SRGControlsBackgroundView~ios.m in Sources */,
 				6F50596720581CAF00823003 /* SRGErrorView.m in Sources */,
 				6FAB3B051E28F7FE00CC2197 /* SRGLetterbox.m in Sources */,
-				08A05B2920585DF000E80BD6 /* SRGLiveLabel~ios.m in Sources */,
+				08A05B2920585DF000E80BD6 /* SRGLiveLabel.m in Sources */,
 				6FF0D89B1F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m in Sources */,
 				6F50595420581CAF00823003 /* SRGAvailabilityView.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
