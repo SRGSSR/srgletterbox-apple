@@ -84,7 +84,7 @@ static void commonInit(SRGImageButton *self);
 - (void)updateAppearancePressed:(BOOL)pressed
 {
     if (pressed) {
-        self.transform = CGAffineTransformMakeScale(0.8f, 0.8f);
+        self.transform = CGAffineTransformMakeScale(0.9f, 0.9f);
     }
     else {
         self.transform = CGAffineTransformIdentity;
