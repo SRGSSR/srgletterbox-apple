@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Live label for the control stack view.
  */
-@interface SRGLiveLabel : UILabel
+@interface SRGLiveLabel : UIView
 
 @end
 

@@ -180,6 +180,11 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         [contentOverlayView addSubview:liveLabel];
         self.liveLabel = liveLabel;
         
+        liveLabel.layer.shadowColor = UIColor.blackColor.CGColor;
+        liveLabel.layer.shadowRadius = 5.f;
+        liveLabel.layer.shadowOpacity = 0.5f;
+        liveLabel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+        
         liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [NSLayoutConstraint activateConstraints:@[ [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
                                                    [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
