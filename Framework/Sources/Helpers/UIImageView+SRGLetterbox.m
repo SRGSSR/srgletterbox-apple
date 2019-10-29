@@ -59,10 +59,11 @@
 - (void)srg_requestImageForObject:(id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
+                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale);
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(placeholder) withSize:size];
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
@@ -98,12 +99,20 @@
     }
 }
 
-- (void)srg_requestImageForObject:(id<SRGImage>)object withScale:(SRGImageScale)scale type:(SRGImageType)type
+- (void)srg_requestImageForObject:(id<SRGImage>)object
+                        withScale:(SRGImageScale)scale
+                             type:(SRGImageType)type
+                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
 {
-    [self srg_requestImageForObject:object withScale:scale type:type unavailabilityHandler:nil];
+    [self srg_requestImageForObject:object withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil];
 }
 
-- (void)srg_requestImageForController:(SRGLetterboxController *)controller withScale:(SRGImageScale)scale type:(SRGImageType)type unavailabilityHandler:(void (^)(void))unavailabilityHandler atDate:(NSDate *)date
+- (void)srg_requestImageForController:(SRGLetterboxController *)controller
+                            withScale:(SRGImageScale)scale
+                                 type:(SRGImageType)type
+                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                unavailabilityHandler:(void (^)(void))unavailabilityHandler
+                               atDate:(NSDate *)date
 {
     // For livestreams, rely on channel information when available
     SRGMedia *media = controller.subdivisionMedia ?: controller.media;
@@ -112,23 +121,27 @@
         
         // Display program artwork (if any) when the provided date falls within the current program, otherwise channel artwork.
         if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type unavailabilityHandler:^{
-                [self srg_requestImageForObject:channel withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type placeholder:placeholder unavailabilityHandler:^{
+                [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
             }];
         }
         else {
-            [self srg_requestImageForObject:channel withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
         }
     }
     else {
-        [self srg_requestImageForObject:media withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
+        [self srg_requestImageForObject:media withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
     }
 
 }
 
-- (void)srg_requestImageForController:(SRGLetterboxController *)controller withScale:(SRGImageScale)scale type:(SRGImageType)type atDate:(NSDate *)date
+- (void)srg_requestImageForController:(SRGLetterboxController *)controller
+                            withScale:(SRGImageScale)scale
+                                 type:(SRGImageType)type
+                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                               atDate:(NSDate *)date
 {
-    [self srg_requestImageForController:controller withScale:scale type:type unavailabilityHandler:nil atDate:date];
+    [self srg_requestImageForController:controller withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil atDate:date];
 }
 
 - (void)srg_resetImage

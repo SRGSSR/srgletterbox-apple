@@ -34,19 +34,33 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
         && ! [URL.absoluteString containsString:@".html"];
 }
 
-NSString *SRGLetterboxMediaPlaceholderFilePath(void)
+NSString *SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholder imagePlaceholder)
 {
+    switch (imagePlaceholder) {
+        case SRGLetterboxImagePlaceholderMedia: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
+            break;
+        }
+            
+        case SRGLetterboxImagePlaceholderArtwork: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-square" ofType:@"pdf"];
+            break;
+        }
+            
 #if TARGET_OS_TV
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media~tvos" ofType:@"pdf"];
-#else
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media~ios" ofType:@"pdf"];
+        case SRGLetterboxImagePlaceholderBackground: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_background~tvos" ofType:@"pdf"];
+            break;
+        }
 #endif
+            
+        default: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
+            break;
+        }
+    }
 }
 
-NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
-{
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-square" ofType:@"pdf"];
-}
 
 NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
 {

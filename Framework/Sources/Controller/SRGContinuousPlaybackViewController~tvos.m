@@ -83,7 +83,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     [super viewDidLoad];
     
-    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:self.backgroundImageView.frame.size];
+    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholderBackground) withSize:self.backgroundImageView.frame.size];
     
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
@@ -130,12 +130,12 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     self.titleLabel.text = self.media.title;
     self.subtitleLabel.text = [self subtitleForMedia:self.media];
-    [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
     self.upcomingSubtitleLabel.text = [self subtitleForMedia:self.upcomingMedia];
     self.upcomingSummaryLabel.text = self.upcomingMedia.summary;
-    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
