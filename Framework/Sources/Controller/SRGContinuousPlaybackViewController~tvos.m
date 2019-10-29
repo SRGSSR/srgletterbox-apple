@@ -145,7 +145,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     });
     
     NSTimeInterval remainingTimeInterval = floor([self.endDate timeIntervalSinceDate:NSDate.date]);
-    if (remainingTimeInterval != 0.) {
+    if (remainingTimeInterval > 0.) {
         NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:self.endDate];
         self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
     }
