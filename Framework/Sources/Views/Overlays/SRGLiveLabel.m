@@ -64,17 +64,16 @@ static void commonInit(SRGLiveLabel *self);
 
 static void commonInit(SRGLiveLabel *self)
 {
-    self.layer.masksToBounds = YES;
     self.backgroundColor = UIColor.srg_liveRedColor;
     self.textColor = UIColor.whiteColor;
     self.text = SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString;
 #if TARGET_OS_TV
     self.font = [UIFont srg_boldFontWithSize:26.f];
-    self.layer.cornerRadius = 2.f;
 #else
     self.font = [UIFont srg_boldFontWithSize:14.f];
-    self.layer.cornerRadius = 1.f;
 #endif
     self.textAlignment = NSTextAlignmentCenter;
     self.numberOfLines = 1;
+    self.layer.masksToBounds = YES;
+    self.layer.cornerRadius = 3.f;
 }
