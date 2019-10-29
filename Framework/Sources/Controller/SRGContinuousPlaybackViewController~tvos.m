@@ -92,7 +92,8 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     self.upcomingSubtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.upcomingSummaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     
-    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    // TODO: Maybe define a new text style. To be discussed later
+    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithSize:38.f];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancel:)];
     tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
