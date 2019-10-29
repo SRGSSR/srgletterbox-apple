@@ -25,45 +25,51 @@
                             <stackView opaque="NO" alpha="0.59999999999999998" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="jpA-G4-ggq">
                                 <rect key="frame" x="45" y="45" width="480" height="990"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wnt-9h-LTZ" customClass="SRGFocusableButton">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qFS-Sn-soc" customClass="SRGImageButton">
                                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="wnt-9h-LTZ" secondAttribute="height" multiplier="16:9" id="aaF-5s-WlV"/>
+                                            <constraint firstAttribute="width" secondItem="qFS-Sn-soc" secondAttribute="height" multiplier="16:9" id="XyR-rE-skY"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <connections>
-                                            <action selector="restart:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="Mry-CR-yj4"/>
+                                            <action selector="restart:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="Gcy-cR-7d3"/>
                                         </connections>
-                                    </button>
+                                    </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;title&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AbB-JM-as5">
                                         <rect key="frame" x="0.0" y="290" width="111" height="46"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;subtitle&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wcj-O2-oOy" userLabel="Subtitle Label">
+                                        <rect key="frame" x="0.0" y="356" width="133" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ncu-9G-fmL" userLabel="Spacer View">
-                                        <rect key="frame" x="0.0" y="356" width="240" height="634"/>
+                                        <rect key="frame" x="0.0" y="411" width="240" height="579"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="wnt-9h-LTZ" firstAttribute="width" secondItem="jpA-G4-ggq" secondAttribute="width" id="0Q6-Pa-GHU"/>
                                     <constraint firstAttribute="width" constant="480" id="GLC-CV-sBq"/>
+                                    <constraint firstItem="qFS-Sn-soc" firstAttribute="width" secondItem="jpA-G4-ggq" secondAttribute="width" id="iL5-XN-w4c"/>
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="DvL-Eq-ksO">
                                 <rect key="frame" x="995" y="45" width="880" height="990"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-jF-e54" customClass="SRGFocusableButton">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ga6-h3-tbF" customClass="SRGImageButton">
                                         <rect key="frame" x="0.0" y="0.0" width="880" height="495"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="uRP-jF-e54" secondAttribute="height" multiplier="16:9" id="hZa-M0-Mjd"/>
+                                            <constraint firstAttribute="width" secondItem="Ga6-h3-tbF" secondAttribute="height" multiplier="16:9" id="HXx-a3-bLu"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <connections>
-                                            <action selector="engage:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="7Xb-bD-en8"/>
+                                            <action selector="engage:" destination="jiF-Qr-yCb" eventType="primaryActionTriggered" id="c0K-Gp-yXu"/>
                                         </connections>
-                                    </button>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mnc-93-dgN" userLabel="Spacer View">
                                         <rect key="frame" x="0.0" y="515" width="240" height="10"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -77,33 +83,39 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;subtitle&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3Q-Ww-W7m" userLabel="Upcoming Subtitle Label">
+                                        <rect key="frame" x="0.0" y="611" width="133" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;summary&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gAc-Bf-xd3">
-                                        <rect key="frame" x="0.0" y="611" width="156" height="35"/>
+                                        <rect key="frame" x="0.0" y="666" width="156" height="35"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pYT-Bd-jUs" userLabel="Spacer View">
-                                        <rect key="frame" x="0.0" y="666" width="240" height="20"/>
+                                        <rect key="frame" x="0.0" y="721" width="240" height="20"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="AHy-dY-QzX"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;remaining time&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kPV-wa-POg" userLabel="Remaining Time Label">
-                                        <rect key="frame" x="0.0" y="706" width="226" height="35"/>
+                                        <rect key="frame" x="0.0" y="761" width="226" height="35"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rRA-jA-4sV" userLabel="Spacer View">
-                                        <rect key="frame" x="0.0" y="761" width="240" height="229"/>
+                                        <rect key="frame" x="0.0" y="816" width="240" height="174"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="uRP-jF-e54" firstAttribute="width" secondItem="DvL-Eq-ksO" secondAttribute="width" id="DOT-l2-5Mt"/>
                                     <constraint firstAttribute="width" constant="880" id="NK0-nu-69A"/>
+                                    <constraint firstItem="Ga6-h3-tbF" firstAttribute="width" secondItem="DvL-Eq-ksO" secondAttribute="width" id="gK3-Ia-Fls"/>
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jw6-uy-rKh" userLabel="Dimming View">
@@ -132,10 +144,12 @@
                     <connections>
                         <outlet property="backgroundImageView" destination="uMI-43-fAx" id="q68-wv-c2C"/>
                         <outlet property="remainingTimeLabel" destination="kPV-wa-POg" id="Bna-KM-BjR"/>
-                        <outlet property="thumbnailButton" destination="wnt-9h-LTZ" id="cAQ-EK-PH0"/>
+                        <outlet property="subtitleLabel" destination="Wcj-O2-oOy" id="nT8-6z-ntU"/>
+                        <outlet property="thumbnailButton" destination="qFS-Sn-soc" id="bOX-Aq-iVu"/>
                         <outlet property="titleLabel" destination="AbB-JM-as5" id="7EK-Yv-sQP"/>
+                        <outlet property="upcomingSubtitleLabel" destination="v3Q-Ww-W7m" id="acK-XR-2Z6"/>
                         <outlet property="upcomingSummaryLabel" destination="gAc-Bf-xd3" id="tGK-D1-Az3"/>
-                        <outlet property="upcomingThumbnailButton" destination="uRP-jF-e54" id="5ft-tr-ODF"/>
+                        <outlet property="upcomingThumbnailButton" destination="Ga6-h3-tbF" id="pEv-XU-AFY"/>
                         <outlet property="upcomingTitleLabel" destination="5Mb-Mu-JRU" id="ko6-fr-xbF"/>
                     </connections>
                 </viewController>

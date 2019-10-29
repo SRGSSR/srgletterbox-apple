@@ -8,11 +8,18 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
+#import "SRGImageButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
 #import <YYWebImage/YYWebImage.h>
+
+static NSString *SRGLocalizedUppercaseString(NSString *string)
+{
+    NSString *firstUppercaseCharacter = [string substringToIndex:1].localizedUppercaseString;
+    return [firstUppercaseCharacter stringByAppendingString:[string substringFromIndex:1]];
+}
 
 @interface SRGContinuousPlaybackViewController ()
 
@@ -22,11 +29,13 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *backgroundImageView;
 
-@property (nonatomic, weak) IBOutlet UIButton *thumbnailButton;
+@property (nonatomic, weak) IBOutlet SRGImageButton *thumbnailButton;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 
-@property (nonatomic, weak) IBOutlet UIButton *upcomingThumbnailButton;
+@property (nonatomic, weak) IBOutlet SRGImageButton *upcomingThumbnailButton;
 @property (nonatomic, weak) IBOutlet UILabel *upcomingTitleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *upcomingSubtitleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *upcomingSummaryLabel;
 
 @property (nonatomic, weak) IBOutlet UILabel *remainingTimeLabel;
@@ -77,8 +86,10 @@
     self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:self.backgroundImageView.frame.size];
     
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     
     self.upcomingTitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    self.upcomingSubtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
     self.upcomingSummaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
     
     self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
@@ -116,14 +127,14 @@
 
 - (void)reloadData
 {
-    NSURL *URL = [NSURL URLWithString:@"https://www.rts.ch/2019/10/27/16/28/10813484.image/16x9/scale/width/688"];
-    
     self.titleLabel.text = self.media.title;
-    [self.thumbnailButton yy_setImageWithURL:URL forState:UIControlStateNormal options:0];
+    self.subtitleLabel.text = [self subtitleForMedia:self.media];
+    [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
+    self.upcomingSubtitleLabel.text = [self subtitleForMedia:self.upcomingMedia];
     self.upcomingSummaryLabel.text = self.upcomingMedia.summary;
-    [self.upcomingThumbnailButton yy_setImageWithURL:URL forState:UIControlStateNormal options:0];
+    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -142,6 +153,33 @@
         self.remainingTimeLabel.text = NSLocalizedString(@"Starting...", nil);
     }
 }
+
+- (NSString *)subtitleForMedia:(SRGMedia *)media
+{
+    static NSDateFormatter *s_relativeDateFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_relativeDateFormatter = [[NSDateFormatter alloc] init];
+        s_relativeDateFormatter.dateStyle = NSDateFormatterShortStyle;
+        s_relativeDateFormatter.timeStyle = NSDateFormatterShortStyle;
+        s_relativeDateFormatter.doesRelativeDateFormatting = YES;
+    });
+    
+    if (media.contentType != SRGContentTypeLivestream) {
+        NSString *showTitle = media.show.title;
+        if (showTitle && ! [media.title containsString:showTitle]) {
+            return [NSString stringWithFormat:@"%@ - %@", showTitle, SRGLocalizedUppercaseString([s_relativeDateFormatter stringFromDate:media.date])];
+        }
+        else {
+            return SRGLocalizedUppercaseString([s_relativeDateFormatter stringFromDate:media.date]);
+        }
+    }
+    else {
+        return nil;
+    }
+}
+
+#pragma mark Focus management
 
 - (void)setupFocusGuides
 {
