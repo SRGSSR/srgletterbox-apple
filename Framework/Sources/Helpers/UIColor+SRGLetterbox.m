@@ -15,4 +15,9 @@
     return [UIColor srg_colorFromHexadecimalString:@"#d50000"];
 }
 
++ (UIColor *)srg_progressRedColor
+{
+    return [UIColor srg_colorFromHexadecimalString:@"#d50000"];
+}
+
 @end

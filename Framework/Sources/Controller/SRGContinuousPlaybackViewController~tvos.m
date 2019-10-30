@@ -10,6 +10,7 @@
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGImageButton.h"
 #import "SRGLetterboxController+Private.h"
+#import "UIColor+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -94,6 +95,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     
     // TODO: Maybe define a new text style. To be discussed later
     self.remainingTimeLabel.font = [UIFont srg_mediumFontWithSize:38.f];
+    self.remainingTimeLabel.textColor = UIColor.srg_progressRedColor;
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancel:)];
     tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
