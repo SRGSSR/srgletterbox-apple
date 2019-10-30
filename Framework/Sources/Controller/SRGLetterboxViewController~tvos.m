@@ -302,7 +302,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 - (void)playerViewController:(AVPlayerViewController *)playerViewController willTransitionToVisibilityOfTransportBar:(BOOL)visible withAnimationCoordinator:(id<AVPlayerViewControllerAnimationCoordinator>)coordinator API_AVAILABLE(tvos(11.0))
 {
     [coordinator addCoordinatedAnimations:^{
-        self.liveLabel.hidden = ! visible;
+        [self updateMainLayout];
     } completion:nil];
 }
 
