@@ -54,6 +54,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 @property (nonatomic, weak) id periodicTimeObserver;
 
+@property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
+
 @end
 
 @implementation SRGLetterboxViewController
@@ -70,6 +72,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.controller = controller;
         self.playerViewController = [[SRGMediaPlayerViewController alloc] initWithController:controller.mediaPlayerController];
         self.playerViewController.delegate = self;
+        self.userInterfaceHidden = YES;
         
         self.imageOperations = [NSMutableDictionary dictionary];
         
@@ -258,6 +261,11 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)updateMainLayout
 {
+    [self updateMainLayoutWithUserInterfaceHidden:self.userInterfaceHidden];
+}
+
+- (void)updateMainLayoutWithUserInterfaceHidden:(BOOL)userInterfaceHidden
+{
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     
     BOOL thumbnailHidden = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
@@ -294,7 +302,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         [self.loadingImageView stopAnimating];
     }
     
-    self.liveLabel.alpha = self.controller.live ? 1.f : 0.f;
+    self.liveLabel.alpha = (! userInterfaceHidden && self.controller.live) ? 1.f : 0.f;
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol
@@ -302,8 +310,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 - (void)playerViewController:(AVPlayerViewController *)playerViewController willTransitionToVisibilityOfTransportBar:(BOOL)visible withAnimationCoordinator:(id<AVPlayerViewControllerAnimationCoordinator>)coordinator API_AVAILABLE(tvos(11.0))
 {
     [coordinator addCoordinatedAnimations:^{
-        [self updateMainLayout];
-    } completion:nil];
+        [self updateMainLayoutWithUserInterfaceHidden:! visible];
+    } completion:^(BOOL finished) {
+        self.userInterfaceHidden = ! visible;
+    }];
 }
 
 #pragma mark SRGContinuousPlaybackViewControllerDelegate protocol
