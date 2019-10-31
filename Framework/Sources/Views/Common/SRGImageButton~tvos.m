@@ -91,6 +91,13 @@ static void commonInit(SRGImageButton *self);
     }
 }
 
+#pragma mark Accessibility
+
+- (UIAccessibilityTraits)accessibilityTraits
+{
+    return UIAccessibilityTraitButton;
+}
+
 @end
 
 static void commonInit(SRGImageButton *self)

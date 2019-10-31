@@ -131,13 +131,23 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 - (void)reloadData
 {
     self.titleLabel.text = self.media.title;
+    self.titleLabel.isAccessibilityElement = NO;
+    
     self.subtitleLabel.text = [self subtitleForMedia:self.media];
+    self.subtitleLabel.isAccessibilityElement = NO;
+    
+    self.thumbnailButton.accessibilityLabel = self.media.title;
+    self.thumbnailButton.accessibilityHint = SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
     [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
+    self.upcomingTitleLabel.isAccessibilityElement = NO;
+    
     self.upcomingSubtitleLabel.text = [self subtitleForMedia:self.upcomingMedia];
+    self.upcomingSubtitleLabel.isAccessibilityElement = NO;
+    
     self.upcomingSummaryLabel.text = self.upcomingMedia.summary;
-    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
+    self.upcomingSummaryLabel.isAccessibilityElement = NO;
     
     static NSDateComponentsFormatter *s_dateComponentsFormatter;
     static dispatch_once_t s_onceToken;
@@ -148,13 +158,20 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     });
     
     NSTimeInterval remainingTimeInterval = floor([self.endDate timeIntervalSinceDate:NSDate.date]);
+    NSString *remainingTimeDescription = nil;
     if (remainingTimeInterval > 0.) {
         NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:self.endDate];
-        self.remainingTimeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
+        remainingTimeDescription = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
     }
     else {
-        self.remainingTimeLabel.text = NSLocalizedString(@"Starting...", nil);
+        remainingTimeDescription = NSLocalizedString(@"Starting...", nil);
     }
+    
+    self.upcomingThumbnailButton.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", self.upcomingMedia.title, remainingTimeDescription];
+    self.upcomingThumbnailButton.accessibilityHint = SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
+    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
+    
+    self.remainingTimeLabel.text = remainingTimeDescription;
 }
 
 - (NSString *)subtitleForMedia:(SRGMedia *)media

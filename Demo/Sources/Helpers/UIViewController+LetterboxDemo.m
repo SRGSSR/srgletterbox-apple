@@ -94,7 +94,7 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
         self.continuePlaybackDataProvider = [[SRGDataProvider alloc] initWithServiceURL:letterboxViewController.controller.serviceURL];
         [[self.continuePlaybackDataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
             self.continuePlaybackPlaylist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-            self.continuePlaybackPlaylist.continuousPlaybackTransitionDuration = 15.;
+            self.continuePlaybackPlaylist.continuousPlaybackTransitionDuration = 1500.;
             letterboxViewController.controller.playlistDataSource = self.continuePlaybackPlaylist;
         }] resume];
     }
