@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWitTopic:(SRGTopic *)topic indentationLevel:(NSInteger)indentationLevel;
 
 @property (nonatomic, readonly) SRGTopic *topic;
-
 @property (nonatomic, readonly) NSInteger indentationLevel;
 
 @end

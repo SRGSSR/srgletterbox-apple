@@ -2,159 +2,288 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>medias</key>
+	<key>sections</key>
 	<array>
 		<dict>
 			<key>name</key>
-			<string>SWI VOD</string>
-			<key>urn</key>
-			<string>urn:swi:video:41981254</string>
-			<key>basic</key>
-			<true/>
-			<key>pageNagivation</key>
-			<true/>
+			<string>Common medias</string>
+			<key>summary</key>
+			<string>Examples for common tyoes of medias supplied by the SRG SSR.</string>
+			<key>medias</key>
+			<array>
+				<dict>
+					<key>name</key>
+					<string>SWI VOD</string>
+					<key>urn</key>
+					<string>urn:swi:video:41981254</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS VOD (short clip)</string>
+					<key>urn</key>
+					<string>urn:rts:video:8591082</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS VOD (segments)</string>
+					<key>urn</key>
+					<string>urn:rts:video:10623665</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS VOD (start on segment)</string>
+					<key>urn</key>
+					<string>urn:rts:video:10623653</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS VODs with no full-length</string>
+					<key>urn</key>
+					<string>urn:rts:video:8686071</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SRF VOD (blocked segment at 29:26)</string>
+					<key>urn</key>
+					<string>urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SRF VOD (blocked overlap at 22:10)</string>
+					<key>urn</key>
+					<string>urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Hybrid VOD (audio / video)</string>
+					<key>urn</key>
+					<string>urn:rts:audio:8581974</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS VOD with multiple audio channels</string>
+					<key>urn</key>
+					<string>urn:rts:video:8806923</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS Le Gotthard 360 VOD</string>
+					<key>urn</key>
+					<string>urn:rts:video:8414077</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS Le Goût du risque 360 VOD</string>
+					<key>urn</key>
+					<string>urn:rts:video:7800215</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SRF VOD (no token protection)</string>
+					<key>urn</key>
+					<string>urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS Info DVR</string>
+					<key>urn</key>
+					<string>urn:rts:video:1967124</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SRF Info LIVE</string>
+					<key>urn</key>
+					<string>urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SRF AOD</string>
+					<key>urn</key>
+					<string>urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS AOD (segments)</string>
+					<key>urn</key>
+					<string>urn:rts:audio:9355007</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS AOD (start on segment)</string>
+					<key>urn</key>
+					<string>urn:rts:audio:9355011</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Couleur 3 DVR</string>
+					<key>urn</key>
+					<string>urn:rts:audio:3262363</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SRF 1 (Region Zurich) DVR</string>
+					<key>urn</key>
+					<string>urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Other media</string>
+					<key>urn</key>
+					<string>OTHER</string>
+				</dict>
+			</array>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>RTS VOD (short clip)</string>
-			<key>urn</key>
-			<string>urn:rts:video:8591082</string>
-			<key>pageNagivation</key>
-			<true/>
+			<string>Scheduled livestreams</string>
+			<key>summary</key>
+			<string>Simulated scheduled livestreams, like those supplied by SwissTXT for sports events.</string>
+			<key>medias</key>
+			<array>
+				<dict>
+					<key>name</key>
+					<string>SwissTXT Full DVR</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_fulldvr</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SwissTXT Limited DVR</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_liveonly_limiteddvr</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SwissTXT Live Only</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_liveonly_delay</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream (100 days transition)</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_delay_100DAYS_</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_delay</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream (1 day transition)</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_delay_1DAY_</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream (1 hour transition)</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_delay_1HOUR_</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream (start)</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_delay_START_</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream with server cache</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_cacheddelay</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Scheduled livestream never playable</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_never</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>SwissTXT Full DVR with start date change</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_fulldvrstartdate</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+			</array>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>RTS VOD (segments)</string>
-			<key>urn</key>
-			<string>urn:rts:video:10623665</string>
-			<key>basic</key>
-			<true/>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS VOD (start on segment)</string>
-			<key>urn</key>
-			<string>urn:rts:video:10623653</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS VODs with no full-length</string>
-			<key>urn</key>
-			<string>urn:rts:video:8686071</string>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>SRF VOD (blocked segment at 29:26)</string>
-			<key>urn</key>
-			<string>urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>SRF VOD (blocked overlap at 22:10)</string>
-			<key>urn</key>
-			<string>urn:srf:video:d57f5c1c-080f-49a2-864e-4a1a83e41ae1</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Hybrid VOD (audio / video)</string>
-			<key>urn</key>
-			<string>urn:rts:audio:8581974</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS VOD with multiple audio channels</string>
-			<key>urn</key>
-			<string>urn:rts:video:8806923</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS Le Gotthard 360 VOD</string>
-			<key>urn</key>
-			<string>urn:rts:video:8414077</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS Le Goût du risque 360 VOD</string>
-			<key>urn</key>
-			<string>urn:rts:video:7800215</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>SRF VOD (no token protection)</string>
-			<key>urn</key>
-			<string>urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25</string>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS Info DVR</string>
-			<key>urn</key>
-			<string>urn:rts:video:1967124</string>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>SRF Info LIVE</string>
-			<key>urn</key>
-			<string>urn:srf:video:c49c1d73-2f70-0001-138a-15e0c4ccd3d0</string>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>SRF AOD</string>
-			<key>urn</key>
-			<string>urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a</string>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS AOD (segments)</string>
-			<key>urn</key>
-			<string>urn:rts:audio:9355007</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>RTS AOD (start on segment)</string>
-			<key>urn</key>
-			<string>urn:rts:audio:9355011</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Couleur 3 DVR</string>
-			<key>urn</key>
-			<string>urn:rts:audio:3262363</string>
-			<key>pageNagivation</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>SRF 1 (Region Zurich) DVR</string>
-			<key>urn</key>
-			<string>urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Square video</string>
-			<key>urn</key>
-			<string>urn:rts:video:10438517</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Invalid media</string>
-			<key>urn</key>
-			<string>urn:swi:video:1234567</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>No media</string>
+			<string>Edge cases</string>
+			<key>summary</key>
+			<string>Uncommon content and edge cases.</string>
+			<key>medias</key>
+			<array>
+				<dict>
+					<key>name</key>
+					<string>URL overriding</string>
+					<key>urn</key>
+					<string>urn:rts:video:8806790</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Temporary geoblocking</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_geoblocked</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Temporary live-only restriction</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_killswitch</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Temporarily not found</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_notfound</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Square video</string>
+					<key>urn</key>
+					<string>urn:rts:video:10438517</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Invalid media</string>
+					<key>urn</key>
+					<string>urn:swi:video:1234567</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>No media</string>
+				</dict>
+			</array>
 		</dict>
 	</array>
 </dict>

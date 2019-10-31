@@ -8,6 +8,7 @@
 
 #import "ModalTransition.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "Playlist.h"
 #import "SettingsViewController.h"
 #import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
@@ -40,13 +41,16 @@
 
 @property (nonatomic) ModalTransition *interactiveTransition;
 
+@property (nonatomic) SRGDataProvider *dataProvider;
+@property (nonatomic) Playlist *playlist;
+
 @end
 
 @implementation ModalPlayerViewController
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL updateInterval:(NSNumber *)updateInterval
+- (instancetype)initWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = SRGLetterboxService.sharedService;
     
@@ -62,7 +66,7 @@
         viewController.URN = URN;
         
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
-        viewController.letterboxController.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
+        viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
         viewController.letterboxController.globalParameters = ApplicationSettingGlobalParameters();
         viewController.letterboxController.backgroundVideoPlaybackEnabled = ApplicationSettingIsBackgroundVideoPlaybackEnabled();
         
@@ -110,7 +114,7 @@
     
     self.URNLabel.copyingEnabled = YES;
     
-    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
+    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", nil);
     
     self.timelineSwitch.enabled = ! self.letterboxView.timelineAlwaysHidden;
     
@@ -132,10 +136,19 @@
     
     if (self.URN) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
-        settings.standalone = ApplicationSettingIsStandalone();
+        settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
         [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
+    }
+    
+    if (ApplicationSettingAutoplayEnabled() && self.URN) {
+        self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.letterboxController.serviceURL];
+        [[self.dataProvider recommendedMediasForURN:self.URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            self.playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
+            self.playlist.continuousPlaybackTransitionDuration = 15.;
+            self.letterboxController.playlistDataSource = self.playlist;
+        }] resume];
     }
     
     // Start with a hidden interface. Performed after a URN has been assigned so that no UI is visible at all
@@ -207,13 +220,13 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.demo_topViewController;
     return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.demo_topViewController;
     [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];

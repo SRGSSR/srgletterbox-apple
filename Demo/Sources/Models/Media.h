@@ -10,13 +10,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Media : NSObject
 
-+ (NSArray<Media *> *)mediasFromFileAtPath:(NSString *)filePath;
+- (nullable instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @property (nonatomic, readonly, copy) NSString *name;
-@property (nonatomic, readonly, copy) NSString *URN;
-@property (nonatomic, readonly, getter=forBasic) BOOL basic;
-@property (nonatomic, readonly, getter=forPageNagivation) BOOL pageNagivation;
-@property (nonatomic, readonly, getter=isOnMMF) BOOL onMMF;
+@property (nonatomic, readonly, copy, nullable) NSString *URN;
+@property (nonatomic, readonly, nullable) NSURL *serviceURL;
 
 @end
 

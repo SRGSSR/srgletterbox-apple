@@ -6,21 +6,18 @@
 
 #import "UIViewController+LetterboxDemo.h"
 
-#import "SettingsViewController.h"
-
-#if TARGET_OS_IOS
 #import "ModalPlayerViewController.h"
-#endif
+#import "SettingsViewController.h"
 
 #import <objc/runtime.h>
 
-static void *s_continuePlaybackDataProviderKey = &s_continuePlaybackDataProviderKey;
-static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
+static void *s_dataProviderKey = &s_dataProviderKey;
+static void *s_playlistKey = &s_playlistKey;
 
 @interface UIViewController (LetterboxDemoPrivate)
 
-@property (nonatomic) SRGDataProvider *continuePlaybackDataProvider;
-@property (nonatomic) Playlist *continuePlaybackPlaylist;
+@property (nonatomic) SRGDataProvider *demo_dataProvider;
+@property (nonatomic) Playlist *demo_playlist;
 
 @end
 
@@ -28,43 +25,71 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
 
 #pragma mark Getters and setters
 
-- (SRGDataProvider *)continuePlaybackDataProvider
+- (SRGDataProvider *)demo_dataProvider
 {
-    return objc_getAssociatedObject(self, s_continuePlaybackDataProviderKey);
+    return objc_getAssociatedObject(self, s_dataProviderKey);
 }
 
-- (void)setContinuePlaybackDataProvider:(SRGDataProvider *)continuePlaybackDataProvider
+- (void)setDemo_dataProvider:(SRGDataProvider *)dataProvider
 {
-    objc_setAssociatedObject(self, s_continuePlaybackDataProviderKey, continuePlaybackDataProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, s_dataProviderKey, dataProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (Playlist *)continuePlaybackPlaylist
+- (Playlist *)demo_playlist
 {
-    return objc_getAssociatedObject(self, s_continuePlaybackPlaylistKey);
+    return objc_getAssociatedObject(self, s_playlistKey);
 }
 
-- (void)setContinuePlaybackPlaylist:(Playlist *)continuePlaybackPlaylist
+- (void)setDemo_playlist:(Playlist *)playlist
 {
-    objc_setAssociatedObject(self, s_continuePlaybackPlaylistKey, continuePlaybackPlaylist, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, s_playlistKey, playlist, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark Player presentation
 
 - (void)openPlayerWithURN:(NSString *)URN
 {
-    [self openPlayerWithURN:URN serviceURL:nil updateInterval:nil];
+    [self openPlayerWithURN:URN serviceURL:nil];
 }
 
-- (void)openPlayerWithURN:(NSString *)URN serviceURL:(nullable NSURL *)serviceURL updateInterval:(nullable NSNumber *)updateInterval
+- (void)openPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL
 {
     if (self.presentedViewController) {
         [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
     }
     
-    UIViewController *viewController = nil;
+    if (! serviceURL) {
+        serviceURL = ApplicationSettingServiceURL();
+    }
     
-#if TARGET_OS_IOS
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL updateInterval:updateInterval];
+#if TARGET_OS_TV
+    SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
+    letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
+        return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
+    };
+    
+    letterboxViewController.controller.serviceURL = serviceURL;
+    letterboxViewController.controller.updateInterval = ApplicationSettingUpdateInterval();
+    letterboxViewController.controller.globalParameters = ApplicationSettingGlobalParameters();
+    
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = ApplicationSettingStandalone();
+    settings.quality = ApplicationSettingPreferredQuality();
+    
+    if (ApplicationSettingAutoplayEnabled() && URN) {
+        self.demo_dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
+        [[self.demo_dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            self.demo_playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
+            self.demo_playlist.continuousPlaybackTransitionDuration = 15.;
+            letterboxViewController.controller.playlistDataSource = self.demo_playlist;
+        }] resume];
+    }
+    
+    [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
+    
+    [self presentViewController:letterboxViewController animated:YES completion:nil];
+#else
+    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
     playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
@@ -73,36 +98,8 @@ static void *s_continuePlaybackPlaylistKey = &s_continuePlaybackPlaylistKey;
         return;
     }
     
-    viewController = playerViewController;
-#else
-    SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
-    letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
-        return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
-    };
-    
-    letterboxViewController.controller.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
-    letterboxViewController.controller.updateInterval = updateInterval ? updateInterval.doubleValue : ApplicationSettingUpdateInterval();
-    letterboxViewController.controller.globalParameters = ApplicationSettingGlobalParameters();
-    
-    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
-    settings.standalone = ApplicationSettingIsStandalone();
-    settings.quality = ApplicationSettingPreferredQuality();
-    
-    [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
-    
-    if (URN) {
-        self.continuePlaybackDataProvider = [[SRGDataProvider alloc] initWithServiceURL:letterboxViewController.controller.serviceURL];
-        [[self.continuePlaybackDataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-            self.continuePlaybackPlaylist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-            self.continuePlaybackPlaylist.continuousPlaybackTransitionDuration = 1500.;
-            letterboxViewController.controller.playlistDataSource = self.continuePlaybackPlaylist;
-        }] resume];
-    }
-    
-    viewController = letterboxViewController;
+    [self presentViewController:playerViewController animated:YES completion:nil];
 #endif
-    
-    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 @end

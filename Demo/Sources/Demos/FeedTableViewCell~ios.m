@@ -4,14 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "AutoplayTableViewCell.h"
+#import "FeedTableViewCell.h"
 
 #import "SettingsViewController.h"
 
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-@interface AutoplayTableViewCell ()
+@interface FeedTableViewCell ()
 
 @property (nonatomic) SRGLetterboxController *letterboxController;
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation AutoplayTableViewCell
+@implementation FeedTableViewCell
 
 #pragma mark Getters and setters
 
@@ -30,7 +30,7 @@
 {
     if (media) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
-        settings.standalone = ApplicationSettingIsStandalone();
+        settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
         self.letterboxController.mediaConfigurationBlock = ^(AVPlayerItem * _Nonnull playerItem, AVAsset * _Nonnull asset) {

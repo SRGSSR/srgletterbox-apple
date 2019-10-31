@@ -72,7 +72,7 @@
 {
     [super viewDidLoad];
     
-    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", @"Close button label");
+    self.closeButton.accessibilityLabel = NSLocalizedString(@"Close", nil);
     
     self.serviceEnabled.on = [SRGLetterboxService.sharedService.controller isEqual:self.letterboxController];
     self.nowPlayingInfoAndCommandsEnabled.on = SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled;
@@ -80,7 +80,7 @@
     
     if (self.URN) {
         SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
-        settings.standalone = ApplicationSettingIsStandalone();
+        settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
         [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
@@ -115,13 +115,13 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.demo_topViewController;
     return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.topViewController;
+    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.demo_topViewController;
     [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];

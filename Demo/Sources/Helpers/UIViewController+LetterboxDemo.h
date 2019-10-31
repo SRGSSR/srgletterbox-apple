@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIViewController (LetterboxDemo)
 
 - (void)openPlayerWithURN:(NSString *)URN;
-- (void)openPlayerWithURN:(NSString *)URN serviceURL:(nullable NSURL *)serviceURL updateInterval:(nullable NSNumber *)updateInterval;
+- (void)openPlayerWithURN:(NSString *)URN serviceURL:(nullable NSURL *)serviceURL;
 
 @end
 

@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "iphone",
-      "filename" : "SoundOffIndicator.pdf"
+      "filename" : "misc-1.pdf"
     },
     {
       "idiom" : "ipad",
-      "filename" : "SoundOffIndicator-1.pdf"
+      "filename" : "misc-2.pdf"
     }
   ],
   "info" : {
@@ -14,6 +14,6 @@
     "author" : "xcode"
   },
   "properties" : {
-    "template-rendering-intent" : "original"
+    "template-rendering-intent" : "template"
   }
 }

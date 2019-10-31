@@ -6,11 +6,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "UIViewController+LetterboxDemo.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DemosViewController : UITableViewController
+@interface MediaListsViewController : UITableViewController
 
 @end
 

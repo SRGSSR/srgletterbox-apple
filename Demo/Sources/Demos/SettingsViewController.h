@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 OBJC_EXPORT NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void);
 
-OBJC_EXPORT BOOL ApplicationSettingIsStandalone(void);
+OBJC_EXPORT BOOL ApplicationSettingStandalone(void);
+OBJC_EXPORT BOOL ApplicationSettingAutoplayEnabled(void);
 
 OBJC_EXPORT SRGQuality ApplicationSettingPreferredQuality(void);
 

@@ -1,8 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "filename" : "SoundOnIndicator.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "SoundOnIndicator-1.pdf"
     }
   ],
   "info" : {

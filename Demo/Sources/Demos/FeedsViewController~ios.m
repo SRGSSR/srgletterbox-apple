@@ -4,16 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "AutoplayViewController.h"
+#import "FeedsViewController.h"
 
-#import "AutoplayTableViewCell.h"
+#import "FeedTableViewCell.h"
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <SRGLetterbox/SRGLetterbox.h>
 
-@interface AutoplayViewController ()
+@interface FeedsViewController ()
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation AutoplayViewController
+@implementation FeedsViewController
 
 #pragma mark Object lifecycle
 
@@ -64,23 +64,23 @@
 
 #pragma mark Setters
 
-- (void)setAutoplayList:(AutoplayList)autoplayList
+- (void)setFeed:(Feed)feed
 {
-    _autoplayList = autoplayList;
+    _feed = feed;
     
-    switch (autoplayList) {
-        case AutoplayListSRFTrendingMedias: {
-            self.title = LetterboxDemoNonLocalizedString(@"SRF trending videos");
+    switch (feed) {
+        case FeedSRFTrendingMedias: {
+            self.title = NSLocalizedString(@"SRF trending videos", nil);
             break;
         }
             
-        case AutoplayListRTSTrendingMedias: {
-            self.title = LetterboxDemoNonLocalizedString(@"RTS trending videos");
+        case FeedRTSTrendingMedias: {
+            self.title = NSLocalizedString(@"RTS trending videos", nil);
             break;
         }
             
-        case AutoplayListRSITrendingMedias: {
-            self.title = LetterboxDemoNonLocalizedString(@"RSI trending videos");
+        case FeedRSITrendingMedias: {
+            self.title = NSLocalizedString(@"RSI trending videos", nil);
             break;
         }
             
@@ -116,12 +116,12 @@
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
     dispatch_once(&s_onceToken, ^{
-        s_vendors = @{ @(AutoplayListRSITrendingMedias) : @(SRGVendorRSI),
-                       @(AutoplayListRTSTrendingMedias) : @(SRGVendorRTS),
-                       @(AutoplayListSRFTrendingMedias) : @(SRGVendorSRF) };
+        s_vendors = @{ @(FeedRSITrendingMedias) : @(SRGVendorRSI),
+                       @(FeedRTSTrendingMedias) : @(SRGVendorRTS),
+                       @(FeedSRFTrendingMedias) : @(SRGVendorSRF) };
     });
     
-    SRGVendor vendor = [s_vendors[@(self.autoplayList)] integerValue];
+    SRGVendor vendor = [s_vendors[@(self.feed)] integerValue];
     SRGRequest *request = [self.dataProvider tvTrendingMediasForVendor:vendor withLimit:@50 completionBlock:completionBlock];
     [request resume];
     self.request = request;
@@ -132,7 +132,7 @@
 - (void)updateAudioSession
 {
     __block BOOL silent = YES;
-    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof FeedTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
         if (! cell.muted) {
             silent = NO;
         }
@@ -155,30 +155,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(AutoplayTableViewCell.class)];
+    return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(FeedTableViewCell.class)];
 }
 
 #pragma mark UITableViewDelegate protocol
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView willDisplayCell:(FeedTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSString *> *s_localizations;
     dispatch_once(&s_onceToken, ^{
-        s_localizations = @{ @(AutoplayListRSITrendingMedias) : @"it",
-                             @(AutoplayListRTSTrendingMedias) : @"fr",
-                             @(AutoplayListSRFTrendingMedias) : @"de" };
+        s_localizations = @{ @(FeedRSITrendingMedias) : @"it",
+                             @(FeedRTSTrendingMedias) : @"fr",
+                             @(FeedSRFTrendingMedias) : @"de" };
     });
     
-    [cell setMedia:self.medias[indexPath.row] withPreferredSubtitleLocalization:s_localizations[@(self.autoplayList)]];
+    [cell setMedia:self.medias[indexPath.row] withPreferredSubtitleLocalization:s_localizations[@(self.feed)]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AutoplayTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    FeedTableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
     selectedCell.muted = ! selectedCell.muted;
     
-    [tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof AutoplayTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+    [tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof FeedTableViewCell * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
         if (! [cell isEqual:selectedCell]) {
             cell.muted = YES;
         }
@@ -189,7 +189,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(AutoplayTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(FeedTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [cell setMedia:nil withPreferredSubtitleLocalization:nil];
 }

@@ -9,27 +9,27 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Autoplay lists.
+ *  Demo feeds.
  */
-typedef API_UNAVAILABLE(tvos) NS_ENUM(NSInteger, AutoplayList) {
+typedef API_UNAVAILABLE(tvos) NS_ENUM(NSInteger, Feed) {
     /**
      *  RTS trending videos.
      */
-    AutoplayListRTSTrendingMedias,
+    FeedRTSTrendingMedias,
     /**
      *  RSI trending videos.
      */
-    AutoplayListRSITrendingMedias,
+    FeedRSITrendingMedias,
     /**
      *  SRF trending videos.
      */
-    AutoplayListSRFTrendingMedias
+    FeedSRFTrendingMedias
 };
 
 API_UNAVAILABLE(tvos)
-@interface AutoplayViewController : UITableViewController
+@interface FeedsViewController : UITableViewController
 
-@property (nonatomic) AutoplayList autoplayList;
+@property (nonatomic) Feed feed;
 
 @end
 

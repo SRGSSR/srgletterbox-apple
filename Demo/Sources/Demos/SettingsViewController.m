@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, SettingSection) {
     SettingSectionServer = 0,
     SettingSectionUserLocation,
     SettingSectionPlaybackMode,
+    SettingSectionAutoplay,
     SettingSectionPreferredQuality,
     SettingSectionUpdateInterval,
 #if TARGET_OS_IOS
@@ -30,10 +31,8 @@ typedef NS_ENUM(NSInteger, SettingSection) {
     SettingSectionBackgroundVideoPlayback,
     SettingSectionApplicationVersion,
 #endif
-    SettingSectionMax
+    SettingSectionCount
 };
-
-NSUInteger const SettingSectionCount = SettingSectionMax;
 
 /**
  *  User location options.
@@ -68,6 +67,7 @@ NSValueTransformer *SettingUserLocationTransformer(void)
 
 NSString * const LetterboxDemoSettingServiceURL = @"LetterboxDemoSettingServiceURL";
 NSString * const LetterboxDemoSettingStandalone = @"LetterboxDemoSettingStandalone";
+NSString * const LetterboxDemoSettingAutoplayEnabled = @"LetterboxDemoSettingAutoplayEnabled";
 NSString * const LetterboxDemoSettingQuality = @"LetterboxDemoSettingQuality";
 NSString * const LetterboxDemoSettingUserLocation = @"LetterboxDemoSettingUserLocation";
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
@@ -105,7 +105,7 @@ static void ApplicationSettingSetUserLocation(SettingUserLocation settingUserLoc
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
-BOOL ApplicationSettingIsStandalone(void)
+BOOL ApplicationSettingStandalone(void)
 {
     return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingStandalone];
 }
@@ -113,6 +113,17 @@ BOOL ApplicationSettingIsStandalone(void)
 static void ApplicationSettingSetStandalone(BOOL standalone)
 {
     [NSUserDefaults.standardUserDefaults setBool:standalone forKey:LetterboxDemoSettingStandalone];
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
+
+BOOL ApplicationSettingAutoplayEnabled(void)
+{
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingAutoplayEnabled];
+}
+
+static void ApplicationSettingSetAutoplayEnabled(BOOL enabled)
+{
+    [NSUserDefaults.standardUserDefaults setBool:enabled forKey:LetterboxDemoSettingAutoplayEnabled];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
@@ -219,9 +230,16 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.serverSettings = ServerSettings.serverSettings;
-        self.title = NSLocalizedString(@"Settings", @"Settings view title");
+        self.title = NSLocalizedString(@"Settings", nil);
     }
     return self;
+}
+
+#pragma mark Getters and setters
+
+- (NSString *)title
+{
+    return NSLocalizedString(@"Settings", nil);
 }
 
 #pragma mark View lifecycle
@@ -229,8 +247,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.title = NSLocalizedString(@"Settings", @"Title of the settings view");
     
     [self.tableView reloadData];
 }
@@ -250,49 +266,54 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
     switch (section) {
         case SettingSectionServer: {
-            return NSLocalizedString(@"Server", @"Server header title in settings view");
+            return NSLocalizedString(@"Server", nil);
             break;
         }
             
         case SettingSectionUserLocation: {
-            return NSLocalizedString(@"User location", @"User location header title in settings view");
+            return NSLocalizedString(@"User location", nil);
             break;
         }
             
         case SettingSectionPlaybackMode: {
-            return NSLocalizedString(@"Playback mode", @"Playback mode header title in settings view");
+            return NSLocalizedString(@"Playback mode", nil);
+            break;
+        }
+            
+        case SettingSectionAutoplay: {
+            return NSLocalizedString(@"Autoplay", nil);
             break;
         }
             
         case SettingSectionPreferredQuality: {
-            return NSLocalizedString(@"Preferred quality", @"Preferred quality mode header title in settings view");
+            return NSLocalizedString(@"Preferred quality", nil);
             break;
         }
         
         case SettingSectionUpdateInterval: {
-            return NSLocalizedString(@"Update interval", @"Update interval header title in settings view");
+            return NSLocalizedString(@"Update interval", nil);
             break;
         }
         
 #if TARGET_OS_IOS
         case SettingSectionScreenMirroring: {
-            return NSLocalizedString(@"Screen mirroring", @"Presentation mode header title in settings view");
+            return NSLocalizedString(@"Screen mirroring", nil);
             break;
         }
             
         case SettingSectionControlCenterIntegration: {
-            return NSLocalizedString(@"Control center integration", @"Control center integration title in settings view");
+            return NSLocalizedString(@"Control center integration", nil);
             break;
         }
             
         case SettingSectionBackgroundVideoPlayback: {
-            return NSLocalizedString(@"Background video playback", @"Background video playback header title in settings view");
+            return NSLocalizedString(@"Background video playback", nil);
             break;
         }
             
         case SettingSectionApplicationVersion: {
             NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
-            return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", @"Application header title in settings view"), buildNumberString];
+            return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", nil), buildNumberString];
             break;
         }
 #endif
@@ -307,9 +328,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
-        NSString *versionString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];        
-        return [NSString stringWithFormat:NSLocalizedString(@"This demo application presents SRG Letterbox features (version %@).", @"Information footer in settings view"),
-                versionString];
+        return [NSString stringWithFormat:NSLocalizedString(@"Version %@", nil), [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]];
     }
     else {
         return nil;
@@ -330,6 +349,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case SettingSectionPlaybackMode: {
+            return 2;
+            break;
+        }
+            
+        case SettingSectionAutoplay: {
             return 2;
             break;
         }
@@ -395,19 +419,19 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionUserLocation: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", @"Label for the defaut location setting");
+                    cell.textLabel.text = NSLocalizedString(@"Default (IP-based location)", nil);
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationDefault) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Outside Switzerland", @"Label for the outside Switzerland location setting");
+                    cell.textLabel.text = NSLocalizedString(@"Outside Switzerland", nil);
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationOutsideCH) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 2: {
-                    cell.textLabel.text = NSLocalizedString(@"Ignore location", @"Label for the ignored location setting");
+                    cell.textLabel.text = NSLocalizedString(@"Ignore location", nil);
                     cell.accessoryType = (ApplicationSettingUserLocation() == SettingUserLocationIgnored) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -424,14 +448,37 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionPlaybackMode: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default (full-length)", @"Label for the defaut standalone mode disabled setting");
-                    cell.accessoryType = ! ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.textLabel.text = NSLocalizedString(@"Default (full-length)", nil);
+                    cell.accessoryType = ! ApplicationSettingStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Standalone", @"Label for the standalone mode enabled setting");
-                    cell.accessoryType = ApplicationSettingIsStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.textLabel.text = NSLocalizedString(@"Standalone", nil);
+                    cell.accessoryType = ApplicationSettingStandalone() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case SettingSectionAutoplay: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", nil);
+                    cell.accessoryType = ! ApplicationSettingAutoplayEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", nil);
+                    cell.accessoryType = ApplicationSettingAutoplayEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -447,25 +494,25 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionPreferredQuality: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Default", @"Label for the defaut quality setting");
+                    cell.textLabel.text = NSLocalizedString(@"Default", nil);
                     cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualityNone ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Standard definition (SD)", @"Label for the SD quality setting");
+                    cell.textLabel.text = NSLocalizedString(@"Standard definition (SD)", nil);
                     cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualitySD ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 2: {
-                    cell.textLabel.text = NSLocalizedString(@"High definition (HD)", @"Label for the HD quality setting");
+                    cell.textLabel.text = NSLocalizedString(@"High definition (HD)", nil);
                     cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualityHD ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 3: {
-                    cell.textLabel.text = NSLocalizedString(@"High quality (HQ)", @"Label for the HQ quality setting");
+                    cell.textLabel.text = NSLocalizedString(@"High quality (HQ)", nil);
                     cell.accessoryType = ApplicationSettingPreferredQuality() == SRGQualityHQ ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -492,14 +539,14 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             switch (indexPath.row) {
                 case 0: {
                     NSTimeInterval timeInterval = SRGLetterboxDefaultUpdateInterval;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", @"Default update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Default, every %@", nil), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
                     cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
                     NSTimeInterval timeInterval = LetterboxDemoSettingUpdateIntervalShort;
-                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", @"Short update interval in settings view"), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Short, every %@", nil), [s_dateComponentsFormatter stringFromTimeInterval:timeInterval]];
                     cell.accessoryType = (ApplicationSettingUpdateInterval() == timeInterval) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -517,13 +564,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionScreenMirroring: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", nil);
                     cell.accessoryType = ! ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", nil);
                     cell.accessoryType = ApplicationSettingIsMirroredOnExternalScreen() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -540,13 +587,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionControlCenterIntegration: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", nil);
                     cell.accessoryType = ! SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", nil);
                     cell.accessoryType = SRGLetterboxService.sharedService.nowPlayingInfoAndCommandsEnabled ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -563,13 +610,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionBackgroundVideoPlayback: {
             switch (indexPath.row) {
                 case 0: {
-                    cell.textLabel.text = NSLocalizedString(@"Disabled", @"Label for a disabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Disabled", nil);
                     cell.accessoryType = ! ApplicationSettingIsBackgroundVideoPlaybackEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
-                    cell.textLabel.text = NSLocalizedString(@"Enabled", @"Label for an enabled setting");
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", nil);
                     cell.accessoryType = ApplicationSettingIsBackgroundVideoPlaybackEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
@@ -585,7 +632,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case SettingSectionApplicationVersion: {
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            cell.textLabel.text = NSLocalizedString(@"Versions and release notes", @"Button to access versions and release notes");
+            cell.textLabel.text = NSLocalizedString(@"Versions and release notes", nil);
             cell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
@@ -625,6 +672,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             [SRGLetterboxService.sharedService.controller reset];
             SRGLetterboxService.sharedService.controller.globalParameters = ApplicationSettingGlobalParameters();
 #endif
+            break;
+        }
+            
+        case SettingSectionAutoplay: {
+            ApplicationSettingSetAutoplayEnabled(indexPath.row == 1);
             break;
         }
             

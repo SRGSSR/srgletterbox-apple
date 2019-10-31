@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 API_UNAVAILABLE(tvos)
 @interface ModalPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
 
-- (instancetype)initWithURN:(nullable NSString *)URN serviceURL:(nullable NSURL *)serviceURL updateInterval:(nullable NSNumber *)updateInterval;
+- (instancetype)initWithURN:(nullable NSString *)URN serviceURL:(nullable NSURL *)serviceURL;
 
 @property (nonatomic) NSTimeInterval updateInterval;
 

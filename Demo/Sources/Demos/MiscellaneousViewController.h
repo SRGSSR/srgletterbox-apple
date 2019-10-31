@@ -8,9 +8,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIWindow (LetterboxDemo)
-
-@property (nonatomic, readonly, nullable) UIViewController *demo_topViewController;
+API_UNAVAILABLE(tvos)
+@interface MiscellaneousViewController : UITableViewController
 
 @end
 

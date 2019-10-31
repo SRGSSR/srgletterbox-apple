@@ -16,6 +16,7 @@
 @interface TopicListViewController ()
 
 @property (nonatomic) TopicList topicList;
+@property (nonatomic) NSURL *serviceURL;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
@@ -30,9 +31,10 @@
 
 - (instancetype)initWithTopicList:(TopicList)topicList
 {
-    self = [super initWithStyle:UITableViewStylePlain];
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.topicList = topicList;
+        self.serviceURL = (self.topicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
     }
     return self;
 }
@@ -51,8 +53,7 @@
     
     self.title = [self pageTitle];
     
-    NSURL *serviceURL = (self.topicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalParameters();
     
 #if TARGET_OS_IOS
@@ -81,14 +82,14 @@
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSString *> *s_titles;
     dispatch_once(&s_onceToken, ^{
-        s_titles = @{ @(TopicListSRF) : LetterboxDemoNonLocalizedString(@"SRF Topics"),
-                      @(TopicListRTS) : LetterboxDemoNonLocalizedString(@"RTS Topics"),
-                      @(TopicListRSI) : LetterboxDemoNonLocalizedString(@"RSI Topics"),
-                      @(TopicListRTR) : LetterboxDemoNonLocalizedString(@"RTR Topics"),
-                      @(TopicListSWI) : LetterboxDemoNonLocalizedString(@"SWI Topics"),
-                      @(TopicListMMF) : LetterboxDemoNonLocalizedString(@"MMF Topics") };
+        s_titles = @{ @(TopicListSRF) : NSLocalizedString(@"SRF Topics", nil),
+                      @(TopicListRTS) : NSLocalizedString(@"RTS Topics", nil),
+                      @(TopicListRSI) : NSLocalizedString(@"RSI Topics", nil),
+                      @(TopicListRTR) : NSLocalizedString(@"RTR Topics", nil),
+                      @(TopicListSWI) : NSLocalizedString(@"SWI Topics", nil),
+                      @(TopicListMMF) : NSLocalizedString(@"MMF Topics", nil) };
     });
-    return s_titles[@(self.topicList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
+    return s_titles[@(self.topicList)] ?: NSLocalizedString(@"Unknown", nil);
 }
 
 #pragma mark Data
@@ -170,7 +171,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TopicItem *topicItem = self.topicItems[indexPath.row];
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic MMFOverride:(self.topicList == TopicListMMF)];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic serviceURL:self.serviceURL];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 

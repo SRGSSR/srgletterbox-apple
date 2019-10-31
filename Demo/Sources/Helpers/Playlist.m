@@ -84,7 +84,7 @@
 {
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
 #if TARGET_OS_IOS
-    settings.standalone = ApplicationSettingIsStandalone();
+    settings.standalone = ApplicationSettingStandalone();
     settings.quality = ApplicationSettingPreferredQuality();
 #endif
     settings.sourceUid = self.sourceUid;

@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 API_UNAVAILABLE(tvos)
-@interface AutoplayTableViewCell : UITableViewCell
+@interface FeedTableViewCell : UITableViewCell
 
 - (void)setMedia:(nullable SRGMedia *)media withPreferredSubtitleLocalization:(nullable NSString *)preferredSubtitleLocalization;
 

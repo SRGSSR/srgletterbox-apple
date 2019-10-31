@@ -6,8 +6,11 @@
 
 #import "AppDelegate.h"
 
-#import "DemosViewController.h"
+#import "MediaListsViewController.h"
+#import "MediasViewController.h"
+#import "MiscellaneousViewController.h"
 #import "SettingsViewController.h"
+#import "UIViewController+LetterboxDemo.h"
 
 #import <AppCenter/AppCenter.h>
 #import <AppCenterCrashes/AppCenterCrashes.h>
@@ -25,12 +28,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
     NSBundle *contentProtectionFramework = [NSBundle bundleWithPath:contentProtectionFrameworkPath];
     [contentProtectionFramework loadAndReturnError:NULL];
 }
-
-@interface AppDelegate ()
-
-@property (nonatomic, weak) DemosViewController *demosViewController;
-
-@end
 
 @implementation AppDelegate
 
@@ -63,9 +60,33 @@ static __attribute__((constructor)) void ApplicationInit(void)
     SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
 #endif
     
-    DemosViewController *demosViewController = [[DemosViewController alloc] init];
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
-    self.demosViewController = demosViewController;
+    NSMutableArray<UIViewController *> *viewControllers = [NSMutableArray array];
+    
+    MediasViewController *mediasViewController = [[MediasViewController alloc] init];
+    UINavigationController *mediasNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediasViewController];
+    mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
+    [viewControllers addObject:mediasNavigationViewController];
+    
+    MediaListsViewController *mediaListsViewController = [[MediaListsViewController alloc] init];
+    UINavigationController *mediaListsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediaListsViewController];
+    mediaListsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
+    [viewControllers addObject:mediaListsNavigationViewController];
+    
+#if TARGET_OS_IOS
+    MiscellaneousViewController *miscellaneousViewController = [[MiscellaneousViewController alloc] init];
+    UINavigationController *miscellaneousNavigationViewController = [[UINavigationController alloc] initWithRootViewController:miscellaneousViewController];
+    miscellaneousNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Miscellaneous", nil) image:[UIImage imageNamed:@"miscellaneous"] tag:2];
+    [viewControllers addObject:miscellaneousNavigationViewController];
+#endif
+    
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    UINavigationController *settingsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    settingsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
+    [viewControllers addObject:settingsNavigationViewController];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.viewControllers = viewControllers.copy;
+    self.window.rootViewController = tabBarController;
     
     return YES;
 }
@@ -83,8 +104,8 @@ static __attribute__((constructor)) void ApplicationInit(void)
             if (server) {
                 serviceURL = LetterboxDemoServiceURLForKey(server);
             }
-            
-            [self.demosViewController openPlayerWithURN:mediaURN serviceURL:serviceURL updateInterval:nil];
+      
+            [self.window.rootViewController openPlayerWithURN:mediaURN serviceURL:serviceURL];
             return YES;
         }
         

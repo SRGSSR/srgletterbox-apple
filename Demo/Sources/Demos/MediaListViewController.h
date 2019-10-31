@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "DemosViewController.h"
-
 #import <SRGDataProvider/SRGDataProvider.h>
 #import <UIKit/UIKit.h>
 
@@ -20,17 +18,17 @@ typedef NS_ENUM(NSInteger, MediaList) {
      */
     MediaListUnknown = 0,
     /**
-     *  Livecenter SRF
+     *  Live center SRF
      */
-    MediaListLivecenterSRF,
+    MediaListLiveCenterSRF,
     /**
-     *  Livecenter RTS
+     *  Live center RTS
      */
-    MediaListLivecenterRTS,
+    MediaListLiveCenterRTS,
     /**
-     *  Livecenter RSI
+     *  Live center RSI
      */
-    MediaListLivecenterRSI,
+    MediaListLiveCenterRSI,
     /**
      *  Latest by topic
      */
@@ -39,13 +37,11 @@ typedef NS_ENUM(NSInteger, MediaList) {
 
 @interface MediaListViewController : UITableViewController
 
-- (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride;
+- (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic serviceURL:(nullable NSURL *)serviceURL;
 
 @property (nonatomic, readonly) MediaList mediaList;
 
 @property (nonatomic, readonly, nullable) SRGTopic *topic;
-
-@property (nonatomic, readonly, getter=isMMFOverride) BOOL MMFOverride;
 
 @end
 

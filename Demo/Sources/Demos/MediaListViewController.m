@@ -15,7 +15,7 @@
 
 @property (nonatomic) MediaList mediaList;
 @property (nonatomic) SRGTopic *topic;
-@property (nonatomic, getter=isMMFOverride) BOOL MMFOverride;
+@property (nonatomic) NSURL *serviceURL;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGBaseRequest *request;
@@ -28,13 +28,12 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic MMFOverride:(BOOL)MMFOverride
+- (instancetype)initWithMediaList:(MediaList)mediaList topic:(SRGTopic *)topic serviceURL:(NSURL *)serviceURL
 {
-    self = [super initWithStyle:UITableViewStylePlain];
-    if (self) {
+    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.mediaList = mediaList;
         self.topic = topic;
-        self.MMFOverride = MMFOverride;
+        self.serviceURL = serviceURL;
     }
     return self;
 }
@@ -56,8 +55,7 @@
     
     self.title = [self pageTitle];
     
-    NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL ?: ApplicationSettingServiceURL()];
     self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
     
 #if TARGET_OS_IOS
@@ -84,17 +82,17 @@
 - (NSString *)pageTitle
 {
     if (self.mediaList == MediaListLatestByTopic) {
-        return self.topic.title ?: LetterboxDemoNonLocalizedString(@"Unknown");
+        return self.topic.title ?: NSLocalizedString(@"Unknown", nil);
     }
     else {
         static dispatch_once_t s_onceToken;
         static NSDictionary<NSNumber *, NSString *> *s_titles;
         dispatch_once(&s_onceToken, ^{
-            s_titles = @{ @(MediaListLivecenterSRF) : LetterboxDemoNonLocalizedString(@"SRF Live center"),
-                          @(MediaListLivecenterRTS) : LetterboxDemoNonLocalizedString(@"RTS Live center"),
-                          @(MediaListLivecenterRSI) : LetterboxDemoNonLocalizedString(@"RSI Live center") };
+            s_titles = @{ @(MediaListLiveCenterSRF) : NSLocalizedString(@"SRF Live center", nil),
+                          @(MediaListLiveCenterRTS) : NSLocalizedString(@"RTS Live center", nil),
+                          @(MediaListLiveCenterRSI) : NSLocalizedString(@"RSI Live center", nil) };
         });
-        return s_titles[@(self.mediaList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
+        return s_titles[@(self.mediaList)] ?: NSLocalizedString(@"Unknown", nil);
     }
 }
 
@@ -124,9 +122,9 @@
         static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
         static dispatch_once_t s_onceToken;
         dispatch_once(&s_onceToken, ^{
-            s_vendors = @{ @(MediaListLivecenterSRF) : @(SRGVendorSRF),
-                           @(MediaListLivecenterRTS) : @(SRGVendorRTS),
-                           @(MediaListLivecenterRSI) : @(SRGVendorRSI) };
+            s_vendors = @{ @(MediaListLiveCenterSRF) : @(SRGVendorSRF),
+                           @(MediaListLiveCenterRTS) : @(SRGVendorRTS),
+                           @(MediaListLiveCenterRSI) : @(SRGVendorRSI) };
         });
         
         NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
@@ -184,10 +182,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *URN = self.medias[indexPath.row].URN;
-    NSURL *serviceURL = self.MMFOverride ? LetterboxDemoMMFServiceURL() : nil;
-    NSNumber *updateIntervalNumber = self.MMFOverride ? @(LetterboxDemoSettingUpdateIntervalShort) : nil;
-    
-    [self openPlayerWithURN:URN serviceURL:serviceURL updateInterval:updateIntervalNumber];
+    [self openPlayerWithURN:URN serviceURL:self.serviceURL];
 }
 
 #pragma mark Actions
