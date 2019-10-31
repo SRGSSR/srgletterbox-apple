@@ -370,11 +370,11 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)playerViewController:(AVPlayerViewController *)playerViewController willTransitionToVisibilityOfTransportBar:(BOOL)visible withAnimationCoordinator:(id<AVPlayerViewControllerAnimationCoordinator>)coordinator API_AVAILABLE(tvos(11.0))
 {
+    self.userInterfaceHidden = ! visible;
+    
     [coordinator addCoordinatedAnimations:^{
         [self updateMainLayoutWithUserInterfaceHidden:! visible];
-    } completion:^(BOOL finished) {
-        self.userInterfaceHidden = ! visible;
-    }];
+    } completion:nil];
 }
 
 #pragma mark SRGContinuousPlaybackViewControllerDelegate protocol
