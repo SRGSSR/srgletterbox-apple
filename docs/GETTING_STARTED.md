@@ -195,6 +195,20 @@ To override the URL to be played for some URN, set the `contentURLOverridingBloc
 
 Note that Letterbox does not include any download manager. Your application is solely responsible of retrieving and storing the file.
 
+## Long-form playback
+
+Starting with iOS 13, Apple introduced the concept of long-form playback. Primarily intended for video content, preparing for long-form playback when displaying a player offers the system the ability to suggest available AirPlay devices. Even though the kind of content played with Letterbox cannot be known a priori (audio is not considered to be long-form), your application can still benefit from AirPlay suggestions.
+
+AirPlay suggestions are entirely the responsibility of the application. To enable the corresponding behavior, add the `AVInitialRouteSharingPolicy` to your application `Info.plist`, with `LongFormVideo` as value, and call the appropriate preparation method where opening your Letterbox-based player view:
+
+```objective-c
+[AVAudioSession.sharedInstance prepareRouteSelectionForPlaybackWithCompletionHandler:^(BOOL shouldStartPlayback, AVAudioSessionRouteSelection routeSelection) {
+    // Open the player
+}];
+```
+
+For more information about long-form playback, have a look at the [dedicated WWDC session](https://developer.apple.com/videos/play/wwdc2019/501).
+
 ## Image copyrights
 
 Media sometimes provide image copyright information via the `imageCopyright` property. If your application displays a Letterbox view, you should ensure that this information is somehow displayed in its vicinity.
