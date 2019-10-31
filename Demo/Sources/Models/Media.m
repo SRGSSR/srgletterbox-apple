@@ -31,7 +31,7 @@
             [medias addObject:media];
         }
     }
-    return [medias copy];
+    return medias.copy;
 }
 
 #pragma mark Object lifecycle

@@ -52,7 +52,7 @@
     settings.sourceUid = @"Source unique id";
     
     // Make a copy
-    SRGLetterboxPlaybackSettings *settingsCopy = [settings copy];
+    SRGLetterboxPlaybackSettings *settingsCopy = settings.copy;
     
     // Modify the original
     settings.streamType = SRGStreamTypeNone;

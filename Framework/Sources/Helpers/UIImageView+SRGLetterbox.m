@@ -27,7 +27,7 @@
 {
     NSArray<UIImage *> *images = [self srg_animatedImageNamed:name withTintColor:tintColor];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:images.firstObject];
-    imageView.animationImages = [images copy];
+    imageView.animationImages = images.copy;
     imageView.animationDuration = duration;
     return imageView;
 }
@@ -51,7 +51,7 @@
     }
     
     NSAssert(images.count != 0, @"Invalid asset %@", name);
-    return [images copy];
+    return images.copy;
 }
 
 #pragma mark Standard image loading

@@ -574,7 +574,7 @@
         NSString *path = [HTTPResponse.URL.path.stringByDeletingPathExtension substringFromIndex:1];
         NSString *sourceUid = [NSString stringWithFormat:@"%@:%@/%d", domain, path, @(NSDate.date.timeIntervalSince1970).intValue];
         
-        [self openPlaylistWithMedias:[medias copy] sourceUid:sourceUid];
+        [self openPlaylistWithMedias:medias.copy sourceUid:sourceUid];
     }] resume];
 }
 

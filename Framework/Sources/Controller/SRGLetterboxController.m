@@ -786,7 +786,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.livestreamEndDateTimer = nil;
     }
     
-    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:[userInfo copy]];
+    [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxMetadataDidChangeNotification object:self userInfo:userInfo.copy];
 }
 
 - (void)notifyLivestreamEndWithMedia:(SRGMedia *)media previousMedia:(SRGMedia *)previousMedia
@@ -1000,7 +1000,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.startPosition = position;
     
     // Deep copy settings to avoid further changes
-    preferredSettings = [preferredSettings copy];
+    preferredSettings = preferredSettings.copy;
     self.preferredSettings = preferredSettings;
     
     @weakify(self)

@@ -28,7 +28,7 @@
 {
     [super awakeFromNib];
     
-    self.backgroundColor = [UIColor srg_blueColor];
+    self.backgroundColor = UIColor.srg_blueColor;
     
     // Workaround UIImage view tint color bug
     // See http://stackoverflow.com/a/26042893/760435
@@ -54,7 +54,11 @@
     
     self.iconImageView.hidden = ! hasMessage;
     
+#if TARGET_OS_TV
+    CGFloat verticalMargin = hasMessage ? 30.f : 0.f;
+#else
     CGFloat verticalMargin = hasMessage ? 6.f : 0.f;
+#endif
     self.messageLabelTopConstraint.constant = verticalMargin;
     self.messageLabelBottomConstraint.constant = verticalMargin;
     

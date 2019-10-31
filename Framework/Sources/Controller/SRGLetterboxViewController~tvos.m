@@ -12,6 +12,7 @@
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLiveLabel.h"
+#import "SRGNotificationView.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
@@ -49,6 +50,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 @property (nonatomic, weak) SRGAvailabilityView *availabilityView;
 @property (nonatomic, weak) SRGErrorView *errorView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
+@property (nonatomic, weak) SRGNotificationView *notificationView;
 
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 
@@ -112,9 +114,19 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                                                    name:SRGLetterboxPlaybackDidFailNotification
                                                  object:controller];
         [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(livestreamDidFinish:)
+                                                   name:SRGLetterboxLivestreamDidFinishNotification
+                                                 object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(playbackDidContinueAutomatically:)
                                                    name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                  object:controller];
+        
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(willSkipBlockedSegment:)
+                                                   name:SRGMediaPlayerWillSkipBlockedSegmentNotification
+                                                 object:mediaPlayerController];
     }
     return self;
 }
@@ -175,18 +187,31 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
                                                [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
     
+    SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
+    notificationView.alpha = 0.f;
+    notificationView.layer.cornerRadius = 3.f;
+    notificationView.layer.shadowOpacity = 0.5f;
+    notificationView.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    [playerView addSubview:notificationView];
+    self.notificationView = notificationView;
+    
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[ [notificationView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+                                               [notificationView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20.f],
+                                               [notificationView.widthAnchor constraintLessThanOrEqualToConstant:1820.f],
+                                               [notificationView.heightAnchor constraintLessThanOrEqualToConstant:980.f] ]];
+    
     // Content overlay animations (to show or hide UI elements alongside player controls) are only available since tvOS 11.
     // On tvOS 10 and below, do not display any live label.
     if (@available(tvOS 11, *)) {
         UIView *contentOverlayView = self.playerViewController.contentOverlayView;
         SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
-        [contentOverlayView addSubview:liveLabel];
-        self.liveLabel = liveLabel;
         
-        liveLabel.layer.shadowColor = UIColor.blackColor.CGColor;
         liveLabel.layer.shadowRadius = 5.f;
         liveLabel.layer.shadowOpacity = 0.5f;
         liveLabel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+        [contentOverlayView addSubview:liveLabel];
+        self.liveLabel = liveLabel;
         
         liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [NSLayoutConstraint activateConstraints:@[ [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
@@ -303,6 +328,42 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     }
     
     self.liveLabel.alpha = (! userInterfaceHidden && self.controller.live) ? 1.f : 0.f;
+}
+
+#pragma mark Notification banners
+
+- (void)showNotificationMessage:(NSString *)notificationMessage animated:(BOOL)animated
+{
+    if (notificationMessage.length == 0) {
+        return;
+    }
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
+    
+    UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
+    [self.notificationView updateLayoutWithMessage:notificationMessage];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        self.notificationView.alpha = 1.f;
+    }];
+    
+    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
+}
+
+- (void)dismissNotificationView
+{
+    [self dismissNotificationViewAnimated:YES];
+}
+
+- (void)dismissNotificationViewAnimated:(BOOL)animated
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        self.notificationView.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        [self.notificationView updateLayoutWithMessage:nil];
+    }];
 }
 
 #pragma mark AVPlayerViewControllerDelegate protocol
@@ -424,12 +485,24 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self updateMainLayout];
 }
 
+- (void)livestreamDidFinish:(NSNotification *)notification
+{
+    [self showNotificationMessage:SRGLetterboxLocalizedString(@"Live broadcast ended", @"Notification message displayed when a live broadcast has finished.") animated:YES];
+}
+
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
     // Only dismiss continuous playback overlay when presented (i.e. when the transition duration is not 0)
     if (self.presentedViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+}
+
+- (void)willSkipBlockedSegment:(NSNotification *)notification
+{
+    SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
+    NSString *notificationMessage = SRGMessageForSkippedSegmentWithBlockingReason([subdivision blockingReasonAtDate:NSDate.date]);
+    [self showNotificationMessage:notificationMessage animated:YES];
 }
 
 @end

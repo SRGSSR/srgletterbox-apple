@@ -479,7 +479,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.isLive);
     }
     
-    MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = [nowPlayingInfo copy];
+    MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nowPlayingInfo.copy;
 }
 
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
