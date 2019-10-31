@@ -55,7 +55,7 @@
     self.iconImageView.hidden = ! hasMessage;
     
 #if TARGET_OS_TV
-    CGFloat verticalMargin = hasMessage ? 30.f : 0.f;
+    CGFloat verticalMargin = hasMessage ? 20.f : 0.f;
 #else
     CGFloat verticalMargin = hasMessage ? 6.f : 0.f;
 #endif

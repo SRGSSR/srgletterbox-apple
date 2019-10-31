@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15400" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15504" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
         <deployment identifier="tvOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15508"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,14 +22,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="notification" translatesAutoresizingMaskIntoConstraints="NO" id="ORO-Do-xuZ">
-                    <rect key="frame" x="30" y="77.5" width="48" height="48"/>
+                    <rect key="frame" x="20" y="85.5" width="32" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="ORO-Do-xuZ" secondAttribute="height" multiplier="1:1" id="7wZ-oc-peU"/>
-                        <constraint firstAttribute="width" constant="48" id="p37-Vf-hgR"/>
+                        <constraint firstAttribute="width" constant="32" id="p37-Vf-hgR"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;message&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lRR-3F-aoZ">
-                    <rect key="frame" x="118" y="30" width="1665" height="143"/>
+                    <rect key="frame" x="92" y="20" width="1701" height="163"/>
                     <fontDescription key="fontDescription" type="system" pointSize="38"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -38,11 +38,11 @@
             <color key="backgroundColor" red="0.058823529409999999" green="0.35294117650000001" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="lRR-3F-aoZ" firstAttribute="leading" secondItem="ORO-Do-xuZ" secondAttribute="trailing" constant="40" id="A64-aA-8Mx"/>
-                <constraint firstItem="ORO-Do-xuZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="IhK-mo-Z48"/>
-                <constraint firstAttribute="trailing" secondItem="lRR-3F-aoZ" secondAttribute="trailing" constant="30" id="d0H-a9-a1W"/>
-                <constraint firstAttribute="bottom" secondItem="lRR-3F-aoZ" secondAttribute="bottom" constant="30" id="oFI-Te-dyV"/>
+                <constraint firstItem="ORO-Do-xuZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="IhK-mo-Z48"/>
+                <constraint firstAttribute="trailing" secondItem="lRR-3F-aoZ" secondAttribute="trailing" constant="20" id="d0H-a9-a1W"/>
+                <constraint firstAttribute="bottom" secondItem="lRR-3F-aoZ" secondAttribute="bottom" constant="20" id="oFI-Te-dyV"/>
                 <constraint firstItem="ORO-Do-xuZ" firstAttribute="centerY" secondItem="lRR-3F-aoZ" secondAttribute="centerY" id="uvu-M2-0Y2"/>
-                <constraint firstItem="lRR-3F-aoZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="30" id="vZx-Zd-uFk"/>
+                <constraint firstItem="lRR-3F-aoZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="vZx-Zd-uFk"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
