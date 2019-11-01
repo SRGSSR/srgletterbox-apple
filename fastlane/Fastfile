@@ -46,7 +46,7 @@ platform :ios do
   desc "Build a new iOS nightly demo on App Center"
   lane :iOSnightly do
 
-    platform = "iOS"
+    build_platform = "iOS"
 
     appCenterBuildNumber = getAppCenterBuildNumber
     increment_build_number(
@@ -54,10 +54,10 @@ platform :ios do
     )
 
     nightly(
-      platform: platform
+      platform: build_platform
     )
 
-    changelog = default_changelog_for_nightlies(platform)
+    changelog = default_changelog_for_nightlies(build_platform)
 
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
@@ -73,7 +73,8 @@ platform :ios do
   desc "Build a new tvOS nightly demo on AppStore Connect"
   lane :tvOSnightly do
 
-    platform = "tvOS"
+    build_platform = "tvOS"
+    appstore_platform =  "appletvos"
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
     app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
@@ -81,7 +82,7 @@ platform :ios do
     appStoreBuildNumber = latest_testflight_build_number(
       team_id: team_id,
       app_identifier: app_identifier,
-      platform: "appletvos"
+      platform: appstore_platform
     )
     increment_build_number(
       build_number: appStoreBuildNumber + 1
@@ -92,18 +93,32 @@ platform :ios do
       plist_path: "Demo/Info.plist"
     )
 
+    # Workaround for missing TagCommander tvOS SDK: copy iOS frameworks for tvOS build.
+    tccore = "../Carthage/Build/%s/TCCore.framework"
+    if !File.directory?(tccore % [build_platform])
+      source_platform = "iOS"
+      FileUtils.copy_entry(tccore % [source_platform], tccore % [build_platform])
+    end
+
+    # Workaround for missing TagCommander tvOS SDK: copy iOS frameworks for tvOS build.
+    tcsdk = "../Carthage/Build/%s/TCSDK.framework"
+    if !File.directory?(tcsdk % [build_platform])
+      source_platform = "iOS"
+      FileUtils.copy_entry(tcsdk % [source_platform], tcsdk % [build_platform])
+    end
+
     nightly(
-      platform: platform,
-      marketing_version_suffix: "",
+      platform: build_platform,
       export_to_appstore: true
     )
 
-    changelog = default_changelog_for_nightlies(platform)
-    
+    changelog = default_changelog_for_nightlies(build_platform)
 
     pilot(
-      app_platform: "appletvos",
+      app_platform: appstore_platform,
       skip_waiting_for_build_processing: true
+      # changelog: changelog,
+      # skip_waiting_for_build_processing: true
     )
 
     clean_build_artifacts
@@ -112,11 +127,10 @@ platform :ios do
 
   end
 
-  desc "Build a new iOS nightly demo on App Center"
+  desc "Build a new iOS nightly demo"
   private_lane :nightly do |options|
     platform = options[:platform]
     export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
-    override_marketing_version_suffix = options[:marketing_version_suffix]
 
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
 
@@ -127,8 +141,8 @@ platform :ios do
       marketing_version_suffix = marketing_version_suffix + '+' + branch_name.sub('feature/', '').strip
     end
 
-    if override_marketing_version_suffix
-      marketing_version_suffix = override_marketing_version_suffix
+    if export_to_appstore
+      marketing_version_suffix = ""
     end
 
     build_lane(
@@ -184,6 +198,13 @@ platform :ios do
 
     destination = "generic/platform=" + platform
 
+    # Workaround for ComScore packaging issue
+    comscore_sh_file = "../Carthage/Build/" + platform + "/ComScore.framework/strip-framework.sh"
+    File.delete(comscore_sh_file) if File.exist?(comscore_sh_file)
+
+    # Workaround for missing TagCommander tvOS SDK
+    fix_tc_frameworks = export_to_appstore
+
     gym(
       configuration: configuration,
       scheme: scheme,
@@ -193,8 +214,27 @@ platform :ios do
       export_method: export_to_appstore ? "app-store" : "enterprise",
       include_bitcode: export_to_appstore,
       export_team_id: team_id,
-      destination: destination
+      destination: destination,
+      skip_package_ipa: fix_tc_frameworks
     )
+
+    # Workaround for missing TagCommander tvOS SDK: remove iOS frameworks and package ipa.
+    if fix_tc_frameworks
+      xcodebuild_archive_frameworks = lane_context[SharedValues::XCODEBUILD_ARCHIVE] + "/Products/Applications/SRGLetterbox-demo.app/Frameworks"
+      FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCCore.framework", force = true)
+      FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCSDK.framework", force = true)
+    
+      gym(
+        skip_build_archive: true,
+        archive_path: lane_context[SharedValues::XCODEBUILD_ARCHIVE],
+        configuration: configuration,
+        scheme: scheme,
+        silent: true,
+        export_method: export_to_appstore ? "app-store" : "enterprise",
+        include_bitcode: export_to_appstore,
+        export_team_id: team_id
+      )
+    end
   end
 
   desc "Upload a build on App Center"
