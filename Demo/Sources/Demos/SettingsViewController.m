@@ -647,11 +647,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-#if TARGET_OS_IOS
-    void (^completionBlock)(void) = nil;
-#endif
-    
+{    
     switch (indexPath.section) {
         case SettingSectionServer: {
             ServerSettings *serverSettings = self.serverSettings[indexPath.row];
@@ -723,20 +719,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case SettingSectionApplicationVersion: {
-            completionBlock = ^{
-                // Clear internal App Center timestamp to force a new update request
-                [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
-                [[MSDistribute sharedInstance] startUpdate];
-                
-                // Display version history
-                NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
-                NSURL *appCenterURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
-                if (appCenterURL) {
-                    SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:appCenterURL];
-                    UIViewController *rootViewController = UIApplication.sharedApplication.delegate.window.rootViewController;
-                    [rootViewController presentViewController:safariViewController animated:YES completion:nil];
-                }
-            };
+            // Clear internal App Center timestamp to force a new update request
+            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
+            [[MSDistribute sharedInstance] startUpdate];
+            
+            // Display version history
+            NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
+            NSURL *appCenterURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
+            if (appCenterURL) {
+                SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:appCenterURL];
+                [self presentViewController:safariViewController animated:YES completion:nil];
+            }
             break;
         }
 #endif
@@ -749,10 +742,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     [self.tableView reloadData];
-    
-#if TARGET_OS_IOS
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:completionBlock];
-#endif
 }
 
 @end
