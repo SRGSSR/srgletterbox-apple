@@ -29,7 +29,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 6;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -38,7 +38,11 @@
     static NSArray<NSNumber *> *s_rows;
     dispatch_once(&s_onceToken, ^{
         s_rows = @[ @6,
-                    @3 ];
+                    @4,
+                    @4,
+                    @3,
+                    @5,
+                    @15 ];
     });
     return s_rows[section].integerValue;
 }
@@ -48,8 +52,12 @@
     static dispatch_once_t s_onceToken;
     static NSArray<NSString *> *s_titles;
     dispatch_once(&s_onceToken, ^{
-        s_titles = @[ NSLocalizedString(@"Topics", nil),
-                      NSLocalizedString(@"Live center", nil) ];
+        s_titles = @[ NSLocalizedString(@"📚 Topics TV", nil),
+                      NSLocalizedString(@"📺 Live TV", nil),
+                      NSLocalizedString(@"📻 Live Radio", nil),
+                      NSLocalizedString(@"🎳 Live center", nil),
+                      NSLocalizedString(@"🎬 Latest videos", nil),
+                      NSLocalizedString(@"🔊 Latest audios", nil) ];
     });
     return s_titles[section];
 }
@@ -95,7 +103,35 @@
                          NSLocalizedString(@"Play MMF", nil) ],
                       @[ NSLocalizedString(@"SRF", nil),
                          NSLocalizedString(@"RTS", nil),
-                         NSLocalizedString(@"RSI", nil) ] ];
+                         NSLocalizedString(@"RSI", nil),
+                         NSLocalizedString(@"RTR", nil) ],
+                      @[ NSLocalizedString(@"SRF", nil),
+                         NSLocalizedString(@"RTS", nil),
+                         NSLocalizedString(@"RSI", nil),
+                         NSLocalizedString(@"RTR", nil) ],
+                      @[ NSLocalizedString(@"SRF", nil),
+                         NSLocalizedString(@"RTS", nil),
+                         NSLocalizedString(@"RSI", nil) ],
+                      @[ NSLocalizedString(@"SRF", nil),
+                         NSLocalizedString(@"RTS", nil),
+                         NSLocalizedString(@"RSI", nil),
+                         NSLocalizedString(@"RTR", nil),
+                         NSLocalizedString(@"SWI", nil) ],
+                      @[ NSLocalizedString(@"SRF 1", nil),
+                         NSLocalizedString(@"SRF 2 Kultur", nil),
+                         NSLocalizedString(@"SRF 3", nil),
+                         NSLocalizedString(@"SRF 4 News", nil),
+                         NSLocalizedString(@"SRF Musikwelle", nil),
+                         NSLocalizedString(@"SRF Virus", nil),
+                         NSLocalizedString(@"RTS La 1ère", nil),
+                         NSLocalizedString(@"RTS Espace 2", nil),
+                         NSLocalizedString(@"RTS Couleur 3", nil),
+                         NSLocalizedString(@"RTS Option Musique", nil),
+                         NSLocalizedString(@"RTS Podcasts originaux", nil),
+                         NSLocalizedString(@"RSI Rete Uno", nil),
+                         NSLocalizedString(@"RSI Rete Due", nil),
+                         NSLocalizedString(@"RSI Rete Tre", nil),
+                         NSLocalizedString(@"RTR", nil) ]];
     });
     cell.textLabel.text = s_titles[indexPath.section][indexPath.row];
 }
@@ -122,9 +158,73 @@
             static dispatch_once_t s_onceToken;
             static NSArray<NSNumber *> *s_lists;
             dispatch_once(&s_onceToken, ^{
+                s_lists = @[ @(MediaListLiveTVSRF),
+                             @(MediaListLiveTVRTS),
+                             @(MediaListLiveTVRSI),
+                             @(MediaListLiveTVRTR) ];
+            });
+            [self openMediaListWithType:s_lists[indexPath.row].integerValue];
+            break;
+        }
+            
+        case 2: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSNumber *> *s_lists;
+            dispatch_once(&s_onceToken, ^{
+                s_lists = @[ @(MediaListLiveRadioSRF),
+                             @(MediaListLiveRadioRTS),
+                             @(MediaListLiveRadioRSI),
+                             @(MediaListLiveRadioRTR) ];
+            });
+            [self openMediaListWithType:s_lists[indexPath.row].integerValue];
+            break;
+        }
+            
+        case 3: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSNumber *> *s_lists;
+            dispatch_once(&s_onceToken, ^{
                 s_lists = @[ @(MediaListLiveCenterSRF),
                              @(MediaListLiveCenterRTS),
                              @(MediaListLiveCenterRSI) ];
+            });
+            [self openMediaListWithType:s_lists[indexPath.row].integerValue];
+            break;
+        }
+            
+        case 4: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSNumber *> *s_lists;
+            dispatch_once(&s_onceToken, ^{
+                s_lists = @[ @(MediaListLatestVideosSRF),
+                             @(MediaListLatestVideosRTS),
+                             @(MediaListLatestVideosRSI),
+                             @(MediaListLatestVideosRTR),
+                             @(MediaListLatestVideosSWI) ];
+            });
+            [self openMediaListWithType:s_lists[indexPath.row].integerValue];
+            break;
+        }
+            
+        case 5: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSNumber *> *s_lists;
+            dispatch_once(&s_onceToken, ^{
+                s_lists = @[ @(MediaListLatestAudiosSRF1),
+                             @(MediaListLatestAudiosSRF2),
+                             @(MediaListLatestAudiosSRF3),
+                             @(MediaListLatestAudiosSRF4),
+                             @(MediaListLatestAudiosSRF5),
+                             @(MediaListLatestAudiosSRF6),
+                             @(MediaListLatestAudiosRTS1),
+                             @(MediaListLatestAudiosRTS2),
+                             @(MediaListLatestAudiosRTS3),
+                             @(MediaListLatestAudiosRTS4),
+                             @(MediaListLatestAudiosRTS5),
+                             @(MediaListLatestAudiosRSI1),
+                             @(MediaListLatestAudiosRSI2),
+                             @(MediaListLatestAudiosRSI3),
+                             @(MediaListLatestAudiosRTR) ];
             });
             [self openMediaListWithType:s_lists[indexPath.row].integerValue];
             break;

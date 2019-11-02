@@ -32,7 +32,119 @@ typedef NS_ENUM(NSInteger, MediaList) {
     /**
      *  Latest by topic
      */
-    MediaListLatestByTopic
+    MediaListLatestByTopic,
+    /**
+     *  Live TV SRF
+     */
+    MediaListLiveTVSRF,
+    /**
+     *  Live TV RTS
+     */
+    MediaListLiveTVRTS,
+    /**
+     *  Live TV RSI
+     */
+    MediaListLiveTVRSI,
+    /**
+     *  Live TV RTR
+     */
+    MediaListLiveTVRTR,
+    /**
+     *  Live Radio SRF
+     */
+    MediaListLiveRadioSRF,
+    /**
+     *  Live Radio RTS
+     */
+    MediaListLiveRadioRTS,
+    /**
+     *  Live Radio RSI
+     */
+    MediaListLiveRadioRSI,
+    /**
+     *  Live Radio RTR
+     */
+    MediaListLiveRadioRTR,
+    /**
+     *  Latest videos SRF
+     */
+    MediaListLatestVideosSRF,
+    /**
+     *  Latest videos RTS
+     */
+    MediaListLatestVideosRTS,
+    /**
+     *  Latest videos RSI
+     */
+    MediaListLatestVideosRSI,
+    /**
+     *  Latest videos RTR
+     */
+    MediaListLatestVideosRTR,
+    /**
+     *  Latest videos SWI
+     */
+    MediaListLatestVideosSWI,
+    /**
+     *  Latest audios SRF 1
+     */
+    MediaListLatestAudiosSRF1,
+    /**
+     *  Latest audios SRF 2
+     */
+    MediaListLatestAudiosSRF2,
+    /**
+     *  Latest audios SRF 3
+     */
+    MediaListLatestAudiosSRF3,
+    /**
+     *  Latest audios SRF 4
+     */
+    MediaListLatestAudiosSRF4,
+    /**
+     *  Latest audios SRF 5
+     */
+    MediaListLatestAudiosSRF5,
+    /**
+     *  Latest audios SRF 6
+     */
+    MediaListLatestAudiosSRF6,
+    /**
+     *  Latest audios RTS 1
+     */
+    MediaListLatestAudiosRTS1,
+    /**
+     *  Latest audios RTS 2
+     */
+    MediaListLatestAudiosRTS2,
+    /**
+     *  Latest audios RTS 3
+     */
+    MediaListLatestAudiosRTS3,
+    /**
+     *  Latest audios RTS 4
+     */
+    MediaListLatestAudiosRTS4,
+    /**
+     *  Latest audios RTS 5
+     */
+    MediaListLatestAudiosRTS5,
+    /**
+     *  Latest audios RSI 1
+     */
+    MediaListLatestAudiosRSI1,
+    /**
+     *  Latest audios RSI 2
+     */
+    MediaListLatestAudiosRSI2,
+    /**
+     *  Latest audios RSI 3
+     */
+    MediaListLatestAudiosRSI3,
+    /**
+     *  Latest audios RTR
+     */
+    MediaListLatestAudiosRTR
 };
 
 @interface MediaListViewController : UITableViewController
