@@ -256,7 +256,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 #if TARGET_OS_IOS
-    return MSDistribute.isEnabled ? 9 : 8;
+    return MSDistribute.isEnabled ? SettingSectionCount : SettingSectionCount - 1;
 #else
     return SettingSectionCount;
 #endif
