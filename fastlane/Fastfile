@@ -77,20 +77,16 @@ platform :ios do
     build_platform = "tvOS"
     appstore_platform =  "appletvos"
 
-    itunes_connect_team_id = CredentialsManager::AppfileConfig.try_fetch_value(:itc_team_id)
-    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
-
     appStoreBuildNumber = latest_testflight_build_number(
-      team_id: itunes_connect_team_id,
-      app_identifier: app_identifier,
       platform: appstore_platform
     )
     increment_build_number(
       build_number: appStoreBuildNumber + 1
     )
 
+    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+
     update_app_identifier(
-      app_identifier: ENV['NIGHLTY_APP_IDENTIFIER'],
       plist_path: "Demo/Info.plist"
     )
 
@@ -116,7 +112,6 @@ platform :ios do
     changelog = default_changelog_for_nightlies(build_platform)
 
     pilot(
-      team_id: itunes_connect_team_id,
       app_platform: appstore_platform,
       skip_waiting_for_build_processing: skip_waiting_for_build_processing,
       changelog: changelog,
@@ -277,7 +272,6 @@ platform :ios do
     # HAX: strip emoji from changelog
     changelog = (changelog) ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '') : "No change log found for this build."
     Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
-    puts changelog
     changelog
   end
 
@@ -291,7 +285,6 @@ platform :ios do
   # Save the git commit hash in a local text file for nightlies
   def saveLastNightliesSuccessGitCommitHash(platform)
     last = last_git_commit
-    puts last[:commit_hash]
     platformPrefix = platform ? platform.downcase + "-" : ""
     File.open("last-" + platformPrefix + "nightlies-success-git-commit-hash.txt", 'w') {|f| f.write(last[:commit_hash]) }
     last[:commit_hash]
