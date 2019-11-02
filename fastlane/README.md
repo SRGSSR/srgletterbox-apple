@@ -30,7 +30,7 @@ Build a new iOS nightly demo on App Center
 ```
 fastlane ios tvOSnightly
 ```
-Build a new tvOS nightly demo on AppStore Connect
+Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter.
 ### ios demo
 ```
 fastlane ios demo

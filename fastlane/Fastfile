@@ -70,8 +70,9 @@ platform :ios do
     saveLastNightliesSuccessGitCommitHash(build_platform)
   end
 
-  desc "Build a new tvOS nightly demo on AppStore Connect"
+  desc "Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter."
   lane :tvOSnightly do
+    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] ? options[:skip_waiting_for_build_processing] : false
 
     build_platform = "tvOS"
     appstore_platform =  "appletvos"
@@ -116,9 +117,9 @@ platform :ios do
 
     pilot(
       app_platform: appstore_platform,
-      skip_waiting_for_build_processing: true
-      # changelog: changelog,
-      # skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: skip_waiting_for_build_processing,
+      changelog: changelog,
+      distribute_external: true
     )
 
     clean_build_artifacts
