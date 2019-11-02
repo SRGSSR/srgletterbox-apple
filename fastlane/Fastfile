@@ -18,11 +18,11 @@ platform :ios do
     # For the demo, before all, check if we have a demo release description
     if lane.to_s == "demo"
       build_number = get_build_number
-      marketing_version = getMarketingVersion
+      marketing_version = xcode_marketing_version
       tag_version = marketing_version + '-' + build_number
 
-      whatsNewForDemo = getWhatsNewForDemo(tag_version)
-      if whatsNewForDemo.empty?
+      what_s_new = what_s_new_for_demo(tag_version)
+      if what_s_new.empty?
         UI.user_error!("Whoops, there is no demo release note in the WhatsNew-demo.json file for " + tag_version)
       end
     end
@@ -45,16 +45,13 @@ platform :ios do
 
   desc "Build a new iOS nightly demo on App Center"
   lane :iOSnightly do
-
     build_platform = "iOS"
 
-    appCenterBuildNumber = getAppCenterBuildNumber(ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_SECRET'])
-    increment_build_number(
-      build_number: appCenterBuildNumber + 1
-    )
+    appcenter_build_number = latest_appcenter_build_number(ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_SECRET'])
 
     nightly(
-      platform: build_platform
+      platform: build_platform,
+      current_build_number: appcenter_build_number
     )
 
     changelog = default_changelog_for_nightlies(build_platform)
@@ -67,7 +64,7 @@ platform :ios do
 
     clean_build_artifacts
 
-    saveLastNightliesSuccessGitCommitHash(build_platform)
+    save_last_nightlies_success_git_commit_hash(build_platform)
   end
 
   desc "Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter."
@@ -77,35 +74,15 @@ platform :ios do
     build_platform = "tvOS"
     appstore_platform =  "appletvos"
 
-    appStoreBuildNumber = latest_testflight_build_number(
-      platform: appstore_platform
-    )
-    increment_build_number(
-      build_number: appStoreBuildNumber + 1
-    )
+    appstore_build_number = latest_testflight_build_number(platform: appstore_platform)
 
-    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+    update_to_appstore_app_identifier
 
-    update_app_identifier(
-      plist_path: "Demo/Info.plist"
-    )
-
-    # Workaround for missing TagCommander tvOS SDK: copy iOS frameworks for tvOS build.
-    tccore = "../Carthage/Build/%s/TCCore.framework"
-    if !File.directory?(tccore % [build_platform])
-      source_platform = "iOS"
-      FileUtils.copy_entry(tccore % [source_platform], tccore % [build_platform])
-    end
-
-    # Workaround for missing TagCommander tvOS SDK: copy iOS frameworks for tvOS build.
-    tcsdk = "../Carthage/Build/%s/TCSDK.framework"
-    if !File.directory?(tcsdk % [build_platform])
-      source_platform = "iOS"
-      FileUtils.copy_entry(tcsdk % [source_platform], tcsdk % [build_platform])
-    end
+    fix_tc_bootstrap_tvos
 
     nightly(
       platform: build_platform,
+      current_build_number: appstore_build_number,
       export_to_appstore: true
     )
 
@@ -121,26 +98,25 @@ platform :ios do
 
     clean_build_artifacts
 
-    saveLastNightliesSuccessGitCommitHash(build_platform)
-
+    save_last_nightlies_success_git_commit_hash(build_platform)
   end
 
-  desc "Build a new iOS nightly demo"
+  desc "Common stuff to build a new nightly demo"
   private_lane :nightly do |options|
-    platform = options[:platform]
+    platform = options[:platform] ? options[:platform] : "iOS"
     export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
+    current_build_number = options[:current_build_number]
+
+    increment_build_number(
+      build_number: current_build_number + 1
+    )
 
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-
     bundle_display_name_suffix = " 🌙"
     marketing_version_suffix = "-nightly"
     if (branch_name.include? 'feature/')
       bundle_display_name_suffix = " 🌿"
       marketing_version_suffix = marketing_version_suffix + '+' + branch_name.sub('feature/', '').strip
-    end
-
-    if export_to_appstore
-      marketing_version_suffix = ""
     end
 
     build_lane(
@@ -157,10 +133,10 @@ platform :ios do
   lane :demo do
 
     build_number = get_build_number
-    marketing_version = getMarketingVersion
+    marketing_version = xcode_marketing_version
     tag_version = marketing_version + '-' + build_number
 
-    whatsNewForDemo = getWhatsNewForDemo(tag_version)
+    what_s_new = what_s_new_for_demo(tag_version)
 
     build_lane(
       configuration: "Release",
@@ -171,7 +147,7 @@ platform :ios do
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_DESTINATIONS'],
-      notes: whatsNewForDemo,
+      notes: what_s_new,
       notify_testers: true
     )
 
@@ -188,6 +164,11 @@ platform :ios do
     bundle_display_name_suffix = options[:bundle_display_name_suffix] ? options[:bundle_display_name_suffix] : ""
     marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
     platform = options[:platform] ? options[:platform] : "iOS"
+
+    # - or + characters are not allowed on AppStore Connect
+    if export_to_appstore
+      marketing_version_suffix = ""
+    end
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
 
@@ -260,13 +241,13 @@ platform :ios do
   # Returns a default changelog for nightlies
   def default_changelog_for_nightlies(platform)
 
-    lastNightliesGitCommitHash = getLastNightliesSuccessGitCommitHash(platform)
-    if lastNightliesGitCommitHash.length < 12
-      lastNightliesGitCommitHash = "HEAD^^^^^"
+    last_commit_hash = last_nightlies_success_git_commit_hash(platform)
+    if last_commit_hash.length < 12
+      last_commit_hash = "HEAD^^^^^"
     end
 
     changelog = changelog_from_git_commits(
-        between: [lastNightliesGitCommitHash, "HEAD"],
+        between: [last_commit_hash, "HEAD"],
         pretty: "- %s"
     )
     # HAX: strip emoji from changelog
@@ -276,14 +257,14 @@ platform :ios do
   end
 
   # Return current build number on App Center
-  def getAppCenterBuildNumber(app_secret)
+  def latest_appcenter_build_number(app_secret)
     appCenterBuildNumber = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} " + app_secret)
     appCenterBuildNumber = Integer(appCenterBuildNumber.lines.map(&:chomp).last)
     appCenterBuildNumber
   end
 
   # Save the git commit hash in a local text file for nightlies
-  def saveLastNightliesSuccessGitCommitHash(platform)
+  def save_last_nightlies_success_git_commit_hash(platform)
     last = last_git_commit
     platformPrefix = platform ? platform.downcase + "-" : ""
     File.open("last-" + platformPrefix + "nightlies-success-git-commit-hash.txt", 'w') {|f| f.write(last[:commit_hash]) }
@@ -291,7 +272,7 @@ platform :ios do
   end
 
   # Read the git commit hash in a local text file for nightlies
-  def getLastNightliesSuccessGitCommitHash(platform)
+  def last_nightlies_success_git_commit_hash(platform)
     platformPrefix = platform ? platform.downcase + "-" : ""
     file = File.open("last-" + platformPrefix + "nightlies-success-git-commit-hash.txt", "a+")
     lastNightliesSuccessGitCommitHash = file.read
@@ -300,26 +281,50 @@ platform :ios do
   end
 
   # Return the marketing version, without suffix
-  def getMarketingVersion()
+  def xcode_marketing_version()
      marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d " =" | sed "s/MARKETING_VERSION//"'
      marketing_version = marketing_version.lines.last.gsub(/\s+/, "")
      marketing_version
   end
 
   # Return the bundle app identifier
-  def getAppIdentifier(scheme, configuration)
+  def xcode_app_identifier(scheme, configuration)
      app_identifier = sh 'cd ..; xcodebuild -scheme "' + scheme + '" -configuration "' + configuration + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d " =" | sed "s/PRODUCT_BUNDLE_IDENTIFIER//"'
      app_identifier = app_identifier.lines.last.gsub(/\s+/, "")
      app_identifier
   end
 
   # Return the what's new text from WhatsNew-demo.json file in the repository
-  def getWhatsNewForDemo(tag_version)
+  def what_s_new_for_demo(tag_version)
     file = File.open("../WhatsNew-demo.json", "r")  
     json = JSON.parse(file.read)
     file.close
     whatsNew = json[tag_version]
     whatsNew ? whatsNew : ''
+  end
+
+  # Workaround for missing TagCommander tvOS SDKs: copy iOS frameworks for tvOS build.
+  def fix_tc_bootstrap_tvos()
+    source_platform = "iOS"
+    destination_platform = "tvOS"
+
+    tccore = "../Carthage/Build/%s/TCCore.framework"
+    if !File.directory?(tccore % [destination_platform])
+      FileUtils.copy_entry(tccore % [source_platform], tccore % [destination_platform])
+    end
+
+    tcsdk = "../Carthage/Build/%s/TCSDK.framework"
+    if !File.directory?(tcsdk % [destination_platform])
+      FileUtils.copy_entry(tcsdk % [source_platform], tcsdk % [destination_platform])
+    end
+  end
+
+  # Update only the demo app identifier for App Store Connect submit.
+  def update_to_appstore_app_identifier()
+    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+    update_app_identifier(
+      plist_path: "Demo/Info.plist"
+    )
   end
 
   after_all do |lane|
