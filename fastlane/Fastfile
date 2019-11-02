@@ -71,17 +71,17 @@ platform :ios do
   end
 
   desc "Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter."
-  lane :tvOSnightly do
+  lane :tvOSnightly do |options|
     skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] ? options[:skip_waiting_for_build_processing] : false
 
     build_platform = "tvOS"
     appstore_platform =  "appletvos"
 
-    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+    itunes_connect_team_id = CredentialsManager::AppfileConfig.try_fetch_value(:itc_team_id)
     app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
 
     appStoreBuildNumber = latest_testflight_build_number(
-      team_id: team_id,
+      team_id: itunes_connect_team_id,
       app_identifier: app_identifier,
       platform: appstore_platform
     )
@@ -116,10 +116,12 @@ platform :ios do
     changelog = default_changelog_for_nightlies(build_platform)
 
     pilot(
+      team_id: itunes_connect_team_id,
       app_platform: appstore_platform,
       skip_waiting_for_build_processing: skip_waiting_for_build_processing,
       changelog: changelog,
-      distribute_external: true
+      distribute_external: true,
+      groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
     clean_build_artifacts

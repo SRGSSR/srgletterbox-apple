@@ -1,12 +1,14 @@
 app_identifier "#{ENV['APP_IDENTIFIER']}"
 apple_id "#{ENV['APPLE_ID']}"
 team_id "#{ENV['TEAM_ID']}"
+itc_team_id "#{ENV['TEAM_ID']}"
 
 for_platform :ios do
 
     for_lane :tvOSnightly do
         app_identifier "#{ENV['NIGHLTY_APP_IDENTIFIER']}"
         itunes_connect_id "#{ENV['SRGSSR_ITUNES_CONNECT_ID']}"
+        itc_team_id "#{ENV['SRGSSR_ITUNES_CONNECT_TEAM_ID']}"
         apple_dev_portal_id "#{ENV['SRGSSR_APPLE_DEV_PORTAL_ID']}"
         team_id "#{ENV['SRGSSR_TEAM_ID']}"
     end
