@@ -48,7 +48,7 @@ platform :ios do
 
     build_platform = "iOS"
 
-    appCenterBuildNumber = getAppCenterBuildNumber
+    appCenterBuildNumber = getAppCenterBuildNumber(ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_SECRET'])
     increment_build_number(
       build_number: appCenterBuildNumber + 1
     )
@@ -60,8 +60,8 @@ platform :ios do
     changelog = default_changelog_for_nightlies(build_platform)
 
     appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
+      appname: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_DESTINATIONS'],
       notes: changelog,
     )
 
@@ -171,8 +171,8 @@ platform :ios do
     )
 
     appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_DESTINATIONS'],
+      appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_DESTINATIONS'],
       notes: whatsNewForDemo,
       notify_testers: true
     )
@@ -276,8 +276,8 @@ platform :ios do
   end
 
   # Return current build number on App Center
-  def getAppCenterBuildNumber()
-    appCenterBuildNumber = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} #{ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_SECRET']}")
+  def getAppCenterBuildNumber(app_secret)
+    appCenterBuildNumber = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} " + app_secret)
     appCenterBuildNumber = Integer(appCenterBuildNumber.lines.map(&:chomp).last)
     appCenterBuildNumber
   end
