@@ -98,8 +98,8 @@ do
         fi
 
         echo $PYTHON_NIGHTLIES_TAG "Making app icon ${CAPTION} | ${filename}"
-        convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${CAPTION}" "${SOURCE_ICON_PATH}" +swap -gravity north -composite "${SCRIPT_ICON_PATH}"
-        convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${VERSION_STRING}" "${SCRIPT_ICON_PATH}" +swap -gravity south -composite "${SCRIPT_ICON_PATH}"
+        convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${CAPTION}" "${SOURCE_ICON_PATH}" +swap -gravity south -composite "${SCRIPT_ICON_PATH}"
+        convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${VERSION_STRING}" "${SCRIPT_ICON_PATH}" +swap -gravity north -composite "${SCRIPT_ICON_PATH}"
 
     fi
 
