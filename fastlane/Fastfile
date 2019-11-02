@@ -199,6 +199,8 @@ platform :ios do
 
     destination = "generic/platform=" + platform
 
+    output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME] + '/'
+
     # Workaround for ComScore packaging issue
     comscore_sh_file = "../Carthage/Build/" + platform + "/ComScore.framework/strip-framework.sh"
     File.delete(comscore_sh_file) if File.exist?(comscore_sh_file)
@@ -216,6 +218,7 @@ platform :ios do
       include_bitcode: export_to_appstore,
       export_team_id: team_id,
       destination: destination,
+      output_directory: output_directory,
       skip_package_ipa: fix_tc_frameworks
     )
 

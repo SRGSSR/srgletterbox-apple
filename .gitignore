@@ -15,8 +15,9 @@ xcuserdata
 /.env
 /Xcode/Links
 
-/fastlane/*.xml
+/fastlane/export
 /fastlane/*commit-hash.txt
+/fastlane/*.xml
 
 /Scripts/generate-icons-caches
 
