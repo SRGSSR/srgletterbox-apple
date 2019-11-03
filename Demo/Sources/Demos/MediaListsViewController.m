@@ -29,7 +29,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 6;
+    return 7;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -41,6 +41,7 @@
                     @4,
                     @4,
                     @3,
+                    @4,
                     @5,
                     @15 ];
     });
@@ -56,6 +57,7 @@
                       NSLocalizedString(@"📺 Live TV", nil),
                       NSLocalizedString(@"📻 Live Radio", nil),
                       NSLocalizedString(@"🎳 Live center", nil),
+                      NSLocalizedString(@"🛰️ Live web", nil),
                       NSLocalizedString(@"🎬 Latest videos", nil),
                       NSLocalizedString(@"🔊 Latest audios", nil) ];
     });
@@ -112,6 +114,10 @@
                       @[ NSLocalizedString(@"SRF", nil),
                          NSLocalizedString(@"RTS", nil),
                          NSLocalizedString(@"RSI", nil) ],
+                      @[ NSLocalizedString(@"SRF", nil),
+                         NSLocalizedString(@"RTS", nil),
+                         NSLocalizedString(@"RSI", nil),
+                         NSLocalizedString(@"RTR", nil) ],
                       @[ NSLocalizedString(@"SRF", nil),
                          NSLocalizedString(@"RTS", nil),
                          NSLocalizedString(@"RSI", nil),
@@ -196,6 +202,19 @@
             static dispatch_once_t s_onceToken;
             static NSArray<NSNumber *> *s_lists;
             dispatch_once(&s_onceToken, ^{
+                s_lists = @[ @(MediaListLiveWebSRF),
+                             @(MediaListLiveWebRTS),
+                             @(MediaListLiveWebRSI),
+                             @(MediaListLiveWebRTR) ];
+            });
+            [self openMediaListWithType:s_lists[indexPath.row].integerValue];
+            break;
+        }
+            
+        case 5: {
+            static dispatch_once_t s_onceToken;
+            static NSArray<NSNumber *> *s_lists;
+            dispatch_once(&s_onceToken, ^{
                 s_lists = @[ @(MediaListLatestVideosSRF),
                              @(MediaListLatestVideosRTS),
                              @(MediaListLatestVideosRSI),
@@ -206,7 +225,7 @@
             break;
         }
             
-        case 5: {
+        case 6: {
             static dispatch_once_t s_onceToken;
             static NSArray<NSNumber *> *s_lists;
             dispatch_once(&s_onceToken, ^{

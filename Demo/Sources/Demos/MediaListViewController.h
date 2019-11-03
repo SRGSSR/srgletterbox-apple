@@ -144,7 +144,23 @@ typedef NS_ENUM(NSInteger, MediaList) {
     /**
      *  Latest audios RTR
      */
-    MediaListLatestAudiosRTR
+    MediaListLatestAudiosRTR,
+    /**
+     *  Live web SRF
+     */
+    MediaListLiveWebSRF,
+    /**
+     *  Live web RTS
+     */
+    MediaListLiveWebRTS,
+    /**
+     *  Live web RSI
+     */
+    MediaListLiveWebRSI,
+    /**
+     *  Live web RTR
+     */
+    MediaListLiveWebRTR
 };
 
 @interface MediaListViewController : UITableViewController

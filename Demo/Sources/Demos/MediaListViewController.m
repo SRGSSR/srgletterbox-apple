@@ -118,7 +118,11 @@
                           @(MediaListLatestAudiosRSI1) : NSLocalizedString(@"RSI Rete Uno Latest audios", nil),
                           @(MediaListLatestAudiosRSI2) : NSLocalizedString(@"RSI Rete Due Latest audios", nil),
                           @(MediaListLatestAudiosRSI3) : NSLocalizedString(@"RSI Rete Tre Latest audios", nil),
-                          @(MediaListLatestAudiosRTR) : NSLocalizedString(@"RTR Latest audios", nil) };
+                          @(MediaListLatestAudiosRTR) : NSLocalizedString(@"RTR Latest audios", nil),
+                          @(MediaListLiveWebSRF) : NSLocalizedString(@"SRF Live Web", nil),
+                          @(MediaListLiveWebRTS) : NSLocalizedString(@"RTS Live Web", nil),
+                          @(MediaListLiveWebRSI) : NSLocalizedString(@"RSI Live Web", nil),
+                          @(MediaListLiveWebRTR) : NSLocalizedString(@"RTR Live Web", nil) };
         });
         return s_titles[@(self.mediaList)] ?: NSLocalizedString(@"Unknown", nil);
     }
@@ -285,6 +289,25 @@
             NSAssert(vendorNumber != nil, @"The business unit must be supported");
             NSAssert(channelId != nil, @"The channel id must not be null");
             request = [[self.dataProvider radioLatestMediasForVendor:vendorNumber.intValue channelUid:channelId withCompletionBlock:completionBlock] requestWithPageSize:100];
+            break;
+        }
+            
+        case MediaListLiveWebSRF:
+        case MediaListLiveWebRTS:
+        case MediaListLiveWebRSI:
+        case MediaListLiveWebRTR: {
+            static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_vendors = @{ @(MediaListLiveWebSRF) : @(SRGVendorSRF),
+                               @(MediaListLiveWebRTS) : @(SRGVendorRTS),
+                               @(MediaListLiveWebRSI) : @(SRGVendorRSI),
+                               @(MediaListLiveWebRTR) : @(SRGVendorRTR) };
+            });
+            
+            NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
+            NSAssert(vendorNumber != nil, @"The business unit must be supported");
+            request = [[self.dataProvider tvScheduledLivestreamsForVendor:vendorNumber.integerValue withCompletionBlock:completionBlock] requestWithPageSize:100];
             break;
         }
             
