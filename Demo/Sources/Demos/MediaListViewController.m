@@ -6,8 +6,10 @@
 
 #import "MediaListViewController.h"
 
+#import "DemoAccessibilityFormatter.h"
 #import "ModalPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
+#import "NSDateFormatter+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "UIViewController+LetterboxDemo.h"
 
@@ -332,7 +334,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
     if (! cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifier];
     }
     
     return cell;
@@ -344,22 +346,36 @@
 {
     SRGMedia *media = self.medias[indexPath.row];
     NSString *text = media.title;
+    NSString *accessibilityLabelPrefix = @"";
     
     SRGTimeAvailability timeAvailability = [media timeAvailabilityAtDate:NSDate.date];
     if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
         text = [@"🔜 " stringByAppendingString:text];
+        accessibilityLabelPrefix = [LetterboxDemoAccessibilityLocalizedString(@"Soon", nil) stringByAppendingString:@" ,"];
     }
     else if (timeAvailability == SRGTimeAvailabilityNotAvailableAnymore) {
         text = [@"🔚 " stringByAppendingString:text];
+        accessibilityLabelPrefix = [LetterboxDemoAccessibilityLocalizedString(@"Expired", nil) stringByAppendingString:@" ,"];
     }
     else if (media.contentType == SRGContentTypeLivestream || media.contentType == SRGContentTypeScheduledLivestream) {
         text = [@"⏺ " stringByAppendingString:text];
+        accessibilityLabelPrefix = [LetterboxDemoAccessibilityLocalizedString(@"Live", nil) stringByAppendingString:@" ,"];
     }
     else {
         text = [@"▶️ " stringByAppendingString:text];
     }
     
     cell.textLabel.text = text;
+    
+    if (media.contentType != SRGContentTypeLivestream) {
+        NSString * dateString = [NSDateFormatter.letteroxdemo_relativeDateAndTimeFormatter stringFromDate:media.date];
+        cell.detailTextLabel.text = dateString;
+        cell.accessibilityLabel = [NSString stringWithFormat:@"%@%@, %@", accessibilityLabelPrefix, text, LetterboxDemoAccessibilityRelativeDateAndTimeFromDate(media.date)];
+    }
+    else {
+        cell.detailTextLabel.text = nil;
+        cell.accessibilityLabel = [NSString stringWithFormat:@"%@%@", accessibilityLabelPrefix, text];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

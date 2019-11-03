@@ -35,6 +35,8 @@
 		08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController.m */; };
 		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
 		08E2E0762146C5D40098E13B /* SRGDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */; };
+		08F163F8236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F163F6236F5A8500072E69 /* NSDateFormatter+LetterboxDemo.m */; };
+		08F163FB236F5B6D00072E69 /* DemoAccessibilityFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F163F9236F5B6C00072E69 /* DemoAccessibilityFormatter.m */; };
 		08F805C81F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */; };
 		08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */; };
 		08FA0CDC1E2E8CCC000C94EF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */; };
@@ -282,6 +284,10 @@
 		08E2E0752146C5D30098E13B /* SRGDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SRGDiagnostics.framework; path = Carthage/Build/iOS/SRGDiagnostics.framework; sourceTree = "<group>"; };
 		08EB669E1F34C6B000E9D7CA /* TCCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCCore.framework; path = Carthage/Build/iOS/TCCore.framework; sourceTree = "<group>"; };
 		08EB669F1F34C6B000E9D7CA /* TCSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCSDK.framework; path = Carthage/Build/iOS/TCSDK.framework; sourceTree = "<group>"; };
+		08F163F6236F5A8500072E69 /* NSDateFormatter+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+LetterboxDemo.m"; sourceTree = "<group>"; };
+		08F163F7236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+LetterboxDemo.h"; sourceTree = "<group>"; };
+		08F163F9236F5B6C00072E69 /* DemoAccessibilityFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAccessibilityFormatter.m; sourceTree = "<group>"; };
+		08F163FA236F5B6C00072E69 /* DemoAccessibilityFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAccessibilityFormatter.h; sourceTree = "<group>"; };
 		08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGMediaComposition+SRGLetterbox.m"; sourceTree = "<group>"; };
 		08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRGMediaComposition+SRGLetterbox.h"; sourceTree = "<group>"; };
 		08FA0CBA1E2E5874000C94EF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -744,10 +750,14 @@
 		6F73FB0A1E4C6F01000986C2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				08F163FA236F5B6C00072E69 /* DemoAccessibilityFormatter.h */,
+				08F163F9236F5B6C00072E69 /* DemoAccessibilityFormatter.m */,
 				6FB017981E975F87004CCAF8 /* ModalTransition.h */,
 				6FB017991E975F87004CCAF8 /* ModalTransition~ios.m */,
 				084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */,
 				6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */,
+				08F163F7236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.h */,
+				08F163F6236F5A8500072E69 /* NSDateFormatter+LetterboxDemo.m */,
 				6FFAD13E202C89C900FDAA6C /* Playlist.h */,
 				6FFAD13D202C89C900FDAA6C /* Playlist.m */,
 				6FCB995B1F56948D00790EAA /* ServerSettings.h */,
@@ -1358,6 +1368,7 @@
 			files = (
 				6F353A6F22BB64AE0035F656 /* PlayerPageViewController~ios.m in Sources */,
 				6F0AD07E1E5EB224000A61A5 /* FeedTableViewCell~ios.m in Sources */,
+				08F163FB236F5B6D00072E69 /* DemoAccessibilityFormatter.m in Sources */,
 				6FC972F7236B18DE00ED6197 /* MediasViewController.m in Sources */,
 				6FB78F8B1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.m in Sources */,
 				6FC95073236B63EC0022B9A9 /* UIViewController+LetterboxDemo.m in Sources */,
@@ -1367,6 +1378,7 @@
 				6F83304B236B4D40005D08A4 /* MiscellaneousViewController~ios.m in Sources */,
 				6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */,
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
+				08F163F8236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.m in Sources */,
 				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
 				6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */,
 				086B944C234CEDA3003D6BAA /* Media.m in Sources */,
