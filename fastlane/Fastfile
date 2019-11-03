@@ -90,6 +90,8 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
+    update_dsyms(ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'])
+
     clean_build_artifacts
 
     save_last_nightlies_success_git_commit_hash(build_platform)
@@ -168,6 +170,8 @@ platform :ios do
       distribute_external: true,
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
+
+    update_dsyms(ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'])
 
     clean_build_artifacts
 
@@ -252,23 +256,36 @@ platform :ios do
     end
   end
 
-  desc "Upload a build on App Center"
+  desc "Upload a build on App Center or just a dSYM file."
   private_lane :appcenter_lane do |options|
     appname = options[:appname]
     destinations = options[:destinations]
     notes = options[:notes]
     notify_testers = options[:notify_testers] ? options[:notify_testers] : false
+    upload_dsym = options[:upload_dsym]
 
-    appcenter_upload(
-      api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-      owner_type: "organization",
-      owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
-      app_name: appname,
-      release_notes: notes,
-      destination_type: "group",
-      destinations: destinations,
-      notify_testers: notify_testers
-    )
+    if upload_dsym
+      appcenter_upload(
+        api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
+        owner_type: "organization",
+        owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
+        app_name: appname,
+        release_notes: notes,
+        upload_dsym_only: true,
+        dsym: upload_dsym
+      )
+    else
+      appcenter_upload(
+        api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
+        owner_type: "organization",
+        owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
+        app_name: appname,
+        release_notes: notes,
+        destination_type: "group",
+        destinations: destinations,
+        notify_testers: notify_testers
+      )
+    end
   end
 
   # Returns a default changelog for nightlies
@@ -373,6 +390,22 @@ platform :ios do
     update_app_identifier(
       plist_path: "Demo/Info.plist"
     )
+  end
+
+  def update_dsyms(appcenter_app_name)
+    output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
+
+    download_dsyms(version: "latest", output_directory: output_directory)
+
+    if lane_context[SharedValues::DSYM_PATHS]
+      lane_context[SharedValues::DSYM_PATHS].each { |dSYM|
+        appcenter_lane(
+          appname: appcenter_app_name,
+          notes: 'DSYMs from AppStore Connect (via fastlane).',
+          upload_dsym: dSYM
+        )
+      }
+    end
   end
 
   after_all do |lane|
