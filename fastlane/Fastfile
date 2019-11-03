@@ -16,12 +16,8 @@ platform :ios do
     ensure_git_status_clean
 
     # For the demo, before all, check if we have a demo release description
-    if lane.to_s == "demo"
-      build_number = get_build_number
-      marketing_version = xcode_marketing_version
-      tag_version = marketing_version + '-' + build_number
-
-      what_s_new = what_s_new_for_demo(tag_version)
+    if lane.to_s.downcase.include? "demo"
+      what_s_new = what_s_new_for_demo()
       if what_s_new.empty?
         UI.user_error!("Whoops, there is no demo release note in the WhatsNew-demo.json file for " + tag_version)
       end
@@ -71,14 +67,12 @@ platform :ios do
   lane :tvOSnightly do |options|
     skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] ? options[:skip_waiting_for_build_processing] : false
 
+    update_to_appstore_app_identifier
+
     build_platform = "tvOS"
     appstore_platform =  "appletvos"
 
     appstore_build_number = latest_testflight_build_number(platform: appstore_platform)
-
-    update_to_appstore_app_identifier
-
-    fix_tc_bootstrap_tvos
 
     nightly(
       platform: build_platform,
@@ -101,7 +95,7 @@ platform :ios do
     save_last_nightlies_success_git_commit_hash(build_platform)
   end
 
-  desc "Common stuff to build a new nightly demo"
+  desc "Common stuff to build a new nightly demo."
   private_lane :nightly do |options|
     platform = options[:platform] ? options[:platform] : "iOS"
     export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
@@ -130,30 +124,67 @@ platform :ios do
   end
 
   desc "Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after."
-  lane :demo do
+  lane :iOSdemo do
+    build_platform = "iOS"
 
-    build_number = get_build_number
-    marketing_version = xcode_marketing_version
-    tag_version = marketing_version + '-' + build_number
-
-    what_s_new = what_s_new_for_demo(tag_version)
-
-    build_lane(
-      configuration: "Release",
-      scheme: "SRGLetterbox-demo",
-      platform: "iOS"
+    demo(
+      platform: build_platform
     )
+
+    changelog = what_s_new_for_demo()
 
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_DESTINATIONS'],
-      notes: what_s_new,
+      notes: changelog,
       notify_testers: true
     )
 
     clean_build_artifacts
 
     print "You are responsible to tag the library version and bump the build number after."
+  end
+
+  desc "Build a new tvOS demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter. You are responsible to tag the library version and bump the build number after."
+  lane :tvOSdemo do |options|
+    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] ? options[:skip_waiting_for_build_processing] : false
+
+    update_to_appstore_app_identifier
+
+    build_platform = "tvOS"
+    appstore_platform =  "appletvos"
+
+    demo(
+      platform: build_platform,
+      export_to_appstore: true
+    )
+
+    changelog = what_s_new_for_demo()
+
+    pilot(
+      app_platform: appstore_platform,
+      skip_waiting_for_build_processing: skip_waiting_for_build_processing,
+      changelog: changelog,
+      distribute_external: true,
+      groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
+    )
+
+    clean_build_artifacts
+
+    print "You are responsible to tag the library version and bump the build number after."
+  end
+
+  desc "Common stuff to build a new demo."
+  private_lane :demo do |options|
+    platform = options[:platform] ? options[:platform] : "iOS"
+    export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
+
+    build_lane(
+      configuration: "Release",
+      scheme: "SRGLetterbox-demo",
+      platform: platform,
+      export_to_appstore: export_to_appstore
+    )
   end
 
   desc "Build for a scheme and a configuration"
@@ -165,7 +196,7 @@ platform :ios do
     marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
     platform = options[:platform] ? options[:platform] : "iOS"
 
-    # - or + characters are not allowed on AppStore Connect
+    # Characters "-" or "+" are not allowed on AppStore Connect.
     if export_to_appstore
       marketing_version_suffix = ""
     end
@@ -183,8 +214,12 @@ platform :ios do
     comscore_sh_file = "../Carthage/Build/" + platform + "/ComScore.framework/strip-framework.sh"
     File.delete(comscore_sh_file) if File.exist?(comscore_sh_file)
 
-    # Workaround for missing TagCommander tvOS SDK
+    # Workaround for missing TagCommander tvOS SDK: use iOS frameworks to build andd remove it for ipad package.
     fix_tc_frameworks = export_to_appstore
+
+    if fix_tc_frameworks
+      fix_tc_tvos_bootstrap
+    end
 
     gym(
       configuration: configuration,
@@ -200,12 +235,9 @@ platform :ios do
       skip_package_ipa: fix_tc_frameworks
     )
 
-    # Workaround for missing TagCommander tvOS SDK: remove iOS frameworks and package ipa.
     if fix_tc_frameworks
-      xcodebuild_archive_frameworks = lane_context[SharedValues::XCODEBUILD_ARCHIVE] + "/Products/Applications/SRGLetterbox-demo.app/Frameworks"
-      FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCCore.framework", force = true)
-      FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCSDK.framework", force = true)
-    
+      fix_tc_tvos_archive
+
       gym(
         skip_build_archive: true,
         archive_path: lane_context[SharedValues::XCODEBUILD_ARCHIVE],
@@ -214,7 +246,8 @@ platform :ios do
         silent: true,
         export_method: export_to_appstore ? "app-store" : "enterprise",
         include_bitcode: export_to_appstore,
-        export_team_id: team_id
+        export_team_id: team_id,
+        output_directory: output_directory
       )
     end
   end
@@ -294,8 +327,16 @@ platform :ios do
      app_identifier
   end
 
+  # Return current tag version
+  def tag_version()
+    build_number = get_build_number
+    marketing_version = xcode_marketing_version
+    tag_version = marketing_version + '-' + build_number
+    tag_version
+  end
+
   # Return the what's new text from WhatsNew-demo.json file in the repository
-  def what_s_new_for_demo(tag_version)
+  def what_s_new_for_demo()
     file = File.open("../WhatsNew-demo.json", "r")  
     json = JSON.parse(file.read)
     file.close
@@ -304,7 +345,7 @@ platform :ios do
   end
 
   # Workaround for missing TagCommander tvOS SDKs: copy iOS frameworks for tvOS build.
-  def fix_tc_bootstrap_tvos()
+  def fix_tc_tvos_bootstrap()
     source_platform = "iOS"
     destination_platform = "tvOS"
 
@@ -317,6 +358,13 @@ platform :ios do
     if !File.directory?(tcsdk % [destination_platform])
       FileUtils.copy_entry(tcsdk % [source_platform], tcsdk % [destination_platform])
     end
+  end
+
+  # Workaround for missing TagCommander tvOS SDK: remove iOS frameworks in archive.
+  def fix_tc_tvos_archive()
+    xcodebuild_archive_frameworks = lane_context[SharedValues::XCODEBUILD_ARCHIVE] + "/Products/Applications/SRGLetterbox-demo.app/Frameworks"
+    FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCCore.framework", force = true)
+    FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCSDK.framework", force = true)    
   end
 
   # Update only the demo app identifier for App Store Connect submit.

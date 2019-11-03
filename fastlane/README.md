@@ -31,11 +31,16 @@ Build a new iOS nightly demo on App Center
 fastlane ios tvOSnightly
 ```
 Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter.
-### ios demo
+### ios iOSdemo
 ```
-fastlane ios demo
+fastlane ios iOSdemo
 ```
 Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after.
+### ios tvOSdemo
+```
+fastlane ios tvOSdemo
+```
+Build a new tvOS demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter. You are responsible to tag the library version and bump the build number after.
 
 ----
 
