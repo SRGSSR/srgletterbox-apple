@@ -81,13 +81,25 @@
 - (void)openTopicListWithType:(TopicList)topicList
 {
     TopicListViewController *topicListViewController = [[TopicListViewController alloc] initWithTopicList:topicList];
-    [self.navigationController pushViewController:topicListViewController animated:YES];
+    if (self.navigationController) {
+        [self.navigationController pushViewController:topicListViewController animated:YES];
+    }
+    else {
+        UINavigationController *navigationViewController = [[UINavigationController alloc] initWithRootViewController:topicListViewController];;
+        [self presentViewController:navigationViewController animated:YES completion:nil];
+    }
 }
 
 - (void)openMediaListWithType:(MediaList)mediaList
 {
     MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:mediaList topic:nil serviceURL:nil];
-    [self.navigationController pushViewController:mediaListViewController animated:YES];
+    if (self.navigationController) {
+        [self.navigationController pushViewController:mediaListViewController animated:YES];
+    }
+    else {
+        UINavigationController *navigationViewController = [[UINavigationController alloc] initWithRootViewController:mediaListViewController];;
+        [self presentViewController:navigationViewController animated:YES completion:nil];
+    }
 }
 
 #pragma mark UITableViewDelegate protocol
