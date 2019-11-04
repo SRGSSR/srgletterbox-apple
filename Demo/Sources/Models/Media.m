@@ -141,7 +141,7 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p; name = %@; URN = %@>",
-            [self class],
+            self.class,
             self,
             self.name,
             self.URN];

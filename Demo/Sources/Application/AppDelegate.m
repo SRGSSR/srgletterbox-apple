@@ -95,7 +95,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
     NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:YES];
-    
     if ([URLComponents.host.lowercaseString isEqualToString:@"media"]) {
         NSString *mediaURN = URLComponents.path.lastPathComponent;
         if (mediaURN) {
@@ -108,10 +107,8 @@ static __attribute__((constructor)) void ApplicationInit(void)
             [self.window.rootViewController openPlayerWithURN:mediaURN serviceURL:serviceURL];
             return YES;
         }
-        
         return NO;
     }
-    
     return NO;
 }
 

@@ -122,11 +122,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                                                    name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                  object:controller];
         
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(willSkipBlockedSegment:)
                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
-                                                 object:mediaPlayerController];
+                                                 object:controller.mediaPlayerController];
     }
     return self;
 }

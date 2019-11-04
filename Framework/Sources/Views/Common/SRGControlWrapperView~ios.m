@@ -67,7 +67,7 @@
 
 - (NSArray *)accessibilityElements
 {
-    return (self.subviews.firstObject) ? @[self.subviews.firstObject] : nil;
+    return self.subviews.firstObject ? @[self.subviews.firstObject] : nil;
 }
 
 @end

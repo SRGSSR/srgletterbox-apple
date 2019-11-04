@@ -10,6 +10,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class SRGContinuousPlaybackViewController;
 
+/**
+ *  Continuous playback view controller delegate protocol.
+ */
 @protocol SRGContinuousPlaybackViewControllerDelegate <NSObject>
 
 /**
@@ -25,12 +28,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This method is called when the users chooses to restart playback of the current media.
  */
-- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController  didRestartPlaybackWithMedia:(SRGMedia *)media;
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didRestartPlaybackWithMedia:(SRGMedia *)media;
 
 @end
 
 /**
- *  View displayed during a continuous playback transition between two medias.
+ *  View controller displayed during a continuous playback transition between two medias.
  */
 API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @interface SRGContinuousPlaybackViewController : UIViewController

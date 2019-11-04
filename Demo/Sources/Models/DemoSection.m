@@ -62,7 +62,7 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p; name = %@; medias = %@>",
-            [self class],
+            self.class,
             self,
             self.name,
             self.medias];
