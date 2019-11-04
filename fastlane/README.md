@@ -41,6 +41,16 @@ Build a new iOS demo on App Center with the current build number. You are respon
 fastlane ios tvOSdemo
 ```
 Build a new tvOS demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter. You are responsible to tag the library version and bump the build number after.
+### ios nighltyDSYMs
+```
+fastlane ios nighltyDSYMs
+```
+Send latest tvOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters.
+### ios demoDSYMs
+```
+fastlane ios demoDSYMs
+```
+Send latest tvOS demo dSYMs to App Center, with optional 'version' or 'min_version' parameters.
 
 ----
 

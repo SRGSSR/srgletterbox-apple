@@ -13,7 +13,6 @@ default_platform :ios
 
 platform :ios do
   before_all do |lane|
-    ensure_git_status_clean
 
     # For the demo, before all, check if we have a demo release description
     if lane.to_s.downcase.include? "demo"
@@ -23,8 +22,11 @@ platform :ios do
       end
     end
 
-    Dir.chdir("..") do
-      sh "make bootstrap"
+    if (!lane.to_s.downcase.include? "dsym")
+      ensure_git_status_clean
+      Dir.chdir("..") do
+        sh "make bootstrap"
+      end
     end
   end
 
@@ -90,7 +92,10 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'])
+    # Wait a bit before asking dSYMs. Not rready yet.
+    sleep(1.minutes)
+
+    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], null)
 
     clean_build_artifacts
 
@@ -174,7 +179,10 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'])
+    # Wait a bit before asking dSYMs. Not rready yet.
+    sleep(1.minutes)
+
+    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], null)
 
     clean_build_artifacts
 
@@ -292,6 +300,16 @@ platform :ios do
     end
   end
 
+  desc "Send latest tvOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters."
+  lane :nighltyDSYMs do |options|
+    update_dsyms("appletvos", ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], options)
+  end
+
+  desc "Send latest tvOS demo dSYMs to App Center, with optional 'version' or 'min_version' parameters."
+  lane :demoDSYMs do |options|
+    update_dsyms("appletvos", ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], options)
+  end
+
   # Returns a default changelog for nightlies
   def default_changelog_for_nightlies(platform)
 
@@ -396,14 +414,35 @@ platform :ios do
     )
   end
 
-  def update_dsyms(platform, appcenter_app_name)
-    output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
+  def update_dsyms (platform, appcenter_app_name, options)
+    min_version = options[:min_version]
+    version = options[:version]
 
-    download_dsyms(
-      platform: platform,
-      version: "latest",
-      output_directory: output_directory
-    )
+    output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
+    
+    Dir.chdir("..") do
+      FileUtils.mkdir_p(output_directory) if !File.directory?(output_directory)
+    end
+
+    if min_version
+      download_dsyms(
+        platform: platform,
+        min_version: min_version,
+        output_directory: output_directory
+      )
+    elsif version
+      download_dsyms(
+        platform: platform,
+        version: version,
+        output_directory: output_directory
+        )
+    else
+      download_dsyms(
+        platform: platform,
+        version: "latest",
+        output_directory: output_directory
+        )
+    end
 
     if lane_context[SharedValues::DSYM_PATHS]
       lane_context[SharedValues::DSYM_PATHS].each { |dSYM|
@@ -417,7 +456,9 @@ platform :ios do
   end
 
   after_all do |lane|
-    reset_git_repo(skip_clean: true)
+    if (!lane.to_s.downcase.include? "dsym")
+      reset_git_repo(skip_clean: true)
+    end
 
     # slack(
     #   message: "Successfully deployed new App Update."
@@ -425,8 +466,11 @@ platform :ios do
   end
 
   error do |lane, exception|
-    clean_build_artifacts
-    reset_git_repo(skip_clean: true, force: true)
+    if (!lane.to_s.downcase.include? "dsym")
+      clean_build_artifacts
+      reset_git_repo(skip_clean: true, force: true)
+    end
+
     # slack(
     #   message: exception.message,
     #   success: false
