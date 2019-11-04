@@ -90,7 +90,7 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    update_dsyms(ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'])
+    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'])
 
     clean_build_artifacts
 
@@ -171,7 +171,7 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    update_dsyms(ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'])
+    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'])
 
     clean_build_artifacts
 
@@ -392,10 +392,14 @@ platform :ios do
     )
   end
 
-  def update_dsyms(appcenter_app_name)
+  def update_dsyms(platform, appcenter_app_name)
     output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
 
-    download_dsyms(version: "latest", output_directory: output_directory)
+    download_dsyms(
+      platform: platform,
+      version: "latest",
+      output_directory: output_directory
+    )
 
     if lane_context[SharedValues::DSYM_PATHS]
       lane_context[SharedValues::DSYM_PATHS].each { |dSYM|
