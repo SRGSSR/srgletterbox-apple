@@ -32,8 +32,8 @@
 {
     [super awakeFromNib];
     
-    self.messageLabel.horizontalMargin = 5.f;
-    self.messageLabel.verticalMargin = 2.f;
+    self.messageLabel.horizontalMargin = 10.f;
+    self.messageLabel.verticalMargin = 4.f;
     self.messageLabel.layer.cornerRadius = 4.f;
     self.messageLabel.layer.masksToBounds = YES;
 }
