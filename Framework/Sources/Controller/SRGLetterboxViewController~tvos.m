@@ -446,7 +446,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 {
     NSMutableArray<AVTimedMetadataGroup *> *navigationMarkers = [NSMutableArray array];
     
-    for (SRGSegment *segment in self.controller.mediaComposition.mainChapter.segments) {
+    for (SRGSegment *segment in segments) {
         AVMutableMetadataItem *titleItem = [[AVMutableMetadataItem alloc] init];
         titleItem.identifier = AVMetadataCommonIdentifierTitle;
         titleItem.value = segment.title;
