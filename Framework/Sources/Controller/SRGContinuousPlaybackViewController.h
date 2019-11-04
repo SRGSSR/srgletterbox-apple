@@ -29,11 +29,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ *  View displayed during a continuous playback transition between two medias.
+ */
 API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 @interface SRGContinuousPlaybackViewController : UIViewController
 
+/**
+ *  Instantiate with current and upcoming media information. The view displays a countdown ending at the specified date.
+ */
 - (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate;
 
+/**
+ *  The delegate.
+ */
 @property (nonatomic, weak) id<SRGContinuousPlaybackViewControllerDelegate> delegate;
 
 @end
