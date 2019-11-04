@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Accessibility player placeholder view.
  */
+API_UNAVAILABLE(tvos)
 @interface SRGAccessibilityView : SRGLetterboxBaseView
 
 /**

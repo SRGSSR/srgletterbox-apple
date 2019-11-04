@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Custom slider displaying a small time bubble attached to its knob.
  */
+API_UNAVAILABLE(tvos)
 @interface SRGLetterboxTimeSlider : SRGTimeSlider
 
 @end

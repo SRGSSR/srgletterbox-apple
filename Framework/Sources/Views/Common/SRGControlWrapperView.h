@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Control wrapper view helps a control to have margin constraints in the control stack view.
  */
+API_UNAVAILABLE(tvos)
 @interface SRGControlWrapperView : UIView
 
 /**

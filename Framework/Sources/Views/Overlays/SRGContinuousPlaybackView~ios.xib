@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGContinuousPlaybackView">
+            <connections>
+                <outlet property="cancelButton" destination="HYZ-hG-mSG" id="VMb-qi-PHj"/>
+                <outlet property="cancelStackView" destination="RXl-u8-lXl" id="uxq-vo-93p"/>
+                <outlet property="imageView" destination="Pla-Fb-TkJ" id="S6x-1R-YTR"/>
+                <outlet property="introLabel" destination="2nS-d4-yiq" id="1J5-xd-klh"/>
+                <outlet property="remainingTimeButton" destination="NDI-pF-dbh" id="jtw-8W-3HR"/>
+                <outlet property="subtitleLabel" destination="sbN-rw-Dcz" id="p9b-C1-dMK"/>
+                <outlet property="titleLabel" destination="CDg-yd-0lJ" id="PXB-TN-QPl"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="639" height="485"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pla-Fb-TkJ">
+                    <rect key="frame" x="0.0" y="0.0" width="639" height="485"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSF-UW-4eb" userLabel="Dimming View">
+                    <rect key="frame" x="0.0" y="0.0" width="639" height="485"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Spe-k9-ZXj">
+                            <rect key="frame" x="16" y="0.0" width="607" height="485"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Wc-k8-e7B" userLabel="Spacer View">
+                                    <rect key="frame" x="0.0" y="0.0" width="607" height="148"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Next" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2nS-d4-yiq" userLabel="Next Label">
+                                    <rect key="frame" x="0.0" y="150" width="607" height="18"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="&lt;title&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CDg-yd-0lJ">
+                                    <rect key="frame" x="0.0" y="170" width="607" height="20.5"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="&lt;subtitle&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbN-rw-Dcz">
+                                    <rect key="frame" x="0.0" y="192.5" width="607" height="18"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SlS-lF-c36" userLabel="Spacer View">
+                                    <rect key="frame" x="0.0" y="212.5" width="607" height="6"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="6" id="Xf5-zP-aJG"/>
+                                    </constraints>
+                                </view>
+                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DHg-WC-l01">
+                                    <rect key="frame" x="0.0" y="220.5" width="607" height="55"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kaF-9m-TLh" userLabel="Spacer View">
+                                            <rect key="frame" x="0.0" y="0.0" width="276" height="55"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NDI-pF-dbh" userLabel="Play Button" customClass="SRGRemainingTimeButton">
+                                            <rect key="frame" x="276" y="0.0" width="55" height="55"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="55" id="U8v-Oj-QUJ"/>
+                                                <constraint firstAttribute="height" constant="55" id="n4t-bo-Ia9"/>
+                                            </constraints>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <state key="normal" image="play_centered"/>
+                                            <connections>
+                                                <action selector="playUpcomingMedia:" destination="-1" eventType="touchUpInside" id="hJc-A4-GWk"/>
+                                            </connections>
+                                        </button>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ov5-2a-xCM" userLabel="Spacer View">
+                                            <rect key="frame" x="331" y="0.0" width="276" height="55"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="kaF-9m-TLh" firstAttribute="width" secondItem="Ov5-2a-xCM" secondAttribute="width" id="AeK-1w-8sa"/>
+                                    </constraints>
+                                </stackView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bRF-eU-6YP" userLabel="Spacer View">
+                                    <rect key="frame" x="0.0" y="277.5" width="607" height="6"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="6" id="c0w-it-ukG"/>
+                                    </constraints>
+                                </view>
+                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RXl-u8-lXl">
+                                    <rect key="frame" x="0.0" y="285.5" width="607" height="50"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dh9-6p-2RN" userLabel="Spacer View">
+                                            <rect key="frame" x="0.0" y="0.0" width="279.5" height="50"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYZ-hG-mSG">
+                                            <rect key="frame" x="279.5" y="0.0" width="48" height="50"/>
+                                            <state key="normal" title="Cancel">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="cancelContinuousPlayback:" destination="-1" eventType="touchUpInside" id="7GL-jU-uGf"/>
+                                            </connections>
+                                        </button>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U7I-6s-aOB" userLabel="Spacer View">
+                                            <rect key="frame" x="327.5" y="0.0" width="279.5" height="50"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="U7I-6s-aOB" firstAttribute="width" secondItem="dh9-6p-2RN" secondAttribute="width" id="apM-dq-qGE"/>
+                                    </constraints>
+                                </stackView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MsH-Et-NWg" userLabel="Spacer View">
+                                    <rect key="frame" x="0.0" y="337.5" width="607" height="147.5"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="4Wc-k8-e7B" secondAttribute="trailing" id="HDQ-r9-9Hp"/>
+                                <constraint firstItem="4Wc-k8-e7B" firstAttribute="height" secondItem="MsH-Et-NWg" secondAttribute="height" id="Nd3-KF-RXN"/>
+                                <constraint firstItem="4Wc-k8-e7B" firstAttribute="leading" secondItem="Spe-k9-ZXj" secondAttribute="leading" id="Uy0-Lc-QVY"/>
+                            </constraints>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="Spe-k9-ZXj" firstAttribute="top" secondItem="YSF-UW-4eb" secondAttribute="top" id="BM0-jG-Xbl"/>
+                        <constraint firstAttribute="bottom" secondItem="Spe-k9-ZXj" secondAttribute="bottom" id="zUo-0y-JVw"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+            <constraints>
+                <constraint firstItem="Pla-Fb-TkJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="20c-Iy-dcL"/>
+                <constraint firstItem="Pla-Fb-TkJ" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="65L-JR-IPz"/>
+                <constraint firstItem="YSF-UW-4eb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Ozm-nC-5fq"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Spe-k9-ZXj" secondAttribute="trailing" constant="16" id="S4C-0U-Hb8"/>
+                <constraint firstItem="Pla-Fb-TkJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="SRi-ff-yPE"/>
+                <constraint firstAttribute="trailing" secondItem="YSF-UW-4eb" secondAttribute="trailing" id="TOl-z6-Ajy"/>
+                <constraint firstItem="YSF-UW-4eb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="dAu-Bc-ZGW"/>
+                <constraint firstAttribute="bottom" secondItem="YSF-UW-4eb" secondAttribute="bottom" id="ecs-6u-gWj"/>
+                <constraint firstAttribute="bottom" secondItem="Pla-Fb-TkJ" secondAttribute="bottom" id="kxJ-ju-kYm"/>
+                <constraint firstItem="Spe-k9-ZXj" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="wHd-Po-9ej"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-243.5" y="1.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="play_centered" width="16" height="16"/>
+    </resources>
+</document>

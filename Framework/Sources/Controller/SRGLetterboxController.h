@@ -346,7 +346,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 /**
  *  Set to `YES` to enable background video playback if possible (not supported for 360° or when AirPlay or Picture in
- *  picture are active).
+ *  picture are active). Default is `NO`.
  */
 @property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled;
 
@@ -742,17 +742,17 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Return `YES` iff the receiver is enabled for background services.
  */
-@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled;
+@property (nonatomic, readonly, getter=areBackgroundServicesEnabled) BOOL backgroundServicesEnabled API_UNAVAILABLE(tvos);
 
 /**
  *  Return `YES` iff the receiver is enabled for picture in picture.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled;
+@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled API_UNAVAILABLE(tvos);
 
 /**
  *  Return `YES` iff picture in picture is currently active for the receiver.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive API_UNAVAILABLE(tvos);
 
 @end
 

@@ -1,11 +1,11 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_FOLDER=Configuration
-CONFIGURATION_COMMIT_SHA1=18f2db5e930cac2e46d63af21cab677d4c6377c7
+CONFIGURATION_COMMIT_SHA1=32b994c83075b40fc75222c3f4c30849b638d2e7
 
 CARTHAGE_FOLDER=Carthage
 CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
-CARTHAGE_BUILD_FLAGS=--platform iOS --cache-builds
+CARTHAGE_BUILD_FLAGS=--platform iOS,tvOS --cache-builds
 
 CARTFILE_PRIVATE=Cartfile.private
 CARTFILE_RESOLVED=Cartfile.resolved

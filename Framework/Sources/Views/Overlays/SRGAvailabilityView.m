@@ -15,7 +15,6 @@
 #import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
-#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGAvailabilityView ()
@@ -33,8 +32,8 @@
 {
     [super awakeFromNib];
     
-    self.messageLabel.horizontalMargin = 5.f;
-    self.messageLabel.verticalMargin = 2.f;
+    self.messageLabel.horizontalMargin = 10.f;
+    self.messageLabel.verticalMargin = 4.f;
     self.messageLabel.layer.cornerRadius = 4.f;
     self.messageLabel.layer.masksToBounds = YES;
 }
@@ -43,7 +42,7 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
 }
 
 - (void)metadataDidChange
@@ -53,6 +52,8 @@
     [self refresh];
     [self updateLayout];
 }
+
+#if TARGET_OS_IOS
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
@@ -68,6 +69,8 @@
     
     [self updateLayout];
 }
+
+#endif
 
 #pragma mark UI
 
@@ -89,11 +92,14 @@
         // Lazily add heavy countdown view when required
         if (! self.countdownView.superview) {
             SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
-            [self insertSubview:countdownView atIndex:0];
-            [countdownView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self);
-            }];
+            [self addSubview:countdownView];
             self.countdownView = countdownView;
+            
+            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[ [countdownView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                       [countdownView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                       [countdownView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+                                                       [countdownView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
         }
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {

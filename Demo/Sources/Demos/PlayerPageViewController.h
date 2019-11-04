@@ -8,6 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+API_UNAVAILABLE(tvos)
 @interface PlayerPageViewController : UIViewController
 
 - (instancetype)initWithURN:(NSString *)URN;

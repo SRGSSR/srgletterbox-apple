@@ -33,11 +33,11 @@
 /**
  Set this property to YES in order to enable the copy feature. Defaults to NO.
  */
-@property (nonatomic) IBInspectable BOOL copyingEnabled;
+@property (nonatomic) IBInspectable BOOL copyingEnabled API_UNAVAILABLE(tvos);
 
 /**
  Used to enable/disable the internal long press gesture recognizer. Defaults to YES.
  */
-@property (nonatomic) IBInspectable BOOL shouldUseLongPressGestureRecognizer;
+@property (nonatomic) IBInspectable BOOL shouldUseLongPressGestureRecognizer API_UNAVAILABLE(tvos);
 
 @end

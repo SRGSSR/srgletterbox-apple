@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "forbidden-12.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "forbidden-13.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "forbidden-14.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

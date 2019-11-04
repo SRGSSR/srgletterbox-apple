@@ -34,15 +34,33 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
         && ! [URL.absoluteString containsString:@".html"];
 }
 
-NSString *SRGLetterboxMediaPlaceholderFilePath(void)
+NSString *SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholder imagePlaceholder)
 {
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-180" ofType:@"pdf"];
+    switch (imagePlaceholder) {
+        case SRGLetterboxImagePlaceholderMedia: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
+            break;
+        }
+            
+        case SRGLetterboxImagePlaceholderArtwork: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-square" ofType:@"pdf"];
+            break;
+        }
+            
+#if TARGET_OS_TV
+        case SRGLetterboxImagePlaceholderBackground: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_background~tvos" ofType:@"pdf"];
+            break;
+        }
+#endif
+            
+        default: {
+            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
+            break;
+        }
+    }
 }
 
-NSString *SRGLetterboxMediaArtworkPlaceholderFilePath(void)
-{
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-320" ofType:@"pdf"];
-}
 
 NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
 {
@@ -85,6 +103,11 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
     static NSDictionary *s_widths;
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
+#if TARGET_OS_TV
+        s_widths = @{ @(SRGImageScaleSmall) : @(400.f),
+                      @(SRGImageScaleMedium) : @(800.f),
+                      @(SRGImageScaleLarge) : @(1920.f)};
+#else
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
             s_widths = @{ @(SRGImageScaleSmall) : @(200.f),
                           @(SRGImageScaleMedium) : @(350.f),
@@ -95,6 +118,7 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
                           @(SRGImageScaleMedium) : @(500.f),
                           @(SRGImageScaleLarge) : @(1000.f)};
         }
+#endif
     });
     
     // Use 2x maximum as scale. Sufficient for a good result without having to load very large images
@@ -209,32 +233,32 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxPlayImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play-48"] : [UIImage srg_letterboxImageNamed:@"play-64"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"play"] : [UIImage srg_letterboxImageNamed:@"play-large"];
 }
 
 + (UIImage *)srg_letterboxPauseImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause-48"] : [UIImage srg_letterboxImageNamed:@"pause-64"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"pause"] : [UIImage srg_letterboxImageNamed:@"pause-large"];
 }
 
 + (UIImage *)srg_letterboxStopImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop-48"] : [UIImage srg_letterboxImageNamed:@"stop-64"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"stop"] : [UIImage srg_letterboxImageNamed:@"stop-large"];
 }
 
 + (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward-48"] : [UIImage srg_letterboxImageNamed:@"forward-64"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"forward"] : [UIImage srg_letterboxImageNamed:@"forward-large"];
 }
 
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward-48"] : [UIImage srg_letterboxImageNamed:@"backward-64"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward"] : [UIImage srg_letterboxImageNamed:@"backward-large"];
 }
 
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live-48"] : [UIImage srg_letterboxImageNamed:@"back_live-64"];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live"] : [UIImage srg_letterboxImageNamed:@"back_live-large"];
 }
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error
@@ -253,14 +277,14 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             return [self srg_letterboxImageForError:underlyingError];
         }
         else {
-            return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
+            return [UIImage srg_letterboxImageNamed:@"generic_error"];
         }
     }
     else if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
-        return [UIImage srg_letterboxImageNamed:@"no_network-25"];
+        return [UIImage srg_letterboxImageNamed:@"no_network"];
     }
     else {
-        return [UIImage srg_letterboxImageNamed:@"generic_error-25"];
+        return [UIImage srg_letterboxImageNamed:@"generic_error"];
     }
 }
 
@@ -268,22 +292,22 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 {
     switch (blockingReason) {
         case SRGBlockingReasonGeoblocking: {
-            return [UIImage srg_letterboxImageNamed:@"geoblocked-25"];
+            return [UIImage srg_letterboxImageNamed:@"geoblocked"];
             break;
         }
             
         case SRGBlockingReasonLegal: {
-            return [UIImage srg_letterboxImageNamed:@"legal-25"];
+            return [UIImage srg_letterboxImageNamed:@"legal"];
             break;
         }
             
         case SRGBlockingReasonAgeRating12: {
-            return [UIImage srg_letterboxImageNamed:@"rating_12-25"];
+            return [UIImage srg_letterboxImageNamed:@"rating_12"];
             break;
         }
             
         case SRGBlockingReasonAgeRating18: {
-            return [UIImage srg_letterboxImageNamed:@"rating_18-25"];
+            return [UIImage srg_letterboxImageNamed:@"rating_18"];
             break;
         }
             
@@ -295,7 +319,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         }
             
         default: {
-            return [UIImage srg_letterboxImageNamed:@"generic_blocked-25"];
+            return [UIImage srg_letterboxImageNamed:@"generic_blocked"];
             break;
         }
     }

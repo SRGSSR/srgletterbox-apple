@@ -6,7 +6,12 @@
 
 #import "SRGLetterboxControllerView.h"
 
+#import <TargetConditionals.h>
+
+#if TARGET_OS_IOS
 #import <CoreMotion/CoreMotion.h>
+#endif
+
 #import <UIKit/UIKit.h>
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 
@@ -18,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Letterbox view delegate protocol for optional full-screen support and view animations.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGLetterboxViewDelegate <NSObject>
 
 @optional
@@ -171,21 +177,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  The Letterbox view automatically displays errors of the underlying controller. When an error is displayed, the
  *  controls will be hidden from view so that the error can be properly read.
  */
-IB_DESIGNABLE
-@interface SRGLetterboxView : SRGLetterboxControllerView <SRGAirPlayViewDelegate, UIGestureRecognizerDelegate>
-
-/**
- *  Set the motion manager to use for device tracking when playing 360° videos. At most one motion manager should
- *  exist per app (see https://developer.apple.com/documentation/coremotion/cmmotionmanager). If your application
- *  already uses its own core motion manager, you can set it using this class method (not that you are then
- *  responsible of starting and stopping tracking, though). Data refresh rate should be at least 1/60 for an optimal
- *  experience.
- *
- *  If no motion manager is provided at the time a Letterbox view requires it, an internal motion manager will
- *  be used. You should set a motion manager before any playback occurs and not change it afterwards, otherwise the
- *  behavior is undefined.
- */
-+ (void)setMotionManager:(nullable CMMotionManager *)motionManager;
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
+@interface SRGLetterboxView : SRGLetterboxControllerView <UIGestureRecognizerDelegate>
 
 /**
  *  View optional delegate.
@@ -331,6 +324,27 @@ IB_DESIGNABLE
  *              player position.
  */
 @property (nonatomic, readonly, getter=isLive) BOOL live;
+
+@end
+
+@interface SRGLetterboxView (CoreMotion)
+
+#if TARGET_OS_IOS
+
+/**
+ *  Set the motion manager to use for device tracking when playing 360° videos. At most one motion manager should
+ *  exist per app (see https://developer.apple.com/documentation/coremotion/cmmotionmanager). If your application
+ *  already uses its own core motion manager, you can set it using this class method (not that you are then
+ *  responsible of starting and stopping tracking, though). Data refresh rate should be at least 1/60 for an optimal
+ *  experience.
+ *
+ *  If no motion manager is provided at the time a Letterbox view requires it, an internal motion manager will
+ *  be used. You should set a motion manager before any playback occurs and not change it afterwards, otherwise the
+ *  behavior is undefined.
+ */
++ (void)setMotionManager:(nullable CMMotionManager *)motionManager;
+
+#endif
 
 @end
 

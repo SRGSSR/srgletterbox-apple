@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
      *  Interface forced to be hidden.
      */
     SRGLetterboxViewBehaviorForcedHidden
-};
+} API_UNAVAILABLE(tvos);
 
 @interface SRGLetterboxView (Private)
 

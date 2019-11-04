@@ -9,6 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+API_UNAVAILABLE(tvos)
 @interface PageViewController : UIPageViewController <UIPageViewControllerDataSource>
 
 - (instancetype)initWithURNs:(nullable NSArray<NSString *> *)URNs;

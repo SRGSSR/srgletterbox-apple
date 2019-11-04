@@ -47,7 +47,7 @@
             [subdivisions addObject:chapter];
         }
     }
-    return [subdivisions copy];
+    return subdivisions.copy;
 }
 
 

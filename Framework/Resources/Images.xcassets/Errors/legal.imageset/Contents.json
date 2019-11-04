@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "legal.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "legal-1.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "legal-2.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

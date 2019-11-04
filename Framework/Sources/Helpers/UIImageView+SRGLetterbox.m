@@ -7,6 +7,7 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -16,9 +17,9 @@
 
 #pragma mark Class methods
 
-+ (UIImageView *)srg_loadingImageView48WithTintColor:(UIColor *)tintColor
++ (UIImageView *)srg_loadingImageViewWithTintColor:(UIColor *)tintColor
 {
-    return [self srg_animatedImageViewNamed:@"loading-48" withTintColor:tintColor duration:1.];
+    return [self srg_animatedImageViewNamed:@"loading" withTintColor:tintColor duration:1.];
 }
 
 // Expect a sequence of images named "name-N", where N must begin at 0. Stops when no image is found for some N
@@ -26,7 +27,7 @@
 {
     NSArray<UIImage *> *images = [self srg_animatedImageNamed:name withTintColor:tintColor];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:images.firstObject];
-    imageView.animationImages = [images copy];
+    imageView.animationImages = images.copy;
     imageView.animationDuration = duration;
     return imageView;
 }
@@ -50,7 +51,7 @@
     }
     
     NSAssert(images.count != 0, @"Invalid asset %@", name);
-    return [images copy];
+    return images.copy;
 }
 
 #pragma mark Standard image loading
@@ -58,10 +59,11 @@
 - (void)srg_requestImageForObject:(id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
+                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale);
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxMediaPlaceholderFilePath() withSize:size];
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(placeholder) withSize:size];
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
@@ -97,9 +99,49 @@
     }
 }
 
-- (void)srg_requestImageForObject:(id<SRGImage>)object withScale:(SRGImageScale)scale type:(SRGImageType)type
+- (void)srg_requestImageForObject:(id<SRGImage>)object
+                        withScale:(SRGImageScale)scale
+                             type:(SRGImageType)type
+                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
 {
-    [self srg_requestImageForObject:object withScale:scale type:type unavailabilityHandler:nil];
+    [self srg_requestImageForObject:object withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil];
+}
+
+- (void)srg_requestImageForController:(SRGLetterboxController *)controller
+                            withScale:(SRGImageScale)scale
+                                 type:(SRGImageType)type
+                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                unavailabilityHandler:(void (^)(void))unavailabilityHandler
+                               atDate:(NSDate *)date
+{
+    // For livestreams, rely on channel information when available
+    SRGMedia *media = controller.subdivisionMedia ?: controller.media;
+    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
+        SRGChannel *channel = controller.channel;
+        
+        // Display program artwork (if any) when the provided date falls within the current program, otherwise channel artwork.
+        if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
+            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type placeholder:placeholder unavailabilityHandler:^{
+                [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+            }];
+        }
+        else {
+            [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+        }
+    }
+    else {
+        [self srg_requestImageForObject:media withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+    }
+
+}
+
+- (void)srg_requestImageForController:(SRGLetterboxController *)controller
+                            withScale:(SRGImageScale)scale
+                                 type:(SRGImageType)type
+                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                               atDate:(NSDate *)date
+{
+    [self srg_requestImageForController:controller withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil atDate:date];
 }
 
 - (void)srg_resetImage

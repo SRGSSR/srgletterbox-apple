@@ -16,6 +16,7 @@
 @interface TopicListViewController ()
 
 @property (nonatomic) TopicList topicList;
+@property (nonatomic) NSURL *serviceURL;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
@@ -30,10 +31,12 @@
 
 - (instancetype)initWithTopicList:(TopicList)topicList
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass(self.class) bundle:nil];
-    TopicListViewController *viewController = [storyboard instantiateInitialViewController];
-    viewController.topicList = topicList;
-    return viewController;
+    self = [super initWithStyle:UITableViewStyleGrouped];
+    if (self) {
+        self.topicList = topicList;
+        self.serviceURL = (self.topicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
+    }
+    return self;
 }
 
 - (instancetype)init
@@ -50,14 +53,15 @@
     
     self.title = [self pageTitle];
     
-    NSURL *serviceURL = (self.topicList == TopicListMMF) ? LetterboxDemoMMFServiceURL() : ApplicationSettingServiceURL();
-    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
+    self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalParameters();
     
+#if TARGET_OS_IOS
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:refreshControl atIndex:0];
     self.refreshControl = refreshControl;
+#endif
     
     [self refresh];
 }
@@ -78,13 +82,14 @@
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSString *> *s_titles;
     dispatch_once(&s_onceToken, ^{
-        s_titles = @{ @(TopicListSRF) : LetterboxDemoNonLocalizedString(@"SRF Topics"),
-                      @(TopicListRTS) : LetterboxDemoNonLocalizedString(@"RTS Topics"),
-                      @(TopicListRSI) : LetterboxDemoNonLocalizedString(@"RSI Topics"),
-                      @(TopicListRTR) : LetterboxDemoNonLocalizedString(@"RTR Topics"),
-                      @(TopicListMMF) : LetterboxDemoNonLocalizedString(@"MMF Topics") };
+        s_titles = @{ @(TopicListSRF) : NSLocalizedString(@"SRF Topics", nil),
+                      @(TopicListRTS) : NSLocalizedString(@"RTS Topics", nil),
+                      @(TopicListRSI) : NSLocalizedString(@"RSI Topics", nil),
+                      @(TopicListRTR) : NSLocalizedString(@"RTR Topics", nil),
+                      @(TopicListSWI) : NSLocalizedString(@"SWI Topics", nil),
+                      @(TopicListMMF) : NSLocalizedString(@"MMF Topics", nil) };
     });
-    return s_titles[@(self.topicList)] ?: LetterboxDemoNonLocalizedString(@"Unknown");
+    return s_titles[@(self.topicList)] ?: NSLocalizedString(@"Unknown", nil);
 }
 
 #pragma mark Data
@@ -94,9 +99,11 @@
     [self.request cancel];
     
     SRGRequest *request = [self.dataProvider tvTopicsForVendor:self.vendor withCompletionBlock:^(NSArray<SRGTopic *> * _Nullable topics, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+#if TARGET_OS_IOS
         if (self.refreshControl.refreshing) {
             [self.refreshControl endRefreshing];
         }
+#endif
         
         NSMutableArray<TopicItem *> *topicItems = NSMutableArray.new;
         for (SRGTopic *topic in topics) {
@@ -124,6 +131,7 @@
                        @(TopicListRTS) : @(SRGVendorRTS),
                        @(TopicListRSI) : @(SRGVendorRSI),
                        @(TopicListRTR) : @(SRGVendorRTR),
+                       @(TopicListSWI) : @(SRGVendorSWI),
                        @(TopicListMMF) : @(SRGVendorRTS) };
     });
     
@@ -141,7 +149,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [tableView dequeueReusableCellWithIdentifier:@"TopicListCell" forIndexPath:indexPath];
+    static NSString * const kCellIdentifier = @"TopicListCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
+    if (! cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
+    }
+    
+    return cell;
 }
 
 #pragma mark UITableViewDelegate protocol
@@ -156,7 +171,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TopicItem *topicItem = self.topicItems[indexPath.row];
-    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic MMFOverride:(self.topicList == TopicListMMF)];
+    MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:MediaListLatestByTopic topic:topicItem.topic serviceURL:self.serviceURL];
     [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 

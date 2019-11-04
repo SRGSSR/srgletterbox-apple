@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "network.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "network-1.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "network-2.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}
