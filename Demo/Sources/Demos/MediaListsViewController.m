@@ -97,12 +97,12 @@
     static dispatch_once_t s_onceToken;
     static NSArray<NSArray<NSString *> *> *s_titles;
     dispatch_once(&s_onceToken, ^{
-        s_titles = @[ @[ NSLocalizedString(@"SRF", nil),
+        s_titles = @[ @[ NSLocalizedString(@"Play MMF", nil),
+                         NSLocalizedString(@"SRF", nil),
                          NSLocalizedString(@"RTS", nil),
                          NSLocalizedString(@"RSI", nil),
                          NSLocalizedString(@"RTR", nil),
-                         NSLocalizedString(@"SWI", nil),
-                         NSLocalizedString(@"Play MMF", nil) ],
+                         NSLocalizedString(@"SWI", nil) ],
                       @[ NSLocalizedString(@"SRF", nil),
                          NSLocalizedString(@"RTS", nil),
                          NSLocalizedString(@"RSI", nil),
@@ -149,12 +149,12 @@
             static dispatch_once_t s_onceToken;
             static NSArray<NSNumber *> *s_topics;
             dispatch_once(&s_onceToken, ^{
-                s_topics = @[ @(TopicListSRF),
+                s_topics = @[ @(TopicListMMF),
+                              @(TopicListSRF),
                               @(TopicListRTS),
                               @(TopicListRSI),
                               @(TopicListRTR),
-                              @(TopicListSWI),
-                              @(TopicListMMF) ];
+                              @(TopicListSWI) ];
             });
             [self openTopicListWithType:s_topics[indexPath.row].integerValue];
             break;
