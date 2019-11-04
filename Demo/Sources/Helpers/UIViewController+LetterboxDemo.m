@@ -40,7 +40,7 @@ static void *s_playlistKey = &s_playlistKey;
     return objc_getAssociatedObject(self, s_playlistKey);
 }
 
-- (void)setletterbox_demo_playlist:(Playlist *)playlist
+- (void)setLetterbox_demo_playlist:(Playlist *)playlist
 {
     objc_setAssociatedObject(self, s_playlistKey, playlist, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
