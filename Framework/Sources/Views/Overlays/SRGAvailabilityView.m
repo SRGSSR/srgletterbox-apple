@@ -42,7 +42,7 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
 }
 
 - (void)metadataDidChange
