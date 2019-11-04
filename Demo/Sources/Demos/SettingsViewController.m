@@ -312,8 +312,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case SettingSectionApplicationVersion: {
-            NSString *buildNumberString = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
-            return [NSString stringWithFormat:@"%@ (build %@)", NSLocalizedString(@"Application", nil), buildNumberString];
+            return NSLocalizedString(@"Application", nil);
             break;
         }
 #endif
@@ -328,7 +327,9 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
-        return [NSString stringWithFormat:NSLocalizedString(@"Version %@", nil), [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+        NSString *versionString = [NSString stringWithFormat:NSLocalizedString(@"Letterbox %@%@", nil), SRGLetterboxMarketingVersion(), [NSBundle.mainBundle.infoDictionary objectForKey:@"BundleNameSuffix"]];
+        NSString *buildString = [NSString stringWithFormat:@"%@ %@", [NSBundle.mainBundle.infoDictionary objectForKey:@"BuildName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"]];
+        return [NSString stringWithFormat:@"%@ (%@)", versionString, buildString];
     }
     else {
         return nil;

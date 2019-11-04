@@ -1602,6 +1602,7 @@
 			buildSettings = {
 				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Nighlty$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
 				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
@@ -1730,6 +1731,7 @@
 			baseConfigurationReference = 6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Debug$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = " 🛠";
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
@@ -1853,6 +1855,7 @@
 			buildSettings = {
 				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Release$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";
@@ -1989,6 +1992,7 @@
 			baseConfigurationReference = 6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Debug$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = " 🛠";
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
@@ -2016,6 +2020,7 @@
 			buildSettings = {
 				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Release$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";

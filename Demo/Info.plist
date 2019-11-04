@@ -6,6 +6,8 @@
 	<string>${APPCENTER_SECRET}</string>
 	<key>AppCenterURL</key>
 	<string>${APPCENTER_URL}</string>
+	<key>BuildName</key>
+	<string>${BUILD_NAME}</string>
 	<key>BundleNameSuffix</key>
 	<string>$(BUNDLE_DISPLAY_NAME_SUFFIX)</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -38,6 +40,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>${CURRENT_PROJECT_VERSION}</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -58,8 +62,6 @@
 		<string>$(REQUIRED_DEVICE_CAPABILITY)</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
-	<false/>
-	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
