@@ -89,16 +89,31 @@ static void *s_playlistKey = &s_playlistKey;
     
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 #else
-    ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
-    playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    void (^openModalPlayer)(void) = ^{
+        ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
+        playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+        
+        // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
+        // (might happen if presenting and dismissing fast)
+        if (playerViewController.presentingViewController) {
+            return;
+        }
+        
+        [self presentViewController:playerViewController animated:YES completion:nil];
+    };
     
-    // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
-    // (might happen if presenting and dismissing fast)
-    if (playerViewController.presentingViewController) {
-        return;
+    if (@available(iOS 13, *)) {
+        // Long-form is usually associated with videos, but we have no way to know which kind of content will be played
+        // (URNs are opaque). This is not a problem, though, as AirPlay support is available for all content types.
+        [AVAudioSession.sharedInstance prepareRouteSelectionForPlaybackWithCompletionHandler:^(BOOL shouldStartPlayback, AVAudioSessionRouteSelection routeSelection) {
+            if (shouldStartPlayback && routeSelection != AVAudioSessionRouteSelectionNone) {
+                openModalPlayer();
+            }
+        }];
     }
-    
-    [self presentViewController:playerViewController animated:YES completion:nil];
+    else {
+        openModalPlayer();
+    }
 #endif
 }
 

@@ -76,5 +76,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>AVInitialRouteSharingPolicy</key>
+	<string>LongFormVideo</string>
 </dict>
 </plist>
