@@ -12,13 +12,16 @@ fi
 
 export PATH="${PATH}:/usr/local/bin:/opt/local/bin"
 
-SOURCE_RESOURCES_PATH="${SRCROOT}/Demo/Resources/Images.xcassets"
-SOURCE_APPICON_PATH="${SOURCE_RESOURCES_PATH}/AppIcon.appiconset"
-DUPLICATE_APPICON_PATH="${SOURCE_RESOURCES_PATH}/OriginalAppIcon.appiconset"
+SOURCE_RESOURCES_PATH="${SRCROOT}/Demo/Resources"
+SOURCE_IOS_APPICON_PATH="${SOURCE_RESOURCES_PATH}/Images.xcassets/AppIcon.appiconset"
+DUPLICATE_IOS_APPICON_PATH="${SOURCE_RESOURCES_PATH}/OriginalAppIcon.appiconset"
+SOURCE_TVOS_APPICON_PATH="${SOURCE_RESOURCES_PATH}/Images.xcassets/App Icon & Top Shelf Image.brandassets/App Icon.imagestack/Back.imagestacklayer/Content.imageset"
+DUPLICATE_TVOS_APPICON_PATH="${SOURCE_RESOURCES_PATH}/OriginalAppIcon.imagestack"
 
 echo $PYTHON_NIGHTLIES_TAG "Duplicate original icons..."
 
-cp -fR "${SOURCE_APPICON_PATH}" "${DUPLICATE_APPICON_PATH}"
+cp -fR "${SOURCE_IOS_APPICON_PATH}" "${DUPLICATE_IOS_APPICON_PATH}"
+cp -fR "${SOURCE_TVOS_APPICON_PATH}" "${DUPLICATE_TVOS_APPICON_PATH}"
 
 BUNDLE_IDENTIFIER=${PRODUCT_BUNDLE_IDENTIFIER}
 BUILD_NUMBER=${CURRENT_PROJECT_VERSION}
@@ -40,73 +43,82 @@ if [ "$LAST_RUN" == "$CURRENT_RUN" ]; then
     echo $PYTHON_NIGHTLIES_TAG "Last run had same configuration: $CURRENT_RUN. No need to recreate dev/beta icons, except if not created before."
 fi
 
-CONTENTS_JSON="${SOURCE_APPICON_PATH}/Contents.json"
+set CONTENTS[0] = "${SOURCE_IOS_APPICON_PATH}/Contents.json"
+set CONTENTS[1] = "${SOURCE_TVOS_APPICON_PATH}/Contents.json"
 
 echo "Processing Icons..."
-ICON_COUNT=$(jq -r '.images | length-1' "${CONTENTS_JSON}")
-for i in $(jot - 0 ${ICON_COUNT});
+for CONTENTS_JSON in "${SOURCE_IOS_APPICON_PATH}/Contents.json" "${SOURCE_TVOS_APPICON_PATH}/Contents.json";
 do
-    filename=$(jq -r ".images[${i}] | .filename" "${CONTENTS_JSON}")
-    size=$(jq -r ".images[${i}] | .size" "${CONTENTS_JSON}")
-    scale=@$(jq -r ".images[${i}] | .scale" "${CONTENTS_JSON}")
-    idiom=~$(jq -r ".images[${i}] | .idiom" "${CONTENTS_JSON}")
+    ICON_COUNT=$(jq -r '.images | length-1' "${CONTENTS_JSON}")
+    for i in $(jot - 0 ${ICON_COUNT});
+    do
+        filename=$(jq -r ".images[${i}] | .filename" "${CONTENTS_JSON}")
+        size=$(jq -r ".images[${i}] | .size" "${CONTENTS_JSON}")
+        scale=@$(jq -r ".images[${i}] | .scale" "${CONTENTS_JSON}")
+        idiom=$(jq -r ".images[${i}] | .idiom" "${CONTENTS_JSON}")
 
-    if [ ${scale} == "@1x" ]; then
-       scale=""
-    fi
-    if [ ${idiom} == "~iphone" ]; then
-       idiom=""
-    fi
-    
-    if [ ${filename} == "null" ]; then
-        continue
-    fi
-
-    SOURCE_ICON_PATH="${SOURCE_APPICON_PATH}/${filename}"
-    TARGET_ICON_PATH="${SOURCE_ICON_PATH}"
-
-    if [ ! -e "${SOURCE_ICON_PATH}" ]; then
-        echo $PYTHON_NIGHTLIES_TAG "warning: App icon not found: ${SOURCE_ICON_PATH}"
-        continue
-    fi
-
-    SCRIPT_DIR=`dirname $BASH_SOURCE`
-    CACHE_APPICON_PATH="${SCRIPT_DIR}/generate-icons-caches"
-
-    if [ ! -e "${CACHE_APPICON_PATH}" ]; then
-        mkdir ${CACHE_APPICON_PATH}
-    fi
-
-    if [ "${CONFIGURATION}" == "Nightly" ]; then
-	    TITLE="Nightly"
-    elif [ "${CONFIGURATION}" == "Debug" ]; then
-        TITLE="Debug"
-    else
-        TITLE="Dev"
-    fi
-
-    SCRIPT_ICON_PATH="${CACHE_APPICON_PATH}/${TITLE}-${filename}"
-
-    if [ "$LAST_RUN" != "$CURRENT_RUN" ] || [! -e "${SCRIPT_ICON_PATH}"]; then
-        WIDTH=`identify -format %w "${SOURCE_ICON_PATH}"`
-        HEIGHT=`echo "${WIDTH}/6" | bc`
-
-        if [ "${BUILD_NUMBER}" != "" ]; then
-            CAPTION="${TITLE}-${BUILD_NUMBER}"
-        else
-            CAPTION="${TITLE}"
+        if [ ${scale} == "@1x" ]; then
+           scale=""
+        fi
+        if [ ${idiom} == "iphone" ]; then
+           idiom=""
+        fi
+        
+        if [ ${filename} == "null" ]; then
+            continue
         fi
 
-        echo $PYTHON_NIGHTLIES_TAG "Making app icon ${CAPTION} | ${filename}"
-        convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${CAPTION}" "${SOURCE_ICON_PATH}" +swap -gravity south -composite "${SCRIPT_ICON_PATH}"
-        convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${VERSION_STRING}" "${SCRIPT_ICON_PATH}" +swap -gravity north -composite "${SCRIPT_ICON_PATH}"
+        SOURCE_ICON_FOLDER="${CONTENTS_JSON//Contents.json/}"
+        SOURCE_ICON_PATH="${SOURCE_ICON_FOLDER}/${filename}"
+        TARGET_ICON_PATH="${SOURCE_ICON_PATH}"
 
-    fi
+        if [ ! -e "${SOURCE_ICON_PATH}" ]; then
+            echo $PYTHON_NIGHTLIES_TAG "warning: App icon not found: ${SOURCE_ICON_PATH}"
+            continue
+        fi
 
-    SOURCE_ICON_PATH="${SCRIPT_ICON_PATH}"
-    echo "Copying icon from '${SOURCE_ICON_PATH}' ... "
-    echo "... in '${TARGET_ICON_PATH}'"
-    cp -f "${SOURCE_ICON_PATH}" "${TARGET_ICON_PATH}"
+        SCRIPT_DIR=`dirname $BASH_SOURCE`
+        CACHE_APPICON_PATH="${SCRIPT_DIR}/generate-icons-caches"
+
+        if [ ! -e "${CACHE_APPICON_PATH}" ]; then
+            mkdir ${CACHE_APPICON_PATH}
+        fi
+
+        if [ "${CONFIGURATION}" == "Nightly" ]; then
+    	    TITLE="Nightly"
+        elif [ "${CONFIGURATION}" == "Debug" ]; then
+            TITLE="Debug"
+        else
+            TITLE="Dev"
+        fi
+
+        SCRIPT_ICON_PATH="${CACHE_APPICON_PATH}/${TITLE}-${filename}"
+
+        if [ "$LAST_RUN" != "$CURRENT_RUN" ] || [! -e "${SCRIPT_ICON_PATH}"]; then
+            WIDTH=`identify -format %w "${SOURCE_ICON_PATH}"`
+            if [ ${idiom} == "tv" ]; then
+              HEIGHT=`echo "${WIDTH}/16" | bc`  
+            else
+              HEIGHT=`echo "${WIDTH}/6" | bc`  
+            fi
+
+            if [ "${BUILD_NUMBER}" != "" ]; then
+                CAPTION="${TITLE}-${BUILD_NUMBER}"
+            else
+                CAPTION="${TITLE}"
+            fi
+
+            echo $PYTHON_NIGHTLIES_TAG "Making app icon ${CAPTION} | ${filename}"
+            convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${CAPTION}" "${SOURCE_ICON_PATH}" +swap -gravity south -composite "${SCRIPT_ICON_PATH}"
+            convert -background '#0001' -fill black -gravity center -size ${WIDTH}x${HEIGHT} caption:"${VERSION_STRING}" "${SCRIPT_ICON_PATH}" +swap -gravity north -composite "${SCRIPT_ICON_PATH}"
+
+        fi
+
+        SOURCE_ICON_PATH="${SCRIPT_ICON_PATH}"
+        echo "Copying icon from '${SOURCE_ICON_PATH}' ... "
+        echo "... in '${TARGET_ICON_PATH}'"
+        cp -f "${SOURCE_ICON_PATH}" "${TARGET_ICON_PATH}"
+    done
 done
 
 if [ -f $LAST_RUN_FILE ]; then
