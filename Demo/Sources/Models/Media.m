@@ -116,6 +116,21 @@
         
         return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
     }
+    else if ([URN containsString:@"_SOON_EXPIRED_"]) {
+        NSString *originalURN = [URN stringByReplacingOccurrencesOfString:@"_SOON_EXPIRED_" withString:@""];
+        
+        NSDate *nowDate = NSDate.date;
+        
+        NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
+        startDateComponents.second = -100;
+        NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        
+        NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
+        endDateComponents.second = 10;
+        NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        
+        return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
+    }
     else {
         return URN;
     }

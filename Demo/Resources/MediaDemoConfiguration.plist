@@ -206,6 +206,14 @@
 				</dict>
 				<dict>
 					<key>name</key>
+					<string>Scheduled livestream (soon expired)</string>
+					<key>urn</key>
+					<string>urn:rts:video:_rts_info_delay_SOON_EXPIRED_</string>
+					<key>service</key>
+					<string>mmf</string>
+				</dict>
+				<dict>
+					<key>name</key>
 					<string>Scheduled livestream with server cache</string>
 					<key>urn</key>
 					<string>urn:rts:video:_rts_info_cacheddelay</string>
