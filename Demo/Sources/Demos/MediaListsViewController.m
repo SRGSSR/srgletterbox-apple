@@ -55,7 +55,7 @@
     dispatch_once(&s_onceToken, ^{
         s_titles = @[ NSLocalizedString(@"📚 Topics TV", nil),
                       NSLocalizedString(@"📺 Live TV", nil),
-                      NSLocalizedString(@"📻 Live Radio", nil),
+                      NSLocalizedString(@"📻 Live radio", nil),
                       NSLocalizedString(@"🎳 Live center", nil),
                       NSLocalizedString(@"🛰️ Live web", nil),
                       NSLocalizedString(@"🎬 Latest videos", nil),

@@ -16,8 +16,8 @@ static void *s_playlistKey = &s_playlistKey;
 
 @interface UIViewController (LetterboxDemoPrivate)
 
-@property (nonatomic) SRGDataProvider *demo_dataProvider;
-@property (nonatomic) Playlist *demo_playlist;
+@property (nonatomic) SRGDataProvider *letterbox_demo_dataProvider;
+@property (nonatomic) Playlist *letterbox_demo_playlist;
 
 @end
 
@@ -25,22 +25,22 @@ static void *s_playlistKey = &s_playlistKey;
 
 #pragma mark Getters and setters
 
-- (SRGDataProvider *)demo_dataProvider
+- (SRGDataProvider *)letterbox_demo_dataProvider
 {
     return objc_getAssociatedObject(self, s_dataProviderKey);
 }
 
-- (void)setDemo_dataProvider:(SRGDataProvider *)dataProvider
+- (void)setLetterbox_demo_dataProvider:(SRGDataProvider *)dataProvider
 {
     objc_setAssociatedObject(self, s_dataProviderKey, dataProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (Playlist *)demo_playlist
+- (Playlist *)letterbox_demo_playlist
 {
     return objc_getAssociatedObject(self, s_playlistKey);
 }
 
-- (void)setDemo_playlist:(Playlist *)playlist
+- (void)setletterbox_demo_playlist:(Playlist *)playlist
 {
     objc_setAssociatedObject(self, s_playlistKey, playlist, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -77,11 +77,11 @@ static void *s_playlistKey = &s_playlistKey;
     settings.quality = ApplicationSettingPreferredQuality();
     
     if (ApplicationSettingAutoplayEnabled() && URN) {
-        self.demo_dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
-        [[self.demo_dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-            self.demo_playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-            self.demo_playlist.continuousPlaybackTransitionDuration = 15.;
-            letterboxViewController.controller.playlistDataSource = self.demo_playlist;
+        self.letterbox_demo_dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
+        [[self.letterbox_demo_dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            self.letterbox_demo_playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
+            self.letterbox_demo_playlist.continuousPlaybackTransitionDuration = 15.;
+            letterboxViewController.controller.playlistDataSource = self.letterbox_demo_playlist;
         }] resume];
     }
     

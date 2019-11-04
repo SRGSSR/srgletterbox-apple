@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIWindow (LetterboxDemo)
 
-@property (nonatomic, readonly, nullable) UIViewController *demo_topViewController;
+@property (nonatomic, readonly, nullable) UIViewController *letterbox_demo_topViewController;
 
 @end
 

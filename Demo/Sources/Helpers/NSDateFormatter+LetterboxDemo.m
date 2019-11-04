@@ -8,7 +8,7 @@
 
 @implementation NSDateFormatter (LetterboxDemo)
 
-+ (NSDateFormatter *)letteroxdemo_relativeDateAndTimeFormatter
++ (NSDateFormatter *)letterbox_demo_relativeDateAndTimeFormatter
 {
     static NSDateFormatter *s_dateFormatter;
     static dispatch_once_t s_onceToken;

@@ -8,7 +8,7 @@
 
 @implementation UIWindow (LetterboxDemo)
 
-- (UIViewController *)demo_topViewController
+- (UIViewController *)letterbox_demo_topViewController
 {
     UIViewController *topViewController = self.rootViewController;
     while (topViewController.presentedViewController) {

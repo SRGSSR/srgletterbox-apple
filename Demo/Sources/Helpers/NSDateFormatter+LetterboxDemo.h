@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @discussion Use `LetterboxDemoAccessibilityRelativeDateAndTimeFromDate` for accessibility-oriented formatting.
  */
-@property (class, nonatomic, readonly) NSDateFormatter *letteroxdemo_relativeDateAndTimeFormatter;
+@property (class, nonatomic, readonly) NSDateFormatter *letterbox_demo_relativeDateAndTimeFormatter;
 
 @end
 

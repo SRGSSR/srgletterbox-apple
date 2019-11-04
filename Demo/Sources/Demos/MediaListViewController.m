@@ -368,7 +368,7 @@
     cell.textLabel.text = text;
     
     if (media.contentType != SRGContentTypeLivestream) {
-        NSString * dateString = [NSDateFormatter.letteroxdemo_relativeDateAndTimeFormatter stringFromDate:media.date];
+        NSString *dateString = [NSDateFormatter.letterbox_demo_relativeDateAndTimeFormatter stringFromDate:media.date];
         cell.detailTextLabel.text = dateString;
         cell.accessibilityLabel = [NSString stringWithFormat:@"%@%@, %@", accessibilityLabelPrefix, text, LetterboxDemoAccessibilityRelativeDateAndTimeFromDate(media.date)];
     }
