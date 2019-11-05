@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>AppCenterSecret</key>
-	<string>${APPCENTER_SECRET}</string>
+	<string>$(APPCENTER_SECRET)</string>
 	<key>AppCenterURL</key>
-	<string>${APPCENTER_URL}</string>
+	<string>$(APPCENTER_URL)</string>
 	<key>BuildName</key>
-	<string>${BUILD_NAME}</string>
+	<string>$(BUILD_NAME)</string>
 	<key>BundleNameSuffix</key>
 	<string>$(BUNDLE_DISPLAY_NAME_SUFFIX)</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -39,7 +39,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>${CURRENT_PROJECT_VERSION}</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -50,7 +50,7 @@
 		<true/>
 	</dict>
 	<key>PlayMMFServiceURL</key>
-	<string>${PLAY_MMF_SERVICE_URL}</string>
+	<string>$(PLAY_MMF_SERVICE_URL)</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -59,7 +59,7 @@
 	<string>$(LAUNCH_SCREEN)</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>$(REQUIRED_DEVICE_CAPABILITY)</string>
+		<string>$(REQUIRED_DEVICE_CAPABILITIES)</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<false/>
