@@ -93,7 +93,7 @@ platform :ios do
     )
 
     # Wait a bit before asking dSYMs. Not rready yet.
-    sleep(1.minutes)
+    sleep(60)
 
     update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], null)
 
@@ -180,7 +180,7 @@ platform :ios do
     )
 
     # Wait a bit before asking dSYMs. Not rready yet.
-    sleep(1.minutes)
+    sleep(60)
 
     update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], null)
 
@@ -408,7 +408,6 @@ platform :ios do
 
   # Update only the demo app identifier for App Store Connect submit.
   def update_to_appstore_app_identifier()
-    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
     update_app_identifier(
       plist_path: "Demo/Info.plist"
     )
