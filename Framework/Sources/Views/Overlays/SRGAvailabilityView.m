@@ -32,9 +32,16 @@
 {
     [super awakeFromNib];
     
-    self.messageLabel.horizontalMargin = 10.f;
-    self.messageLabel.verticalMargin = 4.f;
-    self.messageLabel.layer.cornerRadius = 4.f;
+#if TARGET_OS_TV
+    self.messageLabel.horizontalMargin = 30.f;
+    self.messageLabel.verticalMargin = 12.f;
+    self.messageLabel.layer.cornerRadius = 6.f;
+#else
+    self.messageLabel.horizontalMargin = 15.f;
+    self.messageLabel.verticalMargin = 9.f;
+    self.messageLabel.layer.cornerRadius = 3.f;
+#endif
+    
     self.messageLabel.layer.masksToBounds = YES;
 }
 
@@ -42,7 +49,11 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+#if TARGET_OS_TV
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+#else
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+#endif
 }
 
 - (void)metadataDidChange
@@ -103,7 +114,7 @@
         }
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {
-        self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
+        self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString;
         [self.countdownView removeFromSuperview];
     }
     else {
