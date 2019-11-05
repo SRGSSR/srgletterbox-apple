@@ -133,10 +133,6 @@ API_UNAVAILABLE(tvos)
  *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
  *              easy way to restore the view controller in the exact same state as it was before picture in picture
  *              started.
- *
- *              Also note that enabling a controller with the service will alter audio session settings. Be especially
- *              careful if you plan to change audio settings yourself elsewhere in your application, as you might
- *              prevent the service from correctly working.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
@@ -176,6 +172,8 @@ API_UNAVAILABLE(tvos)
 /**
  *  Now playing information and command customization. Commands are available both from the control center as well
  *  as on remotes (e.g. headset remote or Apple Watch).
+ *
+ *  Fow now playing information and commands to work, the audio session category must be set to `AVAudioSessionCategoryPlayback`.
  *
  *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which
  *              button will be available. Other commands remain available when using a remote, though. A headset button,

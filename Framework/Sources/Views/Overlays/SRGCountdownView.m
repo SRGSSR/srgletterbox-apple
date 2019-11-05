@@ -119,15 +119,23 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     
     self.secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
     
-    self.messageLabel.horizontalMargin = 5.f;
-    self.messageLabel.verticalMargin = 2.f;
+    self.messageLabel.horizontalMargin = 8.f;
+    self.messageLabel.verticalMargin = 4.f;
     self.messageLabel.layer.masksToBounds = YES;
     
-    self.remainingTimeLabel.horizontalMargin = 5.f;
-    self.remainingTimeLabel.verticalMargin = 2.f;
-    self.remainingTimeLabel.layer.masksToBounds = YES;
-    
     self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+    
+#if TARGET_OS_TV
+    self.remainingTimeLabel.horizontalMargin = 30.f;
+    self.remainingTimeLabel.verticalMargin = 12.f;
+    self.remainingTimeLabel.layer.cornerRadius = 6.f;
+#else
+    self.remainingTimeLabel.horizontalMargin = 15.f;
+    self.remainingTimeLabel.verticalMargin = 9.f;
+    self.remainingTimeLabel.layer.cornerRadius = 3.f;
+#endif
+    
+    self.remainingTimeLabel.layer.masksToBounds = YES;
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -207,19 +215,19 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
             s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
             s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
         });
-        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:currentRemainingTimeInterval]];
+        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:currentRemainingTimeInterval]].uppercaseString;
     }
     else if (dateComponents.day > 0) {
-        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_longDateComponentsFormatter stringFromDateComponents:dateComponents];
+        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_longDateComponentsFormatter stringFromDateComponents:dateComponents].uppercaseString;
     }
     else if (currentRemainingTimeInterval >= 60. * 60.) {
-        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromDateComponents:dateComponents];
+        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromDateComponents:dateComponents].uppercaseString;
     }
     else if (currentRemainingTimeInterval >= 0.) {
-        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
+        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromDateComponents:dateComponents].uppercaseString;
     }
     else {
-        self.remainingTimeLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+        self.remainingTimeLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.").uppercaseString;
     }
     
     // The layout highly depends on the value to be displayed, update it at the same time
@@ -297,8 +305,13 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
         stackView.spacing = spacing;
     }];
     
-    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
-    self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
+#if TARGET_OS_TV
+    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+#else
+    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+#endif
     
     // Visibility
     NSTimeInterval currentRemainingTimeInterval = self.currentRemainingTimeInterval;

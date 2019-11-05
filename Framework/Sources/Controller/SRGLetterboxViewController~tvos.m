@@ -213,7 +213,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.liveLabel = liveLabel;
         
         liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [NSLayoutConstraint activateConstraints:@[ [liveLabel.leadingAnchor constraintEqualToAnchor:contentOverlayView.leadingAnchor constant:100.f],
+        [NSLayoutConstraint activateConstraints:@[ [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
                                                    [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
                                                    [liveLabel.widthAnchor constraintEqualToConstant:75.f],
                                                    [liveLabel.heightAnchor constraintEqualToConstant:45.f] ]];

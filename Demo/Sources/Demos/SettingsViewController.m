@@ -248,6 +248,12 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 {
     [super viewDidLoad];
     
+#if TARGET_OS_TV
+    if (@available(tvOS 13, *)) {
+        self.navigationController.tabBarObservedScrollView = self.tableView;
+    }
+#endif
+    
     [self.tableView reloadData];
 }
 

@@ -25,6 +25,17 @@
     return NSLocalizedString(@"Lists", nil);
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+#if TARGET_OS_TV
+    if (@available(tvOS 13, *)) {
+        self.navigationController.tabBarObservedScrollView = self.tableView;
+    }
+#endif
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -81,25 +92,13 @@
 - (void)openTopicListWithType:(TopicList)topicList
 {
     TopicListViewController *topicListViewController = [[TopicListViewController alloc] initWithTopicList:topicList];
-    if (self.navigationController) {
-        [self.navigationController pushViewController:topicListViewController animated:YES];
-    }
-    else {
-        UINavigationController *navigationViewController = [[UINavigationController alloc] initWithRootViewController:topicListViewController];;
-        [self presentViewController:navigationViewController animated:YES completion:nil];
-    }
+    [self.navigationController pushViewController:topicListViewController animated:YES];
 }
 
 - (void)openMediaListWithType:(MediaList)mediaList
 {
     MediaListViewController *mediaListViewController = [[MediaListViewController alloc] initWithMediaList:mediaList topic:nil serviceURL:nil];
-    if (self.navigationController) {
-        [self.navigationController pushViewController:mediaListViewController animated:YES];
-    }
-    else {
-        UINavigationController *navigationViewController = [[UINavigationController alloc] initWithRootViewController:mediaListViewController];;
-        [self presentViewController:navigationViewController animated:YES completion:nil];
-    }
+    [self.navigationController pushViewController:mediaListViewController animated:YES];
 }
 
 #pragma mark UITableViewDelegate protocol
