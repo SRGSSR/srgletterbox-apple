@@ -62,19 +62,15 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     NSMutableArray<UIViewController *> *viewControllers = [NSMutableArray array];
     
-    UIViewController *viewController1 = [[MediasViewController alloc] init];
-#if TARGET_OS_IOS
-    viewController1 = [[UINavigationController alloc] initWithRootViewController:viewController1];
-#endif
-    viewController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
-    [viewControllers addObject:viewController1];
+    MediasViewController *mediasViewController = [[MediasViewController alloc] init];
+    UINavigationController *mediasNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediasViewController];
+    mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
+    [viewControllers addObject:mediasNavigationViewController];
     
-    UIViewController *viewController2 = [[MediaListsViewController alloc] init];
-#if TARGET_OS_IOS
-    viewController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
-#endif
-    viewController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
-    [viewControllers addObject:viewController2];
+    MediaListsViewController *mediaListsViewController = [[MediaListsViewController alloc] init];
+    UINavigationController *mediaListsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediaListsViewController];
+    mediaListsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
+    [viewControllers addObject:mediaListsNavigationViewController];
     
 #if TARGET_OS_IOS
     MiscellaneousViewController *miscellaneousViewController = [[MiscellaneousViewController alloc] init];
@@ -83,12 +79,10 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [viewControllers addObject:miscellaneousNavigationViewController];
 #endif
     
-    UIViewController *viewController3 = [[SettingsViewController alloc] init];
-#if TARGET_OS_IOS
-    viewController3 = [[UINavigationController alloc] initWithRootViewController:viewController3];
-#endif
-    viewController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
-    [viewControllers addObject:viewController3];
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    UINavigationController *settingsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    settingsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
+    [viewControllers addObject:settingsNavigationViewController];
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
     tabBarController.viewControllers = viewControllers.copy;
