@@ -51,7 +51,11 @@
 {
     [super viewDidLoad];
     
-    self.title = [self pageTitle];
+#if TARGET_OS_TV
+    if (@available(tvOS 13, *)) {
+        self.navigationController.tabBarObservedScrollView = self.tableView;
+    }
+#endif
     
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL];
     self.dataProvider.globalHeaders = ApplicationSettingGlobalParameters();
@@ -77,7 +81,7 @@
 
 #pragma mark Getters and setters
 
-- (NSString *)pageTitle
+- (NSString *)title
 {
     static dispatch_once_t s_onceToken;
     static NSDictionary<NSNumber *, NSString *> *s_titles;

@@ -25,6 +25,17 @@
     return NSLocalizedString(@"Lists", nil);
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+#if TARGET_OS_TV
+    if (@available(tvOS 13, *)) {
+        self.navigationController.tabBarObservedScrollView = self.tableView;
+    }
+#endif
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

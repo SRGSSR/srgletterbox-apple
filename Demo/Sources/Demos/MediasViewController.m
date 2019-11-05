@@ -36,6 +36,19 @@
     return NSLocalizedString(@"Medias", nil);
 }
 
+#pragma mark View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+#if TARGET_OS_TV
+    if (@available(tvOS 13, *)) {
+        self.navigationController.tabBarObservedScrollView = self.tableView;
+    }
+#endif
+}
+
 #pragma mark Custom URN entry
 
 - (void)openCustomURNEntryAlertWithCompletionBlock:(void (^)(NSString * _Nullable URN))completionBlock

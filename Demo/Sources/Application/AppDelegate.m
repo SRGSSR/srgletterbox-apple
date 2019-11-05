@@ -84,6 +84,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
     settingsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
     [viewControllers addObject:settingsNavigationViewController];
     
+#if TARGET_OS_TV
+    mediasNavigationViewController.navigationBarHidden = YES;
+    mediaListsNavigationViewController.navigationBarHidden = YES;
+    settingsNavigationViewController.navigationBarHidden = YES;
+#endif
+    
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
     tabBarController.viewControllers = viewControllers.copy;
     self.window.rootViewController = tabBarController;

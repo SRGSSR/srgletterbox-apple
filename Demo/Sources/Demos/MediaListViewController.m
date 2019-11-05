@@ -52,10 +52,14 @@
 {
     [super viewDidLoad];
     
+#if TARGET_OS_TV
+    if (@available(tvOS 13, *)) {
+        self.navigationController.tabBarObservedScrollView = self.tableView;
+    }
+#endif
+    
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    
-    self.title = [self pageTitle];
     
     self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.serviceURL ?: ApplicationSettingServiceURL()];
     self.dataProvider.globalParameters = ApplicationSettingGlobalParameters();
@@ -81,7 +85,7 @@
 
 #pragma mark Getters and setters
 
-- (NSString *)pageTitle
+- (NSString *)title
 {
     if (self.mediaList == MediaListLatestByTopic) {
         return self.topic.title ?: NSLocalizedString(@"Unknown", nil);
