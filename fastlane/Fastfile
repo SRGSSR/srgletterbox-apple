@@ -260,6 +260,8 @@ platform :ios do
         configuration: configuration,
         scheme: scheme,
         silent: true,
+        clean: true,
+        xcargs: "-allowProvisioningUpdates",
         export_method: export_to_appstore ? "app-store" : "enterprise",
         include_bitcode: export_to_appstore,
         export_team_id: team_id,
