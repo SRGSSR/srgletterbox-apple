@@ -223,6 +223,15 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self reloadData];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if (self.movingFromParentViewController || self.beingDismissed) {
+        [self dismissNotificationViewAnimated:NO];
+    }
+}
+
 #pragma mark Image retrieval
 
 - (UIImage *)imageForMetadata:(id<SRGImageMetadata>)metadata withCompletion:(void (^)(void))completion
@@ -346,17 +355,17 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.notificationView.alpha = 1.f;
     }];
     
-    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
+    [self performSelector:@selector(dismissNotificationViewAutomatically) withObject:nil afterDelay:5.];
 }
 
-- (void)dismissNotificationView
+- (void)dismissNotificationViewAutomatically
 {
     [self dismissNotificationViewAnimated:YES];
 }
 
 - (void)dismissNotificationViewAnimated:(BOOL)animated
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationViewAutomatically) object:nil];
     
     [UIView animateWithDuration:0.2 animations:^{
         self.notificationView.alpha = 0.f;
