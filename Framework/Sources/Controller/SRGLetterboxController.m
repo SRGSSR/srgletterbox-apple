@@ -154,6 +154,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGPosition *startPosition;
 @property (nonatomic) SRGLetterboxPlaybackSettings *preferredSettings;
 @property (nonatomic) NSError *error;
+@property (nonatomic, getter=isStopped) BOOL stopped;
 
 // Save the URN sent to the social count view service, to not send it twice
 @property (nonatomic, copy) NSString *socialCountViewURN;
@@ -1113,10 +1114,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self updateWithError:blockingReasonError];
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
         
-        if (blockingReasonError) {
-            
-        }
-        else {
+        if (! blockingReasonError) {
             prepareToPlay(contentURL);
         }
     }
@@ -1160,7 +1158,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     else if (self.URN) {
         [self playURN:self.URN atPosition:self.startPosition withPreferredSettings:self.preferredSettings];
-    };
+    }
 }
 
 - (void)pause
@@ -1189,6 +1187,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     // Reset the player, including the attached URL. We keep the Letterbox controller context so that playback can
     // be restarted.
     [self.mediaPlayerController reset];
+    
+    self.stopped = YES;
 }
 
 - (void)retry
@@ -1233,6 +1233,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     self.error = nil;
+    self.stopped = NO;
     
     self.lastUpdateDate = nil;
     
@@ -1555,7 +1556,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
-    if ([FXReachability sharedInstance].reachable) {
+    if (! self.stopped && [FXReachability sharedInstance].reachable) {
         [self retry];
     }
 }
