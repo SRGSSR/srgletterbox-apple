@@ -47,11 +47,10 @@
     XCTAssertNil(weakController);
 }
 
-- (void)testDeallocationWhilePlaying
+- (void)testDeallocationAfterPlayback
 {
     __weak SRGLetterboxController *weakController = self.controller;
     @autoreleasepool {
-        // When no reference retains the player, playback must gracefully stop. Deallocation will occur right afterwards.
         [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
             return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
         }];
@@ -64,12 +63,11 @@
             return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStateIdle;
         }];
         
-        // Chicken and egg problem: We ensure the idle state can be reached so that the LB controller gets deallocated
         [self.controller reset];
         
-        self.controller = nil;
-        
         [self waitForExpectationsWithTimeout:30. handler:nil];
+        
+        self.controller = nil;
     }
     
     XCTAssertNil(weakController);
