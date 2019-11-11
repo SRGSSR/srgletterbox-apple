@@ -6,7 +6,7 @@
 
 #import "UIViewController+LetterboxDemo.h"
 
-#import "ModalPlayerViewController.h"
+#import "AdvancedPlayerViewController.h"
 #import "SettingsViewController.h"
 
 #import <objc/runtime.h>
@@ -90,7 +90,7 @@ static void *s_playlistKey = &s_playlistKey;
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 #else
     void (^openModalPlayer)(void) = ^{
-        ModalPlayerViewController *playerViewController = [[ModalPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
+        AdvancedPlayerViewController *playerViewController = [[AdvancedPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
         playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
         
         // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
