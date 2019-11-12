@@ -346,7 +346,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         return;
     }
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationViewAutomatically) object:nil];
     
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     [self.notificationView updateLayoutWithMessage:notificationMessage];
