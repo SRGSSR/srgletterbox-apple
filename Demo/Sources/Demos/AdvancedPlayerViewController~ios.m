@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "ModalPlayerViewController.h"
+#import "AdvancedPlayerViewController.h"
 
 #import "ModalTransition.h"
 #import "NSBundle+LetterboxDemo.h"
@@ -15,7 +15,7 @@
 
 #import <SRGAnalytics/SRGAnalytics.h>
 
-@interface ModalPlayerViewController ()
+@interface AdvancedPlayerViewController ()
 
 @property (nonatomic, copy) NSString *URN;
 
@@ -46,7 +46,7 @@
 
 @end
 
-@implementation ModalPlayerViewController
+@implementation AdvancedPlayerViewController
 
 #pragma mark Object lifecycle
 
@@ -56,12 +56,12 @@
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
     if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:self.class] && [service.controller.URN isEqual:URN]) {
-        return (ModalPlayerViewController *)service.pictureInPictureDelegate;
+        return (AdvancedPlayerViewController *)service.pictureInPictureDelegate;
     }
     // Otherwise instantiate a fresh new one
     else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:LetterboxDemoResourceNameForUIClass(self.class) bundle:nil];
-        ModalPlayerViewController *viewController = [storyboard instantiateInitialViewController];
+        AdvancedPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;
         

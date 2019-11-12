@@ -69,8 +69,8 @@
 		6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView~ios.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
 		6F1BA9142029E9E8004BB271 /* TestPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1BA9132029E9E8004BB271 /* TestPlaylist.m */; };
-		6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */; };
-		6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */; };
+		6F1F5FC41E309BE4000215F3 /* AdvancedPlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC31E309BE4000215F3 /* AdvancedPlayerViewController~ios.m */; };
+		6F1F5FC61E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F5FC51E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard */; };
 		6F223C64234B6BB3002F93A1 /* SRGErrorView~tvos.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F223C63234B6BB3002F93A1 /* SRGErrorView~tvos.xib */; };
 		6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F28BAD11E323F6A004F43DD /* Images.xcassets */; };
 		6F2E03F82150E6F200737B3C /* SRGContentProtection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F52DE1C2106F857001EC146 /* SRGContentProtection.framework */; };
@@ -312,9 +312,9 @@
 		6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SRGLetterbox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1BA9122029E9E8004BB271 /* TestPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPlaylist.h; sourceTree = "<group>"; };
 		6F1BA9132029E9E8004BB271 /* TestPlaylist.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPlaylist.m; sourceTree = "<group>"; };
-		6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalPlayerViewController.h; sourceTree = "<group>"; };
-		6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ModalPlayerViewController~ios.m"; sourceTree = "<group>"; };
-		6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "ModalPlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
+		6F1F5FC21E309BE4000215F3 /* AdvancedPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvancedPlayerViewController.h; sourceTree = "<group>"; };
+		6F1F5FC31E309BE4000215F3 /* AdvancedPlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AdvancedPlayerViewController~ios.m"; sourceTree = "<group>"; };
+		6F1F5FC51E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "AdvancedPlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6F223C63234B6BB3002F93A1 /* SRGErrorView~tvos.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SRGErrorView~tvos.xib"; sourceTree = "<group>"; };
 		6F28BAD11E323F6A004F43DD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6F2EB46E2029DFB100E7ACDC /* LetterboxBaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LetterboxBaseTestCase.h; sourceTree = "<group>"; };
@@ -878,9 +878,9 @@
 				6FC972F5236B18DE00ED6197 /* MediasViewController.m */,
 				6F833048236B4D40005D08A4 /* MiscellaneousViewController.h */,
 				6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */,
-				6F1F5FC21E309BE4000215F3 /* ModalPlayerViewController.h */,
-				6F1F5FC31E309BE4000215F3 /* ModalPlayerViewController~ios.m */,
-				6F1F5FC51E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard */,
+				6F1F5FC21E309BE4000215F3 /* AdvancedPlayerViewController.h */,
+				6F1F5FC31E309BE4000215F3 /* AdvancedPlayerViewController~ios.m */,
+				6F1F5FC51E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard */,
 				6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */,
 				6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */,
 				6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */,
@@ -1217,7 +1217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				087874A02364F6C100F4F40C /* AppCenterDistributeResources.bundle in Resources */,
-				6F1F5FC61E309BF0000215F3 /* ModalPlayerViewController~ios.storyboard in Resources */,
+				6F1F5FC61E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard in Resources */,
 				6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */,
 				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */,
 				6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard in Resources */,
@@ -1391,7 +1391,7 @@
 				6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m in Sources */,
 				6F0AD0781E5EAB0D000A61A5 /* FeedsViewController~ios.m in Sources */,
 				6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */,
-				6F1F5FC41E309BE4000215F3 /* ModalPlayerViewController~ios.m in Sources */,
+				6F1F5FC41E309BE4000215F3 /* AdvancedPlayerViewController~ios.m in Sources */,
 				08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */,
 				0849DA5D20FD553100026F0D /* TopicItem.m in Sources */,
 				6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */,

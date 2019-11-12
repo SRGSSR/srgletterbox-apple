@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 API_UNAVAILABLE(tvos)
-@interface ModalPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
+@interface AdvancedPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
 
 - (instancetype)initWithURN:(nullable NSString *)URN serviceURL:(nullable NSURL *)serviceURL;
 
@@ -18,7 +18,7 @@ API_UNAVAILABLE(tvos)
 
 @end
 
-@interface ModalPlayerViewController (Unavailable)
+@interface AdvancedPlayerViewController (Unavailable)
 
 - (instancetype)init NS_UNAVAILABLE;
 

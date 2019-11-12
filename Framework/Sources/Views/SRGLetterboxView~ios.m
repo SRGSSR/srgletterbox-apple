@@ -169,6 +169,7 @@ static void commonInit(SRGLetterboxView *self);
     else {
         [self stopInactivityTracker];
         [self stopPeriodicUpdates];
+        [self dismissNotificationViewAnimated:NO];
         
         [self.controller removeObserver:self keyPath:@keypath(SRGLetterboxController.new, mediaPlayerController.player.externalPlaybackActive)];
         
@@ -687,10 +688,9 @@ static void commonInit(SRGLetterboxView *self);
         self.inactivityTimer = [NSTimer srgletterbox_timerWithTimeInterval:4. repeats:YES /* important */ block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
             
-            SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-            if (mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying
-                    || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateSeeking
-                    || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateStalled) {
+            SRGMediaPlayerPlaybackState playbackState = self.controller.mediaPlayerController.playbackState;
+            if (playbackState == SRGMediaPlayerPlaybackStatePlaying || playbackState == SRGMediaPlayerPlaybackStateSeeking
+                    || playbackState == SRGMediaPlayerPlaybackStateStalled) {
                 [self setTogglableUserInterfaceHidden:YES animated:YES];
             }
         }];
@@ -727,24 +727,24 @@ static void commonInit(SRGLetterboxView *self);
         return;
     }
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationView) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationViewAutomatically) object:nil];
     
     self.notificationMessage = notificationMessage;
     
     [self setNeedsLayoutAnimated:animated];
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     
-    [self performSelector:@selector(dismissNotificationView) withObject:nil afterDelay:5.];
+    [self performSelector:@selector(dismissNotificationViewAutomatically) withObject:nil afterDelay:5.];
 }
 
-- (void)dismissNotificationView
+- (void)dismissNotificationViewAutomatically
 {
     [self dismissNotificationViewAnimated:YES];
 }
 
 - (void)dismissNotificationViewAnimated:(BOOL)animated
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationViewAutomatically) object:nil];
     
     self.notificationMessage = nil;
     [self setNeedsLayoutAnimated:animated];

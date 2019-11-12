@@ -6,8 +6,8 @@
 
 #import "MediaListViewController.h"
 
+#import "AdvancedPlayerViewController.h"
 #import "DemoAccessibilityFormatter.h"
-#import "ModalPlayerViewController.h"
 #import "NSBundle+LetterboxDemo.h"
 #import "NSDateFormatter+LetterboxDemo.h"
 #import "SettingsViewController.h"
