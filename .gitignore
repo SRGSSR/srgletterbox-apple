@@ -17,6 +17,7 @@ xcuserdata
 
 /fastlane/export
 /fastlane/*commit-hash.txt
+/fastlane/*.xcresult
 /fastlane/*.xml
 
 /Scripts/generate-icons-caches
