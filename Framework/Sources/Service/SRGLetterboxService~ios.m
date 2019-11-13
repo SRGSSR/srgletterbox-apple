@@ -145,8 +145,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     _controller = controller;
     
     [self updateRemoteCommandCenterWithController:controller];
-    [self updateNowPlayingMetadataWithController:controller];
-    [self updateNowPlayingPlaybackStateWithController:controller];
+    [self updateNowPlayingInformationWithController:controller];
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
@@ -406,7 +405,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     }
 }
 
-- (void)updateNowPlayingMetadataWithController:(SRGLetterboxController *)controller
+- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
     if (! self.nowPlayingInfoAndCommandsEnabled) {
         return;
@@ -421,7 +420,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         return;
     }
     
-    NSMutableDictionary *nowPlayingInfo = MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo.mutableCopy ?: [NSMutableDictionary dictionary];
+    NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
     
     switch (media.mediaType) {
         case SRGMediaTypeAudio: {
@@ -485,20 +484,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:artworkImage];
     }
     
-    MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nowPlayingInfo.copy;
-}
-
-- (void)updateNowPlayingPlaybackStateWithController:(SRGLetterboxController *)controller
-{
-    if (! self.nowPlayingInfoAndCommandsEnabled) {
-        return;
-    }
-    
-    SRGLetterboxLogDebug(@"service", @"Now playing playback state update started");
-    
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-    
-    NSMutableDictionary *nowPlayingInfo = MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo.mutableCopy ?: [NSMutableDictionary dictionary];
     
     CMTimeRange timeRange = mediaPlayerController.timeRange;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(mediaPlayerController.currentTime, timeRange.start)));
@@ -583,7 +569,7 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                     self.cachedArtworkURL = placeholderImageURL;
                     self.cachedArtworkImage = placeholderImage;
                 }
-                [self updateNowPlayingMetadataWithController:controller];
+                [self updateNowPlayingInformationWithController:controller];
             }];
             
             // Keep the current artwork during retrieval (even if it does not match) for smoother transitions, or use
@@ -738,17 +724,17 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self updateNowPlayingMetadataWithController:self.controller];
+    [self updateNowPlayingInformationWithController:self.controller];
 }
 
 - (void)programDidChange:(NSNotification *)notification
 {
-    [self updateNowPlayingMetadataWithController:self.controller];
+    [self updateNowPlayingInformationWithController:self.controller];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
-    [self updateNowPlayingPlaybackStateWithController:self.controller];
+    [self updateNowPlayingInformationWithController:self.controller];
 }
 
 // Update commands while transitioning from / to the background (since control availability might be affected)
