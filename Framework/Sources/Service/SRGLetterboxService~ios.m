@@ -133,6 +133,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                       name:SRGLetterboxMetadataDidChangeNotification
                                                     object:_controller];
         [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGLetterboxProgramDidChangeNotification
+                                                    object:_controller];
+        [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                     object:previousMediaPlayerController];
         
@@ -190,6 +193,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(metadataDidChange:)
                                                    name:SRGLetterboxMetadataDidChangeNotification
+                                                 object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(programDidChange:)
+                                                   name:SRGLetterboxProgramDidChangeNotification
                                                  object:controller];
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(playbackStateDidChange:)
@@ -730,6 +737,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 #pragma mark Notifications
 
 - (void)metadataDidChange:(NSNotification *)notification
+{
+    [self updateNowPlayingMetadataWithController:self.controller];
+}
+
+- (void)programDidChange:(NSNotification *)notification
 {
     [self updateNowPlayingMetadataWithController:self.controller];
 }
