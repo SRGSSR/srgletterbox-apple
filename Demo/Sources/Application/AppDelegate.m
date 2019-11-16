@@ -6,7 +6,7 @@
 
 #import "AppDelegate.h"
 
-#import "MediaListsViewController.h"
+#import "ListsViewController.h"
 #import "MediasViewController.h"
 #import "MiscellaneousViewController.h"
 #import "SettingsViewController.h"
@@ -67,7 +67,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
     [viewControllers addObject:mediasNavigationViewController];
     
-    MediaListsViewController *mediaListsViewController = [[MediaListsViewController alloc] init];
+    ListsViewController *mediaListsViewController = [[ListsViewController alloc] init];
     UINavigationController *mediaListsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediaListsViewController];
     mediaListsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
     [viewControllers addObject:mediaListsNavigationViewController];

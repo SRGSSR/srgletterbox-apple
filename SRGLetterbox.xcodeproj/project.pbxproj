@@ -129,7 +129,7 @@
 		6F8211952358ED4300B047FF /* placeholder_media-square.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211932358ED4200B047FF /* placeholder_media-square.pdf */; };
 		6F8211962358ED4300B047FF /* placeholder_media.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211942358ED4200B047FF /* placeholder_media.pdf */; };
 		6F83304B236B4D40005D08A4 /* MiscellaneousViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */; };
-		6F93AFBA236B3EDD007F97CA /* MediaListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F93AFB9236B3EDD007F97CA /* MediaListsViewController.m */; };
+		6F93AFBA236B3EDD007F97CA /* ListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F93AFB9236B3EDD007F97CA /* ListsViewController.m */; };
 		6F973EBC233547B10026F54C /* SRGLetterboxViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */; };
 		6F9C18D81F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */; };
@@ -394,8 +394,8 @@
 		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
 		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
-		6F93AFB8236B3EDD007F97CA /* MediaListsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaListsViewController.h; sourceTree = "<group>"; };
-		6F93AFB9236B3EDD007F97CA /* MediaListsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MediaListsViewController.m; sourceTree = "<group>"; };
+		6F93AFB8236B3EDD007F97CA /* ListsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListsViewController.h; sourceTree = "<group>"; };
+		6F93AFB9236B3EDD007F97CA /* ListsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ListsViewController.m; sourceTree = "<group>"; };
 		6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxViewController.h; sourceTree = "<group>"; };
 		6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxViewController~tvos.m"; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
@@ -867,20 +867,22 @@
 		6FAB3B5A1E28FFEA00CC2197 /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				6F1F5FC21E309BE4000215F3 /* AdvancedPlayerViewController.h */,
+				6F1F5FC31E309BE4000215F3 /* AdvancedPlayerViewController~ios.m */,
+				6F1F5FC51E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard */,
 				6F0AD0751E5EAB0D000A61A5 /* FeedsViewController.h */,
 				6F0AD0761E5EAB0D000A61A5 /* FeedsViewController~ios.m */,
 				6F0AD07A1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard */,
 				6F0AD07C1E5EB224000A61A5 /* FeedTableViewCell.h */,
 				6F0AD07D1E5EB224000A61A5 /* FeedTableViewCell~ios.m */,
+				6F93AFB8236B3EDD007F97CA /* ListsViewController.h */,
+				6F93AFB9236B3EDD007F97CA /* ListsViewController.m */,
 				08E03CC81F47283C008AD461 /* MediaListViewController.h */,
 				08E03CC91F47283C008AD461 /* MediaListViewController.m */,
 				6FD9BA2F1E3095F00013CC97 /* MediasViewController.h */,
 				6FC972F5236B18DE00ED6197 /* MediasViewController.m */,
 				6F833048236B4D40005D08A4 /* MiscellaneousViewController.h */,
 				6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */,
-				6F1F5FC21E309BE4000215F3 /* AdvancedPlayerViewController.h */,
-				6F1F5FC31E309BE4000215F3 /* AdvancedPlayerViewController~ios.m */,
-				6F1F5FC51E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard */,
 				6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */,
 				6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */,
 				6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */,
@@ -902,8 +904,6 @@
 				6FB78F8A1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard */,
 				0849DA5720FCD82D00026F0D /* TopicListViewController.h */,
 				0849DA5820FCD82D00026F0D /* TopicListViewController.m */,
-				6F93AFB8236B3EDD007F97CA /* MediaListsViewController.h */,
-				6F93AFB9236B3EDD007F97CA /* MediaListsViewController.m */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -1395,7 +1395,7 @@
 				08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */,
 				0849DA5D20FD553100026F0D /* TopicItem.m in Sources */,
 				6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */,
-				6F93AFBA236B3EDD007F97CA /* MediaListsViewController.m in Sources */,
+				6F93AFBA236B3EDD007F97CA /* ListsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
