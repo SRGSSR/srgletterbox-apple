@@ -145,6 +145,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
                                                       name:SRGMediaPlayerPlaybackStateDidChangeNotification
                                                     object:previousMediaPlayerController];
         [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGMediaPlayerSeekNotification
+                                                    object:previousMediaPlayerController];
+        [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGMediaPlayerAudioTrackDidChangeNotification
                                                     object:previousMediaPlayerController];
         [NSNotificationCenter.defaultCenter removeObserver:self
@@ -213,6 +216,10 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(playbackStateDidChange:)
                                                    name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                 object:mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playerSeek:)
+                                                   name:SRGMediaPlayerSeekNotification
                                                  object:mediaPlayerController];
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(audioTrackDidChange:)
@@ -468,7 +475,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
 }
 
-- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
+- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller time:(NSValue *)time
 {
     if (! self.nowPlayingInfoAndCommandsEnabled) {
         return;
@@ -556,7 +563,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     CMTimeRange timeRange = mediaPlayerController.timeRange;
-    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(mediaPlayerController.currentTime, timeRange.start)));
+    CMTime currentTime = time ? time.CMTimeValue : mediaPlayerController.currentTime;
+    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(currentTime, timeRange.start)));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(timeRange.duration));
     
     // Provide rate information so that the information can be interpolated whithout the need for continuous updates
@@ -609,6 +617,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     nowPlayingInfo[MPNowPlayingInfoPropertyCurrentLanguageOptions] = currentLanguageOptions.copy;
     
     MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nowPlayingInfo.copy;
+}
+
+- (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
+{
+    [self updateNowPlayingInformationWithController:controller time:nil];
 }
 
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
@@ -949,6 +962,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (void)playbackStateDidChange:(NSNotification *)notification
 {
     [self updateNowPlayingInformationWithController:self.controller];
+}
+
+- (void)playerSeek:(NSNotification *)notification
+{
+    [self updateNowPlayingInformationWithController:self.controller time:notification.userInfo[SRGMediaPlayerSeekTimeKey]];
 }
 
 - (void)audioTrackDidChange:(NSNotification *)notification
