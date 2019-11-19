@@ -98,7 +98,7 @@ platform :ios do
     # Wait a bit before asking dSYMs. Not rready yet.
     sleep(60)
 
-    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], null)
+    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], nil)
 
     clean_build_artifacts
 
@@ -185,7 +185,7 @@ platform :ios do
     # Wait a bit before asking dSYMs. Not rready yet.
     sleep(60)
 
-    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], null)
+    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], nil)
 
     clean_build_artifacts
 
@@ -419,8 +419,10 @@ platform :ios do
   end
 
   def update_dsyms (platform, appcenter_app_name, options)
-    min_version = options[:min_version]
-    version = options[:version]
+    if options
+      min_version = options[:min_version]
+      version = options[:version]
+    end
 
     output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
     
