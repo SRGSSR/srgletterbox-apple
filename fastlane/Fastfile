@@ -233,13 +233,6 @@ platform :ios do
     comscore_sh_file = "../Carthage/Build/" + platform + "/ComScore.framework/strip-framework.sh"
     File.delete(comscore_sh_file) if File.exist?(comscore_sh_file)
 
-    # Workaround for missing TagCommander tvOS SDK: use iOS frameworks to build and remove it for ipa package.
-    fix_tc_frameworks = export_to_appstore
-
-    if fix_tc_frameworks
-      fix_tc_tvos_bootstrap
-    end
-
     gym(
       configuration: configuration,
       scheme: scheme,
@@ -250,27 +243,8 @@ platform :ios do
       include_bitcode: export_to_appstore,
       export_team_id: team_id,
       destination: destination,
-      output_directory: output_directory,
-      skip_package_ipa: fix_tc_frameworks
+      output_directory: output_directory
     )
-
-    if fix_tc_frameworks
-      fix_tc_tvos_archive
-
-      gym(
-        skip_build_archive: true,
-        archive_path: lane_context[SharedValues::XCODEBUILD_ARCHIVE],
-        configuration: configuration,
-        scheme: scheme,
-        silent: true,
-        clean: true,
-        xcargs: "-allowProvisioningUpdates",
-        export_method: export_to_appstore ? "app-store" : "enterprise",
-        include_bitcode: export_to_appstore,
-        export_team_id: team_id,
-        output_directory: output_directory
-      )
-    end
   end
 
   desc "Upload a build on App Center or just a dSYM file."
@@ -388,29 +362,6 @@ platform :ios do
     whatsNew ? whatsNew : ''
   end
 
-  # Workaround for missing TagCommander tvOS SDKs: copy iOS frameworks for tvOS build.
-  def fix_tc_tvos_bootstrap()
-    source_platform = "iOS"
-    destination_platform = "tvOS"
-
-    tccore = "../Carthage/Build/%s/TCCore.framework"
-    if !File.directory?(tccore % [destination_platform])
-      FileUtils.copy_entry(tccore % [source_platform], tccore % [destination_platform])
-    end
-
-    tcsdk = "../Carthage/Build/%s/TCSDK.framework"
-    if !File.directory?(tcsdk % [destination_platform])
-      FileUtils.copy_entry(tcsdk % [source_platform], tcsdk % [destination_platform])
-    end
-  end
-
-  # Workaround for missing TagCommander tvOS SDK: remove iOS frameworks in archive.
-  def fix_tc_tvos_archive()
-    xcodebuild_archive_frameworks = lane_context[SharedValues::XCODEBUILD_ARCHIVE] + "/Products/Applications/SRGLetterbox-demo.app/Frameworks"
-    FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCCore.framework", force = true)
-    FileUtils.remove_entry(xcodebuild_archive_frameworks + "/TCSDK.framework", force = true)    
-  end
-
   # Update only the demo app identifier for App Store Connect submit.
   def update_to_appstore_app_identifier()
     update_app_identifier(
@@ -512,9 +463,6 @@ def run_tests_with_devices(devices)
 end
 
 def srg_scan(device)
-  # Workaround for missing TagCommander tvOS SDK: use iOS frameworks to build and remove it for ipa package.
-  fix_tc_tvos_bootstrap
-  
   scan(
     device: device,
     scheme: xcode_library_scheme,
