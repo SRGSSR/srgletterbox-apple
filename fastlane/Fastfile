@@ -229,10 +229,6 @@ platform :ios do
 
     output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME] + '/'
 
-    # Workaround for ComScore packaging issue
-    comscore_sh_file = "../Carthage/Build/" + platform + "/ComScore.framework/strip-framework.sh"
-    File.delete(comscore_sh_file) if File.exist?(comscore_sh_file)
-
     gym(
       configuration: configuration,
       scheme: scheme,
