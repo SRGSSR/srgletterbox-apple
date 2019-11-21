@@ -76,6 +76,10 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                selector:@selector(applicationDidBecomeActive:)
                                                    name:UIApplicationDidBecomeActiveNotification
                                                  object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(audioSessionInterruption:)
+                                                   name:AVAudioSessionInterruptionNotification
+                                                 object:nil];
         
         _restoreUserInterface = YES;
         _playbackStopped = YES;
@@ -710,6 +714,33 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     [self updateRemoteCommandCenterWithController:self.controller];
+}
+
+- (void)audioSessionInterruption:(NSNotification *)notification
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    if (! mediaPlayerController) {
+        return;
+    }
+    
+    AVAudioSessionInterruptionType audioSessionInterruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
+    switch (audioSessionInterruptionType) {
+        case AVAudioSessionInterruptionTypeBegan: {
+            [self.controller pause];
+            break;
+        }
+        
+        case AVAudioSessionInterruptionTypeEnded: {
+            if ([notification.userInfo[AVAudioSessionInterruptionOptionKey] integerValue] == AVAudioSessionInterruptionOptionShouldResume) {
+                [self.controller play];
+            }
+            break;
+        }
+        
+        default: {
+            break;
+        }
+    }
 }
 
 #pragma mark Description
