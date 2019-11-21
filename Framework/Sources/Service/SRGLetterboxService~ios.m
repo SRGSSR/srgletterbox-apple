@@ -718,27 +718,11 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 
 - (void)audioSessionInterruption:(NSNotification *)notification
 {
-    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    if (! mediaPlayerController) {
-        return;
-    }
-    
-    AVAudioSessionInterruptionType audioSessionInterruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
-    switch (audioSessionInterruptionType) {
-        case AVAudioSessionInterruptionTypeBegan: {
-            [self.controller pause];
-            break;
-        }
-        
-        case AVAudioSessionInterruptionTypeEnded: {
-            if ([notification.userInfo[AVAudioSessionInterruptionOptionKey] integerValue] == AVAudioSessionInterruptionOptionShouldResume) {
-                [self.controller play];
-            }
-            break;
-        }
-        
-        default: {
-            break;
+    AVAudioSessionInterruptionType interruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
+    if (interruptionType == AVAudioSessionInterruptionTypeEnded) {
+        AVAudioSessionInterruptionOptions interruptionOption = [notification.userInfo[AVAudioSessionInterruptionOptionKey] integerValue];
+        if (interruptionOption == AVAudioSessionInterruptionOptionShouldResume) {
+            [self.controller play];
         }
     }
 }
