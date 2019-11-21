@@ -283,7 +283,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                                                selector:@selector(audioSessionInterruption:)
                                                    name:AVAudioSessionInterruptionNotification
                                                  object:nil];
-        
     }
     return self;
 }
@@ -1726,8 +1725,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (void)audioSessionInterruption:(NSNotification *)notification
 {
     // Do not let pause live streams, stop playback
-    AVAudioSessionInterruptionType audioSessionInterruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
-    if (audioSessionInterruptionType == AVAudioSessionInterruptionTypeBegan && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
+    AVAudioSessionInterruptionType interruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
+    if (interruptionType == AVAudioSessionInterruptionTypeBegan && self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive) {
         [self stop];
     }
 }
