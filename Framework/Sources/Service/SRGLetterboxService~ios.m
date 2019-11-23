@@ -21,8 +21,7 @@
 #import <YYWebImage/YYWebImage.h>
 
 SRGLetterboxCommands SRGLetterboxCommandsDefault = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward
-    | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward | SRGLetterboxCommandChangePlaybackPosition
-    | SRGLetterboxCommandLanguageSelection;
+    | SRGLetterboxCommandChangePlaybackPosition | SRGLetterboxCommandLanguageSelection;
 
 NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterboxServiceSettingsDidChangeNotification";
 
@@ -326,14 +325,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
     [skipBackwardIntervalCommand srg_addUniqueTarget:self action:@selector(skipBackward:)];
     
-    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
-    seekForwardCommand.enabled = NO;
-    [seekForwardCommand srg_addUniqueTarget:self action:@selector(seekForward:)];
-    
-    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
-    seekBackwardCommand.enabled = NO;
-    [seekBackwardCommand srg_addUniqueTarget:self action:@selector(seekBackward:)];
-    
     MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
     previousTrackCommand.enabled = NO;
     [previousTrackCommand srg_addUniqueTarget:self action:@selector(previousTrack:)];
@@ -386,14 +377,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     skipBackwardIntervalCommand.preferredIntervals = @[];
     [skipBackwardIntervalCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
     
-    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
-    seekForwardCommand.enabled = NO;
-    [seekForwardCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
-    
-    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
-    seekBackwardCommand.enabled = NO;
-    [seekBackwardCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
-    
     MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
     previousTrackCommand.enabled = NO;
     [previousTrackCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
@@ -436,8 +419,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.togglePlayPauseCommand.enabled = YES;
         commandCenter.skipForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipForward) && [controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
-        commandCenter.seekForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekForward);
-        commandCenter.seekBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekBackward);
         commandCenter.nextTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandNextTrack) && [controller canPlayNextMedia];
         commandCenter.previousTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandPreviousTrack) && [controller canPlayPreviousMedia];
         
@@ -454,8 +435,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.togglePlayPauseCommand.enabled = NO;
         commandCenter.skipForwardCommand.enabled = NO;
         commandCenter.skipBackwardCommand.enabled = NO;
-        commandCenter.seekForwardCommand.enabled = NO;
-        commandCenter.seekBackwardCommand.enabled = NO;
         commandCenter.nextTrackCommand.enabled = NO;
         commandCenter.previousTrackCommand.enabled = NO;
 
@@ -746,26 +725,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (MPRemoteCommandHandlerStatus)skipBackward:(MPSkipIntervalCommandEvent *)event
 {
     return [self.controller skipWithInterval:-event.interval completionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
-}
-
-- (MPRemoteCommandHandlerStatus)seekForward:(MPSeekCommandEvent *)event
-{
-#if 0
-    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
-        return [self.controller skipForwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
-    }
-#endif
-    return MPRemoteCommandHandlerStatusSuccess;
-}
-
-- (MPRemoteCommandHandlerStatus)seekBackward:(MPSeekCommandEvent *)event
-{
-#if 0
-    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
-        return [self.controller skipBackwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
-    }
-#endif
-    return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (MPRemoteCommandHandlerStatus)previousTrack:(MPRemoteCommandEvent *)event
