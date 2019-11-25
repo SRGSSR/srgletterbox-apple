@@ -23,6 +23,22 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
+static UIView *SRGLetterboxViewControllerPlayerSubview(UIView *view)
+{
+    if ([view.layer isKindOfClass:AVPlayerLayer.class]) {
+        return view;
+    }
+    
+    for (UIView *subview in view.subviews) {
+        UIView *playerSubview = SRGLetterboxViewControllerPlayerSubview(subview);
+        if (playerSubview) {
+            return playerSubview;
+        }
+    }
+    
+    return nil;
+}
+
 static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 {
     if ([NSStringFromClass(view.class) containsString:@"LoadingIndicator"]) {
@@ -307,31 +323,38 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)updateMainLayoutWithUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
+    // TODO: With tvOS 13 and above, setting userInteractionEnabled suffices.
+    void (^enablePlayerView)(BOOL) = ^(BOOL enabled) {
+        UIView *playerView = SRGLetterboxViewControllerPlayerSubview(self.view);
+        playerView.alpha = enabled;
+        self.view.userInteractionEnabled = enabled;
+    };
+    
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     
-    BOOL thumbnailHidden = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+    BOOL thumbnailHidden = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing);
     self.imageView.alpha = thumbnailHidden ? 0.f : 1.f;
     
     NSError *error = self.controller.error;
     if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
         self.errorView.alpha = 0.f;
         self.availabilityView.alpha = 1.f;
-        self.view.userInteractionEnabled = NO;
+        enablePlayerView(NO);
     }
     else if (error) {
         self.errorView.alpha = 1.f;
         self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = NO;
+        enablePlayerView(NO);
     }
     else if (self.controller.URN) {
         self.errorView.alpha = 0.f;
         self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = YES;
+        enablePlayerView(YES);
     }
     else {
         self.errorView.alpha = 1.f;
         self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = NO;
+        enablePlayerView(! thumbnailHidden);
     }
     
     if (self.controller.loading) {
