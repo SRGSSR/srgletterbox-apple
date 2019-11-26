@@ -548,6 +548,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return AVAudioSession.srg_isAirPlayActive && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
 }
 
+- (void)setReport:(SRGDiagnosticReport *)report
+{
+    [_report discard];
+    _report = report;
+}
+
 #pragma mark Periodic time observers
 
 - (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime))block
