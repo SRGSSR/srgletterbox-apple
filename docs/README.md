@@ -24,7 +24,7 @@ To ensure a coherent visual player identity throughout SRG SSR applications, **t
 
 ## Compatibility
 
-The library is suitable for applications running on iOS 9, tvOS 9 and above. The project is meant to be opened with the latest Xcode version.
+The library is suitable for applications running on iOS 9, tvOS 12 and above. The project is meant to be opened with the latest Xcode version.
 
 ## Contributing
 
