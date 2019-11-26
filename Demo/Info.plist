@@ -78,5 +78,7 @@
 	</array>
 	<key>AVInitialRouteSharingPolicy</key>
 	<string>LongFormVideo</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Automatic</string>
 </dict>
 </plist>
