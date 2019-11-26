@@ -171,6 +171,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = UIColor.blackColor;
+    
     UIView *playerView = self.playerViewController.view;
     playerView.backgroundColor = UIColor.clearColor;
     playerView.frame = self.view.bounds;
@@ -312,6 +314,11 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground atDate:self.controller.date];
 }
 
+- (void)reloadPlaceholderImage
+{
+    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground];
+}
+
 #pragma mark Layout
 
 - (void)updateMainLayoutAnimated:(BOOL)animated
@@ -418,6 +425,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
+    [self reloadPlaceholderImage];
     [self.controller playUpcomingMedia];
     
     if ([self.delegate respondsToSelector:@selector(letterboxViewController:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
@@ -535,6 +543,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
+    [self reloadPlaceholderImage];
+    
     // Only dismiss continuous playback overlay when presented (i.e. when the transition duration is not 0)
     if (self.presentedViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];

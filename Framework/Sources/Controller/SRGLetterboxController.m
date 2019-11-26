@@ -1265,7 +1265,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     self.lastUpdateDate = nil;
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
-    self.program = nil;
     
     self.startPosition = nil;
     self.preferredSettings = nil;
@@ -1278,6 +1277,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    
+    self.program = nil;
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
