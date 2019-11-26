@@ -13,6 +13,7 @@
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
+#import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 
 #import <FXReachability/FXReachability.h>
@@ -52,7 +53,7 @@ NSString * const SRGLetterboxPlaybackDidContinueAutomaticallyNotification = @"SR
 
 NSString * const SRGLetterboxLivestreamDidFinishNotification = @"SRGLetterboxLivestreamDidFinishNotification";
 
-NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"SRGLetterboxSocialCountViewWillIncreaseNotification";
+NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification = @"@SRGLetterboxSocialCountViewWillIncreaseNotification";
 
 NSString * const SRGLetterboxErrorKey = @"SRGLetterboxError";
 
@@ -163,6 +164,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
+// TODO: Not needed if program information is later delivered as highlights (segments).
+@property (nonatomic) SRGProgram *program;
+
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
@@ -178,6 +182,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 // Timer for continuous playback
 @property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
+
+// Time observers
+@property (nonatomic) id programTimeObserver;
 
 @property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
@@ -249,6 +256,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         // Also register the associated periodic time observers
         self.updateInterval = SRGLetterboxDefaultUpdateInterval;
         self.channelUpdateInterval = SRGLetterboxChannelDefaultUpdateInterval;
+        
+        self.programTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+            @strongify(self)
+            [self updateProgramForChannel:self.channel];
+        }];
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
         
@@ -461,7 +473,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     @weakify(self)
     self.channelUpdateTimer = [NSTimer srgletterbox_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
-        
         [self updateChannel];
     }];
 }
@@ -535,6 +546,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (BOOL)isUsingAirPlay
 {
     return AVAudioSession.srg_isAirPlayActive && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
+}
+
+- (void)setReport:(SRGDiagnosticReport *)report
+{
+    [_report discard];
+    _report = report;
 }
 
 #pragma mark Periodic time observers
@@ -702,36 +719,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.channel = channel ?: media.channel;
     
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
-    if (URN) {
-        userInfo[SRGLetterboxURNKey] = URN;
-    }
-    if (media) {
-        userInfo[SRGLetterboxMediaKey] = media;
-    }
-    if (mediaComposition) {
-        userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
-    }
-    if (subdivision) {
-        userInfo[SRGLetterboxSubdivisionKey] = subdivision;
-    }
-    if (channel) {
-        userInfo[SRGLetterboxChannelKey] = channel;
-    }
-    if (previousURN) {
-        userInfo[SRGLetterboxPreviousURNKey] = previousURN;
-    }
-    if (previousMedia) {
-        userInfo[SRGLetterboxPreviousMediaKey] = previousMedia;
-    }
-    if (previousMediaComposition) {
-        userInfo[SRGLetterboxPreviousMediaCompositionKey] = previousMediaComposition;
-    }
-    if (previousSubdivision) {
-        userInfo[SRGLetterboxPreviousSubdivisionKey] = previousSubdivision;
-    }
-    if (previousChannel) {
-        userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
-    }
+    
+    userInfo[SRGLetterboxURNKey] = URN;
+    userInfo[SRGLetterboxMediaKey] = media;
+    userInfo[SRGLetterboxMediaCompositionKey] = mediaComposition;
+    userInfo[SRGLetterboxSubdivisionKey] = subdivision;
+    userInfo[SRGLetterboxChannelKey] = channel;
+    
+    userInfo[SRGLetterboxPreviousURNKey] = previousURN;
+    userInfo[SRGLetterboxPreviousMediaKey] = previousMedia;
+    userInfo[SRGLetterboxPreviousMediaCompositionKey] = previousMediaComposition;
+    userInfo[SRGLetterboxPreviousSubdivisionKey] = previousSubdivision;
+    userInfo[SRGLetterboxPreviousChannelKey] = previousChannel;
     
     // Schedule an update when the media starts
     NSTimeInterval startTimeInterval = [media.startDate timeIntervalSinceNow];
@@ -921,6 +920,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     SRGChannelCompletionBlock channelCompletionBlock = ^(SRGChannel * _Nullable channel, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
         [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:self.subdivision channel:channel];
+        [self updateProgramForChannel:channel];
     };
     
     if (self.media.mediaType == SRGMediaTypeVideo) {
@@ -936,6 +936,30 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:nil completionBlock:channelCompletionBlock];
             [self.requestQueue addRequest:request resume:YES];
         }
+    }
+}
+
+- (SRGProgram *)programForChannel:(SRGChannel *)channel
+{
+    if (self.media.contentType != SRGContentTypeLivestream || ! channel) {
+        return nil;
+    }
+        
+    NSDate *playbackDate = self.date;
+    if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
+        return channel.currentProgram;
+    }
+    else {
+        return nil;
+    }
+}
+
+// TODO: Not needed if program information is later delivered as highlights (segments).
+- (void)updateProgramForChannel:(SRGChannel *)channel
+{
+    SRGProgram *program = [self programForChannel:channel];
+    if (program != self.program && ! [program isEqual:self.program]) {
+        self.program = program;
     }
 }
 
@@ -1240,7 +1264,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.stopped = NO;
     
     self.lastUpdateDate = nil;
-    
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
     
     self.startPosition = nil;
@@ -1254,6 +1277,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
+    
+    self.program = nil;
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
@@ -1369,22 +1394,17 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }];
 }
 
-#pragma mark Standard seeks
+#pragma mark Skips
 
-- (BOOL)canSkipBackward
+- (BOOL)canSkipWithInterval:(NSTimeInterval)interval
 {
-    return [self canSkipBackwardFromTime:[self seekStartTime]];
-}
-
-- (BOOL)canSkipForward
-{
-    return [self canSkipForwardFromTime:[self seekStartTime]];
+    return [self canSkipFromTime:[self seekStartTime] withInterval:interval];
 }
 
 - (BOOL)canSkipToLive
 {
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
-        return [self canSkipForward];
+        return [self canSkipWithInterval:self.mediaPlayerController.liveTolerance];
     }
     
     if (self.mediaComposition.srgletterbox_liveMedia && ! [self.mediaComposition.srgletterbox_liveMedia isEqual:self.media]) {
@@ -1395,14 +1415,33 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
-- (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(void (^)(BOOL))completionHandler
 {
-    return [self skipBackwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+    return [self skipFromTime:[self seekStartTime] withInterval:interval completionHandler:completionHandler];
 }
 
-- (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+- (BOOL)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self skipForwardFromTime:[self seekStartTime] withCompletionHandler:completionHandler];
+    if (! [self canSkipToLive]) {
+        return NO;
+    }
+    
+    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
+        CMTime targetTime = CMTimeRangeGetEnd(self.mediaPlayerController.timeRange);
+        [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
+            if (finished) {
+                [self.mediaPlayerController play];
+            }
+            completionHandler ? completionHandler(finished) : nil;
+        }];
+        return YES;
+    }
+    else if (self.mediaComposition.srgletterbox_liveMedia) {
+        return [self switchToURN:self.mediaComposition.srgletterbox_liveMedia.URN withCompletionHandler:completionHandler];
+    }
+    else {
+        return NO;
+    }
 }
 
 #pragma mark Diagnostics
@@ -1448,7 +1487,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return CMTIME_IS_INDEFINITE(self.mediaPlayerController.seekTargetTime) ? self.mediaPlayerController.currentTime : self.mediaPlayerController.seekTargetTime;
 }
 
-- (BOOL)canSkipBackwardFromTime:(CMTime)time
+- (BOOL)canSkipFromTime:(CMTime)time withInterval:(NSTimeInterval)interval
 {
     if (CMTIME_IS_INDEFINITE(time)) {
         return NO;
@@ -1462,81 +1501,28 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
-    return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
-}
-
-- (BOOL)canSkipForwardFromTime:(CMTime)time
-{
-    if (CMTIME_IS_INDEFINITE(time)) {
-        return NO;
-    }
-    
-    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
-    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
-    
-    if (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStatePreparing) {
-        return NO;
-    }
-    
-    SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
-    return (streamType == SRGMediaPlayerStreamTypeOnDemand && CMTimeGetSeconds(time) + SRGLetterboxForwardSkipInterval < CMTimeGetSeconds(mediaPlayerController.player.currentItem.duration))
-        || (streamType == SRGMediaPlayerStreamTypeDVR && ! mediaPlayerController.live);
-}
-
-- (BOOL)skipBackwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
-{
-    if (! [self canSkipBackwardFromTime:time]) {
-        return NO;
-    }
-    
-    CMTime targetTime = CMTimeSubtract(time, CMTimeMakeWithSeconds(SRGLetterboxBackwardSkipInterval, NSEC_PER_SEC));
-    [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
-        if (finished) {
-            [self.mediaPlayerController play];
-        }
-        completionHandler ? completionHandler(finished) : nil;
-    }];
-    return YES;
-}
-
-- (BOOL)skipForwardFromTime:(CMTime)time withCompletionHandler:(void (^)(BOOL finished))completionHandler
-{
-    if (! [self canSkipForwardFromTime:time]) {
-        return NO;
-    }
-    
-    CMTime targetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(SRGLetterboxForwardSkipInterval, NSEC_PER_SEC));
-    [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
-        if (finished) {
-            [self.mediaPlayerController play];
-        }
-        completionHandler ? completionHandler(finished) : nil;
-    }];
-    return YES;
-}
-
-- (BOOL)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
-{
-    if (! [self canSkipToLive]) {
-        return NO;
-    }
-    
-    if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
-        CMTime targetTime = CMTimeRangeGetEnd(self.mediaPlayerController.timeRange);
-        [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
-            if (finished) {
-                [self.mediaPlayerController play];
-            }
-            completionHandler ? completionHandler(finished) : nil;
-        }];
-        return YES;
-    }
-    else if (self.mediaComposition.srgletterbox_liveMedia) {
-        return [self switchToURN:self.mediaComposition.srgletterbox_liveMedia.URN withCompletionHandler:completionHandler];
+    if (interval <= 0) {
+        return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
     }
     else {
+        return CMTIME_COMPARE_INLINE(CMTimeAdd(time, CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)), <=, CMTimeRangeGetEnd(mediaPlayerController.timeRange));
+    }
+}
+
+- (BOOL)skipFromTime:(CMTime)time withInterval:(NSTimeInterval)interval completionHandler:(void (^)(BOOL finished))completionHandler
+{
+    if (! [self canSkipFromTime:time withInterval:interval]) {
         return NO;
     }
+    
+    CMTime targetTime = CMTimeAdd(time, CMTimeMakeWithSeconds(interval, NSEC_PER_SEC));
+    [self seekToPosition:[SRGPosition positionAroundTime:targetTime] withCompletionHandler:^(BOOL finished) {
+        if (finished) {
+            [self.mediaPlayerController play];
+        }
+        completionHandler ? completionHandler(finished) : nil;
+    }];
+    return YES;
 }
 
 #pragma mark Configuration

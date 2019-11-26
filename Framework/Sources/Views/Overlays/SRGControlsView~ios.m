@@ -8,7 +8,6 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
-#import "NSTimer+SRGLetterbox.h"
 #import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -96,7 +95,7 @@
     self.skipToLiveButton.alpha = 0.f;
     
     self.timeSlider.alpha = 0.f;
-    self.timeSlider.resumingAfterSeek = NO;
+    self.timeSlider.resumingAfterSeek = YES;
     self.timeSlider.delegate = self;
     
     self.tracksButton.delegate = self;
@@ -105,7 +104,8 @@
     // the view hierarchy at runtime.
     self.fullScreenPhantomButton.alpha = 0.f;
     
-    self.airPlayButton.image = [UIImage imageNamed:@"airplay" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.airPlayButton.audioImage = [UIImage imageNamed:@"airplay_audio" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
+    self.airPlayButton.videoImage = [UIImage imageNamed:@"airplay_video" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.startImage = [UIImage imageNamed:@"picture_in_picture_start" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
     self.pictureInPictureButton.stopImage = [UIImage imageNamed:@"picture_in_picture_stop" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
     self.tracksButton.image = [UIImage imageNamed:@"subtitles_off" inBundle:NSBundle.srg_letterboxBundle compatibleWithTraitCollection:nil];
@@ -219,8 +219,8 @@
         self.timeSlider.alpha = 0.f;
     }
     else {
-        self.forwardSeekButton.alpha = [self.controller canSkipForward] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [self.controller canSkipBackward] ? 1.f : 0.f;
+        self.forwardSeekButton.alpha = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval] ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
@@ -398,14 +398,14 @@
 
 - (IBAction)skipBackward:(id)sender
 {
-    [self.controller skipBackwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)skipForward:(id)sender
 {
-    [self.controller skipForwardWithCompletionHandler:^(BOOL finished) {
+    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }

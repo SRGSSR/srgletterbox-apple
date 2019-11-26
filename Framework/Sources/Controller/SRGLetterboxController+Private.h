@@ -11,6 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Standard skip intervals.
+ */
+static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+
+/**
  *  Notification sent when the livestream associated with the current playback context just finished. The corresponding
  *  media can be retrieved under the `SRGLetterboxMediaKey` user information key.
  */
@@ -48,6 +54,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  *  Returns `YES` iff the controller is currently used for external AirPlay playback.
  */
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
+
+/**
+ *  The program corresponding to the current playback position, if any.
+ */
+@property (nonatomic, readonly, nullable) SRGProgram *program;
 
 /**
  *  Play the upcoming media currently available.

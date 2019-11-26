@@ -8,6 +8,7 @@
 
 #import "MPRemoteCommand+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
+#import "SRGLetterboxLogger.h"
 #import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
@@ -19,9 +20,9 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
-SRGLetterboxCommands SRGLetterboxCommandsDefault = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward | SRGLetterboxCommandSeekForward | SRGLetterboxCommandSeekBackward;
-
 NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterboxServiceSettingsDidChangeNotification";
+
+static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGroup(NSArray<AVMediaSelectionOption *> *selectionOption, BOOL allowEmptySelection);
 
 @interface SRGLetterboxService () <AVPictureInPictureControllerDelegate> {
 @private
@@ -124,21 +125,37 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         _controller.playerConfigurationBlock = nil;
         [_controller reloadPlayerConfiguration];
         
+        // TODO: Not needed if program information is later delivered as highlights (segments).
+        [_controller removeObserver:self keyPath:@keypath(_controller.program)];
+        
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
+        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.timeRange)];
+        
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
         [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:SRGLetterboxMetadataDidChangeNotification
                                                     object:_controller];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                    object:previousMediaPlayerController];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGMediaPlayerSeekNotification
+                                                    object:previousMediaPlayerController];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGMediaPlayerAudioTrackDidChangeNotification
+                                                    object:previousMediaPlayerController];
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:SRGMediaPlayerSubtitleTrackDidChangeNotification
+                                                    object:previousMediaPlayerController];
         
         [previousMediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
     
     _controller = controller;
     
-    [self updateRemoteCommandCenterWithController:controller];
-    [self updateNowPlayingInformationWithController:controller];
+    [self updateMetadataWithController:controller];
     
     if (controller) {
         controller.playerConfigurationBlock = ^(AVPlayer *player) {
@@ -152,15 +169,23 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         };
         [controller reloadPlayerConfiguration];
         
-        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
+        // TODO: Not needed if program information is later delivered as highlights (segments).
+        @weakify(controller)
+        [controller addObserver:self keyPath:@keypath(controller.program) options:0 block:^(MAKVONotification *notification) {
+            @strongify(controller)
+            [self updateNowPlayingInformationWithController:controller];
+        }];
         
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification *notification) {
+            [self updateMetadataWithController:controller];
+        }];
+        
+        AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController) {
-            @weakify(self)
-            @weakify(pictureInPictureController)
+            @weakify(self) @weakify(pictureInPictureController)
             [pictureInPictureController addObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
-                @strongify(self)
-                @strongify(pictureInPictureController)
+                @strongify(self) @strongify(pictureInPictureController)
                 
                 // When enabling AirPlay from the control center while picture in picture is active, picture in picture will be
                 // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
@@ -186,11 +211,26 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
                                                selector:@selector(metadataDidChange:)
                                                    name:SRGLetterboxMetadataDidChangeNotification
                                                  object:controller];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playbackStateDidChange:)
+                                                   name:SRGMediaPlayerPlaybackStateDidChangeNotification
+                                                 object:mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(playerSeek:)
+                                                   name:SRGMediaPlayerSeekNotification
+                                                 object:mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(audioTrackDidChange:)
+                                                   name:SRGMediaPlayerAudioTrackDidChangeNotification
+                                                 object:mediaPlayerController];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(subtitleTrackDidChange:)
+                                                   name:SRGMediaPlayerSubtitleTrackDidChangeNotification
+                                                 object:mediaPlayerController];
         
         @weakify(self)
-        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.2, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
-            [self updateNowPlayingInformationWithController:controller];
             [self updateRemoteCommandCenterWithController:controller];
         }];
     }
@@ -281,14 +321,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
     [skipBackwardIntervalCommand srg_addUniqueTarget:self action:@selector(skipBackward:)];
     
-    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
-    seekForwardCommand.enabled = NO;
-    [seekForwardCommand srg_addUniqueTarget:self action:@selector(seekForward:)];
-    
-    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
-    seekBackwardCommand.enabled = NO;
-    [seekBackwardCommand srg_addUniqueTarget:self action:@selector(seekBackward:)];
-    
     MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
     previousTrackCommand.enabled = NO;
     [previousTrackCommand srg_addUniqueTarget:self action:@selector(previousTrack:)];
@@ -296,6 +328,20 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
     nextTrackCommand.enabled = NO;
     [nextTrackCommand srg_addUniqueTarget:self action:@selector(nextTrack:)];
+    
+    if (@available(iOS 9.1, *)) {
+        MPRemoteCommand *changePlaybackPositionCommand = commandCenter.changePlaybackPositionCommand;
+        changePlaybackPositionCommand.enabled = NO;
+        [changePlaybackPositionCommand srg_addUniqueTarget:self action:@selector(changePlaybackPosition:)];
+    }
+
+    MPRemoteCommand *enableLanguageOptionCommand = commandCenter.enableLanguageOptionCommand;
+    enableLanguageOptionCommand.enabled = NO;
+    [enableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(enableLanguageOption:)];
+    
+    MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
+    disableLanguageOptionCommand.enabled = NO;
+    [disableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(disableLanguageOption:)];
 }
 
 - (void)resetRemoteCommandCenter
@@ -327,14 +373,6 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     skipBackwardIntervalCommand.preferredIntervals = @[];
     [skipBackwardIntervalCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
     
-    MPRemoteCommand *seekForwardCommand = commandCenter.seekForwardCommand;
-    seekForwardCommand.enabled = NO;
-    [seekForwardCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
-    
-    MPRemoteCommand *seekBackwardCommand = commandCenter.seekBackwardCommand;
-    seekBackwardCommand.enabled = NO;
-    [seekBackwardCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
-    
     MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
     previousTrackCommand.enabled = NO;
     [previousTrackCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
@@ -342,6 +380,20 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
     nextTrackCommand.enabled = NO;
     [nextTrackCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+
+    if (@available(iOS 9.1, *)) {
+        MPRemoteCommand *changePlaybackPositionCommand = commandCenter.changePlaybackPositionCommand;
+        changePlaybackPositionCommand.enabled = NO;
+        [changePlaybackPositionCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+    }
+
+    MPRemoteCommand *enableLanguageOptionCommand = commandCenter.enableLanguageOptionCommand;
+    enableLanguageOptionCommand.enabled = NO;
+    [enableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+    
+    MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
+    disableLanguageOptionCommand.enabled = NO;
+    [disableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -361,12 +413,17 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
-        commandCenter.skipForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipForward) && [controller canSkipForward];
-        commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipBackward];
-        commandCenter.seekForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekForward);
-        commandCenter.seekBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSeekBackward);
+        commandCenter.skipForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipForward) && [controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+        commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
         commandCenter.nextTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandNextTrack) && [controller canPlayNextMedia];
         commandCenter.previousTrackCommand.enabled = (self.allowedCommands & SRGLetterboxCommandPreviousTrack) && [controller canPlayPreviousMedia];
+        
+        if (@available(iOS 9.1, *)) {
+            commandCenter.changePlaybackPositionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackPosition) && SRG_CMTIMERANGE_IS_NOT_EMPTY(controller.timeRange);
+        }
+
+        commandCenter.enableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
+        commandCenter.disableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -374,10 +431,15 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         commandCenter.togglePlayPauseCommand.enabled = NO;
         commandCenter.skipForwardCommand.enabled = NO;
         commandCenter.skipBackwardCommand.enabled = NO;
-        commandCenter.seekForwardCommand.enabled = NO;
-        commandCenter.seekBackwardCommand.enabled = NO;
         commandCenter.nextTrackCommand.enabled = NO;
         commandCenter.previousTrackCommand.enabled = NO;
+
+        if (@available(iOS 9.1, *)) {
+            commandCenter.changePlaybackPositionCommand.enabled = NO;
+        }
+
+        commandCenter.enableLanguageOptionCommand.enabled = NO;
+        commandCenter.disableLanguageOptionCommand.enabled = NO;
     }
 }
 
@@ -396,6 +458,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     if (! self.nowPlayingInfoAndCommandsEnabled) {
         return;
     }
+    
+    SRGLetterboxLogDebug(@"service", @"Now playing info metadata update started");
     
     SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (! media) {
@@ -423,15 +487,13 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
         }
     }
     
-    // Display channel information when available for a livestream (channel information alone does not suffice since
-    // it can also be available for on-demand medias).
+    // Display channel information when available for a livestream (testing channel information alone does not work since
+    // such information can also be available for on-demand medias).
     SRGChannel *channel = controller.channel;
     if (media.contentType == SRGContentTypeLivestream && channel) {
-        // Display program information (if any) when the controller position is within the current program, otherwise channel
-        // information.
-        NSDate *playbackDate = controller.date;
-        if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
-            NSString *title = channel.currentProgram.title;
+        SRGProgram *program = controller.program;
+        if (program) {
+            NSString *title = program.title;
             nowPlayingInfo[MPMediaItemPropertyTitle] = title;
             nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : @"";
         }
@@ -452,38 +514,96 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     
     // TODO: Remove when iOS 10 is the minimum supported version
     if (@available(iOS 10, *)) {
-        // Home artwork retrieval works (because poorly documented):
-        // Images are retrieved when needed by the now playing info center by calling -[MPMediaItemArtwork imageWithSize:]`. Sizes
-        // larger than the bounds size specified at creation will be fixed to the maximum compatible value. The request block itself
-        // must be implemented to return an image of the size it receives as parameter, and is called on a background thread.
-        //
-        // Moreover, a subtle issue might arise if the controller is strongly captured by the block (successive now playing information
+        // A subtle issue might arise if the controller is strongly captured by the block (successive now playing information
         // center updates might deadlock).
-        @weakify(controller)
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
-            @strongify(controller);
-            return [self cachedArtworkImageForController:controller withSize:size];
+        @weakify(self) @weakify(controller)
+        UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize completion:^{
+            @strongify(self) @strongify(controller)
+            [self updateNowPlayingInformationWithController:controller];
         }];
+        if (artworkImage) {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
+                // Return the closest image we have, see https://developer.apple.com/videos/play/wwdc2017/251. Here just
+                // the image we retrieved for this specific purpose.
+                return artworkImage;
+            }];
+        }
+        else {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
+        }
     }
     else {
-        UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize];
+        @weakify(self) @weakify(controller)
+        UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize completion:^{
+            @strongify(self) @strongify(controller)
+            [self updateNowPlayingInformationWithController:controller];
+        }];
         nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:artworkImage];
     }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
     CMTimeRange timeRange = mediaPlayerController.timeRange;
-    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(mediaPlayerController.currentTime, timeRange.start)));
+    CMTime time = CMTIME_IS_INDEFINITE(mediaPlayerController.seekTargetTime) ? mediaPlayerController.currentTime : mediaPlayerController.seekTargetTime;
+    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(timeRange.duration));
+    
+    // Provide rate information so that the information can be interpolated whithout the need for continuous updates
+    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
+    if (playbackState == SRGMediaPlayerPlaybackStatePlaying || playbackState == SRGMediaPlayerPlaybackStateSeeking) {
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @(mediaPlayerController.player.rate);
+    }
+    else {
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @0.;
+    }
     
     // Available starting with iOS 10. When this property is set to YES the playback button is a play / stop button
     // on iOS 10, a play / pause button on iOS 11 and above, and LIVE is displayed instead of time progress.
     // TODO: Remove when the minimum required version is iOS 10
     if (@available(iOS 10, *)) {
-        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.isLive);
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.live);
     }
     
+    // Audio tracks and subtitles
+    NSMutableArray<MPNowPlayingInfoLanguageOptionGroup *> *languageOptionGroups = [NSMutableArray array];
+    NSMutableArray<MPNowPlayingInfoLanguageOption *> *currentLanguageOptions = [NSMutableArray array];
+    
+    AVPlayerItem *playerItem = mediaPlayerController.player.currentItem;
+    AVAsset *asset = playerItem.asset;
+    if ([asset statusOfValueForKey:@keypath(asset.availableMediaCharacteristicsWithMediaSelectionOptions) error:NULL] == AVKeyValueStatusLoaded) {
+        AVMediaSelectionGroup *audioGroup = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicAudible];
+        NSArray<AVMediaSelectionOption *> *audioOptions = audioGroup.options;
+        if (audioOptions.count > 1) {
+            [languageOptionGroups addObject:SRGLetterboxServiceLanguageOptionGroup(audioOptions, NO)];
+            
+            AVMediaSelectionOption *selectedAudibleOption = [playerItem selectedMediaOptionInMediaSelectionGroup:audioGroup];
+            if (selectedAudibleOption) {
+                [currentLanguageOptions addObject:[selectedAudibleOption makeNowPlayingInfoLanguageOption]];
+            }
+        }
+        
+        AVMediaSelectionGroup *subtitleGroup = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+        NSArray<AVMediaSelectionOption *> *subtitleOptions = [AVMediaSelectionGroup mediaSelectionOptionsFromArray:subtitleGroup.options withoutMediaCharacteristics:@[AVMediaCharacteristicContainsOnlyForcedSubtitles]];
+        if (subtitleOptions.count > 0) {
+            [languageOptionGroups addObject:SRGLetterboxServiceLanguageOptionGroup(subtitleOptions, YES)];
+        }
+        
+        AVMediaSelectionOption *selectedLegibleOption = [playerItem selectedMediaOptionInMediaSelectionGroup:subtitleGroup];
+        if (selectedLegibleOption) {
+            [currentLanguageOptions addObject:[selectedLegibleOption makeNowPlayingInfoLanguageOption]];
+        }
+    }
+    
+    nowPlayingInfo[MPNowPlayingInfoPropertyAvailableLanguageOptions] = languageOptionGroups.copy;
+    nowPlayingInfo[MPNowPlayingInfoPropertyCurrentLanguageOptions] = currentLanguageOptions.copy;
+    
     MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nowPlayingInfo.copy;
+}
+
+- (void)updateMetadataWithController:(SRGLetterboxController *)controller
+{
+    [self updateNowPlayingInformationWithController:controller];
+    [self updateRemoteCommandCenterWithController:controller];
 }
 
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
@@ -491,17 +611,14 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     CGFloat smallestDimension = fmin(size.width, size.height);
     NSURL *artworkURL = nil;
     
-    // Display channel information when available for a livestream (channel information alone does not suffice since
-    // it can also be available for on-demand medias).
-    SRGMedia *media = [self nowPlayingMediaForController:controller];
+    // Display channel information when available for a livestream (testing channel information alone does not work since
+    // such information can also be available for on-demand medias).
     SRGChannel *channel = controller.channel;
-    
+    SRGMedia *media = [self nowPlayingMediaForController:controller];
     if (media.contentType == SRGContentTypeLivestream && channel) {
-        // Display program information (if any) when the controller position is within the current program, otherwise channel
-        // information.
-        NSDate *playbackDate = controller.date;
-        if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
-            artworkURL = SRGLetterboxArtworkImageURL(channel.currentProgram, smallestDimension);
+        SRGProgram *program = controller.program;
+        if (program) {
+            artworkURL = SRGLetterboxArtworkImageURL(program, smallestDimension);
             if (! artworkURL) {
                 artworkURL = SRGLetterboxArtworkImageURL(channel, smallestDimension);
             }
@@ -522,9 +639,9 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     return artworkURL;
 }
 
-// Return the best available image to display in the control center, performing an update only when an image is not
+// Return the best available image to display in the control center, performing an asynchronous update only when an image is not
 // readily available from the cache
-- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withSize:(CGSize)size
+- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withSize:(CGSize)size completion:(void (^)(void))completion
 {
     NSURL *artworkURL = [self artworkURLForController:controller withSize:size];
     if (! [artworkURL isEqual:self.cachedArtworkURL] || ! self.cachedArtworkImage) {
@@ -539,17 +656,26 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
             NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholderArtwork) withSize:size];
             UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
             
-            // Request the image when not available. Calling -cachedArtworkImageForController:withSize: will then return
-            // it when it has been downloaded.
+            SRGLetterboxLogDebug(@"service", @"Artwork image update triggered");
+            
+            // Request the image when not available. Calling -cachedArtworkImageForController:withSize: once the completion handler is called
+            // will then return the image immediately
+            @weakify(self)
             self.imageOperation = [[YYWebImageManager sharedManager] requestImageWithURL:artworkURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                if (image) {
-                    self.cachedArtworkURL = artworkURL;
-                    self.cachedArtworkImage = image;
-                }
-                else {
-                    self.cachedArtworkURL = placeholderImageURL;
-                    self.cachedArtworkImage = placeholderImage;
-                }
+                @strongify(self)
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (image) {
+                        self.cachedArtworkURL = artworkURL;
+                        self.cachedArtworkImage = image;
+                    }
+                    else {
+                        self.cachedArtworkURL = placeholderImageURL;
+                        self.cachedArtworkImage = placeholderImage;
+                    }
+                    
+                    completion ? completion() : nil;
+                });
             }];
             
             // Keep the current artwork during retrieval (even if it does not match) for smoother transitions, or use
@@ -567,6 +693,8 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     self.cachedArtworkURL = nil;
     self.cachedArtworkImage = nil;
 }
+
+#pragma mark Remote commands
 
 - (MPRemoteCommandHandlerStatus)play:(MPRemoteCommandEvent *)event
 {
@@ -586,40 +714,132 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
-- (MPRemoteCommandHandlerStatus)skipForward:(MPRemoteCommandEvent *)event
+- (MPRemoteCommandHandlerStatus)skipForward:(MPSkipIntervalCommandEvent *)event
 {
-    return [self.controller skipForwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
+    return [self.controller skipWithInterval:event.interval completionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
 }
 
-- (MPRemoteCommandHandlerStatus)skipBackward:(MPRemoteCommandEvent *)event
+- (MPRemoteCommandHandlerStatus)skipBackward:(MPSkipIntervalCommandEvent *)event
 {
-    return [self.controller skipBackwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
-}
-
-- (MPRemoteCommandHandlerStatus)seekForward:(MPSeekCommandEvent *)event
-{
-    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
-        return [self.controller skipForwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
-    }
-    return MPRemoteCommandHandlerStatusSuccess;
-}
-
-- (MPRemoteCommandHandlerStatus)seekBackward:(MPSeekCommandEvent *)event
-{
-    if (event.type == MPSeekCommandEventTypeBeginSeeking) {
-        return [self.controller skipBackwardWithCompletionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
-    }
-    return MPRemoteCommandHandlerStatusSuccess;
+    return [self.controller skipWithInterval:-event.interval completionHandler:nil] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusCommandFailed;
 }
 
 - (MPRemoteCommandHandlerStatus)previousTrack:(MPRemoteCommandEvent *)event
 {
-    return [self.controller playPreviousMedia] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusNoSuchContent;
+    if ([self.controller playPreviousMedia]) {
+        return MPRemoteCommandHandlerStatusSuccess;
+    }
+    else {
+        if (@available(iOS 9.1, *)) {
+            return MPRemoteCommandHandlerStatusNoActionableNowPlayingItem;
+        }
+        else {
+            return MPRemoteCommandHandlerStatusNoSuchContent;
+        }
+    }
 }
 
 - (MPRemoteCommandHandlerStatus)nextTrack:(MPRemoteCommandEvent *)event
 {
-    return [self.controller playNextMedia] ? MPRemoteCommandHandlerStatusSuccess : MPRemoteCommandHandlerStatusNoSuchContent;
+    if ([self.controller playNextMedia]) {
+        return MPRemoteCommandHandlerStatusSuccess;
+    }
+    else {
+        if (@available(iOS 9.1, *)) {
+            return MPRemoteCommandHandlerStatusNoActionableNowPlayingItem;
+        }
+        else {
+            return MPRemoteCommandHandlerStatusNoSuchContent;
+        }
+    }
+}
+
+- (MPRemoteCommandHandlerStatus)changePlaybackPosition:(MPChangePlaybackPositionCommandEvent *)event
+{
+    SRGPosition *position = [SRGPosition positionAroundTime:CMTimeMakeWithSeconds(event.positionTime, NSEC_PER_SEC)];
+    [self.controller seekToPosition:position withCompletionHandler:^(BOOL finished) {
+        // Resume playback when seeking from the control center. It namely does not make sense to seek blindly
+        // without playback actually resuming if paused.
+        if (finished) {
+            [self.controller play];
+        }
+    }];
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus)enableLanguageOption:(MPChangeLanguageOptionCommandEvent *)event
+{
+    AVPlayerItem *playerItem = self.controller.mediaPlayerController.player.currentItem;
+    AVAsset *asset = playerItem.asset;
+    if ([asset statusOfValueForKey:@keypath(asset.availableMediaCharacteristicsWithMediaSelectionOptions) error:NULL] != AVKeyValueStatusLoaded) {
+        if (@available(iOS 9.1, *)) {
+            return MPRemoteCommandHandlerStatusNoActionableNowPlayingItem;
+        }
+        else {
+            return MPRemoteCommandHandlerStatusNoSuchContent;
+        }
+    }
+    
+    BOOL (^selectLanguageOptionInGroup)(MPNowPlayingInfoLanguageOption *, AVMediaSelectionGroup *) = ^(MPNowPlayingInfoLanguageOption *languageOption, AVMediaSelectionGroup *group) {
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(AVMediaSelectionOption * _Nullable option, NSDictionary<NSString *,id> * _Nullable bindings) {
+            return [option.extendedLanguageTag isEqualToString:languageOption.languageTag];
+        }];
+        AVMediaSelectionOption *option = [[AVMediaSelectionGroup mediaSelectionOptionsFromArray:group.options withMediaCharacteristics:languageOption.languageOptionCharacteristics] filteredArrayUsingPredicate:predicate].firstObject;
+        if (! option) {
+            return NO;
+        }
+        
+        [playerItem selectMediaOption:option inMediaSelectionGroup:group];
+        return YES;
+    };
+    
+    MPNowPlayingInfoLanguageOption *languageOption = event.languageOption;
+    if (languageOption.languageOptionType == MPNowPlayingInfoLanguageOptionTypeLegible) {
+        AVMediaSelectionGroup *group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+        if ([languageOption isAutomaticLegibleLanguageOption]) {
+            [playerItem selectMediaOptionAutomaticallyInMediaSelectionGroup:group];
+        }
+        else if (! selectLanguageOptionInGroup(languageOption, group)) {
+            return MPRemoteCommandHandlerStatusCommandFailed;
+        }
+    }
+    else {
+        AVMediaSelectionGroup *group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicAudible];
+        if ([languageOption isAutomaticAudibleLanguageOption]) {
+            [playerItem selectMediaOptionAutomaticallyInMediaSelectionGroup:group];
+        }
+        else if (! selectLanguageOptionInGroup(languageOption, group)) {
+            return MPRemoteCommandHandlerStatusCommandFailed;
+        }
+    }
+    
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus)disableLanguageOption:(MPChangeLanguageOptionCommandEvent *)event
+{
+    AVPlayerItem *playerItem = self.controller.mediaPlayerController.player.currentItem;
+    AVAsset *asset = playerItem.asset;
+    if ([asset statusOfValueForKey:@keypath(asset.availableMediaCharacteristicsWithMediaSelectionOptions) error:NULL] != AVKeyValueStatusLoaded) {
+        if (@available(iOS 9.1, *)) {
+            return MPRemoteCommandHandlerStatusNoActionableNowPlayingItem;
+        }
+        else {
+            return MPRemoteCommandHandlerStatusNoSuchContent;
+        }
+    }
+    
+    MPNowPlayingInfoLanguageOption *languageOption = event.languageOption;
+    if (languageOption.languageOptionType == MPNowPlayingInfoLanguageOptionTypeLegible) {
+        AVMediaSelectionGroup *subtitleGroup = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+        [playerItem selectMediaOption:nil inMediaSelectionGroup:subtitleGroup];
+    }
+    else {
+        AVMediaSelectionGroup *audioGroup = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicAudible];
+        [playerItem selectMediaOption:nil inMediaSelectionGroup:audioGroup];
+    }
+    
+    return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (MPRemoteCommandHandlerStatus)doNothing:(MPRemoteCommandEvent *)event
@@ -705,6 +925,26 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
     [self updateNowPlayingInformationWithController:self.controller];
 }
 
+- (void)playbackStateDidChange:(NSNotification *)notification
+{
+    [self updateMetadataWithController:self.controller];
+}
+
+- (void)playerSeek:(NSNotification *)notification
+{
+    [self updateMetadataWithController:self.controller];
+}
+
+- (void)audioTrackDidChange:(NSNotification *)notification
+{
+    [self updateNowPlayingInformationWithController:self.controller];
+}
+
+- (void)subtitleTrackDidChange:(NSNotification *)notification
+{
+    [self updateNowPlayingInformationWithController:self.controller];
+}
+
 // Update commands while transitioning from / to the background (since control availability might be affected)
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
@@ -739,3 +979,19 @@ NSString * const SRGLetterboxServiceSettingsDidChangeNotification = @"SRGLetterb
 }
 
 @end
+
+#pragma mark Functions
+
+// Cannot use `-makeNowPlayingInfoLanguageOptionGroup` for groups for which Off is not an option.
+static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGroup(NSArray<AVMediaSelectionOption *> *selectionOptions, BOOL allowEmptySelection)
+{
+    NSMutableArray<MPNowPlayingInfoLanguageOption *> *languageOptions = [NSMutableArray array];
+    
+    [selectionOptions enumerateObjectsUsingBlock:^(AVMediaSelectionOption * _Nonnull selectionOption, NSUInteger idx, BOOL * _Nonnull stop) {
+        [languageOptions addObject:[selectionOption makeNowPlayingInfoLanguageOption]];
+    }];
+    
+    return [[MPNowPlayingInfoLanguageOptionGroup alloc] initWithLanguageOptions:languageOptions.copy
+                                                          defaultLanguageOption:nil
+                                                            allowEmptySelection:allowEmptySelection];
+}

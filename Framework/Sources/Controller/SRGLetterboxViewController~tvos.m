@@ -23,6 +23,22 @@
 #import <SRGMediaPlayer/SRGMediaPlayer.h>
 #import <YYWebImage/YYWebImage.h>
 
+static UIView *SRGLetterboxViewControllerPlayerSubview(UIView *view)
+{
+    if ([view.layer isKindOfClass:AVPlayerLayer.class]) {
+        return view;
+    }
+    
+    for (UIView *subview in view.subviews) {
+        UIView *playerSubview = SRGLetterboxViewControllerPlayerSubview(subview);
+        if (playerSubview) {
+            return playerSubview;
+        }
+    }
+    
+    return nil;
+}
+
 static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 {
     if ([NSStringFromClass(view.class) containsString:@"LoadingIndicator"]) {
@@ -78,18 +94,13 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         
         self.imageOperations = [NSMutableDictionary dictionary];
         
-        @weakify(self)
-        self.periodicTimeObserver = [controller addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        @weakify(self) @weakify(controller)
+        [controller addObserver:self keyPath:@keypath(controller.program) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            
-            [self updateMainLayout];
             [self reloadImage];
         }];
-        
-        @weakify(controller)
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
-            @strongify(controller)
-            @strongify(self)
+            @strongify(self) @strongify(controller)
             
             SRGMedia *upcomingMedia = controller.continuousPlaybackUpcomingMedia;
             if (upcomingMedia) {
@@ -122,10 +133,20 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                                                    name:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                  object:controller];
         
+        SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.mediaType) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self updateMainLayoutAnimated:YES];
+        }];
+        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.live) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self updateMainLayoutAnimated:YES];
+        }];
+        
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(willSkipBlockedSegment:)
                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
-                                                 object:controller.mediaPlayerController];
+                                                 object:mediaPlayerController];
     }
     return self;
 }
@@ -150,48 +171,27 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = UIColor.blackColor;
+    
     UIView *playerView = self.playerViewController.view;
+    playerView.backgroundColor = UIColor.clearColor;
     playerView.frame = self.view.bounds;
     playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:playerView];
     [self addChildViewController:self.playerViewController];
     
-    SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
-    errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    errorView.controller = self.controller;
-    [playerView insertSubview:errorView atIndex:0];
-    self.errorView = errorView;
-    
-    SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] initWithFrame:playerView.bounds];
-    availabilityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    availabilityView.controller = self.controller;
-    [playerView insertSubview:availabilityView atIndex:0];
-    self.availabilityView = availabilityView;
-    
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [playerView insertSubview:imageView atIndex:0];
+    [self.view insertSubview:imageView belowSubview:playerView];
     self.imageView = imageView;
-    
-    UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
-    loadingIndicatorView.alpha = 0.f;
-    
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
-    loadingImageView.alpha = 0.f;
-    [playerView addSubview:loadingImageView];
-    self.loadingImageView = loadingImageView;
-    
-    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-                                               [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
     
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
     notificationView.alpha = 0.f;
     notificationView.layer.cornerRadius = 3.f;
     notificationView.layer.shadowOpacity = 0.5f;
     notificationView.layer.shadowOffset = CGSizeMake(0.f, 2.f);
-    [playerView addSubview:notificationView];
+    [playerView insertSubview:notificationView aboveSubview:playerView];
     self.notificationView = notificationView;
     
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -199,6 +199,34 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                                                [notificationView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20.f],
                                                [notificationView.widthAnchor constraintLessThanOrEqualToConstant:1820.f],
                                                [notificationView.heightAnchor constraintLessThanOrEqualToConstant:980.f] ]];
+    
+    UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
+    loadingIndicatorView.alpha = 0.f;
+    
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
+    loadingImageView.alpha = 0.f;
+    loadingImageView.userInteractionEnabled = NO;
+    [loadingImageView startAnimating];
+    [self.view insertSubview:loadingImageView aboveSubview:playerView];
+    self.loadingImageView = loadingImageView;
+    
+    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+                                               [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
+    
+    SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
+    errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    errorView.controller = self.controller;
+    errorView.userInteractionEnabled = NO;
+    [self.view insertSubview:errorView aboveSubview:playerView];
+    self.errorView = errorView;
+    
+    SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] initWithFrame:playerView.bounds];
+    availabilityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    availabilityView.controller = self.controller;
+    availabilityView.userInteractionEnabled = NO;
+    [self.view insertSubview:availabilityView aboveSubview:playerView];
+    self.availabilityView = availabilityView;
     
     // Content overlay animations (to show or hide UI elements alongside player controls) are only available since tvOS 11.
     // On tvOS 10 and below, do not display any live label.
@@ -219,8 +247,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                                                    [liveLabel.heightAnchor constraintEqualToConstant:45.f] ]];
     }
     
-    [self updateMainLayout];
-    [self reloadData];
+    [self updateMainLayoutAnimated:NO];
+    [self reloadImage];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -249,7 +277,9 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     }
     
     if (! self.imageOperations[imageURL]) {
+        @weakify(self)
         YYWebImageOperation *imageOperation = [webImageManager requestImageWithURL:imageURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+            @strongify(self)
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageOperations[imageURL] = nil;
                 completion();
@@ -262,12 +292,6 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 }
 
 #pragma mark Data
-
-- (void)reloadData
-{
-    [self.playerViewController reloadData];
-    [self reloadImage];
-}
 
 - (NSString *)fullSummaryForMedia:(SRGMedia *)media
 {
@@ -290,52 +314,64 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground atDate:self.controller.date];
 }
 
-#pragma mark Layout
-
-- (void)updateMainLayout
+- (void)reloadPlaceholderImage
 {
-    [self updateMainLayoutWithUserInterfaceHidden:self.userInterfaceHidden];
+    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground];
 }
 
-- (void)updateMainLayoutWithUserInterfaceHidden:(BOOL)userInterfaceHidden
+#pragma mark Layout
+
+- (void)updateMainLayoutAnimated:(BOOL)animated
 {
-    SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+    [self updateMainLayoutWithUserInterfaceHidden:self.userInterfaceHidden animated:animated];
+}
+
+- (void)updateMainLayoutWithUserInterfaceHidden:(BOOL)userInterfaceHidden animated:(BOOL)animated
+{
+    void (^animations)(void) = ^{
+        SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
+        BOOL isPlaying = playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded;
+        
+        BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && isPlaying);
+        UIView *playerView = SRGLetterboxViewControllerPlayerSubview(self.view);
+        playerView.alpha = playerViewVisible ? 1.f : 0.f;
+        self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
+        self.view.userInteractionEnabled = isPlaying;
+        
+        NSError *error = self.controller.error;
+        if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
+            self.errorView.alpha = 0.f;
+            self.availabilityView.alpha = 1.f;
+        }
+        else if (error) {
+            self.errorView.alpha = 1.f;
+            self.availabilityView.alpha = 0.f;
+        }
+        else if (self.controller.URN) {
+            self.errorView.alpha = 0.f;
+            self.availabilityView.alpha = 0.f;
+        }
+        else {
+            self.errorView.alpha = 1.f;
+            self.availabilityView.alpha = 0.f;
+        }
+        
+        if (self.controller.loading) {
+            self.loadingImageView.alpha = 1.f;
+        }
+        else {
+            self.loadingImageView.alpha = 0.f;
+        }
+        
+        self.liveLabel.alpha = (! userInterfaceHidden && self.controller.live) ? 1.f : 0.f;
+    };
     
-    BOOL thumbnailHidden = (self.controller.media.mediaType == SRGMediaTypeVideo && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
-    self.imageView.alpha = thumbnailHidden ? 0.f : 1.f;
-    
-    NSError *error = self.controller.error;
-    if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {
-        self.errorView.alpha = 0.f;
-        self.availabilityView.alpha = 1.f;
-        self.view.userInteractionEnabled = NO;
-    }
-    else if (error) {
-        self.errorView.alpha = 1.f;
-        self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = NO;
-    }
-    else if (self.controller.URN) {
-        self.errorView.alpha = 0.f;
-        self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = YES;
+    if (animated) {
+        [UIView animateWithDuration:0.4 animations:animations];
     }
     else {
-        self.errorView.alpha = 1.f;
-        self.availabilityView.alpha = 0.f;
-        self.view.userInteractionEnabled = NO;
+        animations();
     }
-    
-    if (self.controller.loading) {
-        self.loadingImageView.alpha = 1.f;
-        [self.loadingImageView startAnimating];
-    }
-    else {
-        self.loadingImageView.alpha = 0.f;
-        [self.loadingImageView stopAnimating];
-    }
-    
-    self.liveLabel.alpha = (! userInterfaceHidden && self.controller.live) ? 1.f : 0.f;
 }
 
 #pragma mark Notification banners
@@ -381,7 +417,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     self.userInterfaceHidden = ! visible;
     
     [coordinator addCoordinatedAnimations:^{
-        [self updateMainLayoutWithUserInterfaceHidden:! visible];
+        [self updateMainLayoutWithUserInterfaceHidden:! visible animated:NO];
     } completion:nil];
 }
 
@@ -389,6 +425,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
+    [self reloadPlaceholderImage];
     [self.controller playUpcomingMedia];
     
     if ([self.delegate respondsToSelector:@selector(letterboxViewController:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
@@ -434,8 +471,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         descriptionItem.value = [self fullSummaryForMedia:media];
         descriptionItem.extendedLanguageTag = @"und";
         
+        @weakify(self)
         UIImage *image = [self imageForMetadata:media withCompletion:^{
-            [self reloadData];
+            @strongify(self)
+            [self.playerViewController reloadData];
         }];
         
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
@@ -460,8 +499,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         titleItem.value = segment.title;
         titleItem.extendedLanguageTag = @"und";
         
+        @weakify(self)
         UIImage *image = [self imageForMetadata:segment withCompletion:^{
-            [self reloadData];
+            @strongify(self)
+            [self.playerViewController reloadData];
         }];
         
         AVMutableMetadataItem *artworkItem = [[AVMutableMetadataItem alloc] init];
@@ -480,17 +521,19 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)metadataDidChange:(NSNotification *)notification
 {
-    [self reloadData];
+    [self.playerViewController reloadData];
+    [self reloadImage];
+    [self updateMainLayoutAnimated:YES];
 }
 
 - (void)playbackStateDidChange:(NSNotification *)notification
 {   
-    [self updateMainLayout];
+    [self updateMainLayoutAnimated:YES];
 }
 
 - (void)playbackDidFail:(NSNotification *)notification
 {
-    [self updateMainLayout];
+    [self updateMainLayoutAnimated:YES];
 }
 
 - (void)livestreamDidFinish:(NSNotification *)notification
@@ -500,6 +543,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)playbackDidContinueAutomatically:(NSNotification *)notification
 {
+    [self reloadPlaceholderImage];
+    
     // Only dismiss continuous playback overlay when presented (i.e. when the transition duration is not 0)
     if (self.presentedViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];
