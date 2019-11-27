@@ -215,15 +215,22 @@ platform :ios do
     build_name_suffix = options[:build_name_suffix] ? options[:build_name_suffix] : ""
     platform = options[:platform] ? options[:platform] : "iOS"
 
+    marketing_version = xcode_marketing_version
     # Characters "-" or "+" are not allowed on AppStore Connect.
     if export_to_appstore
       marketing_version_suffix = ""
+
+      index = marketing_version.index('-')
+      if index
+        bundle_display_name_suffix = marketing_version[index..marketing_version.length-1] + bundle_display_name_suffix
+        marketing_version = marketing_version[0..index-1]
+      end
     end
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
 
     enable_bitcode_arg = export_to_appstore ? "ENABLE_BITCODE=YES" : "ENABLE_BITCODE=NO"
-    xcargs = enable_bitcode_arg + ' BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" BUILD_NAME_SUFFIX="' + build_name_suffix + '" DEVELOPMENT_TEAM="' + team_id + '" -allowProvisioningUpdates'
+    xcargs = enable_bitcode_arg + ' BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION="' + marketing_version + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" BUILD_NAME_SUFFIX="' + build_name_suffix + '" DEVELOPMENT_TEAM="' + team_id + '" -allowProvisioningUpdates'
 
     destination = "generic/platform=" + platform
 
