@@ -14,3 +14,8 @@ Naming/FileName:
 Style/RedundantInterpolation:
   Exclude:
     - '**/Appfile'
+
+# Lane description can be long
+Metrics/LineLength:
+  Enabled: true
+  IgnoredPatterns: ['^(\s+|)desc']
