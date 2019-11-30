@@ -19,9 +19,7 @@ platform :ios do
     if lane.to_s.downcase.include? 'demo'
       what_s_new = what_s_new_for_demo
       if what_s_new.empty?
-        UI.user_error!(
-          'Whoops, WhatsNew-demo.json has no release note for ' + tag_version
-        )
+        UI.user_error!('Whoops, WhatsNew-demo.json has no release note for ' + tag_version + '.')
       end
     end
 
@@ -78,7 +76,9 @@ platform :ios do
     build_platform = 'tvOS'
     appstore_platform = 'appletvos'
 
-    appstore_build_number = latest_testflight_build_number(platform: appstore_platform)
+    appstore_build_number = latest_testflight_build_number(
+      platform: appstore_platform
+    )
 
     nightly(
       platform: build_platform,
@@ -98,7 +98,8 @@ platform :ios do
     # Wait a bit before asking dSYMs. Not rready yet.
     sleep(60)
 
-    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], nil)
+    appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
+    update_dsyms(appstore_platform, appcenter_appname, nil)
 
     clean_build_artifacts
 
@@ -121,7 +122,7 @@ platform :ios do
     build_name_suffix = ''
     if branch_name.include? 'feature/'
       bundle_display_name_suffix = ' 🌿'
-      marketing_version_suffix = marketing_version_suffix + '+' + branch_name.sub('feature/', '').strip
+      marketing_version_suffix += '+' + branch_name.sub('feature/', '').strip
       build_name_suffix = '+' + branch_name.sub('feature/', '').strip
     end
 
@@ -136,8 +137,7 @@ platform :ios do
     )
   end
 
-  desc 'Build a new iOS demo on App Center with the current build number. \
-  You are responsible to tag the library and bump the build number after.'
+  desc 'Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).'
   lane :iOSdemo do
     build_platform = 'iOS'
 
@@ -156,10 +156,10 @@ platform :ios do
 
     clean_build_artifacts
 
-    print 'You are responsible to tag the library and bump the build number.'
+    UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end
 
-  desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library version and bump the build number after.'
+  desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.'
   lane :tvOSdemo do
     update_to_appstore_app_identifier
 
@@ -183,11 +183,12 @@ platform :ios do
     # Wait a bit before asking dSYMs. Not rready yet.
     sleep(60)
 
-    update_dsyms(appstore_platform, ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], nil)
+    appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
+    update_dsyms(appstore_platform, appcenter_appname, nil)
 
     clean_build_artifacts
 
-    print 'You are responsible to tag the library version and bump the build number after.'
+    UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end
 
   desc 'Common stuff to build a new demo.'
@@ -220,19 +221,26 @@ platform :ios do
 
       index = marketing_version.index('-')
       if index
-        bundle_display_name_suffix = marketing_version[index..marketing_version.length - 1] + bundle_display_name_suffix
+        suffix = marketing_version[index..marketing_version.length - 1]
+        bundle_display_name_suffix = suffix + bundle_display_name_suffix
         marketing_version = marketing_version[0..index - 1]
       end
     end
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
 
-    enable_bitcode_arg = export_to_appstore ? 'ENABLE_BITCODE=YES' : 'ENABLE_BITCODE=NO'
-    xcargs = enable_bitcode_arg + ' BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION="' + marketing_version + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" BUILD_NAME_SUFFIX="' + build_name_suffix + '" DEVELOPMENT_TEAM="' + team_id + '" -allowProvisioningUpdates'
+    xcargs = export_to_appstore ? 'ENABLE_BITCODE=YES' : 'ENABLE_BITCODE=NO'
+    xcargs += ' BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '"'
+    xcargs += ' MARKETING_VERSION="' + marketing_version + '"'
+    xcargs += ' MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '"'
+    xcargs += ' BUILD_NAME_SUFFIX="' + build_name_suffix + '"'
+    xcargs += ' DEVELOPMENT_TEAM="' + team_id + '"'
+    xcargs += ' -allowProvisioningUpdates'
 
     destination = 'generic/platform=' + platform
 
-    output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME] + '/'
+    lane_name = lane_context[SharedValues::LANE_NAME]
+    output_directory = 'fastlane/export/' + lane_name + '/'
 
     gym(
       configuration: configuration,
@@ -282,12 +290,14 @@ platform :ios do
 
   desc 'Send latest tvOS nightly dSYMs to App Center, with optional \'version\' or \'min_version\' parameters.'
   lane :nighltyDSYMs do |options|
-    update_dsyms('appletvos', ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], options)
+    appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
+    update_dsyms('appletvos', appcenter_appname, options)
   end
 
   desc 'Send latest tvOS demo dSYMs to App Center, with optional \'version\' or \'min_version\' parameters.'
   lane :demoDSYMs do |options|
-    update_dsyms('appletvos', ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], options)
+    appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
+    update_dsyms('appletvos', appcenter_appname, options)
   end
 
   after_all do |lane|
@@ -320,10 +330,11 @@ def default_changelog_for_nightlies(platform)
     between: [last_commit_hash, 'HEAD'],
     pretty: '- %s'
   )
+
   # HAX: strip emoji from changelog
-  changelog = changelog ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '') : 'No change log found for this build.'
+  changelog = changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '').lstrip if changelog
+  changelog = 'No change log found for this build.' if changelog.length.zero?
   Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
-  changelog
 end
 
 # Returns current build number on App Center
@@ -353,16 +364,28 @@ def last_nightlies_success_git_commit_hash(platform)
   nightlies_success_git_commit_hash
 end
 
-# Return the marketing version, without suffix
+# Returns the marketing version, without suffix
 def xcode_marketing_version
-  marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d " =" | sed "s/MARKETING_VERSION//"'
-  marketing_version.lines.last.gsub(/\s+/, '')
+  marketing_version = nil
+  Dir.chdir('..') do
+    command = 'xcodebuild -showBuildSettings | grep "MARKETING_VERSION ="'
+    marketing_version = sh command
+  end
+  marketing_version ['MARKETING_VERSION ='] = ''
+  marketing_version.gsub(/\s+/, '').chomp
 end
 
-# Return the bundle app identifier
+# Returns the bundle app identifier
 def xcode_app_identifier(scheme, configuration)
-  app_identifier = sh 'cd ..; xcodebuild -scheme "' + scheme + '" -configuration "' + configuration + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d " =" | sed "s/PRODUCT_BUNDLE_IDENTIFIER//"'
-  app_identifier.lines.last.gsub(/\s+/, '')
+  app_identifier = nil
+  Dir.chdir('..') do
+    command = 'xcodebuild -showBuildSettings '
+    command += '-scheme "' + scheme + '" -configuration "' + configuration + '"'
+    command += ' | grep "PRODUCT_BUNDLE_IDENTIFIER ="'
+    app_identifier = sh command
+  end
+  app_identifier ['PRODUCT_BUNDLE_IDENTIFIER ='] = ''
+  app_identifier.gsub(/\s+/, '').chomp
 end
 
 # Return current tag version
@@ -389,18 +412,14 @@ def update_to_appstore_app_identifier
   )
 end
 
-def update_dsyms(platform, appcenter_app_name, options)
+def update_dsyms(platform, appcenter_appname, options)
   if options
     min_version = options[:min_version]
     version = options[:version]
   end
 
   output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
-  Dir.chdir('..') do
-    unless File.directory?(output_directory)
-      FileUtils.mkdir_p(output_directory)
-    end
-  end
+  Dir.chdir('..') { FileUtils.mkdir_p(output_directory) }
 
   if min_version
     download_dsyms(
@@ -424,7 +443,7 @@ def update_dsyms(platform, appcenter_app_name, options)
 
   lane_context[SharedValues::DSYM_PATHS]&.each do |dsym|
     appcenter_lane(
-      appname: appcenter_app_name,
+      appname: appcenter_appname,
       notes: 'DSYMs from AppStore Connect (via fastlane).',
       upload_dsym: dsym
     )

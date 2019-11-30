@@ -17,7 +17,7 @@ Metrics/BlockLength:
 # Lane description and gem lines can be long
 Metrics/LineLength:
   Enabled: true
-  IgnoredPatterns: ['^(\s+|)desc', '^gem']
+  IgnoredPatterns: ['^gem', '^(\s+|)desc', '^(\s+|)UI.']
 
 # They have not to be snake_case
 Naming/FileName:

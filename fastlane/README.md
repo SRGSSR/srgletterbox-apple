@@ -35,13 +35,12 @@ Build a new tvOS nightly demo on AppStore Connect and wait build processing.
 ```
 fastlane ios iOSdemo
 ```
-Build a new iOS demo on App Center with the current build number. \
-  You are responsible to tag the library and bump the build number after.
+Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).
 ### ios tvOSdemo
 ```
 fastlane ios tvOSdemo
 ```
-Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library version and bump the build number after.
+Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.
 ### ios nighltyDSYMs
 ```
 fastlane ios nighltyDSYMs
