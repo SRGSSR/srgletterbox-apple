@@ -16,7 +16,7 @@ default_platform :ios
 platform :ios do
   before_all do |lane|
     # For the demo, before all, check if we have a demo release description
-    if lane.to_s.downcase.include? 'demo'
+    if lane.to_s.downcase.end_with? 'demo'
       what_s_new = what_s_new_for_demo
       if what_s_new.empty?
         UI.user_error!('Whoops, WhatsNew-demo.json has no release note for ' + tag_version + '.')
@@ -95,7 +95,7 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    # Wait a bit before asking dSYMs. Not rready yet.
+    # Wait a bit before asking dSYMs. Not ready yet.
     sleep(60)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
@@ -155,7 +155,7 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    # Wait a bit before asking dSYMs. Not rready yet.
+    # Wait a bit before asking dSYMs. Not ready yet.
     sleep(60)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
@@ -183,20 +183,20 @@ platform :ios do
     )
 
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-    bundle_display_name_suffix = ' 🌙'
-    marketing_version_suffix = '-nightly'
+    display_name_suffix = ' 🌙'
+    version_suffix = '-nightly'
     build_name_suffix = ''
     if branch_name.include? 'feature/'
-      bundle_display_name_suffix = ' 🌿'
-      marketing_version_suffix += '+' + branch_name.sub('feature/', '').strip
+      display_name_suffix = ' 🌿'
+      version_suffix += '+' + branch_name.sub('feature/', '').strip
       build_name_suffix = '+' + branch_name.sub('feature/', '').strip
     end
 
     build_lane(
       configuration: 'Nightly',
       scheme: 'SRGLetterbox-demo',
-      bundle_display_name_suffix: bundle_display_name_suffix,
-      marketing_version_suffix: marketing_version_suffix,
+      display_name_suffix: display_name_suffix,
+      version_suffix: version_suffix,
       build_name_suffix: build_name_suffix,
       platform: platform,
       export_to_appstore: export_to_appstore
@@ -218,51 +218,29 @@ platform :ios do
 
   desc 'Build for a scheme and a configuration'
   private_lane :build_lane do |options|
-    scheme = options[:scheme]
-    configuration = options[:configuration]
-    export_to_appstore = options[:export_to_appstore] || false
-    bundle_display_name_suffix = options[:bundle_display_name_suffix] || ''
-    marketing_version_suffix = options[:marketing_version_suffix] || ''
-    build_name_suffix = options[:build_name_suffix] || ''
-    platform = options[:platform] || 'iOS'
+    options[:export_to_appstore] ||= false
+    options[:display_name_suffix] ||= ''
+    options[:version_suffix] ||= ''
+    options[:build_name_suffix] ||= ''
+    options[:platform] ||= 'iOS'
+    options[:version] = xcode_marketing_version
 
-    marketing_version = xcode_marketing_version
-    # Characters "-" or "+" are not allowed on AppStore Connect.
-    if export_to_appstore
-      marketing_version_suffix = ''
-
-      index = marketing_version.index('-')
-      if index
-        suffix = marketing_version[index..marketing_version.length - 1]
-        bundle_display_name_suffix = suffix + bundle_display_name_suffix
-        marketing_version = marketing_version[0..index - 1]
-      end
-    end
+    options = update_options_to_appstore(options)
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
-
-    xcargs = export_to_appstore ? 'ENABLE_BITCODE=YES' : 'ENABLE_BITCODE=NO'
-    xcargs += ' BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '"'
-    xcargs += ' MARKETING_VERSION="' + marketing_version + '"'
-    xcargs += ' MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '"'
-    xcargs += ' BUILD_NAME_SUFFIX="' + build_name_suffix + '"'
-    xcargs += ' DEVELOPMENT_TEAM="' + team_id + '"'
-    xcargs += ' -allowProvisioningUpdates'
-
-    destination = 'generic/platform=' + platform
-
+    options[:team_id] = team_id
+    destination = 'generic/platform=' + options[:platform]
     lane_name = lane_context[SharedValues::LANE_NAME]
     output_directory = 'fastlane/export/' + lane_name + '/'
-
     gym(
-      configuration: configuration,
-      scheme: scheme,
+      configuration: options[:configuration],
+      scheme: options[:scheme],
       silent: true,
       clean: true,
-      xcargs: xcargs,
-      export_method: export_to_appstore ? 'app-store' : 'enterprise',
-      include_bitcode: export_to_appstore,
-      export_team_id: team_id,
+      xcargs: srg_xcargs(options),
+      export_method: options[:export_to_appstore] ? 'app-store' : 'enterprise',
+      include_bitcode: options[:export_to_appstore],
+      export_team_id: options[:team_id],
       destination: destination,
       output_directory: output_directory
     )
@@ -270,10 +248,9 @@ platform :ios do
 
   desc 'Upload a build on App Center or just a dSYM file.'
   private_lane :appcenter_lane do |options|
-    notify_testers = options[:notify_testers] || false
-    upload_dsym = options[:upload_dsym]
+    options[:notify_testers] ||= false
 
-    if upload_dsym
+    if options[:upload_dsym]
       appcenter_upload(
         api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
         owner_type: 'organization',
@@ -281,7 +258,7 @@ platform :ios do
         app_name: options[:appname],
         release_notes: options[:notes],
         upload_dsym_only: true,
-        dsym: upload_dsym
+        dsym: options[:upload_dsym]
       )
     else
       appcenter_upload(
@@ -292,7 +269,7 @@ platform :ios do
         release_notes: options[:notes],
         destination_type: 'group',
         destinations: options[:destinations],
-        notify_testers: notify_testers
+        notify_testers: options[:notify_testers]
       )
     end
   end
@@ -316,6 +293,32 @@ platform :ios do
     #   success: false
     # )
   end
+end
+
+# Characters "-" or "+" in version are not allowed on AppStore Connect.
+def update_options_to_appstore(options)
+  return options unless options[:export_to_appstore]
+
+  options[:version_suffix] = ''
+  version = options[:version]
+  index = version.index('-')
+  return options unless index
+
+  suffix = version[index..version.length - 1]
+  options[:build_name_suffix] = suffix + options[:build_name_suffix]
+  options[:version] = version[0..index - 1]
+  options
+end
+
+def srg_xcargs(options)
+  export_to_appstore = options[:export_to_appstore] || false
+  xcargs = export_to_appstore ? 'ENABLE_BITCODE=YES' : 'ENABLE_BITCODE=NO'
+  xcargs += " BUNDLE_DISPLAY_NAME_SUFFIX='#{options[:display_name_suffix]}'"
+  xcargs += " MARKETING_VERSION='#{options[:version]}'"
+  xcargs += " MARKETING_VERSION_SUFFIX='#{options[:version_suffix]}'"
+  xcargs += " BUILD_NAME_SUFFIX='#{options[:build_name_suffix]}'"
+  xcargs += " DEVELOPMENT_TEAM='#{options[:team_id]}'"
+  xcargs + ' -allowProvisioningUpdates'
 end
 
 # Returns a default changelog for nightlies
@@ -389,8 +392,7 @@ end
 def tag_version
   build_number = get_build_number
   marketing_version = xcode_marketing_version
-  tag_version = marketing_version + '-' + build_number
-  tag_version
+  marketing_version + '-' + build_number
 end
 
 # Return the what's new text from WhatsNew-demo.json file in the repository
