@@ -1,0 +1,16 @@
+# this would cause errors with long fastlane lanes
+Metrics/BlockLength:
+  Enabled: false
+  
+# They have not to be snake_case
+Naming/FileName:
+  Exclude:
+    - '**/Appfile'
+    - '**/Gemfile'
+    - '**/Pluginfile'
+    - '**/Fastfile'
+
+# Variables have to be as described in fastlane documentation
+Style/RedundantInterpolation:
+  Exclude:
+    - '**/Appfile'

@@ -15,7 +15,6 @@ default_platform :ios
 
 platform :ios do
   before_all do |lane|
-
     # For the demo, before all, check if we have a demo release description
     if lane.to_s.downcase.include? 'demo'
       what_s_new = what_s_new_for_demo
@@ -24,7 +23,7 @@ platform :ios do
       end
     end
 
-    if (!lane.to_s.downcase.include? 'dsym')
+    unless lane.to_s.downcase.include? 'dsym'
       ensure_git_status_clean
       Dir.chdir('..') { sh 'make bootstrap' }
     end
@@ -44,9 +43,9 @@ platform :ios do
     )
   end
 
-  desc "Build a new iOS nightly demo on App Center"
+  desc 'Build a new iOS nightly demo on App Center'
   lane :iOSnightly do
-    build_platform = "iOS"
+    build_platform = 'iOS'
 
     appcenter_build_number = latest_appcenter_build_number(ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_SECRET'])
 
@@ -60,7 +59,7 @@ platform :ios do
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_DESTINATIONS'],
-      notes: changelog,
+      notes: changelog
     )
 
     clean_build_artifacts
@@ -68,14 +67,14 @@ platform :ios do
     save_last_nightlies_success_git_commit_hash(build_platform)
   end
 
-  desc "Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter."
+  desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional "skip_waiting_for_build_processing" parameter.'
   lane :tvOSnightly do |options|
-    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] ? options[:skip_waiting_for_build_processing] : false
+    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] || false
 
     update_to_appstore_app_identifier
 
-    build_platform = "tvOS"
-    appstore_platform =  "appletvos"
+    build_platform = 'tvOS'
+    appstore_platform = 'appletvos'
 
     appstore_build_number = latest_testflight_build_number(platform: appstore_platform)
 
@@ -105,10 +104,10 @@ platform :ios do
     save_last_nightlies_success_git_commit_hash(build_platform)
   end
 
-  desc "Common stuff to build a new nightly demo."
+  desc 'Common stuff to build a new nightly demo.'
   private_lane :nightly do |options|
-    platform = options[:platform] ? options[:platform] : "iOS"
-    export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
+    platform = options[:platform] || 'iOS'
+    export_to_appstore = options[:export_to_appstore] || false
     current_build_number = options[:current_build_number]
 
     increment_build_number(
@@ -116,18 +115,18 @@ platform :ios do
     )
 
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-    bundle_display_name_suffix = " 🌙"
-    marketing_version_suffix = "-nightly"
-    build_name_suffix = ""
-    if (branch_name.include? 'feature/')
-      bundle_display_name_suffix = " 🌿"
+    bundle_display_name_suffix = ' 🌙'
+    marketing_version_suffix = '-nightly'
+    build_name_suffix = ''
+    if branch_name.include? 'feature/'
+      bundle_display_name_suffix = ' 🌿'
       marketing_version_suffix = marketing_version_suffix + '+' + branch_name.sub('feature/', '').strip
       build_name_suffix = '+' + branch_name.sub('feature/', '').strip
     end
 
     build_lane(
-      configuration: "Nightly",
-      scheme: "SRGLetterbox-demo",
+      configuration: 'Nightly',
+      scheme: 'SRGLetterbox-demo',
       bundle_display_name_suffix: bundle_display_name_suffix,
       marketing_version_suffix: marketing_version_suffix,
       build_name_suffix: build_name_suffix,
@@ -136,15 +135,15 @@ platform :ios do
     )
   end
 
-  desc "Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after."
+  desc 'Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after.'
   lane :iOSdemo do
-    build_platform = "iOS"
+    build_platform = 'iOS'
 
     demo(
       platform: build_platform
     )
 
-    changelog = what_s_new_for_demo()
+    changelog = what_s_new_for_demo
 
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
@@ -155,24 +154,24 @@ platform :ios do
 
     clean_build_artifacts
 
-    print "You are responsible to tag the library version and bump the build number after."
+    print 'You are responsible to tag the library version and bump the build number after.'
   end
 
-  desc "Build a new tvOS demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter. You are responsible to tag the library version and bump the build number after."
+  desc 'Build a new tvOS demo on AppStore Connect and wait build processing. Optional "skip_waiting_for_build_processing" parameter. You are responsible to tag the library version and bump the build number after.'
   lane :tvOSdemo do |options|
-    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] ? options[:skip_waiting_for_build_processing] : false
+    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] || false
 
     update_to_appstore_app_identifier
 
-    build_platform = "tvOS"
-    appstore_platform =  "appletvos"
+    build_platform = 'tvOS'
+    appstore_platform = 'appletvos'
 
     demo(
       platform: build_platform,
       export_to_appstore: true
     )
 
-    changelog = what_s_new_for_demo()
+    changelog = what_s_new_for_demo
 
     pilot(
       app_platform: appstore_platform,
@@ -189,50 +188,50 @@ platform :ios do
 
     clean_build_artifacts
 
-    print "You are responsible to tag the library version and bump the build number after."
+    print 'You are responsible to tag the library version and bump the build number after.'
   end
 
-  desc "Common stuff to build a new demo."
+  desc 'Common stuff to build a new demo.'
   private_lane :demo do |options|
-    platform = options[:platform] ? options[:platform] : "iOS"
-    export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
+    platform = options[:platform] || 'iOS'
+    export_to_appstore = options[:export_to_appstore] || false
 
     build_lane(
-      configuration: "Release",
-      scheme: "SRGLetterbox-demo",
+      configuration: 'Release',
+      scheme: 'SRGLetterbox-demo',
       platform: platform,
       export_to_appstore: export_to_appstore
     )
   end
 
-  desc "Build for a scheme and a configuration"
+  desc 'Build for a scheme and a configuration'
   private_lane :build_lane do |options|
     scheme = options[:scheme]
     configuration = options[:configuration]
-    export_to_appstore = options[:export_to_appstore] ? options[:export_to_appstore] : false
-    bundle_display_name_suffix = options[:bundle_display_name_suffix] ? options[:bundle_display_name_suffix] : ""
-    marketing_version_suffix = options[:marketing_version_suffix] ? options[:marketing_version_suffix] : ""
-    build_name_suffix = options[:build_name_suffix] ? options[:build_name_suffix] : ""
-    platform = options[:platform] ? options[:platform] : "iOS"
+    export_to_appstore = options[:export_to_appstore] || false
+    bundle_display_name_suffix = options[:bundle_display_name_suffix] || ''
+    marketing_version_suffix = options[:marketing_version_suffix] || ''
+    build_name_suffix = options[:build_name_suffix] || ''
+    platform = options[:platform] || 'iOS'
 
     marketing_version = xcode_marketing_version
     # Characters "-" or "+" are not allowed on AppStore Connect.
     if export_to_appstore
-      marketing_version_suffix = ""
+      marketing_version_suffix = ''
 
       index = marketing_version.index('-')
       if index
-        bundle_display_name_suffix = marketing_version[index..marketing_version.length-1] + bundle_display_name_suffix
-        marketing_version = marketing_version[0..index-1]
+        bundle_display_name_suffix = marketing_version[index..marketing_version.length - 1] + bundle_display_name_suffix
+        marketing_version = marketing_version[0..index - 1]
       end
     end
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
 
-    enable_bitcode_arg = export_to_appstore ? "ENABLE_BITCODE=YES" : "ENABLE_BITCODE=NO"
+    enable_bitcode_arg = export_to_appstore ? 'ENABLE_BITCODE=YES' : 'ENABLE_BITCODE=NO'
     xcargs = enable_bitcode_arg + ' BUNDLE_DISPLAY_NAME_SUFFIX="' + bundle_display_name_suffix + '" MARKETING_VERSION="' + marketing_version + '" MARKETING_VERSION_SUFFIX="' + marketing_version_suffix + '" BUILD_NAME_SUFFIX="' + build_name_suffix + '" DEVELOPMENT_TEAM="' + team_id + '" -allowProvisioningUpdates'
 
-    destination = "generic/platform=" + platform
+    destination = 'generic/platform=' + platform
 
     output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME] + '/'
 
@@ -242,7 +241,7 @@ platform :ios do
       silent: true,
       clean: true,
       xcargs: xcargs,
-      export_method: export_to_appstore ? "app-store" : "enterprise",
+      export_method: export_to_appstore ? 'app-store' : 'enterprise',
       include_bitcode: export_to_appstore,
       export_team_id: team_id,
       destination: destination,
@@ -250,18 +249,18 @@ platform :ios do
     )
   end
 
-  desc "Upload a build on App Center or just a dSYM file."
+  desc 'Upload a build on App Center or just a dSYM file.'
   private_lane :appcenter_lane do |options|
     appname = options[:appname]
     destinations = options[:destinations]
     notes = options[:notes]
-    notify_testers = options[:notify_testers] ? options[:notify_testers] : false
+    notify_testers = options[:notify_testers] || false
     upload_dsym = options[:upload_dsym]
 
     if upload_dsym
       appcenter_upload(
         api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-        owner_type: "organization",
+        owner_type: 'organization',
         owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
         app_name: appname,
         release_notes: notes,
@@ -271,85 +270,79 @@ platform :ios do
     else
       appcenter_upload(
         api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-        owner_type: "organization",
+        owner_type: 'organization',
         owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
         app_name: appname,
         release_notes: notes,
-        destination_type: "group",
+        destination_type: 'group',
         destinations: destinations,
         notify_testers: notify_testers
       )
     end
   end
 
-  desc "Send latest tvOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters."
+  desc 'Send latest tvOS nightly dSYMs to App Center, with optional "version" or "min_version" parameters.'
   lane :nighltyDSYMs do |options|
-    update_dsyms("appletvos", ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], options)
+    update_dsyms('appletvos', ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME'], options)
   end
 
-  desc "Send latest tvOS demo dSYMs to App Center, with optional 'version' or 'min_version' parameters."
+  desc 'Send latest tvOS demo dSYMs to App Center, with optional "version" or "min_version" parameters.'
   lane :demoDSYMs do |options|
-    update_dsyms("appletvos", ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], options)
+    update_dsyms('appletvos', ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME'], options)
   end
 
   # Returns a default changelog for nightlies
   def default_changelog_for_nightlies(platform)
-
     last_commit_hash = last_nightlies_success_git_commit_hash(platform)
-    if last_commit_hash.length < 12
-      last_commit_hash = "HEAD^^^^^"
-    end
+    last_commit_hash = 'HEAD^^^^^' if last_commit_hash.length < 12
 
     changelog = changelog_from_git_commits(
-        between: [last_commit_hash, "HEAD"],
-        pretty: "- %s"
+      between: [last_commit_hash, 'HEAD'],
+      pretty: '- %s'
     )
     # HAX: strip emoji from changelog
-    changelog = (changelog) ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '') : "No change log found for this build."
+    changelog = changelog ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '') : 'No change log found for this build.'
     Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
     changelog
   end
 
   # Return current build number on App Center
   def latest_appcenter_build_number(app_secret)
-    appCenterBuildNumber = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} " + app_secret)
-    appCenterBuildNumber = Integer(appCenterBuildNumber.lines.map(&:chomp).last)
-    appCenterBuildNumber
+    appcenter_build_number = (sh "scripts/appcenter-build-number.sh -t #{ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']} " + app_secret)
+    Integer(appcenter_build_number.lines.map(&:chomp).last)
   end
 
   # Save the git commit hash in a local text file for nightlies
   def save_last_nightlies_success_git_commit_hash(platform)
     last = last_git_commit
-    platformPrefix = platform ? platform.downcase + "-" : ""
-    File.open("last-" + platformPrefix + "nightlies-success-git-commit-hash.txt", 'w') {|f| f.write(last[:commit_hash]) }
+    platform_prefix = platform ? platform.downcase + '-' : ''
+    File.open('last-' + platform_prefix + 'nightlies-success-git-commit-hash.txt', 'w') { |f| f.write(last[:commit_hash]) }
     last[:commit_hash]
   end
 
   # Read the git commit hash in a local text file for nightlies
   def last_nightlies_success_git_commit_hash(platform)
-    platformPrefix = platform ? platform.downcase + "-" : ""
-    file = File.open("last-" + platformPrefix + "nightlies-success-git-commit-hash.txt", "a+")
-    lastNightliesSuccessGitCommitHash = file.read
+    platform_prefix = platform ? platform.downcase + '-' : ''
+    file = File.open('last-' + platform_prefix + 'nightlies-success-git-commit-hash.txt', 'a+')
+    nightlies_success_git_commit_hash = file.read
     file.close
-    lastNightliesSuccessGitCommitHash
+    nightlies_success_git_commit_hash
   end
 
   # Return the marketing version, without suffix
-  def xcode_marketing_version()
-     marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d " =" | sed "s/MARKETING_VERSION//"'
-     marketing_version = marketing_version.lines.last.gsub(/\s+/, "")
-     marketing_version
+  def xcode_marketing_version
+    marketing_version = sh 'cd ..; xcodebuild -showBuildSettings | grep "MARKETING_VERSION =" | tr -d " =" | sed "s/MARKETING_VERSION//"'
+    marketing_version.lines.last.gsub(/\s+/, '')
   end
 
   # Return the bundle app identifier
   def xcode_app_identifier(scheme, configuration)
-     app_identifier = sh 'cd ..; xcodebuild -scheme "' + scheme + '" -configuration "' + configuration + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d " =" | sed "s/PRODUCT_BUNDLE_IDENTIFIER//"'
-     app_identifier = app_identifier.lines.last.gsub(/\s+/, "")
-     app_identifier
+    app_identifier = sh 'cd ..; xcodebuild -scheme "' + scheme + '" -configuration "' + configuration + '" -showBuildSettings | grep "PRODUCT_BUNDLE_IDENTIFIER =" | tr -d " =" | sed "s/PRODUCT_BUNDLE_IDENTIFIER//"'
+    app_identifier.lines.last.gsub(/\s+/, '')
   end
 
   # Return current tag version
-  def tag_version()
+  def tag_version
     build_number = get_build_number
     marketing_version = xcode_marketing_version
     tag_version = marketing_version + '-' + build_number
@@ -357,31 +350,32 @@ platform :ios do
   end
 
   # Return the what's new text from WhatsNew-demo.json file in the repository
-  def what_s_new_for_demo()
-    file = File.open("../WhatsNew-demo.json", "r")  
+  def what_s_new_for_demo
+    file = File.open('../WhatsNew-demo.json', 'r')
     json = JSON.parse(file.read)
     file.close
-    whatsNew = json[tag_version]
-    whatsNew ? whatsNew : ''
+    what_s_new = json[tag_version]
+    what_s_new || ''
   end
 
   # Update only the demo app identifier for App Store Connect submit.
-  def update_to_appstore_app_identifier()
+  def update_to_appstore_app_identifier
     update_app_identifier(
-      plist_path: "Demo/Info.plist"
+      plist_path: 'Demo/Info.plist'
     )
   end
 
-  def update_dsyms (platform, appcenter_app_name, options)
+  def update_dsyms(platform, appcenter_app_name, options)
     if options
       min_version = options[:min_version]
       version = options[:version]
     end
 
     output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
-    
-    Dir.chdir("..") do
-      FileUtils.mkdir_p(output_directory) if !File.directory?(output_directory)
+    Dir.chdir('..') do
+      unless File.directory?(output_directory)
+        FileUtils.mkdir_p(output_directory)
+      end
     end
 
     if min_version
@@ -395,38 +389,34 @@ platform :ios do
         platform: platform,
         version: version,
         output_directory: output_directory
-        )
+      )
     else
       download_dsyms(
         platform: platform,
-        version: "latest",
+        version: 'latest',
         output_directory: output_directory
-        )
+      )
     end
 
-    if lane_context[SharedValues::DSYM_PATHS]
-      lane_context[SharedValues::DSYM_PATHS].each { |dSYM|
-        appcenter_lane(
-          appname: appcenter_app_name,
-          notes: 'DSYMs from AppStore Connect (via fastlane).',
-          upload_dsym: dSYM
-        )
-      }
+    lane_context[SharedValues::DSYM_PATHS]&.each do |dsym|
+      appcenter_lane(
+        appname: appcenter_app_name,
+        notes: 'DSYMs from AppStore Connect (via fastlane).',
+        upload_dsym: dsym
+      )
     end
   end
 
   after_all do |lane|
-    if (!lane.to_s.downcase.include? 'dsym')
-      reset_git_repo(skip_clean: true)
-    end
+    reset_git_repo(skip_clean: true) unless lane.to_s.downcase.include? 'dsym'
 
     # slack(
     #   message: "Successfully deployed new App Update."
     # )
   end
 
-  error do |lane, exception|
-    if (!lane.to_s.downcase.include? 'dsym')
+  error do |lane|
+    unless lane.to_s.downcase.include? 'dsym'
       clean_build_artifacts
       reset_git_repo(skip_clean: true, force: true)
     end
