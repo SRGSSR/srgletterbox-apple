@@ -71,10 +71,8 @@ platform :ios do
     save_last_nightlies_success_git_commit_hash(build_platform)
   end
 
-  desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional \'skip_waiting_for_build_processing\' parameter.'
-  lane :tvOSnightly do |options|
-    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] || false
-
+  desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing.'
+  lane :tvOSnightly do
     update_to_appstore_app_identifier
 
     build_platform = 'tvOS'
@@ -92,7 +90,6 @@ platform :ios do
 
     pilot(
       app_platform: appstore_platform,
-      skip_waiting_for_build_processing: skip_waiting_for_build_processing,
       changelog: changelog,
       distribute_external: true,
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
@@ -162,10 +159,8 @@ platform :ios do
     print 'You are responsible to tag the library and bump the build number.'
   end
 
-  desc 'Build a new tvOS demo on AppStore Connect and wait build processing. Optional \'skip_waiting_for_build_processing\' parameter. You are responsible to tag the library version and bump the build number after.'
-  lane :tvOSdemo do |options|
-    skip_waiting_for_build_processing = options[:skip_waiting_for_build_processing] || false
-
+  desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library version and bump the build number after.'
+  lane :tvOSdemo do
     update_to_appstore_app_identifier
 
     build_platform = 'tvOS'
@@ -180,7 +175,6 @@ platform :ios do
 
     pilot(
       app_platform: appstore_platform,
-      skip_waiting_for_build_processing: skip_waiting_for_build_processing,
       changelog: changelog,
       distribute_external: true,
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']

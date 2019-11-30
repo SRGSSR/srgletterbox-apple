@@ -1,7 +1,24 @@
-# this would cause errors with long fastlane lanes
+inherit_mode:
+  merge:
+    - Include
+
+AllCops:
+  Exclude:
+    - 'Carthage/**/*'
+    - 'vendor/**/*'
+  Include:
+    - 'fastlane/Pluginfile'
+
+# this would cause errors with long lanes
 Metrics/BlockLength:
-  Enabled: false
-  
+  Enabled: true
+  ExcludedMethods: ['platform']
+
+# Lane description and gem lines can be long
+Metrics/LineLength:
+  Enabled: true
+  IgnoredPatterns: ['^(\s+|)desc', '^gem']
+
 # They have not to be snake_case
 Naming/FileName:
   Exclude:
@@ -14,8 +31,3 @@ Naming/FileName:
 Style/RedundantInterpolation:
   Exclude:
     - '**/Appfile'
-
-# Lane description can be long
-Metrics/LineLength:
-  Enabled: true
-  IgnoredPatterns: ['^(\s+|)desc']
