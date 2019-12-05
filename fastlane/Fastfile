@@ -369,7 +369,7 @@ def xcode_marketing_version
   marketing_version = nil
   Dir.chdir('..') do
     command = 'xcodebuild -showBuildSettings | grep "MARKETING_VERSION ="'
-    marketing_version = sh command
+    marketing_version = xcodebuid_grep_output sh command
   end
   marketing_version ['MARKETING_VERSION ='] = ''
   marketing_version.gsub(/\s+/, '').chomp
@@ -382,7 +382,7 @@ def xcode_app_identifier(scheme, configuration)
     command = 'xcodebuild -showBuildSettings '
     command += '-scheme "' + scheme + '" -configuration "' + configuration + '"'
     command += ' | grep "PRODUCT_BUNDLE_IDENTIFIER ="'
-    app_identifier = sh command
+    app_identifier = xcodebuid_grep_output sh command
   end
   app_identifier ['PRODUCT_BUNDLE_IDENTIFIER ='] = ''
   app_identifier.gsub(/\s+/, '').chomp
@@ -505,10 +505,17 @@ end
 def xcode_library_scheme
   scheme = nil
   Dir.chdir('..') do
-    scheme = sh 'xcodebuild -list | grep "Schemes:" -A 1'
+    command = 'xcodebuild -list | grep "Schemes:" -A 1'
+    scheme = xcodebuid_grep_output sh command
   end
   scheme ['Schemes:'] = ''
   scheme.gsub(/\s+/, '').chomp
+end
+
+# Returns clean xcodebuid grep output, without warning and errors
+def xcodebuid_grep_output(output)
+  line_count = output.lines.count
+  output.split(/\n/) [line_count - 1]
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
