@@ -96,7 +96,7 @@ platform :ios do
     )
 
     # Wait a bit before asking dSYMs. Not ready yet.
-    sleep(60)
+    sleep(90)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
     update_dsyms(appstore_platform, appcenter_appname, nil)
@@ -156,7 +156,7 @@ platform :ios do
     )
 
     # Wait a bit before asking dSYMs. Not ready yet.
-    sleep(60)
+    sleep(90)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
     update_dsyms(appstore_platform, appcenter_appname, nil)
