@@ -15,7 +15,7 @@
 "Hours" = "Ore";
 
 /* Image copyright introductory label */
-"Image credit: %@" = "Image credit: %@";
+"Image credit: %@" = "Immagine: %@";
 
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
@@ -30,7 +30,7 @@
 "Next" = "Prossimo";
 
 /* Message displayed when no content is being played */
-"No content" = "No content";
+"No content" = "Nessun contenuto";
 
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Riproduzione su AirPlay";
@@ -45,10 +45,10 @@
 "Soon" = "Presto";
 
 /* Message displayed to inform that next content should start soon. */
-"Starting…" = "Starting…";
+"Starting…" = "In avvio…";
 
 /* Message displayed to inform that next content will start in \"X seconds\". */
-"Starts in %@" = "Starts in %@";
+"Starts in %@" = "Inizia in %@";
 
 /* Message displayed when an error has occurred and the ability to retry */
 "Tap to retry" = "Cliccare per riprovare";
