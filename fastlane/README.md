@@ -30,25 +30,25 @@ Build a new iOS nightly demo on App Center
 ```
 fastlane ios tvOSnightly
 ```
-Build a new tvOS nightly demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter.
+Build a new tvOS nightly demo on AppStore Connect and wait build processing.
+### ios tvOSnightlyDSYMs
+```
+fastlane ios tvOSnightlyDSYMs
+```
+Send latest tvOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters.
 ### ios iOSdemo
 ```
 fastlane ios iOSdemo
 ```
-Build a new iOS demo on App Center with the current build number. You are responsible to tag the library version and bump the build number after.
+Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).
 ### ios tvOSdemo
 ```
 fastlane ios tvOSdemo
 ```
-Build a new tvOS demo on AppStore Connect and wait build processing. Optional 'skip_waiting_for_build_processing' parameter. You are responsible to tag the library version and bump the build number after.
-### ios nighltyDSYMs
+Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.
+### ios tvOSdemoDSYMs
 ```
-fastlane ios nighltyDSYMs
-```
-Send latest tvOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters.
-### ios demoDSYMs
-```
-fastlane ios demoDSYMs
+fastlane ios tvOSdemoDSYMs
 ```
 Send latest tvOS demo dSYMs to App Center, with optional 'version' or 'min_version' parameters.
 
