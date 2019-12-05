@@ -167,10 +167,10 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     NSString *remainingTimeDescription = nil;
     if (remainingTimeInterval > 0.) {
         NSString *remainingTimeString = [s_dateComponentsFormatter stringFromDate:NSDate.date toDate:self.endDate];
-        remainingTimeDescription = [NSString stringWithFormat:NSLocalizedString(@"Starts in %@", nil), remainingTimeString];
+        remainingTimeDescription = [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Starts in %@", @"Message displayed to inform that next content will start in \"X seconds\"."), remainingTimeString];
     }
     else {
-        remainingTimeDescription = NSLocalizedString(@"Starting...", nil);
+        remainingTimeDescription = SRGLetterboxLocalizedString(@"Starting…", @"Message displayed to inform that next content should start soon.");
     }
     
     self.upcomingThumbnailButton.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", self.upcomingMedia.title, remainingTimeDescription];

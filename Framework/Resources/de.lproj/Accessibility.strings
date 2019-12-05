@@ -22,9 +22,6 @@
 /* Full screen button label in the letterbox view, when the view is NOT in the full screen state */
 "Full screen" = "Vollansicht starten";
 
-/* Short label identifying a livestream or currently in live condition. */
-"Live" = "Live";
-
 /* Live label when playing live. */
 "Live playback" = "Livestream ohne Verzögerung";
 
