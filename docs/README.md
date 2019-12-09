@@ -30,6 +30,15 @@ The library is suitable for applications running on iOS 9, tvOS 12 and above. Th
 
 If you want to contribute to the project, have a look at our [contributing guide](CONTRIBUTING.md).
 
+## Required tools
+
+Building the `SRGLetterbox-demo` target requires command-line tools for icon generation, easily installed with [Homebrew](https://brew.sh/):
+	
+	brew install imagemagick ghostscript
+	brew install jq
+	
+Project dependencies are retrieved using [Carthage](https://github.com/Carthage/Carthage). Be sure that these tools are available on your system.
+
 ## Installation
 
 The library can be added to a project using Carthage. For more information about Carthage and its use, refer to its [official documentation](https://github.com/Carthage/Carthage).
