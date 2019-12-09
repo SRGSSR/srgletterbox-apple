@@ -257,6 +257,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     if (self.movingFromParentViewController || self.beingDismissed) {
         [self dismissNotificationViewAnimated:NO];
+        [self.controller reset];
     }
 }
 

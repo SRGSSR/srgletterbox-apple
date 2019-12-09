@@ -84,10 +84,23 @@ static void commonInit(SRGLetterboxBaseView *self);
                                                selector:@selector(contentSizeCategoryDidChange:)
                                                    name:UIContentSizeCategoryDidChangeNotification
                                                  object:nil];
-        [NSNotificationCenter.defaultCenter addObserver:self
-                                               selector:@selector(accessibilityVoiceOverStatusChanged:)
-                                                   name:UIAccessibilityVoiceOverStatusChanged
-                                                 object:nil];
+        
+#if TARGET_OS_IOS
+        if (@available(iOS 11, *)) {
+#endif
+            [NSNotificationCenter.defaultCenter addObserver:self
+                                                   selector:@selector(accessibilityVoiceOverStatusDidChange:)
+                                                       name:UIAccessibilityVoiceOverStatusDidChangeNotification
+                                                     object:nil];
+#if TARGET_OS_IOS
+        }
+        else {
+            [NSNotificationCenter.defaultCenter addObserver:self
+                                                   selector:@selector(accessibilityVoiceOverStatusDidChange:)
+                                                       name:UIAccessibilityVoiceOverStatusChanged
+                                                     object:nil];
+        }
+#endif
     }
     else {
         [self.nibView removeFromSuperview];
@@ -95,9 +108,21 @@ static void commonInit(SRGLetterboxBaseView *self);
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:UIContentSizeCategoryDidChangeNotification
                                                     object:nil];
-        [NSNotificationCenter.defaultCenter removeObserver:self
-                                                      name:UIAccessibilityVoiceOverStatusChanged
-                                                    object:nil];
+        
+#if TARGET_OS_IOS
+        if (@available(iOS 11, *)) {
+#endif
+            [NSNotificationCenter.defaultCenter removeObserver:self
+                                                          name:UIAccessibilityVoiceOverStatusDidChangeNotification
+                                                        object:nil];
+#if TARGET_OS_IOS
+        }
+        else {
+            [NSNotificationCenter.defaultCenter removeObserver:self
+                                                          name:UIAccessibilityVoiceOverStatusChanged
+                                                        object:nil];
+        }
+#endif
     }
 }
 
@@ -122,7 +147,7 @@ static void commonInit(SRGLetterboxBaseView *self);
     [self contentSizeCategoryDidChange];
 }
 
-- (void)accessibilityVoiceOverStatusChanged:(NSNotification *)notification
+- (void)accessibilityVoiceOverStatusDidChange:(NSNotification *)notification
 {
     [self voiceOverStatusDidChange];
 }

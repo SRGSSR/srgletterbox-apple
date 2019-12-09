@@ -217,12 +217,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
         [focusGuide1.bottomAnchor constraintEqualToAnchor:self.thumbnailButton.bottomAnchor],
         [focusGuide1.widthAnchor constraintEqualToConstant:10.f]
     ]];
-    if (@available(tvOS 10, *)) {
-        focusGuide1.preferredFocusEnvironments = @[ self.upcomingThumbnailButton ];
-    }
-    else {
-        focusGuide1.preferredFocusedView = self.upcomingThumbnailButton;
-    }
+    focusGuide1.preferredFocusEnvironments = @[ self.upcomingThumbnailButton ];
     
     UIFocusGuide *focusGuide2 = [[UIFocusGuide alloc] init];
     [self.view addLayoutGuide:focusGuide2];
@@ -232,12 +227,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
         [focusGuide2.bottomAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.bottomAnchor],
         [focusGuide2.widthAnchor constraintEqualToConstant:10.f]
     ]];
-    if (@available(tvOS 10, *)) {
-        focusGuide2.preferredFocusEnvironments = @[ self.thumbnailButton ];
-    }
-    else {
-        focusGuide2.preferredFocusedView = self.thumbnailButton;
-    }
+    focusGuide2.preferredFocusEnvironments = @[ self.thumbnailButton ];
 }
 
 #pragma mark Overrides
