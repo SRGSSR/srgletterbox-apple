@@ -15,7 +15,7 @@
 "Hours" = "Uras";
 
 /* Image copyright introductory label */
-"Image credit: %@" = "Image credit: %@";
+"Image credit: %@" = "Maletg:%@";
 
 /* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
@@ -30,7 +30,7 @@
 "Next" = "Proxim";
 
 /* Message displayed when no content is being played */
-"No content" = "No content";
+"No content" = "Nagin cuntegn";
 
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Playback sin AirPlay";
@@ -45,10 +45,10 @@
 "Soon" = "Proximamain";
 
 /* Message displayed to inform that next content should start soon. */
-"Starting…" = "Starting…";
+"Starting…" = "Vegn gist…";
 
 /* Message displayed to inform that next content will start in \"X seconds\". */
-"Starts in %@" = "Starts in %@";
+"Starts in %@" = "Cumenza en %@";
 
 /* Message displayed when an error has occurred and the ability to retry */
 "Tap to retry" = "Cliccar per empruvar danovamain";

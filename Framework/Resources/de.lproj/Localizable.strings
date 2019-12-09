@@ -45,7 +45,7 @@
 "Soon" = "In Kürze";
 
 /* Message displayed to inform that next content should start soon. */
-"Starting…" = "Startet";
+"Starting…" = "Startet…";
 
 /* Message displayed to inform that next content will start in \"X seconds\". */
 "Starts in %@" = "Startet in %@";
