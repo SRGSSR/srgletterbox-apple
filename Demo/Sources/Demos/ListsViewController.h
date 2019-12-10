@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MediaListsViewController : UITableViewController
+@interface ListsViewController : UITableViewController
 
 @end
 

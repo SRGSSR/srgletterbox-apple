@@ -4,12 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "MediaListsViewController.h"
+#import "ListsViewController.h"
 
 #import "MediaListViewController.h"
 #import "TopicListViewController.h"
 
-@implementation MediaListsViewController
+@implementation ListsViewController
 
 #pragma mark Object lifecycle
 

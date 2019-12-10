@@ -8,17 +8,9 @@
 
 #import "DemoSection.h"
 #import "NSBundle+LetterboxDemo.h"
-#import "Playlist.h"
 #import "UIViewController+LetterboxDemo.h"
 
 #import <SRGLetterbox/SRGLetterbox.h>
-
-@interface MediasViewController ()
-
-@property (nonatomic) SRGDataProvider *dataProvider;
-@property (nonatomic) Playlist *playlist;
-
-@end
 
 @implementation MediasViewController
 
