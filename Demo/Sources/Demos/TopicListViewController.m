@@ -10,6 +10,7 @@
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "TopicItem.h"
+#import "UIWindow+LetterboxDemo.h"
 
 #import <SRGDataProvider/SRGDataProvider.h>
 
@@ -119,6 +120,12 @@
         
         self.topicItems = topicItems.copy;
         [self.tableView reloadData];
+        
+#if TARGET_OS_TV
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication].keyWindow letterbox_demo_updateFocus];
+        });
+#endif
     }];
     
     
