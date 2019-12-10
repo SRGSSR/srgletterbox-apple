@@ -67,10 +67,10 @@ static __attribute__((constructor)) void ApplicationInit(void)
     mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
     [viewControllers addObject:mediasNavigationViewController];
     
-    ListsViewController *mediaListsViewController = [[ListsViewController alloc] init];
-    UINavigationController *mediaListsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediaListsViewController];
-    mediaListsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
-    [viewControllers addObject:mediaListsNavigationViewController];
+    ListsViewController *listsViewController = [[ListsViewController alloc] init];
+    UINavigationController *listsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:listsViewController];
+    listsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
+    [viewControllers addObject:listsNavigationViewController];
     
 #if TARGET_OS_IOS
     MiscellaneousViewController *miscellaneousViewController = [[MiscellaneousViewController alloc] init];
@@ -86,7 +86,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
 #if TARGET_OS_TV
     mediasNavigationViewController.navigationBarHidden = YES;
-    mediaListsNavigationViewController.navigationBarHidden = YES;
+    listsNavigationViewController.navigationBarHidden = YES;
     settingsNavigationViewController.navigationBarHidden = YES;
 #endif
     
