@@ -12,6 +12,7 @@
 #import "NSDateFormatter+LetterboxDemo.h"
 #import "SettingsViewController.h"
 #import "UIViewController+LetterboxDemo.h"
+#import "UIWindow+LetterboxDemo.h"
 
 @interface MediaListViewController ()
 
@@ -151,6 +152,12 @@
         
         self.medias = medias;
         [self.tableView reloadData];
+        
+#if TARGET_OS_TV
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication].keyWindow letterbox_demo_updateFocus];
+        });
+#endif
     };
     
     switch (self.mediaList) {
