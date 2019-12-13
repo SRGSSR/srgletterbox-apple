@@ -38,4 +38,4 @@ The libraries must be released in the order given by the table below, which you 
 
 ### Letterbox dependency matrix
 
-Update the [Letterbox dependency matrix](https://github.com/SRGSSR/srgletterbox-ios/wiki/Version-matrix) as well.
+Update the [Letterbox dependency matrix](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) as well.

@@ -215,7 +215,7 @@ Media sometimes provide image copyright information via the `imageCopyright` pro
 
 ## Statistics
 
-Letterbox automatically sends media consumption measurements, provided an SRG Analytics tracker has been started. Refer to the [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) for information about how a tracker is started.
+Letterbox automatically sends media consumption measurements, provided an SRG Analytics tracker has been started. Refer to the [SRG Analytics](https://github.com/SRGSSR/srganalytics-apple) for information about how a tracker is started.
 
 If needed, you can disable automatic tracking for a Letterbox controller by setting its `tracked` property to `NO`.
 
@@ -227,4 +227,4 @@ The library is intended to be used from the main thread only. Trying to use if f
 
 In the future, Apple will favor HTTPS over HTTP, and require applications to explicitly declare potentially insecure connections. These guidelines are referred to as [App Transport Security (ATS)](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW33).
 
-For information about how you should configure your application to access our services, please refer to the dedicated [wiki topic](https://github.com/SRGSSR/srgdataprovider-ios/wiki/App-Transport-Security-(ATS)).
+For information about how you should configure your application to access our services, please refer to the dedicated [wiki topic](https://github.com/SRGSSR/srgdataprovider-apple/wiki/App-Transport-Security-(ATS)).

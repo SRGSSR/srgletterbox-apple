@@ -1,6 +1,6 @@
-<p align="center"><img src="README-images/logo.png"/></p>
+[![SRG Letterbox logo](README-images/logo.png)](https://github.com/SRGSSR/srgletterbox-apple)
 
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/srgletterbox-apple) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![GitHub license](https://img.shields.io/github/license/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/blob/master/LICENSE) 
 
 ## About
 
@@ -15,12 +15,12 @@ The SRG Letterbox library defines the official SRG SSR media player experience, 
 * Playlist support.
 * Access to all SRG SSR business unit medias.
 * Native AirPlay and picture in picture support (iOS)
-* Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-ios) when used.
+* Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-apple) when used.
 * ... and [a lot more](FEATURES.md).
 
 <p align="center"><img src="README-images/letterbox.jpg"/></p>
 
-To ensure a coherent visual player identity throughout SRG SSR applications, **the design is intentionally not intended for customization**, and will follow future design evolutions. If you need a completely custom player, you should rather use the [SRG Media Player library](https://github.com/SRGSSR/SRGMediaPlayer-iOS) instead, on top of which Letterbox itself is implemented.
+To ensure a coherent visual player identity throughout SRG SSR applications, **the design is intentionally not intended for customization**, and will follow future design evolutions. If you need a completely custom player, you should rather use the [SRG Media Player library](https://github.com/SRGSSR/srgmediaplayer-apple) instead, on top of which Letterbox itself is implemented.
 
 ## Compatibility
 
@@ -45,25 +45,25 @@ The library can be added to a project using Carthage. For more information about
 
 ### Installation with content protection
 
-The ability to play protected content (e.g. livestreams, foreign TV series) is provided by an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) framework. If you have access to it, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
+The ability to play protected content (e.g. livestreams, foreign TV series) is provided by an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-apple) framework. If you have access to it, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
 
 ```
-github "SRGSSR/srgletterbox-ios"
-github "SRGSSR/srgcontentprotection-ios"
+github "SRGSSR/srgletterbox-apple"
+github "SRGSSR/srgcontentprotection-apple"
 ```
 
-Check the [wiki](https://github.com/SRGSSR/srgletterbox-ios/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
+Check the [wiki](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
 
 ### Installation without content protection
 
-If you have no access to the internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-ios) framework, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
+If you have no access to the internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-apple) framework, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
 
 ```
-github "SRGSSR/srgletterbox-ios"
-github "SRGSSR/srgcontentprotection-fake-ios"
+github "SRGSSR/srgletterbox-apple"
+github "SRGSSR/srgcontentprotection-fake-apple"
 ```
 
-Check the [wiki](https://github.com/SRGSSR/srgletterbox-ios/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
+Check the [wiki](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
 
 With this setup, non-protected content only (e.g. in-house productions or audio content) will be playable.
 
@@ -118,7 +118,7 @@ make help
 
 Alternatively, you can of course open the project with Xcode and use the available schemes.
 
-Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-ios-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-apple-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
 
 If you need to make changes to the settings:
 
@@ -159,11 +159,11 @@ To learn about how the library can be used, have a look at the [getting started 
 
 ### Logging
 
-The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-ios) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
+The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-apple) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
 
 ### Control preview in Interface Builder
 
-Interface Builder can render custom controls dropped onto a storyboard or a xib. If you want to enable this feature for Letterbox controls, and after Carthage has been run, open the `Carthage/Checkouts/srgletterbox-ios/Designables` directory, **copy** the `SRGLetterboxDesignables.m` file it contains to your project and add it to your target.
+Interface Builder can render custom controls dropped onto a storyboard or a xib. If you want to enable this feature for Letterbox controls, and after Carthage has been run, open the `Carthage/Checkouts/srgletterbox-apple/Designables` directory, **copy** the `SRGLetterboxDesignables.m` file it contains to your project and add it to your target.
 
 When dropping a view (e.g. `SRGLetterboxView`) onto a storyboard or xib, Xcode will now build your project in the background and render the view when it is done.
 
