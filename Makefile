@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_FOLDER=Configuration
-CONFIGURATION_COMMIT_SHA1=fabba8d285f1f54ec5a6377264dca118a484ccef
+CONFIGURATION_COMMIT_SHA1=87d9a6b16cb93c4525a969dd3bac2c33e44199a9
 
 CARTHAGE_FOLDER=Carthage
 CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
@@ -137,7 +137,7 @@ setup:
 	@echo "Setting up proprietary project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
-		git clone https://github.com/SRGSSR/srgletterbox-ios-configuration.git $(CONFIGURATION_FOLDER); \
+		git clone https://github.com/SRGSSR/srgletterbox-apple-configuration.git $(CONFIGURATION_FOLDER); \
 	else \
 		echo "A $(CONFIGURATION_FOLDER) folder is already available."; \
 	fi;
