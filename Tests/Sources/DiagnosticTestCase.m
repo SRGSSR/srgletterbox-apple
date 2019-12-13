@@ -16,6 +16,12 @@
 NSString * const DiagnosticTestDidSendReportNotification = @"DiagnosticTestDidSendReportNotification";
 NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionary";
 
+#if TARGET_OS_TV
+static NSString * const DiagnosticTestCasePlatform = @"tvOS";
+#else
+static NSString * const DiagnosticTestCasePlatform = @"iOS";
+#endif
+
 @interface DiagnosticTestCase : LetterboxBaseTestCase
 
 @property (nonatomic) SRGDataProvider *dataProvider;
@@ -81,7 +87,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
@@ -163,7 +169,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
@@ -211,7 +217,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
@@ -265,7 +271,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
@@ -351,7 +357,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
@@ -668,7 +674,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
@@ -722,7 +728,7 @@ NSString * const DiagnosticTestJSONDictionaryKey = @"DiagnosticTestJSONDictionar
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
         XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
-        NSString *playerName = [NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()];
+        NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
