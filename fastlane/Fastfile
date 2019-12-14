@@ -508,7 +508,6 @@ def xcode_library_scheme
     command = 'xcodebuild -list | grep "Schemes:" -A 1'
     scheme = xcodebuid_grep_output sh command
   end
-  scheme ['Schemes:'] = ''
   scheme.gsub(/\s+/, '').chomp
 end
 
