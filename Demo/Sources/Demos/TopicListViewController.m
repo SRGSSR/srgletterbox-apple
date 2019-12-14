@@ -120,12 +120,6 @@
         
         self.topicItems = topicItems.copy;
         [self.tableView reloadData];
-        
-#if TARGET_OS_TV
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[UIApplication sharedApplication].keyWindow letterbox_demo_updateFocus];
-        });
-#endif
     }];
     
     

@@ -337,7 +337,6 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         UIView *playerView = SRGLetterboxViewControllerPlayerSubview(self.view);
         playerView.alpha = playerViewVisible ? 1.f : 0.f;
         self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
-        self.view.userInteractionEnabled = isPlaying;
         
         NSError *error = self.controller.error;
         if ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) {

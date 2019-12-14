@@ -1,4 +1,4 @@
 github "SRGSSR/FXReachability" "f20cd62474d5707d4ca04513473516ba6cdd6c80"
-github "SRGSSR/srganalytics-ios" "72beedb34bf7b204f944d6d1a0fc946092fa246a"
-github "SRGSSR/srgappearance-ios" "f2a5f02345db10487d424ff03c45cf193d0c12cf"
+github "SRGSSR/srganalytics-apple" "793e7e93c3ff3702288016dcfa7b6a69df4aa04f"
+github "SRGSSR/srgappearance-apple" "285f8890d27f451f8b6375c8e4ca73ec3bc41a29"
 github "SRGSSR/YYWebImage" "9c00257b93570f8aa854b0caaaf6461d3bb1abd5"
