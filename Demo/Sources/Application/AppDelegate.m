@@ -54,45 +54,41 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
+    MediasViewController *mediasViewController = [[MediasViewController alloc] init];
+    ListsViewController *listsViewController = [[ListsViewController alloc] init];
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    
 #if TARGET_OS_IOS
     [SRGNetworkActivityManagement enable];
         
     SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
-#endif
     
-    NSMutableArray<UIViewController *> *viewControllers = [NSMutableArray array];
-    
-    MediasViewController *mediasViewController = [[MediasViewController alloc] init];
     UINavigationController *mediasNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediasViewController];
     mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
-    [viewControllers addObject:mediasNavigationViewController];
     
-    ListsViewController *listsViewController = [[ListsViewController alloc] init];
     UINavigationController *listsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:listsViewController];
     listsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
-    [viewControllers addObject:listsNavigationViewController];
     
-#if TARGET_OS_IOS
     MiscellaneousViewController *miscellaneousViewController = [[MiscellaneousViewController alloc] init];
     UINavigationController *miscellaneousNavigationViewController = [[UINavigationController alloc] initWithRootViewController:miscellaneousViewController];
     miscellaneousNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Miscellaneous", nil) image:[UIImage imageNamed:@"miscellaneous"] tag:2];
-    [viewControllers addObject:miscellaneousNavigationViewController];
-#endif
     
-    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
     UINavigationController *settingsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     settingsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
-    [viewControllers addObject:settingsNavigationViewController];
-    
-#if TARGET_OS_TV
-    mediasNavigationViewController.navigationBarHidden = YES;
-    listsNavigationViewController.navigationBarHidden = YES;
-    settingsNavigationViewController.navigationBarHidden = YES;
-#endif
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = viewControllers.copy;
+    tabBarController.viewControllers = @[ mediasNavigationViewController, listsNavigationViewController, miscellaneousNavigationViewController, settingsNavigationViewController ];
     self.window.rootViewController = tabBarController;
+#else
+    mediasViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:nil tag:0];
+    listsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:nil tag:1];
+    settingsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:nil tag:2];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.viewControllers = @[ mediasViewController, listsViewController, settingsViewController ];
+    
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:tabBarController];
+#endif
     
     return YES;
 }
