@@ -98,7 +98,7 @@
         self.durationLabel.hidden = NO;
     }
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
-        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase (uses the application translation).").uppercaseString
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString
                                                                                            attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
                                                                                                          NSForegroundColorAttributeName : UIColor.whiteColor }];
         

@@ -17,7 +17,8 @@
 /* Image copyright introductory label */
 "Image credit: %@" = "Bild: %@";
 
-/* Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
+/* Short label identifying a livestream. Display in uppercase.
+   Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
 
 /* Notification message displayed when a live broadcast has finished. */
