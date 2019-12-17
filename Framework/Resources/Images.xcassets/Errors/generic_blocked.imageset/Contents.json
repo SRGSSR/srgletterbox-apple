@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "nomedia.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "nomedia-1.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "nomedia-100.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

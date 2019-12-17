@@ -11,6 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Standard skip intervals.
+ */
+static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+
+/**
  *  Notification sent when the livestream associated with the current playback context just finished. The corresponding
  *  media can be retrieved under the `SRGLetterboxMediaKey` user information key.
  */
@@ -50,6 +56,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 /**
+ *  The program corresponding to the current playback position, if any.
+ */
+@property (nonatomic, readonly, nullable) SRGProgram *program;
+
+/**
  *  Play the upcoming media currently available.
  *
  *  @return `YES` iff successful.
@@ -61,14 +72,6 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  *  the player has not been created yet.
  */
 - (void)reloadPlayerConfiguration;
-
-/**
- *  If set to `YES`, DRM streams must be favored over non-DRM ones when both are available, otherwise the original
- *  resource order is used when looking for the best match.
- */
-// FIXME: This hook is temporary until 2019 and must only be used by Play SRG applications. It will be removed
-//        afterwards.
-@property (class, nonatomic) BOOL prefersDRM;
 
 @end
 

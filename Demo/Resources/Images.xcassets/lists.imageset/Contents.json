@@ -1,0 +1,19 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "playlist_22-1.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "playlist_22.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

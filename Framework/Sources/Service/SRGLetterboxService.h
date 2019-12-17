@@ -14,26 +14,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Available Letterbox commands for playback control remotes, control center and lock screen.
+ *
+ *  @discussion Skip commands (if available) take precedence over previous / next track commands.
  */
 typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
-    SRGLetterboxCommandMinimal              = 0,                // Minimal controls (play / pause only).
-    SRGLetterboxCommandSkipBackward         = 1 << 0,           // -10 seconds.
-    SRGLetterboxCommandSkipForward          = 1 << 1,           // +30 seconds.
-    SRGLetterboxCommandSeekBackward         = 1 << 2,           // Seek backward.
-    SRGLetterboxCommandSeekForward          = 1 << 3,           // Seek forward.
-    SRGLetterboxCommandPreviousTrack        = 1 << 4,           // Previous track.
-    SRGLetterboxCommandNextTrack            = 1 << 5            // Next track.
-};
+    SRGLetterboxCommandMinimal                      = 0,                // Minimal controls (play / pause only).
+    SRGLetterboxCommandSkipBackward                 = 1 << 0,           // -10 seconds.
+    SRGLetterboxCommandSkipForward                  = 1 << 1,           // +30 seconds.
+    SRGLetterboxCommandPreviousTrack                = 1 << 2,           // Previous track.
+    SRGLetterboxCommandNextTrack                    = 1 << 3,           // Next track.
+    SRGLetterboxCommandChangePlaybackPosition       = 1 << 4,           // Slider to seek within the media.
+    SRGLetterboxCommandLanguageSelection            = 1 << 5            // Language selection (audio track and subtitles; AirPlay only).
+} API_UNAVAILABLE(tvos);
 
 /**
- *  Default set of commands. Seeks and skips are available.
+ *  Default command set.
  */
-OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
+static SRGLetterboxCommands SRGLetterboxCommandsDefault API_UNAVAILABLE(tvos) = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward
+    | SRGLetterboxCommandChangePlaybackPosition | SRGLetterboxCommandLanguageSelection;
 
 /**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture
  *  in picture is namely the responsibility of the application, and is formalized by the following protocol.
  */
+API_UNAVAILABLE(tvos)
 @protocol SRGLetterboxPictureInPictureDelegate <NSObject>
 
 /**
@@ -103,7 +107,8 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *  use AirPlay or picture in picture, and clear control center and lock screen information. Any AirPlay or picture
  *  in picture playback will be immediately stopped.
  */
-@interface SRGLetterboxService : NSObject <AVPictureInPictureControllerDelegate>
+API_UNAVAILABLE(tvos)
+@interface SRGLetterboxService : NSObject
 
 /**
  *  The service singleton instance.
@@ -131,10 +136,6 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
  *              easy way to restore the view controller in the exact same state as it was before picture in picture
  *              started.
- *
- *              Also note that enabling a controller with the service will alter audio session settings. Be especially
- *              careful if you plan to change audio settings yourself elsewhere in your application, as you might
- *              prevent the service from correctly working.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
@@ -175,6 +176,8 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
  *  Now playing information and command customization. Commands are available both from the control center as well
  *  as on remotes (e.g. headset remote or Apple Watch).
  *
+ *  Fow now playing information and commands to work, the audio session category must be set to `AVAudioSessionCategoryPlayback`.
+ *
  *  @discussion For commands occupying the same location in the control center and on the lock screen, iOS chooses which
  *              button will be available. Other commands remain available when using a remote, though. A headset button,
  *              for example, allows you to:
@@ -196,7 +199,7 @@ OBJC_EXPORT SRGLetterboxCommands SRGLetterboxCommandsDefault;
 
 /**
  *  Return the set of commands which might be available during playback. Whether or not a command is available or not
- *  ultimately depends on the media being played (e.g. seeks methods are not available if the media is not seekable).
+ *  ultimately depends on the media being played and the current playback position.
  *
  *  The default value is `SRGLetterboxCommandsDefault`.
  */

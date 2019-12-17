@@ -15,6 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (class, nonatomic, readonly) UIColor *srg_liveRedColor;
 
+/**
+ *  Red color for displaying progress information.
+ */
+@property (class, nonatomic, readonly) UIColor *srg_progressRedColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

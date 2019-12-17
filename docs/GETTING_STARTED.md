@@ -1,12 +1,14 @@
 # Getting started
 
-The SRG Letterbox library is made of three core components:
+The SRG Letterbox library provides three families of components:
 
-* `SRGLetterboxController`: A controller to play medias. The controller automatically retrieves metadata associated with the playback (media information, as well as channel information for DVR and livestreams). It also manages errors and restarts playback after a network loss.
-* `SRGLetterboxView`: A player view reflecting what an associated controller is currently playing, and providing controls to manage playback. The controller of a Letterbox view can be changed at any time.
-* `SRGLetterboxService`: A service to enable application-wide features like AirPlay, picture in picture or control center integration.
+* A controller to play medias, `SRGLetterboxController`. The controller automatically retrieves metadata associated with the playback (media information, as well as channel information for DVR and livestreams). It also manages errors and restarts playback after a network loss.
+* Visual components reflecting what an associated controller is currently playing, and providing controls to manage playback:
+   * On iOS, `SRGLetterboxView` is a `UIView` subclass which must be inserted into your application view hierarchy and bound to a controller, which can be changed at any time.
+   * On tvOS, `SRGLetterboxViewController` is a `UIViewController` subclass you simply present to display content played by a controller. This controller can be provided at creation time or can be entirely managed by the view controller itself.
+* On iOS, a service singletion, `SRGLetterboxService`, to enable application-wide features like AirPlay, picture in picture or control center integration.
 
-The following guide describes how these components can be easily combined to add advanced media playback capabilities to your application.
+The following guide describes how these components can be easily combined to add advanced media playback capabilities to your iOS or tvOS application.
 
 ## Audio session management
 
@@ -66,15 +68,9 @@ Letterbox controller broadcasts metadata updates and errors through `SRGLetterbo
 
 In most cases, applications should not need to perform additional requests for playback metadata: All standard information should readily be available from the controller itself.
 
-### Simultaneous playback
+## Letterbox view (iOS)
 
-Your application can use as many controllers as needed. Each controller can at most be bound to one view, and you are free to change controller - view relationships at will depending on your needs.
-
- When several controllers are playing at the same time, you might want to mute some of them, which can be achieved by setting the `muted` property to `NO`.
-
-## Letterbox view
-
-To display what is currently played by a controller, add a `SRGLetterboxView` instance somewhere in your application, either in code or using Interface Builder, and bind its `controller` property to a Letterbox controller. Nothing else is required, as this view automatically displays what is currently being played by the controller. If you play another media or change the controller of a view, the view will automatically update to reflect the new content being played.
+On iOS, to display what is currently played by a controller, add an `SRGLetterboxView` instance somewhere in your application, either in code or using Interface Builder, and bind its `controller` property to a Letterbox controller. Nothing else is required, as this view automatically displays what is currently being played by the controller. If you play another media or change the controller of a view, the view will automatically update to reflect the new content being played.
 
 ### Controls and overlays
 
@@ -110,9 +106,19 @@ The `-animateAlongsideUserInterfaceWithAnimations:completion:` animation block p
 
 The `SRGLetterboxView` view presents a full screen button on its overlay interface, allowing to toggle between normal and full screen displays. This button is shown if and only if the `-letterboxView:toggleFullScreen:animated:withCompletionHandler:` delegate method is implemented. Since a Letterbox views can be added anywhere to the view hierarchy, you are responsible of managing the full screen layout, as well as the transition animation between the normal and full screen states.
 
-Refer to the modal view controller demo implementation for a concrete example. 
+Refer to the modal view controller demo implementation for a concrete example.
 
-## Application-wide services
+### Simultaneous playback
+
+Your application can use as many controllers as needed. Each controller can at most be bound to one view, and you are free to change controller - view relationships at will depending on your needs.
+
+When several controllers are playing at the same time, you might want to mute some of them, which can be achieved by setting the `muted` property to `NO`.
+
+## Letterbox view controller (tvOS)
+
+On tvOS, to display what is currently played by a controller, instantiate an `SRGLetterboxViewController` instance and simply present it. You can optionally provide a Letterbox controller at creation time, or let the view controller instantiate one for you.
+
+## Application-wide services (iOS)
 
 The `SRGLetterboxService` singleton makes it possible to enable AirPlay and picture in picture for at most one Letterbox controller at a time. This automatically adds the following features for this controller:
 
@@ -163,13 +169,23 @@ For picture in picture to be available, your audio session must be configured to
 
 ## Playlists and continuous playback
 
-The Letterbox controller supports playlists as well as automatic playback of the next available media (continuous playback). To use these features, simply provide an object serving playlists conforming to the `SRGLetterboxControllerPlaylistDataSource` protocol, and assigned to the `playlistDataSource` controller property.
+The Letterbox controller supports playlists as well as automatic playback of the next available media (continuous playback). To use these features, simply provide an object serving playlists conforming to the `SRGLetterboxControllerPlaylistDataSource` protocol, and assign it to the `playlistDataSource` controller property.
 
 Once a playlist data source has been setup, you can skip to the next or previous item at any time using the dedicated methods available from the Letterbox controller `Playlists` category.
 
 If you want playback to automatically continue with the next media in a playlist once playback of the current media ends, implement the optional `-continuousPlaybackTransitionDurationForController:` delegate method, defining the delay before playback of the next media begins. During the transition between two medias, an attached Letterbox view will display an overlay allowing the user to either directly play the next item or cancel the transition. 
 
 If needed, the controller `ContinousPlayback` category provides complete information about continuous playback transition (start and end date, and media which will be played next).
+
+You can be notified about the user engaging or cancelling continuous playback by implementing the dedicated methods from `SRGLetterboxViewDelegate` on iOS, or from `SRGLetterboxViewControllerDelegate` on tvOS. On tvOS playback of the current content restarts when continuous playback is cancelled. You can for example decide to stop the player and dismiss the view controller by implementing the cancellation delegate method accordingly:
+
+```objective-c
+- (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [letterboxViewController.controller reset];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+```
 
 ## URL overrides and local file playback
 
@@ -179,13 +195,27 @@ To override the URL to be played for some URN, set the `contentURLOverridingBloc
 
 Note that Letterbox does not include any download manager. Your application is solely responsible of retrieving and storing the file.
 
+## Long-form playback
+
+Starting with iOS 13, Apple introduced the concept of long-form playback. Primarily intended for video content, preparing for long-form playback when displaying a player offers the system the ability to suggest available AirPlay devices. Even though the kind of content played with Letterbox cannot be known a priori (audio is not considered to be long-form), your application can still benefit from AirPlay suggestions.
+
+AirPlay suggestions are entirely the responsibility of the application. To enable the corresponding behavior, add the `AVInitialRouteSharingPolicy` to your application `Info.plist`, with `LongFormVideo` as value, and call the appropriate preparation method where opening your Letterbox-based player view:
+
+```objective-c
+[AVAudioSession.sharedInstance prepareRouteSelectionForPlaybackWithCompletionHandler:^(BOOL shouldStartPlayback, AVAudioSessionRouteSelection routeSelection) {
+    // Open the player
+}];
+```
+
+For more information about long-form playback, have a look at the [dedicated WWDC session](https://developer.apple.com/videos/play/wwdc2019/501).
+
 ## Image copyrights
 
 Media sometimes provide image copyright information via the `imageCopyright` property. If your application displays a Letterbox view, you should ensure that this information is somehow displayed in its vicinity.
 
 ## Statistics
 
-Letterbox automatically sends media consumption measurements, provided an SRG Analytics tracker has been started. Refer to the [SRG Analytics](https://github.com/SRGSSR/srganalytics-ios) for information about how a tracker is started.
+Letterbox automatically sends media consumption measurements, provided an SRG Analytics tracker has been started. Refer to the [SRG Analytics](https://github.com/SRGSSR/srganalytics-apple) for information about how a tracker is started.
 
 If needed, you can disable automatic tracking for a Letterbox controller by setting its `tracked` property to `NO`.
 
@@ -195,6 +225,6 @@ The library is intended to be used from the main thread only. Trying to use if f
 
 ## App Transport Security (ATS)
 
-In a near future, Apple will favor HTTPS over HTTP, and require applications to explicitly declare potentially insecure connections. These guidelines are referred to as [App Transport Security (ATS)](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW33).
+In the future, Apple will favor HTTPS over HTTP, and require applications to explicitly declare potentially insecure connections. These guidelines are referred to as [App Transport Security (ATS)](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW33).
 
-For information about how you should configure your application to access our services, please refer to the dedicated [wiki topic](https://github.com/SRGSSR/srgdataprovider-ios/wiki/App-Transport-Security-(ATS)).
+For information about how you should configure your application to access our services, please refer to the dedicated [wiki topic](https://github.com/SRGSSR/srgdataprovider-apple/wiki/App-Transport-Security-(ATS)).

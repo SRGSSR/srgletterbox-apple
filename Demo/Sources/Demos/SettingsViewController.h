@@ -14,18 +14,19 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXPORT NSURL *ApplicationSettingServiceURL(void);
 OBJC_EXPORT NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void);
 
-OBJC_EXPORT BOOL ApplicationSettingIsStandalone(void);
+OBJC_EXPORT BOOL ApplicationSettingStandalone(void);
+OBJC_EXPORT BOOL ApplicationSettingAutoplayEnabled(void);
 
 OBJC_EXPORT SRGQuality ApplicationSettingPreferredQuality(void);
 
-OBJC_EXPORT BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
-OBJC_EXPORT void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);
+OBJC_EXPORT API_UNAVAILABLE(tvos) BOOL ApplicationSettingIsMirroredOnExternalScreen(void);
+OBJC_EXPORT API_UNAVAILABLE(tvos) void ApplicationSettingSetMirroredOnExternalScreen(BOOL mirroredOnExternalScreen);
 
 OBJC_EXPORT NSTimeInterval ApplicationSettingUpdateInterval(void);
 
 OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 
-OBJC_EXPORT BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
+OBJC_EXPORT API_UNAVAILABLE(tvos) BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
 
 @interface SettingsViewController : UITableViewController
 

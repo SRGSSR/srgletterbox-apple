@@ -66,9 +66,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithTargetDate:(NSDate *)targetDate
+- (instancetype)initWithTargetDate:(NSDate *)targetDate frame:(CGRect)frame
 {
-    if (self = [super init]) {
+    if (self = [super initWithFrame:frame]) {
         self.targetDate = targetDate;
     }
     return self;
@@ -76,7 +76,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (instancetype)init
 {
-    return [self initWithTargetDate:NSDate.date];
+    return [self initWithTargetDate:NSDate.date frame:CGRectZero];
 }
 
 #pragma mark Getters and setters
@@ -119,15 +119,23 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     
     self.secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
     
-    self.messageLabel.horizontalMargin = 5.f;
-    self.messageLabel.verticalMargin = 2.f;
+    self.messageLabel.horizontalMargin = 8.f;
+    self.messageLabel.verticalMargin = 4.f;
     self.messageLabel.layer.masksToBounds = YES;
     
-    self.remainingTimeLabel.horizontalMargin = 5.f;
-    self.remainingTimeLabel.verticalMargin = 2.f;
-    self.remainingTimeLabel.layer.masksToBounds = YES;
-    
     self.messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+    
+#if TARGET_OS_TV
+    self.remainingTimeLabel.horizontalMargin = 30.f;
+    self.remainingTimeLabel.verticalMargin = 12.f;
+    self.remainingTimeLabel.layer.cornerRadius = 6.f;
+#else
+    self.remainingTimeLabel.horizontalMargin = 15.f;
+    self.remainingTimeLabel.verticalMargin = 9.f;
+    self.remainingTimeLabel.layer.cornerRadius = 3.f;
+#endif
+    
+    self.remainingTimeLabel.layer.masksToBounds = YES;
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -148,12 +156,16 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     }
 }
 
+#if TARGET_OS_IOS
+
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     [self refresh];
 }
+
+#endif
 
 #pragma mark UI
 
@@ -203,19 +215,19 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
             s_dateComponentsFormatter.allowedUnits = NSCalendarUnitDay;
             s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
         });
-        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:currentRemainingTimeInterval]];
+        self.remainingTimeLabel.text = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"Available in %@", @"Label to explain that a content will be available in X minutes / seconds."), [s_dateComponentsFormatter stringFromTimeInterval:currentRemainingTimeInterval]].uppercaseString;
     }
     else if (dateComponents.day > 0) {
-        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_longDateComponentsFormatter stringFromDateComponents:dateComponents];
+        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_longDateComponentsFormatter stringFromDateComponents:dateComponents].uppercaseString;
     }
     else if (currentRemainingTimeInterval >= 60. * 60.) {
-        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromDateComponents:dateComponents];
+        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromDateComponents:dateComponents].uppercaseString;
     }
     else if (currentRemainingTimeInterval >= 0.) {
-        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromDateComponents:dateComponents];
+        self.remainingTimeLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromDateComponents:dateComponents].uppercaseString;
     }
     else {
-        self.remainingTimeLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
+        self.remainingTimeLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.").uppercaseString;
     }
     
     // The layout highly depends on the value to be displayed, update it at the same time
@@ -224,41 +236,56 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 - (void)updateLayout
 {
+#if TARGET_OS_IOS
     BOOL isLarge = (CGRectGetWidth(self.frame) >= 668.f);
+    
+    CGFloat width = isLarge ? 88.f : 70.f;
+    CGFloat height = isLarge ? 57.f : 45.f;
+    
+    CGFloat digitFontSize = isLarge ? 45.f : 36.f;
+    CGFloat titleFontSize = isLarge ? 17.f : 13.f;
+    CGFloat digitCornerRadius = isLarge ? 3.f : 2.f;
+    
+    CGFloat spacing = isLarge ? 3.f : 2.f;
+#else
+    CGFloat width = 155.f;
+    CGFloat height = 100.f;
+    
+    CGFloat digitFontSize = 65.f;
+    CGFloat titleFontSize = 35.f;
+    CGFloat digitCornerRadius = 3.f;
+    
+    CGFloat spacing = 3.f;
+#endif
     
     // Appearance
     [self.widthConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        constraint.constant = isLarge ? 88.f : 70.f;
+        constraint.constant = width;
     }];
     
     [self.heightConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger idx, BOOL * _Nonnull stop) {
-        constraint.constant = isLarge ? 57.f : 45.f;
+        constraint.constant = height;
     }];
     
-    CGFloat digitSize = isLarge ? 45.f : 36.f;
-    CGFloat titleSize = isLarge ? 17.f : 13.f;
+    self.days1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.days0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.daysTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
     
-    self.days1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.days0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.daysTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    self.hours1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.hours0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.hoursTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
     
-    self.hours1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.hours0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.hoursTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    self.minutes1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.minutes0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.minutesTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
     
-    self.minutes1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.minutes0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.minutesTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
-    
-    self.seconds1Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.seconds0Label.font = [UIFont srg_mediumFontWithSize:digitSize];
-    self.secondsTitleLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+    self.seconds1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.seconds0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+    self.secondsTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
     
     [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
-        label.font = [UIFont srg_mediumFontWithSize:digitSize];
+        label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
     }];
-    
-    CGFloat digitCornerRadius = isLarge ? 3.f : 2.f;
     
     self.days1Label.layer.cornerRadius = digitCornerRadius;
     self.days0Label.layer.cornerRadius = digitCornerRadius;
@@ -275,10 +302,16 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     self.messageLabel.layer.cornerRadius = digitCornerRadius;
     
     [self.digitStackViews enumerateObjectsUsingBlock:^(UIStackView * _Nonnull stackView, NSUInteger idx, BOOL * _Nonnull stop) {
-        stackView.spacing = isLarge ? 3.f : 2.f;
+        stackView.spacing = spacing;
     }];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithSize:titleSize];
+#if TARGET_OS_TV
+    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+#else
+    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+#endif
     
     // Visibility
     NSTimeInterval currentRemainingTimeInterval = self.currentRemainingTimeInterval;
@@ -288,11 +321,13 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
         self.remainingTimeStackView.hidden = YES;
         self.messageLabel.hidden = YES;
     }
+#if TARGET_OS_IOS
     else if (CGRectGetWidth(self.frame) < 300.f || CGRectGetHeight(self.frame) < 145.f) {
         self.remainingTimeLabel.hidden = NO;
         self.remainingTimeStackView.hidden = YES;
         self.messageLabel.hidden = YES;
     }
+#endif
     else {
         self.remainingTimeLabel.hidden = YES;
         self.remainingTimeStackView.hidden = NO;

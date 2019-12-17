@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "loading-48-16.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "loading-48-17.pdf"
+    },
+    {
+      "idiom" : "tv",
+      "filename" : "loading16_180.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

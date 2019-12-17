@@ -6,15 +6,21 @@
 
 #import "AppDelegate.h"
 
-#import "DemosViewController.h"
+#import "ListsViewController.h"
+#import "MediasViewController.h"
+#import "MiscellaneousViewController.h"
 #import "SettingsViewController.h"
+#import "UIViewController+LetterboxDemo.h"
 
 #import <AppCenter/AppCenter.h>
 #import <AppCenterCrashes/AppCenterCrashes.h>
-#import <AppCenterDistribute/AppCenterDistribute.h>
 #import <libextobjc/libextobjc.h>
 #import <SRGAnalytics/SRGAnalytics.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+
+#if TARGET_OS_IOS
+#import <AppCenterDistribute/AppCenterDistribute.h>
+#endif
 
 static __attribute__((constructor)) void ApplicationInit(void)
 {
@@ -23,12 +29,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [contentProtectionFramework loadAndReturnError:NULL];
 }
 
-@interface AppDelegate ()
-
-@property (nonatomic, weak) DemosViewController *demosViewController;
-
-@end
-
 @implementation AppDelegate
 
 #pragma mark Application lifecycle
@@ -36,15 +36,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    self.window.backgroundColor = UIColor.blackColor;
     [self.window makeKeyAndVisible];
     
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     application.accessibilityLanguage = @"en";
-    
-    [SRGNetworkActivityManagement enable];
-    
+        
 #ifndef DEBUG
     [self setupAppCenter];
 #endif
@@ -57,11 +54,41 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
+    MediasViewController *mediasViewController = [[MediasViewController alloc] init];
+    ListsViewController *listsViewController = [[ListsViewController alloc] init];
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    
+#if TARGET_OS_IOS
+    [SRGNetworkActivityManagement enable];
+        
     SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
     
-    DemosViewController *demosViewController = [[DemosViewController alloc] init];
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:demosViewController];
-    self.demosViewController = demosViewController;
+    UINavigationController *mediasNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediasViewController];
+    mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
+    
+    UINavigationController *listsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:listsViewController];
+    listsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
+    
+    MiscellaneousViewController *miscellaneousViewController = [[MiscellaneousViewController alloc] init];
+    UINavigationController *miscellaneousNavigationViewController = [[UINavigationController alloc] initWithRootViewController:miscellaneousViewController];
+    miscellaneousNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Miscellaneous", nil) image:[UIImage imageNamed:@"miscellaneous"] tag:2];
+    
+    UINavigationController *settingsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    settingsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.viewControllers = @[ mediasNavigationViewController, listsNavigationViewController, miscellaneousNavigationViewController, settingsNavigationViewController ];
+    self.window.rootViewController = tabBarController;
+#else
+    mediasViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:nil tag:0];
+    listsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:nil tag:1];
+    settingsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:nil tag:2];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    tabBarController.viewControllers = @[ mediasViewController, listsViewController, settingsViewController ];
+    
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:tabBarController];
+#endif
     
     return YES;
 }
@@ -70,7 +97,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
     NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:YES];
-    
     if ([URLComponents.host.lowercaseString isEqualToString:@"media"]) {
         NSString *mediaURN = URLComponents.path.lastPathComponent;
         if (mediaURN) {
@@ -79,14 +105,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
             if (server) {
                 serviceURL = LetterboxDemoServiceURLForKey(server);
             }
-            
-            [self.demosViewController openModalPlayerWithURN:mediaURN serviceURL:serviceURL updateInterval:nil];
+      
+            [self.window.rootViewController openPlayerWithURN:mediaURN serviceURL:serviceURL];
             return YES;
         }
-        
         return NO;
     }
-    
     return NO;
 }
 
@@ -116,7 +140,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
         
         return YES;
     }];
+    
+#if TARGET_OS_IOS
     [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class, MSDistribute.class ]];
+#else
+    [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class ]];
+#endif
 }
 
 #pragma mark Custom URL scheme support

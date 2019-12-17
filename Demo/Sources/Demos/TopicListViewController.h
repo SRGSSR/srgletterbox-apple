@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#import "DemosViewController.h"
-
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -34,6 +32,10 @@ typedef NS_ENUM(NSInteger, TopicList) {
      *  RTR Topics
      */
     TopicListRTR,
+    /**
+     *  SWI Topics
+     */
+    TopicListSWI,
     /**
      *  MMF topics
      */

@@ -26,6 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 __attribute__((annotate("returns_localized_nsstring")))
 OBJC_EXPORT NSString *SRGLetterboxNonLocalizedString(NSString *string);
 
+/**
+ *  Return the recommended resource name for the main resource (xib, storyboard) associated with a class.
+ */
+OBJC_EXPORT NSString *SRGLetterboxResourceNameForUIClass(Class cls);
+
 @interface NSBundle (SRGLetterbox)
 
 /**

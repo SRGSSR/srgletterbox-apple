@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5WB-zg-NQB">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Delegate-->
+        <scene sceneID="rjx-aZ-llm">
+            <objects>
+                <viewController id="5WB-zg-NQB" customClass="MultiPlayerViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CVL-Ms-lzF">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bb-qO-DK7" customClass="SRGLetterboxView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="337.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" secondItem="1bb-qO-DK7" secondAttribute="width" multiplier="9:16" id="H3H-pd-Ynf"/>
+                                </constraints>
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="H3H-pd-Ynf"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="controller" destination="Z7p-HD-xJW" id="RUW-Nf-NdN"/>
+                                    <outlet property="delegate" destination="5WB-zg-NQB" id="55t-Pd-MC6"/>
+                                </connections>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mnt-gM-iQ3" userLabel="Close Button">
+                                <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="mnt-gM-iQ3" secondAttribute="height" multiplier="1:1" id="3Fn-D8-QOG"/>
+                                    <constraint firstAttribute="width" constant="48" id="6kt-WM-cMx"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="close"/>
+                                <connections>
+                                    <action selector="close:" destination="5WB-zg-NQB" eventType="touchUpInside" id="zRk-QA-3oD"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Udg-mi-has" customClass="SRGLetterboxView">
+                                <rect key="frame" x="172" y="357.5" width="256" height="144"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="256" id="a34-v1-gax"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="QUZ-dT-8iK" id="rkK-si-9gb"/>
+                                </connections>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1j-HG-eIf" customClass="SRGLetterboxView">
+                                <rect key="frame" x="172" y="521.5" width="256" height="144"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="256" id="N93-Ov-tRt"/>
+                                    <constraint firstAttribute="width" secondItem="c1j-HG-eIf" secondAttribute="height" multiplier="16:9" id="a2S-P4-1la"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="controller" destination="xlQ-lD-cZi" id="buO-uo-xhx"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="mnt-gM-iQ3" firstAttribute="top" secondItem="Y0W-Wa-7Cb" secondAttribute="top" id="0cT-sM-Y27"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="centerX" secondItem="Y0W-Wa-7Cb" secondAttribute="centerX" id="0eE-kC-2i4"/>
+                            <constraint firstItem="Udg-mi-has" firstAttribute="centerX" secondItem="Y0W-Wa-7Cb" secondAttribute="centerX" id="3Qj-KR-z4t"/>
+                            <constraint firstItem="Udg-mi-has" firstAttribute="width" secondItem="Udg-mi-has" secondAttribute="height" multiplier="16:9" id="OdK-YN-cbo"/>
+                            <constraint firstItem="Y0W-Wa-7Cb" firstAttribute="bottom" secondItem="1bb-qO-DK7" secondAttribute="bottom" id="aku-MR-UHB"/>
+                            <constraint firstItem="c1j-HG-eIf" firstAttribute="top" secondItem="Udg-mi-has" secondAttribute="bottom" constant="20" id="eAf-tY-4Sj"/>
+                            <constraint firstItem="Y0W-Wa-7Cb" firstAttribute="trailing" secondItem="1bb-qO-DK7" secondAttribute="trailing" id="jyS-a3-NEU"/>
+                            <constraint firstItem="1bb-qO-DK7" firstAttribute="leading" secondItem="Y0W-Wa-7Cb" secondAttribute="leading" id="kDE-YM-s3S"/>
+                            <constraint firstItem="mnt-gM-iQ3" firstAttribute="leading" secondItem="Y0W-Wa-7Cb" secondAttribute="leading" id="pBI-TA-KIY"/>
+                            <constraint firstItem="Udg-mi-has" firstAttribute="top" secondItem="1bb-qO-DK7" secondAttribute="bottom" constant="20" id="suW-fL-3Rn"/>
+                            <constraint firstItem="1bb-qO-DK7" firstAttribute="top" secondItem="Y0W-Wa-7Cb" secondAttribute="top" id="z88-in-Ldl"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Y0W-Wa-7Cb"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="aku-MR-UHB"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="aku-MR-UHB"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="closeButton" destination="mnt-gM-iQ3" id="prb-D8-f7X"/>
+                        <outlet property="letterboxAspectRatioConstraint" destination="H3H-pd-Ynf" id="hRq-eF-PvB"/>
+                        <outlet property="letterboxController" destination="Z7p-HD-xJW" id="M9C-Uq-Fqy"/>
+                        <outlet property="letterboxView" destination="1bb-qO-DK7" id="DqY-ZJ-gur"/>
+                        <outlet property="smallLetterboxController1" destination="QUZ-dT-8iK" id="RXP-CJ-Faf"/>
+                        <outlet property="smallLetterboxController2" destination="xlQ-lD-cZi" id="Ahj-VW-mVe"/>
+                        <outlet property="smallLetterboxView1" destination="Udg-mi-has" id="jsZ-ep-VxE"/>
+                        <outlet property="smallLetterboxView2" destination="c1j-HG-eIf" id="cae-Xk-QH2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ldR-9K-uXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="Z7p-HD-xJW" customClass="SRGLetterboxController"/>
+                <customObject id="QUZ-dT-8iK" customClass="SRGLetterboxController"/>
+                <customObject id="xlQ-lD-cZi" customClass="SRGLetterboxController"/>
+            </objects>
+            <point key="canvasLocation" x="48.799999999999997" y="-344.07796101949026"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="close" width="16" height="16"/>
+    </resources>
+</document>

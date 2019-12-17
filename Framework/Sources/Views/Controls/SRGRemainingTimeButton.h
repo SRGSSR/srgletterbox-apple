@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Button displaying and animating remaining time as a circle progress bar.
  */
+API_UNAVAILABLE(tvos)
 @interface SRGRemainingTimeButton : UIButton
 
 /**

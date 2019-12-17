@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SRGNotificationView">
+            <connections>
+                <outlet property="iconImageView" destination="xKZ-Kt-RAq" id="OSC-yN-4hg"/>
+                <outlet property="messageLabel" destination="9yo-zw-Sql" id="gIe-Vq-Bzp"/>
+                <outlet property="messageLabelBottomConstraint" destination="wLz-7k-4h9" id="5Dv-pg-MVA"/>
+                <outlet property="messageLabelTopConstraint" destination="OyV-jB-UMb" id="guc-rv-stF"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Es9-A5-jcC" userLabel="Main View">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ba2-Cu-mWE" userLabel="Notification Content View">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
+                    <subviews>
+                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="notification" translatesAutoresizingMaskIntoConstraints="NO" id="xKZ-Kt-RAq">
+                            <rect key="frame" x="4" y="19" width="16" height="16"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="xKZ-Kt-RAq" secondAttribute="height" multiplier="1:1" id="1hw-yQ-9bd"/>
+                                <constraint firstAttribute="width" constant="16" id="zR6-8l-n8z"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="&lt;notification&gt;" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yo-zw-Sql">
+                            <rect key="frame" x="28" y="0.0" width="339" height="54"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="9yo-zw-Sql" firstAttribute="top" secondItem="ba2-Cu-mWE" secondAttribute="top" id="ByV-rs-MjR"/>
+                        <constraint firstAttribute="trailing" secondItem="9yo-zw-Sql" secondAttribute="trailing" constant="8" id="hyB-i2-xsI"/>
+                        <constraint firstItem="xKZ-Kt-RAq" firstAttribute="centerY" secondItem="9yo-zw-Sql" secondAttribute="centerY" id="j2M-3l-wxe"/>
+                        <constraint firstItem="9yo-zw-Sql" firstAttribute="leading" secondItem="xKZ-Kt-RAq" secondAttribute="trailing" constant="8" id="r51-cc-FYb"/>
+                        <constraint firstItem="xKZ-Kt-RAq" firstAttribute="leading" secondItem="ba2-Cu-mWE" secondAttribute="leading" constant="4" id="swE-zE-7Ch"/>
+                        <constraint firstAttribute="bottom" secondItem="9yo-zw-Sql" secondAttribute="bottom" id="xWn-sh-KJ8"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.058823529411764705" green="0.3529411764705882" blue="0.79607843137254897" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="ba2-Cu-mWE" firstAttribute="leading" secondItem="Zr0-YB-KJZ" secondAttribute="leading" id="1BF-Sn-RbH"/>
+                <constraint firstItem="ba2-Cu-mWE" firstAttribute="top" secondItem="Es9-A5-jcC" secondAttribute="top" id="OyV-jB-UMb"/>
+                <constraint firstItem="Zr0-YB-KJZ" firstAttribute="trailing" secondItem="ba2-Cu-mWE" secondAttribute="trailing" id="tze-z3-vcM"/>
+                <constraint firstAttribute="bottom" secondItem="ba2-Cu-mWE" secondAttribute="bottom" id="wLz-7k-4h9"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Zr0-YB-KJZ"/>
+            <point key="canvasLocation" x="34.5" y="17"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="notification" width="16" height="16"/>
+    </resources>
+</document>

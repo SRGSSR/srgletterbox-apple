@@ -8,14 +8,12 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
-#import "NSTimer+SRGLetterbox.h"
 #import "SRGCountdownView.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxError.h"
 #import "SRGPaddedLabel.h"
 
 #import <libextobjc/libextobjc.h>
-#import <Masonry/Masonry.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGAvailabilityView ()
@@ -33,9 +31,16 @@
 {
     [super awakeFromNib];
     
-    self.messageLabel.horizontalMargin = 5.f;
-    self.messageLabel.verticalMargin = 2.f;
-    self.messageLabel.layer.cornerRadius = 4.f;
+#if TARGET_OS_TV
+    self.messageLabel.horizontalMargin = 30.f;
+    self.messageLabel.verticalMargin = 12.f;
+    self.messageLabel.layer.cornerRadius = 6.f;
+#else
+    self.messageLabel.horizontalMargin = 15.f;
+    self.messageLabel.verticalMargin = 9.f;
+    self.messageLabel.layer.cornerRadius = 3.f;
+#endif
+    
     self.messageLabel.layer.masksToBounds = YES;
 }
 
@@ -43,7 +48,11 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+#if TARGET_OS_TV
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+#else
+    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+#endif
 }
 
 - (void)metadataDidChange
@@ -53,6 +62,8 @@
     [self refresh];
     [self updateLayout];
 }
+
+#if TARGET_OS_IOS
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
@@ -68,6 +79,8 @@
     
     [self updateLayout];
 }
+
+#endif
 
 #pragma mark UI
 
@@ -88,16 +101,19 @@
         
         // Lazily add heavy countdown view when required
         if (! self.countdownView.superview) {
-            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate];
-            [self insertSubview:countdownView atIndex:0];
-            [countdownView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(self);
-            }];
+            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
+            [self addSubview:countdownView];
             self.countdownView = countdownView;
+            
+            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[ [countdownView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                       [countdownView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                       [countdownView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+                                                       [countdownView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
         }
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {
-        self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired");
+        self.messageLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Label to explain that a content has expired").uppercaseString;
         [self.countdownView removeFromSuperview];
     }
     else {

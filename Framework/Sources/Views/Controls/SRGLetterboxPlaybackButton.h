@@ -10,7 +10,7 @@
 /**
  *  Playback button.
  */
-IB_DESIGNABLE
+IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGLetterboxPlaybackButton : UIButton
 
 /**

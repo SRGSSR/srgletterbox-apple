@@ -32,5 +32,7 @@
   "1.14.4-64": "- The demo application supports the new scheme url format.",
   "1.14.5-65": "- Fix partial diagnostics performance reports sent when playing some medias.\n- Demo application supports iOS 13 dark mode.",
   "1.15-66": "- Audio session management removal.\n- Autoplay with muted videos example added in this demonstration application.",
-  "1.15-67": "- Update demo application with the new App Center distribution service."
+  "1.15-67": "- Update demo application with the new App Center distribution service.",
+  "2.0.0-rc.1-68": "- First Letterbox tvOS RC version. (tvOS)\n- Automatic playback restart after system interruption (iOS) (e.g. alarm clock, phone call).\n- Long-form playback and control center improvements (iOS) (seek bar, AirPlay track selection, Siri controls).\n- Upgrade to comScore version 6.",
+  "2.0.0-69": "### tvOS support\n\n- The library is compatible with tvOS.\n- The control center integration has been improved:\n    - The seek bar can be used to navigate in the media being played.\n    - When using AirPlay, subtitles and audio tracks can be changed directly from the control center.\n    - Playback controls through Siri have been improved.\n- Playback automatically resumes after audio interruption (e.g. phone call or alarm).\n- Data consumption has been reduced.\n- Fixed issue restarting stopped playback after network is reachable again.\n- Fixed issue incorrectly leading to livestreams being paused instead of stopped when using split view.\n\n- Demonstration application has media lists from all SRG business units."
 }

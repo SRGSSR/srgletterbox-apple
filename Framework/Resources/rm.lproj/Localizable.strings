@@ -14,7 +14,10 @@
 /* Short label for countdown display */
 "Hours" = "Uras";
 
-/* Short label identifying a livestream or currently in live condition.
+/* Image copyright introductory label */
+"Image credit: %@" = "Maletg:%@";
+
+/* Short label identifying a livestream. Display in uppercase.
    Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
 
@@ -26,6 +29,9 @@
 
 /* For continuous playback, introductory label for content which is about to start */
 "Next" = "Proxim";
+
+/* Message displayed when no content is being played */
+"No content" = "Nagin cuntegn";
 
 /* Message displayed when broadcasting on an AirPlay device */
 "Playback on AirPlay" = "Playback sin AirPlay";
@@ -39,8 +45,14 @@
 /* Short label identifying content which will be available soon. */
 "Soon" = "Proximamain";
 
+/* Message displayed to inform that next content should start soon. */
+"Starting…" = "Vegn gist…";
+
+/* Message displayed to inform that next content will start in \"X seconds\". */
+"Starts in %@" = "Cumenza en %@";
+
 /* Message displayed when an error has occurred and the ability to retry */
 "Tap to retry" = "Cliccar per empruvar danovamain";
 
 /* Message displayed when a media cannot be played for some reason (the user should not know about) */
-"The media cannot be played" = "Quest cuntegn na sa betg vegnì laschà ir";
+"The media cannot be played" = "Quest cuntegn na sa betg vegnir laschà ir";

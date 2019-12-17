@@ -22,7 +22,7 @@ IB_DESIGNABLE
 /**
  *  Instantiate a countdown targeting the target date.
  */
-- (instancetype)initWithTargetDate:(NSDate *)targetDate;
+- (instancetype)initWithTargetDate:(NSDate *)targetDate frame:(CGRect)frame;
 
 /**
  *  The target date.
