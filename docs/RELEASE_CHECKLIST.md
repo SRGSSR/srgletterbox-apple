@@ -9,6 +9,8 @@ Release these 3rd party dependencies (forked on SRGSSR github) if needed:
 - MAKVONotificationCenter
 - libextobjc
 - FXReachability
+- UICKeyChainStore
+- YYWebImage
 
 ### SRG SSR libraries
 
