@@ -375,6 +375,17 @@ def xcode_marketing_version
   marketing_version.gsub(/\s+/, '').chomp
 end
 
+# Returns the current project version
+def xcode_current_project_version
+  version = nil
+  Dir.chdir('..') do
+    command = 'xcodebuild -showBuildSettings | grep "CURRENT_PROJECT_VERSION ="'
+    version = xcodebuid_grep_output sh command
+  end
+  version ['CURRENT_PROJECT_VERSION ='] = ''
+  version.gsub(/\s+/, '').chomp
+end
+
 # Returns the bundle app identifier
 def xcode_app_identifier(scheme, configuration)
   app_identifier = nil
@@ -390,7 +401,7 @@ end
 
 # Return current tag version
 def tag_version
-  build_number = get_build_number
+  build_number = xcode_current_project_version
   marketing_version = xcode_marketing_version
   marketing_version + '-' + build_number
 end
