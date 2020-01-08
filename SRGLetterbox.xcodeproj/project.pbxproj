@@ -606,6 +606,7 @@
 		6F042D241E28E2D100CFD89B /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6F36CF7B23C630B0008A44C3 /* Categories */,
 				087EB6091E290A14005DD80B /* Controller */,
 				6F48559D1E3A311C00B0141C /* Externals */,
 				6F042D281E28F70500CFD89B /* Helpers */,
@@ -620,6 +621,32 @@
 		6F042D281E28F70500CFD89B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */,
+				6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */,
+				08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */,
+				6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */,
+				6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */,
+				6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */,
+				6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */,
+				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
+				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
+				6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */,
+				6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		6F06A6A0233A203C00BB4B4A /* Designables */ = {
+			isa = PBXGroup;
+			children = (
+				6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */,
+			);
+			path = Designables;
+			sourceTree = "<group>";
+		};
+		6F36CF7B23C630B0008A44C3 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
 				6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */,
 				6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */,
 				6F042D291E28F70500CFD89B /* NSBundle+SRGLetterbox.h */,
@@ -628,19 +655,8 @@
 				6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */,
 				6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */,
 				6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */,
-				6FEA9D9B1E4DA977007DED52 /* SRGLetterboxError.h */,
-				6FEA9D9C1E4DA977007DED52 /* SRGLetterboxError.m */,
-				08FA0CF01E2E92DE000C94EF /* SRGLetterboxLogger.h */,
-				6F75AF45219ADB0C0013423A /* SRGLetterboxPlaybackSettings.h */,
-				6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */,
-				6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */,
-				6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */,
 				08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */,
 				08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */,
-				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
-				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
-				6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */,
-				6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */,
 				6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */,
 				6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */,
 				087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */,
@@ -652,15 +668,7 @@
 				08FA0CF21E2F6BCC000C94EF /* UIImageView+SRGLetterbox.h */,
 				08FA0CF31E2F6BCC000C94EF /* UIImageView+SRGLetterbox.m */,
 			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
-		6F06A6A0233A203C00BB4B4A /* Designables */ = {
-			isa = PBXGroup;
-			children = (
-				6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */,
-			);
-			path = Designables;
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		6F48559D1E3A311C00B0141C /* Externals */ = {
