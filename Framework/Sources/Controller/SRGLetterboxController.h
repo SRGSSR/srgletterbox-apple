@@ -340,7 +340,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 /**
  *  Set to `YES` to enable background video playback if possible (not supported for 360° or when AirPlay or Picture in
- *  picture are active). Default is `NO`.
+ *  picture are active). Default is `NO`. Note that in order for this to work your `AVAudioSession` category must be set
+ *  to `AVAudioSessionCategoryPlayback`.
  */
 @property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled;
 
