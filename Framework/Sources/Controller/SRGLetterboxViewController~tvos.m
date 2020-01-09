@@ -111,6 +111,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
                 [self presentViewController:continuousPlaybackViewController animated:YES completion:nil];
             }
         }];
+        [controller addObserver:self keyPath:@keypath(controller.loading) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self updateMainLayoutAnimated:YES];
+        }];
         
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(metadataDidChange:)
