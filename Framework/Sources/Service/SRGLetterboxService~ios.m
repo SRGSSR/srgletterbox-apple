@@ -750,7 +750,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (MPRemoteCommandHandlerStatus)changePlaybackPosition:(MPChangePlaybackPositionCommandEvent *)event
 {
-    SRGPosition *position = [SRGPosition positionAroundTime:CMTimeMakeWithSeconds(event.positionTime, NSEC_PER_SEC)];
+    CMTime time = CMTimeAdd(self.controller.timeRange.start, CMTimeMakeWithSeconds(event.positionTime, NSEC_PER_SEC));
+    SRGPosition *position = [SRGPosition positionAroundTime:time];
     [self.controller seekToPosition:position withCompletionHandler:^(BOOL finished) {
         // Resume playback when seeking from the control center. It namely does not make sense to seek blindly
         // without playback actually resuming if paused.
