@@ -277,12 +277,6 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>Square video</string>
-					<key>urn</key>
-					<string>urn:rts:video:10438517</string>
-				</dict>
-				<dict>
-					<key>name</key>
 					<string>Invalid media</string>
 					<key>urn</key>
 					<string>urn:swi:video:1234567</string>
