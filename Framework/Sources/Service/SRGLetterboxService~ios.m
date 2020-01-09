@@ -129,8 +129,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [_controller removeObserver:self keyPath:@keypath(_controller.program)];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.timeRange)];
-        
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
         [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
@@ -177,10 +175,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         }];
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification *notification) {
-            [self updateMetadataWithController:controller];
-        }];
-        
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController) {
             @weakify(self) @weakify(pictureInPictureController)
