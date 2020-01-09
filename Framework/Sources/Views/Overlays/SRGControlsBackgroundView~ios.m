@@ -37,10 +37,6 @@
     
     if (self.controller.loading) {
         self.loadingImageView.alpha = 1.f;
-        
-        // Restart animation for a nicer effect
-        [self.loadingImageView stopAnimating];
-        [self.loadingImageView startAnimating];
     }
     else {
         self.loadingImageView.alpha = 0.f;
