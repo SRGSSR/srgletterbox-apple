@@ -37,6 +37,7 @@
     
     if (self.controller.loading) {
         self.loadingImageView.alpha = 1.f;
+        [self.loadingImageView startAnimating];
     }
     else {
         self.loadingImageView.alpha = 0.f;
@@ -50,7 +51,6 @@
     // Lazily add view when needed, mitigating associated costs
     if (self.controller.loading && ! self.loadingImageView) {
         UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
-        [loadingImageView startAnimating];
         [self addSubview:loadingImageView];
         self.loadingImageView = loadingImageView;
         
