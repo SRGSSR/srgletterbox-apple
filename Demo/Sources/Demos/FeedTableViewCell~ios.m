@@ -113,6 +113,18 @@
     }
 }
 
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    // Fix issue stopping image view animations when the user taps the cell
+    // See https://stackoverflow.com/questions/27904177/uiimageview-animation-stops-when-user-touches-screen/29330962
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    // Fix issue stopping image view animations when the user taps the cell
+    // See https://stackoverflow.com/questions/27904177/uiimageview-animation-stops-when-user-touches-screen/29330962
+}
+
 #pragma UI
 
 - (void)updateProgressWithTime:(CMTime)time
