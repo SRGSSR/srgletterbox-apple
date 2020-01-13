@@ -146,8 +146,8 @@
     static dispatch_once_t s_onceToken;
     static NSArray<NSNumber *> *s_rows;
     dispatch_once(&s_onceToken, ^{
-        s_rows = @[ @2,
-                    @2,
+        s_rows = @[ @3,
+                    @3,
                     @4,
                     @3,
                     @3,
@@ -176,9 +176,11 @@
     static NSArray<NSArray<NSString *> *> *s_titles;
     dispatch_once(&s_onceToken, ^{
         s_titles = @[ @[ NSLocalizedString(@"SWI VOD", nil),
-                         NSLocalizedString(@"RTS VOD (segments)", nil) ],
+                         NSLocalizedString(@"RTS VOD (segments)", nil),
+                         NSLocalizedString(@"SRF AOD", nil) ],
                       @[ NSLocalizedString(@"SWI VOD", nil),
-                         NSLocalizedString(@"RTS VOD (segments)", nil) ],
+                         NSLocalizedString(@"RTS VOD (segments)", nil),
+                         NSLocalizedString(@"SRF AOD", nil) ],
                       @[ NSLocalizedString(@"RTS livestreams", nil),
                          NSLocalizedString(@"Various streams", nil),
                          NSLocalizedString(@"Non-protected streams", nil),
@@ -202,7 +204,8 @@
             static NSArray<NSString *> *s_URNs;
             dispatch_once(&s_onceToken, ^{
                 s_URNs = @[ @"urn:swi:video:41981254",
-                            @"urn:rts:video:10623665" ];
+                            @"urn:rts:video:10623665",
+                            @"urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a" ];
             });
             [self openSimplePlayerWithURN:s_URNs[indexPath.row]];
             break;
@@ -213,7 +216,8 @@
             static NSArray<NSString *> *s_URNs;
             dispatch_once(&s_onceToken, ^{
                 s_URNs = @[ @"urn:swi:video:41981254",
-                            @"urn:rts:video:10623665" ];
+                            @"urn:rts:video:10623665",
+                            @"urn:srf:audio:0d666ad6-b191-4f45-9762-9a271b52d38a" ];
             });
             [self openStandalonePlayerWithURN:s_URNs[indexPath.row]];
             break;
