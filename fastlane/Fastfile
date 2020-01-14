@@ -178,9 +178,7 @@ platform :ios do
     export_to_appstore = options[:export_to_appstore] || false
     current_build_number = options[:current_build_number]
 
-    increment_build_number(
-      build_number: current_build_number + 1
-    )
+    override_current_project_version(current_build_number + 1)
 
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
     display_name_suffix = ' 🌙'
@@ -469,6 +467,15 @@ def override_test_product_names
     path: 'Tests/Tests.xcconfig',
     name: 'PRODUCT_NAME[sdk=appletv*]',
     value: '$(PROJECT_NAME)-tvOS'
+  )
+end
+
+# Override common current project version
+def override_current_project_version(build_number)
+  set_xcconfig_value(
+    path: 'Common.xcconfig',
+    name: 'CURRENT_PROJECT_VERSION',
+    value: build_number.to_s
   )
 end
 
