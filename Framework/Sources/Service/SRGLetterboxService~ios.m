@@ -189,7 +189,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
             @weakify(self)
             mediaPlayerController.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
                 @strongify(self)
-                
                 pictureInPictureController.delegate = self;
             };
         }

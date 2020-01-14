@@ -62,10 +62,10 @@ API_UNAVAILABLE(tvos)
 /**
  *  Called when a restoration process takes place.
  *
- *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
- *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
- *                               undefined behavior. The completion block must be called with `restored` set to `YES`
- *                               iff the restoration was successful.
+ *  @param completionHandler A completion block which MUST be called at the VERY END of the restoration process
+ *                           (e.g. after at the end of a modal presentation animation). Failing to do so leads to
+ *                           undefined behavior. The completion block must be called with `restored` set to `YES`
+ *                           iff the restoration was successful.
  */
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
 
