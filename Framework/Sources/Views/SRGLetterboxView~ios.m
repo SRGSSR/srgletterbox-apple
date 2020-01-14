@@ -422,6 +422,9 @@ static void commonInit(SRGLetterboxView *self);
 - (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
+    [controller addObserver:self keyPath:@keypath(controller.loading) options:0 block:^(MAKVONotification *notification) {
+        [self setNeedsLayoutAnimated:YES];
+    }];
     
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(livestreamDidFinish:)
@@ -458,6 +461,8 @@ static void commonInit(SRGLetterboxView *self);
 - (void)unregisterObservers
 {
     SRGLetterboxController *controller = self.controller;
+    [controller removeObserver:self keyPath:@keypath(controller.loading)];
+    
     [NSNotificationCenter.defaultCenter removeObserver:self
                                                   name:SRGLetterboxLivestreamDidFinishNotification
                                                 object:controller];

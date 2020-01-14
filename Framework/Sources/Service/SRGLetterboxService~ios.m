@@ -129,8 +129,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [_controller removeObserver:self keyPath:@keypath(_controller.program)];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.timeRange)];
-        
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
         [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
@@ -177,10 +175,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         }];
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
-        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification *notification) {
-            [self updateMetadataWithController:controller];
-        }];
-        
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController) {
             @weakify(self) @weakify(pictureInPictureController)
@@ -229,7 +223,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
                                                  object:mediaPlayerController];
         
         @weakify(self)
-        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.2, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
             @strongify(self)
             [self updateRemoteCommandCenterWithController:controller];
         }];
@@ -756,7 +750,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (MPRemoteCommandHandlerStatus)changePlaybackPosition:(MPChangePlaybackPositionCommandEvent *)event
 {
-    SRGPosition *position = [SRGPosition positionAroundTime:CMTimeMakeWithSeconds(event.positionTime, NSEC_PER_SEC)];
+    CMTime time = CMTimeAdd(self.controller.timeRange.start, CMTimeMakeWithSeconds(event.positionTime, NSEC_PER_SEC));
+    SRGPosition *position = [SRGPosition positionAroundTime:time];
     [self.controller seekToPosition:position withCompletionHandler:^(BOOL finished) {
         // Resume playback when seeking from the control center. It namely does not make sense to seek blindly
         // without playback actually resuming if paused.

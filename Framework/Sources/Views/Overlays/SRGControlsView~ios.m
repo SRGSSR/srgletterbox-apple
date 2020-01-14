@@ -124,6 +124,8 @@
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
+    
+    self.durationLabel.font = [UIFont srg_regularFontWithSize:14.f];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow

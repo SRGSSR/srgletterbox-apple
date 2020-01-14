@@ -340,7 +340,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 /**
  *  Set to `YES` to enable background video playback if possible (not supported for 360° or when AirPlay or Picture in
- *  picture are active). Default is `NO`.
+ *  picture are active). Default is `NO`. Note that in order for this to work your `AVAudioSession` category must be set
+ *  to `AVAudioSessionCategoryPlayback`.
  */
 @property (nonatomic, getter=isBackgroundVideoPlaybackEnabled) BOOL backgroundVideoPlaybackEnabled;
 
@@ -757,7 +758,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Time interval for controller automatic updates.
  *
- *  Default is `SRGLetterboxDefaultUpdateInterval`, and minimum is `SRGLetterboxMinimumUpdateInterval`.
+ *  Default is `SRGLetterboxDefaultUpdateInterval`, and minimum is `SRGLetterboxMinimumUpdateInterval`. Beware that
+ *  reducing this interval will increase energy consumption.
  */
 @property (nonatomic) NSTimeInterval updateInterval;
 
@@ -766,6 +768,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  notification.
  *
  *  Default is `SRGLetterboxChannelDefaultUpdateInterval`, and minimum is `SRGLetterboxChannelMinimumUpdateInterval`.
+ *  Beware that reducing this interval will increase energy consumption.
  */
 @property (nonatomic) NSTimeInterval channelUpdateInterval;
 
