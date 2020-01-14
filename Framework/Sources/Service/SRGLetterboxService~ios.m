@@ -31,7 +31,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 }
 
 @property (nonatomic) SRGLetterboxController *controller;
-@property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> activePictureInPictureDelegate;      // Strong ref during PiP use
 
 @property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
 @property (nonatomic, getter=areNowPlayingInfoAndCommandsInstalled) BOOL nowPlayingInfoAndCommandsInstalled;
@@ -253,7 +254,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     });
     
     self.controller = controller;
+    
     self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
+    self.activePictureInPictureDelegate = nil;
     
     [self updateMetadataWithController:controller];
     
@@ -276,7 +279,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
     
     self.controller = nil;
+    
     self.pictureInPictureDelegate = nil;
+    self.activePictureInPictureDelegate = nil;
     
     [self updateRemoteCommandCenterWithController:nil];
     
@@ -904,6 +909,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
+    self.activePictureInPictureDelegate = self.pictureInPictureDelegate;
+    
     BOOL dismissed = [self.pictureInPictureDelegate letterboxDismissUserInterfaceForPictureInPicture];
     _restoreUserInterface = _restoreUserInterface && dismissed;
     
@@ -914,11 +921,16 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
+    void (^finishRestoration)(BOOL) = ^(BOOL restored) {
+        completionHandler(restored);
+        self.activePictureInPictureDelegate = nil;
+    };
+    
     // If the restoration method gets called, this means playback was not stopped from the picture in picture stop button
     _playbackStopped = NO;
     
     if (! _restoreUserInterface) {
-        completionHandler(YES);
+        finishRestoration(YES);
         return;
     }
     
@@ -927,17 +939,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     // If stopping picture in picture because of a reset, don't restore anything
     if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        completionHandler(YES);
+        finishRestoration(YES);
         return;
     }
     
     if ([self.pictureInPictureDelegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
         [self.pictureInPictureDelegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
-            completionHandler(restored);
+            finishRestoration(restored);
         }];
     }
     else {
-        completionHandler(YES);
+        finishRestoration(YES);
     }
 }
 
@@ -956,6 +968,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     // Reset to default values
     _playbackStopped = YES;
     _restoreUserInterface = YES;
+    
+    self.activePictureInPictureDelegate = nil;
 }
 
 #pragma mark Notifications

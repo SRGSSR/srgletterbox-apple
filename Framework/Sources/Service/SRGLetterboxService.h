@@ -121,11 +121,12 @@ API_UNAVAILABLE(tvos)
  *
  *  @param controller               The Letterbox controller to enable application-wide services for. The controller 
  *                                  is retained.
- *  @param pictureInPictureDelegate The picture in picture delegate. Unlike most delegates, this delegate is RETAINED.
- *                                  If none is provided, picture in picture will not be available for the controller.
- *                                  Note that you can provide a delegate in all cases, even if some devices you target 
- *                                  do not actually support picture in picture (the delegate won't be saved, though). 
- *                                  The delegate will be released when a new delegate is set, or when `-disable` is called.
+ *  @param pictureInPictureDelegate The picture in picture delegate. The delegate is weakly referenced, but automatically
+ *                                  retained while picture in picture is in use. A delegate must be available for picture
+ *                                  in picture to be available. Note that you can provide a delegate even if some devices
+ *                                  you target do not actually support picture in picture (the delegate will be ignored,
+ *                                  though). A registered delegate will be released when a new delegate is set, or when
+ *                                  `-disable` is called.
  *
  *  @discussion The 'Audio, AirPlay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
  *              this method will throw an exception when called.
@@ -133,9 +134,9 @@ API_UNAVAILABLE(tvos)
  *              The picture in picture delegate is provided alongside the controller when calling this method, so that 
  *              the exact picture in picture starting context is set with the controller. Usually, since picture in picture 
  *              is started from a view controller, a good delegate candidate is the view controller itself, which knows how
- *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
- *              easy way to restore the view controller in the exact same state as it was before picture in picture
- *              started.
+ *              it can be dismissed and presented again. Since the delegate is retained during picture in picture use, this
+ *              also provides you with an easy way to restore the view controller in the exact same state as it was before
+ *              picture in picture started.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
@@ -156,11 +157,11 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
 
 /**
- *  The picture in picture delegate, if any has been set. Use it to enable and customize picture in picture behavior.
+ *  The picture in picture delegate, if any is available.
  *
  *  @discussion This property always returns `nil` on devices which do not support picture in picture.
  */
-@property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic, readonly, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
  *  If set to `YES`, playback never switches to full-screen playback on an external screen. This is especially handy 
