@@ -170,19 +170,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController) {
-            @weakify(self) @weakify(pictureInPictureController)
-            [pictureInPictureController addObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
-                @strongify(self) @strongify(pictureInPictureController)
-                
-                // When enabling AirPlay from the control center while picture in picture is active, picture in picture will be
-                // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
-                // those methods manually
-                if (mediaPlayerController.player.externalPlaybackActive) {
-                    [self pictureInPictureController:pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-                    [self pictureInPictureControllerDidStopPictureInPicture:pictureInPictureController];
-                }
-            }];
-            
             pictureInPictureController.delegate = self;
         }
         else {

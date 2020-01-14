@@ -137,6 +137,18 @@ API_UNAVAILABLE(tvos)
  *              it can be dismissed and presented again. Since the delegate is retained during picture in picture use, this
  *              also provides you with an easy way to restore the view controller in the exact same state as it was before
  *              picture in picture started.
+ *
+ *  Warning: If you plan to implement restoration from picture in picture, you must avoid usual built-in iOS modal
+ *           presentations, as they are implemented using `UIPercentDrivenInteractiveTransition`. You must use a
+ *           custom modal transition instead and avoid implementing it using `UIPercentDrivenInteractiveTransition`.
+ *           The reason is that `UIPercentDrivenInteractiveTransition` varies the time offset of a layer and thus
+ *           messes up with the player local time. This makes picture in picture restoration unreliable (sometimes it
+ *           works, sometimes it does not and the animation is ugly).
+ *
+ *           Picture in picture also temporarily disables external playback for the associated player. You should not
+ *           attempt to change this property while picture in playback is running, otherwise the behavior is undefined.
+ *           When picture in picture playback starts or stops, the configuration block (if any) is called so that the
+ *           player configuration can be properly setup and restored.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
