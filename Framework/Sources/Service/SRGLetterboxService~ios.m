@@ -907,16 +907,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    void (^finishRestoration)(BOOL) = ^(BOOL restored) {
-        completionHandler(restored);
-        self.activePictureInPictureDelegate = nil;
-    };
-    
     // If the restoration method gets called, this means playback was not stopped from the picture in picture stop button
     _playbackStopped = NO;
     
     if (! _restoreUserInterface) {
-        finishRestoration(YES);
+        completionHandler(YES);
         return;
     }
     
@@ -925,17 +920,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     // If stopping picture in picture because of a reset, don't restore anything
     if (self.controller.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle) {
-        finishRestoration(YES);
+        completionHandler(YES);
         return;
     }
     
     if ([self.pictureInPictureDelegate letterboxShouldRestoreUserInterfaceForPictureInPicture]) {
         [self.pictureInPictureDelegate letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:^(BOOL restored) {
-            finishRestoration(restored);
+            completionHandler(restored);
         }];
     }
     else {
-        finishRestoration(YES);
+        completionHandler(YES);
     }
 }
 
