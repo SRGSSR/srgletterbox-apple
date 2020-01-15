@@ -136,7 +136,9 @@ API_UNAVAILABLE(tvos)
  *              is started from a view controller, a good delegate candidate is the view controller itself, which knows how
  *              it can be dismissed and presented again. Since the delegate is retained during picture in picture use, this
  *              also provides you with an easy way to restore the view controller in the exact same state as it was before
- *              picture in picture started.
+ *              picture in picture started. If you decide for another delegate, be sure that your application keeps the
+ *              delegate alive (except if you don't need it anymore and picture in picture is active, in which case you
+ *              can safely release it and let the service keep it alive until picture in picture is stopped).
  *
  *  Warning: If you plan to implement restoration from picture in picture, you must avoid usual built-in iOS modal
  *           presentations, as they are implemented using `UIPercentDrivenInteractiveTransition`. You must use a
