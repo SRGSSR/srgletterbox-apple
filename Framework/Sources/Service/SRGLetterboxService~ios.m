@@ -34,6 +34,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 @property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 @property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
+@property (nonatomic, getter=areNowPlayingInfoAndCommandsInstalled) BOOL nowPlayingInfoAndCommandsInstalled;
 @property (nonatomic) SRGLetterboxCommands allowedCommands;
 
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -93,7 +94,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (void)dealloc
 {
     self.controller = nil;
-    self.nowPlayingInfoAndCommandsEnabled = NO;
 }
 
 #pragma mark Getters and setters
@@ -101,20 +101,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (void)setNowPlayingInfoAndCommandsEnabled:(BOOL)nowPlayingInfoAndCommandsEnabled
 {
     _nowPlayingInfoAndCommandsEnabled = nowPlayingInfoAndCommandsEnabled;
-    
-    if (nowPlayingInfoAndCommandsEnabled) {
-        [self setupRemoteCommandCenter];
-    }
-    else {
-        [self resetRemoteCommandCenter];
-        MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nil;
-    }
+    [self updateMetadataWithController:self.controller];
 }
 
 - (void)setAllowedCommands:(SRGLetterboxCommands)allowedCommands
 {
     _allowedCommands = allowedCommands;
-    
     [self updateRemoteCommandCenterWithController:self.controller];
 }
 
@@ -263,6 +255,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     self.controller = controller;
     self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
     
+    [self updateMetadataWithController:controller];
+    
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
@@ -284,6 +278,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     self.controller = nil;
     self.pictureInPictureDelegate = nil;
     
+    [self updateRemoteCommandCenterWithController:nil];
+    
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
 }
 
@@ -291,6 +287,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)setupRemoteCommandCenter
 {
+    NSAssert(! self.nowPlayingInfoAndCommandsInstalled, @"Must not be installed");
+    
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
     MPRemoteCommand *playCommand = commandCenter.playCommand;
@@ -340,13 +338,14 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)resetRemoteCommandCenter
 {
+    NSAssert(self.nowPlayingInfoAndCommandsInstalled, @"Must be installed");
+    
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
     MPRemoteCommand *playCommand = commandCenter.playCommand;
     [playCommand removeTarget:self action:@selector(play:)];
     
     MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
-    pauseCommand.enabled = NO;
     [pauseCommand removeTarget:self action:@selector(pause:)];
     
     MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
@@ -582,8 +581,19 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)updateMetadataWithController:(SRGLetterboxController *)controller
 {
-    [self updateNowPlayingInformationWithController:controller];
-    [self updateRemoteCommandCenterWithController:controller];
+    if (self.nowPlayingInfoAndCommandsEnabled && controller && controller.playbackState != SRGMediaPlayerPlaybackStateIdle) {
+        if (! self.nowPlayingInfoAndCommandsInstalled) {
+            [self setupRemoteCommandCenter];
+            self.nowPlayingInfoAndCommandsInstalled = YES;
+        }
+        [self updateNowPlayingInformationWithController:controller];
+        [self updateRemoteCommandCenterWithController:controller];
+    }
+    else if (self.nowPlayingInfoAndCommandsInstalled) {
+        [self resetRemoteCommandCenter];
+        MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nil;
+        self.nowPlayingInfoAndCommandsInstalled = NO;
+    }
 }
 
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
