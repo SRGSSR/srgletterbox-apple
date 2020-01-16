@@ -1681,10 +1681,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     dispatch_async(dispatch_get_main_queue(), ^{
         NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
         if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable
-                && self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused) {
-            if (self.resumesAfterRouteBecomesUnavailable) {
-                [self play];
-            }
+                && self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
+                && self.resumesAfterRouteBecomesUnavailable) {
+            [self play];
         }
     });
 }
