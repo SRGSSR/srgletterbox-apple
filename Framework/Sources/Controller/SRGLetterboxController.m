@@ -1677,19 +1677,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)routeDidChange:(NSNotification *)notification
 {
-    NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
-    if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable
-            && self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
-        // Playback is automatically paused by the system. Force resume if desired. Wait a little bit (0.1 is an
-        // empirical value), the system induced state change occurs slightly after this notification is received.
-        // We could probably do something more robust (e.g. wait until the real state change), but this would lead
-        // to additional complexity or states which do not seem required for correct behavior. Improve later if needed.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    // Received on a background thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
+        if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable
+                && self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePaused) {
             if (self.resumesAfterRouteBecomesUnavailable) {
                 [self play];
             }
-        });
-    }
+        }
+    });
 }
 
 - (void)audioSessionInterruption:(NSNotification *)notification
