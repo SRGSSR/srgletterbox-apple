@@ -934,7 +934,10 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 // Update commands while transitioning from / to the background (since control availability might be affected)
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    [self updateRemoteCommandCenterWithController:self.controller];
+    // To determine whether a background entry is due to the lock screen being enabled or not, we need to wait a little bit.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self updateRemoteCommandCenterWithController:self.controller];
+    });
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
