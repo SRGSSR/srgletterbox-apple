@@ -225,12 +225,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         //        for more information about this choice.
         self.mediaPlayerController.minimumDVRWindowLength = 45.;
         
+        self.mediaPlayerController.playerCreationBlock = ^(AVPlayer *player) {
+            // Do not allow AirPlay video playback by default
+            player.allowsExternalPlayback = NO;
+        };
+        
         @weakify(self)
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
             @strongify(self)
-            
-            // Do not allow AirPlay video playback by default
-            player.allowsExternalPlayback = NO;
             
             // Call the configuration block afterwards (so that the above default behavior can be overridden)
             self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
