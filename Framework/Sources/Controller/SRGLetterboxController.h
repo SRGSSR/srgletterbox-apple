@@ -353,8 +353,9 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic) BOOL resumesAfterRetry;
 
 /**
- *  Set to `YES` to automatically resume playback after the current route becomes unavailalbe (e.g. a wired headset is
- *  unplugged or a Bluetooth headset is switched off abruptly). Default is `NO`.
+ *  Set to `YES` to automatically resume playback after the current route becomes unavailable (e.g. a wired headset is
+ *  unplugged or a Bluetooth headset is switched off abruptly). Mostly useful to make non-interactive players continue
+ *  to play in all circumstances. Default is `NO`.
  */
 @property (nonatomic) BOOL resumesAfterRouteBecomesUnavailable;
 
