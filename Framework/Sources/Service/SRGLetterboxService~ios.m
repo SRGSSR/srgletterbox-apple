@@ -113,6 +113,10 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)setController:(SRGLetterboxController *)controller
 {
+    if (_controller == controller) {
+        return;
+    }
+    
     if (_controller) {
         [self disableExternalPlaybackForController:_controller];
         
