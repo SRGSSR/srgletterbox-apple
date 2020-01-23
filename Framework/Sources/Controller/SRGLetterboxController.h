@@ -432,7 +432,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (void)reloadMediaConfiguration;
 
 /**
- *  Reload the player configuration with a new configuration block. Any previously existing configuration block is
+ *  Reload the media configuration with a new configuration block. Any previously existing configuration block is
  *  replaced.
  *
  *  @discussion If the media has not been loaded yet, the block is set but not called.

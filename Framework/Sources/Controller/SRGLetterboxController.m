@@ -182,7 +182,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 // Time observers
 @property (nonatomic) id programTimeObserver;
 
-@property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
@@ -198,6 +197,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) NSDate *lastUpdateDate;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
+
+@property (nonatomic) BOOL allowsExternalPlayback;
+@property (nonatomic) BOOL usesExternalPlaybackWhileExternalScreenIsActive;
 
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
@@ -226,16 +228,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.mediaPlayerController.minimumDVRWindowLength = 45.;
         
         self.mediaPlayerController.playerCreationBlock = ^(AVPlayer *player) {
-            // Do not allow AirPlay video playback by default
             player.allowsExternalPlayback = NO;
         };
         
         @weakify(self)
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
             @strongify(self)
-            
-            // Call the configuration block afterwards (so that the above default behavior can be overridden)
-            self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
+            player.allowsExternalPlayback = self.allowsExternalPlayback;
+            player.usesExternalPlaybackWhileExternalScreenIsActive = self.usesExternalPlaybackWhileExternalScreenIsActive;
             player.muted = self.muted;
         };
         
@@ -527,6 +527,13 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     [_continuousPlaybackTransitionTimer invalidate];
     _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
+}
+
+- (void)setAllowsExternalPlayback:(BOOL)allowsExternalPlayback usedWhileExternalScreenIsActive:(BOOL)usedWhileExternalScreenIsActive
+{
+    self.allowsExternalPlayback = allowsExternalPlayback;
+    self.usesExternalPlaybackWhileExternalScreenIsActive = usedWhileExternalScreenIsActive;
+    [self.mediaPlayerController reloadPlayerConfiguration];
 }
 
 - (BOOL)isUsingAirPlay
@@ -1512,11 +1519,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 }
 
 #pragma mark Configuration
-
-- (void)reloadPlayerConfiguration
-{
-    [self.mediaPlayerController reloadPlayerConfiguration];
-}
 
 - (void)reloadMediaConfiguration
 {

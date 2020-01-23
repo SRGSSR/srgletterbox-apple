@@ -60,7 +60,7 @@
 - (void)setMuted:(BOOL)muted
 {
     self.letterboxController.muted = muted;
-    self.soundIndicatorImageView.image = (muted) ? [UIImage imageNamed:@"sound_off"] : [UIImage imageNamed:@"sound_on"];
+    self.soundIndicatorImageView.image = muted ? [UIImage imageNamed:@"sound_off"] : [UIImage imageNamed:@"sound_on"];
 }
 
 #pragma mark Overrides
