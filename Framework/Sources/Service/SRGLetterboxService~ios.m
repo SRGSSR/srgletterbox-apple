@@ -342,37 +342,85 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
-    MPRemoteCommand *playCommand = commandCenter.playCommand;
-    [playCommand removeTarget:self action:@selector(play:)];
-    
-    MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
-    [pauseCommand removeTarget:self action:@selector(pause:)];
-    
-    MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
-    [togglePlayPauseCommand removeTarget:self action:@selector(togglePlayPause:)];
-    
-    MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
-    [skipForwardIntervalCommand removeTarget:self action:@selector(skipForward:)];
-    
-    MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
-    [skipBackwardIntervalCommand removeTarget:self action:@selector(skipBackward:)];
-    
-    MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
-    [previousTrackCommand removeTarget:self action:@selector(previousTrack:)];
-    
-    MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
-    [nextTrackCommand removeTarget:self action:@selector(nextTrack:)];
+    if (@available(iOS 12, *)) {
+        MPRemoteCommand *playCommand = commandCenter.playCommand;
+        [playCommand removeTarget:self action:@selector(play:)];
+        
+        MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
+        [pauseCommand removeTarget:self action:@selector(pause:)];
+        
+        MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
+        [togglePlayPauseCommand removeTarget:self action:@selector(togglePlayPause:)];
+        
+        MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
+        [skipForwardIntervalCommand removeTarget:self action:@selector(skipForward:)];
+        
+        MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
+        [skipBackwardIntervalCommand removeTarget:self action:@selector(skipBackward:)];
+        
+        MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+        [previousTrackCommand removeTarget:self action:@selector(previousTrack:)];
+        
+        MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+        [nextTrackCommand removeTarget:self action:@selector(nextTrack:)];
 
-    if (@available(iOS 9.1, *)) {
         MPRemoteCommand *changePlaybackPositionCommand = commandCenter.changePlaybackPositionCommand;
         [changePlaybackPositionCommand removeTarget:self action:@selector(changePlaybackPosition:)];
+        
+        MPRemoteCommand *enableLanguageOptionCommand = commandCenter.enableLanguageOptionCommand;
+        [enableLanguageOptionCommand removeTarget:self action:@selector(enableLanguageOption:)];
+        
+        MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
+        [disableLanguageOptionCommand removeTarget:self action:@selector(disableLanguageOption:)];
     }
+    else {
+        // For some unknown reason, at least an action (even dummy) must be bound to a command for `enabled` to have an effect,
+        // see https://stackoverflow.com/questions/38993801/how-to-disable-all-the-mpremotecommand-objects-from-mpremotecommandcenter
+        
+        MPRemoteCommand *playCommand = commandCenter.playCommand;
+        playCommand.enabled = NO;
+        [playCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
+        pauseCommand.enabled = NO;
+        [pauseCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
+        togglePlayPauseCommand.enabled = NO;
+        [togglePlayPauseCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
+        skipForwardIntervalCommand.enabled = NO;
+        skipForwardIntervalCommand.preferredIntervals = @[];
+        [skipForwardIntervalCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
+        skipBackwardIntervalCommand.enabled = NO;
+        skipBackwardIntervalCommand.preferredIntervals = @[];
+        [skipBackwardIntervalCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;
+        previousTrackCommand.enabled = NO;
+        [previousTrackCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPRemoteCommand *nextTrackCommand = commandCenter.nextTrackCommand;
+        nextTrackCommand.enabled = NO;
+        [nextTrackCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
 
-    MPRemoteCommand *enableLanguageOptionCommand = commandCenter.enableLanguageOptionCommand;
-    [enableLanguageOptionCommand removeTarget:self action:@selector(enableLanguageOption:)];
-    
-    MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
-    [disableLanguageOptionCommand removeTarget:self action:@selector(disableLanguageOption:)];
+        if (@available(iOS 9.1, *)) {
+            MPRemoteCommand *changePlaybackPositionCommand = commandCenter.changePlaybackPositionCommand;
+            changePlaybackPositionCommand.enabled = NO;
+            [changePlaybackPositionCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        }
+
+        MPRemoteCommand *enableLanguageOptionCommand = commandCenter.enableLanguageOptionCommand;
+        enableLanguageOptionCommand.enabled = NO;
+        [enableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+        
+        MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
+        disableLanguageOptionCommand.enabled = NO;
+        [disableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+    }
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -830,6 +878,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [playerItem selectMediaOption:nil inMediaSelectionGroup:audioGroup];
     }
     
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+// TODO: Remove when iOS 12 is the minimum required version
+- (MPRemoteCommandHandlerStatus)doNothing:(MPRemoteCommandEvent *)event
+{
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
