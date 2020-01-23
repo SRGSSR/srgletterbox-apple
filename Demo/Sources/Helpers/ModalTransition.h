@@ -34,6 +34,11 @@ API_UNAVAILABLE(tvos)
  */
 - (void)cancelInteractiveTransition;
 
+/**
+ *  `YES` iff the transition was cancelled by the user.
+ */
+@property (nonatomic, readonly) BOOL wasCancelled;
+
 @end
 
 NS_ASSUME_NONNULL_END
