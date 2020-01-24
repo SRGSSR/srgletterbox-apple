@@ -113,13 +113,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)setController:(SRGLetterboxController *)controller
 {
+    if (_controller == controller) {
+        return;
+    }
+    
     if (_controller) {
-        // Revert back to default behavior
-        _controller.playerConfigurationBlock = nil;
-        [_controller reloadPlayerConfiguration];
+        [self disableExternalPlaybackForController:_controller];
         
         // TODO: Not needed if program information is later delivered as highlights (segments).
         [_controller removeObserver:self keyPath:@keypath(_controller.program)];
+        
+        [_controller removeObserver:self keyPath:@keypath(_controller.media)];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
@@ -149,23 +153,23 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     [self updateMetadataWithController:controller];
     
     if (controller) {
-        controller.playerConfigurationBlock = ^(AVPlayer *player) {
-            // Do not switch to external playback when playing anything other than videos. External playback is namely only
-            // intended for video playback. If you try to play audio with external playback, then:
-            //   - The screen will be black instead of displaying a media notification.
-            //   - The user won't be able to change the volume with the phone controls.
-            // Remark: For video external playback, it is normal that the user cannot control the volume from her device.
-            player.allowsExternalPlayback = (controller.media.mediaType == SRGMediaTypeVideo);
-            player.usesExternalPlaybackWhileExternalScreenIsActive = ! self.mirroredOnExternalScreen;
-        };
-        [controller reloadPlayerConfiguration];
-        
         // TODO: Not needed if program information is later delivered as highlights (segments).
         @weakify(controller)
         [controller addObserver:self keyPath:@keypath(controller.program) options:0 block:^(MAKVONotification *notification) {
             @strongify(controller)
             [self updateNowPlayingInformationWithController:controller];
         }];
+        
+        // Do not switch to external playback when playing anything other than videos. External playback is namely only
+        // intended for video playback. If you try to play audio with external playback, then:
+        //   - The screen will be black instead of displaying a media notification.
+        //   - The user won't be able to change the volume with the phone controls.
+        // Remark: For video external playback, it is normal that the user cannot control the volume from her device.
+        [controller addObserver:self keyPath:@keypath(controller.media) options:0 block:^(MAKVONotification *notification) {
+            @strongify(controller)
+            [self enableExternalPlaybackForController:controller];
+        }];
+        [self enableExternalPlaybackForController:controller];
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
@@ -272,6 +276,19 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     [self updateRemoteCommandCenterWithController:nil];
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxServiceSettingsDidChangeNotification object:self];
+}
+
+#pragma mark External playback
+
+- (void)enableExternalPlaybackForController:(SRGLetterboxController *)controller
+{
+    [controller setAllowsExternalPlayback:(controller.media.mediaType == SRGMediaTypeVideo)
+          usedWhileExternalScreenIsActive:! self.mirroredOnExternalScreen];
+}
+
+- (void)disableExternalPlaybackForController:(SRGLetterboxController *)controller
+{
+    [controller setAllowsExternalPlayback:NO usedWhileExternalScreenIsActive:NO];
 }
 
 #pragma mark Control center and lock screen integration
