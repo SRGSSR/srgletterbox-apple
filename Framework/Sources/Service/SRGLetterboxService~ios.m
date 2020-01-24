@@ -31,7 +31,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 }
 
 @property (nonatomic) SRGLetterboxController *controller;
-@property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic) id<SRGLetterboxPictureInPictureDelegate> activePictureInPictureDelegate;      // Strong ref during PiP use
 
 @property (nonatomic, getter=areNowPlayingInfoAndCommandsEnabled) BOOL nowPlayingInfoAndCommandsEnabled;
 @property (nonatomic, getter=areNowPlayingInfoAndCommandsInstalled) BOOL nowPlayingInfoAndCommandsInstalled;
@@ -169,26 +170,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController) {
-            @weakify(self) @weakify(pictureInPictureController)
-            [pictureInPictureController addObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive) options:0 block:^(MAKVONotification *notification) {
-                @strongify(self) @strongify(pictureInPictureController)
-                
-                // When enabling AirPlay from the control center while picture in picture is active, picture in picture will be
-                // stopped without the usual restoration and stop delegate methods being called. KVO observe changes and call
-                // those methods manually
-                if (mediaPlayerController.player.externalPlaybackActive) {
-                    [self pictureInPictureController:pictureInPictureController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:^(BOOL restored) {}];
-                    [self pictureInPictureControllerDidStopPictureInPicture:pictureInPictureController];
-                }
-            }];
-            
             pictureInPictureController.delegate = self;
         }
         else {
             @weakify(self)
             mediaPlayerController.pictureInPictureControllerCreationBlock = ^(AVPictureInPictureController *pictureInPictureController) {
                 @strongify(self)
-                
                 pictureInPictureController.delegate = self;
             };
         }
@@ -253,7 +240,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     });
     
     self.controller = controller;
+    
     self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
+    self.activePictureInPictureDelegate = nil;
     
     [self updateMetadataWithController:controller];
     
@@ -276,7 +265,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
     
     self.controller = nil;
+    
     self.pictureInPictureDelegate = nil;
+    self.activePictureInPictureDelegate = nil;
     
     [self updateRemoteCommandCenterWithController:nil];
     
@@ -904,6 +895,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController
 {
+    self.activePictureInPictureDelegate = self.pictureInPictureDelegate;
+    
     BOOL dismissed = [self.pictureInPictureDelegate letterboxDismissUserInterfaceForPictureInPicture];
     _restoreUserInterface = _restoreUserInterface && dismissed;
     
@@ -956,6 +949,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     // Reset to default values
     _playbackStopped = YES;
     _restoreUserInterface = YES;
+    
+    self.activePictureInPictureDelegate = nil;
 }
 
 #pragma mark Notifications

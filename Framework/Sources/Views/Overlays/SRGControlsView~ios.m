@@ -12,6 +12,7 @@
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
+#import "SRGLetterboxService.h"
 #import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
 #import "SRGLetterboxView+Private.h"
@@ -20,6 +21,7 @@
 #import "UIImage+SRGLetterbox.h"
 
 #import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <SRGAppearance/SRGAppearance.h>
 
 @interface SRGControlsView ()
@@ -126,6 +128,12 @@
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
     
     self.durationLabel.font = [UIFont srg_regularFontWithSize:14.f];
+    
+    @weakify(self)
+    [SRGLetterboxService.sharedService addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self setNeedsLayoutAnimated:YES];
+    }];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -278,7 +286,7 @@
     self.timeSlider.hidden = NO;
     self.durationLabelWrapperView.alwaysHidden = NO;
     self.viewModeButton.alwaysHidden = NO;
-    self.pictureInPictureButton.alwaysHidden = NO;
+    self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
     self.liveLabelWrapperView.alwaysHidden = NO;
     self.tracksButton.alwaysHidden = NO;
     
