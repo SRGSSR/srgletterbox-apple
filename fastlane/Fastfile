@@ -180,6 +180,8 @@ platform :ios do
 
     override_current_project_version(current_build_number + 1)
 
+    notify_build_number_to_ci
+
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
     display_name_suffix = ' 🌙'
     version_suffix = '-nightly'
@@ -205,6 +207,8 @@ platform :ios do
   private_lane :demo do |options|
     platform = options[:platform] || 'iOS'
     export_to_appstore = options[:export_to_appstore] || false
+
+    notify_build_number_to_ci
 
     build_lane(
       configuration: 'Release',
@@ -384,19 +388,6 @@ def xcode_current_project_version
   version.gsub(/\s+/, '').chomp
 end
 
-# Returns the bundle app identifier
-def xcode_app_identifier(scheme, configuration)
-  app_identifier = nil
-  Dir.chdir('..') do
-    command = 'xcodebuild -showBuildSettings '
-    command += '-scheme "' + scheme + '" -configuration "' + configuration + '"'
-    command += ' | grep "PRODUCT_BUNDLE_IDENTIFIER ="'
-    app_identifier = xcodebuid_grep_output sh command
-  end
-  app_identifier ['PRODUCT_BUNDLE_IDENTIFIER ='] = ''
-  app_identifier.gsub(/\s+/, '').chomp
-end
-
 # Return current tag version
 def tag_version
   build_number = xcode_current_project_version
@@ -533,6 +524,15 @@ end
 def xcodebuid_grep_output(output)
   line_count = output.lines.count
   output.split(/\n/) [line_count - 1]
+end
+
+# Share build number to the continuous integration
+def notify_build_number_to_ci
+  return unless ENV['TEAMCITY_VERSION']
+
+  displayed_build_number = xcode_marketing_version
+  displayed_build_number += '-' + xcode_current_project_version
+  puts '##teamcity[buildNumber \'' + displayed_build_number + + '\']'
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
