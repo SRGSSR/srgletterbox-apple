@@ -48,7 +48,7 @@ platform :ios do
     build_platform = 'iOS'
 
     appcenter_build_number = latest_appcenter_build_number(
-      ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_SECRET']
+      ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
     )
 
     nightly(
@@ -340,11 +340,14 @@ def default_changelog_for_nightlies(platform)
 end
 
 # Returns current build number on App Center
-def latest_appcenter_build_number(app_secret)
-  token = ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']
-  sh_parameters = "-t #{token} #{app_secret}"
-  build_number = (sh "scripts/appcenter-build-number.sh #{sh_parameters}")
-  Integer(build_number.lines.map(&:chomp).last)
+def latest_appcenter_build_number(app_name)
+  appcenter_hash = appcenter_fetch_version_number(
+    api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
+    owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
+    app_name: app_name
+  )
+
+  Integer(appcenter_hash['build_number'])
 end
 
 # Save the git commit hash in a local text file for nightlies
