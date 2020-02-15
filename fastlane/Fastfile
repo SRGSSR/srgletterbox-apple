@@ -180,24 +180,16 @@ platform :ios do
 
     override_current_project_version(current_build_number + 1)
 
-    branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-    display_name_suffix = ' 🌙'
-    version_suffix = '-nightly'
-    build_name_suffix = ''
-    if branch_name.include? 'feature/'
-      display_name_suffix = ' 🌿'
-      version_suffix += '+' + branch_name.sub('feature/', '').strip
-      build_name_suffix = '+' + branch_name.sub('feature/', '').strip
-    end
+    branch_name = git_branch_name
 
-    notify_build_number_to_ci(build_name_suffix)
+    notify_build_number_to_ci(nightly_build_name_suffix(branch_name))
 
     build_lane(
       configuration: 'Nightly',
       scheme: 'SRGLetterbox-demo',
-      display_name_suffix: display_name_suffix,
-      version_suffix: version_suffix,
-      build_name_suffix: build_name_suffix,
+      display_name_suffix: nighlty_display_name_suffix(branch_name),
+      version_suffix: nightly_version_suffix(branch_name),
+      build_name_suffix: nightly_build_name_suffix(branch_name),
       platform: platform,
       export_to_appstore: export_to_appstore
     )
@@ -321,6 +313,28 @@ def srg_xcargs(options)
   xcargs += " BUILD_NAME_SUFFIX='#{options[:build_name_suffix]}'"
   xcargs += " DEVELOPMENT_TEAM='#{options[:team_id]}'"
   xcargs + ' -allowProvisioningUpdates'
+end
+
+def nighlty_display_name_suffix(branch_name)
+  nighlty_display_name_suffix = ' 🌙'
+  nighlty_display_name_suffix = ' 🌿' if branch_name.include? 'feature/'
+  nighlty_display_name_suffix
+end
+
+def nightly_version_suffix(branch_name)
+  nightly_version_suffix = '-nightly'
+  if branch_name.include? 'feature/'
+    nightly_version_suffix += '+' + branch_name.sub('feature/', '').strip
+  end
+  nightly_version_suffix
+end
+
+def nightly_build_name_suffix(branch_name)
+  nightly_build_name_suffix = ''
+  if branch_name.include? 'feature/'
+    nightly_build_name_suffix = '+' + branch_name.sub('feature/', '').strip
+  end
+  nightly_build_name_suffix
 end
 
 # Returns a default changelog for nightlies
@@ -539,6 +553,10 @@ def notify_build_number_to_ci(suffix)
   displayed_build_number += '-' + xcode_current_project_version
   displayed_build_number += suffix
   puts '##teamcity[buildNumber \'' + displayed_build_number + '\']'
+end
+
+def git_branch_name
+  sh "git branch | grep \\* | cut -d ' ' -f2"
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
