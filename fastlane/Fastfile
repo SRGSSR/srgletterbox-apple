@@ -180,8 +180,6 @@ platform :ios do
 
     override_current_project_version(current_build_number + 1)
 
-    notify_build_number_to_ci
-
     branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
     display_name_suffix = ' 🌙'
     version_suffix = '-nightly'
@@ -191,6 +189,8 @@ platform :ios do
       version_suffix += '+' + branch_name.sub('feature/', '').strip
       build_name_suffix = '+' + branch_name.sub('feature/', '').strip
     end
+
+    notify_build_number_to_ci(build_name_suffix)
 
     build_lane(
       configuration: 'Nightly',
@@ -208,7 +208,7 @@ platform :ios do
     platform = options[:platform] || 'iOS'
     export_to_appstore = options[:export_to_appstore] || false
 
-    notify_build_number_to_ci
+    notify_build_number_to_ci(nil)
 
     build_lane(
       configuration: 'Release',
@@ -530,12 +530,15 @@ def xcodebuid_grep_output(output)
 end
 
 # Share build number to the continuous integration
-def notify_build_number_to_ci
+def notify_build_number_to_ci(suffix)
   return unless ENV['TEAMCITY_VERSION']
+
+  suffix ||= ''
 
   displayed_build_number = xcode_marketing_version
   displayed_build_number += '-' + xcode_current_project_version
-  puts '##teamcity[buildNumber \'' + displayed_build_number + + '\']'
+  displayed_build_number += suffix
+  puts '##teamcity[buildNumber \'' + displayed_build_number + '\']'
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
