@@ -334,7 +334,7 @@ def default_changelog_for_nightlies(platform)
   )
 
   # HAX: strip emoji from changelog
-  changelog = changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '').lstrip if changelog
+  changelog = changelog ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '').lstrip : ''
   changelog = 'No change log found for this build.' if changelog.length.zero?
   Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
 end
