@@ -33,16 +33,11 @@
         settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
-        self.letterboxController.mediaConfigurationBlock = ^(AVPlayerItem * _Nonnull playerItem, AVAsset * _Nonnull asset) {
-            AVMediaSelectionGroup *group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+        self.letterboxController.subtitleConfigurationBlock = ^AVMediaSelectionOption * _Nullable(NSArray<AVMediaSelectionOption *> * _Nonnull subtitleOptions, AVMediaSelectionOption * _Nullable audioOption, AVMediaSelectionOption * _Nullable defaultSubtitleOption) {
             NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(AVMediaSelectionOption * _Nullable option, NSDictionary<NSString *,id> * _Nullable bindings) {
                 return [[option.locale objectForKey:NSLocaleLanguageCode] isEqualToString:preferredSubtitleLocalization];
             }];
-            NSArray<AVMediaSelectionOption *> *options = [AVMediaSelectionGroup mediaSelectionOptionsFromArray:group.options withoutMediaCharacteristics:@[AVMediaCharacteristicContainsOnlyForcedSubtitles]];
-            AVMediaSelectionOption *option = [options filteredArrayUsingPredicate:predicate].firstObject;
-            if (option) {
-                [playerItem selectMediaOption:option inMediaSelectionGroup:group];
-            }
+            return [subtitleOptions filteredArrayUsingPredicate:predicate].firstObject;
         };
         
         [self.letterboxController playMedia:media atPosition:nil withPreferredSettings:settings];
