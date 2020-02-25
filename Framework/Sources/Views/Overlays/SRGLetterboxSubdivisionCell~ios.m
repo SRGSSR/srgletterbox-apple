@@ -16,7 +16,6 @@
 
 @interface SRGLetterboxSubdivisionCell ()
 
-@property (nonatomic, weak) IBOutlet UIView *wrapperView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -38,8 +37,8 @@
 {
     [super awakeFromNib];
     
-    self.wrapperView.layer.cornerRadius = 4.f;
-    self.wrapperView.layer.masksToBounds = YES;
+    self.contentView.layer.cornerRadius = 4.f;
+    self.contentView.layer.masksToBounds = YES;
     
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(longPress:)];
@@ -152,7 +151,7 @@
 - (void)setCurrent:(BOOL)current
 {
     _current = current;
-    self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : UIColor.blackColor;
+    self.contentView.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor colorWithWhite:0.1f alpha:1.f];
 }
 
 #pragma mark Gesture recognizers
