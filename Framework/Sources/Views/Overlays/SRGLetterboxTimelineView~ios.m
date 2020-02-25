@@ -13,6 +13,8 @@
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 
+static CGFloat SRGLetterboxCellMargin = 5.f;
+
 @interface SRGLetterboxTimelineView ()
 
 @property (nonatomic, copy) NSString *chapterURN;
@@ -70,7 +72,7 @@
     self.collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    collectionViewLayout.minimumLineSpacing = 1.f;
+    collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
     
     UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
@@ -81,7 +83,7 @@
     [super layoutSubviews];
     
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    CGFloat height = CGRectGetHeight(self.frame);
+    CGFloat height = CGRectGetHeight(self.frame) - 2 * SRGLetterboxCellMargin;
     CGFloat width = (height > 0) ? 16.f / 13.f * height : 10e-6f; // UICollectionViewFlowLayout doesn't allow CGSizeZero
     collectionViewLayout.itemSize = CGSizeMake(width, height);
     
@@ -237,6 +239,13 @@
     cell.delegate = self;
     cell.subdivision = self.subdivisions[indexPath.row];
     [self updateAppearanceForCell:cell];
+}
+
+#pragma mark UICollectionViewDelegateFlowLayout protocol
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(SRGLetterboxCellMargin, SRGLetterboxCellMargin, SRGLetterboxCellMargin, SRGLetterboxCellMargin);
 }
 
 @end
