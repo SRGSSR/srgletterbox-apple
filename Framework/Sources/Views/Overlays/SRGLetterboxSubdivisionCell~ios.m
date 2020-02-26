@@ -16,6 +16,8 @@
 
 @interface SRGLetterboxSubdivisionCell ()
 
+@property (nonatomic, weak) IBOutlet UIView *wrapperView;
+
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -36,9 +38,6 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    self.contentView.layer.cornerRadius = 4.f;
-    self.contentView.layer.masksToBounds = YES;
     
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(longPress:)];
@@ -151,7 +150,23 @@
 - (void)setCurrent:(BOOL)current
 {
     _current = current;
-    self.contentView.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : [UIColor colorWithWhite:0.1f alpha:1.f];
+    
+    if (current) {
+        self.contentView.layer.cornerRadius = 4.f;
+        self.contentView.layer.masksToBounds = YES;
+        self.contentView.backgroundColor = [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f];
+        
+        self.wrapperView.layer.cornerRadius = 0.f;
+        self.wrapperView.layer.masksToBounds = NO;
+    }
+    else {
+        self.contentView.layer.cornerRadius = 0.f;
+        self.contentView.layer.masksToBounds = NO;
+        self.contentView.backgroundColor = UIColor.clearColor;
+        
+        self.wrapperView.layer.cornerRadius = 4.f;
+        self.wrapperView.layer.masksToBounds = YES;
+    }
 }
 
 #pragma mark Gesture recognizers
