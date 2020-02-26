@@ -20,11 +20,52 @@ static CGFloat SRGLetterboxCellMargin = 5.f;
 @property (nonatomic, copy) NSString *chapterURN;
 @property (nonatomic) NSArray<SRGSubdivision *> *subdivisions;
 
-@property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
+@property (nonatomic, weak) UICollectionView *collectionView;
 
 @end
 
+static void commonInit(SRGLetterboxTimelineView *self)
+{
+    self.backgroundColor = UIColor.clearColor;
+    self.selectedIndex = NSNotFound;
+    
+    UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
+    collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
+    
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:collectionViewLayout];
+    collectionView.backgroundColor = UIColor.clearColor;
+    collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    collectionView.alwaysBounceHorizontal = YES;
+    collectionView.delegate = self;
+    collectionView.dataSource = self;
+    [self addSubview:collectionView];
+    self.collectionView = collectionView;
+    
+    UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
+    [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
+}
+
 @implementation SRGLetterboxTimelineView
+
+#pragma mark Object lifecycle
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        commonInit(self);
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    if (self = [super initWithCoder:coder]) {
+        commonInit(self);
+    }
+    return self;
+}
 
 #pragma mark Getters and setters
 
@@ -57,25 +98,6 @@ static CGFloat SRGLetterboxCellMargin = 5.f;
 }
 
 #pragma mark Overrides
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    self.selectedIndex = NSNotFound;
-    self.backgroundColor = UIColor.clearColor;
-    
-    self.collectionView.dataSource = self;
-    self.collectionView.delegate = self;
-    
-    self.collectionView.alwaysBounceHorizontal = YES;
-    
-    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
-    
-    UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
-    [self.collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
-}
 
 - (void)layoutSubviews
 {

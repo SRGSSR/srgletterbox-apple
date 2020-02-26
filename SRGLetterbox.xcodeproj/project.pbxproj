@@ -64,7 +64,6 @@
 		6F0C99132121E73400073AB6 /* SRGCountdownView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593820581CAF00823003 /* SRGCountdownView~ios.xib */; };
 		6F0C99142121E73400073AB6 /* SRGErrorView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593120581CAF00823003 /* SRGErrorView~ios.xib */; };
 		6F0C99152121E73400073AB6 /* SRGLetterboxSubdivisionCell~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50592820581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.xib */; };
-		6F0C99162121E73400073AB6 /* SRGLetterboxTimelineView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593220581CAF00823003 /* SRGLetterboxTimelineView~ios.xib */; };
 		6F0C99172121E73400073AB6 /* SRGNotificationView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F50593620581CAF00823003 /* SRGNotificationView~ios.xib */; };
 		6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08D97F031E2D09F100521A6B /* SRGLetterboxView~ios.xib */; };
 		6F0C99192121E74000073AB6 /* SRGLetterbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F0C98FE2121E54700073AB6 /* SRGLetterbox.bundle */; };
@@ -343,7 +342,6 @@
 		6F50592F20581CAF00823003 /* SRGErrorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGErrorView.h; sourceTree = "<group>"; };
 		6F50593020581CAF00823003 /* SRGAvailabilityView~ios.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SRGAvailabilityView~ios.xib"; sourceTree = "<group>"; };
 		6F50593120581CAF00823003 /* SRGErrorView~ios.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SRGErrorView~ios.xib"; sourceTree = "<group>"; };
-		6F50593220581CAF00823003 /* SRGLetterboxTimelineView~ios.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SRGLetterboxTimelineView~ios.xib"; sourceTree = "<group>"; };
 		6F50593320581CAF00823003 /* SRGCountdownView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGCountdownView.m; sourceTree = "<group>"; };
 		6F50593420581CAF00823003 /* SRGContinuousPlaybackView~ios.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SRGContinuousPlaybackView~ios.xib"; sourceTree = "<group>"; };
 		6F50593520581CAF00823003 /* SRGNotificationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGNotificationView.m; sourceTree = "<group>"; };
@@ -710,7 +708,6 @@
 				6F50592820581CAF00823003 /* SRGLetterboxSubdivisionCell~ios.xib */,
 				6F50593720581CAF00823003 /* SRGLetterboxTimelineView.h */,
 				6F50592720581CAF00823003 /* SRGLetterboxTimelineView~ios.m */,
-				6F50593220581CAF00823003 /* SRGLetterboxTimelineView~ios.xib */,
 				08A05B2620585DF000E80BD6 /* SRGLiveLabel.h */,
 				08A05B2720585DF000E80BD6 /* SRGLiveLabel.m */,
 				6F50592520581CAF00823003 /* SRGNotificationView.h */,
@@ -1198,7 +1195,6 @@
 				6F0C99092121E70000073AB6 /* Images.xcassets in Resources */,
 				6F0C990A2121E70300073AB6 /* Localizable.strings in Resources */,
 				6F0C99132121E73400073AB6 /* SRGCountdownView~ios.xib in Resources */,
-				6F0C99162121E73400073AB6 /* SRGLetterboxTimelineView~ios.xib in Resources */,
 				6F8211952358ED4300B047FF /* placeholder_media-square.pdf in Resources */,
 				6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */,
 				6F72A81523391490008AA908 /* SRGContinuousPlaybackViewController~tvos.storyboard in Resources */,
