@@ -315,14 +315,24 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
 }
 
-- (void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))mediaConfigurationBlock
+- (AVMediaSelectionOption * _Nonnull (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nonnull))audioConfigurationBlock
 {
-    return self.mediaPlayerController.mediaConfigurationBlock;
+    return self.mediaPlayerController.audioConfigurationBlock;
 }
 
-- (void)setMediaConfigurationBlock:(void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))mediaConfigurationBlock
+- (void)setAudioConfigurationBlock:(AVMediaSelectionOption * _Nonnull (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nonnull))audioConfigurationBlock
 {
-    self.mediaPlayerController.mediaConfigurationBlock = mediaConfigurationBlock;
+    self.mediaPlayerController.audioConfigurationBlock = audioConfigurationBlock;
+}
+
+- (AVMediaSelectionOption * _Nullable (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nullable, AVMediaSelectionOption * _Nullable))subtitleConfigurationBlock
+{
+    return self.mediaPlayerController.subtitleConfigurationBlock;
+}
+
+- (void)setSubtitleConfigurationBlock:(AVMediaSelectionOption * _Nullable (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nullable, AVMediaSelectionOption * _Nullable))subtitleConfigurationBlock
+{
+    self.mediaPlayerController.subtitleConfigurationBlock = subtitleConfigurationBlock;
 }
 
 - (BOOL)isLive
@@ -349,6 +359,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     _muted = muted;
     [self.mediaPlayerController reloadPlayerConfiguration];
+}
+
+- (NSArray<AVTextStyleRule *> *)textStyleRules
+{
+    return self.mediaPlayerController.textStyleRules;
+}
+
+- (void)setTextStyleRules:(NSArray<AVTextStyleRule *> *)textStyleRules
+{
+    self.mediaPlayerController.textStyleRules = textStyleRules;
 }
 
 - (BOOL)isBackgroundVideoPlaybackEnabled
@@ -1523,11 +1543,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (void)reloadMediaConfiguration
 {
     [self.mediaPlayerController reloadMediaConfiguration];
-}
-
-- (void)reloadMediaConfigurationWithBlock:(void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))block
-{
-    [self.mediaPlayerController reloadMediaConfigurationWithBlock:block];
 }
 
 #pragma mark Notifications
