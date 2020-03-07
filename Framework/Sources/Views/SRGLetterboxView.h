@@ -249,7 +249,7 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
  *
  *  @discussion Call this method outside the correct delegate method leads to undefined behavior.
  */
-- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, BOOL minimal, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
+- (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
 /**
  *  Return `YES` when the view is full screen.

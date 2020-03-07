@@ -249,10 +249,28 @@
 
 #pragma mark SRGLetterboxViewDelegate protocol
 
+- (void)updateWithAspectRatio:(CGFloat)aspectRatio
+{
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.letterboxAspectRatioConstraint.firstItem
+                                                                  attribute:self.letterboxAspectRatioConstraint.firstAttribute
+                                                                  relatedBy:self.letterboxAspectRatioConstraint.relation
+                                                                     toItem:self.letterboxAspectRatioConstraint.secondItem
+                                                                  attribute:self.letterboxAspectRatioConstraint.secondAttribute
+                                                                 multiplier:1.f / aspectRatio
+                                                                   constant:self.letterboxAspectRatioConstraint.constant];
+    constraint.priority = self.letterboxAspectRatioConstraint.priority;
+    
+    [NSLayoutConstraint deactivateConstraints:@[ self.letterboxAspectRatioConstraint ]];
+    [NSLayoutConstraint activateConstraints:@[ constraint ]];
+    
+    self.letterboxAspectRatioConstraint = constraint;
+}
+
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset) {
+        [self updateWithAspectRatio:aspectRatio];
         self.letterboxAspectRatioConstraint.constant = heightOffset + self.heightOffsetSlider.value;
         self.closeButton.alpha = (minimal || ! hidden) ? 1.f : 0.f;
         [self.view layoutIfNeeded];

@@ -65,7 +65,7 @@ static void commonInit(SRGLetterboxView *self);
 
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, BOOL minimal, CGFloat heightOffset);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @end
@@ -549,7 +549,10 @@ static void commonInit(SRGLetterboxView *self);
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        self.animations ? self.animations(userInterfaceHidden, self.minimal, timelineHeight + notificationHeight) : nil;
+        
+        SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+        CGFloat aspectRatio = (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : 16.f / 9.f;
+        self.animations ? self.animations(userInterfaceHidden, self.minimal, aspectRatio, timelineHeight + notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -678,7 +681,7 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, BOOL, CGFloat, CGFloat))animations completion:(void (^)(BOOL))completion
 {
     self.animations = animations;
     self.completion = completion;
