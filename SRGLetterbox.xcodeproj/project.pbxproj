@@ -80,6 +80,8 @@
 		6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */; };
 		6F36254D236AA79C00C075C1 /* SRGNotificationView~tvos.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F36254C236AA79C00C075C1 /* SRGNotificationView~tvos.xib */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
+		6F4F6834241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F4F6832241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F4F6835241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F4F6833241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m */; };
 		6F50594F20581CAF00823003 /* SRGNotificationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592520581CAF00823003 /* SRGNotificationView.h */; };
 		6F50595020581CAF00823003 /* SRGCountdownView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F50592620581CAF00823003 /* SRGCountdownView.h */; };
 		6F50595120581CAF00823003 /* SRGLetterboxTimelineView~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F50592720581CAF00823003 /* SRGLetterboxTimelineView~ios.m */; };
@@ -330,6 +332,8 @@
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AE1E3A66AB00B0141C /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AF1E3A66B100B0141C /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6F4F6832241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLayoutConstraint+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6F4F6833241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F50592520581CAF00823003 /* SRGNotificationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGNotificationView.h; sourceTree = "<group>"; };
 		6F50592620581CAF00823003 /* SRGCountdownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGCountdownView.h; sourceTree = "<group>"; };
 		6F50592720581CAF00823003 /* SRGLetterboxTimelineView~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SRGLetterboxTimelineView~ios.m"; sourceTree = "<group>"; };
@@ -653,6 +657,8 @@
 				6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */,
 				6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */,
 				6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */,
+				6F4F6832241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h */,
+				6F4F6833241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m */,
 				6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */,
 				6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */,
 				08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */,
@@ -1032,6 +1038,7 @@
 				6FAB3B021E28F77E00CC2197 /* SRGLetterboxView.h in Headers */,
 				08A05B2820585DF000E80BD6 /* SRGLiveLabel.h in Headers */,
 				6F50594F20581CAF00823003 /* SRGNotificationView.h in Headers */,
+				6F4F6834241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h in Headers */,
 				08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */,
 				6F50596B20581CAF00823003 /* SRGLetterboxControllerView.h in Headers */,
 				6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */,
@@ -1470,6 +1477,7 @@
 				6F50595420581CAF00823003 /* SRGAvailabilityView.m in Sources */,
 				6FEA9D9E1E4DA977007DED52 /* SRGLetterboxError.m in Sources */,
 				6F042D2C1E28F70500CFD89B /* NSBundle+SRGLetterbox.m in Sources */,
+				6F4F6835241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m in Sources */,
 				6F50595320581CAF00823003 /* SRGControlsView~ios.m in Sources */,
 				6F50595520581CAF00823003 /* SRGContinuousPlaybackView~ios.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView~ios.m in Sources */,

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "NSLayoutConstraint+SRGLetterbox.h"
 #import "SRGLetterboxBaseView.h"
 #import "SRGLetterboxController.h"
 #import "SRGLetterboxControllerView.h"
