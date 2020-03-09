@@ -20,7 +20,7 @@ To release an SRG SSR library, perform the following steps sequentially (some st
 - Run `make update`.
 - Verify that `Cartfile.resolved`, `Cartfile.resolved.public` and `Cartfile.resolved.proprietary` only contain tagged versions.
 - Perform global diff with last release to verify changes.
-- Verify version number in project. In particular, bump the minor version number in case of breaking API changes. Commit and push on _develop_.
+- Verify version number in project. Bump it according to [semantic versioning rules](https://semver.org) if need it. Commit and push on _develop_.
 - Run unit tests successfully in proprietary and public modes.
 - Update demo release note JSON. Commit and push on _develop_.
 - Start `git-flow release` for the new library version.
