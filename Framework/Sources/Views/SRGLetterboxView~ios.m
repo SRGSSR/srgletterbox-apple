@@ -422,6 +422,9 @@ static void commonInit(SRGLetterboxView *self);
 - (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
+    [controller addObserver:self keyPath:@keypath(controller.loading) options:0 block:^(MAKVONotification *notification) {
+        [self setNeedsLayoutAnimated:YES];
+    }];
     
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(livestreamDidFinish:)
@@ -453,11 +456,21 @@ static void commonInit(SRGLetterboxView *self);
                                            selector:@selector(externalPlaybackStateDidChange:)
                                                name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                              object:mediaPlayerController];
+    
+    SRGMediaPlayerView *mediaPlayerView = mediaPlayerController.view;
+    
+    @weakify(self)
+    [mediaPlayerView addObserver:self keyPath:@keypath(mediaPlayerView.readyForDisplay) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self setNeedsLayoutAnimated:YES];
+    }];
 }
 
 - (void)unregisterObservers
 {
     SRGLetterboxController *controller = self.controller;
+    [controller removeObserver:self keyPath:@keypath(controller.loading)];
+    
     [NSNotificationCenter.defaultCenter removeObserver:self
                                                   name:SRGLetterboxLivestreamDidFinishNotification
                                                 object:controller];
@@ -482,8 +495,11 @@ static void commonInit(SRGLetterboxView *self);
                                                   name:SRGMediaPlayerExternalPlaybackStateDidChangeNotification
                                                 object:mediaPlayerController];
     
-    if (mediaPlayerController.view.superview == self.playbackView) {
-        [mediaPlayerController.view removeFromSuperview];
+    SRGMediaPlayerView *mediaPlayerView = mediaPlayerController.view;
+    [mediaPlayerView removeObserver:self keyPath:@keypath(mediaPlayerView.readyForDisplay)];
+    
+    if (mediaPlayerView.superview == self.playbackView) {
+        [mediaPlayerView removeFromSuperview];
     }
 }
 
@@ -582,7 +598,7 @@ static void commonInit(SRGLetterboxView *self);
     
     // Hide video view if a video is played with AirPlay or if "true screen mirroring" is used (device screen copy with no full-screen
     // playback on the external device)
-    BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && ! mediaPlayerController.externalNonMirroredPlaybackActive
+    BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && mediaPlayerController.view.readyForDisplay && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     if (@available(iOS 11, *)) {
         if (NSBundle.srg_letterbox_isProductionVersion && UIScreen.mainScreen.captured && ! AVAudioSession.srg_isAirPlayActive) {

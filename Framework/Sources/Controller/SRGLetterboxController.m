@@ -182,7 +182,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 // Time observers
 @property (nonatomic) id programTimeObserver;
 
-@property (nonatomic, copy) void (^playerConfigurationBlock)(AVPlayer *player);
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
@@ -198,6 +197,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) NSDate *lastUpdateDate;
 
 @property (nonatomic, getter=isTracked) BOOL tracked;
+
+@property (nonatomic) BOOL allowsExternalPlayback;
+@property (nonatomic) BOOL usesExternalPlaybackWhileExternalScreenIsActive;
 
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
@@ -225,15 +227,15 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         //        for more information about this choice.
         self.mediaPlayerController.minimumDVRWindowLength = 45.;
         
+        self.mediaPlayerController.playerCreationBlock = ^(AVPlayer *player) {
+            player.allowsExternalPlayback = NO;
+        };
+        
         @weakify(self)
         self.mediaPlayerController.playerConfigurationBlock = ^(AVPlayer *player) {
             @strongify(self)
-            
-            // Do not allow AirPlay video playback by default
-            player.allowsExternalPlayback = NO;
-            
-            // Call the configuration block afterwards (so that the above default behavior can be overridden)
-            self.playerConfigurationBlock ? self.playerConfigurationBlock(player) : nil;
+            player.allowsExternalPlayback = self.allowsExternalPlayback;
+            player.usesExternalPlaybackWhileExternalScreenIsActive = self.usesExternalPlaybackWhileExternalScreenIsActive;
             player.muted = self.muted;
         };
         
@@ -313,14 +315,24 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.loading = SRGLetterboxControllerIsLoading(self.dataAvailability, playbackState);
 }
 
-- (void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))mediaConfigurationBlock
+- (AVMediaSelectionOption * _Nonnull (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nonnull))audioConfigurationBlock
 {
-    return self.mediaPlayerController.mediaConfigurationBlock;
+    return self.mediaPlayerController.audioConfigurationBlock;
 }
 
-- (void)setMediaConfigurationBlock:(void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))mediaConfigurationBlock
+- (void)setAudioConfigurationBlock:(AVMediaSelectionOption * _Nonnull (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nonnull))audioConfigurationBlock
 {
-    self.mediaPlayerController.mediaConfigurationBlock = mediaConfigurationBlock;
+    self.mediaPlayerController.audioConfigurationBlock = audioConfigurationBlock;
+}
+
+- (AVMediaSelectionOption * _Nullable (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nullable, AVMediaSelectionOption * _Nullable))subtitleConfigurationBlock
+{
+    return self.mediaPlayerController.subtitleConfigurationBlock;
+}
+
+- (void)setSubtitleConfigurationBlock:(AVMediaSelectionOption * _Nullable (^)(NSArray<AVMediaSelectionOption *> * _Nonnull, AVMediaSelectionOption * _Nullable, AVMediaSelectionOption * _Nullable))subtitleConfigurationBlock
+{
+    self.mediaPlayerController.subtitleConfigurationBlock = subtitleConfigurationBlock;
 }
 
 - (BOOL)isLive
@@ -347,6 +359,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     _muted = muted;
     [self.mediaPlayerController reloadPlayerConfiguration];
+}
+
+- (NSArray<AVTextStyleRule *> *)textStyleRules
+{
+    return self.mediaPlayerController.textStyleRules;
+}
+
+- (void)setTextStyleRules:(NSArray<AVTextStyleRule *> *)textStyleRules
+{
+    self.mediaPlayerController.textStyleRules = textStyleRules;
 }
 
 - (BOOL)isBackgroundVideoPlaybackEnabled
@@ -525,6 +547,13 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     [_continuousPlaybackTransitionTimer invalidate];
     _continuousPlaybackTransitionTimer = continuousPlaybackTransitionTimer;
+}
+
+- (void)setAllowsExternalPlayback:(BOOL)allowsExternalPlayback usedWhileExternalScreenIsActive:(BOOL)usedWhileExternalScreenIsActive
+{
+    self.allowsExternalPlayback = allowsExternalPlayback;
+    self.usesExternalPlaybackWhileExternalScreenIsActive = usedWhileExternalScreenIsActive;
+    [self.mediaPlayerController reloadPlayerConfiguration];
 }
 
 - (BOOL)isUsingAirPlay
@@ -1511,19 +1540,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 #pragma mark Configuration
 
-- (void)reloadPlayerConfiguration
-{
-    [self.mediaPlayerController reloadPlayerConfiguration];
-}
-
 - (void)reloadMediaConfiguration
 {
     [self.mediaPlayerController reloadMediaConfiguration];
-}
-
-- (void)reloadMediaConfigurationWithBlock:(void (^)(AVPlayerItem * _Nonnull, AVAsset * _Nonnull))block
-{
-    [self.mediaPlayerController reloadMediaConfigurationWithBlock:block];
 }
 
 #pragma mark Notifications
@@ -1677,19 +1696,15 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)routeDidChange:(NSNotification *)notification
 {
-    NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
-    if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable
-            && self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePlaying) {
-        // Playback is automatically paused by the system. Force resume if desired. Wait a little bit (0.1 is an
-        // empirical value), the system induced state change occurs slightly after this notification is received.
-        // We could probably do something more robust (e.g. wait until the real state change), but this would lead
-        // to additional complexity or states which do not seem required for correct behavior. Improve later if needed.
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.resumesAfterRouteBecomesUnavailable) {
-                [self play];
-            }
-        });
-    }
+    // Received on a background thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
+        if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable
+                && self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle
+                && self.resumesAfterRouteBecomesUnavailable) {
+            [self play];
+        }
+    });
 }
 
 - (void)audioSessionInterruption:(NSNotification *)notification

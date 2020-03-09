@@ -48,7 +48,7 @@ platform :ios do
     build_platform = 'iOS'
 
     appcenter_build_number = latest_appcenter_build_number(
-      ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_SECRET']
+      ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
     )
 
     nightly(
@@ -178,26 +178,18 @@ platform :ios do
     export_to_appstore = options[:export_to_appstore] || false
     current_build_number = options[:current_build_number]
 
-    increment_build_number(
-      build_number: current_build_number + 1
-    )
+    override_current_project_version(current_build_number + 1)
 
-    branch_name = sh "git branch | grep \\* | cut -d ' ' -f2"
-    display_name_suffix = ' 🌙'
-    version_suffix = '-nightly'
-    build_name_suffix = ''
-    if branch_name.include? 'feature/'
-      display_name_suffix = ' 🌿'
-      version_suffix += '+' + branch_name.sub('feature/', '').strip
-      build_name_suffix = '+' + branch_name.sub('feature/', '').strip
-    end
+    branch_name = git_branch_name
+
+    notify_build_number_to_ci(nightly_build_name_suffix(branch_name))
 
     build_lane(
       configuration: 'Nightly',
       scheme: 'SRGLetterbox-demo',
-      display_name_suffix: display_name_suffix,
-      version_suffix: version_suffix,
-      build_name_suffix: build_name_suffix,
+      display_name_suffix: nighlty_display_name_suffix(branch_name),
+      version_suffix: nightly_version_suffix(branch_name),
+      build_name_suffix: nightly_build_name_suffix(branch_name),
       platform: platform,
       export_to_appstore: export_to_appstore
     )
@@ -207,6 +199,8 @@ platform :ios do
   private_lane :demo do |options|
     platform = options[:platform] || 'iOS'
     export_to_appstore = options[:export_to_appstore] || false
+
+    notify_build_number_to_ci(nil)
 
     build_lane(
       configuration: 'Release',
@@ -321,6 +315,28 @@ def srg_xcargs(options)
   xcargs + ' -allowProvisioningUpdates'
 end
 
+def nighlty_display_name_suffix(branch_name)
+  nighlty_display_name_suffix = ' 🌙'
+  nighlty_display_name_suffix = ' 🌿' if branch_name.include? 'feature/'
+  nighlty_display_name_suffix
+end
+
+def nightly_version_suffix(branch_name)
+  nightly_version_suffix = '-nightly'
+  if branch_name.include? 'feature/'
+    nightly_version_suffix += '+' + branch_name.sub('feature/', '').strip
+  end
+  nightly_version_suffix
+end
+
+def nightly_build_name_suffix(branch_name)
+  nightly_build_name_suffix = ''
+  if branch_name.include? 'feature/'
+    nightly_build_name_suffix = '+' + branch_name.sub('feature/', '').strip
+  end
+  nightly_build_name_suffix
+end
+
 # Returns a default changelog for nightlies
 def default_changelog_for_nightlies(platform)
   last_commit_hash = last_nightlies_success_git_commit_hash(platform)
@@ -332,17 +348,20 @@ def default_changelog_for_nightlies(platform)
   )
 
   # HAX: strip emoji from changelog
-  changelog = changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '').lstrip if changelog
+  changelog = changelog ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '').lstrip : ''
   changelog = 'No change log found for this build.' if changelog.length.zero?
   Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
 end
 
 # Returns current build number on App Center
-def latest_appcenter_build_number(app_secret)
-  token = ENV['LETTERBOX_DEMO_APPCENTER_TOKEN']
-  sh_parameters = "-t #{token} #{app_secret}"
-  build_number = (sh "scripts/appcenter-build-number.sh #{sh_parameters}")
-  Integer(build_number.lines.map(&:chomp).last)
+def latest_appcenter_build_number(app_name)
+  appcenter_hash = appcenter_fetch_version_number(
+    api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
+    owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
+    app_name: app_name
+  )
+
+  Integer(appcenter_hash['build_number'])
 end
 
 # Save the git commit hash in a local text file for nightlies
@@ -375,22 +394,20 @@ def xcode_marketing_version
   marketing_version.gsub(/\s+/, '').chomp
 end
 
-# Returns the bundle app identifier
-def xcode_app_identifier(scheme, configuration)
-  app_identifier = nil
+# Returns the current project version
+def xcode_current_project_version
+  version = nil
   Dir.chdir('..') do
-    command = 'xcodebuild -showBuildSettings '
-    command += '-scheme "' + scheme + '" -configuration "' + configuration + '"'
-    command += ' | grep "PRODUCT_BUNDLE_IDENTIFIER ="'
-    app_identifier = xcodebuid_grep_output sh command
+    command = 'xcodebuild -showBuildSettings | grep "CURRENT_PROJECT_VERSION ="'
+    version = xcodebuid_grep_output sh command
   end
-  app_identifier ['PRODUCT_BUNDLE_IDENTIFIER ='] = ''
-  app_identifier.gsub(/\s+/, '').chomp
+  version ['CURRENT_PROJECT_VERSION ='] = ''
+  version.gsub(/\s+/, '').chomp
 end
 
 # Return current tag version
 def tag_version
-  build_number = get_build_number
+  build_number = xcode_current_project_version
   marketing_version = xcode_marketing_version
   marketing_version + '-' + build_number
 end
@@ -461,6 +478,15 @@ def override_test_product_names
   )
 end
 
+# Override common current project version
+def override_current_project_version(build_number)
+  set_xcconfig_value(
+    path: 'Common.xcconfig',
+    name: 'CURRENT_PROJECT_VERSION',
+    value: build_number.to_s
+  )
+end
+
 def run_tests_with_devices(devices)
   devices.each do |device|
     srg_scan(device)
@@ -515,6 +541,22 @@ end
 def xcodebuid_grep_output(output)
   line_count = output.lines.count
   output.split(/\n/) [line_count - 1]
+end
+
+# Share build number to the continuous integration
+def notify_build_number_to_ci(suffix)
+  return unless ENV['TEAMCITY_VERSION']
+
+  suffix ||= ''
+
+  displayed_build_number = xcode_marketing_version
+  displayed_build_number += '-' + xcode_current_project_version
+  displayed_build_number += suffix
+  puts '##teamcity[buildNumber \'' + displayed_build_number + '\']'
+end
+
+def git_branch_name
+  sh "git branch | grep \\* | cut -d ' ' -f2"
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md

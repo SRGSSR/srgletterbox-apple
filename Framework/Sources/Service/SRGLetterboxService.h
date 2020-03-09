@@ -62,10 +62,10 @@ API_UNAVAILABLE(tvos)
 /**
  *  Called when a restoration process takes place.
  *
- *  @parameter completionHandler A completion block which MUST be called at the VERY END of the restoration process
- *                               (e.g. after at the end of a modal presentation animation). Failing to do so leads to
- *                               undefined behavior. The completion block must be called with `restored` set to `YES`
- *                               iff the restoration was successful.
+ *  @param completionHandler A completion block which MUST be called at the VERY END of the restoration process
+ *                           (e.g. after at the end of a modal presentation animation). Failing to do so leads to
+ *                           undefined behavior. The completion block must be called with `restored` set to `YES`
+ *                           iff the restoration was successful.
  */
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
 
@@ -121,11 +121,12 @@ API_UNAVAILABLE(tvos)
  *
  *  @param controller               The Letterbox controller to enable application-wide services for. The controller 
  *                                  is retained.
- *  @param pictureInPictureDelegate The picture in picture delegate. Unlike most delegates, this delegate is RETAINED.
- *                                  If none is provided, picture in picture will not be available for the controller.
- *                                  Note that you can provide a delegate in all cases, even if some devices you target 
- *                                  do not actually support picture in picture (the delegate won't be saved, though). 
- *                                  The delegate will be released when a new delegate is set, or when `-disable` is called.
+ *  @param pictureInPictureDelegate The picture in picture delegate. The delegate is weakly referenced, but automatically
+ *                                  retained while picture in picture is in use. A delegate must be available for picture
+ *                                  in picture to be available. Note that you can provide a delegate even if some devices
+ *                                  you target do not actually support picture in picture (the delegate will be ignored,
+ *                                  though). A registered delegate will be released when a new delegate is set, or when
+ *                                  `-disable` is called.
  *
  *  @discussion The 'Audio, AirPlay, and Picture in Picture' flag of your target background modes must be enabled, otherwise
  *              this method will throw an exception when called.
@@ -133,9 +134,23 @@ API_UNAVAILABLE(tvos)
  *              The picture in picture delegate is provided alongside the controller when calling this method, so that 
  *              the exact picture in picture starting context is set with the controller. Usually, since picture in picture 
  *              is started from a view controller, a good delegate candidate is the view controller itself, which knows how
- *              it can be dismissed and presented again. Since the delegate is retained, this also provides you with an
- *              easy way to restore the view controller in the exact same state as it was before picture in picture
- *              started.
+ *              it can be dismissed and presented again. Since the delegate is retained during picture in picture use, this
+ *              also provides you with an easy way to restore the view controller in the exact same state as it was before
+ *              picture in picture started. If you decide for another delegate, be sure that your application keeps the
+ *              delegate alive (except if you don't need it anymore and picture in picture is active, in which case you
+ *              can safely release it and let the service keep it alive until picture in picture is stopped).
+ *
+ *  Warning: If you plan to implement restoration from picture in picture, you must avoid usual built-in iOS modal
+ *           presentations, as they are implemented using `UIPercentDrivenInteractiveTransition`. You must use a
+ *           custom modal transition instead and avoid implementing it using `UIPercentDrivenInteractiveTransition`.
+ *           The reason is that `UIPercentDrivenInteractiveTransition` varies the time offset of a layer and thus
+ *           messes up with the player local time. This makes picture in picture restoration unreliable (sometimes it
+ *           works, sometimes it does not and the animation is ugly).
+ *
+ *           Picture in picture also temporarily disables external playback for the associated player. You should not
+ *           attempt to change this property while picture in playback is running, otherwise the behavior is undefined.
+ *           When picture in picture playback starts or stops, the configuration block (if any) is called so that the
+ *           player configuration can be properly setup and restored.
  */
 - (void)enableWithController:(SRGLetterboxController *)controller
     pictureInPictureDelegate:(nullable id<SRGLetterboxPictureInPictureDelegate>)pictureInPictureDelegate;
@@ -156,11 +171,11 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic, readonly, nullable) SRGLetterboxController *controller;
 
 /**
- *  The picture in picture delegate, if any has been set. Use it to enable and customize picture in picture behavior.
+ *  The picture in picture delegate, if any is available.
  *
  *  @discussion This property always returns `nil` on devices which do not support picture in picture.
  */
-@property (nonatomic, readonly, nullable) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
+@property (nonatomic, readonly, weak) id<SRGLetterboxPictureInPictureDelegate> pictureInPictureDelegate;
 
 /**
  *  If set to `YES`, playback never switches to full-screen playback on an external screen. This is especially handy 

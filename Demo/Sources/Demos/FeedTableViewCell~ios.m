@@ -33,16 +33,11 @@
         settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
-        self.letterboxController.mediaConfigurationBlock = ^(AVPlayerItem * _Nonnull playerItem, AVAsset * _Nonnull asset) {
-            AVMediaSelectionGroup *group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+        self.letterboxController.subtitleConfigurationBlock = ^AVMediaSelectionOption * _Nullable(NSArray<AVMediaSelectionOption *> * _Nonnull subtitleOptions, AVMediaSelectionOption * _Nullable audioOption, AVMediaSelectionOption * _Nullable defaultSubtitleOption) {
             NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(AVMediaSelectionOption * _Nullable option, NSDictionary<NSString *,id> * _Nullable bindings) {
                 return [[option.locale objectForKey:NSLocaleLanguageCode] isEqualToString:preferredSubtitleLocalization];
             }];
-            NSArray<AVMediaSelectionOption *> *options = [AVMediaSelectionGroup mediaSelectionOptionsFromArray:group.options withoutMediaCharacteristics:@[AVMediaCharacteristicContainsOnlyForcedSubtitles]];
-            AVMediaSelectionOption *option = [options filteredArrayUsingPredicate:predicate].firstObject;
-            if (option) {
-                [playerItem selectMediaOption:option inMediaSelectionGroup:group];
-            }
+            return [subtitleOptions filteredArrayUsingPredicate:predicate].firstObject;
         };
         
         [self.letterboxController playMedia:media atPosition:nil withPreferredSettings:settings];
@@ -60,7 +55,7 @@
 - (void)setMuted:(BOOL)muted
 {
     self.letterboxController.muted = muted;
-    self.soundIndicatorImageView.image = (muted) ? [UIImage imageNamed:@"sound_off"] : [UIImage imageNamed:@"sound_on"];
+    self.soundIndicatorImageView.image = muted ? [UIImage imageNamed:@"sound_off"] : [UIImage imageNamed:@"sound_on"];
 }
 
 #pragma mark Overrides
@@ -111,6 +106,18 @@
     else {
         [self.letterboxController removePeriodicTimeObserver:self.periodicTimeObserver];
     }
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    // Fix issue stopping image view animations when the user taps the cell
+    // See https://stackoverflow.com/questions/27904177/uiimageview-animation-stops-when-user-touches-screen/29330962
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    // Fix issue stopping image view animations when the user taps the cell
+    // See https://stackoverflow.com/questions/27904177/uiimageview-animation-stops-when-user-touches-screen/29330962
 }
 
 #pragma UI

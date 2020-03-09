@@ -157,9 +157,9 @@ At any time, you can call the _enable_ method again with a new controller to ena
 
 ### Picture in picture
 
-Picture in picture only makes sense when a controller has been bound to a Letterbox view. To respond to picture and picture events, most notably for dismissing and restoring your user interface, you must implement the mandatory `SRGLetterboxPictureInPictureDelegate` delegate methods. If no delegate has been set, picture in picture will not be available, and the corresponding button will not be displayed on the Letterbox view.
+Picture in picture only makes sense when a controller has been bound to a Letterbox view. To respond to picture and picture events, most notably for dismissing and restoring your user interface, you must implement the mandatory `SRGLetterboxPictureInPictureDelegate` delegate methods. If no delegate is available, picture in picture will not be available, and the corresponding button will not be displayed on the Letterbox view.
 
-Usually, a Letterbox view is part of a view controller view hiearchy. In such cases, providing the view controller itself as picture in picture delegate is a good idea. Unlike usual delegates, the picture in picture delegate is namely retained, providing you with a good way to restore the user interface as it was before picture in picture started.
+Usually, a Letterbox view is part of a view controller view hiearchy. In such cases, providing the view controller itself as picture in picture delegate is a good idea. The picture in picture delegate is namely retained while picture in picture is in use, providing you with an easy way to restore the user interface as it was before picture in picture started.
 
 Refer to the modal view controller demo for a concrete example.
 

@@ -42,20 +42,6 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
 /**
- *  Optional block which gets called right after player creation, when the player changes, or when the configuration is
- *  reloaded by calling `-reloadPlayerConfiguration`. Does not get called when the player is set to `nil`.
- *
- *  @discussion The player starts with external playback disabled and default audio session settings for the media
- *              being played. The configuration block might be used to override these default values.
- */
-@property (nonatomic, copy, nullable) void (^playerConfigurationBlock)(AVPlayer *player);
-
-/**
- *  Returns `YES` iff the controller is currently used for external AirPlay playback.
- */
-@property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
-
-/**
  *  The program corresponding to the current playback position, if any.
  */
 @property (nonatomic, readonly, nullable) SRGProgram *program;
@@ -68,10 +54,17 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 - (BOOL)playUpcomingMedia;
 
 /**
- *  Ask the player to reload its configuration by calling the associated configuration block, if any. Does nothing if
- *  the player has not been created yet.
+ *  Enable or disable external playback, with or without automatic switching to an external screen (ignored if external
+ *  playback is disaabled).
+ *
+ *  By default external playback is disabled.
  */
-- (void)reloadPlayerConfiguration;
+- (void)setAllowsExternalPlayback:(BOOL)allowsExternalPlayback usedWhileExternalScreenIsActive:(BOOL)usesWhileExternalScreenIsActive;
+
+/**
+ *  Returns `YES` iff the controller is currently used for external AirPlay playback.
+ */
+@property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 @end
 

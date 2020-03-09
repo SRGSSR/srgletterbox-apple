@@ -15,7 +15,7 @@ Metrics/BlockLength:
   ExcludedMethods: ['platform', 'for_platform']
 
 # Lane description and gem lines can be long
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: true
   IgnoredPatterns: ['^gem', '^(\s+|)desc', '^(\s+|)UI.']
 
