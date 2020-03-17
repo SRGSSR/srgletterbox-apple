@@ -253,7 +253,7 @@
 {
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset) {
-        self.letterboxAspectRatioConstraint = [self.letterboxAspectRatioConstraint srg_replacementConstraintWithMultiplier:1.f / aspectRatio
+        self.letterboxAspectRatioConstraint = [self.letterboxAspectRatioConstraint srg_replacementConstraintWithMultiplier:fminf(1.f / aspectRatio, 1.f)
                                                                                                                   constant:heightOffset + self.heightOffsetSlider.value];
         self.closeButton.alpha = (minimal || ! hidden) ? 1.f : 0.f;
         [self.view layoutIfNeeded];
