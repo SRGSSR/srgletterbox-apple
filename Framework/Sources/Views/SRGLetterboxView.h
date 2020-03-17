@@ -51,9 +51,10 @@ API_UNAVAILABLE(tvos)
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView;
 
 /**
- *  This method gets called when user interface controls or the timeline are shown or hidden. You can call the `SRGLetterboxView`
- *  `-animateAlongsideUserInterfaceWithAnimations:completion:` method from within this method implementation to perform 
- *  animations alongside the built-in control animations.
+ *  This method gets called when the view wants to perform animations, either as a result of the view intrinsic size
+ *  changing, or because controls are toggled. You can call the `-animateAlongsideUserInterfaceWithAnimations:completion:`
+ *  method on the view from within this method implementation to perform your own animations alongside the built-in
+ *  animations.
  */
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
@@ -230,24 +231,40 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 
 /**
  *  Call this method from within the delegate `-letterboxViewWillAnimateUserInterface:` method implementation to provide
- *  the animations to be performed alongside the player user interface animations when controls, timeline or notifications
- *  are shown or hidden. An optional block to be called on completion can be provided as well.
+ *  the animations to be performed alongside player user interface animations. An optional block to be called on completion
+ *  can be provided as well.
  *
- *  Even when controls are hidden, the user interface might still be in a minimal form, ensuring that basic controls
- *  are available, for example when no media has been loaded or when an error has been encountered. You can use the
- *  corresponding boolean information to show additional custom controls which must also be available in such cases
- *  (e.g. a close button which needs to be available in such cases as well).
+ *  Even when controls are hidden, the user interface might still be visible in a minimal form, ensuring that basic
+ *  controls are available, for example when no media has been loaded or when an error has been encountered. You can use
+ *  the corresponding boolean information to show additional custom controls which must also be available in such cases
+ *  (e.g. a close button which, if missing, would prevent the user from closing your custom player view).
  *
- *  @param animations The animations to be performed when these subviews are shown or hidden. The main view is usually 
- *                    animated in response to more information being displayed within it (e.g. a subdivision timeline or a
- *                    notification). If the view frame is not changed, the player will be temporarily shrinked to make room
- *                    for such additional elements. If you prefer your parent layout to provide more space so that
- *                    shrinking does not occur, the required height offset is provided as information, so that you can
- *                    adjust your layout accordingly. You can e.g. use this value as the constant of an aspect ratio layout 
- *                    constraint to make the player view slightly taller.
+ *  @param animations The animations to be performed when animations occur within the view. Use the provided block
+ *                    parameters to setup your animation in the best possible way, depending on the result you want
+ *                    to achieve:
+ *                      - `hidden`: Whether the user interface controls are hidden or not.
+ *                      - `minimal`: Whether the user interface is in a minimal state or not.
+ *                      - `aspectRatio`: The recommended aspect ratio for the content being displayed by the view.
+ *                      - `heightOffset`: Additional vertical space recommended to display other items (for example
+ *                                        timeline or notifications) without requiring the content to shrink.
  *  @param completion The block to be called on completion.
  *
- *  @discussion Call this method outside the correct delegate method leads to undefined behavior.
+ *  @discussion Call this method outside the correct delegate method leads to undefined behavior. You are free to use
+ *              aspect ratio and height offset information as a hint to provide the best possible frame to the player.
+ *              You can provide a larger frame, in which case the player will expand using letterboxing or pillarboxing.
+ *              If you provide a smaller frame, the content being displayed will shring when additional height is required
+ *              to display a timeline or a notification.
+ *
+ *              If your layout is setup through constraints, you can use aspect ratio constraints to apply the recommmended
+ *              values in a simple way:
+ *                - Use the inverse aspect ratio value as constraint multiplier. Since constraint multipliers are immutable,
+ *                  convenience `NSLayoutConstraint` methods are provided to replace an existing constraint instead, see
+ *                  `NSLayoutConstraint+SRGLetterbox.h`.
+ *                - Use the height offset value as constraint constant.
+ *
+ *              Note that depending on how you need to display the Letterbox view and which device form factors your
+ *              app needs to support, you might need several constraints with different priorities to ensure content
+ *              stays properly visible in all possible cases.
  */
 - (void)animateAlongsideUserInterfaceWithAnimations:(nullable void (^)(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset))animations completion:(nullable void (^)(BOOL finished))completion;
 
