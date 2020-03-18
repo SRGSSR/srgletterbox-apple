@@ -315,6 +315,12 @@ static void commonInit(SRGLetterboxView *self);
     }];
 }
 
+- (CGFloat)aspectRatio
+{
+    SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+    return (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : 16.f / 9.f;
+}
+
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
 {
     [_inactivityTimer invalidate];
@@ -549,10 +555,7 @@ static void commonInit(SRGLetterboxView *self);
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        
-        SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-        CGFloat aspectRatio = (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : 16.f / 9.f;
-        self.animations ? self.animations(userInterfaceHidden, self.minimal, aspectRatio, timelineHeight + notificationHeight) : nil;
+        self.animations ? self.animations(userInterfaceHidden, self.minimal, self.aspectRatio, timelineHeight + notificationHeight) : nil;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;

@@ -277,6 +277,11 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @property (nonatomic, readonly, getter=isFullScreen) BOOL fullScreen;
 
 /**
+ *  The recommended aspect ratio for the content being displayed.
+ */
+@property (nonatomic, readonly) CGFloat aspectRatio;
+
+/**
  *  Enable or disable full screen.
  *
  *  Calling this method will call the delegate method `-letterboxView:toggleFullScreen:animated:withCompletionHandler:`.
