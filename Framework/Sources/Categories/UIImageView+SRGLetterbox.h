@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param scale                 The image scale.
  *  @param type                  The image type.
  *  @param placeholder           The image placeholder.
+ *  @param backgroundColor       The background color to apply.
  *  @param unavailabilityHandler An optional handler called when the image is invalid (no object was provided or its
  *                               associated image is invalid). You can implement this block to respond to such cases,
  *                               e.g. to retrieve another image. If the block is set, no image will be set, otherwise
@@ -34,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                  backgroundColor:(UIColor *)backgroundColor
             unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler;
 
 /**
@@ -43,7 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
-                      placeholder:(SRGLetterboxImagePlaceholder)placeholder;
+                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                  backgroundColor:(UIColor *)backgroundColor;
 
 /**
  *  Request an image matching the content currently being played by a controller, if playing at the specified date. Use
@@ -56,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
                             withScale:(SRGImageScale)scale
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                      backgroundColor:(UIColor *)backgroundColor
                 unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler
                                atDate:(nullable NSDate *)date;
 
@@ -67,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
                             withScale:(SRGImageScale)scale
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
+                      backgroundColor:(UIColor *)backgroundColor
                                atDate:(nullable NSDate *)date;
 
 /**

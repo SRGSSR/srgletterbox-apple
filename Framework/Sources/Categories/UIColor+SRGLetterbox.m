@@ -20,4 +20,14 @@
     return [UIColor srg_colorFromHexadecimalString:@"#d50000"];
 }
 
++ (UIColor *)srg_placeholderBackgroundGrayColor
+{
+    return [UIColor srg_colorFromHexadecimalString:@"#202020"];
+}
+
++ (UIColor *)srg_timelineCellBackgroundGrayColor
+{
+    return [UIColor srg_colorFromHexadecimalString:@"#171717"];
+}
+
 @end

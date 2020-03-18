@@ -420,7 +420,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia atDate:self.controlsView.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia backgroundColor:UIColor.clearColor atDate:self.controlsView.date];
 }
 
 #pragma mark Observer management
