@@ -281,7 +281,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         return image;
     }
     
-    if (! self.imageOperations[imageURL]) {
+    if (imageURL && ! self.imageOperations[imageURL]) {
         @weakify(self)
         YYWebImageOperation *imageOperation = [webImageManager requestImageWithURL:imageURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             @strongify(self)
