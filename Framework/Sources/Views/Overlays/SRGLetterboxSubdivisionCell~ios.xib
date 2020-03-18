@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -63,7 +63,7 @@
                         <color key="trackTintColor" white="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </progressView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ZTG-10-dKM">
-                        <rect key="frame" x="6" y="94" width="148" height="31"/>
+                        <rect key="frame" x="6" y="93" width="148" height="33"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" text="&lt;title&gt;" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="XEC-ZT-Ya9" userLabel="Title Label">
                                 <rect key="frame" x="0.0" y="0.0" width="148" height="15.5"/>
@@ -73,7 +73,7 @@
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qm6-mr-AB1" userLabel="Spacer View">
-                                <rect key="frame" x="0.0" y="15.5" width="148" height="15.5"/>
+                                <rect key="frame" x="0.0" y="15.5" width="148" height="17.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -94,8 +94,8 @@
                 <constraint firstItem="cFP-OY-NIp" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" id="WGt-Ou-MS6"/>
                 <constraint firstAttribute="trailing" secondItem="cFP-OY-NIp" secondAttribute="trailing" id="bLU-U1-WnL"/>
                 <constraint firstItem="FIC-tI-Av6" firstAttribute="bottom" secondItem="Fjo-Dj-oWj" secondAttribute="bottom" id="dsA-0Q-H7o"/>
-                <constraint firstAttribute="bottom" secondItem="ZTG-10-dKM" secondAttribute="bottom" constant="5" id="fUW-bZ-zlK"/>
-                <constraint firstItem="ZTG-10-dKM" firstAttribute="top" secondItem="cFP-OY-NIp" secondAttribute="bottom" constant="4" id="hLw-7w-foI"/>
+                <constraint firstAttribute="bottom" secondItem="ZTG-10-dKM" secondAttribute="bottom" constant="4" id="fUW-bZ-zlK"/>
+                <constraint firstItem="ZTG-10-dKM" firstAttribute="top" secondItem="cFP-OY-NIp" secondAttribute="bottom" constant="3" id="hLw-7w-foI"/>
                 <constraint firstItem="xPG-fm-CkX" firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" constant="-5" id="iwD-qB-I9o"/>
                 <constraint firstAttribute="trailing" secondItem="Fjo-Dj-oWj" secondAttribute="trailing" id="kYp-Sb-Yv6"/>
                 <constraint firstItem="Fjo-Dj-oWj" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="sYb-Om-2SE"/>
