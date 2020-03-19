@@ -107,7 +107,7 @@
             self.subtitleLabel.text = nil;
         }
         
-        [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge aspectRatio:16.f / 9.f type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
+        [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge aspectRatio:SRGLetterboxDefaultAspectRatio type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
         
         NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
         float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;

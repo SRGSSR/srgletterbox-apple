@@ -318,7 +318,7 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)aspectRatio
 {
     SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-    return (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : 16.f / 9.f;
+    return (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : SRGLetterboxDefaultAspectRatio;
 }
 
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
@@ -420,7 +420,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge aspectRatio:16.f / 9.f type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia atDate:self.controlsView.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge aspectRatio:SRGLetterboxDefaultAspectRatio type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia atDate:self.controlsView.date];
 }
 
 #pragma mark Observer management

@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
+
 @interface UIImageView (SRGLetterbox)
 
 /**
