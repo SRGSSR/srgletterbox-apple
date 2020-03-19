@@ -84,7 +84,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     [super viewDidLoad];
     
-    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholderBackground) withSize:self.backgroundImageView.frame.size];
+    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:self.backgroundImageView.frame.size];
     
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];

@@ -128,7 +128,6 @@
 		6F75EA422225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */; };
 		6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */; };
 		6F8211922358ED3500B047FF /* placeholder_background~tvos.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211912358ED3500B047FF /* placeholder_background~tvos.pdf */; };
-		6F8211952358ED4300B047FF /* placeholder_media-square.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211932358ED4200B047FF /* placeholder_media-square.pdf */; };
 		6F8211962358ED4300B047FF /* placeholder_media.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211942358ED4200B047FF /* placeholder_media.pdf */; };
 		6F83304B236B4D40005D08A4 /* MiscellaneousViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */; };
 		6F93AFBA236B3EDD007F97CA /* ListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F93AFB9236B3EDD007F97CA /* ListsViewController.m */; };
@@ -391,7 +390,6 @@
 		6F75EA402225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPRemoteCommand+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F75EA412225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPRemoteCommand+SRGLetterbox.h"; sourceTree = "<group>"; };
 		6F8211912358ED3500B047FF /* placeholder_background~tvos.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_background~tvos.pdf"; sourceTree = "<group>"; };
-		6F8211932358ED4200B047FF /* placeholder_media-square.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "placeholder_media-square.pdf"; sourceTree = "<group>"; };
 		6F8211942358ED4200B047FF /* placeholder_media.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = placeholder_media.pdf; sourceTree = "<group>"; };
 		6F833048236B4D40005D08A4 /* MiscellaneousViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiscellaneousViewController.h; sourceTree = "<group>"; };
 		6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MiscellaneousViewController~ios.m"; sourceTree = "<group>"; };
@@ -579,7 +577,6 @@
 				08FA0CBA1E2E5874000C94EF /* Images.xcassets */,
 				6F00F7BC2148E09E0016E664 /* Info.plist */,
 				6F4855AA1E3A669B00B0141C /* Localizable.strings */,
-				6F8211932358ED4200B047FF /* placeholder_media-square.pdf */,
 				6F8211942358ED4200B047FF /* placeholder_media.pdf */,
 				6F8211912358ED3500B047FF /* placeholder_background~tvos.pdf */,
 			);
@@ -1206,7 +1203,6 @@
 				6F0C990A2121E70300073AB6 /* Localizable.strings in Resources */,
 				6F0C99132121E73400073AB6 /* SRGCountdownView~ios.xib in Resources */,
 				6F0C99162121E73400073AB6 /* SRGLetterboxTimelineView~ios.xib in Resources */,
-				6F8211952358ED4300B047FF /* placeholder_media-square.pdf in Resources */,
 				6F0C99182121E73400073AB6 /* SRGLetterboxView~ios.xib in Resources */,
 				6F72A81523391490008AA908 /* SRGContinuousPlaybackViewController~tvos.storyboard in Resources */,
 				6F0C99122121E73400073AB6 /* SRGControlsView~ios.xib in Resources */,

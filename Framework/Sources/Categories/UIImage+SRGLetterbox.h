@@ -27,27 +27,9 @@ typedef NS_ENUM(NSInteger, SRGImageSet) {
 };
 
 /**
- *  Types of placeholders available.
+ *  Return the file path for the default media placeholder.
  */
-typedef NS_ENUM(NSInteger, SRGLetterboxImagePlaceholder) {
-    /**
-     *  Media placeholder.
-     */
-    SRGLetterboxImagePlaceholderMedia,
-    /**
-     *  Artwork (square) placeholder.
-     */
-    SRGLetterboxImagePlaceholderArtwork,
-    /**
-     *  Large background placeholder, mostly for full-screen display on a TV.
-     */
-    SRGLetterboxImagePlaceholderBackground API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
-};
-
-/**
- *  Return the file path corresponding to the specified placeholder.
- */
-OBJC_EXPORT NSString *SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholder imagePlaceholder);
+OBJC_EXPORT NSString *SRGLetterboxFilePathForImagePlaceholder(void);
 
 /**
  *  Return the image URL for an object and width, `nil` if the image URL is not found or invalid.

@@ -25,8 +25,8 @@ static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
  *
  *  @param object                The object for which the image must be requested.
  *  @param scale                 The image scale.
+ *  @param aspectRatio           The image aspect ratio.
  *  @param type                  The image type.
- *  @param placeholder           The image placeholder.
  *  @param unavailabilityHandler An optional handler called when the image is invalid (no object was provided or its
  *                               associated image is invalid). You can implement this block to respond to such cases,
  *                               e.g. to retrieve another image. If the block is set, no image will be set, otherwise
@@ -36,18 +36,16 @@ static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
                         withScale:(SRGImageScale)scale
                       aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
-                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
             unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler;
 
 /**
- *  Same as `-srg_requestImageForObject:withScale:type:unavailabilityHandler:`, with no unavailability handler (thus
- *  setting the default placeholder if no image is available).
+ *  Same as `-srg_requestImageForObject:withScale:aspectRatio:type:unavailabilityHandler:`, with no unavailability handler
+ *  (thus setting the default placeholder if no image is available).
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
                       aspectRatio:(CGFloat)aspectRatio
-                             type:(SRGImageType)type
-                      placeholder:(SRGLetterboxImagePlaceholder)placeholder;
+                             type:(SRGImageType)type;
 
 /**
  *  Request an image matching the content currently being played by a controller, if playing at the specified date. Use
@@ -60,19 +58,17 @@ static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
                             withScale:(SRGImageScale)scale
                           aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
-                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
                 unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler
                                atDate:(nullable NSDate *)date;
 
 /**
-*  Same as `-srg_requestImageForController:withScale:type:unavailabilityHandler:atDate`, with no unavailability handler
- * (thus setting the default placeholder if no image is available).
-*/
+ *  Same as `-srg_requestImageForController:withScale:aspectRatio:type:unavailabilityHandler:atDate`, with no unavailability
+ *  handler (thus setting the default placeholder if no image is available).
+ */
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
                           aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
-                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
                                atDate:(nullable NSDate *)date;
 
 /**

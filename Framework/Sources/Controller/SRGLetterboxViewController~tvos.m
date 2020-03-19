@@ -293,7 +293,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.imageOperations[imageURL] = imageOperation;
     }
     
-    return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholderMedia) withSize:size];
+    return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];
 }
 
 #pragma mark Data

@@ -61,11 +61,10 @@
                         withScale:(SRGImageScale)scale
                       aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
-                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale, aspectRatio);
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(placeholder) withSize:size fillColor:UIColor.srg_placeholderBackgroundGrayColor];
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size fillColor:UIColor.srg_placeholderBackgroundGrayColor];
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
@@ -74,6 +73,7 @@
         }
         else {
             [self yy_setImageWithURL:nil placeholder:placeholderImage];
+            self.contentMode = UIViewContentModeScaleAspectFill;
         }
         return;
     }
@@ -86,7 +86,9 @@
                 [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
             }
             else {
-                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                    self.contentMode = (error == nil) ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
+                }];
             }
         }
         // If no image is already displayed, check if the image we want to display is already available from the cache.
@@ -100,7 +102,9 @@
                 [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
             }
             else {
-                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                    self.contentMode = (error == nil) ? UIViewContentModeScaleAspectFit : UIViewContentModeScaleAspectFill;
+                }];
             }
         }
     }
@@ -110,16 +114,14 @@
                         withScale:(SRGImageScale)scale
                       aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
-                      placeholder:(SRGLetterboxImagePlaceholder)placeholder
 {
-    [self srg_requestImageForObject:object withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:nil];
+    [self srg_requestImageForObject:object withScale:scale aspectRatio:aspectRatio type:type unavailabilityHandler:nil];
 }
 
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
                           aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
-                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
                 unavailabilityHandler:(void (^)(void))unavailabilityHandler
                                atDate:(NSDate *)date
 {
@@ -130,16 +132,16 @@
         
         // Display program artwork (if any) when the provided date falls within the current program, otherwise channel artwork.
         if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self srg_requestImageForObject:channel.currentProgram withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:^{
-                [self srg_requestImageForObject:channel withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel.currentProgram withScale:scale aspectRatio:aspectRatio type:type unavailabilityHandler:^{
+                [self srg_requestImageForObject:channel withScale:scale aspectRatio:aspectRatio type:type unavailabilityHandler:unavailabilityHandler];
             }];
         }
         else {
-            [self srg_requestImageForObject:channel withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel withScale:scale aspectRatio:aspectRatio type:type unavailabilityHandler:unavailabilityHandler];
         }
     }
     else {
-        [self srg_requestImageForObject:media withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+        [self srg_requestImageForObject:media withScale:scale aspectRatio:aspectRatio type:type unavailabilityHandler:unavailabilityHandler];
     }
 
 }
@@ -148,10 +150,9 @@
                             withScale:(SRGImageScale)scale
                           aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
-                          placeholder:(SRGLetterboxImagePlaceholder)placeholder
                                atDate:(NSDate *)date
 {
-    [self srg_requestImageForController:controller withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:nil atDate:date];
+    [self srg_requestImageForController:controller withScale:scale aspectRatio:aspectRatio type:type unavailabilityHandler:nil atDate:date];
 }
 
 - (void)srg_resetImage

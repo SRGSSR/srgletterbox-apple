@@ -34,31 +34,13 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
         && ! [URL.absoluteString containsString:@".html"];
 }
 
-NSString *SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholder imagePlaceholder)
+NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 {
-    switch (imagePlaceholder) {
-        case SRGLetterboxImagePlaceholderMedia: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
-            break;
-        }
-            
-        case SRGLetterboxImagePlaceholderArtwork: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-square" ofType:@"pdf"];
-            break;
-        }
-            
 #if TARGET_OS_TV
-        case SRGLetterboxImagePlaceholderBackground: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_background~tvos" ofType:@"pdf"];
-            break;
-        }
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_background~tvos" ofType:@"pdf"];
+#else
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
 #endif
-            
-        default: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
-            break;
-        }
-    }
 }
 
 
