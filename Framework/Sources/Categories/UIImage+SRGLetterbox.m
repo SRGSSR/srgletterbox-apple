@@ -37,9 +37,9 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 {
 #if TARGET_OS_TV
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_background~tvos" ofType:@"pdf"];
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder~tvos" ofType:@"pdf"];
 #else
-    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder" ofType:@"pdf"];
 #endif
 }
 
