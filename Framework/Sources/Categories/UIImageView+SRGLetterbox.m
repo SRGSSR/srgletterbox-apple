@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGProgram+SRGLetterbox.h"
+#import "UIColor+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -64,7 +65,7 @@
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale, aspectRatio);
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(placeholder) withSize:size];
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(placeholder) withSize:size fillColor:UIColor.srg_placeholderBackgroundGrayColor];
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
     if (! URL) {
@@ -81,9 +82,14 @@
         // If an image is already displayed, use it as placeholder. This make the transition smooth between both images.
         // Using the placeholder would add an unnecessary intermediate state leading to flickering
         if (self.image) {
-            [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            if (self.yy_imageURL) {
+                [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
+            else {
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+            }
         }
-        // If no image is already displayed, check if the image we want to display is already available from the cahce.
+        // If no image is already displayed, check if the image we want to display is already available from the cache.
         // If this is the case, use it as placeholder, avoiding an intermediate step which would lead to flickering
         else {
             YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
