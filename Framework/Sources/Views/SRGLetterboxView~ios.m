@@ -63,6 +63,8 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 
+@property (nonatomic) CGFloat previousAspectRatio;
+
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
 @property (nonatomic, copy) void (^animations)(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset);
@@ -318,7 +320,7 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)aspectRatio
 {
     SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-    return (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : SRGLetterboxDefaultAspectRatio;
+    return (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : self.previousAspectRatio;
 }
 
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
@@ -555,7 +557,10 @@ static void commonInit(SRGLetterboxView *self);
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        self.animations ? self.animations(userInterfaceHidden, self.minimal, self.aspectRatio, timelineHeight + notificationHeight) : nil;
+        
+        CGFloat aspectRatio = self.aspectRatio;
+        self.animations ? self.animations(userInterfaceHidden, self.minimal, aspectRatio, timelineHeight + notificationHeight) : nil;
+        self.previousAspectRatio = aspectRatio;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -993,6 +998,8 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+    self.previousAspectRatio = SRGLetterboxDefaultAspectRatio;
+    
     self.backgroundColor = UIColor.blackColor;
     
     if (@available(iOS 11.0, *)) {
