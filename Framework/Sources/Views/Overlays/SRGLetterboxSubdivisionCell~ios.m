@@ -43,8 +43,6 @@
     [self addGestureRecognizer:longPressGestureRecognizer];
     self.longPressGestureRecognizer = longPressGestureRecognizer;
     
-    self.imageView.backgroundColor = UIColor.srg_timelineCellBackgroundGrayColor;
-    
     // Workaround UIImage view tint color bug
     // See http://stackoverflow.com/a/26042893/760435
     UIImage *media360Image = self.media360ImageView.image;
@@ -86,7 +84,7 @@
     self.titleLabel.text = subdivision.title;
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia backgroundColor:UIColor.srg_timelineCellBackgroundGrayColor];
+    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     

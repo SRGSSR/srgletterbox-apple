@@ -8,7 +8,6 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGProgram+SRGLetterbox.h"
-#import "UIColor+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -61,7 +60,6 @@
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder
-                  backgroundColor:(UIColor *)backgroundColor
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
     CGSize size = SRGSizeForImageScale(scale);
@@ -74,7 +72,6 @@
         }
         else {
             [self yy_setImageWithURL:nil placeholder:placeholderImage];
-            self.backgroundColor = UIColor.srg_placeholderBackgroundGrayColor;
         }
         return;
     }
@@ -83,14 +80,9 @@
         // If an image is already displayed, use it as placeholder. This make the transition smooth between both images.
         // Using the placeholder would add an unnecessary intermediate state leading to flickering
         if (self.image) {
-            [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                if (! error) {
-                    // Use background color only if the image is set
-                    self.backgroundColor = backgroundColor;
-                }
-            }];
+            [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
         }
-        // If no image is already displayed, check if the image we want to display is already available from the cache.
+        // If no image is already displayed, check if the image we want to display is already available from the cahce.
         // If this is the case, use it as placeholder, avoiding an intermediate step which would lead to flickering
         else {
             YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
@@ -98,23 +90,10 @@
             UIImage *image = [webImageManager.cache getImageForKey:key];
             if (image) {
                 // Use the YYWebImage setter so that the URL is properly associated with the image view
-                [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                    if(! error) {
-                        // Use background color only if the image is set
-                        self.backgroundColor = backgroundColor;
-                    }
-                }];
+                [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
             }
             else {
-                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                    if (error) {
-                        self.backgroundColor = UIColor.srg_placeholderBackgroundGrayColor;
-                    }
-                    else {
-                        // Use background color only if the image is set
-                        self.backgroundColor = backgroundColor;
-                    }
-                }];
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
             }
         }
     }
@@ -124,16 +103,14 @@
                         withScale:(SRGImageScale)scale
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder
-                  backgroundColor:(UIColor *)backgroundColor
 {
-    [self srg_requestImageForObject:object withScale:scale type:type placeholder:placeholder backgroundColor:backgroundColor unavailabilityHandler:nil];
+    [self srg_requestImageForObject:object withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil];
 }
 
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
-                      backgroundColor:(UIColor *)backgroundColor
                 unavailabilityHandler:(void (^)(void))unavailabilityHandler
                                atDate:(NSDate *)date
 {
@@ -144,16 +121,16 @@
         
         // Display program artwork (if any) when the provided date falls within the current program, otherwise channel artwork.
         if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type placeholder:placeholder backgroundColor:backgroundColor unavailabilityHandler:^{
-                [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder backgroundColor:backgroundColor unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type placeholder:placeholder unavailabilityHandler:^{
+                [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
             }];
         }
         else {
-            [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder backgroundColor:backgroundColor unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
         }
     }
     else {
-        [self srg_requestImageForObject:media withScale:scale type:type placeholder:placeholder backgroundColor:backgroundColor unavailabilityHandler:unavailabilityHandler];
+        [self srg_requestImageForObject:media withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
     }
 
 }
@@ -162,10 +139,9 @@
                             withScale:(SRGImageScale)scale
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
-                      backgroundColor:(UIColor *)backgroundColor
                                atDate:(NSDate *)date
 {
-    [self srg_requestImageForController:controller withScale:scale type:type placeholder:placeholder backgroundColor:backgroundColor unavailabilityHandler:nil atDate:date];
+    [self srg_requestImageForController:controller withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil atDate:date];
 }
 
 - (void)srg_resetImage
