@@ -62,15 +62,10 @@
                              type:(SRGImageType)type
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
-    // Use resource aspect ratio so that the image is best fitted
-#if TARGET_OS_TV
-    CGSize size = SRGSizeForImageScale(scale, 16.f / 9.f);
-#else
-    CGSize size = SRGSizeForImageScale(scale, 1.f);
-#endif
-    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];
+    CGFloat width = SRGWidthForImageScale(scale);
+    UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
     
-    NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
+    NSURL *URL = SRGLetterboxImageURL(object, width, type);
     if (! URL) {
         if (unavailabilityHandler) {
             unavailabilityHandler();

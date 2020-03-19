@@ -79,7 +79,7 @@ NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
     return artworkURL;
 }
 
-CGSize SRGSizeForImageScale(SRGImageScale imageScale, CGFloat aspectRatio)
+CGFloat SRGWidthForImageScale(SRGImageScale imageScale)
 {
     static NSDictionary *s_widths;
     static dispatch_once_t s_onceToken;
@@ -103,8 +103,7 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale, CGFloat aspectRatio)
     });
     
     // Use 2x maximum as scale. Sufficient for a good result without having to load very large images
-    CGFloat width = [s_widths[@(imageScale)] floatValue] * fminf(UIScreen.mainScreen.scale, 2.f);
-    return CGSizeMake(width, width / aspectRatio);
+    return [s_widths[@(imageScale)] floatValue] * fminf(UIScreen.mainScreen.scale, 2.f);
 }
 
 static CGFloat SRGImageAspectScaleFit(CGSize sourceSize, CGRect destRect)

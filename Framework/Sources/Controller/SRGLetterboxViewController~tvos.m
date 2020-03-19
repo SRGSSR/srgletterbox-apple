@@ -273,8 +273,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    CGSize size = SRGSizeForImageScale(SRGImageScaleMedium, 16.f / 9.f);
-    NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:size.width type:SRGImageTypeDefault];
+    CGFloat width = SRGWidthForImageScale(SRGImageScaleMedium);
+    NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:width type:SRGImageTypeDefault];
     NSString *key = [webImageManager cacheKeyForURL:imageURL];
     UIImage *image = [webImageManager.cache getImageForKey:key];
     if (image) {
@@ -293,7 +293,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.imageOperations[imageURL] = imageOperation;
     }
     
-    return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];
+    return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
 }
 
 #pragma mark Data
