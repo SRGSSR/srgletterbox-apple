@@ -1032,6 +1032,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
             self.cachedArtworkImage = nil;
             self.cachedArtworkURL = nil;
             self.cachedArtworkError = nil;
+            
+            [self updateNowPlayingInformationWithController:self.controller];
         }
     }
 }
