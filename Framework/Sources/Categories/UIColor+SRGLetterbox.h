@@ -22,11 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Placeholder background color (same as the resource).
-*/
+ */
 @property (class, nonatomic, readonly) UIColor *srg_placeholderBackgroundGrayColor;
+
 /**
  *  Gray timeline cell background color.
-*/
+ */
 @property (class, nonatomic, readonly) UIColor *srg_timelineCellBackgroundGrayColor;
 
 @end

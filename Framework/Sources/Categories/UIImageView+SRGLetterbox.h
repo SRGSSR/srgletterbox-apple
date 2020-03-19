@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
+                      aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder
             unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler;
@@ -42,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
+                      aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder;
 
@@ -54,6 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
+                          aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
                 unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler
@@ -65,6 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
+                          aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
                                atDate:(nullable NSDate *)date;

@@ -58,11 +58,12 @@
 
 - (void)srg_requestImageForObject:(id<SRGImage>)object
                         withScale:(SRGImageScale)scale
+                      aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder
             unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
-    CGSize size = SRGSizeForImageScale(scale);
+    CGSize size = SRGSizeForImageScale(scale, aspectRatio);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(placeholder) withSize:size];
     
     NSURL *URL = SRGLetterboxImageURL(object, size.width, type);
@@ -101,14 +102,16 @@
 
 - (void)srg_requestImageForObject:(id<SRGImage>)object
                         withScale:(SRGImageScale)scale
+                      aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
                       placeholder:(SRGLetterboxImagePlaceholder)placeholder
 {
-    [self srg_requestImageForObject:object withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil];
+    [self srg_requestImageForObject:object withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:nil];
 }
 
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
+                          aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
                 unavailabilityHandler:(void (^)(void))unavailabilityHandler
@@ -121,27 +124,28 @@
         
         // Display program artwork (if any) when the provided date falls within the current program, otherwise channel artwork.
         if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type placeholder:placeholder unavailabilityHandler:^{
-                [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel.currentProgram withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:^{
+                [self srg_requestImageForObject:channel withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
             }];
         }
         else {
-            [self srg_requestImageForObject:channel withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+            [self srg_requestImageForObject:channel withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
         }
     }
     else {
-        [self srg_requestImageForObject:media withScale:scale type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
+        [self srg_requestImageForObject:media withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:unavailabilityHandler];
     }
 
 }
 
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
+                          aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
                           placeholder:(SRGLetterboxImagePlaceholder)placeholder
                                atDate:(NSDate *)date
 {
-    [self srg_requestImageForController:controller withScale:scale type:type placeholder:placeholder unavailabilityHandler:nil atDate:date];
+    [self srg_requestImageForController:controller withScale:scale aspectRatio:aspectRatio type:type placeholder:placeholder unavailabilityHandler:nil atDate:date];
 }
 
 - (void)srg_resetImage

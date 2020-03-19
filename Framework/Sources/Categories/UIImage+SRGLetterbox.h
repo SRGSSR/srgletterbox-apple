@@ -66,9 +66,9 @@ OBJC_EXPORT NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object
 OBJC_EXPORT NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension);
 
 /**
- *  Return the recommended size matching a given image scale.
+ *  Return the recommended size matching a given image scale and aspect ratio.
  */
-OBJC_EXPORT CGSize SRGSizeForImageScale(SRGImageScale imageScale);
+OBJC_EXPORT CGSize SRGSizeForImageScale(SRGImageScale imageScale, CGFloat aspectRatio);
 
 /**
  *  Standard images from Letterbox bundle.
