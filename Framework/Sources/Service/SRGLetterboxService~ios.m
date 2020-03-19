@@ -13,6 +13,7 @@
 #import "UIDevice+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
+#import <FXReachability/FXReachability.h>
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -43,6 +44,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 @property (atomic) NSURL *cachedArtworkURL;
 @property (atomic) UIImage *cachedArtworkImage;
+@property (atomic) NSError *cachedArtworkError;
 
 @end
 
@@ -82,6 +84,10 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(audioSessionInterruption:)
                                                    name:AVAudioSessionInterruptionNotification
+                                                 object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(rechabilityDidChange:)
+                                                   name:FXReachabilityStatusDidChangeNotification
                                                  object:nil];
         
         _restoreUserInterface = YES;
@@ -696,6 +702,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
             UIImage *image = [UIImage imageWithContentsOfFile:artworkURL.path];
             self.cachedArtworkURL = artworkURL;
             self.cachedArtworkImage = image;
+            self.cachedArtworkError = nil;
             return image;
         }
         else {
@@ -711,14 +718,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
                 @strongify(self)
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (image) {
-                        self.cachedArtworkURL = artworkURL;
-                        self.cachedArtworkImage = image;
-                    }
-                    else {
-                        self.cachedArtworkURL = placeholderImageURL;
-                        self.cachedArtworkImage = placeholderImage;
-                    }
+                    self.cachedArtworkURL = artworkURL;
+                    self.cachedArtworkImage = image ?: placeholderImage;
+                    self.cachedArtworkError = error;
                     
                     completion ? completion() : nil;
                 });
@@ -738,6 +740,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 {
     self.cachedArtworkURL = nil;
     self.cachedArtworkImage = nil;
+    self.cachedArtworkError = nil;
 }
 
 #pragma mark Remote commands
@@ -1018,6 +1021,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         AVAudioSessionInterruptionOptions interruptionOption = [notification.userInfo[AVAudioSessionInterruptionOptionKey] integerValue];
         if (interruptionOption == AVAudioSessionInterruptionOptionShouldResume) {
             [self.controller play];
+        }
+    }
+}
+
+- (void)rechabilityDidChange:(NSNotification *)notification
+{
+    if ([FXReachability sharedInstance].reachable) {
+        if (self.cachedArtworkError) {
+            self.cachedArtworkImage = nil;
+            self.cachedArtworkURL = nil;
+            self.cachedArtworkError = nil;
         }
     }
 }
