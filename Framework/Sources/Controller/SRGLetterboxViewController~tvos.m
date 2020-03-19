@@ -273,7 +273,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    CGSize size = SRGSizeForImageScale(SRGImageScaleMedium, 1.f);
+    CGSize size = SRGSizeForImageScale(SRGImageScaleMedium, 16.f / 9.f);
     NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:size.width type:SRGImageTypeDefault];
     NSString *key = [webImageManager cacheKeyForURL:imageURL];
     UIImage *image = [webImageManager.cache getImageForKey:key];
