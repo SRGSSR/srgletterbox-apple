@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
  *                               associated image is invalid). You can implement this block to respond to such cases,
  *                               e.g. to retrieve another image. If the block is set, no image will be set, otherwise
  *                               the specified placeholder will automatically be set.
+ *
+ *  @discussion The background color is automatically adjusted.
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
