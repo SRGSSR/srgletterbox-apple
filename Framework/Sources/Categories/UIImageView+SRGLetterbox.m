@@ -77,18 +77,15 @@
         return;
     }
     
+    YYWebImageCompletionBlock completion = ^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+        self.backgroundColor = (error == nil) ? UIColor.clearColor : UIColor.srg_placeholderBackgroundGrayColor;
+    };
+    
     if (! [URL isEqual:self.yy_imageURL]) {
         // If an image is already displayed, use it as placeholder. This make the transition smooth between both images.
         // Using the placeholder would add an unnecessary intermediate state leading to flickering
         if (self.image) {
-            if (self.yy_imageURL) {
-                [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
-            }
-            else {
-                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                    self.backgroundColor = (error == nil) ? UIColor.clearColor : UIColor.srg_placeholderBackgroundGrayColor;
-                }];
-            }
+            [self yy_setImageWithURL:URL placeholder:self.image options:YYWebImageOptionSetImageWithFadeAnimation completion:completion];
         }
         // If no image is already displayed, check if the image we want to display is already available from the cache.
         // If this is the case, use it as placeholder, avoiding an intermediate step which would lead to flickering
@@ -98,12 +95,11 @@
             UIImage *image = [webImageManager.cache getImageForKey:key];
             if (image) {
                 // Use the YYWebImage setter so that the URL is properly associated with the image view
-                [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:nil];
+                [self yy_setImageWithURL:URL placeholder:image options:YYWebImageOptionSetImageWithFadeAnimation completion:completion];
             }
             else {
-                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                    self.backgroundColor = (error == nil) ? UIColor.clearColor : UIColor.srg_placeholderBackgroundGrayColor;
-                }];
+                self.backgroundColor = UIColor.srg_placeholderBackgroundGrayColor;
+                [self yy_setImageWithURL:URL placeholder:placeholderImage options:YYWebImageOptionSetImageWithFadeAnimation completion:completion];
             }
         }
     }
@@ -140,7 +136,6 @@
     else {
         [self srg_requestImageForObject:media withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
     }
-
 }
 
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
@@ -154,6 +149,7 @@
 - (void)srg_resetImage
 {
     [self yy_setImageWithURL:nil options:0];
+    self.backgroundColor = UIColor.clearColor;
 }
 
 @end
