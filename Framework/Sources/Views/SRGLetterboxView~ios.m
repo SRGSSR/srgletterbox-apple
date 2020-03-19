@@ -320,7 +320,15 @@ static void commonInit(SRGLetterboxView *self);
 - (CGFloat)aspectRatio
 {
     SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-    return (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) ? mainChapter.aspectRatio : self.previousAspectRatio;
+    if (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) {
+        return mainChapter.aspectRatio;
+    }
+    else if (self.previousAspectRatio != SRGAspectRatioUndefined) {
+        return self.previousAspectRatio;
+    }
+    else {
+        return 16.f / 9.f;
+    }
 }
 
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
@@ -422,7 +430,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge aspectRatio:self.aspectRatio type:SRGImageTypeDefault atDate:self.controlsView.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controlsView.date];
 }
 
 #pragma mark Observer management
@@ -998,7 +1006,7 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
-    self.previousAspectRatio = SRGLetterboxDefaultAspectRatio;
+    self.previousAspectRatio = SRGAspectRatioUndefined;
     
     self.backgroundColor = UIColor.blackColor;
     

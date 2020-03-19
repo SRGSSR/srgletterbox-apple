@@ -11,8 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
-
 @interface UIImageView (SRGLetterbox)
 
 /**
@@ -25,7 +23,6 @@ static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
  *
  *  @param object                The object for which the image must be requested.
  *  @param scale                 The image scale.
- *  @param aspectRatio           The image aspect ratio.
  *  @param type                  The image type.
  *  @param unavailabilityHandler An optional handler called when the image is invalid (no object was provided or its
  *                               associated image is invalid). You can implement this block to respond to such cases,
@@ -34,17 +31,15 @@ static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
-                      aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type
             unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler;
 
 /**
- *  Same as `-srg_requestImageForObject:withScale:aspectRatio:type:unavailabilityHandler:`, with no unavailability handler
- *  (thus setting the default placeholder if no image is available).
+ *  Same as `-srg_requestImageForObject:withScale:type:unavailabilityHandler:`, with no unavailability handler (thus
+ *  setting the default placeholder if no image is available).
  */
 - (void)srg_requestImageForObject:(nullable id<SRGImage>)object
                         withScale:(SRGImageScale)scale
-                      aspectRatio:(CGFloat)aspectRatio
                              type:(SRGImageType)type;
 
 /**
@@ -56,18 +51,16 @@ static const CGFloat SRGLetterboxDefaultAspectRatio = 16.f / 9.f;
  */
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
-                          aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
                 unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler
                                atDate:(nullable NSDate *)date;
 
 /**
- *  Same as `-srg_requestImageForController:withScale:aspectRatio:type:unavailabilityHandler:atDate`, with no unavailability
- *  handler (thus setting the default placeholder if no image is available).
+ *  Same as `-srg_requestImageForController:withScale:type:unavailabilityHandler:atDate`, with no unavailability handler
+ *  (thus setting the default placeholder if no image is available).
  */
 - (void)srg_requestImageForController:(SRGLetterboxController *)controller
                             withScale:(SRGImageScale)scale
-                          aspectRatio:(CGFloat)aspectRatio
                                  type:(SRGImageType)type
                                atDate:(nullable NSDate *)date;
 

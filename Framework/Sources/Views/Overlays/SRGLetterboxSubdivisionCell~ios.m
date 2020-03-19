@@ -84,7 +84,7 @@
     self.titleLabel.text = subdivision.title;
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     
-    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium aspectRatio:SRGLetterboxDefaultAspectRatio type:SRGImageTypeDefault];
+    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     

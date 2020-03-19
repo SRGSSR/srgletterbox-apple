@@ -273,7 +273,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    CGSize size = SRGSizeForImageScale(SRGImageScaleMedium);
+    CGSize size = SRGSizeForImageScale(SRGImageScaleMedium, 1.f);
     NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:size.width type:SRGImageTypeDefault];
     NSString *key = [webImageManager cacheKeyForURL:imageURL];
     UIImage *image = [webImageManager.cache getImageForKey:key];
@@ -316,12 +316,12 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground atDate:self.controller.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
 }
 
 - (void)reloadPlaceholderImage
 {
-    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground];
+    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 #pragma mark Layout

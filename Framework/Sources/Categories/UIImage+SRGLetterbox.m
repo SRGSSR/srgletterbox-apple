@@ -43,7 +43,6 @@ NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 #endif
 }
 
-
 NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
 {
     if (! object) {
