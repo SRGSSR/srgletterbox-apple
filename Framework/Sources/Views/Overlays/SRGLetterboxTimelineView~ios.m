@@ -67,6 +67,7 @@
     self.collectionView.delegate = self;
     
     self.collectionView.alwaysBounceHorizontal = YES;
+    self.collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     collectionViewLayout.minimumLineSpacing = 1.f;
