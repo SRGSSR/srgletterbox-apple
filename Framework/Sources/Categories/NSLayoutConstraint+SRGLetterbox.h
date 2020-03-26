@@ -13,13 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Replace a constraint with an equivalent one having the specified multiplier. Returns the new constraint.
  */
-- (NSLayoutConstraint *)srg_replacementConstraintWithMultiplier:(CGFloat)multiplier;
+- (NSLayoutConstraint *)srg_replacementConstraintWithMultiplier:(CGFloat)multiplier API_AVAILABLE(ios(10.0));
 
 /**
  *  Replace a constraint with an equivalent one having the specified multiplier and constant. Returns the new
  *  constraint.
  */
-- (NSLayoutConstraint *)srg_replacementConstraintWithMultiplier:(CGFloat)multiplier constant:(CGFloat)constant;
+- (NSLayoutConstraint *)srg_replacementConstraintWithMultiplier:(CGFloat)multiplier constant:(CGFloat)constant API_AVAILABLE(ios(10.0));
 
 @end
 
