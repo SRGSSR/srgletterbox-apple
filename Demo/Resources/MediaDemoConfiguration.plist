@@ -79,12 +79,6 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>RTS Square video</string>
-					<key>urn</key>
-					<string>urn:rts:video:10438517</string>
-				</dict>
-				<dict>
-					<key>name</key>
 					<string>SRF VOD (no token protection)</string>
 					<key>urn</key>
 					<string>urn:srf:video:db741834-044f-443e-901a-e2fc03a4ef25</string>

@@ -70,37 +70,39 @@ In most cases, applications should not need to perform additional requests for p
 
 ## Letterbox view (iOS)
 
-On iOS, to display what is currently played by a controller, add an `SRGLetterboxView` instance somewhere in your application, either in code or using Interface Builder, and bind its `controller` property to a Letterbox controller. Nothing else is required, as this view automatically displays what is currently being played by the controller. If you play another media or change the controller of a view, the view will automatically update to reflect the new content being played.
+On iOS, to display what is currently being played by a controller, add an `SRGLetterboxView` instance somewhere in your application, either in code or using Interface Builder, and bind its `controller` property to a Letterbox controller. Nothing else is required, as this view automatically keeps in sync with the underlying controller. If you play another media or change the controller of a view, the view will automatically update to reflect the new content.
 
 ### Controls and overlays
 
 The standard player controls (play / pause button, seek bar, etc.) and the chapter and segment timeline of a Letterbox view cannot be customised. You can still add your own controls on top of the player view and have them shown or hidden alongside the player controls, though. 
 
-You can also respond to view height changes in the same way, e.g. when a timeline or a notification are displayed. Simply set a delegate for the player view and respond to user interface state changes, as follows:
+You can also respond to recommended intrinsic view size changes in the same way, e.g. when a timeline or a notification are displayed, or to better support arbitrary aspect ratios. Simply set a delegate for the player view and respond to user interface state changes, as follows:
 
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset) {
         // Show or hide your own overlays here, or adjust your layout to respond to height changes
     } completion:nil];
 }
 ```
 
-Within the block, you can apply any `UIView` or layout change, as you would in a usual view animation block. All changes will be animated within the same transaction as the controls animation. If layout constraints must be animated, you will need to add calls to `-layoutIfNeeded` to ensure correct behavior. For example, if the delegate is a view controller, a typical implementation would look like:
+Within the block, you can apply any `UIView` or layout change, as you would in a usual view animation block. All changes will be animated within the same transaction as the view animations. If layout constraints must be animated, you will need to add calls to `-layoutIfNeeded` to ensure correct behavior. For example, if the delegate is a view controller, a typical implementation would look like:
 
 ```objective-c
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [self.view layoutIfNeeded];
-    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat heightOffset) {
+    [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset) {
         // Show or hide your own overlays here, or adjust your layout to respond to height changes
         [self.view layoutIfNeeded];
     } completion:nil];
 }
 ```
 
-The `-animateAlongsideUserInterfaceWithAnimations:completion:` animation block provides information about whether the usual controls are visible (`hidden` property) or whether the interface is in a minimal state, usually because no media is available or an error has been encountered (`minimal` property). You should use this information to set the visibility of your own custom controls appropriately. Refer to the modal view controller demo implementation for a concrete example. 
+The `-animateAlongsideUserInterfaceWithAnimations:completion:` animation block provides information about whether the usual controls are visible (`hidden` property) or whether the interface is in a minimal state, usually because no media is available or an error has been encountered (`minimal` property). You should use this information to set the visibility of your own custom controls appropriately. 
+
+It also provides information about the view intrinsic size (`aspectRatio` and `heightOffset`), which you can use to assign the view just the size it requires, so that its content does not have to expand or shrink. Refer to the modal view controller demo implementation for a concrete example. 
 
 ### Full screen
 

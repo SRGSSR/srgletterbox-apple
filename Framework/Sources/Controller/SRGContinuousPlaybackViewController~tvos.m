@@ -84,7 +84,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     [super viewDidLoad];
     
-    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholderBackground) withSize:self.backgroundImageView.frame.size];
+    self.backgroundImageView.image = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:self.backgroundImageView.frame.size];
     
     self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
     self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
@@ -138,7 +138,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     
     self.thumbnailButton.accessibilityLabel = self.media.title;
     self.thumbnailButton.accessibilityHint = SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
-    [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
+    [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
     self.upcomingTitleLabel.isAccessibilityElement = NO;
@@ -150,7 +150,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     self.upcomingSummaryLabel.isAccessibilityElement = NO;
     
     self.upcomingThumbnailButton.accessibilityHint = SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
-    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia];
+    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
 }
 
 - (void)reloadTimeInformation
