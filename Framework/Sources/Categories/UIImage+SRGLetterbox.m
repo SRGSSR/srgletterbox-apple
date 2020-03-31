@@ -34,33 +34,14 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
         && ! [URL.absoluteString containsString:@".html"];
 }
 
-NSString *SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholder imagePlaceholder)
+NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 {
-    switch (imagePlaceholder) {
-        case SRGLetterboxImagePlaceholderMedia: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
-            break;
-        }
-            
-        case SRGLetterboxImagePlaceholderArtwork: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media-square" ofType:@"pdf"];
-            break;
-        }
-            
 #if TARGET_OS_TV
-        case SRGLetterboxImagePlaceholderBackground: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_background~tvos" ofType:@"pdf"];
-            break;
-        }
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder~tvos" ofType:@"pdf"];
+#else
+    return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder" ofType:@"pdf"];
 #endif
-            
-        default: {
-            return [NSBundle.srg_letterboxBundle pathForResource:@"placeholder_media" ofType:@"pdf"];
-            break;
-        }
-    }
 }
-
 
 NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
 {
@@ -98,7 +79,7 @@ NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
     return artworkURL;
 }
 
-CGSize SRGSizeForImageScale(SRGImageScale imageScale)
+CGFloat SRGWidthForImageScale(SRGImageScale imageScale)
 {
     static NSDictionary *s_widths;
     static dispatch_once_t s_onceToken;
@@ -122,8 +103,7 @@ CGSize SRGSizeForImageScale(SRGImageScale imageScale)
     });
     
     // Use 2x maximum as scale. Sufficient for a good result without having to load very large images
-    CGFloat width = [s_widths[@(imageScale)] floatValue] * fminf(UIScreen.mainScreen.scale, 2.f);
-    return CGSizeMake(width, width * 9.f / 16.f);
+    return [s_widths[@(imageScale)] floatValue] * fminf(UIScreen.mainScreen.scale, 2.f);
 }
 
 static CGFloat SRGImageAspectScaleFit(CGSize sourceSize, CGRect destRect)
@@ -180,7 +160,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 @implementation UIImage (SRGLetterbox)
 
 // Implementation borrowed from https://github.com/erica/useful-things
-+ (UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle withSize:(CGSize)size
++ (UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(NSBundle *)bundle withSize:(CGSize)size
 {
     static NSCache<NSString *, UIImage *> *s_cache = nil;
     static dispatch_once_t onceToken;
@@ -214,12 +194,6 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     
     [s_cache setObject:image forKey:key];
     return image;
-}
-
-+ (UIImage *)srg_vectorImageNamed:(NSString *)imageName inBundle:(nullable NSBundle *)bundle withScale:(SRGImageScale)imageScale
-{
-    CGSize size = SRGSizeForImageScale(imageScale);
-    return [self srg_vectorImageNamed:imageName inBundle:bundle withSize:size];
 }
 
 @end

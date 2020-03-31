@@ -273,15 +273,15 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    CGSize size = SRGSizeForImageScale(SRGImageScaleMedium);
-    NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:size.width type:SRGImageTypeDefault];
+    CGFloat width = SRGWidthForImageScale(SRGImageScaleMedium);
+    NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:width type:SRGImageTypeDefault];
     NSString *key = [webImageManager cacheKeyForURL:imageURL];
     UIImage *image = [webImageManager.cache getImageForKey:key];
     if (image) {
         return image;
     }
     
-    if (! self.imageOperations[imageURL]) {
+    if (imageURL && ! self.imageOperations[imageURL]) {
         @weakify(self)
         YYWebImageOperation *imageOperation = [webImageManager requestImageWithURL:imageURL options:0 progress:nil transform:nil completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             @strongify(self)
@@ -293,7 +293,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.imageOperations[imageURL] = imageOperation;
     }
     
-    return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder(SRGLetterboxImagePlaceholderMedia) withSize:size];
+    return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
 }
 
 #pragma mark Data
@@ -316,12 +316,12 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground atDate:self.controller.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
 }
 
 - (void)reloadPlaceholderImage
 {
-    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderBackground];
+    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 #pragma mark Layout

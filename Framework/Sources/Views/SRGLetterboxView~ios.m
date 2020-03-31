@@ -63,9 +63,11 @@ static void commonInit(SRGLetterboxView *self);
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
 
+@property (nonatomic) CGFloat previousAspectRatio;
+
 @property (nonatomic) CGFloat preferredTimelineHeight;
 
-@property (nonatomic, copy) void (^animations)(BOOL hidden, BOOL minimal, CGFloat heightOffset);
+@property (nonatomic, copy) void (^animations)(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset);
 @property (nonatomic, copy) void (^completion)(BOOL finished);
 
 @end
@@ -315,6 +317,20 @@ static void commonInit(SRGLetterboxView *self);
     }];
 }
 
+- (CGFloat)aspectRatio
+{
+    SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
+    if (mainChapter && mainChapter.aspectRatio != SRGAspectRatioUndefined) {
+        return mainChapter.aspectRatio;
+    }
+    else if (self.previousAspectRatio != SRGAspectRatioUndefined) {
+        return self.previousAspectRatio;
+    }
+    else {
+        return 16.f / 9.f;
+    }
+}
+
 - (void)setInactivityTimer:(NSTimer *)inactivityTimer
 {
     [_inactivityTimer invalidate];
@@ -414,7 +430,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault placeholder:SRGLetterboxImagePlaceholderMedia atDate:self.controlsView.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controlsView.date];
 }
 
 #pragma mark Observer management
@@ -549,7 +565,10 @@ static void commonInit(SRGLetterboxView *self);
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
-        self.animations ? self.animations(userInterfaceHidden, self.minimal, timelineHeight + notificationHeight) : nil;
+        
+        CGFloat aspectRatio = self.aspectRatio;
+        self.animations ? self.animations(userInterfaceHidden, self.minimal, aspectRatio, timelineHeight + notificationHeight) : nil;
+        self.previousAspectRatio = aspectRatio;
     };
     void (^completion)(BOOL) = ^(BOOL finished) {
         self.completion ? self.completion(finished) : nil;
@@ -678,7 +697,7 @@ static void commonInit(SRGLetterboxView *self);
     return timelineHeight;
 }
 
-- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, BOOL, CGFloat))animations completion:(void (^)(BOOL))completion
+- (void)animateAlongsideUserInterfaceWithAnimations:(void (^)(BOOL, BOOL, CGFloat, CGFloat))animations completion:(void (^)(BOOL))completion
 {
     self.animations = animations;
     self.completion = completion;
@@ -987,6 +1006,8 @@ static void commonInit(SRGLetterboxView *self)
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+    self.previousAspectRatio = SRGAspectRatioUndefined;
+    
     self.backgroundColor = UIColor.blackColor;
     
     if (@available(iOS 11.0, *)) {
