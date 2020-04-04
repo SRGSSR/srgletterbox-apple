@@ -203,18 +203,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     return location ? @{ @"forceLocation" : location } : nil;
 }
 
-#if TARGET_OS_IOS
-/**
- *  Private App Center implementation details.
- */
-@interface MSDistribute (Private)
-
-+ (id)sharedInstance;
-- (void)startUpdate;
-
-@end
-#endif
-
 @interface SettingsViewController ()
 
 @property (nonatomic) NSArray<ServerSettings *> *serverSettings;
@@ -728,7 +716,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionApplicationVersion: {
             // Clear internal App Center timestamp to force a new update request
             [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
-            [[MSDistribute sharedInstance] startUpdate];
+            [MSDistribute checkForUpdate];
             
             // Display version history
             NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
