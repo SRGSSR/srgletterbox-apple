@@ -71,6 +71,8 @@
 		6F353A6F22BB64AE0035F656 /* PlayerPageViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */; };
 		6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */; };
 		6F36254D236AA79C00C075C1 /* SRGNotificationView~tvos.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F36254C236AA79C00C075C1 /* SRGNotificationView~tvos.xib */; };
+		6F47602B243B09A400FEBB21 /* SRGControlButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F476029243B09A400FEBB21 /* SRGControlButton.h */; };
+		6F47602C243B09A400FEBB21 /* SRGControlButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F47602A243B09A400FEBB21 /* SRGControlButton.m */; };
 		6F48559F1E3A311C00B0141C /* SRGMediaPlayerDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */; };
 		6F4F6834241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F4F6832241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F4F6835241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F4F6833241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m */; };
@@ -305,6 +307,8 @@
 		6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlayerPageViewController~ios.m"; sourceTree = "<group>"; };
 		6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "PlayerPageViewController~ios.storyboard"; sourceTree = "<group>"; };
 		6F36254C236AA79C00C075C1 /* SRGNotificationView~tvos.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SRGNotificationView~tvos.xib"; sourceTree = "<group>"; };
+		6F476029243B09A400FEBB21 /* SRGControlButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGControlButton.h; sourceTree = "<group>"; };
+		6F47602A243B09A400FEBB21 /* SRGControlButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGControlButton.m; sourceTree = "<group>"; };
 		6F48559E1E3A311C00B0141C /* SRGMediaPlayerDesignables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGMediaPlayerDesignables.m; sourceTree = "<group>"; };
 		6F4855AB1E3A669B00B0141C /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F4855AD1E3A66A400B0141C /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -704,6 +708,8 @@
 		6F50594820581CAF00823003 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				6F476029243B09A400FEBB21 /* SRGControlButton.h */,
+				6F47602A243B09A400FEBB21 /* SRGControlButton.m */,
 				6F50594B20581CAF00823003 /* SRGFullScreenButton.h */,
 				6F50594D20581CAF00823003 /* SRGFullScreenButton~ios.m */,
 				6F50594C20581CAF00823003 /* SRGLetterboxPlaybackButton.h */,
@@ -996,6 +1002,7 @@
 				6F4F6834241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h in Headers */,
 				08F805C91F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h in Headers */,
 				6F50596B20581CAF00823003 /* SRGLetterboxControllerView.h in Headers */,
+				6F47602B243B09A400FEBB21 /* SRGControlButton.h in Headers */,
 				6FB696531F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h in Headers */,
 				08A05B1F20585DD200E80BD6 /* SRGControlWrapperView.h in Headers */,
 				6F75EA432225262D0014B6DF /* MPRemoteCommand+SRGLetterbox.h in Headers */,
@@ -1435,6 +1442,7 @@
 				6F50595320581CAF00823003 /* SRGControlsView~ios.m in Sources */,
 				6F50595520581CAF00823003 /* SRGContinuousPlaybackView~ios.m in Sources */,
 				6FAB3B031E28F77E00CC2197 /* SRGLetterboxView~ios.m in Sources */,
+				6F47602C243B09A400FEBB21 /* SRGControlButton.m in Sources */,
 				6F6008902048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

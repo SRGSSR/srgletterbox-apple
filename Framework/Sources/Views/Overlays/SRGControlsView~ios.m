@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "SRGControlButton.h"
 #import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -27,10 +28,10 @@
 @interface SRGControlsView ()
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
-@property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *startOverButton;
-@property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *backwardSeekButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *forwardSeekButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *startOverButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *skipToLiveButton;
 
 @property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;

@@ -164,7 +164,7 @@
                         <constraint firstAttribute="height" constant="48" id="EAl-Je-4qh"/>
                     </constraints>
                 </stackView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZX-0j-6Vg" userLabel="Start Over Button">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZX-0j-6Vg" userLabel="Start Over Button" customClass="SRGControlButton">
                     <rect key="frame" x="161.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
@@ -173,7 +173,7 @@
                         <action selector="startOver:" destination="-1" eventType="touchUpInside" id="DBg-Dc-Xlk"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fsV-iR-Pxo" userLabel="Backward Button" customClass="SRGControlButton">
                     <rect key="frame" x="225.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
@@ -187,7 +187,7 @@
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="10" minY="20" maxX="10" maxY="20"/>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJC-uY-JVi" userLabel="Forward Button">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJC-uY-JVi" userLabel="Forward Button" customClass="SRGControlButton">
                     <rect key="frame" x="309.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
@@ -196,7 +196,7 @@
                         <action selector="skipForward:" destination="-1" eventType="touchUpInside" id="cZc-nZ-4B9"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWK-b9-2Ez" userLabel="Skip To Live Button">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWK-b9-2Ez" userLabel="Skip To Live Button" customClass="SRGControlButton">
                     <rect key="frame" x="373.5" y="176.5" width="64" height="88"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="8" minY="20" maxX="8" maxY="20"/>
