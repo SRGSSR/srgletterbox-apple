@@ -422,7 +422,9 @@
 
 - (IBAction)skipToLive:(id)sender
 {
-    [self.controller skipToLiveWithCompletionHandler:nil];
+    [self.controller skipToLiveWithCompletionHandler:^(BOOL finished) {
+        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+    }];
 }
 
 - (IBAction)hideUserInterface:(id)sender
