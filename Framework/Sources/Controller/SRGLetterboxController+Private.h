@@ -42,11 +42,6 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
 /**
- *  The program corresponding to the current playback position, if any.
- */
-@property (nonatomic, readonly, nullable) SRGProgram *program;
-
-/**
  *  Play the upcoming media currently available.
  *
  *  @return `YES` iff successful.

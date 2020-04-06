@@ -160,15 +160,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
-// TODO: Not needed if program information is later delivered as highlights (segments).
-@property (nonatomic) SRGProgram *program;
-
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 // Use timers (not time observers) so that updates are performed also when the controller is idle
 @property (nonatomic) NSTimer *updateTimer;
-@property (nonatomic) NSTimer *channelUpdateTimer;
 
 // Timers for single metadata updates at start and end times
 @property (nonatomic) NSTimer *startDateTimer;
@@ -178,9 +174,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 // Timer for continuous playback
 @property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
-
-// Time observers
-@property (nonatomic) id programTimeObserver;
 
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
@@ -192,7 +185,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGMedia *continuousPlaybackUpcomingMedia;
 
 @property (nonatomic) NSTimeInterval updateInterval;
-@property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @property (nonatomic) NSDate *lastUpdateDate;
 
@@ -241,12 +233,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         
         // Also register the associated periodic time observers
         self.updateInterval = SRGLetterboxDefaultUpdateInterval;
-        self.channelUpdateInterval = SRGLetterboxChannelDefaultUpdateInterval;
-        
-        self.programTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            @strongify(self)
-            [self updateProgramForChannel:self.channel];
-        }];
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
         
@@ -289,7 +275,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     // Invalidate timers
     self.updateTimer = nil;
-    self.channelUpdateTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
     self.livestreamEndDateTimer = nil;
@@ -468,21 +453,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }];
 }
 
-- (void)setChannelUpdateInterval:(NSTimeInterval)channelUpdateInterval
-{
-    if (channelUpdateInterval < SRGLetterboxChannelMinimumUpdateInterval) {
-        channelUpdateInterval = SRGLetterboxChannelMinimumUpdateInterval;
-    }
-    
-    _channelUpdateInterval = channelUpdateInterval;
-    
-    @weakify(self)
-    self.channelUpdateTimer = [NSTimer srgletterbox_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
-        @strongify(self)
-        [self updateChannel];
-    }];
-}
-
 - (SRGMedia *)subdivisionMedia
 {
     return [self.mediaComposition mediaForSubdivision:self.subdivision];
@@ -511,12 +481,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     [_updateTimer invalidate];
     _updateTimer = updateTimer;
-}
-
-- (void)setChannelUpdateTimer:(NSTimer *)channelUpdateTimer
-{
-    [_channelUpdateTimer invalidate];
-    _channelUpdateTimer = channelUpdateTimer;
 }
 
 - (void)setStartDateTimer:(NSTimer *)startDateTimer
@@ -925,6 +889,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
+<<<<<<< HEAD
 - (void)updateChannel
 {
     if (! self.media || self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
@@ -976,6 +941,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
+=======
+>>>>>>> Remove channel updates from Letterbox
 - (void)updateWithError:(NSError *)error
 {
     if (! error) {
@@ -1078,7 +1045,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self.report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
-        [self updateChannel];
         
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
@@ -1290,8 +1256,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self cancelContinuousPlayback];
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
-    
-    self.program = nil;
     
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
@@ -1587,6 +1551,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         if (subdivision.contentType != SRGContentTypeLivestream && subdivision.contentType != SRGContentTypeScheduledLivestream && subdivision.duration < kDefaultTimerInterval) {
             timerInterval = subdivision.duration * .8;
         }
+        
         @weakify(self)
         self.socialCountViewTimer = [NSTimer srgletterbox_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
