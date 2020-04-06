@@ -233,13 +233,22 @@
         self.timeSlider.alpha = 0.f;
     }
     else {
-        self.forwardSeekButton.alpha = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval] ? 1.f : 0.f;
-        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
-        
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
-        self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
+        
+        self.forwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+        
+        self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+
+        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        self.startOverButton.enabled = [self.controller canStartOver];
+        
+        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        self.skipToLiveButton.enabled = [self.controller canSkipToLive];
+        
+        self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
