@@ -889,60 +889,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
-<<<<<<< HEAD
-- (void)updateChannel
-{
-    if (! self.media || self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
-        return;
-    }
-    
-    SRGChannelCompletionBlock channelCompletionBlock = ^(SRGChannel * _Nullable channel, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:self.subdivision channel:channel];
-        [self updateProgramForChannel:channel];
-    };
-    
-    if (self.media.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *request = [self.dataProvider tvChannelForVendor:self.media.vendor withUid:self.media.channel.uid completionBlock:channelCompletionBlock];
-        [self.requestQueue addRequest:request resume:YES];
-    }
-    else if (self.media.mediaType == SRGMediaTypeAudio) {
-        if (self.media.vendor == SRGVendorSRF && ! [self.media.uid isEqualToString:self.media.channel.uid]) {
-            SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:self.media.uid completionBlock:channelCompletionBlock];
-            [self.requestQueue addRequest:request resume:YES];
-        }
-        else {
-            SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:nil completionBlock:channelCompletionBlock];
-            [self.requestQueue addRequest:request resume:YES];
-        }
-    }
-}
-
-- (SRGProgram *)programForChannel:(SRGChannel *)channel
-{
-    if (self.media.contentType != SRGContentTypeLivestream || ! channel) {
-        return nil;
-    }
-        
-    NSDate *playbackDate = self.currentDate;
-    if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
-        return channel.currentProgram;
-    }
-    else {
-        return nil;
-    }
-}
-
-// TODO: Not needed if program information is later delivered as highlights (segments).
-- (void)updateProgramForChannel:(SRGChannel *)channel
-{
-    SRGProgram *program = [self programForChannel:channel];
-    if (program != self.program && ! [program isEqual:self.program]) {
-        self.program = program;
-    }
-}
-
-=======
->>>>>>> Remove channel updates from Letterbox
 - (void)updateWithError:(NSError *)error
 {
     if (! error) {
@@ -1500,6 +1446,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         completionHandler ? completionHandler(finished) : nil;
     }];
     return YES;
+}
+
+- (SRGSubdivision *)subdivisionAtTime:(CMTime)time
+{
+    SRGChapter *mainChapter = self.mediaComposition.mainChapter;
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
+        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
+        return CMTimeRangeContainsTime(segmentTimeRange, time);
+    }];
+    return [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject ?: mainChapter;
 }
 
 #pragma mark Configuration
