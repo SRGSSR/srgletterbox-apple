@@ -144,9 +144,8 @@ static __attribute__((constructor)) void ApplicationInit(void)
         return YES;
     }];
     
-    MSDistribute.updateTrack = MSUpdateTrackPrivate;
-    
 #if TARGET_OS_IOS
+    MSDistribute.updateTrack = MSUpdateTrackPrivate;
     [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class, MSDistribute.class ]];
 #else
     [MSAppCenter start:appCenterSecret withServices:@[ MSCrashes.class ]];
