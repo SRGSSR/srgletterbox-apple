@@ -246,8 +246,9 @@
         self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
-        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
-        self.skipToLiveButton.enabled = [self.controller canSkipToLive];
+        BOOL canSkipToLive = [self.controller canSkipToLive];
+        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
+        self.skipToLiveButton.enabled = canSkipToLive;
         
         self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
