@@ -345,9 +345,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return self.mediaPlayerController.currentTime;
 }
 
-- (NSDate *)date
+- (NSDate *)currentDate
 {
-    return self.mediaPlayerController.date;
+    return self.mediaPlayerController.currentDate;
 }
 
 - (CMTimeRange)timeRange
@@ -958,7 +958,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         return nil;
     }
         
-    NSDate *playbackDate = self.date;
+    NSDate *playbackDate = self.currentDate;
     if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
         return channel.currentProgram;
     }

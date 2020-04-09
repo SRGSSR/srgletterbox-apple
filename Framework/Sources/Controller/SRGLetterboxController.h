@@ -378,12 +378,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
 
 /**
- *  For DVR and live streams, returns the date corresponding to the current playback time. If the date cannot be
- *  determined or for on-demand streams, the method returns `nil`.
- */
-@property (nonatomic, readonly, nullable) NSDate *date;
-
-/**
  *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the
  *  last 30 seconds of a DVR stream).
  */
@@ -393,6 +387,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  The current player time.
  */
 @property (nonatomic, readonly) CMTime currentTime;
+
+/**
+ *  For DVR and live streams, returns the date corresponding to the current playback time. If the date cannot be
+ *  determined or for on-demand streams, the method returns `nil`.
+ */
+@property (nonatomic, readonly, nullable) NSDate *currentDate;
 
 /**
  *  The current media time range (might be empty or indefinite).

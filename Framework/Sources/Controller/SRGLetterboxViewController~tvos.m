@@ -316,7 +316,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
+    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.currentDate];cd919c38... Use  information when available
 }
 
 - (void)reloadPlaceholderImage
@@ -514,7 +514,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         artworkItem.value = UIImagePNGRepresentation(image);
         artworkItem.extendedLanguageTag = @"und";       // Apparently not required, but added for safety / consistency
         
-        AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy, artworkItem.copy ] timeRange:segment.srg_timeRange];
+        CMTimeRange segmentTimeRange = [playerViewController.controller streamTimeRangeForMarkRange:segment.srg_markRange];
+        AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy, artworkItem.copy ] timeRange:segmentTimeRange];
         [navigationMarkers addObject:navigationMarker];
     }
     

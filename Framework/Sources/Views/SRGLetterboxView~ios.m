@@ -779,7 +779,8 @@ static void commonInit(SRGLetterboxView *self);
     // For chapters without segments, return the chapter, otherwise the segment at time
     if (mainChapter.segments.count != 0) {
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
-            return CMTimeRangeContainsTime(segment.srg_timeRange, time);
+            CMTimeRange segmentTimeRange = [self.controller.mediaPlayerController streamTimeRangeForMarkRange:segment.srg_markRange];
+            return CMTimeRangeContainsTime(segmentTimeRange, time);
         }];
         subdivision = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
     }
