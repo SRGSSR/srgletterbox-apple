@@ -1334,9 +1334,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         return [self canSkipWithInterval:self.mediaPlayerController.liveTolerance];
     }
-    
-    if (self.mediaComposition.srgletterbox_liveMedia && ! [self.mediaComposition.srgletterbox_liveMedia isEqual:self.media]) {
-        return [self.mediaComposition.srgletterbox_liveMedia blockingReasonAtDate:NSDate.date] != SRGBlockingReasonEndDate;
+    else if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand) {
+        SRGMedia *liveMedia = self.mediaComposition.srgletterbox_liveMedia;
+        if (liveMedia && ! [liveMedia isEqual:self.media]) {
+            return [liveMedia blockingReasonAtDate:NSDate.date] != SRGBlockingReasonEndDate;
+        }
+        else {
+            return NO;
+        }
     }
     else {
         return NO;
