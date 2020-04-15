@@ -1324,6 +1324,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self canSkipFromTime:[self seekStartTime] withInterval:interval];
 }
 
+- (BOOL)canStartOver
+{
+    return (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR && [self.subdivision isKindOfClass:SRGSegment.class]);
+}
+
 - (BOOL)canSkipToLive
 {
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
@@ -1341,6 +1346,15 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(void (^)(BOOL))completionHandler
 {
     return [self skipFromTime:[self seekStartTime] withInterval:interval completionHandler:completionHandler];
+}
+
+- (BOOL)startOverWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    if (! [self canStartOver]) {
+        return NO;
+    }
+    
+    return [self switchToSubdivision:self.subdivision withCompletionHandler:completionHandler];
 }
 
 - (BOOL)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler

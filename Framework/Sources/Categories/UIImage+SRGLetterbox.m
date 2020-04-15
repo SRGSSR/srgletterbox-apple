@@ -230,6 +230,11 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward"] : [UIImage srg_letterboxImageNamed:@"backward-large"];
 }
 
++ (UIImage *)srg_letterboxStartOverImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"start_over"] : [UIImage srg_letterboxImageNamed:@"start_over-large"];
+}
+
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live"] : [UIImage srg_letterboxImageNamed:@"back_live-large"];

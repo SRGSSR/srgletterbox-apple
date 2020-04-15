@@ -71,6 +71,9 @@ OBJC_EXPORT CGFloat SRGWidthForImageScale(SRGImageScale imageScale);
 
 + (UIImage *)srg_letterboxSeekForwardImageInSet:(SRGImageSet)imageSet;
 + (UIImage *)srg_letterboxSeekBackwardImageInSet:(SRGImageSet)imageSet;
+
+
++ (UIImage *)srg_letterboxStartOverImageInSet:(SRGImageSet)imageSet;
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet;
 
 /**

@@ -29,6 +29,7 @@
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
 @property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
+@property (nonatomic, weak) IBOutlet UIButton *startOverButton;
 @property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
 
 @property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
@@ -94,6 +95,7 @@
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
+    self.startOverButton.alpha = 0.f;
     self.skipToLiveButton.alpha = 0.f;
     
     self.timeSlider.alpha = 0.f;
@@ -125,6 +127,7 @@
                                                   [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
+    self.startOverButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Start over", @"Start over label");
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
     
     self.durationLabel.font = [UIFont srg_regularFontWithSize:14.f];
@@ -224,6 +227,7 @@
             || playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
+        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         self.timeSlider.alpha = 0.f;
@@ -231,6 +235,7 @@
     else {
         self.forwardSeekButton.alpha = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval] ? 1.f : 0.f;
         self.backwardSeekButton.alpha = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval] ? 1.f : 0.f;
+        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
@@ -271,6 +276,7 @@
     
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.startOverButton setImage:[UIImage srg_letterboxStartOverImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
     self.viewModeButton.viewModeMonoscopicImage = [UIImage srg_letterboxImageNamed:@"view_mode_monoscopic"];
@@ -282,6 +288,7 @@
     // Responsiveness
     self.backwardSeekButton.hidden = NO;
     self.forwardSeekButton.hidden = NO;
+    self.startOverButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
     self.durationLabelWrapperView.alwaysHidden = NO;
@@ -298,6 +305,7 @@
     if (height < 120.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
+        self.startOverButton.hidden = YES;
         self.skipToLiveButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
@@ -307,6 +315,7 @@
     
     CGFloat width = CGRectGetWidth(self.frame);
     if (width < 296.f) {
+        self.startOverButton.hidden = YES;
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
         self.durationLabelWrapperView.alwaysHidden = YES;
@@ -416,6 +425,13 @@
 - (IBAction)skipForward:(id)sender
 {
     [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:^(BOOL finished) {
+        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+    }];
+}
+
+- (IBAction)startOver:(id)sender
+{
+    [self.controller startOverWithCompletionHandler:^(BOOL finished) {
         [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
     }];
 }
