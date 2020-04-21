@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "SRGControlButton.h"
 #import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -27,10 +28,10 @@
 @interface SRGControlsView ()
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
-@property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *startOverButton;
-@property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *backwardSeekButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *forwardSeekButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *startOverButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *skipToLiveButton;
 
 @property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
@@ -233,13 +234,23 @@
         self.timeSlider.alpha = 0.f;
     }
     else {
-        self.forwardSeekButton.alpha = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval] ? 1.f : 0.f;
-        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
-        
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
-        self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
+        
+        self.forwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+        
+        self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+
+        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        self.startOverButton.enabled = [self.controller canStartOver];
+        
+        BOOL canSkipToLive = [self.controller canSkipToLive];
+        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
+        self.skipToLiveButton.enabled = canSkipToLive;
+        
+        self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
