@@ -45,28 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
                              type:(SRGImageType)type;
 
 /**
- *  Request an image matching the content currently being played by a controller, if playing at the specified date. Use
- *  `SRGImageTypeDefault` for the default image.
- *
- *  When playing a livestream, a date can be used to attempt loading an image corresponding to the program played at
- *  the corresponding time (otherwise a standard channel image will be used).
- */
-- (void)srg_requestImageForController:(SRGLetterboxController *)controller
-                            withScale:(SRGImageScale)scale
-                                 type:(SRGImageType)type
-                unavailabilityHandler:(nullable void (^)(void))unavailabilityHandler
-                               atDate:(nullable NSDate *)date;
-
-/**
- *  Same as `-srg_requestImageForController:withScale:type:unavailabilityHandler:atDate`, with no unavailability handler
- *  (thus setting the default placeholder if no image is available).
- */
-- (void)srg_requestImageForController:(SRGLetterboxController *)controller
-                            withScale:(SRGImageScale)scale
-                                 type:(SRGImageType)type
-                               atDate:(nullable NSDate *)date;
-
-/**
  *  Reset the image and cancel any pending image request.
  */
 - (void)srg_resetImage;

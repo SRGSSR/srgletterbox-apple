@@ -112,40 +112,6 @@
     [self srg_requestImageForObject:object withScale:scale type:type unavailabilityHandler:nil];
 }
 
-- (void)srg_requestImageForController:(SRGLetterboxController *)controller
-                            withScale:(SRGImageScale)scale
-                                 type:(SRGImageType)type
-                unavailabilityHandler:(void (^)(void))unavailabilityHandler
-                               atDate:(NSDate *)date
-{
-    // For livestreams, rely on channel information when available
-    SRGMedia *media = controller.subdivisionMedia ?: controller.media;
-    if (media.contentType == SRGContentTypeLivestream && controller.channel) {
-        SRGChannel *channel = controller.channel;
-        
-        // Display program artwork (if any) when the provided date falls within the current program, otherwise channel artwork.
-        if (date && [channel.currentProgram srgletterbox_containsDate:date]) {
-            [self srg_requestImageForObject:channel.currentProgram withScale:scale type:type unavailabilityHandler:^{
-                [self srg_requestImageForObject:channel withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
-            }];
-        }
-        else {
-            [self srg_requestImageForObject:channel withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
-        }
-    }
-    else {
-        [self srg_requestImageForObject:media withScale:scale type:type unavailabilityHandler:unavailabilityHandler];
-    }
-}
-
-- (void)srg_requestImageForController:(SRGLetterboxController *)controller
-                            withScale:(SRGImageScale)scale
-                                 type:(SRGImageType)type
-                               atDate:(NSDate *)date
-{
-    [self srg_requestImageForController:controller withScale:scale type:type unavailabilityHandler:nil atDate:date];
-}
-
 - (void)srg_resetImage
 {
     [self yy_setImageWithURL:nil options:0];

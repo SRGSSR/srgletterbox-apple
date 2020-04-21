@@ -143,33 +143,51 @@
 
 - (void)scrollToSelectedIndexAnimated:(BOOL)animated
 {
-    if (self.selectedIndex == NSNotFound) {
-        return;
-    }
-    
     if (self.collectionView.dragging) {
         return;
     }
     
-    void (^animations)(void) = ^{
-        if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
+    if (self.selectedIndex != NSNotFound) {
+        void (^animations)(void) = ^{
+            if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
+                [self layoutIfNeeded];
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                    animated:NO];
+            }
+        };
+        
+        if (animated) {
+            // Override the standard scroll to item animation duration for faster snapping
             [self layoutIfNeeded];
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                animated:NO];
+            [UIView animateWithDuration:0.1 animations:^{
+                animations();
+                [self layoutIfNeeded];
+            } completion:nil];
         }
-    };
-    
-    if (animated) {
-        // Override the standard scroll to item animation duration for faster snapping
-        [self layoutIfNeeded];
-        [UIView animateWithDuration:0.1 animations:^{
+        else {
             animations();
-            [self layoutIfNeeded];
-        } completion:nil];
+        }
     }
-    else {
-        animations();
+    else if (self.controller.live && self.subdivisions.count != 0) {
+        void (^animations)(void) = ^{
+            [self layoutIfNeeded];
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.subdivisions.count - 1 inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionRight
+                                                animated:NO];
+        };
+        
+        if (animated) {
+            // Override the standard scroll to item animation duration for faster snapping
+            [self layoutIfNeeded];
+            [UIView animateWithDuration:0.1 animations:^{
+                animations();
+                [self layoutIfNeeded];
+            } completion:nil];
+        }
+        else {
+            animations();
+        }
     }
 }
 

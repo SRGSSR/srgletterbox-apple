@@ -102,12 +102,6 @@ static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
 static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
- *  Standard time intervals for checking channel metadata.
- */
-static const NSTimeInterval SRGLetterboxChannelDefaultUpdateInterval = 30.;
-static const NSTimeInterval SRGLetterboxChannelMinimumUpdateInterval = 10.;
-
-/**
  *  Special interval used to disable continuous playback.
  */
 static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
@@ -594,6 +588,13 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)canSkipWithInterval:(NSTimeInterval)interval;
 
 /**
+ *  Return `YES` iff the current program can be started over.
+ *
+ *  @discussion Always returns `NO` for on-demand streams.
+ */
+- (BOOL)canStartOver;
+
+/**
  *  Return `YES` iff the player can skip to live conditions.
  *
  *  @discussion Always returns `NO` for on-demand streams.
@@ -610,6 +611,16 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  @return `YES` iff skipping is possible.
  */
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Start the current program over.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff starting over is possible. Always returns `NO` for on-demand streams.
+ */
+- (BOOL)startOverWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Skip forward to live conditions.
@@ -645,7 +656,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
 
 /**
- *  Channel information (contains information about current and next programs).
+ *  Channel information.
  */
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
@@ -777,15 +788,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  reducing this interval will increase energy consumption.
  */
 @property (nonatomic) NSTimeInterval updateInterval;
-
-/**
- *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
- *  notification.
- *
- *  Default is `SRGLetterboxChannelDefaultUpdateInterval`, and minimum is `SRGLetterboxChannelMinimumUpdateInterval`.
- *  Beware that reducing this interval will increase energy consumption.
- */
-@property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @end
 
