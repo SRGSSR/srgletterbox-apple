@@ -8,7 +8,9 @@
 
 #import "NSBundle+LetterboxDemo.h"
 
+#import <SRGAppearance/SRGAppearance.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+#import <YYWebImage/YYWebImage.h>
 
 #if TARGET_OS_IOS
 #import <AppCenterDistribute/AppCenterDistribute.h>
@@ -29,6 +31,9 @@ typedef NS_ENUM(NSInteger, SettingSection) {
     SettingSectionScreenMirroring,
     SettingSectionControlCenterIntegration,
     SettingSectionBackgroundVideoPlayback,
+#endif
+    SettingSectionReset,
+#if TARGET_OS_IOS
     SettingSectionApplicationVersion,
 #endif
     SettingSectionCount
@@ -245,6 +250,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     [self.tableView reloadData];
 }
 
+#pragma mark Cleanup
+
+- (void)clearWebCache
+{
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    YYImageCache *cache = YYWebImageManager.sharedManager.cache;
+    [cache.memoryCache removeAllObjects];
+    [cache.diskCache removeAllObjects];
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -311,6 +327,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
 #endif
             
+        case SettingSectionReset: {
+            return NSLocalizedString(@"Reset", nil);
+            break;
+        }
+            
         default: {
             break;
         }
@@ -376,6 +397,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
 #endif
+            
+        case SettingSectionReset: {
+            return 3;
+            break;
+        }
             
         default: {
             return 0;
@@ -633,6 +659,38 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
 #endif
             
+        case SettingSectionReset: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Clear web cache", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
+                case 1: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Clear vector image cache", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
+                case 2: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Clear all caches", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+            }
+            break;
+        };
+            
         default: {
             cell.textLabel.text = nil;
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -728,6 +786,31 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
 #endif
+            
+        case SettingSectionReset: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self clearWebCache];
+                    break;
+                }
+                    
+                case 1: {
+                    [UIImage srg_clearVectorImageCache];
+                    break;
+                }
+                
+                case 2: {
+                    [self clearWebCache];
+                    [UIImage srg_clearVectorImageCache];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
             
         default: {
             break;

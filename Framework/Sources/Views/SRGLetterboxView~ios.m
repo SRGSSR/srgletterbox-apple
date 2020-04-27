@@ -255,7 +255,8 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super metadataDidChange];
     
-    [self reloadImageForTime:self.controller.currentTime];
+    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:self.controller.currentTime];
+    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)playbackDidFail
@@ -424,14 +425,6 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isLive
 {
     return self.controlsView.live;
-}
-
-#pragma mark Data refresh
-
-- (void)reloadImageForTime:(CMTime)time
-{
-    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:time];
-    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 #pragma mark Observer management
@@ -851,20 +844,20 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
-    SRGSubdivision *currentSubdivision = [self.controller subdivisionAtTime:time];
+    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:time];
     
     if (interactive) {
-        NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:currentSubdivision];
+        NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
         self.timelineView.selectedIndex = selectedIndex;
         [self.timelineView scrollToSelectedIndexAnimated:YES];
     }
     self.timelineView.time = time;
     
     if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSubdivision:currentSubdivision time:time interactive:interactive];
+        [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time interactive:interactive];
     }
     
-    [self reloadImageForTime:time];
+    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
