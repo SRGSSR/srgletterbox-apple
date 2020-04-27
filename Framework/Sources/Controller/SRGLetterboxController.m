@@ -1467,14 +1467,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return YES;
 }
 
-- (SRGSubdivision *)subdivisionAtTime:(CMTime)time
+- (SRGSubdivision *)displayableSubdivisionAtTime:(CMTime)time
 {
     SRGChapter *mainChapter = self.mediaComposition.mainChapter;
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
         CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
-        return CMTimeRangeContainsTime(segmentTimeRange, time);
+        return !segment.hidden && CMTimeRangeContainsTime(segmentTimeRange, time);
     }];
-    return [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject ?: mainChapter;
+    return [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject ?: (! mainChapter.hidden) ? mainChapter nil;
 }
 
 #pragma mark Configuration

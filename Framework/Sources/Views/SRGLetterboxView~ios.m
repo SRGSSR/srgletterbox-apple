@@ -255,7 +255,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super metadataDidChange];
     
-    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:self.controller.currentTime];
+    SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:self.controller.currentTime];
     [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
@@ -844,7 +844,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
-    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:time];
+    SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:time];
     
     if (interactive) {
         NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
@@ -932,7 +932,7 @@ static void commonInit(SRGLetterboxView *self);
         NSValue *seekTimeValue = notification.userInfo[SRGMediaPlayerSeekTimeKey];
         if (seekTimeValue) {
             CMTime seekTime = seekTimeValue.CMTimeValue;
-            SRGSubdivision *subdivision = [self.controller subdivisionAtTime:seekTime];
+            SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:seekTime];
             self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
             self.timelineView.time = seekTime;
         }
