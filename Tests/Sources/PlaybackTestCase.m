@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "LetterboxBaseTestCase.h"
+
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
-
-#import "LetterboxBaseTestCase.h"
 
 // Imports required to test internals
 #import "SRGLetterboxController+Private.h"

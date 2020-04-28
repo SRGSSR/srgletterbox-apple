@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <libextobjc/libextobjc.h>
-#import <SRGLetterbox/SRGLetterbox.h>
-
 #import "LetterboxBaseTestCase.h"
 #import "TestPlaylist.h"
+
+#import <libextobjc/libextobjc.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 static NSString * const MediaURN1 = @"urn:rts:video:9309820";
 static NSString * const MediaURN2 = @"urn:rts:video:9314051";
