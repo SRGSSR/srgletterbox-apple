@@ -477,12 +477,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (SRGMedia *)nowPlayingMediaForController:(SRGLetterboxController *)controller
 {
-    if (controller.media.mediaType == SRGMediaTypeVideo) {
-        return controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
-    }
-    else {
-        return controller.media;
-    }
+    return [controller displayableMediaAtTime:controller.currentTime];
 }
 
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
