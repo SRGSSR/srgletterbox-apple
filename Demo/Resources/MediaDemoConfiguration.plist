@@ -252,9 +252,15 @@
 			<array>
 				<dict>
 					<key>name</key>
-					<string>URL overriding</string>
+					<string>URL overriding (video)</string>
 					<key>urn</key>
 					<string>urn:rts:video:8806790</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>URL overriding (audio)</string>
+					<key>urn</key>
+					<string>urn:rts:audio:8798735</string>
 				</dict>
 				<dict>
 					<key>name</key>

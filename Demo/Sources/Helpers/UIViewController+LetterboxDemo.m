@@ -65,7 +65,14 @@ static void *s_playlistKey = &s_playlistKey;
 #if TARGET_OS_TV
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
     letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
-        return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
+        NSURL *overridedURL = nil;
+        if ([URN isEqualToString:@"urn:rts:video:8806790"]) {
+            overridedURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+        }
+        else if ([URN isEqualToString:@"urn:rts:audio:8798735"]) {
+            overridedURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"];
+        }
+        return overridedURL;
     };
     
     letterboxViewController.controller.serviceURL = serviceURL;
