@@ -1472,9 +1472,15 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     SRGChapter *mainChapter = self.mediaComposition.mainChapter;
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
         CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
-        return !segment.hidden && CMTimeRangeContainsTime(segmentTimeRange, time);
+        return ! segment.hidden && CMTimeRangeContainsTime(segmentTimeRange, time);
     }];
-    return [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject ?: (! mainChapter.hidden) ? mainChapter nil;
+    return [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject ?: (! mainChapter.hidden) ? mainChapter : nil;
+}
+
+- (SRGMedia *)displayableMediaAtTime:(CMTime)time
+{
+    SRGSubdivision *subdivision = [self displayableSubdivisionAtTime:time];
+    return subdivision ? [self.mediaComposition mediaForSubdivision:subdivision] : self.media;
 }
 
 #pragma mark Configuration
