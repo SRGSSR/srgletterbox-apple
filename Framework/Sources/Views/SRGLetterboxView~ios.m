@@ -262,9 +262,6 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super playbackDidFail];
     
-    self.timelineView.selectedIndex = NSNotFound;
-    self.timelineView.time = kCMTimeZero;
-    
     [self setNeedsLayoutAnimated:YES];
 }
 
