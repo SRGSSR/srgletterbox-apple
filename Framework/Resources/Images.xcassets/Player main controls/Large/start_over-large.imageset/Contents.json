@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "start_over-large.pdf",
+      "filename" : "startover_64.pdf",
       "idiom" : "iphone"
     },
     {
-      "filename" : "start_over-large-1.pdf",
+      "filename" : "startover_64-1.pdf",
       "idiom" : "ipad"
     }
   ],
