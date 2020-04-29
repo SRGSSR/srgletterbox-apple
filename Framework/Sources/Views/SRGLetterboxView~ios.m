@@ -856,7 +856,10 @@ static void commonInit(SRGLetterboxView *self);
         [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time interactive:interactive];
     }
     
-    [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
+    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateSeeking) {
+        [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    }
 }
 
 - (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
