@@ -312,8 +312,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)reloadImage
 {
-    SRGMedia *media = [self.controller displayableMediaAtTime:self.controller.currentTime];
-    [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)reloadPlaceholderImage

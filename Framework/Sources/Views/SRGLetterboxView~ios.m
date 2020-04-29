@@ -255,8 +255,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super metadataDidChange];
     
-    SRGMedia *media = [self.controller displayableMediaAtTime:self.controller.currentTime];
-    [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)playbackDidFail
@@ -857,8 +856,7 @@ static void commonInit(SRGLetterboxView *self);
         [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time interactive:interactive];
     }
     
-    SRGMedia *media = [self.controller displayableMediaAtTime:time];
-    [self.imageView srg_requestImageForObject:media withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView

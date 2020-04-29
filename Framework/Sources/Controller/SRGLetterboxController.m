@@ -458,6 +458,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self.mediaComposition mediaForSubdivision:self.subdivision];
 }
 
+- (SRGMedia *)displayableMedia
+{
+    return (self.subdivision && ! self.subdivision.hidden) ? [self.mediaComposition mediaForSubdivision:self.subdivision] : self.media;
+}
+
 - (SRGMedia *)fullLengthMedia
 {
     return self.mediaComposition.fullLengthMedia;
@@ -1481,12 +1486,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     else {
         return ! mainChapter.hidden ? mainChapter : nil;
     }
-}
-
-- (SRGMedia *)displayableMediaAtTime:(CMTime)time
-{
-    SRGSubdivision *subdivision = [self displayableSubdivisionAtTime:time];
-    return subdivision ? [self.mediaComposition mediaForSubdivision:subdivision] : self.media;
 }
 
 #pragma mark Configuration

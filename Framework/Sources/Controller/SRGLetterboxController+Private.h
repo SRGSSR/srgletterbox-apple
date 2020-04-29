@@ -67,9 +67,9 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 - (nullable SRGSubdivision *)displayableSubdivisionAtTime:(CMTime)time;
 
 /**
- *  Return the displayable media at the specified time, `nil` if none.
+ *  The current media which can be used for display purposes (thumbnails, control center…)
  */
-- (nullable SRGMedia *)displayableMediaAtTime:(CMTime)time;
+@property (nonatomic, readonly, nullable) SRGMedia *displayableMedia;
 
 @end
 
