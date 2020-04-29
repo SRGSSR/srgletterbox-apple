@@ -1474,7 +1474,13 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
         return ! segment.hidden && CMTimeRangeContainsTime(segmentTimeRange, time);
     }];
-    return [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject ?: (! mainChapter.hidden) ? mainChapter : nil;
+    SRGSubdivision *displayableSegment = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
+    if (displayableSegment) {
+        return displayableSegment;
+    }
+    else {
+        return ! mainChapter.hidden ? mainChapter : nil;
+    }
 }
 
 - (SRGMedia *)displayableMediaAtTime:(CMTime)time

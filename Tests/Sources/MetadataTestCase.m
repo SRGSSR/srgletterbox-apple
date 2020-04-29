@@ -165,7 +165,6 @@
     XCTAssertTrue(legalBlockedSegment.hidden);
     
     CMTime hiddenTime = CMTimeMakeWithSeconds((legalBlockedSegment.markIn + legalBlockedSegment.duration / 2.) / 1000., NSEC_PER_SEC);
-
     XCTAssertEqualObjects([self.controller displayableSubdivisionAtTime:hiddenTime].URN, URN);
 
     [self.controller reset];
@@ -212,7 +211,6 @@
     XCTAssertTrue(legalBlockedSegment.hidden);
     
     CMTime hiddenTime = CMTimeMakeWithSeconds((legalBlockedSegment.markIn + legalBlockedSegment.duration / 2.) / 1000., NSEC_PER_SEC);
-
     XCTAssertEqualObjects([self.controller displayableMediaAtTime:hiddenTime].URN, URN);
 
     [self.controller reset];
