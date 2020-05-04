@@ -475,16 +475,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
 }
 
-- (SRGMedia *)nowPlayingMediaForController:(SRGLetterboxController *)controller
-{
-    if (controller.media.mediaType == SRGMediaTypeVideo) {
-        return controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
-    }
-    else {
-        return controller.media;
-    }
-}
-
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
     if (! self.nowPlayingInfoAndCommandsEnabled) {
@@ -493,7 +483,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     SRGLetterboxLogDebug(@"service", @"Now playing info metadata update started");
     
-    SRGMedia *media = [self nowPlayingMediaForController:controller];
+    SRGMedia *media = controller.displayableMedia;
     if (! media) {
         [self clearArtworkImageCache];
         MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nil;
@@ -634,7 +624,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
 {
     CGFloat smallestDimension = fmin(size.width, size.height);
-    SRGMedia *media = [self nowPlayingMediaForController:controller];
+    SRGMedia *media = controller.displayableMedia;
     NSURL *artworkURL = SRGLetterboxArtworkImageURL(media, smallestDimension);
     if (! artworkURL) {
         artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];

@@ -255,16 +255,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super metadataDidChange];
     
-    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:self.controller.currentTime];
-    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)playbackDidFail
 {
     [super playbackDidFail];
-    
-    self.timelineView.selectedIndex = NSNotFound;
-    self.timelineView.time = kCMTimeZero;
     
     [self setNeedsLayoutAnimated:YES];
 }
@@ -844,7 +840,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
 {
-    SRGSubdivision *subdivision = [self.controller subdivisionAtTime:time];
+    SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:time];
     
     if (interactive) {
         NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
@@ -857,7 +853,10 @@ static void commonInit(SRGLetterboxView *self);
         [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time interactive:interactive];
     }
     
-    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
+    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateSeeking) {
+        [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    }
 }
 
 - (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
@@ -932,7 +931,7 @@ static void commonInit(SRGLetterboxView *self);
         NSValue *seekTimeValue = notification.userInfo[SRGMediaPlayerSeekTimeKey];
         if (seekTimeValue) {
             CMTime seekTime = seekTimeValue.CMTimeValue;
-            SRGSubdivision *subdivision = [self.controller subdivisionAtTime:seekTime];
+            SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:seekTime];
             self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
             self.timelineView.time = seekTime;
         }

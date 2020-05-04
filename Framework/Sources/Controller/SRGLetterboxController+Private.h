@@ -62,9 +62,14 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 /**
- *  Return the subdivision (segment or chapter) at the specified time, `nil` if none.
+ *  Return the displayable subdivision (segment or chapter) at the specified time, `nil` if none.
  */
-- (nullable SRGSubdivision *)subdivisionAtTime:(CMTime)time;
+- (nullable SRGSubdivision *)displayableSubdivisionAtTime:(CMTime)time;
+
+/**
+ *  The current media which can be used for display purposes (thumbnails, control center…)
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *displayableMedia;
 
 @end
 

@@ -6,7 +6,11 @@
 
 #import "LetterboxBaseTestCase.h"
 
+#import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+
+// Imports required to test internals
+#import "SRGLetterboxController+Private.h"
 
 @interface MetadataTestCase : LetterboxBaseTestCase
 
@@ -131,6 +135,53 @@
     [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
     }];
+}
+
+- (void)testDisplayableSubdivisionAtTime
+{
+    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    NSString *URN = OnDemandVideoWithLegalBlockedContentURN;
+    
+    self.controller.updateInterval = 10.;
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertEqualObjects([self.controller displayableSubdivisionAtTime:kCMTimeZero].URN, URN);
+    
+    SRGSegment *firstSegment = self.controller.mediaComposition.mainChapter.segments.firstObject;
+    XCTAssertNotNil(firstSegment);
+    XCTAssertFalse(firstSegment.hidden);
+    
+    CMTime segmentTime = CMTimeMakeWithSeconds((firstSegment.markIn + firstSegment.duration / 2.) / 1000., NSEC_PER_SEC);
+    XCTAssertEqualObjects([self.controller displayableSubdivisionAtTime:segmentTime].URN, firstSegment.URN);
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGSegment.new, URN), OnDemandVideoWithLegalBlockedContentSegementURN];
+    SRGSegment *legalBlockedSegment = [self.controller.mediaComposition.mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
+    XCTAssertNotNil(legalBlockedSegment);
+    XCTAssertTrue(legalBlockedSegment.hidden);
+    
+    CMTime hiddenTime = CMTimeMakeWithSeconds((legalBlockedSegment.markIn + legalBlockedSegment.duration / 2.) / 1000., NSEC_PER_SEC);
+    XCTAssertEqualObjects([self.controller displayableSubdivisionAtTime:hiddenTime].URN, URN);
+
+    [self.controller reset];
+    
+    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(NSString * _Nonnull URN) {
+        return [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+    };
+    
+    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTAssertNil([self.controller displayableSubdivisionAtTime:kCMTimeZero]);
 }
 
 @end
