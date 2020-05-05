@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -87,7 +87,7 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ZTG-10-dKM">
-                        <rect key="frame" x="6" y="94" width="148" height="31"/>
+                        <rect key="frame" x="6" y="92" width="148" height="35"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" text="&lt;title&gt;" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="XEC-ZT-Ya9" userLabel="Title Label">
                                 <rect key="frame" x="0.0" y="0.0" width="148" height="15.5"/>
@@ -97,7 +97,7 @@
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qm6-mr-AB1" userLabel="Spacer View">
-                                <rect key="frame" x="0.0" y="15.5" width="148" height="15.5"/>
+                                <rect key="frame" x="0.0" y="15.5" width="148" height="19.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -110,9 +110,9 @@
                 <constraint firstAttribute="trailing" secondItem="ZTG-10-dKM" secondAttribute="trailing" constant="6" id="9DY-fb-ddE"/>
                 <constraint firstItem="ZTG-10-dKM" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" constant="6" id="I3z-Um-heC"/>
                 <constraint firstAttribute="trailing" secondItem="sFm-wn-NZ8" secondAttribute="trailing" id="WJp-xk-hSJ"/>
-                <constraint firstAttribute="bottom" secondItem="ZTG-10-dKM" secondAttribute="bottom" constant="5" id="fUW-bZ-zlK"/>
+                <constraint firstAttribute="bottom" secondItem="ZTG-10-dKM" secondAttribute="bottom" constant="3" id="fUW-bZ-zlK"/>
                 <constraint firstItem="sFm-wn-NZ8" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="m6T-RA-JJe"/>
-                <constraint firstItem="ZTG-10-dKM" firstAttribute="top" secondItem="sFm-wn-NZ8" secondAttribute="bottom" constant="4" id="m8l-2t-Hzf"/>
+                <constraint firstItem="ZTG-10-dKM" firstAttribute="top" secondItem="sFm-wn-NZ8" secondAttribute="bottom" constant="2" id="m8l-2t-Hzf"/>
             </constraints>
             <size key="customSize" width="189" height="123"/>
             <connections>
