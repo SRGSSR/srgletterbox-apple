@@ -13,7 +13,7 @@
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 
-static CGFloat SRGLetterboxCellMargin = 5.f;
+static CGFloat SRGLetterboxCellMargin = 3.f;
 
 @interface SRGLetterboxTimelineView ()
 
