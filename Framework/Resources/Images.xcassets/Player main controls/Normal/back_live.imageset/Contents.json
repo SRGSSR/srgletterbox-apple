@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "back_live_48.pdf",
-      "idiom" : "iphone"
+      "idiom" : "iphone",
+      "filename" : "back_live_48.pdf"
     },
     {
-      "filename" : "back_live_48-1.pdf",
-      "idiom" : "ipad"
+      "idiom" : "ipad",
+      "filename" : "back_live_48-1.pdf"
     }
   ],
   "info" : {
-    "author" : "xcode",
-    "version" : 1
+    "version" : 1,
+    "author" : "xcode"
   },
   "properties" : {
     "template-rendering-intent" : "template"
