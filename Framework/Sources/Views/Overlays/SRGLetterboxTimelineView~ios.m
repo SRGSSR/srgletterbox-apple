@@ -170,47 +170,44 @@ static void commonInit(SRGLetterboxTimelineView *self)
         return;
     }
     
+    void (^animations)(void) = nil;
+    
     if (self.selectedIndex != NSNotFound) {
-        void (^animations)(void) = ^{
+        animations = ^{
             if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
+                // Force layout so that scrolling to an item works
+                [self setNeedsLayout];
                 [self layoutIfNeeded];
                 [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
                                             atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                     animated:NO];
             }
         };
-        
-        if (animated) {
-            // Override the standard scroll to item animation duration for faster snapping
-            [self layoutIfNeeded];
-            [UIView animateWithDuration:0.1 animations:^{
-                animations();
-                [self layoutIfNeeded];
-            } completion:nil];
-        }
-        else {
-            animations();
-        }
     }
     else if (self.controller.live && self.subdivisions.count != 0) {
-        void (^animations)(void) = ^{
+        animations = ^{
+            // Force layout so that scrolling to an item works
+            [self setNeedsLayout];
             [self layoutIfNeeded];
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.subdivisions.count - 1 inSection:0]
                                         atScrollPosition:UICollectionViewScrollPositionRight
                                                 animated:NO];
         };
-        
-        if (animated) {
-            // Override the standard scroll to item animation duration for faster snapping
-            [self layoutIfNeeded];
-            [UIView animateWithDuration:0.1 animations:^{
-                animations();
-                [self layoutIfNeeded];
-            } completion:nil];
-        }
-        else {
+    }
+    else {
+        return;
+    }
+    
+    if (animated) {
+        // Override the standard scroll to item animation duration for faster snapping
+        [self layoutIfNeeded];
+        [UIView animateWithDuration:0.1 animations:^{
             animations();
-        }
+            [self layoutIfNeeded];
+        } completion:nil];
+    }
+    else {
+        animations();
     }
 }
 
