@@ -172,27 +172,31 @@ static void commonInit(SRGLetterboxTimelineView *self)
     
     void (^animations)(void) = nil;
     
-    if (self.selectedIndex != NSNotFound) {
-        animations = ^{
-            if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
-                // Force layout so that scrolling to an item works
-                [self setNeedsLayout];
-                [self layoutIfNeeded];
-                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                    animated:NO];
-            }
-        };
-    }
-    else if (self.controller.live && self.subdivisions.count != 0) {
+    NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
+    if (self.selectedIndex < numberOfItems) {
         animations = ^{
             // Force layout so that scrolling to an item works
             [self setNeedsLayout];
             [self layoutIfNeeded];
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.subdivisions.count - 1 inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionRight
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:NO];
         };
+    }
+    else if (self.controller.live) {
+        if (numberOfItems != 0) {
+            animations = ^{
+                // Force layout so that scrolling to an item works
+                [self setNeedsLayout];
+                [self layoutIfNeeded];
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:numberOfItems - 1 inSection:0]
+                                            atScrollPosition:UICollectionViewScrollPositionRight
+                                                    animated:NO];
+            };
+        }
+        else {
+            return;
+        }
     }
     else {
         return;
