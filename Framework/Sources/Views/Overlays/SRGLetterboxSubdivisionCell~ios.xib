@@ -107,8 +107,8 @@
             <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
             <constraints>
                 <constraint firstItem="sFm-wn-NZ8" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" id="806-bu-LfO"/>
-                <constraint firstAttribute="trailing" secondItem="ZTG-10-dKM" secondAttribute="trailing" constant="6" id="9DY-fb-ddE"/>
-                <constraint firstItem="ZTG-10-dKM" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" constant="6" id="I3z-Um-heC"/>
+                <constraint firstAttribute="trailing" secondItem="ZTG-10-dKM" secondAttribute="trailing" priority="999" constant="6" id="9DY-fb-ddE"/>
+                <constraint firstItem="ZTG-10-dKM" firstAttribute="leading" secondItem="H11-DD-Stp" secondAttribute="leading" priority="999" constant="6" id="I3z-Um-heC"/>
                 <constraint firstAttribute="trailing" secondItem="sFm-wn-NZ8" secondAttribute="trailing" id="WJp-xk-hSJ"/>
                 <constraint firstAttribute="bottom" secondItem="ZTG-10-dKM" secondAttribute="bottom" constant="3" id="fUW-bZ-zlK"/>
                 <constraint firstItem="sFm-wn-NZ8" firstAttribute="top" secondItem="H11-DD-Stp" secondAttribute="top" id="m6T-RA-JJe"/>
