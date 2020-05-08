@@ -35,13 +35,18 @@ static void commonInit(SRGLetterboxTimelineView *self)
     
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:collectionViewLayout];
     collectionView.backgroundColor = UIColor.clearColor;
-    collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     collectionView.alwaysBounceHorizontal = YES;
     collectionView.delegate = self;
     collectionView.dataSource = self;
     [self addSubview:collectionView];
     self.collectionView = collectionView;
+    
+    collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                                               [collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+                                               [collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                               [collectionView.heightAnchor constraintEqualToConstant:120.f] ]];
     
     UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
     [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
