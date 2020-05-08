@@ -180,44 +180,36 @@ static void commonInit(SRGLetterboxTimelineView *self)
     NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
     if (self.selectedIndex < numberOfItems) {
         animations = ^{
-            // Force layout so that scrolling to an item works
-            [self setNeedsLayout];
-            [self layoutIfNeeded];
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
                                         atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:NO];
         };
     }
-    else if (self.controller.live) {
-        if (numberOfItems != 0) {
-            animations = ^{
-                // Force layout so that scrolling to an item works
-                [self setNeedsLayout];
-                [self layoutIfNeeded];
-                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:numberOfItems - 1 inSection:0]
-                                            atScrollPosition:UICollectionViewScrollPositionRight
-                                                    animated:NO];
-            };
-        }
-        else {
-            return;
-        }
+    else if (self.controller.live && numberOfItems != 0) {
+        animations = ^{
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:numberOfItems - 1 inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionRight
+                                                animated:NO];
+        };
     }
     else {
         return;
     }
     
-    if (animated) {
-        // Override the standard scroll to item animation duration for faster snapping
-        [self layoutIfNeeded];
-        [UIView animateWithDuration:0.1 animations:^{
-            animations();
+    // Schedule for next run loop so that scrolling works and its animation is performed separately
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (animated) {
+            // Override the standard scroll to item animation duration for faster snapping
             [self layoutIfNeeded];
-        } completion:nil];
-    }
-    else {
-        animations();
-    }
+            [UIView animateWithDuration:0.1 animations:^{
+                animations();
+                [self layoutIfNeeded];
+            } completion:nil];
+        }
+        else {
+            animations();
+        }
+    });
 }
 
 #pragma mark SRGLetterboxSubdivisionCellDelegate protocol
