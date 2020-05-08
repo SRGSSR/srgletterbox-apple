@@ -29,6 +29,8 @@ static void commonInit(SRGLetterboxTimelineView *self)
     self.backgroundColor = UIColor.clearColor;
     self.selectedIndex = NSNotFound;
     
+    self.clipsToBounds = YES;
+    
     UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
