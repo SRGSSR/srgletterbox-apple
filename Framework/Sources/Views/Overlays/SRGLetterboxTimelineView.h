@@ -13,6 +13,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// The standard timeline height.
+static const CGFloat SRGLetterboxTimelineViewDefaultHeight = 120.f;
+
 // Forward declarations.
 @class SRGLetterboxTimelineView;
 

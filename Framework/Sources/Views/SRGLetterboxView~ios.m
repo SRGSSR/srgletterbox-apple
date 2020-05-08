@@ -30,8 +30,6 @@
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 
-const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
-
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
@@ -384,7 +382,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
 {
-    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxViewDefaultTimelineHeight) animated:animated];
+    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxTimelineViewDefaultHeight) animated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -980,7 +978,7 @@ static void commonInit(SRGLetterboxView *self)
 {
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
-    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+    self.preferredTimelineHeight = SRGLetterboxTimelineViewDefaultHeight;
     self.previousAspectRatio = SRGAspectRatioUndefined;
     
     self.backgroundColor = UIColor.blackColor;

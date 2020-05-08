@@ -46,7 +46,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
     [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
                                                [collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
                                                [collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                                               [collectionView.heightAnchor constraintEqualToConstant:120.f] ]];
+                                               [collectionView.heightAnchor constraintEqualToConstant:SRGLetterboxTimelineViewDefaultHeight] ]];
     
     UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
     [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
