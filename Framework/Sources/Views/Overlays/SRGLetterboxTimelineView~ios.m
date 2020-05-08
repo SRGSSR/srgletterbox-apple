@@ -45,7 +45,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
     collectionView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
                                                [collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-                                               [collectionView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                               [collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                                [collectionView.heightAnchor constraintEqualToConstant:120.f] ]];
     
     UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
