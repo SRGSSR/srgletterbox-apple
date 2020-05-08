@@ -13,16 +13,59 @@
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 
+static CGFloat SRGLetterboxCellMargin = 3.f;
+
 @interface SRGLetterboxTimelineView ()
 
 @property (nonatomic, copy) NSString *chapterURN;
 @property (nonatomic) NSArray<SRGSubdivision *> *subdivisions;
 
-@property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
+@property (nonatomic, weak) UICollectionView *collectionView;
 
 @end
 
+static void commonInit(SRGLetterboxTimelineView *self)
+{
+    self.backgroundColor = UIColor.clearColor;
+    self.selectedIndex = NSNotFound;
+    
+    UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
+    collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
+    
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:collectionViewLayout];
+    collectionView.backgroundColor = UIColor.clearColor;
+    collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    collectionView.alwaysBounceHorizontal = YES;
+    collectionView.delegate = self;
+    collectionView.dataSource = self;
+    [self addSubview:collectionView];
+    self.collectionView = collectionView;
+    
+    UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
+    [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
+}
+
 @implementation SRGLetterboxTimelineView
+
+#pragma mark Object lifecycle
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        commonInit(self);
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    if (self = [super initWithCoder:coder]) {
+        commonInit(self);
+    }
+    return self;
+}
 
 #pragma mark Getters and setters
 
@@ -56,32 +99,12 @@
 
 #pragma mark Overrides
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    self.selectedIndex = NSNotFound;
-    self.backgroundColor = UIColor.clearColor;
-    
-    self.collectionView.dataSource = self;
-    self.collectionView.delegate = self;
-    
-    self.collectionView.alwaysBounceHorizontal = YES;
-    self.collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    
-    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    collectionViewLayout.minimumLineSpacing = 1.f;
-    
-    UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
-    [self.collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
-}
-
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
     UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    CGFloat height = CGRectGetHeight(self.frame);
+    CGFloat height = CGRectGetHeight(self.frame) - 2 * SRGLetterboxCellMargin;
     CGFloat width = (height > 0) ? 16.f / 13.f * height : 10e-6f; // UICollectionViewFlowLayout doesn't allow CGSizeZero
     collectionViewLayout.itemSize = CGSizeMake(width, height);
     
@@ -147,47 +170,48 @@
         return;
     }
     
-    if (self.selectedIndex != NSNotFound) {
-        void (^animations)(void) = ^{
-            if (self.selectedIndex < [self.collectionView numberOfItemsInSection:0]) {
-                [self layoutIfNeeded];
-                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                    animated:NO];
-            }
-        };
-        
-        if (animated) {
-            // Override the standard scroll to item animation duration for faster snapping
+    void (^animations)(void) = nil;
+    
+    NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
+    if (self.selectedIndex < numberOfItems) {
+        animations = ^{
+            // Force layout so that scrolling to an item works
+            [self setNeedsLayout];
             [self layoutIfNeeded];
-            [UIView animateWithDuration:0.1 animations:^{
-                animations();
-                [self layoutIfNeeded];
-            } completion:nil];
-        }
-        else {
-            animations();
-        }
-    }
-    else if (self.controller.live && self.subdivisions.count != 0) {
-        void (^animations)(void) = ^{
-            [self layoutIfNeeded];
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.subdivisions.count - 1 inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionRight
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:NO];
         };
-        
-        if (animated) {
-            // Override the standard scroll to item animation duration for faster snapping
-            [self layoutIfNeeded];
-            [UIView animateWithDuration:0.1 animations:^{
-                animations();
+    }
+    else if (self.controller.live) {
+        if (numberOfItems != 0) {
+            animations = ^{
+                // Force layout so that scrolling to an item works
+                [self setNeedsLayout];
                 [self layoutIfNeeded];
-            } completion:nil];
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:numberOfItems - 1 inSection:0]
+                                            atScrollPosition:UICollectionViewScrollPositionRight
+                                                    animated:NO];
+            };
         }
         else {
-            animations();
+            return;
         }
+    }
+    else {
+        return;
+    }
+    
+    if (animated) {
+        // Override the standard scroll to item animation duration for faster snapping
+        [self layoutIfNeeded];
+        [UIView animateWithDuration:0.1 animations:^{
+            animations();
+            [self layoutIfNeeded];
+        } completion:nil];
+    }
+    else {
+        animations();
     }
 }
 
@@ -237,6 +261,13 @@
     cell.delegate = self;
     cell.subdivision = self.subdivisions[indexPath.row];
     [self updateAppearanceForCell:cell];
+}
+
+#pragma mark UICollectionViewDelegateFlowLayout protocol
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(SRGLetterboxCellMargin, SRGLetterboxCellMargin, SRGLetterboxCellMargin, SRGLetterboxCellMargin);
 }
 
 @end

@@ -16,6 +16,8 @@
 
 @interface SRGLetterboxSubdivisionCell ()
 
+@property (nonatomic, weak) IBOutlet UIView *wrapperView;
+
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
@@ -54,6 +56,8 @@
     self.media360ImageView.layer.shadowOffset = CGSizeMake(0.f, 1.f);
     
     self.durationLabel.horizontalMargin = 5.f;
+    self.durationLabel.layer.cornerRadius = 3.f;
+    self.durationLabel.layer.masksToBounds = YES;
     
     self.blockingOverlayView.hidden = YES;
     
@@ -69,7 +73,6 @@
     [super prepareForReuse];
     
     self.blockingOverlayView.hidden = YES;
-    
     self.blockingReasonImageView.image = nil;
     
     [self.imageView srg_resetImage];
@@ -87,6 +90,7 @@
     [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
     
     SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:NSDate.date];
     if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
@@ -98,16 +102,9 @@
         self.durationLabel.hidden = NO;
     }
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
-        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString
-                                                                                           attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                                         NSForegroundColorAttributeName : UIColor.whiteColor }];
-        
-        [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@"  ●")
-                                                                               attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption],
-                                                                                             NSForegroundColorAttributeName : UIColor.srg_liveRedColor }]];
-        
-        self.durationLabel.attributedText = attributedText.copy;
+        self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
         self.durationLabel.hidden = NO;
+        self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
     }
     else if (subdivision.duration != 0.) {
         NSTimeInterval durationInSeconds = subdivision.duration / 1000.;
@@ -153,7 +150,23 @@
 - (void)setCurrent:(BOOL)current
 {
     _current = current;
-    self.backgroundColor = current ? [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f] : UIColor.blackColor;
+    
+    if (current) {
+        self.contentView.layer.cornerRadius = 4.f;
+        self.contentView.layer.masksToBounds = YES;
+        self.contentView.backgroundColor = [UIColor colorWithRed:128.f / 255.f green:0.f / 255.f blue:0.f / 255.f alpha:1.f];
+        
+        self.wrapperView.layer.cornerRadius = 0.f;
+        self.wrapperView.layer.masksToBounds = NO;
+    }
+    else {
+        self.contentView.layer.cornerRadius = 0.f;
+        self.contentView.layer.masksToBounds = NO;
+        self.contentView.backgroundColor = UIColor.clearColor;
+        
+        self.wrapperView.layer.cornerRadius = 4.f;
+        self.wrapperView.layer.masksToBounds = YES;
+    }
 }
 
 #pragma mark Gesture recognizers
