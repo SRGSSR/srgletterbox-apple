@@ -243,7 +243,7 @@
         self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
 
-        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
         BOOL canSkipToLive = [self.controller canSkipToLive];
