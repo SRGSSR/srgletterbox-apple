@@ -179,17 +179,34 @@ static void commonInit(SRGLetterboxTimelineView *self)
     
     void (^animations)(void) = nil;
     
-    NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
-    if (self.selectedIndex < numberOfItems) {
+    if (self.selectedIndex != NSNotFound) {
         animations = ^{
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                animated:NO];
+            NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
+            if (self.selectedIndex < numberOfItems) {
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                    animated:NO];
+            }
         };
     }
-    else if (self.controller.live && numberOfItems != 0) {
+    else if (self.subdivisions.count != 0) {
+        __block NSUInteger nearestIndex = 0;
+        [self.subdivisions enumerateObjectsUsingBlock:^(SRGSubdivision * _Nonnull subdivision, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (! [subdivision isKindOfClass:SRGSegment.class]) {
+                return;
+            }
+            
+            SRGSegment *segment = (SRGSegment *)subdivision;
+            CMTime segmentStartTime = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+            if (CMTIME_COMPARE_INLINE(self.time, <, segmentStartTime)) {
+                *stop = YES;
+            }
+            
+            nearestIndex = idx;
+        }];
+        
         animations = ^{
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:numberOfItems - 1 inSection:0]
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:nearestIndex inSection:0]
                                         atScrollPosition:UICollectionViewScrollPositionRight
                                                 animated:NO];
         };
