@@ -59,10 +59,11 @@ API_UNAVAILABLE(tvos)
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
 /**
- *  This method is called when the Letterbox view slider did scroll. The subdivision and the time corresponding to the current
- *  slider position are provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made by the user.
+ *  This method is called when the Letterbox view slider did scroll. The subdivision, time and date (if any) corresponding to
+ *  the current slider position are provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made
+ *  by the user.
  */
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(nullable SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive;
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(nullable SRGSubdivision *)subdivision time:(CMTime)time date:(nullable NSDate *)date interactive:(BOOL)interactive;
 
 /**
  *  This method is called when the user has actively selected a subdivision.
@@ -127,8 +128,8 @@ API_UNAVAILABLE(tvos)
  *  The view automatically loads and displays subdivisions as a timeline below the player. Since the subdivision timeline 
  *  takes some space when present, you can have your code respond to timeline height adjustments by setting a Letterbox 
  *  view delegate and implementing the `-letterboxViewWillAnimateUserInterface:` method to update your layout accordingly. 
- *  You can also respond to the `-letterboxView:didScrollWithSubdivision:time:interactive:` delegate method to respond to 
- *  the timeline being moved, either interactively or during normal playback.
+ *  You can also respond to the `-letterboxView:didScrollWithSubdivision:time:date:interactive:` delegate method to respond
+ *  to the timeline being moved, either interactively or during normal playback.
  *
  *  If you don't need it, you can also entirely hide the timeline from view by calling `-setTimelineAlwaysHidden:animated:`.
  *

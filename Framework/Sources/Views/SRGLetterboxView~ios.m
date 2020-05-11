@@ -836,7 +836,7 @@ static void commonInit(SRGLetterboxView *self);
     [self setFullScreen:!self.isFullScreen animated:YES];
 }
 
-- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
+- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
     SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:time];
     
@@ -847,8 +847,8 @@ static void commonInit(SRGLetterboxView *self);
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time interactive:interactive];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:date:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time date:date interactive:interactive];
     }
     
     // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
