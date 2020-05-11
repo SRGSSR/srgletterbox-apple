@@ -1391,6 +1391,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
+#pragma mark Time conversions
+
+- (CMTime)streamTimeForDate:(NSDate *)date
+{
+    return [self.mediaPlayerController streamTimeForDate:date];
+}
+
+- (NSDate *)streamDateForTime:(CMTime)time
+{
+    return [self.mediaPlayerController streamDateForTime:time];
+}
+
 #pragma mark Diagnostics
 
 - (SRGDiagnosticReport *)startPlaybackDiagnosticReportForService:(NSString *)service withName:(NSString *)name options:(NSDictionary<SRGResourceLoaderOption, id> **)pOptions
@@ -1727,3 +1739,20 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 @end
 
+@implementation SRGMark (SRGLetterbox)
+
+- (CMTime)srg_timeForLetterboxController:(SRGLetterboxController *)controller
+{
+    return [self timeForMediaPlayerController:controller.mediaPlayerController];
+}
+
+@end
+
+@implementation SRGMarkRange (SRGLetterbox)
+
+- (CMTimeRange)srg_timeRangeForLetterboxController:(SRGLetterboxController *)controller
+{
+    return [self timeRangeForMediaPlayerController:controller.mediaPlayerController];
+}
+
+@end
