@@ -163,7 +163,8 @@ static void commonInit(SRGLetterboxTimelineView *self)
         }
         else if ([subdivision isKindOfClass:SRGSegment.class] && [subdivision.fullLengthURN isEqual:self.chapterURN]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
-            progress = (1000. * CMTimeGetSeconds(self.time) - segment.markIn) / segment.duration;
+            CMTimeRange segmentTimeRange = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller];
+            progress = (CMTimeGetSeconds(self.time) - CMTimeGetSeconds(segmentTimeRange.start)) / (CMTimeGetSeconds(segmentTimeRange.duration));
         }
     }
     cell.progress = fminf(1.f, fmaxf(0.f, progress));
@@ -197,7 +198,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             }
             
             SRGSegment *segment = (SRGSegment *)subdivision;
-            CMTime segmentStartTime = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+            CMTime segmentStartTime = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
             if (CMTIME_COMPARE_INLINE(self.time, <, segmentStartTime)) {
                 *stop = YES;
             }
@@ -259,7 +260,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
     if ([self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
         if ([subdivision isKindOfClass:SRGSegment.class]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
-            self.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+            self.time = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
         }
         else {
             self.chapterURN = subdivision.URN;
