@@ -172,7 +172,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
 
 #pragma mark Scrolling
 
-- (void)scrollToSelectedIndexAnimated:(BOOL)animated
+- (void)scrollToDestination:(SRGLetterboxTimelineScrollDestination)destination animated:(BOOL)animated
 {
     if (self.collectionView.dragging) {
         return;
@@ -190,7 +190,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             }
         };
     }
-    else if (self.subdivisions.count != 0) {
+    else if (destination == SRGLetterboxTimelineScrollDestinationNearest &&  self.subdivisions.count != 0) {
         __block NSUInteger nearestIndex = 0;
         [self.subdivisions enumerateObjectsUsingBlock:^(SRGSubdivision * _Nonnull subdivision, NSUInteger idx, BOOL * _Nonnull stop) {
             if (! [subdivision isKindOfClass:SRGSegment.class]) {
@@ -267,7 +267,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             self.time = kCMTimeZero;
         }
         self.selectedIndex = [self.subdivisions indexOfObject:subdivision];
-        [self scrollToSelectedIndexAnimated:YES];
+        [self scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
     }
     
     [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];
