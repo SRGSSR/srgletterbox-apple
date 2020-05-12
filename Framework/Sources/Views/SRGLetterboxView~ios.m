@@ -30,8 +30,6 @@
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 
-const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
-
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
@@ -384,7 +382,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
 {
-    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxViewDefaultTimelineHeight) animated:animated];
+    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxTimelineViewDefaultHeight) animated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -669,7 +667,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineHeightConstraint.constant = timelineHeight;
     
     if (shouldFocus) {
-        [self.timelineView scrollToSelectedIndexAnimated:NO];
+        [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationNearest animated:NO];
     }
     
     static const CGFloat kBottomConstraintGreaterPriority = 950.f;
@@ -838,19 +836,19 @@ static void commonInit(SRGLetterboxView *self);
     [self setFullScreen:!self.isFullScreen animated:YES];
 }
 
-- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
+- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
     SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:time];
     
     if (interactive) {
         NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
         self.timelineView.selectedIndex = selectedIndex;
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
+        [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time interactive:interactive];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:date:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time date:date interactive:interactive];
     }
     
     // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
@@ -920,7 +918,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     
     if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateIdle) {
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
+        [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationNearest animated:YES];
         [self showAirPlayNotificationMessageIfNeededAnimated:YES];
     }
     
@@ -944,7 +942,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
-    [self.timelineView scrollToSelectedIndexAnimated:YES];
+    [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
@@ -980,7 +978,7 @@ static void commonInit(SRGLetterboxView *self)
 {
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
-    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+    self.preferredTimelineHeight = SRGLetterboxTimelineViewDefaultHeight;
     self.previousAspectRatio = SRGAspectRatioUndefined;
     
     self.backgroundColor = UIColor.blackColor;

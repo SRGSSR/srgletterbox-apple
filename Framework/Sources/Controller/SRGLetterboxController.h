@@ -819,4 +819,44 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 @end
 
+@interface SRGLetterboxController (TimeConversions)
+
+/**
+ *  Return the time corresponding to some date, in the stream reference frame.
+ *
+ *  @discussion Returns `kCMTimeIndefinite` if the stream has no date information, or if the date parameter is `nil`.
+ */
+- (CMTime)streamTimeForDate:(nullable NSDate *)date;
+
+/**
+ *  Return the date corresponding to some time, in the stream reference frame.
+ *
+ *  @discussion Returns `nil` if the stream has no date information.
+ */
+- (nullable NSDate *)streamDateForTime:(CMTime)time;
+
+@end
+
+@interface SRGMark (SRGLetterbox)
+
+/**
+ *  Return the time corresponding to a mark, in the reference frame of the provided controller.
+ *
+ *  @discussion Returns the raw time if the controller is `nil`.
+ */
+- (CMTime)srg_timeForLetterboxController:(nullable SRGLetterboxController *)controller;
+
+@end
+
+@interface SRGMarkRange (SRGLetterbox)
+
+/**
+ *  Return the time corresponding to a mark, in the reference frame of the provided controller.
+ *
+ *  @discussion Returns the range from `fromMark.time` to `toMark.time` if the controller is `nil`.
+ */
+- (CMTimeRange)srg_timeRangeForLetterboxController:(nullable SRGLetterboxController *)controller;
+
+@end
+
 NS_ASSUME_NONNULL_END

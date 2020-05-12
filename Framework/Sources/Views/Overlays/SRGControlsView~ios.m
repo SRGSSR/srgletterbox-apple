@@ -372,19 +372,18 @@
 
 #pragma mark SRGTimeSliderDelegate protocol
 
-- (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
+- (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    [self.delegate controlsView:self isMovingSliderToPlaybackTime:time withValue:value interactive:interactive];
+    [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
 }
 
-- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time
+- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time date:(NSDate *)date
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.live) {
         return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
-        NSDate *date = slider.date;
         if (date) {
             static dispatch_once_t s_onceToken;
             static NSDateFormatter *s_dateFormatter;
@@ -429,28 +428,28 @@
 - (IBAction)skipBackward:(id)sender
 {
     [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)skipForward:(id)sender
 {
     [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)startOver:(id)sender
 {
     [self.controller startOverWithCompletionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)skipToLive:(id)sender
 {
     [self.controller skipToLiveWithCompletionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
     }];
 }
 

@@ -29,19 +29,26 @@ static void commonInit(SRGLetterboxTimelineView *self)
     self.backgroundColor = UIColor.clearColor;
     self.selectedIndex = NSNotFound;
     
+    self.clipsToBounds = YES;
+    
     UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
     
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:collectionViewLayout];
     collectionView.backgroundColor = UIColor.clearColor;
-    collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     collectionView.alwaysBounceHorizontal = YES;
     collectionView.delegate = self;
     collectionView.dataSource = self;
     [self addSubview:collectionView];
     self.collectionView = collectionView;
+    
+    collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                                               [collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+                                               [collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                               [collectionView.heightAnchor constraintEqualToConstant:SRGLetterboxTimelineViewDefaultHeight] ]];
     
     UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:NSBundle.srg_letterboxBundle];
     [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
@@ -156,7 +163,8 @@ static void commonInit(SRGLetterboxTimelineView *self)
         }
         else if ([subdivision isKindOfClass:SRGSegment.class] && [subdivision.fullLengthURN isEqual:self.chapterURN]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
-            progress = (1000. * CMTimeGetSeconds(self.time) - segment.markIn) / segment.duration;
+            CMTimeRange segmentTimeRange = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller];
+            progress = (CMTimeGetSeconds(self.time) - CMTimeGetSeconds(segmentTimeRange.start)) / (CMTimeGetSeconds(segmentTimeRange.duration));
         }
     }
     cell.progress = fminf(1.f, fmaxf(0.f, progress));
@@ -164,7 +172,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
 
 #pragma mark Scrolling
 
-- (void)scrollToSelectedIndexAnimated:(BOOL)animated
+- (void)scrollToDestination:(SRGLetterboxTimelineScrollDestination)destination animated:(BOOL)animated
 {
     if (self.collectionView.dragging) {
         return;
@@ -172,47 +180,56 @@ static void commonInit(SRGLetterboxTimelineView *self)
     
     void (^animations)(void) = nil;
     
-    NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
-    if (self.selectedIndex < numberOfItems) {
+    if (self.selectedIndex != NSNotFound) {
         animations = ^{
-            // Force layout so that scrolling to an item works
-            [self setNeedsLayout];
-            [self layoutIfNeeded];
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                animated:NO];
+            NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
+            if (self.selectedIndex < numberOfItems) {
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                    animated:NO];
+            }
         };
     }
-    else if (self.controller.live) {
-        if (numberOfItems != 0) {
-            animations = ^{
-                // Force layout so that scrolling to an item works
-                [self setNeedsLayout];
-                [self layoutIfNeeded];
-                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:numberOfItems - 1 inSection:0]
-                                            atScrollPosition:UICollectionViewScrollPositionRight
-                                                    animated:NO];
-            };
-        }
-        else {
-            return;
-        }
+    else if (destination == SRGLetterboxTimelineScrollDestinationNearest &&  self.subdivisions.count != 0) {
+        __block NSUInteger nearestIndex = 0;
+        [self.subdivisions enumerateObjectsUsingBlock:^(SRGSubdivision * _Nonnull subdivision, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (! [subdivision isKindOfClass:SRGSegment.class]) {
+                return;
+            }
+            
+            SRGSegment *segment = (SRGSegment *)subdivision;
+            CMTime segmentStartTime = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
+            if (CMTIME_COMPARE_INLINE(self.time, <, segmentStartTime)) {
+                *stop = YES;
+            }
+            
+            nearestIndex = idx;
+        }];
+        
+        animations = ^{
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:nearestIndex inSection:0]
+                                        atScrollPosition:UICollectionViewScrollPositionRight
+                                                animated:NO];
+        };
     }
     else {
         return;
     }
     
-    if (animated) {
-        // Override the standard scroll to item animation duration for faster snapping
-        [self layoutIfNeeded];
-        [UIView animateWithDuration:0.1 animations:^{
-            animations();
+    // Schedule for next run loop so that scrolling works and its animation is performed separately
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (animated) {
+            // Override the standard scroll to item animation duration for faster snapping
             [self layoutIfNeeded];
-        } completion:nil];
-    }
-    else {
-        animations();
-    }
+            [UIView animateWithDuration:0.1 animations:^{
+                animations();
+                [self layoutIfNeeded];
+            } completion:nil];
+        }
+        else {
+            animations();
+        }
+    });
 }
 
 #pragma mark SRGLetterboxSubdivisionCellDelegate protocol
@@ -243,14 +260,14 @@ static void commonInit(SRGLetterboxTimelineView *self)
     if ([self.controller switchToSubdivision:subdivision withCompletionHandler:nil]) {
         if ([subdivision isKindOfClass:SRGSegment.class]) {
             SRGSegment *segment = (SRGSegment *)subdivision;
-            self.time = CMTimeMakeWithSeconds(segment.markIn / 1000., NSEC_PER_SEC);
+            self.time = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
         }
         else {
             self.chapterURN = subdivision.URN;
             self.time = kCMTimeZero;
         }
         self.selectedIndex = [self.subdivisions indexOfObject:subdivision];
-        [self scrollToSelectedIndexAnimated:YES];
+        [self scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
     }
     
     [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];
