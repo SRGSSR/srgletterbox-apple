@@ -92,6 +92,8 @@ platform :ios do
       app_platform: appstore_platform,
       changelog: changelog,
       distribute_external: true,
+      demo_account_required: false,
+      beta_app_review_info: beta_app_review_info,
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
@@ -557,6 +559,15 @@ end
 
 def git_branch_name
   sh "git branch | grep \\* | cut -d ' ' -f2"
+end
+
+def beta_app_review_info
+  {
+    contact_email: ENV['ITUNES_CONNECT_REVIEW_EMAIL'],
+    contact_first_name: ENV['ITUNES_CONNECT_REVIEW_FIRST_NAME'],
+    contact_last_name: ENV['ITUNES_CONNECT_REVIEW_LAST_NAME'],
+    contact_phone: ENV['ITUNES_CONNECT_REVIEW_PHONE']
+  }
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
