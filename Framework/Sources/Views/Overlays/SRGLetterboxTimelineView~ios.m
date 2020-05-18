@@ -13,6 +13,9 @@
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 
+#import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
+
 static CGFloat SRGLetterboxCellMargin = 3.f;
 
 @interface SRGLetterboxTimelineView ()
@@ -129,11 +132,37 @@ static void commonInit(SRGLetterboxTimelineView *self)
 {
     [super metadataDidChange];
     
+    [self reloadSegments];
+}
+
+- (void)willDetachFromController
+{
+    [super willDetachFromController];
+    
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    [mediaPlayerController removeObserver:self keyPath:@keypath(mediaPlayerController.timeRange)];
+}
+
+- (void)didAttachToController
+{
+    [super didAttachToController];
+    
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification * _Nonnull notification) {
+        [self reloadSegments];
+    }];
+    [self reloadSegments];
+}
+
+- (void)reloadSegments
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
     SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
-    SRGSubdivision *subdivision = (SRGSegment *)self.controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    SRGSubdivision *subdivision = (SRGSegment *)mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
     self.chapterURN = mediaComposition.mainChapter.URN;
-    self.subdivisions = mediaComposition.srgletterbox_subdivisions;
+    self.subdivisions = [mediaComposition srgletterbox_subdivisionsForMediaPlayerController:mediaPlayerController];
     self.selectedIndex = subdivision ? [self.subdivisions indexOfObject:subdivision] : NSNotFound;
 }
 

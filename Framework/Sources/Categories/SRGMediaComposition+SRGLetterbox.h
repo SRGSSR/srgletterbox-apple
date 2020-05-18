@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <SRGDataProvider/SRGMediaComposition.h>
+#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Consolidate segments and sibling chapters (segments from sibling chapters are omitted).
  */
-@property (nonatomic, readonly, nullable) NSArray<SRGSubdivision *> *srgletterbox_subdivisions;
+- (NSArray<SRGSubdivision *> *)srgletterbox_subdivisionsForMediaPlayerController:(SRGMediaPlayerController *)mediaPlayerController;
 
 @end
 

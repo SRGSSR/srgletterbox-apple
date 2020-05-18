@@ -654,7 +654,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
+    NSArray<SRGSubdivision *> *subdivisions = [self.controller.mediaComposition srgletterbox_subdivisionsForMediaPlayerController:self.controller.mediaPlayerController];
     
     // The timeline (if other content is available) is displayed when an error has been encountered, so that the user has
     // a chance to pick another media
