@@ -589,8 +589,6 @@
 				6F75AF46219ADB0C0013423A /* SRGLetterboxPlaybackSettings.m */,
 				6FF0D8981F4DABF200B3C1EB /* SRGLetterboxTimerTarget.h */,
 				6FF0D8991F4DABF200B3C1EB /* SRGLetterboxTimerTarget.m */,
-				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
-				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
 				6FB696511F9F5FB200AD2CEC /* SRGTapGestureRecognizer.h */,
 				6FB696521F9F5FB200AD2CEC /* SRGTapGestureRecognizer.m */,
 			);
@@ -620,6 +618,8 @@
 				6F6EA9031F4DA2D900844199 /* NSTimer+SRGLetterbox.m */,
 				08F805C71F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.h */,
 				08F805C61F9F3B8A00CC070D /* SRGMediaComposition+SRGLetterbox.m */,
+				6FC886651EC5849D000BC3FF /* SRGProgram+SRGLetterbox.h */,
+				6FC886661EC5849D000BC3FF /* SRGProgram+SRGLetterbox.m */,
 				6F5543E820AD9D0D0049ECB2 /* UIColor+SRGLetterbox.h */,
 				6F5543E920AD9D0D0049ECB2 /* UIColor+SRGLetterbox.m */,
 				087EB61A1E291203005DD80B /* UIDevice+SRGLetterbox.h */,
