@@ -8,6 +8,7 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "NSDateFormatter+SRGLetterbox.h"
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
@@ -120,14 +121,7 @@
                 self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
             }
             else {
-                static dispatch_once_t s_onceToken;
-                static NSDateFormatter *s_dateFormatter;
-                dispatch_once(&s_onceToken, ^{
-                    s_dateFormatter = [[NSDateFormatter alloc] init];
-                    s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
-                    s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
-                });
-                self.durationLabel.text = [NSString stringWithFormat:@"%@ - %@", [s_dateFormatter stringFromDate:segment.markInDate], [s_dateFormatter stringFromDate:segment.markOutDate]];
+                self.durationLabel.text = [NSString stringWithFormat:@"%@ - %@", [NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate], [NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markOutDate]];
             }
             self.durationLabel.hidden = NO;
         }

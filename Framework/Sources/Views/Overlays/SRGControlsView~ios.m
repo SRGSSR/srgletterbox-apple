@@ -7,6 +7,7 @@
 #import "SRGControlsView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateFormatter+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "SRGControlButton.h"
 #import "SRGControlWrapperView.h"
@@ -385,16 +386,8 @@
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         if (date) {
-            static dispatch_once_t s_onceToken;
-            static NSDateFormatter *s_dateFormatter;
-            dispatch_once(&s_onceToken, ^{
-                s_dateFormatter = [[NSDateFormatter alloc] init];
-                s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
-                s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
-            });
-            
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[s_dateFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
             return attributedString.copy;
         }
         else {

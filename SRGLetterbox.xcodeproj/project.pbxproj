@@ -122,6 +122,8 @@
 		6F8211922358ED3500B047FF /* placeholder~tvos.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211912358ED3500B047FF /* placeholder~tvos.pdf */; };
 		6F8211962358ED4300B047FF /* placeholder.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8211942358ED4200B047FF /* placeholder.pdf */; };
 		6F83304B236B4D40005D08A4 /* MiscellaneousViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */; };
+		6F8FDBD62474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8FDBD42474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.h */; };
+		6F8FDBD72474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8FDBD52474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.m */; };
 		6F93AFBA236B3EDD007F97CA /* ListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F93AFB9236B3EDD007F97CA /* ListsViewController.m */; };
 		6F973EBC233547B10026F54C /* SRGLetterboxViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F973EBD233547B10026F54C /* SRGLetterboxViewController~tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F973EBB233547B10026F54C /* SRGLetterboxViewController~tvos.m */; };
@@ -377,6 +379,8 @@
 		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
 		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
 		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
+		6F8FDBD42474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+SRGLetterbox.h"; sourceTree = "<group>"; };
+		6F8FDBD52474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+SRGLetterbox.m"; sourceTree = "<group>"; };
 		6F93AFB8236B3EDD007F97CA /* ListsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListsViewController.h; sourceTree = "<group>"; };
 		6F93AFB9236B3EDD007F97CA /* ListsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ListsViewController.m; sourceTree = "<group>"; };
 		6F973EBA233547B10026F54C /* SRGLetterboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRGLetterboxViewController.h; sourceTree = "<group>"; };
@@ -612,6 +616,8 @@
 				6F042D2A1E28F70500CFD89B /* NSBundle+SRGLetterbox.m */,
 				6F60088D2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h */,
 				6F60088E2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.m */,
+				6F8FDBD42474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.h */,
+				6F8FDBD52474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.m */,
 				6F4F6832241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.h */,
 				6F4F6833241436FE00E0563A /* NSLayoutConstraint+SRGLetterbox.m */,
 				6F6EA9021F4DA2D900844199 /* NSTimer+SRGLetterbox.h */,
@@ -970,6 +976,7 @@
 				087EB6101E290AC4005DD80B /* SRGLetterboxController.h in Headers */,
 				6F72A81123391395008AA908 /* SRGContinuousPlaybackViewController.h in Headers */,
 				6F60088F2048330200947FA7 /* NSDateComponentsFormatter+SRGLetterbox.h in Headers */,
+				6F8FDBD62474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.h in Headers */,
 				08FA0CF81E2F6DDF000C94EF /* UIImage+SRGLetterbox.h in Headers */,
 				6F50596520581CAF00823003 /* SRGAvailabilityView.h in Headers */,
 				6F50597420581CAF00823003 /* SRGLetterboxPlaybackButton.h in Headers */,
@@ -1413,6 +1420,7 @@
 				6F50597020581CAF00823003 /* SRGLetterboxBaseView.m in Sources */,
 				6F72A81223391395008AA908 /* SRGContinuousPlaybackViewController~tvos.m in Sources */,
 				6FE08CEA1E8B81B000EC4716 /* UIFont+SRGLetterbox.m in Sources */,
+				6F8FDBD72474FDFD00628DAE /* NSDateFormatter+SRGLetterbox.m in Sources */,
 				6FFA54A92366BEF6004709BF /* SRGImageButton~tvos.m in Sources */,
 				6F50597520581CAF00823003 /* SRGFullScreenButton~ios.m in Sources */,
 				6FB97FCD1E49D7240014C4C2 /* SRGLetterboxService~ios.m in Sources */,
