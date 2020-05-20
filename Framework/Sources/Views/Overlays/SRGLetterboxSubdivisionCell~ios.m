@@ -11,6 +11,7 @@
 #import "NSDateFormatter+SRGLetterbox.h"
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
+#import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -121,7 +122,9 @@
                 self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
             }
             else {
-                self.durationLabel.text = [NSString stringWithFormat:@"%@ - %@", [NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate], [NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markOutDate]];
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
+                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }]];
+                self.durationLabel.attributedText = attributedString.copy;
             }
             self.durationLabel.hidden = NO;
         }
