@@ -201,7 +201,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
 
 #pragma mark Scrolling
 
-- (void)scrollToDestination:(SRGLetterboxTimelineScrollDestination)destination animated:(BOOL)animated
+- (void)scrollToCurrentSelectionAnimated:(BOOL)animated
 {
     if (self.collectionView.dragging) {
         return;
@@ -219,7 +219,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             }
         };
     }
-    else if (destination == SRGLetterboxTimelineScrollDestinationNearest &&  self.subdivisions.count != 0) {
+    else if (self.subdivisions.count != 0) {
         __block NSUInteger nearestIndex = 0;
         [self.subdivisions enumerateObjectsUsingBlock:^(SRGSubdivision * _Nonnull subdivision, NSUInteger idx, BOOL * _Nonnull stop) {
             if (! [subdivision isKindOfClass:SRGSegment.class]) {
@@ -229,15 +229,17 @@ static void commonInit(SRGLetterboxTimelineView *self)
             SRGSegment *segment = (SRGSegment *)subdivision;
             CMTime segmentStartTime = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
             if (CMTIME_COMPARE_INLINE(self.time, <, segmentStartTime)) {
+                nearestIndex = (idx > 0) ? idx - 1 : 0;
                 *stop = YES;
             }
-            
-            nearestIndex = idx;
+            else {
+                nearestIndex = idx;
+            }
         }];
         
         animations = ^{
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:nearestIndex inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionRight
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:NO];
         };
     }
@@ -296,7 +298,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             self.time = kCMTimeZero;
         }
         self.selectedIndex = [self.subdivisions indexOfObject:subdivision];
-        [self scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
+        [self scrollToCurrentSelectionAnimated:YES];
     }
     
     [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];
