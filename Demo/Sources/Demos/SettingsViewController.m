@@ -773,7 +773,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case SettingSectionApplicationVersion: {
             // Clear internal App Center timestamp to force a new update request
-            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
+            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSAppCenterPostponedTimestamp"];
             [MSDistribute checkForUpdate];
             
             // Display version history
