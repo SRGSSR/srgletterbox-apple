@@ -220,6 +220,14 @@ static void commonInit(SRGLetterboxTimelineView *self)
         };
     }
     else if (self.subdivisions.count != 0) {
+        // Here is how the nearest index is determined with 3 disjoint subdivisions as example:
+        //
+        //         ┌─────────────────────────────────┐           ┌──────────────────┐         ┌───────────────────────────────┐
+        //─────────┤                0                ├───────────┤        1         ├─────────┤               2               ├────────────  time
+        //         └─────────────────────────────────┘           └──────────────────┘         └───────────────────────────────┘
+        // ◀─────────────────────────────────────────────────────▶◀───────────────────────────▶◀──────────────────────────────────────────▶
+        //                      nearest = 0                                 nearest = 1                       nearest = 2
+        //
         __block NSUInteger nearestIndex = 0;
         [self.subdivisions enumerateObjectsUsingBlock:^(SRGSubdivision * _Nonnull subdivision, NSUInteger idx, BOOL * _Nonnull stop) {
             if (! [subdivision isKindOfClass:SRGSegment.class]) {
@@ -233,6 +241,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
                 *stop = YES;
             }
             else {
+                // Last segment
                 nearestIndex = idx;
             }
         }];
