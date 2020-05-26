@@ -382,6 +382,11 @@
     [self.letterboxView setFullScreen:YES animated:YES];
 }
 
+- (IBAction)stop:(id)sender
+{
+    [self.letterboxController stop];
+}
+
 - (IBAction)toggleTimeline:(UISwitch *)sender
 {
     [self.letterboxView setTimelineAlwaysHidden:! sender.on animated:YES];
