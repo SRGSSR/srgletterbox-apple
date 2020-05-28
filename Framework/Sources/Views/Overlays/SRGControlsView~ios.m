@@ -386,8 +386,12 @@
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         if (date) {
+            // Convert back to a wall-clock date for display purposes
+            NSTimeInterval streamOffset = slider.mediaPlayerController.resource.streamOffset / 1000.;
+            NSDate *wallClockDate = [date dateByAddingTimeInterval:-streamOffset];
+            
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:wallClockDate] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
             return attributedString.copy;
         }
         else {
