@@ -134,6 +134,7 @@
     
     self.durationLabel.font = [UIFont srg_regularFontWithSize:14.f];
     
+    // Track controller changes to ensure picture in picture availability is correctly displayed.
     @weakify(self)
     [SRGLetterboxService.sharedService addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
@@ -173,9 +174,13 @@
 {
     [super willDetachFromController];
     
+    SRGLetterboxController *controller = self.controller;
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    [mediaPlayerController removeObserver:self keyPath:@keypath(mediaPlayerController.timeRange)];
+    
     [NSNotificationCenter.defaultCenter removeObserver:self
                                                   name:SRGLetterboxPlaybackStateDidChangeNotification
-                                                object:self.controller];
+                                                object:controller];
 }
 
 - (void)didDetachFromController
@@ -206,6 +211,12 @@
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
+    
+    @weakify(self)
+    [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self setNeedsLayoutAnimated:YES];
+    }];
     
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(playbackStateDidChange:)
