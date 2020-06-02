@@ -27,6 +27,7 @@ OBJC_EXPORT NSTimeInterval ApplicationSettingUpdateInterval(void);
 OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 
 OBJC_EXPORT API_UNAVAILABLE(tvos) BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
+OBJC_EXPORT BOOL ApplicationSettingPreferredMediaContentEnabled(void);
 
 @interface SettingsViewController : UITableViewController
 
