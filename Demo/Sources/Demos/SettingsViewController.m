@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, SettingSection) {
     SettingSectionControlCenterIntegration,
     SettingSectionBackgroundVideoPlayback,
 #endif
-    SettingSectionPreferredMediaContent,
+    SettingSectionPrefersMediaContent,
     SettingSectionReset,
 #if TARGET_OS_IOS
     SettingSectionApplicationVersion,
@@ -79,7 +79,7 @@ NSString * const LetterboxDemoSettingUserLocation = @"LetterboxDemoSettingUserLo
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 NSString * const LetterboxDemoSettingBackgroundVideoPlaybackEnabled = @"LetterboxDemoSettingBackgroundVideoPlaybackEnabled";
-NSString * const LetterboxDemoSettingPreferredMediaContentEnabled = @"LetterboxDemoSettingPreferredMediaContentEnabled";
+NSString * const LetterboxDemoSettingPrefersMediaContentEnabled = @"LetterboxDemoSettingPrefersMediaContentEnabled";
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
@@ -190,14 +190,14 @@ static void ApplicationSettingSetBackgroundVideoPlaybackEnabled(BOOL backgroundV
 }
 #endif
 
-BOOL ApplicationSettingPreferredMediaContentEnabled(void)
+BOOL ApplicationSettingPrefersMediaContentEnabled(void)
 {
-    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingPreferredMediaContentEnabled];
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingPrefersMediaContentEnabled];
 }
 
-static void ApplicationSettingSetPreferredMediaContentEnabled(BOOL preferredMediaEnabled)
+static void ApplicationSettingSetPrefersMediaContentEnabled(BOOL preferredMediaEnabled)
 {
-    [NSUserDefaults.standardUserDefaults setBool:preferredMediaEnabled forKey:LetterboxDemoSettingPreferredMediaContentEnabled];
+    [NSUserDefaults.standardUserDefaults setBool:preferredMediaEnabled forKey:LetterboxDemoSettingPrefersMediaContentEnabled];
     [NSUserDefaults.standardUserDefaults synchronize];
 }
 
@@ -340,8 +340,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
 #endif
             
-        case SettingSectionPreferredMediaContent: {
-            return NSLocalizedString(@"Preferred media content", nil);
+        case SettingSectionPrefersMediaContent: {
+            return NSLocalizedString(@"Prefers media content", nil);
             break;
         }
             
@@ -398,7 +398,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
             
         case SettingSectionUpdateInterval:
-        case SettingSectionPreferredMediaContent: {
+        case SettingSectionPrefersMediaContent: {
             return 2;
             break;
         }
@@ -678,17 +678,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
 #endif
            
-        case SettingSectionPreferredMediaContent: {
+        case SettingSectionPrefersMediaContent: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = NSLocalizedString(@"Disabled (URNs only)", nil);
-                    cell.accessoryType = ! ApplicationSettingPreferredMediaContentEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = ! ApplicationSettingPrefersMediaContentEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
                 case 1: {
                     cell.textLabel.text = NSLocalizedString(@"Enabled", nil);
-                    cell.accessoryType = ApplicationSettingPreferredMediaContentEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    cell.accessoryType = ApplicationSettingPrefersMediaContentEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
                     break;
                 };
                     
@@ -829,8 +829,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
 #endif
             
-        case SettingSectionPreferredMediaContent: {
-            ApplicationSettingSetPreferredMediaContentEnabled(indexPath.row == 1);
+        case SettingSectionPrefersMediaContent: {
+            ApplicationSettingSetPrefersMediaContentEnabled(indexPath.row == 1);
             break;
         }
             

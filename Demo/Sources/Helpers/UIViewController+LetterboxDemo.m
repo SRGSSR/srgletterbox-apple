@@ -72,7 +72,7 @@ static void *s_playlistKey = &s_playlistKey;
         serviceURL = ApplicationSettingServiceURL();
     }
     
-    if (! ApplicationSettingPreferredMediaContentEnabled()) {
+    if (! ApplicationSettingPrefersMediaContentEnabled()) {
         media = nil;
     }
     
