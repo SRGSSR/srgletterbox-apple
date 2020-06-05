@@ -15,7 +15,6 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
-#import <SRGAnalytics_DataProvider/SRGAnalytics_DataProvider.h>
 
 @interface SRGLetterboxSubdivisionCell ()
 
