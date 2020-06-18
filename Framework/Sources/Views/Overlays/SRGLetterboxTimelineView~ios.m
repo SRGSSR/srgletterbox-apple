@@ -13,6 +13,9 @@
 #import "SRGLetterboxSubdivisionCell.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
 
+#import <libextobjc/libextobjc.h>
+#import <MAKVONotificationCenter/MAKVONotificationCenter.h>
+
 static CGFloat SRGLetterboxCellMargin = 3.f;
 
 @interface SRGLetterboxTimelineView ()
@@ -129,11 +132,37 @@ static void commonInit(SRGLetterboxTimelineView *self)
 {
     [super metadataDidChange];
     
+    [self reloadSegments];
+}
+
+- (void)willDetachFromController
+{
+    [super willDetachFromController];
+    
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    [mediaPlayerController removeObserver:self keyPath:@keypath(mediaPlayerController.timeRange)];
+}
+
+- (void)didAttachToController
+{
+    [super didAttachToController];
+    
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification * _Nonnull notification) {
+        [self reloadSegments];
+    }];
+    [self reloadSegments];
+}
+
+- (void)reloadSegments
+{
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    
     SRGMediaComposition *mediaComposition = self.controller.mediaComposition;
-    SRGSubdivision *subdivision = (SRGSegment *)self.controller.mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
+    SRGSubdivision *subdivision = (SRGSegment *)mediaPlayerController.currentSegment ?: mediaComposition.mainSegment ?: mediaComposition.mainChapter;
     
     self.chapterURN = mediaComposition.mainChapter.URN;
-    self.subdivisions = mediaComposition.srgletterbox_subdivisions;
+    self.subdivisions = [mediaComposition srgletterbox_subdivisionsForMediaPlayerController:mediaPlayerController];
     self.selectedIndex = subdivision ? [self.subdivisions indexOfObject:subdivision] : NSNotFound;
 }
 
@@ -172,7 +201,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
 
 #pragma mark Scrolling
 
-- (void)scrollToDestination:(SRGLetterboxTimelineScrollDestination)destination animated:(BOOL)animated
+- (void)scrollToCurrentSelectionAnimated:(BOOL)animated
 {
     if (self.collectionView.dragging) {
         return;
@@ -190,7 +219,15 @@ static void commonInit(SRGLetterboxTimelineView *self)
             }
         };
     }
-    else if (destination == SRGLetterboxTimelineScrollDestinationNearest &&  self.subdivisions.count != 0) {
+    else if (self.subdivisions.count != 0) {
+        // Here is how the nearest index is determined with 3 disjoint subdivisions as example:
+        //
+        //         ┌─────────────────────────────────┐           ┌──────────────────┐         ┌───────────────────────────────┐
+        //─────────┤                0                ├───────────┤        1         ├─────────┤               2               ├────────────  time
+        //         └─────────────────────────────────┘           └──────────────────┘         └───────────────────────────────┘
+        // ◀─────────────────────────────────────────────────────▶◀───────────────────────────▶◀──────────────────────────────────────────▶
+        //                      nearest = 0                                 nearest = 1                       nearest = 2
+        //
         __block NSUInteger nearestIndex = 0;
         [self.subdivisions enumerateObjectsUsingBlock:^(SRGSubdivision * _Nonnull subdivision, NSUInteger idx, BOOL * _Nonnull stop) {
             if (! [subdivision isKindOfClass:SRGSegment.class]) {
@@ -200,15 +237,18 @@ static void commonInit(SRGLetterboxTimelineView *self)
             SRGSegment *segment = (SRGSegment *)subdivision;
             CMTime segmentStartTime = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
             if (CMTIME_COMPARE_INLINE(self.time, <, segmentStartTime)) {
+                nearestIndex = (idx > 0) ? idx - 1 : 0;
                 *stop = YES;
             }
-            
-            nearestIndex = idx;
+            else {
+                // Last segment
+                nearestIndex = idx;
+            }
         }];
         
         animations = ^{
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:nearestIndex inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionRight
+                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                                 animated:NO];
         };
     }
@@ -267,7 +307,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             self.time = kCMTimeZero;
         }
         self.selectedIndex = [self.subdivisions indexOfObject:subdivision];
-        [self scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
+        [self scrollToCurrentSelectionAnimated:YES];
     }
     
     [self.delegate letterboxTimelineView:self didSelectSubdivision:subdivision];

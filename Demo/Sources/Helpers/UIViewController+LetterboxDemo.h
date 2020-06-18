@@ -4,9 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <SRGLetterbox/SRGLetterbox.h>
-
 #import "Playlist.h"
+
+#import <SRGDataProvider/SRGDataProvider.h>
+#import <SRGLetterbox/SRGLetterbox.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)openPlayerWithURN:(NSString *)URN;
 - (void)openPlayerWithURN:(NSString *)URN serviceURL:(nullable NSURL *)serviceURL;
+- (void)openPlayerWithMedia:(SRGMedia *)media serviceURL:(nullable NSURL *)serviceURL;
 
 @end
 

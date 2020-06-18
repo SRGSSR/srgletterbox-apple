@@ -49,10 +49,20 @@ static void *s_playlistKey = &s_playlistKey;
 
 - (void)openPlayerWithURN:(NSString *)URN
 {
-    [self openPlayerWithURN:URN serviceURL:nil];
+    [self openPlayerWithURN:URN media:nil serviceURL:nil];
 }
 
 - (void)openPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL
+{
+    [self openPlayerWithURN:URN media:nil serviceURL:serviceURL];
+}
+
+- (void)openPlayerWithMedia:(SRGMedia *)media serviceURL:(NSURL *)serviceURL
+{
+    [self openPlayerWithURN:media.URN media:media serviceURL:serviceURL];
+}
+
+- (void)openPlayerWithURN:(NSString *)URN media:(SRGMedia *)media serviceURL:(NSURL *)serviceURL
 {
     if (self.presentedViewController) {
         [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
@@ -60,6 +70,15 @@ static void *s_playlistKey = &s_playlistKey;
     
     if (! serviceURL) {
         serviceURL = ApplicationSettingServiceURL();
+    }
+    
+    if (! ApplicationSettingPrefersMediaContentEnabled()) {
+        media = nil;
+    }
+    
+    // If `media` is set, `URN` is ignored.
+    if (media) {
+        URN = media.URN;
     }
     
 #if TARGET_OS_TV
@@ -92,12 +111,17 @@ static void *s_playlistKey = &s_playlistKey;
         }] resume];
     }
     
-    [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
+    if (media) {
+        [letterboxViewController.controller playMedia:media atPosition:nil withPreferredSettings:settings];
+    }
+    else {
+        [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
+    }
     
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 #else
     void (^openModalPlayer)(void) = ^{
-        AdvancedPlayerViewController *playerViewController = [[AdvancedPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
+        AdvancedPlayerViewController *playerViewController = [[AdvancedPlayerViewController alloc] initWithURN:URN media:media serviceURL:serviceURL];
         playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
         
         // Since might be reused, ensure we are not trying to present the same view controller while still dismissed

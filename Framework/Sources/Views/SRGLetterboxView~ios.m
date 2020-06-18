@@ -654,7 +654,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
+    NSArray<SRGSubdivision *> *subdivisions = [self.controller.mediaComposition srgletterbox_subdivisionsForMediaPlayerController:self.controller.mediaPlayerController];
     
     // The timeline (if other content is available) is displayed when an error has been encountered, so that the user has
     // a chance to pick another media
@@ -667,7 +667,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineHeightConstraint.constant = timelineHeight;
     
     if (shouldFocus) {
-        [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationNearest animated:NO];
+        [self.timelineView scrollToCurrentSelectionAnimated:NO];
     }
     
     static const CGFloat kBottomConstraintGreaterPriority = 950.f;
@@ -843,7 +843,7 @@ static void commonInit(SRGLetterboxView *self);
     if (interactive) {
         NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
         self.timelineView.selectedIndex = selectedIndex;
-        [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
+        [self.timelineView scrollToCurrentSelectionAnimated:YES];
     }
     self.timelineView.time = time;
     
@@ -918,7 +918,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     
     if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateIdle) {
-        [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationNearest animated:YES];
+        [self.timelineView scrollToCurrentSelectionAnimated:YES];
         [self showAirPlayNotificationMessageIfNeededAnimated:YES];
     }
     
@@ -942,7 +942,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
-    [self.timelineView scrollToDestination:SRGLetterboxTimelineScrollDestinationSelected animated:YES];
+    [self.timelineView scrollToCurrentSelectionAnimated:YES];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification

@@ -20,14 +20,6 @@ static const CGFloat SRGLetterboxTimelineViewDefaultHeight = 120.f;
 @class SRGLetterboxTimelineView;
 
 /**
- *  Destination for a scrolling request.
- */
-typedef NS_ENUM(NSInteger, SRGLetterboxTimelineScrollDestination) {
-    SRGLetterboxTimelineScrollDestinationSelected = 0,      // Only to a selected item. If none, no scrolling is made.
-    SRGLetterboxTimelineScrollDestinationNearest            // To the selected item, or the location closely matching the current playback position.
-};
-
-/**
  *  Timeline delegate protocol.
  */
 API_UNAVAILABLE(tvos)
@@ -72,9 +64,9 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @property (nonatomic) NSUInteger selectedIndex;
 
 /**
- *  Scroll the timeline to the desired destination. Does nothing if the user is actively dragging the timeline.
+ *  Scroll the timeline to the current selection. Does nothing if the user is actively dragging the timeline.
  */
-- (void)scrollToDestination:(SRGLetterboxTimelineScrollDestination)destination animated:(BOOL)animated;
+- (void)scrollToCurrentSelectionAnimated:(BOOL)animated;
 
 @end
 

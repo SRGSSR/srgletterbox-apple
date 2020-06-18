@@ -78,7 +78,7 @@
     }
     
     YYWebImageCompletionBlock completion = ^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-        self.backgroundColor = (error == nil) ? UIColor.clearColor : UIColor.srg_placeholderBackgroundGrayColor;
+        self.backgroundColor = (! error && image) ? UIColor.clearColor : UIColor.srg_placeholderBackgroundGrayColor;
     };
     
     if (! [URL isEqual:self.yy_imageURL]) {

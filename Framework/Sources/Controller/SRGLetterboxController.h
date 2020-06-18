@@ -289,7 +289,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
  *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur. Switching
- *  to the currently playing URN restarts playback at its beginning.
+ *  to the currently playing URN restarts playback at its beginning (or at the nearest location if the beginning is not
+ *  reachable anymore).
  *
  *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
  *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
@@ -302,7 +303,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
  *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
- *  Switching to the currently playing subdivision restarts playback at its beginning.
+ *  Switching to the currently playing subdivision restarts playback at its beginning (or at the nearest location if the
+ *  subdivision start is not reachable anymore).
  *
  *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
  *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
@@ -590,14 +592,14 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Return `YES` iff the current program can be started over.
  *
- *  @discussion Always returns `NO` for on-demand streams.
+ *  @discussion Returns `NO` for on-demand streams or if the program start is not reachable anymore.
  */
 - (BOOL)canStartOver;
 
 /**
  *  Return `YES` iff the player can skip to live conditions.
  *
- *  @discussion Always returns `NO` for on-demand streams.
+ *  @discussion Returns `NO` for on-demand streams.
  */
 - (BOOL)canSkipToLive;
 
@@ -618,7 +620,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
  *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
  *
- *  @return `YES` iff starting over is possible. Always returns `NO` for on-demand streams.
+ *  @return `YES` iff starting over at the beginning of the current program is possible. Returns `NO` for on-demand
+ *          streams or if the program start is not reachable anymore.
  */
 - (BOOL)startOverWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
@@ -628,7 +631,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
  *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
  *
- *  @return `YES` iff skipping is possible. Always returns `NO` for on-demand streams.
+ *  @return `YES` iff skipping is possible. Returns `NO` for on-demand streams.
  */
 - (BOOL)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 

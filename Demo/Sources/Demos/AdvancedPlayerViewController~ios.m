@@ -18,6 +18,7 @@
 @interface AdvancedPlayerViewController ()
 
 @property (nonatomic, copy) NSString *URN;
+@property (nonatomic, copy) SRGMedia *media;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
@@ -48,9 +49,13 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL
+- (instancetype)initWithURN:(NSString *)URN media:(SRGMedia *)media serviceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = SRGLetterboxService.sharedService;
+    
+    if (media) {
+        URN = media.URN;
+    }
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
     if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:self.class] && [service.controller.URN isEqual:URN]) {
@@ -62,6 +67,7 @@
         AdvancedPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;
+        viewController.media = media;
         
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
@@ -144,7 +150,12 @@
         settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
-        [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
+        if (self.media) {
+            [self.letterboxController playMedia:self.media atPosition:nil withPreferredSettings:settings];
+        }
+        else {
+            [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
+        }
     }
     
     if (ApplicationSettingAutoplayEnabled() && self.URN) {
@@ -380,6 +391,11 @@
 - (IBAction)toggleFullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
+}
+
+- (IBAction)stop:(id)sender
+{
+    [self.letterboxController stop];
 }
 
 - (IBAction)toggleTimeline:(UISwitch *)sender

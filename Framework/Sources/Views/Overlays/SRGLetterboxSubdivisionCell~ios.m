@@ -8,8 +8,10 @@
 
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "NSDateFormatter+SRGLetterbox.h"
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
+#import "UIFont+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 #import <SRGAppearance/SRGAppearance.h>
@@ -92,7 +94,18 @@
     self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
     self.durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
     
-    SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:NSDate.date];
+    NSString * (^formattedDuration)(NSTimeInterval) = ^(NSTimeInterval durationInSeconds) {
+        if (durationInSeconds <= 60. * 60.) {
+            return [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
+        else {
+            return [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        }
+    };
+    
+    NSDate *currentDate = NSDate.date;
+    
+    SRGTimeAvailability timeAvailability = [subdivision timeAvailabilityAtDate:currentDate];
     if (timeAvailability == SRGTimeAvailabilityNotYetAvailable) {
         self.durationLabel.text = SRGLetterboxLocalizedString(@"Soon", @"Short label identifying content which will be available soon.").uppercaseString;
         self.durationLabel.hidden = NO;
@@ -101,19 +114,36 @@
         self.durationLabel.text = SRGLetterboxLocalizedString(@"Expired", @"Short label identifying content which has expired.").uppercaseString;
         self.durationLabel.hidden = NO;
     }
+    else if ([subdivision isKindOfClass:SRGSegment.class]) {
+        SRGSegment *segment = (SRGSegment *)subdivision;
+        if (segment.markInDate && segment.markOutDate) {
+            if ([segment.markInDate compare:currentDate] != NSOrderedDescending && [currentDate compare:segment.markOutDate] != NSOrderedDescending) {
+                self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
+                self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
+            }
+            else {
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
+                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }]];
+                self.durationLabel.attributedText = attributedString.copy;
+            }
+            self.durationLabel.hidden = NO;
+        }
+        else if (segment.duration != 0) {
+            self.durationLabel.text = formattedDuration(segment.duration / 1000.);
+            self.durationLabel.hidden = NO;
+        }
+        else {
+            self.durationLabel.text = nil;
+            self.durationLabel.hidden = YES;
+        }
+    }
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
         self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
         self.durationLabel.hidden = NO;
         self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
     }
     else if (subdivision.duration != 0.) {
-        NSTimeInterval durationInSeconds = subdivision.duration / 1000.;
-        if (durationInSeconds <= 60. * 60.) {
-            self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
-        }
-        else {
-            self.durationLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
-        }
+        self.durationLabel.text = formattedDuration(subdivision.duration / 1000.);
         self.durationLabel.hidden = NO;
     }
     else {
@@ -121,7 +151,7 @@
         self.durationLabel.hidden = YES;
     }
     
-    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:NSDate.date];
+    SRGBlockingReason blockingReason = [subdivision blockingReasonAtDate:currentDate];
     if (blockingReason == SRGBlockingReasonNone || blockingReason == SRGBlockingReasonStartDate) {
         self.blockingOverlayView.hidden = YES;
         self.blockingReasonImageView.image = nil;

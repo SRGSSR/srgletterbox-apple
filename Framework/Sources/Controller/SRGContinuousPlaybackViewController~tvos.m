@@ -7,6 +7,7 @@
 #import "SRGContinuousPlaybackViewController.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateFormatter+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGImageButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -179,22 +180,13 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 
 - (NSString *)subtitleForMedia:(SRGMedia *)media
 {
-    static NSDateFormatter *s_relativeDateFormatter;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_relativeDateFormatter = [[NSDateFormatter alloc] init];
-        s_relativeDateFormatter.dateStyle = NSDateFormatterShortStyle;
-        s_relativeDateFormatter.timeStyle = NSDateFormatterShortStyle;
-        s_relativeDateFormatter.doesRelativeDateFormatting = YES;
-    });
-    
     if (media.contentType != SRGContentTypeLivestream) {
         NSString *showTitle = media.show.title;
         if (showTitle && ! [media.title containsString:showTitle]) {
-            return [NSString stringWithFormat:@"%@ - %@", showTitle, SRGLocalizedUppercaseString([s_relativeDateFormatter stringFromDate:media.date])];
+            return [NSString stringWithFormat:@"%@ - %@", showTitle, SRGLocalizedUppercaseString([NSDateFormatter.srgletterbox_relativeDateAndTimeFormatter stringFromDate:media.date])];
         }
         else {
-            return SRGLocalizedUppercaseString([s_relativeDateFormatter stringFromDate:media.date]);
+            return SRGLocalizedUppercaseString([NSDateFormatter.srgletterbox_relativeDateAndTimeFormatter stringFromDate:media.date]);
         }
     }
     else {
