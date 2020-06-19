@@ -209,7 +209,11 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live"] : [UIImage srg_letterboxImageNamed:@"back_live-large"];
+    // TODO: Localization catalogs can be used for image localization, but for iOS 12 and above. Here we can preserve iOS 9
+    //       compatibility with a simple trick, as we have a single FR resource at the moment.
+    //       See https://developer.apple.com/videos/play/wwdc2018/404/
+    NSString *imageName = [NSBundle.mainBundle.preferredLocalizations.firstObject isEqualToString:@"fr"] ? @"back_live_fr" : @"back_live";
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:imageName] : [UIImage srg_letterboxImageNamed:[imageName stringByAppendingString:@"-large"]];
 }
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error
