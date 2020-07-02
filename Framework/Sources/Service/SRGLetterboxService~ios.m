@@ -690,19 +690,19 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (MPRemoteCommandHandlerStatus)play:(MPRemoteCommandEvent *)event
 {
-    [self.controller.mediaPlayerController play];
+    [self.controller play];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (MPRemoteCommandHandlerStatus)pause:(MPRemoteCommandEvent *)event
 {
-    [self.controller.mediaPlayerController pause];
+    [self.controller pause];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (MPRemoteCommandHandlerStatus)togglePlayPause:(MPRemoteCommandEvent *)event
 {
-    [self.controller.mediaPlayerController togglePlayPause];
+    [self.controller togglePlayPause];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
