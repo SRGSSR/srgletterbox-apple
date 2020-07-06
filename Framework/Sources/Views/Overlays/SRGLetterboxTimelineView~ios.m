@@ -220,6 +220,11 @@ static void commonInit(SRGLetterboxTimelineView *self)
         };
     }
     else if (self.subdivisions.count != 0) {
+        CMTime time = self.time;
+        if (CMTIME_IS_INVALID(time) || CMTIME_IS_INDEFINITE(time)) {
+            return;
+        }
+        
         // Here is how the nearest index is determined with 3 disjoint subdivisions as example:
         //
         //         ┌─────────────────────────────────┐           ┌──────────────────┐         ┌───────────────────────────────┐
@@ -236,7 +241,7 @@ static void commonInit(SRGLetterboxTimelineView *self)
             
             SRGSegment *segment = (SRGSegment *)subdivision;
             CMTime segmentStartTime = [segment.srg_markRange srg_timeRangeForLetterboxController:self.controller].start;
-            if (CMTIME_COMPARE_INLINE(self.time, <, segmentStartTime)) {
+            if (CMTIME_COMPARE_INLINE(time, <, segmentStartTime)) {
                 nearestIndex = (idx > 0) ? idx - 1 : 0;
                 *stop = YES;
             }
