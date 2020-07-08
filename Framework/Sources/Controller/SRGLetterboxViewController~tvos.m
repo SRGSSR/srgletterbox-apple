@@ -95,10 +95,6 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         self.imageOperations = [NSMutableDictionary dictionary];
         
         @weakify(self) @weakify(controller)
-        [controller addObserver:self keyPath:@keypath(controller.program) options:0 block:^(MAKVONotification *notification) {
-            @strongify(self)
-            [self reloadImage];
-        }];
         [controller addObserver:self keyPath:@keypath(controller.continuousPlaybackUpcomingMedia) options:0 block:^(MAKVONotification *notification) {
             @strongify(self) @strongify(controller)
             
@@ -316,7 +312,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controller.date];
+    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)reloadPlaceholderImage
@@ -514,7 +510,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         artworkItem.value = UIImagePNGRepresentation(image);
         artworkItem.extendedLanguageTag = @"und";       // Apparently not required, but added for safety / consistency
         
-        AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy, artworkItem.copy ] timeRange:segment.srg_timeRange];
+        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.playerViewController.controller];
+        AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy, artworkItem.copy ] timeRange:segmentTimeRange];
         [navigationMarkers addObject:navigationMarker];
     }
     

@@ -102,12 +102,6 @@ static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
 static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
- *  Standard time intervals for checking channel metadata.
- */
-static const NSTimeInterval SRGLetterboxChannelDefaultUpdateInterval = 30.;
-static const NSTimeInterval SRGLetterboxChannelMinimumUpdateInterval = 10.;
-
-/**
  *  Special interval used to disable continuous playback.
  */
 static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
@@ -295,7 +289,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Switch to the specified URN, resuming playback if necessary. The URN must be related to the current playback context
  *  (i.e. it must be the URN of one of the related chapters or segments), otherwise no switching will occur. Switching
- *  to the currently playing URN restarts playback at its beginning.
+ *  to the currently playing URN restarts playback at its beginning (or at the nearest location if the beginning is not
+ *  reachable anymore).
  *
  *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
  *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
@@ -308,7 +303,8 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  Switch to the specified subdivision, resuming playback if necessary. The subdivision must be related to the
  *  current playback context (i.e. it must be one of its related chapters or segments), otherwise no switching will occur.
- *  Switching to the currently playing subdivision restarts playback at its beginning.
+ *  Switching to the currently playing subdivision restarts playback at its beginning (or at the nearest location if the
+ *  subdivision start is not reachable anymore).
  *
  *  @param completionHandler The completion handler called once switching finishes. The block will only be called when
  *                           switching is performed, and with `finished` set to `YES` iff playback could successfully
@@ -378,12 +374,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, readonly) SRGMediaPlayerPlaybackState playbackState;
 
 /**
- *  For DVR and live streams, returns the date corresponding to the current playback time. If the date cannot be
- *  determined or for on-demand streams, the method returns `nil`.
- */
-@property (nonatomic, readonly, nullable) NSDate *date;
-
-/**
  *  Return `YES` iff the stream is currently played in live conditions (always `YES` for live streams, `YES` within the
  *  last 30 seconds of a DVR stream).
  */
@@ -393,6 +383,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  The current player time.
  */
 @property (nonatomic, readonly) CMTime currentTime;
+
+/**
+ *  For DVR and live streams, returns the date corresponding to the current playback time. If the date cannot be
+ *  determined or for on-demand streams, the method returns `nil`.
+ */
+@property (nonatomic, readonly, nullable) NSDate *currentDate;
 
 /**
  *  The current media time range (might be empty or indefinite).
@@ -594,9 +590,16 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)canSkipWithInterval:(NSTimeInterval)interval;
 
 /**
+ *  Return `YES` iff the current program can be started over.
+ *
+ *  @discussion Returns `NO` for on-demand streams or if the program start is not reachable anymore.
+ */
+- (BOOL)canStartOver;
+
+/**
  *  Return `YES` iff the player can skip to live conditions.
  *
- *  @discussion Always returns `NO` for on-demand streams.
+ *  @discussion Returns `NO` for on-demand streams.
  */
 - (BOOL)canSkipToLive;
 
@@ -612,12 +615,23 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
+ *  Start the current program over.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff starting over at the beginning of the current program is possible. Returns `NO` for on-demand
+ *          streams or if the program start is not reachable anymore.
+ */
+- (BOOL)startOverWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
  *  Skip forward to live conditions.
  *
  *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
  *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
  *
- *  @return `YES` iff skipping is possible. Always returns `NO` for on-demand streams.
+ *  @return `YES` iff skipping is possible. Returns `NO` for on-demand streams.
  */
 - (BOOL)skipToLiveWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
@@ -645,7 +659,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic, readonly, nullable) SRGMediaComposition *mediaComposition;
 
 /**
- *  Channel information (contains information about current and next programs).
+ *  Channel information.
  */
 @property (nonatomic, readonly, nullable) SRGChannel *channel;
 
@@ -778,15 +792,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  */
 @property (nonatomic) NSTimeInterval updateInterval;
 
-/**
- *  Time interval between channel information updates, notified by a `SRGLetterboxMetadataDidChangeNotification`
- *  notification.
- *
- *  Default is `SRGLetterboxChannelDefaultUpdateInterval`, and minimum is `SRGLetterboxChannelMinimumUpdateInterval`.
- *  Beware that reducing this interval will increase energy consumption.
- */
-@property (nonatomic) NSTimeInterval channelUpdateInterval;
-
 @end
 
 /**
@@ -814,6 +819,46 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  @discussion If no media URN is attached to the controller, the property returns `NO`.
  */
 @property (nonatomic, readonly, getter=isContentURLOverridden) BOOL contentURLOverridden;
+
+@end
+
+@interface SRGLetterboxController (TimeConversions)
+
+/**
+ *  Return the time corresponding to some date, in the stream reference frame.
+ *
+ *  @discussion Returns `kCMTimeIndefinite` if the stream has no date information, or if the date parameter is `nil`.
+ */
+- (CMTime)streamTimeForDate:(nullable NSDate *)date;
+
+/**
+ *  Return the date corresponding to some time, in the stream reference frame.
+ *
+ *  @discussion Returns `nil` if the stream has no date information.
+ */
+- (nullable NSDate *)streamDateForTime:(CMTime)time;
+
+@end
+
+@interface SRGMark (SRGLetterbox)
+
+/**
+ *  Return the time corresponding to a mark, in the reference frame of the provided controller.
+ *
+ *  @discussion Returns the raw time if the controller is `nil`.
+ */
+- (CMTime)srg_timeForLetterboxController:(nullable SRGLetterboxController *)controller;
+
+@end
+
+@interface SRGMarkRange (SRGLetterbox)
+
+/**
+ *  Return the time corresponding to a mark, in the reference frame of the provided controller.
+ *
+ *  @discussion Returns the range from `fromMark.time` to `toMark.time` if the controller is `nil`.
+ */
+- (CMTimeRange)srg_timeRangeForLetterboxController:(nullable SRGLetterboxController *)controller;
 
 @end
 

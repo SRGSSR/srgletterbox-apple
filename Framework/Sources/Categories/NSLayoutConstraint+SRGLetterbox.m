@@ -15,19 +15,25 @@
 
 - (NSLayoutConstraint *)srg_replacementConstraintWithMultiplier:(CGFloat)multiplier constant:(CGFloat)constant
 {
-    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.firstItem
-                                                                  attribute:self.firstAttribute
-                                                                  relatedBy:self.relation
-                                                                     toItem:self.secondItem
-                                                                  attribute:self.secondAttribute
-                                                                 multiplier:multiplier
-                                                                   constant:constant];
-    constraint.priority = self.priority;
-    
-    [NSLayoutConstraint deactivateConstraints:@[ self ]];
-    [NSLayoutConstraint activateConstraints:@[ constraint ]];
-    
-    return constraint;
+    if (self.multiplier != multiplier) {
+        NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.firstItem
+                                                                      attribute:self.firstAttribute
+                                                                      relatedBy:self.relation
+                                                                         toItem:self.secondItem
+                                                                      attribute:self.secondAttribute
+                                                                     multiplier:multiplier
+                                                                       constant:constant];
+        constraint.priority = self.priority;
+        
+        [NSLayoutConstraint deactivateConstraints:@[ self ]];
+        [NSLayoutConstraint activateConstraints:@[ constraint ]];
+        
+        return constraint;
+    }
+    else if (self.constant != constant) {
+        self.constant = constant;
+    }
+    return self;
 }
 
 @end

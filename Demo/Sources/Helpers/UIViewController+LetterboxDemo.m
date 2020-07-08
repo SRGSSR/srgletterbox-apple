@@ -49,10 +49,20 @@ static void *s_playlistKey = &s_playlistKey;
 
 - (void)openPlayerWithURN:(NSString *)URN
 {
-    [self openPlayerWithURN:URN serviceURL:nil];
+    [self openPlayerWithURN:URN media:nil serviceURL:nil];
 }
 
 - (void)openPlayerWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL
+{
+    [self openPlayerWithURN:URN media:nil serviceURL:serviceURL];
+}
+
+- (void)openPlayerWithMedia:(SRGMedia *)media serviceURL:(NSURL *)serviceURL
+{
+    [self openPlayerWithURN:media.URN media:media serviceURL:serviceURL];
+}
+
+- (void)openPlayerWithURN:(NSString *)URN media:(SRGMedia *)media serviceURL:(NSURL *)serviceURL
 {
     if (self.presentedViewController) {
         [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
@@ -62,10 +72,26 @@ static void *s_playlistKey = &s_playlistKey;
         serviceURL = ApplicationSettingServiceURL();
     }
     
+    if (! ApplicationSettingPrefersMediaContentEnabled()) {
+        media = nil;
+    }
+    
+    // If `media` is set, `URN` is ignored.
+    if (media) {
+        URN = media.URN;
+    }
+    
 #if TARGET_OS_TV
     SRGLetterboxViewController *letterboxViewController = [[SRGLetterboxViewController alloc] init];
     letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
-        return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
+        NSURL *overriddenURL = nil;
+        if ([URN isEqualToString:@"urn:rts:video:8806790"]) {
+            overriddenURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+        }
+        else if ([URN isEqualToString:@"urn:rts:audio:8798735"]) {
+            overriddenURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"];
+        }
+        return overriddenURL;
     };
     
     letterboxViewController.controller.serviceURL = serviceURL;
@@ -85,12 +111,17 @@ static void *s_playlistKey = &s_playlistKey;
         }] resume];
     }
     
-    [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
+    if (media) {
+        [letterboxViewController.controller playMedia:media atPosition:nil withPreferredSettings:settings];
+    }
+    else {
+        [letterboxViewController.controller playURN:URN atPosition:nil withPreferredSettings:settings];
+    }
     
     [self presentViewController:letterboxViewController animated:YES completion:nil];
 #else
     void (^openModalPlayer)(void) = ^{
-        AdvancedPlayerViewController *playerViewController = [[AdvancedPlayerViewController alloc] initWithURN:URN serviceURL:serviceURL];
+        AdvancedPlayerViewController *playerViewController = [[AdvancedPlayerViewController alloc] initWithURN:URN media:media serviceURL:serviceURL];
         playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
         
         // Since might be reused, ensure we are not trying to present the same view controller while still dismissed

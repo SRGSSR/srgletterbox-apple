@@ -18,14 +18,13 @@
 @interface AdvancedPlayerViewController ()
 
 @property (nonatomic, copy) NSString *URN;
+@property (nonatomic, copy) SRGMedia *media;
 
 @property (nonatomic) IBOutlet SRGLetterboxController *letterboxController;     // top-level object, retained
 @property (nonatomic, weak) IBOutlet SRGLetterboxView *letterboxView;
 @property (nonatomic, weak) IBOutlet UIButton *closeButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *nowLabel;
-@property (nonatomic, weak) IBOutlet UILabel *nextLabel;
 @property (nonatomic, weak) IBOutlet UILabel *serverLabel;
 @property (nonatomic, weak) IBOutlet UILabel *URNLabel;
 
@@ -50,9 +49,13 @@
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithURN:(NSString *)URN serviceURL:(NSURL *)serviceURL
+- (instancetype)initWithURN:(NSString *)URN media:(SRGMedia *)media serviceURL:(NSURL *)serviceURL
 {
     SRGLetterboxService *service = SRGLetterboxService.sharedService;
+    
+    if (media) {
+        URN = media.URN;
+    }
     
     // If an equivalent view controller was dismissed for picture in picture of the same media, simply restore it
     if (service.controller.pictureInPictureActive && [service.pictureInPictureDelegate isKindOfClass:self.class] && [service.controller.URN isEqual:URN]) {
@@ -64,6 +67,7 @@
         AdvancedPlayerViewController *viewController = [storyboard instantiateInitialViewController];
         
         viewController.URN = URN;
+        viewController.media = media;
         
         viewController.letterboxController.serviceURL = serviceURL ?: ApplicationSettingServiceURL();
         viewController.letterboxController.updateInterval = ApplicationSettingUpdateInterval();
@@ -131,7 +135,14 @@
                                              object:self.letterboxController];
     
     self.letterboxController.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
-        return [URN isEqualToString:@"urn:rts:video:8806790"] ? [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"] : nil;
+        NSURL *overriddenURL = nil;
+        if ([URN isEqualToString:@"urn:rts:video:8806790"]) {
+            overriddenURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+        }
+        else if ([URN isEqualToString:@"urn:rts:audio:8798735"]) {
+            overriddenURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"];
+        }
+        return overriddenURL;
     };
     
     if (self.URN) {
@@ -139,7 +150,12 @@
         settings.standalone = ApplicationSettingStandalone();
         settings.quality = ApplicationSettingPreferredQuality();
         
-        [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
+        if (self.media) {
+            [self.letterboxController playMedia:self.media atPosition:nil withPreferredSettings:settings];
+        }
+        else {
+            [self.letterboxController playURN:self.URN atPosition:nil withPreferredSettings:settings];
+        }
     }
     
     if (ApplicationSettingAutoplayEnabled() && self.URN) {
@@ -203,9 +219,6 @@
     
     self.titleLabel.text = media.title;
     
-    SRGChannel *channel = self.letterboxController.channel;
-    self.nowLabel.text = channel.currentProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Now: %@", nil), channel.currentProgram.title] : nil;
-    self.nextLabel.text = channel.nextProgram.title ? [NSString stringWithFormat:NSLocalizedString(@"Next: %@", nil), channel.nextProgram.title] : nil;
     self.serverLabel.text = media.URN ? [NSString stringWithFormat:@"%@ urn:", LetterboxDemoServiceNameForURL(self.letterboxController.serviceURL)] : nil;
     self.URNLabel.text = media.URN;
 }
@@ -269,7 +282,7 @@
     }];
 }
 
-- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time interactive:(BOOL)interactive
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didScrollWithSubdivision:(SRGSubdivision *)subdivision time:(CMTime)time date:(NSDate *)date interactive:(BOOL)interactive
 {
     if (interactive) {
         SRGMedia *media = subdivision ? [self.letterboxController.mediaComposition mediaForSubdivision:subdivision] : self.letterboxController.fullLengthMedia;
@@ -378,6 +391,11 @@
 - (IBAction)toggleFullScreen:(id)sender
 {
     [self.letterboxView setFullScreen:YES animated:YES];
+}
+
+- (IBAction)stop:(id)sender
+{
+    [self.letterboxController stop];
 }
 
 - (IBAction)toggleTimeline:(UISwitch *)sender

@@ -167,7 +167,7 @@ Refer to the modal view controller demo for a concrete example.
 
 #### Remark
 
-For picture in picture to be available, your audio session must be configured to use the `AVAudioSessionCategoryPlayback` category.
+Picture in picture requires your application to declare the corresponding background mode capability, as well as an audio session category set to `AVAudioSessionCategoryPlayback`.
 
 ## Playlists and continuous playback
 

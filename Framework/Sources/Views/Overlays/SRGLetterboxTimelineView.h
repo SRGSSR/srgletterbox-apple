@@ -13,6 +13,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// The standard timeline height.
+static const CGFloat SRGLetterboxTimelineViewDefaultHeight = 120.f;
+
 // Forward declarations.
 @class SRGLetterboxTimelineView;
 
@@ -61,9 +64,9 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @property (nonatomic) NSUInteger selectedIndex;
 
 /**
- *  Scroll the timeline to the selected index, if any. Does nothing if the user is actively dragging the timeline.
+ *  Scroll the timeline to the current selection. Does nothing if the user is actively dragging the timeline.
  */
-- (void)scrollToSelectedIndexAnimated:(BOOL)animated;
+- (void)scrollToCurrentSelectionAnimated:(BOOL)animated;
 
 @end
 

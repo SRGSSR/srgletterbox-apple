@@ -30,17 +30,25 @@
     }
 }
 
-- (NSArray<SRGSubdivision *> *)srgletterbox_subdivisions
+- (NSArray<SRGSubdivision *> *)srgletterbox_subdivisionsForMediaPlayerController:(SRGMediaPlayerController *)mediaPlayerController
 {
     // Show visible segments for the current chapter (if any), and display other chapters but not expanded. If
     // there is only a chapter, do not display it
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSubdivision.new, hidden)];
-    NSArray<SRGChapter *> *visibleChapters = [self.chapters filteredArrayUsingPredicate:predicate];
+    NSPredicate *chaptersPredicate = [NSPredicate predicateWithFormat:@"%K == NO", @keypath(SRGSubdivision.new, hidden)];
+    NSArray<SRGChapter *> *visibleChapters = [self.chapters filteredArrayUsingPredicate:chaptersPredicate];
     
     NSMutableArray<SRGSubdivision *> *subdivisions = [NSMutableArray array];
     for (SRGChapter *chapter in visibleChapters) {
         if (chapter == self.mainChapter && chapter.segments.count != 0) {
-            NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:predicate];
+            NSPredicate *segmentsPredicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment * _Nullable segment, NSDictionary<NSString *, id> * _Nullable bindings) {
+                if (segment.hidden || ! mediaPlayerController) {
+                    return NO;
+                }
+                
+                CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:mediaPlayerController];
+                return CMTimeRangeContainsTime(mediaPlayerController.timeRange, segmentTimeRange.start);
+            }];
+            NSArray<SRGSegment *> *visibleSegments = [chapter.segments filteredArrayUsingPredicate:segmentsPredicate];
             [subdivisions addObjectsFromArray:visibleSegments];
         }
         else if (visibleChapters.count > 1) {
@@ -49,6 +57,5 @@
     }
     return subdivisions.copy;
 }
-
 
 @end

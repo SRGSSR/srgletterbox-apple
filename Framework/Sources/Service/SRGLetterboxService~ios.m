@@ -126,9 +126,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     if (_controller) {
         [self disableExternalPlaybackForController:_controller];
         
-        // TODO: Not needed if program information is later delivered as highlights (segments).
-        [_controller removeObserver:self keyPath:@keypath(_controller.program)];
-        
         [_controller removeObserver:self keyPath:@keypath(_controller.media)];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
@@ -159,18 +156,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     [self updateMetadataWithController:controller];
     
     if (controller) {
-        // TODO: Not needed if program information is later delivered as highlights (segments).
-        @weakify(controller)
-        [controller addObserver:self keyPath:@keypath(controller.program) options:0 block:^(MAKVONotification *notification) {
-            @strongify(controller)
-            [self updateNowPlayingInformationWithController:controller];
-        }];
-        
         // Do not switch to external playback when playing anything other than videos. External playback is namely only
         // intended for video playback. If you try to play audio with external playback, then:
         //   - The screen will be black instead of displaying a media notification.
         //   - The user won't be able to change the volume with the phone controls.
         // Remark: For video external playback, it is normal that the user cannot control the volume from her device.
+        @weakify(controller)
         [controller addObserver:self keyPath:@keypath(controller.media) options:0 block:^(MAKVONotification *notification) {
             @strongify(controller)
             [self enableExternalPlaybackForController:controller];
@@ -484,16 +475,6 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
 }
 
-- (SRGMedia *)nowPlayingMediaForController:(SRGLetterboxController *)controller
-{
-    if (controller.media.mediaType == SRGMediaTypeVideo) {
-        return controller.subdivisionMedia ?: controller.fullLengthMedia ?: controller.media;
-    }
-    else {
-        return controller.media;
-    }
-}
-
 - (void)updateNowPlayingInformationWithController:(SRGLetterboxController *)controller
 {
     if (! self.nowPlayingInfoAndCommandsEnabled) {
@@ -502,7 +483,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     SRGLetterboxLogDebug(@"service", @"Now playing info metadata update started");
     
-    SRGMedia *media = [self nowPlayingMediaForController:controller];
+    SRGMedia *media = controller.displayableMedia;
     if (! media) {
         [self clearArtworkImageCache];
         MPNowPlayingInfoCenter.defaultCenter.nowPlayingInfo = nil;
@@ -528,26 +509,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         }
     }
     
-    // Display channel information when available for a livestream (testing channel information alone does not work since
-    // such information can also be available for on-demand medias).
-    SRGChannel *channel = controller.channel;
-    if (media.contentType == SRGContentTypeLivestream && channel) {
-        SRGProgram *program = controller.program;
-        if (program) {
-            NSString *title = program.title;
-            nowPlayingInfo[MPMediaItemPropertyTitle] = title;
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = ! [channel.title isEqualToString:title] ? channel.title : @"";
-        }
-        else {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = channel.title;
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = @"";
-        }
-    }
-    else {
-        nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
-    }
-    
+    nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
+    nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
     nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
     
     CGFloat artworkDimension = 256.f * UIScreen.mainScreen.scale;
@@ -661,28 +624,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
 {
     CGFloat smallestDimension = fmin(size.width, size.height);
-    NSURL *artworkURL = nil;
-    
-    // Display channel information when available for a livestream (testing channel information alone does not work since
-    // such information can also be available for on-demand medias).
-    SRGChannel *channel = controller.channel;
-    SRGMedia *media = [self nowPlayingMediaForController:controller];
-    if (media.contentType == SRGContentTypeLivestream && channel) {
-        SRGProgram *program = controller.program;
-        if (program) {
-            artworkURL = SRGLetterboxArtworkImageURL(program, smallestDimension);
-            if (! artworkURL) {
-                artworkURL = SRGLetterboxArtworkImageURL(channel, smallestDimension);
-            }
-        }
-        else {
-            artworkURL = SRGLetterboxArtworkImageURL(channel, smallestDimension);
-        }
-    }
-    else {
-        artworkURL = SRGLetterboxArtworkImageURL(media, smallestDimension);
-    }
-    
+    SRGMedia *media = controller.displayableMedia;
+    NSURL *artworkURL = SRGLetterboxArtworkImageURL(media, smallestDimension);
     if (! artworkURL) {
         artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];
     }
@@ -747,19 +690,19 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 - (MPRemoteCommandHandlerStatus)play:(MPRemoteCommandEvent *)event
 {
-    [self.controller.mediaPlayerController play];
+    [self.controller play];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (MPRemoteCommandHandlerStatus)pause:(MPRemoteCommandEvent *)event
 {
-    [self.controller.mediaPlayerController pause];
+    [self.controller pause];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
 - (MPRemoteCommandHandlerStatus)togglePlayPause:(MPRemoteCommandEvent *)event
 {
-    [self.controller.mediaPlayerController togglePlayPause];
+    [self.controller togglePlayPause];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 

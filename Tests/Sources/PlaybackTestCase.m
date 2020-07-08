@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "LetterboxBaseTestCase.h"
+
 #import <libextobjc/libextobjc.h>
 #import <SRGLetterbox/SRGLetterbox.h>
-
-#import "LetterboxBaseTestCase.h"
 
 // Imports required to test internals
 #import "SRGLetterboxController+Private.h"
@@ -999,8 +999,8 @@
     [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertEqualObjects(self.controller.URN, URN);
-    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertNotNil(self.controller.URN);
+    XCTAssertNotNil(self.controller.media.URN);
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
     id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {

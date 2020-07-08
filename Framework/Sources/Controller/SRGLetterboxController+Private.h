@@ -42,11 +42,6 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly) SRGMediaPlayerController *mediaPlayerController;
 
 /**
- *  The program corresponding to the current playback position, if any.
- */
-@property (nonatomic, readonly, nullable) SRGProgram *program;
-
-/**
  *  Play the upcoming media currently available.
  *
  *  @return `YES` iff successful.
@@ -65,6 +60,16 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  *  Returns `YES` iff the controller is currently used for external AirPlay playback.
  */
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
+
+/**
+ *  Return the displayable subdivision (segment or chapter) at the specified time, `nil` if none.
+ */
+- (nullable SRGSubdivision *)displayableSubdivisionAtTime:(CMTime)time;
+
+/**
+ *  The current media which can be used for display purposes (thumbnails, control center…)
+ */
+@property (nonatomic, readonly, nullable) SRGMedia *displayableMedia;
 
 @end
 

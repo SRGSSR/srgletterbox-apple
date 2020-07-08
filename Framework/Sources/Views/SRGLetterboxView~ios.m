@@ -30,8 +30,6 @@
 #import <libextobjc/libextobjc.h>
 #import <MAKVONotificationCenter/MAKVONotificationCenter.h>
 
-const CGFloat SRGLetterboxViewDefaultTimelineHeight = 120.f;
-
 static void commonInit(SRGLetterboxView *self);
 
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
@@ -255,15 +253,12 @@ static void commonInit(SRGLetterboxView *self);
 {
     [super metadataDidChange];
     
-    [self reloadImage];
+    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
 }
 
 - (void)playbackDidFail
 {
     [super playbackDidFail];
-    
-    self.timelineView.selectedIndex = NSNotFound;
-    self.timelineView.time = kCMTimeZero;
     
     [self setNeedsLayoutAnimated:YES];
 }
@@ -387,7 +382,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated
 {
-    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxViewDefaultTimelineHeight) animated:animated];
+    [self setPreferredTimelineHeight:(timelineAlwaysHidden ? 0.f : SRGLetterboxTimelineViewDefaultHeight) animated:animated];
 }
 
 - (CGFloat)timelineHeight
@@ -424,13 +419,6 @@ static void commonInit(SRGLetterboxView *self);
 - (BOOL)isLive
 {
     return self.controlsView.live;
-}
-
-#pragma mark Data refresh
-
-- (void)reloadImage
-{
-    [self.imageView srg_requestImageForController:self.controller withScale:SRGImageScaleLarge type:SRGImageTypeDefault atDate:self.controlsView.date];
 }
 
 #pragma mark Observer management
@@ -666,7 +654,7 @@ static void commonInit(SRGLetterboxView *self);
 
 - (CGFloat)updateTimelineLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
-    NSArray<SRGSubdivision *> *subdivisions = self.controller.mediaComposition.srgletterbox_subdivisions;
+    NSArray<SRGSubdivision *> *subdivisions = [self.controller.mediaComposition srgletterbox_subdivisionsForMediaPlayerController:self.controller.mediaPlayerController];
     
     // The timeline (if other content is available) is displayed when an error has been encountered, so that the user has
     // a chance to pick another media
@@ -679,7 +667,7 @@ static void commonInit(SRGLetterboxView *self);
     self.timelineHeightConstraint.constant = timelineHeight;
     
     if (shouldFocus) {
-        [self.timelineView scrollToSelectedIndexAnimated:NO];
+        [self.timelineView scrollToCurrentSelectionAnimated:NO];
     }
     
     static const CGFloat kBottomConstraintGreaterPriority = 950.f;
@@ -768,24 +756,6 @@ static void commonInit(SRGLetterboxView *self);
     }
 }
 
-#pragma mark Subdivisions
-
-// Return the subdivision in the timeline at the specified time
-- (SRGSubdivision *)subdivisionOnTimelineAtTime:(CMTime)time
-{
-    SRGChapter *mainChapter = self.controller.mediaComposition.mainChapter;
-    SRGSubdivision *subdivision = mainChapter;
-    
-    // For chapters without segments, return the chapter, otherwise the segment at time
-    if (mainChapter.segments.count != 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
-            return CMTimeRangeContainsTime(segment.srg_timeRange, time);
-        }];
-        subdivision = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
-    }
-    return [self.timelineView.subdivisions containsObject:subdivision] ? subdivision : nil;
-}
-
 #pragma mark Gesture recognizers
 
 - (void)resetInactivity:(UIGestureRecognizer *)gestureRecognizer
@@ -866,22 +836,25 @@ static void commonInit(SRGLetterboxView *self);
     [self setFullScreen:!self.isFullScreen animated:YES];
 }
 
-- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
+- (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    SRGSubdivision *selectedSubdivision = [self subdivisionOnTimelineAtTime:time];
+    SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:time];
     
     if (interactive) {
-        NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:selectedSubdivision];
+        NSInteger selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
         self.timelineView.selectedIndex = selectedIndex;
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
+        [self.timelineView scrollToCurrentSelectionAnimated:YES];
     }
     self.timelineView.time = time;
     
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:interactive:)]) {
-        [self.delegate letterboxView:self didScrollWithSubdivision:selectedSubdivision time:time interactive:interactive];
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didScrollWithSubdivision:time:date:interactive:)]) {
+        [self.delegate letterboxView:self didScrollWithSubdivision:subdivision time:time date:date interactive:interactive];
     }
     
-    [self reloadImage];
+    // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
+    if (self.controller.playbackState == SRGMediaPlayerPlaybackStateSeeking) {
+        [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    }
 }
 
 - (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
@@ -945,7 +918,7 @@ static void commonInit(SRGLetterboxView *self);
     SRGMediaPlayerPlaybackState playbackState = [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue];
     
     if (previousPlaybackState == SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateIdle) {
-        [self.timelineView scrollToSelectedIndexAnimated:YES];
+        [self.timelineView scrollToCurrentSelectionAnimated:YES];
         [self showAirPlayNotificationMessageIfNeededAnimated:YES];
     }
     
@@ -956,7 +929,7 @@ static void commonInit(SRGLetterboxView *self);
         NSValue *seekTimeValue = notification.userInfo[SRGMediaPlayerSeekTimeKey];
         if (seekTimeValue) {
             CMTime seekTime = seekTimeValue.CMTimeValue;
-            SRGSubdivision *subdivision = [self subdivisionOnTimelineAtTime:seekTime];
+            SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:seekTime];
             self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
             self.timelineView.time = seekTime;
         }
@@ -969,7 +942,7 @@ static void commonInit(SRGLetterboxView *self);
 {
     SRGSubdivision *subdivision = notification.userInfo[SRGMediaPlayerSegmentKey];
     self.timelineView.selectedIndex = [self.timelineView.subdivisions indexOfObject:subdivision];
-    [self.timelineView scrollToSelectedIndexAnimated:YES];
+    [self.timelineView scrollToCurrentSelectionAnimated:YES];
 }
 
 - (void)segmentDidEnd:(NSNotification *)notification
@@ -1005,7 +978,7 @@ static void commonInit(SRGLetterboxView *self)
 {
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
-    self.preferredTimelineHeight = SRGLetterboxViewDefaultTimelineHeight;
+    self.preferredTimelineHeight = SRGLetterboxTimelineViewDefaultHeight;
     self.previousAspectRatio = SRGAspectRatioUndefined;
     
     self.backgroundColor = UIColor.blackColor;

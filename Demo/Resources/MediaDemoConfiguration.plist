@@ -5,6 +5,17 @@
 	<key>sections</key>
 	<array>
 		<dict>
+			<key>medias</key>
+			<array>
+				<dict>
+					<key>name</key>
+					<string>Manual URN entry</string>
+					<key>urn</key>
+					<string>OTHER</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
 			<key>name</key>
 			<string>Common medias</string>
 			<key>summary</key>
@@ -125,12 +136,6 @@
 					<key>urn</key>
 					<string>urn:srf:audio:5e266ba0-f769-4d6d-bd41-e01f188dd106</string>
 				</dict>
-				<dict>
-					<key>name</key>
-					<string>Other media</string>
-					<key>urn</key>
-					<string>OTHER</string>
-				</dict>
 			</array>
 		</dict>
 		<dict>
@@ -247,9 +252,15 @@
 			<array>
 				<dict>
 					<key>name</key>
-					<string>URL overriding</string>
+					<string>URL overriding (video)</string>
 					<key>urn</key>
 					<string>urn:rts:video:8806790</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>URL overriding (audio)</string>
+					<key>urn</key>
+					<string>urn:rts:audio:8798735</string>
 				</dict>
 				<dict>
 					<key>name</key>

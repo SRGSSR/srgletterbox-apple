@@ -11,7 +11,7 @@
 "Available in %@" = "Disponible dans %@";
 
 /* Back to live label */
-"Back to live" = "Retour au direct";
+"Back to live" = "Retourner au direct";
 
 /* Hint for the letterbox view */
 "Double tap to display or hide player controls." = "Taper deux fois pour montrer ou cacher les contrôles.";
@@ -36,6 +36,9 @@
 
 /* Segment or chapter cell hint */
 "Plays the content." = "Joue le contenu.";
+
+/* Start over label */
+"Start over" = "Reprendre au début";
 
 /* Stop button label */
 "Stop" = "Stop";

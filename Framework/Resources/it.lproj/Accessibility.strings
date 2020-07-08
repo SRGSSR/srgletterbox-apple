@@ -37,6 +37,9 @@
 /* Segment or chapter cell hint */
 "Plays the content." = "Riprodurre il contenuto.";
 
+/* Start over label */
+"Start over" = "Ripartire dall'inizio";
+
 /* Stop button label */
 "Stop" = "Stop";
 

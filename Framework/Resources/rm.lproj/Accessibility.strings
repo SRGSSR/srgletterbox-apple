@@ -37,6 +37,9 @@
 /* Segment or chapter cell hint */
 "Plays the content." = "Mussar cuntegn.";
 
+/* Start over label */
+"Start over" = "Recumenzar";
+
 /* Stop button label */
 "Stop" = "Stop";
 

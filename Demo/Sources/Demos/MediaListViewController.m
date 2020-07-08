@@ -387,8 +387,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *URN = self.medias[indexPath.row].URN;
-    [self openPlayerWithURN:URN serviceURL:self.serviceURL];
+    SRGMedia *media = self.medias[indexPath.row];
+    [self openPlayerWithMedia:media serviceURL:self.serviceURL];
 }
 
 #pragma mark Actions

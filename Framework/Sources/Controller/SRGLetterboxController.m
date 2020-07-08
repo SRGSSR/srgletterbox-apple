@@ -160,15 +160,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
-// TODO: Not needed if program information is later delivered as highlights (segments).
-@property (nonatomic) SRGProgram *program;
-
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
 // Use timers (not time observers) so that updates are performed also when the controller is idle
 @property (nonatomic) NSTimer *updateTimer;
-@property (nonatomic) NSTimer *channelUpdateTimer;
 
 // Timers for single metadata updates at start and end times
 @property (nonatomic) NSTimer *startDateTimer;
@@ -178,9 +174,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 // Timer for continuous playback
 @property (nonatomic) NSTimer *continuousPlaybackTransitionTimer;
-
-// Time observers
-@property (nonatomic) id programTimeObserver;
 
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
@@ -192,7 +185,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGMedia *continuousPlaybackUpcomingMedia;
 
 @property (nonatomic) NSTimeInterval updateInterval;
-@property (nonatomic) NSTimeInterval channelUpdateInterval;
 
 @property (nonatomic) NSDate *lastUpdateDate;
 
@@ -241,12 +233,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         
         // Also register the associated periodic time observers
         self.updateInterval = SRGLetterboxDefaultUpdateInterval;
-        self.channelUpdateInterval = SRGLetterboxChannelDefaultUpdateInterval;
-        
-        self.programTimeObserver = [self.mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
-            @strongify(self)
-            [self updateProgramForChannel:self.channel];
-        }];
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
         
@@ -289,7 +275,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     // Invalidate timers
     self.updateTimer = nil;
-    self.channelUpdateTimer = nil;
     self.startDateTimer = nil;
     self.endDateTimer = nil;
     self.livestreamEndDateTimer = nil;
@@ -345,9 +330,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return self.mediaPlayerController.currentTime;
 }
 
-- (NSDate *)date
+- (NSDate *)currentDate
 {
-    return self.mediaPlayerController.date;
+    return self.mediaPlayerController.currentDate;
 }
 
 - (CMTimeRange)timeRange
@@ -468,24 +453,14 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }];
 }
 
-- (void)setChannelUpdateInterval:(NSTimeInterval)channelUpdateInterval
-{
-    if (channelUpdateInterval < SRGLetterboxChannelMinimumUpdateInterval) {
-        channelUpdateInterval = SRGLetterboxChannelMinimumUpdateInterval;
-    }
-    
-    _channelUpdateInterval = channelUpdateInterval;
-    
-    @weakify(self)
-    self.channelUpdateTimer = [NSTimer srgletterbox_timerWithTimeInterval:channelUpdateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
-        @strongify(self)
-        [self updateChannel];
-    }];
-}
-
 - (SRGMedia *)subdivisionMedia
 {
     return [self.mediaComposition mediaForSubdivision:self.subdivision];
+}
+
+- (SRGMedia *)displayableMedia
+{
+    return (self.subdivision && ! self.subdivision.hidden) ? [self.mediaComposition mediaForSubdivision:self.subdivision] : self.media;
 }
 
 - (SRGMedia *)fullLengthMedia
@@ -511,12 +486,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     [_updateTimer invalidate];
     _updateTimer = updateTimer;
-}
-
-- (void)setChannelUpdateTimer:(NSTimer *)channelUpdateTimer
-{
-    [_channelUpdateTimer invalidate];
-    _channelUpdateTimer = channelUpdateTimer;
 }
 
 - (void)setStartDateTimer:(NSTimer *)startDateTimer
@@ -925,57 +894,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [self.requestQueue addRequest:mediaCompositionRequest resume:YES];
 }
 
-- (void)updateChannel
-{
-    if (! self.media || self.media.contentType != SRGContentTypeLivestream || ! self.media.channel.uid) {
-        return;
-    }
-    
-    SRGChannelCompletionBlock channelCompletionBlock = ^(SRGChannel * _Nullable channel, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
-        [self updateWithURN:self.URN media:self.media mediaComposition:self.mediaComposition subdivision:self.subdivision channel:channel];
-        [self updateProgramForChannel:channel];
-    };
-    
-    if (self.media.mediaType == SRGMediaTypeVideo) {
-        SRGRequest *request = [self.dataProvider tvChannelForVendor:self.media.vendor withUid:self.media.channel.uid completionBlock:channelCompletionBlock];
-        [self.requestQueue addRequest:request resume:YES];
-    }
-    else if (self.media.mediaType == SRGMediaTypeAudio) {
-        if (self.media.vendor == SRGVendorSRF && ! [self.media.uid isEqualToString:self.media.channel.uid]) {
-            SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:self.media.uid completionBlock:channelCompletionBlock];
-            [self.requestQueue addRequest:request resume:YES];
-        }
-        else {
-            SRGRequest *request = [self.dataProvider radioChannelForVendor:self.media.vendor withUid:self.media.channel.uid livestreamUid:nil completionBlock:channelCompletionBlock];
-            [self.requestQueue addRequest:request resume:YES];
-        }
-    }
-}
-
-- (SRGProgram *)programForChannel:(SRGChannel *)channel
-{
-    if (self.media.contentType != SRGContentTypeLivestream || ! channel) {
-        return nil;
-    }
-        
-    NSDate *playbackDate = self.date;
-    if (playbackDate && [channel.currentProgram srgletterbox_containsDate:playbackDate]) {
-        return channel.currentProgram;
-    }
-    else {
-        return nil;
-    }
-}
-
-// TODO: Not needed if program information is later delivered as highlights (segments).
-- (void)updateProgramForChannel:(SRGChannel *)channel
-{
-    SRGProgram *program = [self programForChannel:channel];
-    if (program != self.program && ! [program isEqual:self.program]) {
-        self.program = program;
-    }
-}
-
 - (void)updateWithError:(NSError *)error
 {
     if (! error) {
@@ -1078,7 +996,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self.report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
-        [self updateChannel];
         
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
@@ -1291,8 +1208,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     [self updateWithURN:URN media:media mediaComposition:nil subdivision:nil channel:nil];
     
-    self.program = nil;
-    
     [self.mediaPlayerController reset];
     [self.requestQueue cancel];
 }
@@ -1322,23 +1237,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)switchToSubdivision:(SRGSubdivision *)subdivision withCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    if (! self.mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"No context is available. No switch will occur.");
+    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
+    if (! mediaComposition) {
+        SRGLetterboxLogInfo(@"controller", @"Cannot determine subdivision switch context. No switch will occur.");
         return NO;
     }
     
-    // Build the media composition for the provided subdivision. Return `NO` if the subdivision is not related to the
-    // media composition.
-    SRGMediaComposition *mediaComposition = [self.mediaComposition mediaCompositionForSubdivision:subdivision];
-    if (! mediaComposition) {
-        SRGLetterboxLogInfo(@"controller", @"The subdivision is not related to the current context. No switch will occur.");
-        return NO;
-    }
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
     
     // If playing another media or if the player is not playing, restart
     if ([subdivision isKindOfClass:SRGChapter.class]
-            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
-            || self.mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStateIdle
+            || mediaPlayerController.playbackState == SRGMediaPlayerPlaybackStatePreparing) {
         NSError *blockingReasonError = SRGBlockingReasonErrorForMedia([mediaComposition mediaForSubdivision:mediaComposition.mainChapter], NSDate.date);
         [self updateWithError:blockingReasonError];
         
@@ -1357,12 +1267,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         if (! blockingReasonError) {
             [[self.report informationForKey:@"playerResult"] startTimeMeasurementForKey:@"duration"];
             NSDictionary *userInfo = @{ SRGAnalyticsDataProviderUserInfoResourceLoaderOptionsKey : options };
-            [self.mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(self.preferredSettings) userInfo:userInfo completionHandler:^{
+            [mediaPlayerController prepareToPlayMediaComposition:mediaComposition atPosition:nil withPreferredSettings:SRGPlaybackSettingsFromLetterboxPlaybackSettings(self.preferredSettings) userInfo:userInfo completionHandler:^{
                 [[self.report informationForKey:@"playerResult"] stopTimeMeasurementForKey:@"duration"];
                 [self.report stopTimeMeasurementForKey:@"duration"];
                 [self.report finish];
                 
-                [self.mediaPlayerController play];
+                [mediaPlayerController play];
                 completionHandler ? completionHandler(YES) : nil;
             }];
         }
@@ -1374,9 +1284,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     // Playing another segment from the same media. Seek
     else if ([subdivision isKindOfClass:SRGSegment.class]) {
-        [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:subdivision channel:nil];
-        [self.mediaPlayerController seekToPosition:nil inSegment:(SRGSegment *)subdivision withCompletionHandler:^(BOOL finished) {
-            [self.mediaPlayerController play];
+        SRGSegment *segment = (SRGSegment *)subdivision;
+        [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:segment channel:nil];
+        [mediaPlayerController seekToPosition:nil inSegment:segment withCompletionHandler:^(BOOL finished) {
+            [mediaPlayerController play];
             completionHandler ? completionHandler(finished) : nil;
         }];
     }
@@ -1414,14 +1325,35 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self canSkipFromTime:[self seekStartTime] withInterval:interval];
 }
 
+- (BOOL)canStartOver
+{
+    SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
+    if (mediaPlayerController.streamType != SRGMediaPlayerStreamTypeDVR) {
+        return NO;
+    }
+    
+    if (! [self.subdivision isKindOfClass:SRGSegment.class]) {
+        return NO;
+    }
+    
+    SRGSegment *segment = (SRGSegment *)self.subdivision;
+    CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:mediaPlayerController];
+    return CMTimeRangeContainsTime(mediaPlayerController.timeRange, segmentTimeRange.start);
+}
+
 - (BOOL)canSkipToLive
 {
     if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeDVR) {
         return [self canSkipWithInterval:self.mediaPlayerController.liveTolerance];
     }
-    
-    if (self.mediaComposition.srgletterbox_liveMedia && ! [self.mediaComposition.srgletterbox_liveMedia isEqual:self.media]) {
-        return [self.mediaComposition.srgletterbox_liveMedia blockingReasonAtDate:NSDate.date] != SRGBlockingReasonEndDate;
+    else if (self.mediaPlayerController.streamType == SRGMediaPlayerStreamTypeOnDemand) {
+        SRGMedia *liveMedia = self.mediaComposition.srgletterbox_liveMedia;
+        if (liveMedia && ! [liveMedia isEqual:self.media]) {
+            return [liveMedia blockingReasonAtDate:NSDate.date] != SRGBlockingReasonEndDate;
+        }
+        else {
+            return NO;
+        }
     }
     else {
         return NO;
@@ -1431,6 +1363,15 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(void (^)(BOOL))completionHandler
 {
     return [self skipFromTime:[self seekStartTime] withInterval:interval completionHandler:completionHandler];
+}
+
+- (BOOL)startOverWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    if (! [self canStartOver]) {
+        return NO;
+    }
+    
+    return [self switchToSubdivision:self.subdivision withCompletionHandler:completionHandler];
 }
 
 - (BOOL)skipToLiveWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -1455,6 +1396,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     else {
         return NO;
     }
+}
+
+#pragma mark Time conversions
+
+- (CMTime)streamTimeForDate:(NSDate *)date
+{
+    return [self.mediaPlayerController streamTimeForDate:date];
+}
+
+- (NSDate *)streamDateForTime:(CMTime)time
+{
+    return [self.mediaPlayerController streamDateForTime:time];
 }
 
 #pragma mark Diagnostics
@@ -1538,6 +1491,22 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return YES;
 }
 
+- (SRGSubdivision *)displayableSubdivisionAtTime:(CMTime)time
+{
+    SRGChapter *mainChapter = self.mediaComposition.mainChapter;
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(SRGSegment *  _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
+        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
+        return ! segment.hidden && CMTimeRangeContainsTime(segmentTimeRange, time);
+    }];
+    SRGSubdivision *displayableSegment = [mainChapter.segments filteredArrayUsingPredicate:predicate].firstObject;
+    if (displayableSegment) {
+        return displayableSegment;
+    }
+    else {
+        return ! mainChapter.hidden ? mainChapter : nil;
+    }
+}
+
 #pragma mark Configuration
 
 - (void)reloadMediaConfiguration
@@ -1587,6 +1556,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         if (subdivision.contentType != SRGContentTypeLivestream && subdivision.contentType != SRGContentTypeScheduledLivestream && subdivision.duration < kDefaultTimerInterval) {
             timerInterval = subdivision.duration * .8;
         }
+        
         @weakify(self)
         self.socialCountViewTimer = [NSTimer srgletterbox_timerWithTimeInterval:timerInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
@@ -1776,3 +1746,20 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 @end
 
+@implementation SRGMark (SRGLetterbox)
+
+- (CMTime)srg_timeForLetterboxController:(SRGLetterboxController *)controller
+{
+    return [self timeForMediaPlayerController:controller.mediaPlayerController];
+}
+
+@end
+
+@implementation SRGMarkRange (SRGLetterbox)
+
+- (CMTimeRange)srg_timeRangeForLetterboxController:(SRGLetterboxController *)controller
+{
+    return [self timeRangeForMediaPlayerController:controller.mediaPlayerController];
+}
+
+@end

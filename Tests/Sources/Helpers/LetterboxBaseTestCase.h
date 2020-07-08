@@ -15,6 +15,9 @@ static NSString * const OnDemandLongVideoURN = @"urn:srf:video:2c685129-bad8-4ea
 static NSString * const OnDemandLongVideoSegmentURN = @"urn:srf:video:5fe1618a-b710-42aa-ac8a-cb9eabf42426";
 static NSString * const OnDemandAudioWithChaptersURN = @"urn:rts:audio:9355007";
 static NSString * const LiveOnlyVideoURN = @"urn:rts:video:8841634";
+static NSString * const LiveAudioURN = @"urn:srf:audio:69e8ac16-4327-4af4-b873-fd5cd6e895a7";
+static NSString * const OnDemandVideoWithLegalBlockedContentURN = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
+static NSString * const OnDemandVideoWithLegalBlockedContentSegementURN = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
 
 static NSString * const MMFLiveDVRVideoURN = @"urn:rts:video:_tagesschau24_ard";
 static NSString * const MMFNonProtectedMediaChangedURN = @"urn:rts:video:mediacompositionChangedURN";

@@ -7,7 +7,9 @@
 #import "SRGControlsView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSDateFormatter+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
+#import "SRGControlButton.h"
 #import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
 #import "SRGLetterboxController+Private.h"
@@ -27,9 +29,10 @@
 @interface SRGControlsView ()
 
 @property (nonatomic, weak) IBOutlet SRGLetterboxPlaybackButton *playbackButton;
-@property (nonatomic, weak) IBOutlet UIButton *backwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *forwardSeekButton;
-@property (nonatomic, weak) IBOutlet UIButton *skipToLiveButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *backwardSeekButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *forwardSeekButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *startOverButton;
+@property (nonatomic, weak) IBOutlet SRGControlButton *skipToLiveButton;
 
 @property (nonatomic, weak) IBOutlet UIStackView *bottomStackView;
 @property (nonatomic, weak) IBOutlet SRGViewModeButton *viewModeButton;
@@ -94,6 +97,7 @@
     
     self.backwardSeekButton.alpha = 0.f;
     self.forwardSeekButton.alpha = 0.f;
+    self.startOverButton.alpha = 0.f;
     self.skipToLiveButton.alpha = 0.f;
     
     self.timeSlider.alpha = 0.f;
@@ -125,10 +129,12 @@
                                                   [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
     self.forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
                                                  [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
+    self.startOverButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Start over", @"Start over label");
     self.skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
     
     self.durationLabel.font = [UIFont srg_regularFontWithSize:14.f];
     
+    // Track controller changes to ensure picture in picture availability is correctly displayed.
     @weakify(self)
     [SRGLetterboxService.sharedService addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
@@ -168,9 +174,13 @@
 {
     [super willDetachFromController];
     
+    SRGLetterboxController *controller = self.controller;
+    SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+    [mediaPlayerController removeObserver:self keyPath:@keypath(mediaPlayerController.timeRange)];
+    
     [NSNotificationCenter.defaultCenter removeObserver:self
                                                   name:SRGLetterboxPlaybackStateDidChangeNotification
-                                                object:self.controller];
+                                                object:controller];
 }
 
 - (void)didDetachFromController
@@ -202,6 +212,12 @@
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
     
+    @weakify(self)
+    [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self setNeedsLayoutAnimated:YES];
+    }];
+    
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(playbackStateDidChange:)
                                                name:SRGLetterboxPlaybackStateDidChangeNotification
@@ -224,17 +240,29 @@
             || playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
+        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
         self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
         
         self.timeSlider.alpha = 0.f;
     }
     else {
-        self.forwardSeekButton.alpha = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval] ? 1.f : 0.f;
-        self.backwardSeekButton.alpha = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
-        
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
-        self.timeSlider.alpha = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR) ? 1.f : 0.f;
+        BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
+        
+        self.forwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+        
+        self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+
+        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
+        self.startOverButton.enabled = [self.controller canStartOver];
+        
+        BOOL canSkipToLive = [self.controller canSkipToLive];
+        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
+        self.skipToLiveButton.enabled = canSkipToLive;
+        
+        self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
@@ -271,6 +299,7 @@
     
     [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.startOverButton setImage:[UIImage srg_letterboxStartOverImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
     self.viewModeButton.viewModeMonoscopicImage = [UIImage srg_letterboxImageNamed:@"view_mode_monoscopic"];
@@ -282,6 +311,7 @@
     // Responsiveness
     self.backwardSeekButton.hidden = NO;
     self.forwardSeekButton.hidden = NO;
+    self.startOverButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
     self.durationLabelWrapperView.alwaysHidden = NO;
@@ -298,6 +328,7 @@
     if (height < 120.f) {
         self.backwardSeekButton.hidden = YES;
         self.forwardSeekButton.hidden = YES;
+        self.startOverButton.hidden = YES;
         self.skipToLiveButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
@@ -307,6 +338,7 @@
     
     CGFloat width = CGRectGetWidth(self.frame);
     if (width < 296.f) {
+        self.startOverButton.hidden = YES;
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
         self.durationLabelWrapperView.alwaysHidden = YES;
@@ -352,30 +384,21 @@
 
 #pragma mark SRGTimeSliderDelegate protocol
 
-- (void)timeSlider:(SRGTimeSlider *)slider isMovingToPlaybackTime:(CMTime)time withValue:(float)value interactive:(BOOL)interactive
+- (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    [self.delegate controlsView:self isMovingSliderToPlaybackTime:time withValue:value interactive:interactive];
+    [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
 }
 
-- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time
+- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time date:(NSDate *)date
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.live) {
         return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [UIFont srg_boldFontWithSize:14.f] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
-        NSDate *date = slider.date;
         if (date) {
-            static dispatch_once_t s_onceToken;
-            static NSDateFormatter *s_dateFormatter;
-            dispatch_once(&s_onceToken, ^{
-                s_dateFormatter = [[NSDateFormatter alloc] init];
-                s_dateFormatter.dateStyle = NSDateFormatterNoStyle;
-                s_dateFormatter.timeStyle = NSDateFormatterShortStyle;
-            });
-            
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[s_dateFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithSize:14.f] }]];
             return attributedString.copy;
         }
         else {
@@ -409,20 +432,29 @@
 - (IBAction)skipBackward:(id)sender
 {
     [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)skipForward:(id)sender
 {
     [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToPlaybackTime:self.timeSlider.time withValue:self.timeSlider.value interactive:YES];
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
+    }];
+}
+
+- (IBAction)startOver:(id)sender
+{
+    [self.controller startOverWithCompletionHandler:^(BOOL finished) {
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
     }];
 }
 
 - (IBAction)skipToLive:(id)sender
 {
-    [self.controller skipToLiveWithCompletionHandler:nil];
+    [self.controller skipToLiveWithCompletionHandler:^(BOOL finished) {
+        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
+    }];
 }
 
 - (IBAction)hideUserInterface:(id)sender

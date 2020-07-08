@@ -9,23 +9,6 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxError.h"
 
-// ** Private SRGDataProvider fixes for Play. See NSURL+SRGDataProvider.h for more information
-
-@interface NSURL (SRGLetterbox_Private_SRGDataProvider)
-
-- (NSURL *)srg_URLForDimension:(SRGImageDimension)dimension withValue:(CGFloat)value uid:(nullable NSString *)uid type:(nullable NSString *)type;
-
-@end
-
-@interface NSObject (SRGLetterbox_Private_SRGDataProvider)
-
-// Declare internal image URL accessor
-@property (nonatomic, readonly) NSURL *imageURL;
-
-@end
-
-// **
-
 static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
 {
     // Fix for invalid images, incorrect Kids program images, and incorrect images for sports (RTS)
@@ -59,24 +42,13 @@ NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType typ
 
 NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
 {
-    if (! [object respondsToSelector:@selector(imageURL)]) {
+    NSURL *imageURL = SRGLetterboxImageURL(object, dimension, SRGImageTypeDefault);
+    if (! imageURL) {
         return nil;
     }
     
-    NSURL *imageURL = [object performSelector:@selector(imageURL)];
-    NSString *uid = [object respondsToSelector:@selector(uid)] ? [object performSelector:@selector(uid)] : nil;
-    NSURL *artworkURL = [imageURL srg_URLForDimension:SRGImageDimensionWidth withValue:dimension uid:uid type:@"artwork"];
-    if (! SRGLetterboxIsValidURL(artworkURL)) {
-        return nil;
-    }
-    
-    // Use IL image service to create square artwork images for images delivered remotely (SRG SSR images are 16:9).
-    if (! artworkURL.fileURL) {
-        NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://il.srgssr.ch/integrationlayer/2.0/image-scale-one-to-one/%@/scale/width/%.0f", imageURL.absoluteString, dimension];
-        artworkURL = [NSURL URLWithString:squareArtworkURLString];
-    }
-    
-    return artworkURL;
+    NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://il.srgssr.ch/integrationlayer/2.0/image-scale-one-to-one/%@/scale/width/%.0f", imageURL.absoluteString, dimension];
+    return [NSURL URLWithString:squareArtworkURLString];
 }
 
 CGFloat SRGWidthForImageScale(SRGImageScale imageScale)
@@ -230,9 +202,18 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
     return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"backward"] : [UIImage srg_letterboxImageNamed:@"backward-large"];
 }
 
++ (UIImage *)srg_letterboxStartOverImageInSet:(SRGImageSet)imageSet
+{
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"start_over"] : [UIImage srg_letterboxImageNamed:@"start_over-large"];
+}
+
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live"] : [UIImage srg_letterboxImageNamed:@"back_live-large"];
+    // TODO: Localization catalogs can be used for image localization, but for iOS 12 and above. Here we can preserve iOS 9
+    //       compatibility with a simple trick, as we have a single FR resource at the moment.
+    //       See https://developer.apple.com/videos/play/wwdc2018/404/
+    NSString *imageName = [NSBundle.mainBundle.preferredLocalizations.firstObject isEqualToString:@"fr"] ? @"back_live_fr" : @"back_live";
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:imageName] : [UIImage srg_letterboxImageNamed:[imageName stringByAppendingString:@"-large"]];
 }
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error

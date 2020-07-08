@@ -38,11 +38,7 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
 {
     if (self = [super init]) {
-        self.name = dictionary[@"name"];
-        if (! self.name) {
-            return nil;
-        }
-        
+        self.name = dictionary[@"name"];        
         self.summary = dictionary[@"summary"];
         
         NSMutableArray<Media *> *medias = [NSMutableArray array];

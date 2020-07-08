@@ -8,7 +8,9 @@
 
 #import "NSBundle+LetterboxDemo.h"
 
+#import <SRGAppearance/SRGAppearance.h>
 #import <SRGLetterbox/SRGLetterbox.h>
+#import <YYWebImage/YYWebImage.h>
 
 #if TARGET_OS_IOS
 #import <AppCenterDistribute/AppCenterDistribute.h>
@@ -29,6 +31,10 @@ typedef NS_ENUM(NSInteger, SettingSection) {
     SettingSectionScreenMirroring,
     SettingSectionControlCenterIntegration,
     SettingSectionBackgroundVideoPlayback,
+#endif
+    SettingSectionPrefersMediaContent,
+    SettingSectionReset,
+#if TARGET_OS_IOS
     SettingSectionApplicationVersion,
 #endif
     SettingSectionCount
@@ -73,6 +79,7 @@ NSString * const LetterboxDemoSettingUserLocation = @"LetterboxDemoSettingUserLo
 NSString * const LetterboxDemoSettingMirroredOnExternalScreen = @"LetterboxDemoSettingMirroredOnExternalScreen";
 NSString * const LetterboxDemoSettingUpdateInterval = @"LetterboxDemoSettingUpdateInterval";
 NSString * const LetterboxDemoSettingBackgroundVideoPlaybackEnabled = @"LetterboxDemoSettingBackgroundVideoPlaybackEnabled";
+NSString * const LetterboxDemoSettingPrefersMediaContentEnabled = @"LetterboxDemoSettingPrefersMediaContentEnabled";
 
 NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
@@ -183,6 +190,17 @@ static void ApplicationSettingSetBackgroundVideoPlaybackEnabled(BOOL backgroundV
 }
 #endif
 
+BOOL ApplicationSettingPrefersMediaContentEnabled(void)
+{
+    return [NSUserDefaults.standardUserDefaults boolForKey:LetterboxDemoSettingPrefersMediaContentEnabled];
+}
+
+static void ApplicationSettingSetPrefersMediaContentEnabled(BOOL preferredMediaEnabled)
+{
+    [NSUserDefaults.standardUserDefaults setBool:preferredMediaEnabled forKey:LetterboxDemoSettingPrefersMediaContentEnabled];
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
+
 NSTimeInterval ApplicationSettingUpdateInterval(void)
 {
     // Set manually to default value, 5 minutes, if no setting.
@@ -202,18 +220,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     NSString *location = s_locations[@(ApplicationSettingUserLocation())];
     return location ? @{ @"forceLocation" : location } : nil;
 }
-
-#if TARGET_OS_IOS
-/**
- *  Private App Center implementation details.
- */
-@interface MSDistribute (Private)
-
-+ (id)sharedInstance;
-- (void)startUpdate;
-
-@end
-#endif
 
 @interface SettingsViewController ()
 
@@ -255,6 +261,17 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 #endif
     
     [self.tableView reloadData];
+}
+
+#pragma mark Cleanup
+
+- (void)clearWebCache
+{
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    YYImageCache *cache = YYWebImageManager.sharedManager.cache;
+    [cache.memoryCache removeAllObjects];
+    [cache.diskCache removeAllObjects];
 }
 
 #pragma mark UITableViewDataSource protocol
@@ -323,6 +340,16 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         }
 #endif
             
+        case SettingSectionPrefersMediaContent: {
+            return NSLocalizedString(@"Prefers media content", nil);
+            break;
+        }
+            
+        case SettingSectionReset: {
+            return NSLocalizedString(@"Reset", nil);
+            break;
+        }
+            
         default: {
             break;
         }
@@ -370,7 +397,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
             
-        case SettingSectionUpdateInterval: {
+        case SettingSectionUpdateInterval:
+        case SettingSectionPrefersMediaContent: {
             return 2;
             break;
         }
@@ -388,6 +416,11 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
 #endif
+            
+        case SettingSectionReset: {
+            return 3;
+            break;
+        }
             
         default: {
             return 0;
@@ -644,6 +677,61 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
 #endif
+           
+        case SettingSectionPrefersMediaContent: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = NSLocalizedString(@"Disabled (URNs only)", nil);
+                    cell.accessoryType = ! ApplicationSettingPrefersMediaContentEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                case 1: {
+                    cell.textLabel.text = NSLocalizedString(@"Enabled", nil);
+                    cell.accessoryType = ApplicationSettingPrefersMediaContentEnabled() ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                    break;
+                };
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                };
+            }
+            break;
+        }
+            
+        case SettingSectionReset: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Clear web cache", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
+                case 1: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Clear vector image cache", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
+                case 2: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Clear all caches", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
+                default: {
+                    cell.textLabel.text = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+            }
+            break;
+        };
             
         default: {
             cell.textLabel.text = nil;
@@ -727,8 +815,8 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case SettingSectionApplicationVersion: {
             // Clear internal App Center timestamp to force a new update request
-            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSPostponedTimestamp"];
-            [[MSDistribute sharedInstance] startUpdate];
+            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSAppCenterPostponedTimestamp"];
+            [MSDistribute checkForUpdate];
             
             // Display version history
             NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
@@ -740,6 +828,36 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             break;
         }
 #endif
+            
+        case SettingSectionPrefersMediaContent: {
+            ApplicationSettingSetPrefersMediaContentEnabled(indexPath.row == 1);
+            break;
+        }
+            
+        case SettingSectionReset: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self clearWebCache];
+                    break;
+                }
+                    
+                case 1: {
+                    [UIImage srg_clearVectorImageCache];
+                    break;
+                }
+                
+                case 2: {
+                    [self clearWebCache];
+                    [UIImage srg_clearVectorImageCache];
+                    break;
+                }
+                    
+                default: {
+                    break;
+                }
+            }
+            break;
+        }
             
         default: {
             break;

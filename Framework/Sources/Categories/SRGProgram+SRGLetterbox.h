@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGProgram (SRGLetterbox)
 
 /**
- *  Returns `YES` iff the program is on air on the specified date.
+ *  Returns `YES` iff the program contains the specified date.
  */
 - (BOOL)srgletterbox_containsDate:(NSDate *)date;
 
