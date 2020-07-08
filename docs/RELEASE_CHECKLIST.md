@@ -30,7 +30,7 @@ To release an SRG SSR library, perform the following steps sequentially (some st
 - Push _master_, _develop_ and tag.
 - Close milestone and issues on github.
 - Create github release. Use global diff to write release notes.
-- Deliver demo on HockeyApp.
+- Deliver demo on AppCenter.
 
 The libraries must be released in the order given by the table below, which you can use to keep track of version numbers as you release libraries:
 
