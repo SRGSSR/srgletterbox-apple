@@ -999,8 +999,8 @@
     [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
-    XCTAssertEqualObjects(self.controller.URN, URN);
-    XCTAssertEqualObjects(self.controller.media.URN, URN);
+    XCTAssertNotNil(self.controller.URN);
+    XCTAssertNotNil(self.controller.media.URN);
     XCTAssertEqualObjects(self.controller.mediaComposition.mainChapter.URN, URN);
     
     id eventObserver1 = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxLivestreamDidFinishNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
