@@ -640,6 +640,34 @@
     }];
 }
 
+- (void)testSameParentMediaPlaybackWhileAlreadyPlaying
+{
+    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    [self.controller playURN:OnDemandLongVideoSegmentURN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    // Expect no change when trying to play the same media
+    id metadataObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxMetadataDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no metadata update when playing the same media");
+    }];
+    id eventObserver = [NSNotificationCenter.defaultCenter addObserverForName:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        XCTFail(@"Expect no playback state change when playing the same media");
+    }];
+    
+    [self expectationForElapsedTimeInterval:3. withHandler:nil];
+    
+    [self.controller playURN:OnDemandLongVideoURN atPosition:nil withPreferredSettings:nil];
+    
+    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
+        [NSNotificationCenter.defaultCenter removeObserver:metadataObserver];
+        [NSNotificationCenter.defaultCenter removeObserver:eventObserver];
+    }];
+}
+
 - (void)testSameMediaPlaybackWhilePaused
 {
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {

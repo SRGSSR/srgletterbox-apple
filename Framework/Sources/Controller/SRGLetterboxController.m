@@ -949,8 +949,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         return;
     }
     
-    // If already playing the media, does nothing
-    if (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && [self.URN isEqual:URN]) {
+    // If already playing the media or a part of it, does nothing
+    BOOL isSameMedia = [self.URN isEqualToString:URN] || [self.mediaComposition.mainChapter.URN isEqualToString:URN];
+    if (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && isSameMedia) {
         return;
     }
     
