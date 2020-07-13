@@ -213,9 +213,12 @@ static void commonInit(SRGLetterboxTimelineView *self)
         animations = ^{
             NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:0];
             if (self.selectedIndex < numberOfItems) {
-                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
-                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                    animated:NO];
+                @try {
+                    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]
+                                                atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                        animated:NO];
+                }
+                @catch (NSException *exception) {}
             }
         };
     }
@@ -252,9 +255,12 @@ static void commonInit(SRGLetterboxTimelineView *self)
         }];
         
         animations = ^{
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:nearestIndex inSection:0]
-                                        atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                                animated:NO];
+            @try {
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:nearestIndex inSection:0]
+                                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                    animated:NO];
+            }
+            @catch (NSException *exception) {}
         };
     }
     else {
