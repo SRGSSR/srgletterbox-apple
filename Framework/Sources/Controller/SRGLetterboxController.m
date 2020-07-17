@@ -951,6 +951,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     // If already playing the media, does nothing
     if (self.mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && [self.URN isEqual:URN]) {
+        completionHandler ? completionHandler() : nil;
         return;
     }
     
