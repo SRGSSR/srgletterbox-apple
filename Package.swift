@@ -46,7 +46,6 @@ let package = Package(
                 "SRGErrorView~ios.xib",
                 "SRGErrorView~tvos.xib",
                 "SRGLetterboxSubdivisionCell~ios.xib",
-                "SRGLetterboxView~ios.xib",
                 "SRGNotificationView~ios.xib",
                 "SRGNotificationView~tvos.xib"
             ],

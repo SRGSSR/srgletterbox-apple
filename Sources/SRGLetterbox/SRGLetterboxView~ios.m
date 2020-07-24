@@ -106,6 +106,36 @@ static void commonInit(SRGLetterboxView *self);
     return self;
 }
 
+#pragma mark Layout
+
+- (void)buildView
+{
+    UIView *playbackView = [[UIView alloc] init];
+    playbackView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:playbackView];
+    self.playbackView = playbackView;
+    
+    [NSLayoutConstraint activateConstraints: @[
+        [playbackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [playbackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [playbackView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [playbackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+    ]];
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self insertSubview:imageView belowSubview:playbackView];
+    self.imageView = imageView;
+    
+    [NSLayoutConstraint activateConstraints: @[
+        [imageView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
+        [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor],
+        [imageView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
+        [imageView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor]
+    ]];
+}
+
 #pragma mark Overrides
 
 - (void)awakeFromNib
@@ -990,6 +1020,8 @@ static void commonInit(SRGLetterboxView *self)
     if (@available(iOS 11.0, *)) {
         self.accessibilityIgnoresInvertColors = YES;
     }
+    
+    [self buildView];
 }
 
 #endif
