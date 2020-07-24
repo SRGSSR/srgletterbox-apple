@@ -6,10 +6,7 @@
 
 #import "SRGLetterboxBaseView.h"
 
-#import "NSBundle+SRGLetterbox.h"
 #import "SRGLetterboxView+Private.h"
-
-static void commonInit(SRGLetterboxBaseView *self);
 
 @interface SRGLetterboxBaseView ()
 
@@ -18,28 +15,6 @@ static void commonInit(SRGLetterboxBaseView *self);
 @end
 
 @implementation SRGLetterboxBaseView
-
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-        
-        // The top-level view loaded from the xib file and initialized in `commonInit` is NOT a instance of the class.
-        // Manually calling `-awakeFromNib` forces the final view initialization (also see comments in `commonInit`).
-        [self awakeFromNib];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
-    }
-    return self;
-}
 
 #pragma mark Getters and setters
 
@@ -67,16 +42,6 @@ static void commonInit(SRGLetterboxBaseView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
-        if (self.nibView) {
-            [self insertSubview:self.nibView atIndex:0];
-            
-            self.nibView.translatesAutoresizingMaskIntoConstraints = NO;
-            [NSLayoutConstraint activateConstraints:@[ [self.nibView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                                                       [self.nibView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                                                       [self.nibView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
-                                                       [self.nibView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
-        }
-        
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];
         
@@ -103,8 +68,6 @@ static void commonInit(SRGLetterboxBaseView *self);
 #endif
     }
     else {
-        [self.nibView removeFromSuperview];
-        
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:UIContentSizeCategoryDidChangeNotification
                                                     object:nil];
@@ -164,14 +127,3 @@ static void commonInit(SRGLetterboxBaseView *self);
 #endif
 
 @end
-
-static void commonInit(SRGLetterboxBaseView *self)
-{
-    NSString *nibName = SRGLetterboxResourceNameForUIClass(self.class);
-    if ([SWIFTPM_MODULE_BUNDLE pathForResource:nibName ofType:@"nib"]) {
-        // This makes design in a xib and Interface Builder preview (IB_DESIGNABLE) work. The top-level view must NOT be
-        // an instance of the class itself to avoid infinite recursion.
-        self.nibView = [[SWIFTPM_MODULE_BUNDLE loadNibNamed:nibName owner:self options:nil] firstObject];
-        self.nibView.backgroundColor = UIColor.clearColor;
-    }
-}
