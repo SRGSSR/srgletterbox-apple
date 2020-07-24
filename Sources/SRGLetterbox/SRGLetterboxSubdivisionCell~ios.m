@@ -39,7 +39,22 @@
 
 @implementation SRGLetterboxSubdivisionCell
 
-#pragma mark View life cycle
+#pragma mark Object lifecycle
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self createView];
+    }
+    return self;
+}
+
+#pragma mark Layout
+
+- (void)createView
+{
+    self.backgroundColor = UIColor.redColor;
+}
 
 - (void)awakeFromNib
 {
@@ -73,6 +88,8 @@
     self.blockingReasonImageView.image = nil;
     self.blockingReasonImageView.image = blockingReasonImage;
 }
+
+#pragma mark Overrides
 
 - (void)prepareForReuse
 {

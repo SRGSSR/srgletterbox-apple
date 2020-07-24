@@ -6,37 +6,80 @@
 
 #import "SRGNotificationView.h"
 
+#import "UIImage+SRGLetterbox.h"
 #import "SRGLetterboxBaseView+Subclassing.h"
 
 @import SRGAppearance;
 
 @interface SRGNotificationView ()
 
-@property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
-@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
+@property (nonatomic, weak) UIImageView *iconImageView;
+@property (nonatomic, weak) UILabel *messageLabel;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *messageLabelTopConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *messageLabelBottomConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *messageLabelTopConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *messageLabelBottomConstraint;
 
 @end
 
 @implementation SRGNotificationView
 
-#pragma mark Overrides
+#pragma mark Layout
 
-- (void)awakeFromNib
+- (void)createView
 {
-    [super awakeFromNib];
+    [super createView];
     
     self.backgroundColor = UIColor.srg_blueColor;
     
-    // Workaround UIImage view tint color bug
-    // See http://stackoverflow.com/a/26042893/760435
-    UIImage *image = self.iconImageView.image;
-    self.iconImageView.image = nil;
-    self.iconImageView.image = image;
-    self.messageLabel.text = nil;
-    self.iconImageView.hidden = YES;
+#if TARGET_OS_TV
+    // TODO:
+    
+#else
+    UIView *contentView = [[UIView alloc] init];
+    contentView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:contentView];
+    
+    if (@available(iOS 11, *)) {
+        [NSLayoutConstraint activateConstraints:@[
+            [contentView.leadingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.leadingAnchor],
+            [contentView.trailingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.trailingAnchor]
+        ]];
+    }
+    else {
+        [NSLayoutConstraint activateConstraints:@[
+            [contentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+            [contentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        ]];
+    }
+    [NSLayoutConstraint activateConstraints:@[
+        [contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+    ]];
+    
+    UIImage *iconImage = [UIImage srg_letterboxImageNamed:@"notification"];
+    UIImageView *iconImageView = [[UIImageView alloc] initWithImage:iconImage];
+    iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    iconImageView.hidden = YES;
+    [contentView addSubview:iconImageView];
+    self.iconImageView = iconImageView;
+    
+    UILabel *messageLabel = [[UILabel alloc] init];
+    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [contentView addSubview:messageLabel];
+    self.messageLabel = messageLabel;
+    
+    self.messageLabelTopConstraint = [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:4.f];
+    self.messageLabelBottomConstraint = [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        self.messageLabelTopConstraint,
+        self.messageLabelBottomConstraint,
+        [messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:8.f],
+        [messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-8.f],
+        [messageLabel.topAnchor constraintEqualToAnchor:contentView.topAnchor],
+        [messageLabel.bottomAnchor constraintEqualToAnchor:contentView.bottomAnchor]
+    ]];
+#endif
 }
 
 - (void)contentSizeCategoryDidChange

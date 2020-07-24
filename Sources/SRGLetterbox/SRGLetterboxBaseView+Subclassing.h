@@ -41,6 +41,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) SRGLetterboxView *parentLetterboxView API_UNAVAILABLE(tvos);
 
 /**
+ *  Method called when the view is initially created. Subclasses must implement this method to create the associated
+ *  view hierarchy.
+ */
+- (void)createView NS_REQUIRES_SUPER;
+
+/**
  *  Method called when the content size category changes. Subclasses can e.g. implement this method if needed to adjust
  *  font sizes accordingly.
  */

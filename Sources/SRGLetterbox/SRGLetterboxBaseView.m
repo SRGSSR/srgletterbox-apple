@@ -8,13 +8,27 @@
 
 #import "SRGLetterboxView+Private.h"
 
-@interface SRGLetterboxBaseView ()
-
-@property (nonatomic) UIView *nibView;         // Strong
-
-@end
+static void commonInit(SRGLetterboxBaseView *self);
 
 @implementation SRGLetterboxBaseView
+
+#pragma mark Object lifecycle
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        commonInit(self);
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super initWithCoder:aDecoder]) {
+        commonInit(self);
+    }
+    return self;
+}
 
 #pragma mark Getters and setters
 
@@ -91,6 +105,9 @@
 
 #pragma mark Subclassing hooks
 
+- (void)createView
+{}
+
 - (void)contentSizeCategoryDidChange
 {}
 
@@ -127,3 +144,8 @@
 #endif
 
 @end
+
+static void commonInit(SRGLetterboxView *self)
+{
+    [self createView];
+}

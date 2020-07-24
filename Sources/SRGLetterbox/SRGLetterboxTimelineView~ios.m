@@ -57,8 +57,8 @@ static void commonInit(SRGLetterboxTimelineView *self)
                                                [collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                                [collectionView.heightAnchor constraintEqualToConstant:SRGLetterboxTimelineViewDefaultHeight] ]];
     
-    UINib *nib = [UINib nibWithNibName:SRGLetterboxResourceNameForUIClass(SRGLetterboxSubdivisionCell.class) bundle:SWIFTPM_MODULE_BUNDLE];
-    [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
+    Class cellClass = SRGLetterboxSubdivisionCell.class;
+    [collectionView registerClass:cellClass forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
 }
 
 @implementation SRGLetterboxTimelineView

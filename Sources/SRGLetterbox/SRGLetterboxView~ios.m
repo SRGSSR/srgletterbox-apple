@@ -34,26 +34,27 @@
 @import libextobjc;
 @import MAKVONotificationCenter;
 
-static void commonInit(SRGLetterboxView *self);
+static const CGFloat kBottomConstraintGreaterPriority = 950.f;
+static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UIView *playbackView;
-@property (nonatomic, weak) IBOutlet SRGControlsBackgroundView *controlsBackgroundView;
-@property (nonatomic, weak) IBOutlet SRGControlsView *controlsView;
-@property (nonatomic, weak) IBOutlet SRGNotificationView *notificationView;
-@property (nonatomic, weak) IBOutlet SRGLetterboxTimelineView *timelineView;
-@property (nonatomic, weak) IBOutlet SRGAvailabilityView *availabilityView;
-@property (nonatomic, weak) IBOutlet SRGContinuousPlaybackView *continuousPlaybackView;
-@property (nonatomic, weak) IBOutlet SRGErrorView *errorView;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) UIView *playbackView;
+@property (nonatomic, weak) SRGControlsBackgroundView *controlsBackgroundView;
+@property (nonatomic, weak) SRGControlsView *controlsView;
+@property (nonatomic, weak) SRGNotificationView *notificationView;
+@property (nonatomic, weak) SRGLetterboxTimelineView *timelineView;
+@property (nonatomic, weak) SRGAvailabilityView *availabilityView;
+@property (nonatomic, weak) SRGContinuousPlaybackView *continuousPlaybackView;
+@property (nonatomic, weak) SRGErrorView *errorView;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineHeightConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *timelineToSelfBottomConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *timelineHeightConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *timelineToSelfBottomConstraint;
 
-@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
-@property (nonatomic, weak) IBOutlet SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
+@property (nonatomic, weak) UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
+@property (nonatomic, weak) SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 
@@ -88,65 +89,94 @@ static void commonInit(SRGLetterboxView *self);
     [SRGMediaPlayerView setMotionManager:motionManager];
 }
 
-#pragma mark Object lifecycle
+#pragma mark Overrides
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (void)createView
 {
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
+    [super createView];
+    
+    self.userInterfaceHidden = NO;
+    self.userInterfaceTogglable = YES;
+    self.preferredTimelineHeight = SRGLetterboxTimelineViewDefaultHeight;
+    self.previousAspectRatio = SRGAspectRatioUndefined;
+    
+    self.backgroundColor = UIColor.blackColor;
+    
+    if (@available(iOS 11.0, *)) {
+        self.accessibilityIgnoresInvertColors = YES;
     }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder]) {
-        commonInit(self);
+    
+    SRGLetterboxTimelineView *timelineView = [[SRGLetterboxTimelineView alloc] init];
+    timelineView.translatesAutoresizingMaskIntoConstraints = NO;
+    timelineView.delegate = self;
+    [self addSubview:timelineView];
+    self.timelineView = timelineView;
+    
+    self.timelineHeightConstraint = [timelineView.heightAnchor constraintEqualToConstant:0.f];
+    
+    if (@available(iOS 11, *)) {
+        self.timelineToSafeAreaBottomConstraint = [timelineView.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.bottomAnchor];
     }
-    return self;
-}
-
-#pragma mark Layout
-
-- (void)buildView
-{
+    else {
+        self.timelineToSafeAreaBottomConstraint = [timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
+    }
+    self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
+    
+    self.timelineToSelfBottomConstraint = [timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
+    self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [timelineView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [timelineView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        self.timelineHeightConstraint,
+        self.timelineToSafeAreaBottomConstraint,
+        self.timelineToSelfBottomConstraint
+    ]];
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self addSubview:imageView];
+    self.imageView = imageView;
+    
     UIView *playbackView = [[UIView alloc] init];
     playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:playbackView];
     self.playbackView = playbackView;
     
     [NSLayoutConstraint activateConstraints: @[
-        [playbackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [playbackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
         [playbackView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [playbackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+        [playbackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [playbackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
     ]];
-    
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self insertSubview:imageView belowSubview:playbackView];
-    self.imageView = imageView;
     
     [NSLayoutConstraint activateConstraints: @[
-        [imageView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
-        [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor],
         [imageView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
-        [imageView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor]
+        [imageView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
+        [imageView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
+        [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+    ]];
+    
+    SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:notificationView];
+    self.notificationView = notificationView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [notificationView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [notificationView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [notificationView.heightAnchor constraintEqualToConstant:0.f],          // TODO: ???
+        [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
+        [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor]
     ]];
 }
-
-#pragma mark Overrides
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     
     self.controlsView.delegate = self;
-    self.timelineView.delegate = self;
     self.continuousPlaybackView.delegate = self;
-    
-    self.timelineHeightConstraint.constant = 0.f;
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
@@ -704,9 +734,6 @@ static void commonInit(SRGLetterboxView *self);
         [self.timelineView scrollToCurrentSelectionAnimated:NO];
     }
     
-    static const CGFloat kBottomConstraintGreaterPriority = 950.f;
-    static const CGFloat kBottomConstraintLesserPriority = 850.f;
-    
     if (isTimelineVisible) {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
@@ -1007,21 +1034,5 @@ static void commonInit(SRGLetterboxView *self);
 }
 
 @end
-
-static void commonInit(SRGLetterboxView *self)
-{
-    self.userInterfaceHidden = NO;
-    self.userInterfaceTogglable = YES;
-    self.preferredTimelineHeight = SRGLetterboxTimelineViewDefaultHeight;
-    self.previousAspectRatio = SRGAspectRatioUndefined;
-    
-    self.backgroundColor = UIColor.blackColor;
-    
-    if (@available(iOS 11.0, *)) {
-        self.accessibilityIgnoresInvertColors = YES;
-    }
-    
-    [self buildView];
-}
 
 #endif
