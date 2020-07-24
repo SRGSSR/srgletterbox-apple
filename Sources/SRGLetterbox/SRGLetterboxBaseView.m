@@ -145,7 +145,7 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 @end
 
-static void commonInit(SRGLetterboxView *self)
+static void commonInit(SRGLetterboxBaseView *self)
 {
     [self createView];
 }

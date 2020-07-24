@@ -44,37 +44,12 @@
 		6FC972F7236B18DE00ED6197 /* MediasViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC972F5236B18DE00ED6197 /* MediasViewController.m */; };
 		6FCB995D1F56948D00790EAA /* ServerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB995C1F56948D00790EAA /* ServerSettings.m */; };
 		6FCCE1FF24CA229500EBD269 /* SRGLetterbox in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCCE1FE24CA229500EBD269 /* SRGLetterbox */; };
-		6FCCE20024CA2B9800EBD269 /* AppCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.framework */; };
-		6FCCE20124CA2B9800EBD269 /* AppCenter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FCCE20224CA2B9800EBD269 /* AppCenterAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */; };
-		6FCCE20324CA2B9800EBD269 /* AppCenterAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FCCE20424CA2B9800EBD269 /* AppCenterCrashes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */; };
-		6FCCE20524CA2B9800EBD269 /* AppCenterCrashes.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FCCE20624CA2B9800EBD269 /* AppCenterDistribute.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */; };
-		6FCCE20724CA2B9800EBD269 /* AppCenterDistribute.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FCE898A1E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */; };
 		6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */; };
 		6FFAD13A202C889200FDAA6C /* PlaylistViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */; };
 		6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FFAD13B202C88BD00FDAA6C /* PlaylistViewController~ios.storyboard */; };
 		6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD13D202C89C900FDAA6C /* Playlist.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		6FCCE20824CA2B9800EBD269 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				6FCCE20324CA2B9800EBD269 /* AppCenterAnalytics.framework in Embed Frameworks */,
-				6FCCE20124CA2B9800EBD269 /* AppCenter.framework in Embed Frameworks */,
-				6FCCE20724CA2B9800EBD269 /* AppCenterDistribute.framework in Embed Frameworks */,
-				6FCCE20524CA2B9800EBD269 /* AppCenterCrashes.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
@@ -168,10 +143,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FCCE1FF24CA229500EBD269 /* SRGLetterbox in Frameworks */,
-				6FCCE20624CA2B9800EBD269 /* AppCenterDistribute.framework in Frameworks */,
-				6FCCE20424CA2B9800EBD269 /* AppCenterCrashes.framework in Frameworks */,
-				6FCCE20224CA2B9800EBD269 /* AppCenterAnalytics.framework in Frameworks */,
-				6FCCE20024CA2B9800EBD269 /* AppCenter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,7 +333,6 @@
 				084F2EE423664AE900A983FF /* Make custom icons */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				084F2EE523664B8400A983FF /* Restore original icons */,
-				6FCCE20824CA2B9800EBD269 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
