@@ -31,8 +31,14 @@ static CGFloat SRGLetterboxCellMargin = 3.f;
 
 @end
 
-static void commonInit(SRGLetterboxTimelineView *self)
+@implementation SRGLetterboxTimelineView
+
+#pragma mark Layout
+
+- (void)createView
 {
+    [super createView];
+    
     self.backgroundColor = UIColor.clearColor;
     self.selectedIndex = NSNotFound;
     
@@ -59,26 +65,6 @@ static void commonInit(SRGLetterboxTimelineView *self)
     
     Class cellClass = SRGLetterboxSubdivisionCell.class;
     [collectionView registerClass:cellClass forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];
-}
-
-@implementation SRGLetterboxTimelineView
-
-#pragma mark Object lifecycle
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        commonInit(self);
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    if (self = [super initWithCoder:coder]) {
-        commonInit(self);
-    }
-    return self;
 }
 
 #pragma mark Getters and setters

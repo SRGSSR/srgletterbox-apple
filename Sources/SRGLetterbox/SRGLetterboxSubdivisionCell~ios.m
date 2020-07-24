@@ -16,22 +16,23 @@
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
+#import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 
 @import SRGAppearance;
 
 @interface SRGLetterboxSubdivisionCell ()
 
-@property (nonatomic, weak) IBOutlet UIView *wrapperView;
+@property (nonatomic, weak) UIView *wrapperView;
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet SRGPaddedLabel *durationLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *media360ImageView;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) UIProgressView *progressView;
+@property (nonatomic, weak) UILabel *titleLabel;
+@property (nonatomic, weak) SRGPaddedLabel *durationLabel;
+@property (nonatomic, weak) UIImageView *media360ImageView;
 
-@property (nonatomic, weak) IBOutlet UIView *blockingOverlayView;
-@property (nonatomic, weak) IBOutlet UIImageView *blockingReasonImageView;
+@property (nonatomic, weak) UIView *blockingOverlayView;
+@property (nonatomic, weak) UIImageView *blockingReasonImageView;
 
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -53,40 +54,133 @@
 
 - (void)createView
 {
-    self.backgroundColor = UIColor.redColor;
-}
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(longPress:)];
     longPressGestureRecognizer.minimumPressDuration = 1.;
     [self addGestureRecognizer:longPressGestureRecognizer];
     self.longPressGestureRecognizer = longPressGestureRecognizer;
     
-    // Workaround UIImage view tint color bug
-    // See http://stackoverflow.com/a/26042893/760435
-    UIImage *media360Image = self.media360ImageView.image;
-    self.media360ImageView.image = nil;
-    self.media360ImageView.image = media360Image;
+    UIView *wrapperView = [[UIView alloc] init];
+    wrapperView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:wrapperView];
+    self.wrapperView = wrapperView;
     
-    self.media360ImageView.layer.shadowOpacity = 0.3f;
-    self.media360ImageView.layer.shadowRadius = 2.f;
-    self.media360ImageView.layer.shadowOffset = CGSizeMake(0.f, 1.f);
+    [NSLayoutConstraint activateConstraints:@[
+        [wrapperView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+        [wrapperView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
+        [wrapperView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+        [wrapperView.widthAnchor constraintEqualToAnchor:wrapperView.heightAnchor multiplier:16.f / 9.f]
+    ]];
     
-    self.durationLabel.horizontalMargin = 5.f;
-    self.durationLabel.layer.cornerRadius = 3.f;
-    self.durationLabel.layer.masksToBounds = YES;
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [wrapperView addSubview:imageView];
+    self.imageView = imageView;
     
-    self.blockingOverlayView.hidden = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [imageView.leadingAnchor constraintEqualToAnchor:wrapperView.leadingAnchor],
+        [imageView.trailingAnchor constraintEqualToAnchor:wrapperView.trailingAnchor],
+        [imageView.topAnchor constraintEqualToAnchor:wrapperView.topAnchor],
+        [imageView.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor],
+    ]];
     
-    // Workaround UIImage view tint color bug
-    // See http://stackoverflow.com/a/26042893/760435
-    UIImage *blockingReasonImage = self.blockingReasonImageView.image;
-    self.blockingReasonImageView.image = nil;
-    self.blockingReasonImageView.image = blockingReasonImage;
+    UIView *blockingOverlayView = [[UIView alloc] init];
+    blockingOverlayView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
+    blockingOverlayView.hidden = YES;
+    blockingOverlayView.translatesAutoresizingMaskIntoConstraints = NO;
+    [wrapperView addSubview:blockingOverlayView];
+    self.blockingOverlayView = blockingOverlayView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [blockingOverlayView.leadingAnchor constraintEqualToAnchor:wrapperView.leadingAnchor],
+        [blockingOverlayView.trailingAnchor constraintEqualToAnchor:wrapperView.trailingAnchor],
+        [blockingOverlayView.topAnchor constraintEqualToAnchor:wrapperView.topAnchor],
+        [blockingOverlayView.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor],
+    ]];
+    
+    UIImageView *blockingReasonImageView = [[UIImageView alloc] init];
+    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    blockingReasonImageView.tintColor = UIColor.whiteColor;
+    [blockingOverlayView addSubview:blockingReasonImageView];
+    self.blockingReasonImageView = blockingReasonImageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [blockingReasonImageView.centerXAnchor constraintEqualToAnchor:blockingOverlayView.centerXAnchor],
+        [blockingReasonImageView.centerYAnchor constraintEqualToAnchor:blockingOverlayView.centerYAnchor]
+    ]];
+    
+    UIImage *media360Image = [UIImage srg_letterboxImageNamed:@"360_media"];
+    UIImageView *media360ImageView = [[UIImageView alloc] initWithImage:media360Image];
+    media360ImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    media360ImageView.tintColor = UIColor.whiteColor;
+    media360ImageView.layer.shadowOpacity = 0.3f;
+    media360ImageView.layer.shadowRadius = 2.f;
+    media360ImageView.layer.shadowOffset = CGSizeMake(0.f, 1.f);
+    [wrapperView addSubview:media360ImageView];
+    self.media360ImageView = media360ImageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [media360ImageView.leadingAnchor constraintEqualToAnchor:wrapperView.leadingAnchor constant:5.f],
+        [media360ImageView.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor constant:5.f],
+    ]];
+    
+    SRGPaddedLabel *durationLabel = [[SRGPaddedLabel alloc] init];
+    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.85f];
+    durationLabel.textColor = UIColor.whiteColor;
+    durationLabel.textAlignment = NSTextAlignmentCenter;
+    durationLabel.horizontalMargin = 5.f;
+    durationLabel.layer.cornerRadius = 3.f;
+    durationLabel.layer.masksToBounds = YES;
+    [wrapperView addSubview:durationLabel];
+    self.durationLabel = durationLabel;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [durationLabel.trailingAnchor constraintEqualToAnchor:wrapperView.trailingAnchor constant:-5.f],
+        [durationLabel.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor constant:-5.f],
+        [durationLabel.heightAnchor constraintEqualToConstant:18.f]
+    ]];
+    
+    UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+    progressView.translatesAutoresizingMaskIntoConstraints = NO;
+    progressView.progressTintColor = UIColor.redColor;
+    progressView.trackTintColor = [UIColor colorWithWhite:1.f alpha:0.6f];
+    [wrapperView addSubview:progressView];
+    self.progressView = progressView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [progressView.leadingAnchor constraintEqualToAnchor:wrapperView.leadingAnchor],
+        [progressView.trailingAnchor constraintEqualToAnchor:wrapperView.trailingAnchor],
+        [progressView.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor]
+    ]];
+    
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.alignment = UIStackViewAlignmentFill;
+    stackView.distribution = UIStackViewDistributionFill;
+    [self.contentView addSubview:stackView];
+    
+    NSLayoutConstraint *stackViewLeadingConstraint = [stackView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:6.f];
+    stackViewLeadingConstraint.priority = 999;
+    
+    NSLayoutConstraint *stackViewTrailingConstraint = [stackView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-6.f];
+    stackViewTrailingConstraint.priority = 999;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        stackViewLeadingConstraint,
+        stackViewTrailingConstraint,
+        [stackView.topAnchor constraintEqualToAnchor:wrapperView.bottomAnchor constant:2.f],
+        [stackView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:3.f]
+    ]];
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.numberOfLines = 2;
+    [stackView addArrangedSubview:titleLabel];
+    self.titleLabel = titleLabel;
+    
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
 }
 
 #pragma mark Overrides
