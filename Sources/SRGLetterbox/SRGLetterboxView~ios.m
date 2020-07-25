@@ -228,6 +228,18 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.topAnchor constraintEqualToAnchor:controlsView.bottomAnchor]
     ]];
     
+    SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
+    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:availabilityView];
+    self.availabilityView = availabilityView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [availabilityView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
+        [availabilityView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
+        [availabilityView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
+        [availabilityView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+    ]];
+    
     SRGContinuousPlaybackView *continuousPlaybackView = [[SRGContinuousPlaybackView alloc] init];
     continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
     continuousPlaybackView.delegate = self;

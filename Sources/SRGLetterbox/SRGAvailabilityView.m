@@ -19,30 +19,45 @@
 @interface SRGAvailabilityView ()
 
 @property (nonatomic, weak) SRGCountdownView *countdownView;
-@property (nonatomic, weak) IBOutlet SRGPaddedLabel *messageLabel;
+@property (nonatomic, weak) SRGPaddedLabel *messageLabel;
 
 @end
 
 @implementation SRGAvailabilityView
 
-#pragma mark Overrides
+#pragma mark Layout
 
-- (void)awakeFromNib
+- (void)createView
 {
-    [super awakeFromNib];
+    [super createView];
     
+    self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
+    
+    SRGPaddedLabel *messageLabel = [[SRGPaddedLabel alloc] init];
+    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    messageLabel.textColor = UIColor.whiteColor;
+    messageLabel.textAlignment = NSTextAlignmentCenter;
+    messageLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.75f];
+    messageLabel.layer.masksToBounds = YES;
 #if TARGET_OS_TV
-    self.messageLabel.horizontalMargin = 30.f;
-    self.messageLabel.verticalMargin = 12.f;
-    self.messageLabel.layer.cornerRadius = 6.f;
+    messageLabel.horizontalMargin = 30.f;
+    messageLabel.verticalMargin = 12.f;
+    messageLabel.layer.cornerRadius = 6.f;
 #else
-    self.messageLabel.horizontalMargin = 15.f;
-    self.messageLabel.verticalMargin = 9.f;
-    self.messageLabel.layer.cornerRadius = 3.f;
+    messageLabel.horizontalMargin = 15.f;
+    messageLabel.verticalMargin = 9.f;
+    messageLabel.layer.cornerRadius = 3.f;
 #endif
+    [self addSubview:messageLabel];
+    self.messageLabel = messageLabel;
     
-    self.messageLabel.layer.masksToBounds = YES;
+    [NSLayoutConstraint activateConstraints:@[
+        [messageLabel.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+        [messageLabel.centerYAnchor constraintEqualToAnchor:self.centerYAnchor]
+    ]];
 }
+
+#pragma mark Overrides
 
 - (void)contentSizeCategoryDidChange
 {
