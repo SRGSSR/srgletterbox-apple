@@ -488,7 +488,7 @@
     // The reference frame for controls is given by the available width (as occupied by the bottom stack view) as
     // well as the whole parent Letterbox height. Critical size is aligned on iPhone Plus devices in landscape. 
     SRGImageSet imageSet = (CGRectGetWidth(self.bottomStackView.frame) < 668.f || CGRectGetHeight(self.parentLetterboxView.frame) < 376.f) ? SRGImageSetNormal : SRGImageSetLarge;
-    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 0.f : 20.f;
+    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 16.f : 36.f;
     
     self.horizontalSpacingBackwardToPlaybackConstraint.constant = horizontalSpacing;
     self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
