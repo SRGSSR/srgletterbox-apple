@@ -75,6 +75,7 @@
     
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     [wrapperView addSubview:imageView];
     self.imageView = imageView;
     
