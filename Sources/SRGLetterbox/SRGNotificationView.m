@@ -73,6 +73,8 @@
     self.messageLabel = messageLabel;
     
     [NSLayoutConstraint activateConstraints:@[
+        [iconImageView.widthAnchor constraintEqualToConstant:16.f],
+        [iconImageView.heightAnchor constraintEqualToAnchor:iconImageView.widthAnchor],
         [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:4.f],
         [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor],
         [messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:8.f],
