@@ -59,25 +59,26 @@
     UIImage *iconImage = [UIImage srg_letterboxImageNamed:@"notification"];
     UIImageView *iconImageView = [[UIImageView alloc] initWithImage:iconImage];
     iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    iconImageView.tintColor = UIColor.whiteColor;
     iconImageView.hidden = YES;
     [contentView addSubview:iconImageView];
     self.iconImageView = iconImageView;
     
     UILabel *messageLabel = [[UILabel alloc] init];
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    messageLabel.textColor = UIColor.whiteColor;
+    messageLabel.numberOfLines = 0;
+    [messageLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     [contentView addSubview:messageLabel];
     self.messageLabel = messageLabel;
     
-    self.messageLabelTopConstraint = [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:4.f];
-    self.messageLabelBottomConstraint = [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor];
-    
     [NSLayoutConstraint activateConstraints:@[
-        self.messageLabelTopConstraint,
-        self.messageLabelBottomConstraint,
+        [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:4.f],
+        [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor],
         [messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:8.f],
         [messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-8.f],
-        [messageLabel.topAnchor constraintEqualToAnchor:contentView.topAnchor],
-        [messageLabel.bottomAnchor constraintEqualToAnchor:contentView.bottomAnchor]
+        self.messageLabelTopConstraint = [messageLabel.topAnchor constraintEqualToAnchor:contentView.topAnchor],
+        self.messageLabelBottomConstraint = [contentView.bottomAnchor constraintEqualToAnchor:messageLabel.bottomAnchor]
     ]];
 #endif
 }

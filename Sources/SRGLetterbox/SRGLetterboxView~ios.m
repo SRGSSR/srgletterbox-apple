@@ -193,7 +193,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [NSLayoutConstraint activateConstraints:@[
         [notificationView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [notificationView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        [notificationView.heightAnchor constraintEqualToConstant:0.f],          // TODO: ???
         [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
         [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
         [controlsBackgroundView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
