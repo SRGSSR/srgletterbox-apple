@@ -195,8 +195,8 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
         [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
         [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
-        [controlsBackgroundView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
-        [controlsView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor]
+        [notificationView.topAnchor constraintEqualToAnchor:controlsBackgroundView.bottomAnchor],
+        [notificationView.topAnchor constraintEqualToAnchor:controlsView.bottomAnchor]
     ]];
 }
 
