@@ -142,7 +142,7 @@
         [durationLabel.heightAnchor constraintEqualToConstant:18.f]
     ]];
     
-    UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+    UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     progressView.translatesAutoresizingMaskIntoConstraints = NO;
     progressView.progressTintColor = UIColor.redColor;
     progressView.trackTintColor = [UIColor colorWithWhite:1.f alpha:0.6f];
@@ -152,7 +152,8 @@
     [NSLayoutConstraint activateConstraints:@[
         [progressView.leadingAnchor constraintEqualToAnchor:wrapperView.leadingAnchor],
         [progressView.trailingAnchor constraintEqualToAnchor:wrapperView.trailingAnchor],
-        [progressView.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor]
+        [progressView.bottomAnchor constraintEqualToAnchor:wrapperView.bottomAnchor],
+        [progressView.heightAnchor constraintEqualToConstant:2.f]
     ]];
     
     UIStackView *stackView = [[UIStackView alloc] init];
