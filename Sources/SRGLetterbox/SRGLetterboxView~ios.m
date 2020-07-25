@@ -162,6 +162,19 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
     ]];
     
+    UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showUserInterface:)];
+    showUserInterfaceTapGestureRecognizer.delegate = self;
+    [playbackView addGestureRecognizer:showUserInterfaceTapGestureRecognizer];
+    self.showUserInterfaceTapGestureRecognizer = showUserInterfaceTapGestureRecognizer;
+    
+    SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(changeVideoGravity:)];
+    videoGravityTapChangeGestureRecognizer.numberOfTapsRequired = 2;
+    videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
+    videoGravityTapChangeGestureRecognizer.delegate = self;
+    videoGravityTapChangeGestureRecognizer.enabled = NO;
+    [playbackView addGestureRecognizer:videoGravityTapChangeGestureRecognizer];
+    self.videoGravityTapChangeGestureRecognizer = videoGravityTapChangeGestureRecognizer;
+    
     SRGControlsBackgroundView *controlsBackgroundView = [[SRGControlsBackgroundView alloc] init];
     controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:controlsBackgroundView];
@@ -205,9 +218,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [super awakeFromNib];
     
     self.continuousPlaybackView.delegate = self;
-    
-    self.videoGravityTapChangeGestureRecognizer.enabled = NO;
-    self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
 }
 
 - (void)layoutSubviews
@@ -845,12 +855,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self restartInactivityTracker];
 }
 
-- (IBAction)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
+- (void)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
 {
     [self setTogglableUserInterfaceHidden:NO animated:YES];
 }
 
-- (IBAction)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
+- (void)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
 {
     @weakify(self)
     [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
@@ -867,7 +877,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark Actions
 
-- (IBAction)toggleFullScreen:(id)sender
+- (void)toggleFullScreen:(id)sender
 {
     [self setFullScreen:!self.isFullScreen animated:YES];
 }
