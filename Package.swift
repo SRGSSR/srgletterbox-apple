@@ -35,18 +35,10 @@ let package = Package(
                 "SRGAppearance", "YYWebImage"
             ],
             exclude: [
-                "SRGAvailabilityView~ios.xib",
                 "SRGAvailabilityView~tvos.xib",
-                "SRGContinuousPlaybackView~ios.xib",
                 "SRGContinuousPlaybackViewController~tvos.storyboard",
-                "SRGControlsView~ios.xib",
-                "SRGCountdownView~ios.xib",
                 "SRGCountdownView~tvos.xib",
-                "SRGErrorView~ios.xib",
                 "SRGErrorView~tvos.xib",
-                "SRGLetterboxView~ios.xib",
-                "SRGLetterboxSubdivisionCell~ios.xib",
-                "SRGNotificationView~ios.xib",
                 "SRGNotificationView~tvos.xib"
             ],
             resources: [
