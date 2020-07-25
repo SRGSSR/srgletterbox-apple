@@ -14,6 +14,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "NSTimer+SRGLetterbox.h"
+#import "SRGAccessibilityView.h"
 #import "SRGAvailabilityView.h"
 #import "SRGContinuousPlaybackView.h"
 #import "SRGControlsBackgroundView.h"
@@ -196,6 +197,19 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [controlsView.topAnchor constraintEqualToAnchor:self.topAnchor],
         [controlsView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [controlsView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
+    
+    SRGAccessibilityView *accessibilityView = [[SRGAccessibilityView alloc] init];
+    accessibilityView.userInteractionEnabled = YES;
+    accessibilityView.translatesAutoresizingMaskIntoConstraints = NO;
+    accessibilityView.accessibilityFrameView = controlsView;
+    [self addSubview:accessibilityView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [accessibilityView.centerXAnchor constraintEqualToAnchor:controlsView.centerXAnchor],
+        [accessibilityView.centerYAnchor constraintEqualToAnchor:controlsView.centerYAnchor],
+        [accessibilityView.widthAnchor constraintEqualToConstant:1.f],
+        [accessibilityView.heightAnchor constraintEqualToConstant:1.f]
     ]];
     
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];

@@ -16,11 +16,11 @@
 
 @implementation SRGAccessibilityView
 
-#pragma mark Overrides
+#pragma mark Layout
 
-- (void)awakeFromNib
+- (void)createView
 {
-    [super awakeFromNib];
+    [super createView];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
     [self addGestureRecognizer:tapGestureRecognizer];
