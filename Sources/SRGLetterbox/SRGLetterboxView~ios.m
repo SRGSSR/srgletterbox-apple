@@ -54,6 +54,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 @property (nonatomic, weak) NSLayoutConstraint *timelineHeightConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *timelineToSafeAreaBottomConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *timelineToSelfBottomConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *notificationHeightConstraint;
 
 @property (nonatomic, weak) UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
@@ -222,6 +223,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
         [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
         [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
+        self.notificationHeightConstraint = [notificationView.heightAnchor constraintEqualToConstant:0.f],
         [notificationView.topAnchor constraintEqualToAnchor:controlsBackgroundView.bottomAnchor],
         [notificationView.topAnchor constraintEqualToAnchor:controlsView.bottomAnchor]
     ]];
@@ -662,6 +664,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
+        self.notificationHeightConstraint.constant = notificationHeight;
         
         CGFloat aspectRatio = self.aspectRatio;
         self.animations ? self.animations(userInterfaceHidden, self.minimal, aspectRatio, timelineHeight + notificationHeight) : nil;

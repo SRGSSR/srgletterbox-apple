@@ -67,7 +67,7 @@
     UILabel *messageLabel = [[UILabel alloc] init];
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.textColor = UIColor.whiteColor;
-    messageLabel.numberOfLines = 0;
+    messageLabel.numberOfLines = 2;
     [messageLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     [contentView addSubview:messageLabel];
     self.messageLabel = messageLabel;
@@ -109,18 +109,15 @@
     // The notification message determines the height of the view required to display it.
     self.messageLabel.text = message;
     
-    // Force autolayout
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
-    
-    // Return the minimum size which satisfies the constraints. Put a strong requirement on width and properly let the height
-    // adjusts
-    // For an explanation, see http://titus.io/2015/01/13/a-better-way-to-autosize-in-ios-8.html
-    CGSize fittingSize = UILayoutFittingCompressedSize;
-    fittingSize.width = CGRectGetWidth(self.frame);
-    return [self systemLayoutSizeFittingSize:fittingSize
-               withHorizontalFittingPriority:UILayoutPriorityRequired
-                     verticalFittingPriority:UILayoutPriorityFittingSizeLevel].height;
+    // Calculate the needed height
+    UIFont *font = self.messageLabel.font;
+    CGRect boundingRect = [message boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.messageLabel.frame), CGFLOAT_MAX)
+                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                             attributes:@{ NSFontAttributeName : font }
+                                                context:nil];
+    CGFloat lineHeight = font.lineHeight;
+    NSInteger numberOfLines = MIN(CGRectGetHeight(boundingRect) / lineHeight, self.messageLabel.numberOfLines);
+    return ceil(numberOfLines * lineHeight + 2 * verticalMargin);
 }
 
 @end
