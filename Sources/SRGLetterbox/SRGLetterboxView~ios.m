@@ -227,6 +227,18 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.topAnchor constraintEqualToAnchor:controlsBackgroundView.bottomAnchor],
         [notificationView.topAnchor constraintEqualToAnchor:controlsView.bottomAnchor]
     ]];
+    
+    SRGErrorView *errorView = [[SRGErrorView alloc] init];
+    errorView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:errorView];
+    self.errorView = errorView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [errorView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
+        [errorView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
+        [errorView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
+        [errorView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+    ]];
 }
 
 - (void)awakeFromNib

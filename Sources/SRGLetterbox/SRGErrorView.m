@@ -7,6 +7,7 @@
 #import "SRGErrorView.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxView+Private.h"
@@ -16,9 +17,9 @@
 
 @interface SRGErrorView ()
 
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
-@property (nonatomic, weak) IBOutlet UILabel *instructionsLabel;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) UILabel *messageLabel;
+@property (nonatomic, weak) UILabel *instructionsLabel;
 
 @property (nonatomic, weak) UITapGestureRecognizer *retryTapGestureRecognizer;
 
@@ -26,20 +27,74 @@
 
 @implementation SRGErrorView
 
-#pragma mark Overrides
+#pragma mark Layout
 
-- (void)awakeFromNib
+- (void)createView
 {
-    [super awakeFromNib];
+    [super createView];
     
-    self.messageLabel.numberOfLines = 3;
-    
-    self.instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
+#if TARGET_OS_TV
+    // TODO
+#else
+    self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
     
     UITapGestureRecognizer *retryTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(retry:)];
     [self addGestureRecognizer:retryTapGestureRecognizer];
     self.retryTapGestureRecognizer = retryTapGestureRecognizer;
+    
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.alignment = UIStackViewAlignmentFill;
+    stackView.distribution = UIStackViewDistributionFill;
+    stackView.spacing = 8.f;
+    [self addSubview:stackView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [stackView.topAnchor constraintEqualToAnchor:self.topAnchor constant:8.f],
+        [stackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-8.f],
+        [stackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:8.f],
+        [stackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-8.f]
+    ]];
+    
+    UIView *topSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:topSpacerView];
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.tintColor = UIColor.whiteColor;
+    [stackView addArrangedSubview:imageView];
+    self.imageView = imageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [[imageView.heightAnchor constraintEqualToConstant:25.f] srgletterbox_withPriority:999]
+    ]];
+    
+    UILabel *messageLabel = [[UILabel alloc] init];
+    messageLabel.numberOfLines = 3;
+    messageLabel.textColor = UIColor.whiteColor;
+    messageLabel.textAlignment = NSTextAlignmentCenter;
+    [stackView addArrangedSubview:messageLabel];
+    self.messageLabel = messageLabel;
+    
+    UILabel *instructionsLabel = [[UILabel alloc] init];
+    instructionsLabel.numberOfLines = 1;
+    instructionsLabel.textColor = [UIColor srg_colorFromHexadecimalString:@"#aaaaaa"];
+    instructionsLabel.textAlignment = NSTextAlignmentCenter;
+    instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
+    [stackView addArrangedSubview:instructionsLabel];
+    self.instructionsLabel = instructionsLabel;
+    
+    UIView *bottomSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:bottomSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
+    ]];
+#endif
 }
+
+#pragma mark Overrides
 
 - (void)contentSizeCategoryDidChange
 {
