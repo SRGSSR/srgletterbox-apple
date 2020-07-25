@@ -157,6 +157,17 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
     ]];
     
+    SRGControlsBackgroundView *controlsBackgroundView = [[SRGControlsBackgroundView alloc] init];
+    controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:controlsBackgroundView];
+    self.controlsBackgroundView = controlsBackgroundView;
+    
+    [NSLayoutConstraint activateConstraints: @[
+        [controlsBackgroundView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [controlsBackgroundView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [controlsBackgroundView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
+    
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:notificationView];
@@ -167,7 +178,8 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
         [notificationView.heightAnchor constraintEqualToConstant:0.f],          // TODO: ???
         [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
-        [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor]
+        [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
+        [controlsBackgroundView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
     ]];
 }
 

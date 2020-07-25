@@ -15,23 +15,38 @@
 
 @interface SRGControlsBackgroundView ()
 
-@property (nonatomic, weak) IBOutlet UIView *dimmingView;
+@property (nonatomic, weak) UIView *dimmingView;
 @property (nonatomic, weak) UIImageView *loadingImageView;
 
 @end
 
 @implementation SRGControlsBackgroundView
 
-#pragma mark Overrides
+#pragma mark Layout
 
-- (void)awakeFromNib
+- (void)createView
 {
-    [super awakeFromNib];
+    [super createView];
     
     // Disable all user interactions so that the view does not trap gesture recognizers. Its only purpose is
     // to increase control readability and displaying the activity indicator
     self.userInteractionEnabled = NO;
+    
+    UIView *dimmingView = [[UIView alloc] init];
+    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
+    dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.35f];
+    [self addSubview:dimmingView];
+    self.dimmingView = dimmingView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [dimmingView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [dimmingView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [dimmingView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [dimmingView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
 }
+
+#pragma mark Overrides
 
 - (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
@@ -55,11 +70,11 @@
     // Lazily add view when needed, mitigating associated costs
     if (self.controller.loading && ! self.loadingImageView) {
         UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
+        loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [loadingImageView startAnimating];
         [self addSubview:loadingImageView];
         self.loadingImageView = loadingImageView;
         
-        loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
                                                    [loadingImageView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor] ]];
     }

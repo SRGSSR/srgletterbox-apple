@@ -39,7 +39,6 @@ let package = Package(
                 "SRGAvailabilityView~tvos.xib",
                 "SRGContinuousPlaybackView~ios.xib",
                 "SRGContinuousPlaybackViewController~tvos.storyboard",
-                "SRGControlsBackgroundView~ios.xib",
                 "SRGControlsView~ios.xib",
                 "SRGCountdownView~ios.xib",
                 "SRGCountdownView~tvos.xib",
