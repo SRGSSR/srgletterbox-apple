@@ -23,27 +23,172 @@
 
 @interface SRGContinuousPlaybackView ()
 
-@property (nonatomic, weak) IBOutlet UILabel *introLabel;
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet SRGRemainingTimeButton *remainingTimeButton;
-@property (nonatomic, weak) IBOutlet UIStackView *cancelStackView;
-@property (nonatomic, weak) IBOutlet UIButton *cancelButton;
+@property (nonatomic, weak) UILabel *introLabel;
+@property (nonatomic, weak) UILabel *titleLabel;
+@property (nonatomic, weak) UILabel *subtitleLabel;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) SRGRemainingTimeButton *remainingTimeButton;
+@property (nonatomic, weak) UIStackView *cancelButtonStackView;
+@property (nonatomic, weak) UIButton *cancelButton;
 
 @end
 
 @implementation SRGContinuousPlaybackView
 
-#pragma mark Overrides
+#pragma mark Layout
 
-- (void)awakeFromNib
+- (void)createView
 {
-    [super awakeFromNib];
+    [super createView];
     
-    self.introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
-    [self.cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self addSubview:imageView];
+    self.imageView = imageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [imageView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [imageView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [imageView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [imageView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
+    
+    UIView *dimmingView = [[UIView alloc] init];
+    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
+    dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
+    [self addSubview:dimmingView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [dimmingView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [dimmingView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [dimmingView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [dimmingView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
+    
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.alignment = UIStackViewAlignmentFill;
+    stackView.distribution = UIStackViewDistributionFill;
+    stackView.spacing = 2.f;
+    [self addSubview:stackView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [stackView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [stackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+    ]];
+    
+    if (@available(iOS 11, *)) {
+        [NSLayoutConstraint activateConstraints:@[
+            [stackView.leadingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.leadingAnchor constant:16.f],
+            [stackView.trailingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.trailingAnchor constant:-16.f]
+        ]];
+    }
+    else {
+        [NSLayoutConstraint activateConstraints:@[
+            [stackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:16.f],
+            [stackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-16.f]
+        ]];
+    }
+    
+    UIView *topSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:topSpacerView];
+    
+    UILabel *introLabel = [[UILabel alloc] init];
+    introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
+    introLabel.textColor = UIColor.lightGrayColor;
+    introLabel.textAlignment = NSTextAlignmentCenter;
+    [stackView addArrangedSubview:introLabel];
+    self.introLabel = introLabel;
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.textColor = UIColor.whiteColor;
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [stackView addArrangedSubview:titleLabel];
+    self.titleLabel = titleLabel;
+    
+    UILabel *subtitleLabel = [[UILabel alloc] init];
+    subtitleLabel.textColor = UIColor.lightGrayColor;
+    subtitleLabel.textAlignment = NSTextAlignmentCenter;
+    [stackView addArrangedSubview:subtitleLabel];
+    self.subtitleLabel = subtitleLabel;
+    
+    UIView *fixedSpacerView1 = [[UIView alloc] init];
+    [stackView addArrangedSubview:fixedSpacerView1];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [fixedSpacerView1.heightAnchor constraintEqualToConstant:6.f]
+    ]];
+    
+    UIStackView *remainingTimeButtonStackView = [[UIStackView alloc] init];
+    remainingTimeButtonStackView.axis = UILayoutConstraintAxisHorizontal;
+    remainingTimeButtonStackView.alignment = UIStackViewAlignmentFill;
+    remainingTimeButtonStackView.distribution = UIStackViewDistributionFill;
+    [stackView addArrangedSubview:remainingTimeButtonStackView];
+    
+    UIView *remainingTimeButtonLeadingSpacerView = [[UIView alloc] init];
+    [remainingTimeButtonStackView addArrangedSubview:remainingTimeButtonLeadingSpacerView];
+    
+    SRGRemainingTimeButton *remainingTimeButton = [[SRGRemainingTimeButton alloc] init];
+    remainingTimeButton.tintColor = UIColor.whiteColor;
+    [remainingTimeButton setImage:[UIImage srg_letterboxImageNamed:@"play_centered"] forState:UIControlStateNormal];
+    [remainingTimeButton addTarget:self action:@selector(playUpcomingMedia:) forControlEvents:UIControlEventTouchUpInside];
+    [remainingTimeButtonStackView addArrangedSubview:remainingTimeButton];
+    self.remainingTimeButton = remainingTimeButton;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [remainingTimeButton.widthAnchor constraintEqualToConstant:55.f],
+        [remainingTimeButton.heightAnchor constraintEqualToConstant:55.f]
+    ]];
+    
+    UIView *remainingTimeButtonTrailingSpacerView = [[UIView alloc] init];
+    [remainingTimeButtonStackView addArrangedSubview:remainingTimeButtonTrailingSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [remainingTimeButtonLeadingSpacerView.widthAnchor constraintEqualToAnchor:remainingTimeButtonTrailingSpacerView.widthAnchor]
+    ]];
+    
+    UIView *fixedSpacerView2 = [[UIView alloc] init];
+    [stackView addArrangedSubview:fixedSpacerView2];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [fixedSpacerView2.heightAnchor constraintEqualToConstant:6.f]
+    ]];
+    
+    UIStackView *cancelButtonStackView = [[UIStackView alloc] init];
+    cancelButtonStackView.axis = UILayoutConstraintAxisHorizontal;
+    cancelButtonStackView.alignment = UIStackViewAlignmentFill;
+    cancelButtonStackView.distribution = UIStackViewDistributionFill;
+    [stackView addArrangedSubview:cancelButtonStackView];
+    self.cancelButtonStackView = cancelButtonStackView;
+    
+    UIView *cancelButtonLeadingSpacerView = [[UIView alloc] init];
+    [cancelButtonStackView addArrangedSubview:cancelButtonLeadingSpacerView];
+    
+    UIButton *cancelButton = [[UIButton alloc] init];
+    [cancelButton setTitle:SRGLetterboxLocalizedString(@"Cancel", @"Title of a cancel button") forState:UIControlStateNormal];
+    cancelButton.titleLabel.textColor = UIColor.whiteColor;
+    [cancelButton addTarget:self action:@selector(cancelContinuousPlayback:) forControlEvents:UIControlEventTouchUpInside];
+    [cancelButtonStackView addArrangedSubview:cancelButton];
+    self.cancelButton = cancelButton;
+     
+    UIView *cancelButtonTrailingSpacerView = [[UIView alloc] init];
+    [cancelButtonStackView addArrangedSubview:cancelButtonTrailingSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [cancelButtonLeadingSpacerView.widthAnchor constraintEqualToAnchor:cancelButtonTrailingSpacerView.widthAnchor]
+    ]];
+    
+    UIView *bottomSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:bottomSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
+    ]];
 }
+
+#pragma mark Overrides
 
 - (void)contentSizeCategoryDidChange
 {
@@ -124,13 +269,13 @@
     self.introLabel.hidden = NO;
     self.titleLabel.hidden = NO;
     self.subtitleLabel.hidden = NO;
-    self.cancelStackView.hidden = NO;
+    self.cancelButtonStackView.hidden = NO;
     self.remainingTimeButton.enabled = YES;
     
     if (self.controller.continuousPlaybackUpcomingMedia) {
         if (! self.parentLetterboxView.userInterfaceEnabled) {
             self.remainingTimeButton.enabled = NO;
-            self.cancelStackView.hidden = YES;
+            self.cancelButtonStackView.hidden = YES;
         }
         
         CGFloat height = CGRectGetHeight(self.frame);
@@ -139,14 +284,14 @@
             self.subtitleLabel.hidden = YES;
         }
         if (height < 150.f) {
-            self.cancelStackView.hidden = YES;
+            self.cancelButtonStackView.hidden = YES;
         }
         if (height < 100.f) {
             self.titleLabel.hidden = YES;
         }
     }
     else {
-        self.cancelStackView.hidden = YES;
+        self.cancelButtonStackView.hidden = YES;
     }
 }
 

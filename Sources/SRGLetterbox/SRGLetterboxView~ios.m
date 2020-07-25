@@ -92,7 +92,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [SRGMediaPlayerView setMotionManager:motionManager];
 }
 
-#pragma mark Overrides
+#pragma mark Layout
 
 - (void)createView
 {
@@ -228,6 +228,19 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.topAnchor constraintEqualToAnchor:controlsView.bottomAnchor]
     ]];
     
+    SRGContinuousPlaybackView *continuousPlaybackView = [[SRGContinuousPlaybackView alloc] init];
+    continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
+    continuousPlaybackView.delegate = self;
+    [self addSubview:continuousPlaybackView];
+    self.continuousPlaybackView = continuousPlaybackView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [continuousPlaybackView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
+        [continuousPlaybackView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
+        [continuousPlaybackView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
+        [continuousPlaybackView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+    ]];
+    
     SRGErrorView *errorView = [[SRGErrorView alloc] init];
     errorView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:errorView];
@@ -241,12 +254,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
 }
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    self.continuousPlaybackView.delegate = self;
-}
+#pragma mark Overrdes
 
 - (void)layoutSubviews
 {
