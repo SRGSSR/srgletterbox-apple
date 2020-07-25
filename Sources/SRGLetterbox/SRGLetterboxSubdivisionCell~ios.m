@@ -13,6 +13,7 @@
 #import "NSBundle+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSDateFormatter+SRGLetterbox.h"
+#import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "SRGPaddedLabel.h"
 #import "UIColor+SRGLetterbox.h"
 #import "UIFont+SRGLetterbox.h"
@@ -161,15 +162,9 @@
     stackView.distribution = UIStackViewDistributionFill;
     [self.contentView addSubview:stackView];
     
-    NSLayoutConstraint *stackViewLeadingConstraint = [stackView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:6.f];
-    stackViewLeadingConstraint.priority = 999;
-    
-    NSLayoutConstraint *stackViewTrailingConstraint = [stackView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-6.f];
-    stackViewTrailingConstraint.priority = 999;
-    
     [NSLayoutConstraint activateConstraints:@[
-        stackViewLeadingConstraint,
-        stackViewTrailingConstraint,
+        [[stackView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:6.f] srgletterbox_withPriority:999],
+        [[stackView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-6.f] srgletterbox_withPriority:999],
         [stackView.topAnchor constraintEqualToAnchor:wrapperView.bottomAnchor constant:2.f],
         [stackView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:3.f]
     ]];

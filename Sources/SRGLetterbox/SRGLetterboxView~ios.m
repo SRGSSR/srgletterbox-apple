@@ -12,6 +12,7 @@
 #import "SRGLetterboxView+Private.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGAvailabilityView.h"
 #import "SRGContinuousPlaybackView.h"
@@ -102,6 +103,13 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     self.backgroundColor = UIColor.blackColor;
     
+    // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
+    // to detect other interactions earlier
+    SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
+                                                                                                            action:@selector(resetInactivity:)];
+    activityGestureRecognizer.delegate = self;
+    [self addGestureRecognizer:activityGestureRecognizer];
+    
     if (@available(iOS 11.0, *)) {
         self.accessibilityIgnoresInvertColors = YES;
     }
@@ -112,25 +120,22 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self addSubview:timelineView];
     self.timelineView = timelineView;
     
-    self.timelineHeightConstraint = [timelineView.heightAnchor constraintEqualToConstant:0.f];
-    
     if (@available(iOS 11, *)) {
-        self.timelineToSafeAreaBottomConstraint = [timelineView.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.bottomAnchor];
+        [NSLayoutConstraint activateConstraints:@[
+            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
+        ]];
     }
     else {
-        self.timelineToSafeAreaBottomConstraint = [timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
+        [NSLayoutConstraint activateConstraints:@[
+            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
+        ]];
     }
-    self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
-    
-    self.timelineToSelfBottomConstraint = [timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
-    self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
     
     [NSLayoutConstraint activateConstraints:@[
         [timelineView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [timelineView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        self.timelineHeightConstraint,
-        self.timelineToSafeAreaBottomConstraint,
-        self.timelineToSelfBottomConstraint
+        self.timelineHeightConstraint = [timelineView.heightAnchor constraintEqualToConstant:0.f],
+        self.timelineToSelfBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] srgletterbox_withPriority:kBottomConstraintLesserPriority]
     ]];
     
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -168,6 +173,18 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [controlsBackgroundView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
     ]];
     
+    SRGControlsView *controlsView = [[SRGControlsView alloc] init];
+    controlsView.translatesAutoresizingMaskIntoConstraints = NO;
+    controlsView.delegate = self;
+    [self addSubview:controlsView];
+    self.controlsView = controlsView;
+    
+    [NSLayoutConstraint activateConstraints: @[
+        [controlsView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [controlsView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [controlsView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
+    
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:notificationView];
@@ -180,6 +197,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
         [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
         [controlsBackgroundView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
+        [controlsView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor]
     ]];
 }
 
@@ -187,15 +205,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 {
     [super awakeFromNib];
     
-    self.controlsView.delegate = self;
     self.continuousPlaybackView.delegate = self;
-    
-    // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
-    // to detect other interactions earlier
-    SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
-                                                                                                            action:@selector(resetInactivity:)];
-    activityGestureRecognizer.delegate = self;
-    [self addGestureRecognizer:activityGestureRecognizer];
     
     self.videoGravityTapChangeGestureRecognizer.enabled = NO;
     self.videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
