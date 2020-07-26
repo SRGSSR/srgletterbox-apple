@@ -37,8 +37,7 @@ let package = Package(
             exclude: [
                 "SRGAvailabilityView~tvos.xib",
                 "SRGContinuousPlaybackViewController~tvos.storyboard",
-                "SRGCountdownView~tvos.xib",
-                "SRGErrorView~tvos.xib"
+                "SRGCountdownView~tvos.xib"
             ],
             resources: [
                 .process("Resources")
