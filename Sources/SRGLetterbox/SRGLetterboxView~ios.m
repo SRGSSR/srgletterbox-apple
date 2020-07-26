@@ -695,7 +695,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
-        CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage];
+        CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage width:CGRectGetWidth(self.frame)].height;
         self.notificationHeightConstraint.constant = notificationHeight;
         
         CGFloat aspectRatio = self.aspectRatio;

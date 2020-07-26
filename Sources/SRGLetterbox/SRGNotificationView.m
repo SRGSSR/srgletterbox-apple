@@ -6,17 +6,16 @@
 
 #import "SRGNotificationView.h"
 
+#import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "UIImage+SRGLetterbox.h"
 #import "SRGLetterboxBaseView+Subclassing.h"
 
 #if TARGET_OS_TV
 static const CGFloat kImageLength = 24.f;
-static const CGFloat kLeadingMargin = 16.f;
 static const CGFloat kMargin = 20.f;
 #else
 static const CGFloat kImageLength = 16.f;
-static const CGFloat kLeadingMargin = 4.f;
-static const CGFloat kMargin = 6.f;
+static const CGFloat kMargin = 8.f;
 #endif
 
 @import SRGAppearance;
@@ -25,9 +24,6 @@ static const CGFloat kMargin = 6.f;
 
 @property (nonatomic, weak) UIImageView *iconImageView;
 @property (nonatomic, weak) UILabel *messageLabel;
-
-@property (nonatomic, weak) NSLayoutConstraint *messageLabelTopConstraint;
-@property (nonatomic, weak) NSLayoutConstraint *messageLabelBottomConstraint;
 
 @end
 
@@ -79,14 +75,13 @@ static const CGFloat kMargin = 6.f;
     self.messageLabel = messageLabel;
         
     [NSLayoutConstraint activateConstraints:@[
-        [iconImageView.widthAnchor constraintEqualToConstant:kImageLength],
+        [[iconImageView.widthAnchor constraintEqualToConstant:kImageLength] srgletterbox_withPriority:999],
         [iconImageView.heightAnchor constraintEqualToAnchor:iconImageView.widthAnchor],
-        [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:kLeadingMargin],
+        [[iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:kMargin] srgletterbox_withPriority:999],
         [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor],
-        [messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:kMargin],
-        [messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-kMargin],
-        self.messageLabelTopConstraint = [messageLabel.topAnchor constraintEqualToAnchor:contentView.topAnchor],
-        self.messageLabelBottomConstraint = [contentView.bottomAnchor constraintEqualToAnchor:messageLabel.bottomAnchor]
+        [messageLabel.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        [[messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:kMargin] srgletterbox_withPriority:999],
+        [[messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-kMargin] srgletterbox_withPriority:999]
     ]];
 }
 
@@ -99,28 +94,34 @@ static const CGFloat kMargin = 6.f;
 
 #pragma mark Refresh
 
-- (CGFloat)updateLayoutWithMessage:(NSString *)message
+- (CGSize)updateLayoutWithMessage:(NSString *)message width:(CGFloat)width
 {
     BOOL hasMessage = (message != nil);
     
     self.iconImageView.hidden = ! hasMessage;
-    
-    CGFloat verticalMargin = hasMessage ? kMargin : 0.f;
-    self.messageLabelTopConstraint.constant = verticalMargin;
-    self.messageLabelBottomConstraint.constant = verticalMargin;
-    
-    // The notification message determines the height of the view required to display it.
     self.messageLabel.text = message;
     
-    // Calculate the needed height
+    if (! hasMessage) {
+        return CGSizeZero;
+    }
+    
+    // Calculate the needed height. Remove the width corresponding to non-text items to calcualte the required text
+    // height
+    CGFloat layoutFixedWidth = kImageLength + 3 * kMargin;
+    CGFloat availableWidth = fmaxf(width - layoutFixedWidth, 0.f);
     UIFont *font = self.messageLabel.font;
-    CGRect boundingRect = [message boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.messageLabel.frame), CGFLOAT_MAX)
+    CGRect boundingRect = [message boundingRectWithSize:CGSizeMake(availableWidth, CGFLOAT_MAX)
                                                 options:NSStringDrawingUsesLineFragmentOrigin
                                              attributes:@{ NSFontAttributeName : font }
                                                 context:nil];
     CGFloat lineHeight = font.lineHeight;
     NSInteger numberOfLines = MIN(CGRectGetHeight(boundingRect) / lineHeight, self.messageLabel.numberOfLines);
-    return ceil(numberOfLines * lineHeight + 2 * verticalMargin);
+    if (numberOfLines < 2) {
+        return CGSizeMake(CGRectGetWidth(boundingRect) + layoutFixedWidth, CGRectGetHeight(boundingRect) + 2 * kMargin);
+    }
+    else {
+        return CGSizeMake(width, ceil(numberOfLines * lineHeight + 2 * kMargin));
+    }
 }
 
 @end

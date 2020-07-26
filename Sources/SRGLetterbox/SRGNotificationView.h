@@ -14,10 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGNotificationView : SRGLetterboxBaseView
 
 /**
- *  Update the notification for the specified message. Fits the view vertically and return the recommended height required
- *  for proper display.
+ *  Update the notification for the specified message. Return the recommended size required for proper display.
  */
-- (CGFloat)updateLayoutWithMessage:(nullable NSString *)message;
+- (CGSize)updateLayoutWithMessage:(nullable NSString *)message width:(CGFloat)width;
 
 @end
 

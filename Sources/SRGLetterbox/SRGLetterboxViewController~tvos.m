@@ -72,6 +72,9 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 @property (nonatomic, weak) UIImageView *loadingImageView;
 @property (nonatomic, weak) SRGNotificationView *notificationView;
 
+@property (nonatomic, weak) NSLayoutConstraint *notificationViewWidthConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *notificationViewHeightConstraint;
+
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 
 @property (nonatomic, weak) id periodicTimeObserver;
@@ -199,10 +202,12 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [playerView insertSubview:notificationView aboveSubview:playerView];
     self.notificationView = notificationView;
     
-    [NSLayoutConstraint activateConstraints:@[ [notificationView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-                                               [notificationView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20.f],
-                                               [notificationView.widthAnchor constraintLessThanOrEqualToConstant:1820.f],
-                                               [notificationView.heightAnchor constraintLessThanOrEqualToConstant:980.f] ]];
+    [NSLayoutConstraint activateConstraints:@[
+        [notificationView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [notificationView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20.f],
+        self.notificationViewWidthConstraint = [notificationView.widthAnchor constraintEqualToConstant:0.f],
+        self.notificationViewHeightConstraint = [notificationView.heightAnchor constraintEqualToConstant:0.f],
+    ]];
     
     UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
     loadingIndicatorView.alpha = 0.f;
@@ -215,8 +220,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [self.view insertSubview:loadingImageView aboveSubview:playerView];
     self.loadingImageView = loadingImageView;
     
-    [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-                                               [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
+    [NSLayoutConstraint activateConstraints:@[
+        [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor]
+    ]];
     
     SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
     errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -244,10 +251,12 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         [contentOverlayView addSubview:liveLabel];
         self.liveLabel = liveLabel;
         
-        [NSLayoutConstraint activateConstraints:@[ [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
-                                                   [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
-                                                   [liveLabel.widthAnchor constraintEqualToConstant:75.f],
-                                                   [liveLabel.heightAnchor constraintEqualToConstant:45.f] ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
+            [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
+            [liveLabel.widthAnchor constraintEqualToConstant:75.f],
+            [liveLabel.heightAnchor constraintEqualToConstant:45.f]
+        ]];
     }
     
     [self updateMainLayoutAnimated:NO];
@@ -388,7 +397,9 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissNotificationViewAutomatically) object:nil];
     
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
-    [self.notificationView updateLayoutWithMessage:notificationMessage];
+    CGSize notificationSize = [self.notificationView updateLayoutWithMessage:notificationMessage width:CGRectGetWidth(self.view.frame) - 100.f];
+    self.notificationViewWidthConstraint.constant = notificationSize.width;
+    self.notificationViewHeightConstraint.constant = notificationSize.height;
     
     [UIView animateWithDuration:0.2 animations:^{
         self.notificationView.alpha = 1.f;
@@ -409,7 +420,9 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [UIView animateWithDuration:0.2 animations:^{
         self.notificationView.alpha = 0.f;
     } completion:^(BOOL finished) {
-        [self.notificationView updateLayoutWithMessage:nil];
+        CGSize notificationSize = [self.notificationView updateLayoutWithMessage:nil width:CGRectGetWidth(self.view.frame) - 100.f];
+        self.notificationViewWidthConstraint.constant = notificationSize.width;
+        self.notificationViewHeightConstraint.constant = notificationSize.height;
     }];
 }
 
