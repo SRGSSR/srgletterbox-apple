@@ -34,9 +34,6 @@ let package = Package(
                 .product(name: "SRGAnalyticsDataProvider", package: "SRGAnalytics"),
                 "SRGAppearance", "YYWebImage"
             ],
-            exclude: [
-                "SRGContinuousPlaybackViewController~tvos.storyboard"
-            ],
             resources: [
                 .process("Resources")
             ],

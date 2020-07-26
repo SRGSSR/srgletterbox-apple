@@ -13,16 +13,6 @@ NSString *SRGLetterboxNonLocalizedString(NSString *string)
     return string;
 }
 
-NSString *SRGLetterboxResourceNameForUIClass(Class cls)
-{
-    NSString *name = NSStringFromClass(cls);
-#if TARGET_OS_TV
-    return [name stringByAppendingString:@"~tvos"];
-#else
-    return [name stringByAppendingString:@"~ios"];
-#endif
-}
-
 @implementation NSBundle (SRGLetterbox)
 
 #pragma mark Class methods
