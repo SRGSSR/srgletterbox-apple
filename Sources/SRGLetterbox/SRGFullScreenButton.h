@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Full screen button.
  */
-IB_DESIGNABLE API_UNAVAILABLE(tvos)
+API_UNAVAILABLE(tvos)
 @interface SRGFullScreenButton : UIButton
 
 @end

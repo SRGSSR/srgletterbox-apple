@@ -16,7 +16,6 @@ OBJC_EXPORT NSDateComponents *SRGDateComponentsForTimeIntervalSinceNow(NSTimeInt
 /**
  *  A simple view displaying a remaining time (in seconds).
  */
-IB_DESIGNABLE
 @interface SRGCountdownView : SRGLetterboxBaseView
 
 /**

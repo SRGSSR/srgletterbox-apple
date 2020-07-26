@@ -32,7 +32,7 @@ API_UNAVAILABLE(tvos)
 /**
  *  View displayed during a continuous playback transition between two medias.
  */
-IB_DESIGNABLE API_UNAVAILABLE(tvos)
+API_UNAVAILABLE(tvos)
 @interface SRGContinuousPlaybackView : SRGLetterboxControllerView
 
 /**

@@ -11,7 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  View displayed when waiting for content to be available, or when content is not available anymore.
  */
-IB_DESIGNABLE
 @interface SRGAvailabilityView : SRGLetterboxControllerView
 
 @end

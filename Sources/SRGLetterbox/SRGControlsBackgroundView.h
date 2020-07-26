@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Overlay displayed as background for controls, ensuring their readability. Also displays the loading indicator.
  */
-IB_DESIGNABLE API_UNAVAILABLE(tvos)
+API_UNAVAILABLE(tvos)
 @interface SRGControlsBackgroundView : SRGLetterboxControllerView
 
 @end

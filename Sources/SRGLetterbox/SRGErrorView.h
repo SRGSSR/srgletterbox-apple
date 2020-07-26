@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  View displayed when an error has been encountered.
  */
-IB_DESIGNABLE
 @interface SRGErrorView : SRGLetterboxControllerView
 
 @end

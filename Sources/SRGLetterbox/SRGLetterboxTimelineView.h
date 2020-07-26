@@ -40,7 +40,7 @@ API_UNAVAILABLE(tvos)
 /**
  *  Timeline displaying subdivisions (segments and chapters) associated with a media.
  */
-IB_DESIGNABLE API_UNAVAILABLE(tvos)
+API_UNAVAILABLE(tvos)
 @interface SRGLetterboxTimelineView : SRGLetterboxControllerView <UICollectionViewDataSource, UICollectionViewDelegate, SRGLetterboxSubdivisionCellDelegate>
 
 /**

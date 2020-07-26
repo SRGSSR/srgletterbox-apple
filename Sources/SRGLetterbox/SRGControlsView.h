@@ -57,7 +57,7 @@ API_UNAVAILABLE(tvos)
 /**
  *  View displaying controls.
  */
-IB_DESIGNABLE API_UNAVAILABLE(tvos)
+API_UNAVAILABLE(tvos)
 @interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGTracksButtonDelegate>
 
 /**
