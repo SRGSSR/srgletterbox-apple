@@ -4,9 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-#import <SRGLetterbox/SRGLetterbox.h>
-#import <SRGDataProvider/SRGDataProvider.h>
-#import <UIKit/UIKit.h>
+@import SRGLetterbox;
+@import SRGDataProvider;
+@import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN
 

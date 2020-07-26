@@ -10,7 +10,7 @@
 #import "NSBundle+LetterboxDemo.h"
 #import "UIViewController+LetterboxDemo.h"
 
-#import <SRGLetterbox/SRGLetterbox.h>
+@import SRGLetterbox;
 
 @implementation MediasViewController
 

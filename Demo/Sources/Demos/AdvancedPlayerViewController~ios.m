@@ -13,7 +13,7 @@
 #import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
 
-#import <SRGAnalytics/SRGAnalytics.h>
+@import SRGAnalytics;
 
 @interface AdvancedPlayerViewController ()
 

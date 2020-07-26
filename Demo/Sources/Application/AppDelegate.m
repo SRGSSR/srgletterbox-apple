@@ -12,11 +12,11 @@
 #import "SettingsViewController.h"
 #import "UIViewController+LetterboxDemo.h"
 
-#import <AppCenter/AppCenter.h>
-#import <AppCenterCrashes/AppCenterCrashes.h>
-#import <libextobjc/libextobjc.h>
-#import <SRGAnalytics/SRGAnalytics.h>
-#import <SRGLetterbox/SRGLetterbox.h>
+@import AppCenter;
+@import AppCenterCrashes;
+@import libextobjc;
+@import SRGAnalytics;
+@import SRGLetterbox;
 
 #if TARGET_OS_IOS
 #import <AppCenterDistribute/AppCenterDistribute.h>
