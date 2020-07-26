@@ -35,7 +35,6 @@ let package = Package(
                 "SRGAppearance", "YYWebImage"
             ],
             exclude: [
-                "SRGAvailabilityView~tvos.xib",
                 "SRGContinuousPlaybackViewController~tvos.storyboard",
                 "SRGCountdownView~tvos.xib"
             ],
