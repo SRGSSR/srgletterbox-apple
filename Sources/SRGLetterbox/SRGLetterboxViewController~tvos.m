@@ -191,6 +191,7 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     self.imageView = imageView;
     
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     notificationView.alpha = 0.f;
     notificationView.layer.cornerRadius = 3.f;
     notificationView.layer.shadowOpacity = 0.5f;
@@ -198,7 +199,6 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [playerView insertSubview:notificationView aboveSubview:playerView];
     self.notificationView = notificationView;
     
-    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[ [notificationView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
                                                [notificationView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20.f],
                                                [notificationView.widthAnchor constraintLessThanOrEqualToConstant:1820.f],
@@ -208,13 +208,13 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     loadingIndicatorView.alpha = 0.f;
     
     UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
+    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
     loadingImageView.alpha = 0.f;
     loadingImageView.userInteractionEnabled = NO;
     [loadingImageView startAnimating];
     [self.view insertSubview:loadingImageView aboveSubview:playerView];
     self.loadingImageView = loadingImageView;
     
-    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
                                                [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor] ]];
     
@@ -237,14 +237,13 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     if (@available(tvOS 11, *)) {
         UIView *contentOverlayView = self.playerViewController.contentOverlayView;
         SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
-        
+        liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
         liveLabel.layer.shadowRadius = 5.f;
         liveLabel.layer.shadowOpacity = 0.5f;
         liveLabel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
         [contentOverlayView addSubview:liveLabel];
         self.liveLabel = liveLabel;
         
-        liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [NSLayoutConstraint activateConstraints:@[ [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
                                                    [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
                                                    [liveLabel.widthAnchor constraintEqualToConstant:75.f],

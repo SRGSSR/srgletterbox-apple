@@ -117,14 +117,15 @@
         // Lazily add heavy countdown view when required
         if (! self.countdownView.superview) {
             SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
+            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
             [self addSubview:countdownView];
             self.countdownView = countdownView;
             
-            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
             [NSLayoutConstraint activateConstraints:@[ [countdownView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                                        [countdownView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
                                                        [countdownView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
-                                                       [countdownView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
+                                                       [countdownView.rightAnchor constraintEqualToAnchor:self.rightAnchor]
+            ]];
         }
     }
     else if (blockingReason == SRGBlockingReasonEndDate) {

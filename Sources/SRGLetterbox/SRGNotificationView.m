@@ -9,6 +9,16 @@
 #import "UIImage+SRGLetterbox.h"
 #import "SRGLetterboxBaseView+Subclassing.h"
 
+#if TARGET_OS_TV
+static const CGFloat kImageLength = 24.f;
+static const CGFloat kLeadingMargin = 16.f;
+static const CGFloat kMargin = 20.f;
+#else
+static const CGFloat kImageLength = 16.f;
+static const CGFloat kLeadingMargin = 4.f;
+static const CGFloat kMargin = 6.f;
+#endif
+
 @import SRGAppearance;
 
 @interface SRGNotificationView ()
@@ -31,10 +41,6 @@
     
     self.backgroundColor = UIColor.srg_blueColor;
     
-#if TARGET_OS_TV
-    // TODO:
-    
-#else
     UIView *contentView = [[UIView alloc] init];
     contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:contentView];
@@ -71,18 +77,17 @@
     [messageLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     [contentView addSubview:messageLabel];
     self.messageLabel = messageLabel;
-    
+        
     [NSLayoutConstraint activateConstraints:@[
-        [iconImageView.widthAnchor constraintEqualToConstant:16.f],
+        [iconImageView.widthAnchor constraintEqualToConstant:kImageLength],
         [iconImageView.heightAnchor constraintEqualToAnchor:iconImageView.widthAnchor],
-        [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:4.f],
+        [iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:kLeadingMargin],
         [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor],
-        [messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:8.f],
-        [messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-8.f],
+        [messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:kMargin],
+        [messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-kMargin],
         self.messageLabelTopConstraint = [messageLabel.topAnchor constraintEqualToAnchor:contentView.topAnchor],
         self.messageLabelBottomConstraint = [contentView.bottomAnchor constraintEqualToAnchor:messageLabel.bottomAnchor]
     ]];
-#endif
 }
 
 - (void)contentSizeCategoryDidChange
@@ -100,11 +105,7 @@
     
     self.iconImageView.hidden = ! hasMessage;
     
-#if TARGET_OS_TV
-    CGFloat verticalMargin = hasMessage ? 20.f : 0.f;
-#else
-    CGFloat verticalMargin = hasMessage ? 6.f : 0.f;
-#endif
+    CGFloat verticalMargin = hasMessage ? kMargin : 0.f;
     self.messageLabelTopConstraint.constant = verticalMargin;
     self.messageLabelBottomConstraint.constant = verticalMargin;
     
