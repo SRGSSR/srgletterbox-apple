@@ -38,8 +38,7 @@ let package = Package(
                 "SRGAvailabilityView~tvos.xib",
                 "SRGContinuousPlaybackViewController~tvos.storyboard",
                 "SRGCountdownView~tvos.xib",
-                "SRGErrorView~tvos.xib",
-                "SRGNotificationView~tvos.xib"
+                "SRGErrorView~tvos.xib"
             ],
             resources: [
                 .process("Resources")
