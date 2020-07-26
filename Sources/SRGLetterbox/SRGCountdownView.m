@@ -181,8 +181,14 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     UIView *daysTitleView = [[UIView alloc] init];
     [daysStackView addArrangedSubview:daysTitleView];
     
+#if TARGET_OS_TV
+    static const CGFloat kTitleHeight = 40.f;
+#else
+    static const CGFloat kTitleHeight = 30.f;
+#endif
+    
     [NSLayoutConstraint activateConstraints:@[
-        [daysTitleView.heightAnchor constraintEqualToConstant:30.f]
+        [daysTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
     ]];
     
     UILabel *daysTitleLabel = [[UILabel alloc] init];
@@ -269,7 +275,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [hoursStackView addArrangedSubview:hoursTitleView];
     
     [NSLayoutConstraint activateConstraints:@[
-        [hoursTitleView.heightAnchor constraintEqualToConstant:30.f]
+        [hoursTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
     ]];
     
     UILabel *hoursTitleLabel = [[UILabel alloc] init];
@@ -355,7 +361,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [minutesStackView addArrangedSubview:minutesTitleView];
     
     [NSLayoutConstraint activateConstraints:@[
-        [minutesTitleView.heightAnchor constraintEqualToConstant:30.f]
+        [minutesTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
     ]];
     
     UILabel *minutesTitleLabel = [[UILabel alloc] init];
@@ -440,7 +446,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [secondsStackView addArrangedSubview:secondsTitleView];
     
     [NSLayoutConstraint activateConstraints:@[
-        [secondsTitleView.heightAnchor constraintEqualToConstant:30.f]
+        [secondsTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
     ]];
     
     UILabel *secondsTitleLabel = [[UILabel alloc] init];

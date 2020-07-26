@@ -56,11 +56,11 @@
     [self addSubview:stackView];
     
 #if TARGET_OS_TV
-    static CGFloat kVerticalMargin = 60.f;
-    static CGFloat kHorizontalMargin = 90.f;
+    static const CGFloat kVerticalMargin = 60.f;
+    static const CGFloat kHorizontalMargin = 90.f;
 #else
-    static CGFloat kVerticalMargin = 8.f;
-    static CGFloat kHorizontalMargin = 8.f;
+    static const CGFloat kVerticalMargin = 8.f;
+    static const CGFloat kHorizontalMargin = 8.f;
 #endif
 
     [NSLayoutConstraint activateConstraints:@[
@@ -80,9 +80,9 @@
     self.imageView = imageView;
     
 #if TARGET_OS_TV
-    static CGFloat kImageHeight = 100.f;
+    static const CGFloat kImageHeight = 100.f;
 #else
-    static CGFloat kImageHeight = 25.f;
+    static const CGFloat kImageHeight = 25.f;
 #endif
     
     [NSLayoutConstraint activateConstraints:@[

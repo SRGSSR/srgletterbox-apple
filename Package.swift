@@ -35,8 +35,7 @@ let package = Package(
                 "SRGAppearance", "YYWebImage"
             ],
             exclude: [
-                "SRGContinuousPlaybackViewController~tvos.storyboard",
-                "SRGCountdownView~tvos.xib"
+                "SRGContinuousPlaybackViewController~tvos.storyboard"
             ],
             resources: [
                 .process("Resources")

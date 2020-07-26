@@ -20,7 +20,7 @@
 @import libextobjc;
 @import MAKVONotificationCenter;
 
-static CGFloat SRGLetterboxCellMargin = 3.f;
+static const CGFloat SRGLetterboxCellMargin = 3.f;
 
 @interface SRGLetterboxTimelineView ()
 
