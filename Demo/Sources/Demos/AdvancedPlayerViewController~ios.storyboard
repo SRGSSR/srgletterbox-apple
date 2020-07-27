@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FcC-Qn-oGg">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -23,7 +24,7 @@
                                     <constraint firstAttribute="height" secondItem="5VB-3F-wwv" secondAttribute="width" multiplier="9:16" priority="950" id="nYf-MQ-bSx"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="controller" destination="V5l-nr-tDL" id="6mJ-p1-ZCM"/>
+                                    <outlet property="controller" destination="V5l-nr-tDL" id="rFs-BW-7CZ"/>
                                     <outlet property="delegate" destination="FcC-Qn-oGg" id="XzF-48-ayl"/>
                                 </connections>
                             </view>
@@ -63,14 +64,14 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="d4B-OL-0vy">
                                         <rect key="frame" x="0.0" y="82.5" width="378" height="30"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md4-t4-5he">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md4-t4-5he">
                                                 <rect key="frame" x="0.0" y="0.0" width="181" height="30"/>
                                                 <state key="normal" title="Hide controls"/>
                                                 <connections>
                                                     <action selector="hideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="Cx0-DG-7VH"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-r1-Pgs">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-r1-Pgs">
                                                 <rect key="frame" x="197" y="0.0" width="181" height="30"/>
                                                 <state key="normal" title="Show controls"/>
                                                 <connections>
@@ -85,14 +86,14 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="bVR-wr-cKZ">
                                         <rect key="frame" x="0.0" y="119.5" width="378" height="30"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WSi-1R-LWr">
                                                 <rect key="frame" x="0.0" y="0.0" width="181" height="30"/>
                                                 <state key="normal" title="Always hide controls"/>
                                                 <connections>
                                                     <action selector="forceHideControls:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="ENm-2M-VN0"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvK-aX-fgP">
                                                 <rect key="frame" x="197" y="0.0" width="181" height="30"/>
                                                 <state key="normal" title="Always show controls"/>
                                                 <connections>
@@ -107,14 +108,14 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="gGI-Se-Jm5">
                                         <rect key="frame" x="0.0" y="156.5" width="378" height="30"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpT-Mg-MmS">
                                                 <rect key="frame" x="0.0" y="0.0" width="159" height="30"/>
                                                 <state key="normal" title="Full screen"/>
                                                 <connections>
                                                     <action selector="toggleFullScreen:" destination="FcC-Qn-oGg" eventType="touchUpInside" id="LgO-pO-ZZe"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wql-u5-a4y">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wql-u5-a4y">
                                                 <rect key="frame" x="219" y="0.0" width="159" height="30"/>
                                                 <state key="normal" title="Stop player"/>
                                                 <connections>
@@ -161,13 +162,13 @@
                                         </connections>
                                     </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Height offset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAu-YG-xSi" userLabel="Height Offset Label">
-                                        <rect key="frame" x="20" y="60.5" width="100" height="20.5"/>
+                                        <rect key="frame" x="20" y="60.5" width="99" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-200" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="CDc-iR-c7p" userLabel="Height Offset Slider">
-                                        <rect key="frame" x="138" y="56" width="258" height="31"/>
+                                        <rect key="frame" x="137" y="56" width="259" height="31"/>
                                         <connections>
                                             <action selector="changeHeightOffset:" destination="FcC-Qn-oGg" eventType="valueChanged" id="8FW-Xt-MTu"/>
                                         </connections>
@@ -207,7 +208,8 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="Qoe-I9-dll"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="ePn-4e-JbK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Qoe-I9-dll" secondAttribute="leading" id="6hy-A6-kfe"/>
@@ -224,7 +226,6 @@
                             <constraint firstItem="Qoe-I9-dll" firstAttribute="trailing" secondItem="MmD-0t-QA7" secondAttribute="trailing" constant="18" id="wTe-cs-mHh"/>
                             <constraint firstItem="MmD-0t-QA7" firstAttribute="top" secondItem="5VB-3F-wwv" secondAttribute="bottom" constant="10" id="xne-iO-msa"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Qoe-I9-dll"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="IWJ-iK-R0H" appends="YES" id="JOB-QI-D2K"/>
                         </connections>
@@ -258,6 +259,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="close" width="48" height="48"/>
+        <image name="close" width="18" height="18"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

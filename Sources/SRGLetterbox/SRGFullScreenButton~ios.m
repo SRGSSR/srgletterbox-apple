@@ -41,15 +41,6 @@ static void commonInit(SRGFullScreenButton *self);
     return self.selected ? SRGLetterboxAccessibilityLocalizedString(@"Exit full screen", @"Full screen button label in the letterbox view, when the view is in the full screen state") : SRGLetterboxAccessibilityLocalizedString(@"Full screen", @"Full screen button label in the letterbox view, when the view is NOT in the full screen state");
 }
 
-#pragma mark Interface Builder integration
-
-- (void)prepareForInterfaceBuilder
-{
-    [super prepareForInterfaceBuilder];
-    
-    commonInit(self);
-}
-
 @end
 
 static void commonInit(SRGFullScreenButton *self)

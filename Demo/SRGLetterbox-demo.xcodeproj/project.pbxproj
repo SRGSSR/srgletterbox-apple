@@ -18,7 +18,6 @@
 		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
 		08F163F8236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F163F6236F5A8500072E69 /* NSDateFormatter+LetterboxDemo.m */; };
 		08F163FB236F5B6D00072E69 /* DemoAccessibilityFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F163F9236F5B6C00072E69 /* DemoAccessibilityFormatter.m */; };
-		6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */; };
 		6F0AD0781E5EAB0D000A61A5 /* FeedsViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD0761E5EAB0D000A61A5 /* FeedsViewController~ios.m */; };
 		6F0AD07B1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F0AD07A1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard */; };
 		6F0AD07E1E5EB224000A61A5 /* FeedTableViewCell~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AD07D1E5EB224000A61A5 /* FeedTableViewCell~ios.m */; };
@@ -78,7 +77,6 @@
 		08F163F9236F5B6C00072E69 /* DemoAccessibilityFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAccessibilityFormatter.m; sourceTree = "<group>"; };
 		08F163FA236F5B6C00072E69 /* DemoAccessibilityFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAccessibilityFormatter.h; sourceTree = "<group>"; };
 		08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRGLetterboxDesignables.m; sourceTree = "<group>"; };
 		6F0AD0751E5EAB0D000A61A5 /* FeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedsViewController.h; sourceTree = "<group>"; };
 		6F0AD0761E5EAB0D000A61A5 /* FeedsViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FeedsViewController~ios.m"; sourceTree = "<group>"; };
 		6F0AD07A1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "FeedsViewController~ios.storyboard"; sourceTree = "<group>"; };
@@ -169,15 +167,6 @@
 			);
 			name = Xcode;
 			path = ../Xcode;
-			sourceTree = "<group>";
-		};
-		6F06A6A0233A203C00BB4B4A /* Designables */ = {
-			isa = PBXGroup;
-			children = (
-				6F06A6A1233A203C00BB4B4A /* SRGLetterboxDesignables.m */,
-			);
-			name = Designables;
-			path = ../Designables;
 			sourceTree = "<group>";
 		};
 		6F73FB0A1E4C6F01000986C2 /* Helpers */ = {
@@ -305,7 +294,6 @@
 				6FAB3B521E28FFEA00CC2197 /* Info.plist */,
 				6FAB3B551E28FFEA00CC2197 /* Sources */,
 				6FAB3B531E28FFEA00CC2197 /* Resources */,
-				6F06A6A0233A203C00BB4B4A /* Designables */,
 				6F0136F4213FA39000B95405 /* Xcode */,
 				6FAB3B061E28FB1400CC2197 /* Frameworks */,
 				6FE321421E28E24E00FD8E42 /* Products */,
@@ -509,7 +497,6 @@
 				6FAB3B601E28FFEA00CC2197 /* main.m in Sources */,
 				08F163F8236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.m in Sources */,
 				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
-				6F06A6A2233A203C00BB4B4A /* SRGLetterboxDesignables.m in Sources */,
 				086B944C234CEDA3003D6BAA /* Media.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,

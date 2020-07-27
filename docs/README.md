@@ -65,12 +65,6 @@ To learn about how the library can be used, have a look at the [getting started 
 
 The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-apple) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
 
-### Control preview in Interface Builder
-
-Interface Builder can render custom controls dropped onto a storyboard or a xib. If you want to enable this feature for SRG Media Player controls, **copy** the `SRGLetterboxDesignables.m` file available from the Swift Package Manager checkout to your project and add it to your target.
-
-When dropping a view (e.g. `SRGLetterboxView`) onto a storyboard or xib, Xcode will now build your project in the background and render the view when it is done.
-
 ## Demo project
 
 To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` from the main repository directory.
