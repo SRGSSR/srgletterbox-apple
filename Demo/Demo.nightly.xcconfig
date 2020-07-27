@@ -1,2 +1,2 @@
 #include "Demo.xcconfig"
-// #include "../Xcode/Links/SRGLetterbox-demo.nightly.xcconfig"
+#include "../Xcode/Links/SRGLetterbox-demo.nightly.xcconfig"
