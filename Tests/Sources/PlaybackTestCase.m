@@ -612,6 +612,27 @@
     XCTAssertNil(self.controller.error);
 }
 
+- (void)testSameMediaPlaybackWithCompletionHandler
+{
+    XCTestExpectation *completionHandlerExpectation1 = [self expectationWithDescription:@"Completion handler"];
+    [self.controller prepareToPlayURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil completionHandler:^{
+        [completionHandlerExpectation1 fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    [self.controller play];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
+    
+    XCTestExpectation *completionHandlerExpectation2 = [self expectationWithDescription:@"Completion handler"];
+    [self.controller prepareToPlayURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil completionHandler:^{
+        [completionHandlerExpectation2 fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:10. handler:nil];
+}
+
 - (void)testSameMediaPlaybackWhileAlreadyPlaying
 {
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
