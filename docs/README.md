@@ -36,33 +36,12 @@ Building the `SRGLetterbox-demo` target requires command-line tools for icon gen
 	
 	brew install imagemagick ghostscript
 	brew install jq
+	
+The demo project also retrieves additional dependencies with [Carthage](https://github.com/Carthage/Carthage).
 
 ## Integration
 
 The library must be integrated using [Swift Package Manager](https://swift.org/package-manager) directly [within Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). You can also declare the library as a dependency of another one directly in the associated `Package.swift` manifest.
-
-### Content protection
-
-The `SRGAnalyticsDataProvider` companion library provides convenience methods for playing content delivered by our [SRG Data Provider](https://github.com/SRGSSR/srgdataprovider-apple) library. Not all content is publicly accessible for legal reasons, though, in particular livestreams or foreign TV series.
-
-To play protected content, and provided you have been granted access to it, an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-apple) library is available and must be added to your project as well.
-
-If you have no access to this repository, use the fake public replacement library by adding the [fake replacement dependency](SRGSSR/srgcontentprotection-fake-apple) instead. With this setup, only non-protected content (e.g. in-house productions or audio content) will be playable.
-
-When linking against the fake library, some content (e.g. TV livestreams) will not be playable.
-
-Check the [wiki](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
-
-## Settings
-
-Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-apple-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
-
-If you need to make changes to the settings:
-
-1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
-1. Switch to the `Configuration` directory and commit changes there.
-1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
-1. Push all commits when you are ready.
 
 ## Usage
 
@@ -94,7 +73,7 @@ When dropping a view (e.g. `SRGLetterboxView`) onto a storyboard or xib, Xcode w
 
 ## Demo project
 
-To test what the library is capable of, run the associated demo.
+To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` from the main repository directory.
 
 #### URL schemes (iOS)
 
@@ -102,6 +81,17 @@ The iOS demo application can be opened with a custom URL scheme having the follo
 
 * Open a media within the player: `[scheme]://open?media=[media_urn]`.
 * A `&server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
+
+## Settings
+
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-apple-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+
+If you need to make changes to the settings:
+
+1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
+1. Switch to the `Configuration` directory and commit changes there.
+1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
+1. Push all commits when you are ready.
 
 ## Known issues
 

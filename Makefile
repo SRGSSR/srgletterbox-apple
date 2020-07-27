@@ -4,7 +4,7 @@ CONFIGURATION_FOLDER=Configuration
 CONFIGURATION_COMMIT_SHA1=d2af474c3a3785bc6f0e480ee65e8d496a70dd70
 
 CARTHAGE_FOLDER=Carthage
-CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
+CARTHAGE_FLAGS=--platform iOS,tvOS --new-resolver --cache-builds
 
 # Checkout a commit for a repository in the specified directory. Fails if the repository is dirty of if the
 # commit does not exist.  
@@ -39,7 +39,7 @@ test-tvos:
 
 .PHONY: setup
 setup:
-	@echo "Setting up proprietary project..."
+	@echo "Setting up project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-apple-configuration.git $(CONFIGURATION_FOLDER); \
@@ -52,26 +52,13 @@ setup:
 	@mkdir -p Xcode/Links
 	@pushd Xcode/Links > /dev/null; ln -fs ../../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
 
-	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
-	@echo "... done.\n"
-
-.PHONY: public.setup
-public.setup:
-	@echo "Setting up public project..."
-
-	@rm -rf $(CONFIGURATION_FOLDER)
-	@rm -rf .env
-	@mkdir -p Xcode/Links
-	@pushd Xcode/Links > /dev/null; ln -fs ../Public/*.xcconfig .
-	
-	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
+	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_FLAGS)
 	@echo "... done.\n"
 
 .PHONY: help
 help:
 	@echo "The following targets are available:"
-	@echo "   setup               Setup project (internal SRG SSR use)"
-	@echo "   setup.public        Setup project (open source use)"
+	@echo "   setup               Setup project (configuration and demo dependencies)"
 	@echo "   all                 Build and run unit tests for all platforms"
 	@echo "   test-ios            Build and run unit tests for iOS"
 	@echo "   test-tvos           Build and run unit tests for tvOS"
