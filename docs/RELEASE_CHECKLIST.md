@@ -7,12 +7,12 @@ Use the following checklist when releasing libraries.
 Release these 3rd party dependencies (forked on SRGSSR github) if needed:
 
 - [ComScore](https://github.com/SRGSSR/ComScore-xcframework-apple)
+- [FXReachability](https://github.com/SRGSSR/FXReachability)
+- [libextobjc](https://github.com/SRGSSR/libextobjc)
+- [MAKVONotificationCenter](https://github.com/SRGSSR/MAKVONotificationCenter)
+- [Mantle](https://github.com/SRGSSR/Mantle)
 - [TCCore](https://github.com/SRGSSR/TCCore-xcframework-apple)
 - [TCSDK](https://github.com/SRGSSR/TCSDK-xcframework-apple)
-- [MAKVONotificationCenter](https://github.com/SRGSSR/MAKVONotificationCenter)
-- [libextobjc](https://github.com/SRGSSR/libextobjc)
-- [FXReachability](https://github.com/SRGSSR/FXReachability)
-- [UICKeyChainStore](https://github.com/SRGSSR/UICKeyChainStore)
 - [YYWebImage](https://github.com/SRGSSR/YYWebImage)
 
 ### SRG SSR libraries
