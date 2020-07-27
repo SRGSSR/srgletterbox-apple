@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+@import Foundation;
+
 // Official version number.
 FOUNDATION_EXPORT NSString * SRGLetterboxMarketingVersion(void);
 
