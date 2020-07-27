@@ -337,12 +337,12 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 
 #pragma mark Actions
 
-- (IBAction)engage:(id)sender
+- (void)engage:(id)sender
 {
     [self.delegate continuousPlaybackViewController:self didEngageInContinuousPlaybackWithUpcomingMedia:self.upcomingMedia];
 }
 
-- (IBAction)restart:(id)sender
+- (void)restart:(id)sender
 {
     [self.delegate continuousPlaybackViewController:self didRestartPlaybackWithMedia:self.media];
 }

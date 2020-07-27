@@ -50,7 +50,7 @@ API_UNAVAILABLE(tvos)
 /**
  *  Cell optional delegate.
  */
-@property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxSubdivisionCellDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRGLetterboxSubdivisionCellDelegate> delegate;
 
 @end
 

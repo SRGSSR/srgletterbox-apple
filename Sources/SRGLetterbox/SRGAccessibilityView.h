@@ -21,7 +21,7 @@ API_UNAVAILABLE(tvos)
  *  The view which which the accessibility frame must correspond to. If none specified, the receiver frame is
  *  used.
  */
-@property (nonatomic, weak) IBOutlet UIView *accessibilityFrameView;
+@property (nonatomic, weak) UIView *accessibilityFrameView;
 
 @end
 

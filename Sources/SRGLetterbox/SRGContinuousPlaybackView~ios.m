@@ -297,7 +297,7 @@
 
 #pragma mark Actions
 
-- (IBAction)cancelContinuousPlayback:(id)sender
+- (void)cancelContinuousPlayback:(id)sender
 {
     // Save media informations since cancelling will change it
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;
@@ -305,7 +305,7 @@
     [self.delegate continuousPlaybackView:self didCancelWithUpcomingMedia:upcomingMedia];
 }
 
-- (IBAction)playUpcomingMedia:(id)sender
+- (void)playUpcomingMedia:(id)sender
 {
     // Save media information since playing will change it
     SRGMedia *upcomingMedia = self.controller.continuousPlaybackUpcomingMedia;

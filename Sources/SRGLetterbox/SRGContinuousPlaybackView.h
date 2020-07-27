@@ -38,7 +38,7 @@ API_UNAVAILABLE(tvos)
 /**
  *  View delegate.
  */
-@property (nonatomic, weak, nullable) IBOutlet id<SRGContinuousPlaybackViewDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRGContinuousPlaybackViewDelegate> delegate;
 
 @end
 
