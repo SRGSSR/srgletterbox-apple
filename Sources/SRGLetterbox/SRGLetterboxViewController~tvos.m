@@ -180,85 +180,14 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     self.view.backgroundColor = UIColor.blackColor;
     
-    UIView *playerView = self.playerViewController.view;
-    playerView.backgroundColor = UIColor.clearColor;
-    playerView.frame = self.view.bounds;
-    playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:playerView];
-    [self addChildViewController:self.playerViewController];
-    
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
-    imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view insertSubview:imageView belowSubview:playerView];
-    self.imageView = imageView;
-    
-    SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
-    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
-    notificationView.alpha = 0.f;
-    notificationView.layer.cornerRadius = 3.f;
-    notificationView.layer.shadowOpacity = 0.5f;
-    notificationView.layer.shadowOffset = CGSizeMake(0.f, 2.f);
-    [playerView insertSubview:notificationView aboveSubview:playerView];
-    self.notificationView = notificationView;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [notificationView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [notificationView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20.f],
-        self.notificationViewWidthConstraint = [notificationView.widthAnchor constraintEqualToConstant:0.f],
-        self.notificationViewHeightConstraint = [notificationView.heightAnchor constraintEqualToConstant:0.f],
-    ]];
-    
-    UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
-    loadingIndicatorView.alpha = 0.f;
-    
-    UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
-    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    loadingImageView.alpha = 0.f;
-    loadingImageView.userInteractionEnabled = NO;
-    [loadingImageView startAnimating];
-    [self.view insertSubview:loadingImageView aboveSubview:playerView];
-    self.loadingImageView = loadingImageView;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [loadingImageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [loadingImageView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor]
-    ]];
-    
-    SRGErrorView *errorView = [[SRGErrorView alloc] initWithFrame:playerView.bounds];
-    errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    errorView.controller = self.controller;
-    errorView.userInteractionEnabled = NO;
-    [self.view insertSubview:errorView aboveSubview:playerView];
-    self.errorView = errorView;
-    
-    SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] initWithFrame:playerView.bounds];
-    availabilityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    availabilityView.controller = self.controller;
-    availabilityView.userInteractionEnabled = NO;
-    [self.view insertSubview:availabilityView aboveSubview:playerView];
-    self.availabilityView = availabilityView;
-    
-    // Content overlay animations (to show or hide UI elements alongside player controls) are only available since tvOS 11.
-    // On tvOS 10 and below, do not display any live label.
-    if (@available(tvOS 11, *)) {
-        UIView *contentOverlayView = self.playerViewController.contentOverlayView;
-        SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
-        liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        liveLabel.layer.shadowRadius = 5.f;
-        liveLabel.layer.shadowOpacity = 0.5f;
-        liveLabel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
-        [contentOverlayView addSubview:liveLabel];
-        self.liveLabel = liveLabel;
+    // In -viewDidLoad so that we can inject our hierarchy into the standard player layout
+    [self layoutPlayerViewInView:self.view];
+    [self layoutNotificationViewInView:self.view];
+    [self loadLoadingImageViewInView:self.view];
+    [self loadErrorViewInView:self.view];
+    [self loadAvailabilityViewInView:self.view];
+    [self loadLiveLabel];
         
-        [NSLayoutConstraint activateConstraints:@[
-            [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
-            [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
-            [liveLabel.widthAnchor constraintEqualToConstant:75.f],
-            [liveLabel.heightAnchor constraintEqualToConstant:45.f]
-        ]];
-    }
-    
     [self updateMainLayoutAnimated:NO];
     [self reloadImage];
 }
@@ -271,6 +200,130 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         [self dismissNotificationViewAnimated:NO];
         [self.controller reset];
     }
+}
+
+#pragma mark Layout helpers
+
+- (void)layoutPlayerViewInView:(UIView *)view
+{
+    UIView *playerView = self.playerViewController.view;
+    playerView.translatesAutoresizingMaskIntoConstraints = NO;
+    playerView.backgroundColor = UIColor.clearColor;
+    [view addSubview:playerView];
+    [self addChildViewController:self.playerViewController];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [playerView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [playerView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [playerView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [playerView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
+    ]];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [view insertSubview:imageView belowSubview:playerView];
+    self.imageView = imageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [imageView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [imageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [imageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [imageView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
+    ]];
+}
+
+- (void)layoutNotificationViewInView:(UIView *)view
+{
+    SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
+    notificationView.alpha = 0.f;
+    notificationView.layer.cornerRadius = 3.f;
+    notificationView.layer.shadowOpacity = 0.5f;
+    notificationView.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    [view insertSubview:notificationView aboveSubview:self.playerViewController.view];
+    self.notificationView = notificationView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [notificationView.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [notificationView.topAnchor constraintEqualToAnchor:view.topAnchor constant:20.f],
+        self.notificationViewWidthConstraint = [notificationView.widthAnchor constraintEqualToConstant:0.f],
+        self.notificationViewHeightConstraint = [notificationView.heightAnchor constraintEqualToConstant:0.f],
+    ]];
+}
+
+- (void)loadLoadingImageViewInView:(UIView *)view
+{
+    // Hide the standard system UI
+    UIView *playerView = self.playerViewController.view;
+    UIView *loadingIndicatorView = SRGLetterboxViewControllerLoadingIndicatorSubview(playerView);
+    loadingIndicatorView.alpha = 0.f;
+    
+    UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
+    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    loadingImageView.alpha = 0.f;
+    loadingImageView.userInteractionEnabled = NO;
+    [loadingImageView startAnimating];
+    [view insertSubview:loadingImageView aboveSubview:playerView];
+    self.loadingImageView = loadingImageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [loadingImageView.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [loadingImageView.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]
+    ]];
+}
+
+- (void)loadErrorViewInView:(UIView *)view
+{
+    SRGErrorView *errorView = [[SRGErrorView alloc] init];
+    errorView.translatesAutoresizingMaskIntoConstraints = NO;
+    errorView.controller = self.controller;
+    errorView.userInteractionEnabled = NO;
+    [view insertSubview:errorView aboveSubview:self.playerViewController.view];
+    self.errorView = errorView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [errorView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [errorView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [errorView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [errorView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
+    ]];
+}
+
+- (void)loadAvailabilityViewInView:(UIView *)view
+{
+    SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
+    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
+    availabilityView.controller = self.controller;
+    availabilityView.userInteractionEnabled = NO;
+    [view insertSubview:availabilityView aboveSubview:self.playerViewController.view];
+    self.availabilityView = availabilityView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [availabilityView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [availabilityView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [availabilityView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [availabilityView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
+    ]];
+}
+
+- (void)loadLiveLabel
+{
+    UIView *contentOverlayView = self.playerViewController.contentOverlayView;
+    SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
+    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    liveLabel.layer.shadowRadius = 5.f;
+    liveLabel.layer.shadowOpacity = 0.5f;
+    liveLabel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    [contentOverlayView addSubview:liveLabel];
+    self.liveLabel = liveLabel;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
+        [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
+        [liveLabel.widthAnchor constraintEqualToConstant:75.f],
+        [liveLabel.heightAnchor constraintEqualToConstant:45.f]
+    ]];
 }
 
 #pragma mark Image retrieval
