@@ -31,12 +31,8 @@
 {
     [super createView];
     
-#if TARGET_OS_TV
-    self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.75f];
-#else
     self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
-#endif
-    
+        
     SRGPaddedLabel *messageLabel = [[SRGPaddedLabel alloc] init];
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.textColor = UIColor.whiteColor;
