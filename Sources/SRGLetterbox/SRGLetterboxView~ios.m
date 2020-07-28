@@ -116,45 +116,59 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         self.accessibilityIgnoresInvertColors = YES;
     }
     
+    [self createTimelineViewInView:self];
+    [self createPlayerViewInView:self];
+    [self createControlsViewInView:self];
+    [self createNotificationViewInView:self];
+    [self createAvailabilityViewInView:self];
+    [self createContinuousPlaybackViewInView:self];
+    [self createErrorViewInView:self];
+}
+
+- (void)createTimelineViewInView:(UIView *)view
+{
     SRGLetterboxTimelineView *timelineView = [[SRGLetterboxTimelineView alloc] init];
     timelineView.translatesAutoresizingMaskIntoConstraints = NO;
     timelineView.delegate = self;
-    [self addSubview:timelineView];
+    [view addSubview:timelineView];
     self.timelineView = timelineView;
     
     if (@available(iOS 11, *)) {
         [NSLayoutConstraint activateConstraints:@[
-            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
+            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
         ]];
     }
     else {
         [NSLayoutConstraint activateConstraints:@[
-            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
+            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
         ]];
     }
     
     [NSLayoutConstraint activateConstraints:@[
-        [timelineView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [timelineView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [timelineView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [timelineView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
         self.timelineHeightConstraint = [timelineView.heightAnchor constraintEqualToConstant:0.f],
-        self.timelineToSelfBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] srgletterbox_withPriority:kBottomConstraintLesserPriority]
+        self.timelineToSelfBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:kBottomConstraintLesserPriority]
     ]];
-    
+}
+
+- (void)createPlayerViewInView:(UIView *)view
+{
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:imageView];
+    [view addSubview:imageView];
     self.imageView = imageView;
     
     UIView *playbackView = [[UIView alloc] init];
     playbackView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:playbackView];
+    [view addSubview:playbackView];
     self.playbackView = playbackView;
     
     [NSLayoutConstraint activateConstraints: @[
-        [playbackView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [playbackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [playbackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [playbackView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [playbackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [playbackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
     
     [NSLayoutConstraint activateConstraints: @[
@@ -176,35 +190,38 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     videoGravityTapChangeGestureRecognizer.enabled = NO;
     [playbackView addGestureRecognizer:videoGravityTapChangeGestureRecognizer];
     self.videoGravityTapChangeGestureRecognizer = videoGravityTapChangeGestureRecognizer;
-    
+}
+
+- (void)createControlsViewInView:(UIView *)view
+{
     SRGControlsBackgroundView *controlsBackgroundView = [[SRGControlsBackgroundView alloc] init];
     controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:controlsBackgroundView];
+    [view addSubview:controlsBackgroundView];
     self.controlsBackgroundView = controlsBackgroundView;
     
     [NSLayoutConstraint activateConstraints: @[
-        [controlsBackgroundView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [controlsBackgroundView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [controlsBackgroundView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [controlsBackgroundView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [controlsBackgroundView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [controlsBackgroundView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
     
     SRGControlsView *controlsView = [[SRGControlsView alloc] init];
     controlsView.translatesAutoresizingMaskIntoConstraints = NO;
     controlsView.delegate = self;
-    [self addSubview:controlsView];
+    [view addSubview:controlsView];
     self.controlsView = controlsView;
     
     [NSLayoutConstraint activateConstraints: @[
-        [controlsView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [controlsView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [controlsView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [controlsView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [controlsView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [controlsView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
     
     SRGAccessibilityView *accessibilityView = [[SRGAccessibilityView alloc] init];
     accessibilityView.userInteractionEnabled = YES;
     accessibilityView.translatesAutoresizingMaskIntoConstraints = NO;
     accessibilityView.accessibilityFrameView = controlsView;
-    [self addSubview:accessibilityView];
+    [view addSubview:accessibilityView];
     
     [NSLayoutConstraint activateConstraints:@[
         [accessibilityView.centerXAnchor constraintEqualToAnchor:controlsView.centerXAnchor],
@@ -212,57 +229,69 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [accessibilityView.widthAnchor constraintEqualToConstant:1.f],
         [accessibilityView.heightAnchor constraintEqualToConstant:1.f]
     ]];
-    
+}
+
+- (void)createNotificationViewInView:(UIView *)view
+{
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:notificationView];
+    [view addSubview:notificationView];
     self.notificationView = notificationView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [notificationView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [notificationView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        [notificationView.topAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
-        [notificationView.bottomAnchor constraintEqualToAnchor:timelineView.topAnchor],
+        [notificationView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [notificationView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+        [notificationView.topAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+        [notificationView.bottomAnchor constraintEqualToAnchor:self.timelineView.topAnchor],
         self.notificationHeightConstraint = [notificationView.heightAnchor constraintEqualToConstant:0.f],
-        [notificationView.topAnchor constraintEqualToAnchor:controlsBackgroundView.bottomAnchor],
-        [notificationView.topAnchor constraintEqualToAnchor:controlsView.bottomAnchor]
+        [notificationView.topAnchor constraintEqualToAnchor:self.controlsBackgroundView.bottomAnchor],
+        [notificationView.topAnchor constraintEqualToAnchor:self.controlsView.bottomAnchor]
     ]];
-    
+}
+
+- (void)createAvailabilityViewInView:(UIView *)view
+{
     SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
     availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:availabilityView];
+    [view addSubview:availabilityView];
     self.availabilityView = availabilityView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [availabilityView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
-        [availabilityView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
-        [availabilityView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
-        [availabilityView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+        [availabilityView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
+        [availabilityView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+        [availabilityView.leadingAnchor constraintEqualToAnchor:self.playbackView.leadingAnchor],
+        [availabilityView.trailingAnchor constraintEqualToAnchor:self.playbackView.trailingAnchor]
     ]];
-    
+}
+
+- (void)createContinuousPlaybackViewInView:(UIView *)view
+{
     SRGContinuousPlaybackView *continuousPlaybackView = [[SRGContinuousPlaybackView alloc] init];
     continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
     continuousPlaybackView.delegate = self;
-    [self addSubview:continuousPlaybackView];
+    [view addSubview:continuousPlaybackView];
     self.continuousPlaybackView = continuousPlaybackView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [continuousPlaybackView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
-        [continuousPlaybackView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
-        [continuousPlaybackView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
-        [continuousPlaybackView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+        [continuousPlaybackView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
+        [continuousPlaybackView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+        [continuousPlaybackView.leadingAnchor constraintEqualToAnchor:self.playbackView.leadingAnchor],
+        [continuousPlaybackView.trailingAnchor constraintEqualToAnchor:self.playbackView.trailingAnchor]
     ]];
-    
+}
+
+- (void)createErrorViewInView:(UIView *)view
+{
     SRGErrorView *errorView = [[SRGErrorView alloc] init];
     errorView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:errorView];
+    [view addSubview:errorView];
     self.errorView = errorView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [errorView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
-        [errorView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
-        [errorView.leadingAnchor constraintEqualToAnchor:playbackView.leadingAnchor],
-        [errorView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
+        [errorView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
+        [errorView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+        [errorView.leadingAnchor constraintEqualToAnchor:self.playbackView.leadingAnchor],
+        [errorView.trailingAnchor constraintEqualToAnchor:self.playbackView.trailingAnchor]
     ]];
 }
 
