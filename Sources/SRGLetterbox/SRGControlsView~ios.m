@@ -31,7 +31,21 @@
 @import MAKVONotificationCenter;
 @import SRGAppearance;
 
+static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormatter(void)
+{
+    static NSDateComponentsFormatter *s_dateComponentsFormatter;
+    static dispatch_once_t s_onceToken;
+    dispatch_once(&s_onceToken, ^{
+        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+        s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond;
+    });
+    return s_dateComponentsFormatter;
+}
+
 @interface SRGControlsView ()
+
+@property (nonatomic, weak) UIView *userInterfaceToggleActiveView;
 
 @property (nonatomic, weak) SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) SRGControlButton *backwardSeekButton;
@@ -71,80 +85,119 @@
 {
     [super createView];
     
+    [self createUserInterfaceToggleActiveViewInView:self];
+    [self createBottomControlsInView:self];
+    [self createCenterControlsInView:self];
+    
+    // Track controller changes to ensure picture in picture availability is correctly displayed.
+    @weakify(self)
+    [SRGLetterboxService.sharedService addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
+        [self setNeedsLayoutAnimated:YES];
+    }];
+}
+
+- (void)createUserInterfaceToggleActiveViewInView:(UIView *)view
+{
     UIView *userInterfaceToggleActiveView = [[UIView alloc] init];
     userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:userInterfaceToggleActiveView];
+    [view addSubview:userInterfaceToggleActiveView];
+    self.userInterfaceToggleActiveView = userInterfaceToggleActiveView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [userInterfaceToggleActiveView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [userInterfaceToggleActiveView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [userInterfaceToggleActiveView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [userInterfaceToggleActiveView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [userInterfaceToggleActiveView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [userInterfaceToggleActiveView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
     ]];
     
     UITapGestureRecognizer *hideUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideUserInterface:)];
     [userInterfaceToggleActiveView addGestureRecognizer:hideUserInterfaceTapGestureRecognizer];
-    
+}
+
+- (void)createBottomControlsInView:(UIView *)view
+{
     UIStackView *bottomStackView = [[UIStackView alloc] init];
     bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:bottomStackView];
+    [view addSubview:bottomStackView];
     self.bottomStackView = bottomStackView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [bottomStackView.topAnchor constraintEqualToAnchor:userInterfaceToggleActiveView.bottomAnchor],
-        [[bottomStackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] srgletterbox_withPriority:750],
+        [bottomStackView.topAnchor constraintEqualToAnchor:self.userInterfaceToggleActiveView.bottomAnchor],
+        [[bottomStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:750],
         [bottomStackView.heightAnchor constraintEqualToConstant:48.f]
     ]];
     
     if (@available(iOS 11, *)) {
         [NSLayoutConstraint activateConstraints:@[
-            [bottomStackView.leadingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.leadingAnchor],
-            [bottomStackView.trailingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.trailingAnchor],
-            [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:self.safeAreaLayoutGuide.bottomAnchor]
+            [bottomStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],
+            [bottomStackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor],
+            [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor]
         ]];
     }
     else {
         [NSLayoutConstraint activateConstraints:@[
-            [bottomStackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-            [bottomStackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-            [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:self.bottomAnchor]
+            [bottomStackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+            [bottomStackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+            [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor]
         ]];
     }
     
+    [self createViewModeButtonInStackView:bottomStackView];
+    [self createAirPlayButtonInStackView:bottomStackView];
+    [self createPictureInPictureButtonInStackView:bottomStackView];
+    [self createTimeSliderInStackView:bottomStackView];
+    [self createDurationLabelInStackView:bottomStackView];
+    [self createLiveLabelInStackView:bottomStackView];
+    [self createTracksButtonInStackView:bottomStackView];
+    [self createFullScreenPhantomButtonInStackView:bottomStackView];
+}
+
+- (void)createViewModeButtonInStackView:(UIStackView *)stackView
+{
     SRGViewModeButton *viewModeButton = [[SRGViewModeButton alloc] init];
     viewModeButton.tintColor = UIColor.whiteColor;
     viewModeButton.viewModeMonoscopicImage = [UIImage srg_letterboxImageNamed:@"view_mode_monoscopic"];
     viewModeButton.viewModeStereoscopicImage = [UIImage srg_letterboxImageNamed:@"view_mode_stereoscopic"];
-    [bottomStackView addArrangedSubview:viewModeButton];
+    [stackView addArrangedSubview:viewModeButton];
     self.viewModeButton = viewModeButton;
     
     [NSLayoutConstraint activateConstraints:@[
         [[viewModeButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
-    
+}
+
+- (void)createAirPlayButtonInStackView:(UIStackView *)stackView
+{
     SRGAirPlayButton *airPlayButton = [[SRGAirPlayButton alloc] init];
     airPlayButton.tintColor = UIColor.whiteColor;
     airPlayButton.audioImage = [UIImage srg_letterboxImageNamed:@"airplay_audio"];
     airPlayButton.videoImage = [UIImage srg_letterboxImageNamed:@"airplay_video"];
-    [bottomStackView addArrangedSubview:airPlayButton];
+    [stackView addArrangedSubview:airPlayButton];
     self.airPlayButton = airPlayButton;
     
     [NSLayoutConstraint activateConstraints:@[
         [[airPlayButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
-    
+}
+
+- (void)createPictureInPictureButtonInStackView:(UIStackView *)stackView
+{
     SRGPictureInPictureButton *pictureInPictureButton = [[SRGPictureInPictureButton alloc] init];
     pictureInPictureButton.tintColor = UIColor.whiteColor;
     pictureInPictureButton.startImage = [UIImage srg_letterboxImageNamed:@"picture_in_picture_start"];
     pictureInPictureButton.stopImage = [UIImage srg_letterboxImageNamed:@"picture_in_picture_stop"];
-    [bottomStackView addArrangedSubview:pictureInPictureButton];
+    [stackView addArrangedSubview:pictureInPictureButton];
     self.pictureInPictureButton = pictureInPictureButton;
     
     [NSLayoutConstraint activateConstraints:@[
         [[pictureInPictureButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
-    
+}
+
+- (void)createTimeSliderInStackView:(UIStackView *)stackView
+{
     SRGControlWrapperView *timeSliderWrapperView = [[SRGControlWrapperView alloc] init];
-    [bottomStackView addArrangedSubview:timeSliderWrapperView];
+    [stackView addArrangedSubview:timeSliderWrapperView];
     
     SRGLetterboxTimeSlider *timeSlider = [[SRGLetterboxTimeSlider alloc] init];
     timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
@@ -163,10 +216,13 @@
         [timeSlider.centerYAnchor constraintEqualToAnchor:timeSliderWrapperView.centerYAnchor],
         [timeSlider.heightAnchor constraintEqualToConstant:22.f]
     ]];
-    
+}
+
+- (void)createDurationLabelInStackView:(UIStackView *)stackView
+{
     SRGControlWrapperView *durationLabelWrapperView = [[SRGControlWrapperView alloc] init];
     durationLabelWrapperView.matchingFirstSubviewHidden = YES;
-    [bottomStackView addArrangedSubview:durationLabelWrapperView];
+    [stackView addArrangedSubview:durationLabelWrapperView];
     self.durationLabelWrapperView = durationLabelWrapperView;
     
     UILabel *durationLabel = [[UILabel alloc] init];
@@ -182,10 +238,13 @@
         [durationLabel.trailingAnchor constraintEqualToAnchor:durationLabelWrapperView.trailingAnchor constant:-11.f],
         [durationLabel.centerYAnchor constraintEqualToAnchor:durationLabelWrapperView.centerYAnchor]
     ]];
-    
+}
+
+- (void)createLiveLabelInStackView:(UIStackView *)stackView
+{
     SRGControlWrapperView *liveLabelWrapperView = [[SRGControlWrapperView alloc] init];
     liveLabelWrapperView.matchingFirstSubviewHidden = YES;
-    [bottomStackView addArrangedSubview:liveLabelWrapperView];
+    [stackView addArrangedSubview:liveLabelWrapperView];
     self.liveLabelWrapperView = liveLabelWrapperView;
     
     SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
@@ -198,49 +257,62 @@
         [liveLabel.trailingAnchor constraintEqualToAnchor:liveLabelWrapperView.trailingAnchor constant:-11.f],
         [liveLabel.centerYAnchor constraintEqualToAnchor:liveLabelWrapperView.centerYAnchor]
     ]];
-    
+}
+
+- (void)createTracksButtonInStackView:(UIStackView *)stackView
+{
     SRGTracksButton *tracksButton = [[SRGTracksButton alloc] init];
     tracksButton.tintColor = UIColor.whiteColor;
     tracksButton.image = [UIImage srg_letterboxImageNamed:@"subtitles_off"];
     tracksButton.selectedImage = [UIImage srg_letterboxImageNamed:@"subtitles_on"];
     tracksButton.delegate = self;
-    [bottomStackView addArrangedSubview:tracksButton];
+    [stackView addArrangedSubview:tracksButton];
     self.tracksButton = tracksButton;
     
     [NSLayoutConstraint activateConstraints:@[
         [[tracksButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
-    
+}
+
+- (void)createFullScreenPhantomButtonInStackView:(UIStackView *)stackView
+{
     // Always hidden from view. Only used to define the frame of the real full screen button, injected at the top of
     // the view hierarchy at runtime.
     SRGFullScreenButton *fullScreenPhantomButton = [[SRGFullScreenButton alloc] init];
     fullScreenPhantomButton.alpha = 0.f;
-    [bottomStackView addArrangedSubview:fullScreenPhantomButton];
+    [stackView addArrangedSubview:fullScreenPhantomButton];
     self.fullScreenPhantomButton = fullScreenPhantomButton;
     
     [NSLayoutConstraint activateConstraints:@[
         [[fullScreenPhantomButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
-    
+}
+
+- (void)createCenterControlsInView:(UIView *)view
+{
+    [self createPlaybackButtonInView:view];
+    [self createBackwardSeekButtonInView:view];
+    [self createForwardSeekButtonInView:view];
+    [self createStartOverButtonInView:view];
+    [self createSkipToLiveButtonInView:view];
+}
+
+- (void)createPlaybackButtonInView:(UIView *)view
+{
     SRGLetterboxPlaybackButton *playbackButton = [[SRGLetterboxPlaybackButton alloc] init];
     playbackButton.translatesAutoresizingMaskIntoConstraints = NO;
     playbackButton.tintColor = UIColor.whiteColor;
-    [self addSubview:playbackButton];
+    [view addSubview:playbackButton];
     self.playbackButton = playbackButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [playbackButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
-        [playbackButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor]
+        [playbackButton.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [playbackButton.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]
     ]];
-    
-    static NSDateComponentsFormatter *s_dateComponentsFormatter;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-        s_dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-        s_dateComponentsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
-        s_dateComponentsFormatter.allowedUnits = NSCalendarUnitSecond;
-    });
-    
+}
+
+- (void)createBackwardSeekButtonInView:(UIView *)view
+{
     SRGControlButton *backwardSeekButton = [[SRGControlButton alloc] init];
     backwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
     [backwardSeekButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
@@ -248,15 +320,18 @@
     backwardSeekButton.alpha = 0.f;
     [backwardSeekButton addTarget:self action:@selector(skipBackward:) forControlEvents:UIControlEventTouchUpInside];
     backwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ backward", @"Seek backward button label with a custom time range"),
-                                             [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
-    [self addSubview:backwardSeekButton];
+                                             [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
+    [view addSubview:backwardSeekButton];
     self.backwardSeekButton = backwardSeekButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [backwardSeekButton.centerYAnchor constraintEqualToAnchor:playbackButton.centerYAnchor],
-        self.horizontalSpacingBackwardToPlaybackConstraint = [playbackButton.leadingAnchor constraintEqualToAnchor:backwardSeekButton.trailingAnchor],
+        [backwardSeekButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingBackwardToPlaybackConstraint = [self.playbackButton.leadingAnchor constraintEqualToAnchor:backwardSeekButton.trailingAnchor],
     ]];
-    
+}
+
+- (void)createForwardSeekButtonInView:(UIView *)view
+{
     SRGControlButton *forwardSeekButton = [[SRGControlButton alloc] init];
     forwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
     [forwardSeekButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
@@ -264,15 +339,18 @@
     forwardSeekButton.alpha = 0.f;
     [forwardSeekButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
     forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
-                                            [s_dateComponentsFormatter stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
-    [self addSubview:forwardSeekButton];
+                                            [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
+    [view addSubview:forwardSeekButton];
     self.forwardSeekButton = forwardSeekButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [forwardSeekButton.centerYAnchor constraintEqualToAnchor:playbackButton.centerYAnchor],
-        self.horizontalSpacingPlaybackToForwardConstraint = [forwardSeekButton.leadingAnchor constraintEqualToAnchor:playbackButton.trailingAnchor],
+        [forwardSeekButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingPlaybackToForwardConstraint = [forwardSeekButton.leadingAnchor constraintEqualToAnchor:self.playbackButton.trailingAnchor]
     ]];
-    
+}
+
+- (void)createStartOverButtonInView:(UIView *)view
+{
     SRGControlButton *startOverButton = [[SRGControlButton alloc] init];
     startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
     [startOverButton setImage:[UIImage srg_letterboxImageNamed:@"start_over"] forState:UIControlStateNormal];
@@ -280,14 +358,17 @@
     startOverButton.alpha = 0.f;
     [startOverButton addTarget:self action:@selector(startOver:) forControlEvents:UIControlEventTouchUpInside];
     startOverButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Start over", @"Start over label");
-    [self addSubview:startOverButton];
+    [view addSubview:startOverButton];
     self.startOverButton = startOverButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [startOverButton.centerYAnchor constraintEqualToAnchor:backwardSeekButton.centerYAnchor],
-        self.horizontalSpacingStartOverToBackwardConstraint = [backwardSeekButton.leadingAnchor constraintEqualToAnchor:startOverButton.trailingAnchor],
+        [startOverButton.centerYAnchor constraintEqualToAnchor:self.backwardSeekButton.centerYAnchor],
+        self.horizontalSpacingStartOverToBackwardConstraint = [self.backwardSeekButton.leadingAnchor constraintEqualToAnchor:startOverButton.trailingAnchor]
     ]];
-    
+}
+
+- (void)createSkipToLiveButtonInView:(UIView *)view
+{
     SRGControlButton *skipToLiveButton = [[SRGControlButton alloc] init];
     skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
     [skipToLiveButton setImage:[UIImage srg_letterboxImageNamed:@"back_live"] forState:UIControlStateNormal];
@@ -295,20 +376,13 @@
     skipToLiveButton.alpha = 0.f;
     [skipToLiveButton addTarget:self action:@selector(skipToLive:) forControlEvents:UIControlEventTouchUpInside];
     skipToLiveButton.accessibilityLabel = SRGLetterboxAccessibilityLocalizedString(@"Back to live", @"Back to live label");
-    [self addSubview:skipToLiveButton];
+    [view addSubview:skipToLiveButton];
     self.skipToLiveButton = skipToLiveButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [skipToLiveButton.centerYAnchor constraintEqualToAnchor:forwardSeekButton.centerYAnchor],
-        self.horizontalSpacingForwardToSkipToLiveConstraint = [skipToLiveButton.leadingAnchor constraintEqualToAnchor:forwardSeekButton.trailingAnchor],
+        [skipToLiveButton.centerYAnchor constraintEqualToAnchor:self.forwardSeekButton.centerYAnchor],
+        self.horizontalSpacingForwardToSkipToLiveConstraint = [skipToLiveButton.leadingAnchor constraintEqualToAnchor:self.forwardSeekButton.trailingAnchor],
     ]];
-    
-    // Track controller changes to ensure picture in picture availability is correctly displayed.
-    @weakify(self)
-    [SRGLetterboxService.sharedService addObserver:self keyPath:@keypath(SRGLetterboxService.new, controller) options:0 block:^(MAKVONotification *notification) {
-        @strongify(self)
-        [self setNeedsLayoutAnimated:YES];
-    }];
 }
 
 #pragma mark Getters and setters
