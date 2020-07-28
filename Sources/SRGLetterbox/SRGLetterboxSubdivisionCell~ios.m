@@ -197,7 +197,7 @@
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentFill;
     stackView.distribution = UIStackViewDistributionFill;
-    [self.contentView addSubview:stackView];
+    [view addSubview:stackView];
     
     [NSLayoutConstraint activateConstraints:@[
         [[stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:6.f] srgletterbox_withPriority:999],

@@ -41,86 +41,129 @@
 {
     [super createView];
     
+    [self createImageBackgroundInView:self];
+    [self creatDimmingViewInView:self];
+    [self createMainLayoutInView:self];
+}
+
+- (void)createImageBackgroundInView:(UIView *)view
+{
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:imageView];
+    [view addSubview:imageView];
     self.imageView = imageView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [imageView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [imageView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        [imageView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [imageView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [imageView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [imageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [imageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [imageView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
-    
+}
+
+- (void)creatDimmingViewInView:(UIView *)view
+{
     UIView *dimmingView = [[UIView alloc] init];
     dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
-    [self addSubview:dimmingView];
+    [view addSubview:dimmingView];
     
     [NSLayoutConstraint activateConstraints:@[
-        [dimmingView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [dimmingView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        [dimmingView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [dimmingView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [dimmingView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [dimmingView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [dimmingView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [dimmingView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
-    
+}
+
+- (void)createMainLayoutInView:(UIView *)view
+{
     UIStackView *stackView = [[UIStackView alloc] init];
     stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentFill;
     stackView.distribution = UIStackViewDistributionFill;
     stackView.spacing = 2.f;
-    [self addSubview:stackView];
+    [view addSubview:stackView];
     
     [NSLayoutConstraint activateConstraints:@[
-        [stackView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [stackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+        [stackView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor]
     ]];
     
     if (@available(iOS 11, *)) {
         [NSLayoutConstraint activateConstraints:@[
-            [stackView.leadingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.leadingAnchor constant:16.f],
-            [stackView.trailingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.trailingAnchor constant:-16.f]
+            [stackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor constant:16.f],
+            [stackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor constant:-16.f]
         ]];
     }
     else {
         [NSLayoutConstraint activateConstraints:@[
-            [stackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:16.f],
-            [stackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-16.f]
+            [stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:16.f],
+            [stackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-16.f]
         ]];
     }
     
     UIView *topSpacerView = [[UIView alloc] init];
     [stackView addArrangedSubview:topSpacerView];
     
+    [self createIntroLabelInStackView:stackView];
+    [self createTitleLabelInStackView:stackView];
+    [self createSubtitleLabelInStackView:stackView];
+    [self createFixedSpacerWithHeight:6.f inStackView:stackView];
+    [self createRemainingTimeButtonInStackView:stackView];
+    [self createFixedSpacerWithHeight:6.f inStackView:stackView];
+    [self createCancelButtonInStackView:stackView];
+    
+    UIView *bottomSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:bottomSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
+    ]];
+}
+
+- (void)createFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
+{
+    UIView *fixedSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:fixedSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [fixedSpacerView.heightAnchor constraintEqualToConstant:height]
+    ]];
+}
+
+- (void)createIntroLabelInStackView:(UIStackView *)stackView
+{
     UILabel *introLabel = [[UILabel alloc] init];
     introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
     introLabel.textColor = UIColor.lightGrayColor;
     introLabel.textAlignment = NSTextAlignmentCenter;
     [stackView addArrangedSubview:introLabel];
     self.introLabel = introLabel;
-    
+}
+
+- (void)createTitleLabelInStackView:(UIStackView *)stackView
+{
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.textColor = UIColor.whiteColor;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [stackView addArrangedSubview:titleLabel];
     self.titleLabel = titleLabel;
-    
+}
+
+- (void)createSubtitleLabelInStackView:(UIStackView *)stackView
+{
     UILabel *subtitleLabel = [[UILabel alloc] init];
     subtitleLabel.textColor = UIColor.lightGrayColor;
     subtitleLabel.textAlignment = NSTextAlignmentCenter;
     [stackView addArrangedSubview:subtitleLabel];
     self.subtitleLabel = subtitleLabel;
-    
-    UIView *fixedSpacerView1 = [[UIView alloc] init];
-    [stackView addArrangedSubview:fixedSpacerView1];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [fixedSpacerView1.heightAnchor constraintEqualToConstant:6.f]
-    ]];
-    
+}
+
+- (void)createRemainingTimeButtonInStackView:(UIStackView *)stackView
+{
     UIStackView *remainingTimeButtonStackView = [[UIStackView alloc] init];
     remainingTimeButtonStackView.axis = UILayoutConstraintAxisHorizontal;
     remainingTimeButtonStackView.alignment = UIStackViewAlignmentFill;
@@ -148,14 +191,10 @@
     [NSLayoutConstraint activateConstraints:@[
         [remainingTimeButtonLeadingSpacerView.widthAnchor constraintEqualToAnchor:remainingTimeButtonTrailingSpacerView.widthAnchor]
     ]];
-    
-    UIView *fixedSpacerView2 = [[UIView alloc] init];
-    [stackView addArrangedSubview:fixedSpacerView2];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [fixedSpacerView2.heightAnchor constraintEqualToConstant:6.f]
-    ]];
-    
+}
+
+- (void)createCancelButtonInStackView:(UIStackView *)stackView
+{
     UIStackView *cancelButtonStackView = [[UIStackView alloc] init];
     cancelButtonStackView.axis = UILayoutConstraintAxisHorizontal;
     cancelButtonStackView.alignment = UIStackViewAlignmentFill;
@@ -178,13 +217,6 @@
     
     [NSLayoutConstraint activateConstraints:@[
         [cancelButtonLeadingSpacerView.widthAnchor constraintEqualToAnchor:cancelButtonTrailingSpacerView.widthAnchor]
-    ]];
-    
-    UIView *bottomSpacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:bottomSpacerView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
     ]];
 }
 
