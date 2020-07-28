@@ -97,138 +97,10 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     tapGestureRecognizer.allowedPressTypes = @[ @(UIPressTypeMenu) ];
     [view addGestureRecognizer:tapGestureRecognizer];
     
-    UIImageView *backgroundImageView = [[UIImageView alloc] init];
-    backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    [view addSubview:backgroundImageView];
-    self.backgroundImageView = backgroundImageView;
-    
-    UIStackView *stackView = [[UIStackView alloc] init];
-    stackView.translatesAutoresizingMaskIntoConstraints = NO;
-    stackView.axis = UILayoutConstraintAxisVertical;
-    stackView.alignment = UIStackViewAlignmentLeading;
-    stackView.distribution = UIStackViewDistributionFill;
-    stackView.spacing = 20.f;
-    [view addSubview:stackView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [stackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:55.f],
-        [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-55.f],
-        [stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:55.f],
-        [stackView.widthAnchor constraintEqualToConstant:480.f]
-    ]];
-    
-    SRGImageButton *thumbnailButton = [[SRGImageButton alloc] init];
-    [thumbnailButton addTarget:self action:@selector(restart:) forControlEvents:UIControlEventPrimaryActionTriggered];
-    [stackView addArrangedSubview:thumbnailButton];
-    self.thumbnailButton = thumbnailButton;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [thumbnailButton.widthAnchor constraintEqualToAnchor:stackView.widthAnchor],
-        [thumbnailButton.widthAnchor constraintEqualToAnchor:thumbnailButton.heightAnchor multiplier:16.f / 9.f]
-    ]];
-    
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.numberOfLines = 2;
-    titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
-    titleLabel.textColor = UIColor.whiteColor;
-    [stackView addArrangedSubview:titleLabel];
-    self.titleLabel = titleLabel;
-    
-    UILabel *subtitleLabel = [[UILabel alloc] init];
-    subtitleLabel.numberOfLines = 2;
-    subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    subtitleLabel.textColor = UIColor.lightGrayColor;
-    [stackView addArrangedSubview:subtitleLabel];
-    self.subtitleLabel = subtitleLabel;
-    
-    UIView *spacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:spacerView];
-    
-    UIStackView *upcomingStackView = [[UIStackView alloc] init];
-    upcomingStackView.translatesAutoresizingMaskIntoConstraints = NO;
-    upcomingStackView.axis = UILayoutConstraintAxisVertical;
-    upcomingStackView.alignment = UIStackViewAlignmentLeading;
-    upcomingStackView.distribution = UIStackViewDistributionFill;
-    upcomingStackView.spacing = 20.f;
-    [view addSubview:upcomingStackView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [upcomingStackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:55.f],
-        [upcomingStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-55.f],
-        [upcomingStackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-55.f],
-        [upcomingStackView.widthAnchor constraintEqualToConstant:880.f]
-    ]];
-    
-    SRGImageButton *upcomingThumbnailButton = [[SRGImageButton alloc] init];
-    [upcomingThumbnailButton addTarget:self action:@selector(engage:) forControlEvents:UIControlEventPrimaryActionTriggered];
-    [upcomingStackView addArrangedSubview:upcomingThumbnailButton];
-    self.upcomingThumbnailButton = upcomingThumbnailButton;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [upcomingThumbnailButton.widthAnchor constraintEqualToAnchor:upcomingStackView.widthAnchor],
-        [upcomingThumbnailButton.widthAnchor constraintEqualToAnchor:upcomingThumbnailButton.heightAnchor multiplier:16.f / 9.f]
-    ]];
-    
-    UILabel *upcomingTitleLabel = [[UILabel alloc] init];
-    upcomingTitleLabel.numberOfLines = 2;
-    upcomingTitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
-    upcomingTitleLabel.textColor = UIColor.whiteColor;
-    [upcomingStackView addArrangedSubview:upcomingTitleLabel];
-    self.upcomingTitleLabel = upcomingTitleLabel;
-    
-    UILabel *upcomingSubtitleLabel = [[UILabel alloc] init];
-    upcomingSubtitleLabel.numberOfLines = 2;
-    upcomingSubtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    upcomingSubtitleLabel.textColor = UIColor.lightGrayColor;
-    [upcomingStackView addArrangedSubview:upcomingSubtitleLabel];
-    self.upcomingSubtitleLabel = upcomingSubtitleLabel;
-    
-    UILabel *upcomingSummaryLabel = [[UILabel alloc] init];
-    upcomingSummaryLabel.numberOfLines = 3;
-    upcomingSummaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
-    upcomingSummaryLabel.textColor = UIColor.whiteColor;
-    [upcomingStackView addArrangedSubview:upcomingSummaryLabel];
-    self.upcomingSummaryLabel = upcomingSummaryLabel;
-    
-    UIView *upcomingMiddleSpacerView = [[UIView alloc] init];
-    [upcomingStackView addArrangedSubview:upcomingMiddleSpacerView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [upcomingMiddleSpacerView.heightAnchor constraintEqualToConstant:10.f]
-    ]];
-    
-    UILabel *remainingTimeLabel = [[UILabel alloc] init];
-    remainingTimeLabel.numberOfLines = 3;
-    remainingTimeLabel.font = [UIFont srg_mediumFontWithSize:38.f];
-    remainingTimeLabel.textColor = UIColor.srg_progressRedColor;
-    [upcomingStackView addArrangedSubview:remainingTimeLabel];
-    self.remainingTimeLabel = remainingTimeLabel;
-    
-    UIView *upcomingBottomSpacerView = [[UIView alloc] init];
-    [upcomingStackView addArrangedSubview:upcomingBottomSpacerView];
-    
-    // Navigation here requires focus guides. For focus to be able to move from a focused button (slightly larger than
-    // its official frame), we need the focus guides (each associated with the corresponding button) to be anchored with
-    // an offset so that the focus engine can find them.
-    UIFocusGuide *focusGuide1 = [[UIFocusGuide alloc] init];
-    [view addLayoutGuide:focusGuide1];
-    [NSLayoutConstraint activateConstraints:@[
-        [focusGuide1.leadingAnchor constraintEqualToAnchor:thumbnailButton.trailingAnchor constant:30.f],
-        [focusGuide1.topAnchor constraintEqualToAnchor:thumbnailButton.topAnchor],
-        [focusGuide1.bottomAnchor constraintEqualToAnchor:thumbnailButton.bottomAnchor],
-        [focusGuide1.widthAnchor constraintEqualToConstant:10.f]
-    ]];
-    focusGuide1.preferredFocusEnvironments = @[ upcomingThumbnailButton ];
-    
-    UIFocusGuide *focusGuide2 = [[UIFocusGuide alloc] init];
-    [view addLayoutGuide:focusGuide2];
-    [NSLayoutConstraint activateConstraints:@[
-        [focusGuide2.trailingAnchor constraintEqualToAnchor:upcomingThumbnailButton.leadingAnchor constant:-30.f],
-        [focusGuide2.topAnchor constraintEqualToAnchor:upcomingThumbnailButton.topAnchor],
-        [focusGuide2.bottomAnchor constraintEqualToAnchor:upcomingThumbnailButton.bottomAnchor],
-        [focusGuide2.widthAnchor constraintEqualToConstant:10.f]
-    ]];
-    focusGuide2.preferredFocusEnvironments = @[ thumbnailButton ];
+    [self layoutBackgroundInView:view];
+    [self layoutStackViewInView:view];
+    [self layoutUpcomingStackViewInView:view];
+    [self layoutFocusGuidesInView:view];
 }
 
 - (void)viewDidLoad
@@ -259,6 +131,188 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     if (self.movingFromParentViewController || self.beingDismissed) {
         self.timer = nil;
     }
+}
+
+#pragma mark Layout helpers
+
+- (void)layoutBackgroundInView:(UIView *)view
+{
+    UIImageView *backgroundImageView = [[UIImageView alloc] init];
+    backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:backgroundImageView];
+    self.backgroundImageView = backgroundImageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [backgroundImageView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [backgroundImageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [backgroundImageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [backgroundImageView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
+    ]];
+}
+
+- (void)layoutFlexibleSpacerInStackView:(UIStackView *)stackView
+{
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
+}
+
+- (void)layoutFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
+{
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [spacerView.heightAnchor constraintEqualToConstant:height]
+    ]];
+}
+
+- (void)layoutStackViewInView:(UIView *)view
+{
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.alignment = UIStackViewAlignmentLeading;
+    stackView.distribution = UIStackViewDistributionFill;
+    stackView.spacing = 20.f;
+    [view addSubview:stackView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [stackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:55.f],
+        [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-55.f],
+        [stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:55.f],
+        [stackView.widthAnchor constraintEqualToConstant:480.f]
+    ]];
+    
+    [self layoutThumbnailButtonInStackView:stackView];
+    [self layoutDescriptionInStackView:stackView];
+    [self layoutFlexibleSpacerInStackView:stackView];
+}
+
+- (void)layoutThumbnailButtonInStackView:(UIStackView *)stackView
+{
+    SRGImageButton *thumbnailButton = [[SRGImageButton alloc] init];
+    [thumbnailButton addTarget:self action:@selector(restart:) forControlEvents:UIControlEventPrimaryActionTriggered];
+    [stackView addArrangedSubview:thumbnailButton];
+    self.thumbnailButton = thumbnailButton;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [thumbnailButton.widthAnchor constraintEqualToAnchor:stackView.widthAnchor],
+        [thumbnailButton.widthAnchor constraintEqualToAnchor:thumbnailButton.heightAnchor multiplier:16.f / 9.f]
+    ]];
+}
+
+- (void)layoutDescriptionInStackView:(UIStackView *)stackView
+{
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.numberOfLines = 2;
+    titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    titleLabel.textColor = UIColor.whiteColor;
+    [stackView addArrangedSubview:titleLabel];
+    self.titleLabel = titleLabel;
+    
+    UILabel *subtitleLabel = [[UILabel alloc] init];
+    subtitleLabel.numberOfLines = 2;
+    subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    subtitleLabel.textColor = UIColor.lightGrayColor;
+    [stackView addArrangedSubview:subtitleLabel];
+    self.subtitleLabel = subtitleLabel;
+}
+
+- (void)layoutUpcomingStackViewInView:(UIView *)view
+{
+    UIStackView *upcomingStackView = [[UIStackView alloc] init];
+    upcomingStackView.translatesAutoresizingMaskIntoConstraints = NO;
+    upcomingStackView.axis = UILayoutConstraintAxisVertical;
+    upcomingStackView.alignment = UIStackViewAlignmentLeading;
+    upcomingStackView.distribution = UIStackViewDistributionFill;
+    upcomingStackView.spacing = 20.f;
+    [view addSubview:upcomingStackView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [upcomingStackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:55.f],
+        [upcomingStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-55.f],
+        [upcomingStackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-55.f],
+        [upcomingStackView.widthAnchor constraintEqualToConstant:880.f]
+    ]];
+    
+    [self layoutUpcomingThumbnailButtonInStackView:upcomingStackView];
+    [self layoutUpcomingDescriptionInStackView:upcomingStackView];
+    [self layoutFixedSpacerWithHeight:10.f inStackView:upcomingStackView];
+    [self layoutRemainingTimeLabelInStackView:upcomingStackView];
+    [self layoutFlexibleSpacerInStackView:upcomingStackView];
+}
+
+- (void)layoutUpcomingThumbnailButtonInStackView:(UIStackView *)stackView
+{
+    SRGImageButton *upcomingThumbnailButton = [[SRGImageButton alloc] init];
+    [upcomingThumbnailButton addTarget:self action:@selector(engage:) forControlEvents:UIControlEventPrimaryActionTriggered];
+    [stackView addArrangedSubview:upcomingThumbnailButton];
+    self.upcomingThumbnailButton = upcomingThumbnailButton;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [upcomingThumbnailButton.widthAnchor constraintEqualToAnchor:stackView.widthAnchor],
+        [upcomingThumbnailButton.widthAnchor constraintEqualToAnchor:upcomingThumbnailButton.heightAnchor multiplier:16.f / 9.f]
+    ]];
+}
+
+- (void)layoutUpcomingDescriptionInStackView:(UIStackView *)stackView
+{
+    UILabel *upcomingTitleLabel = [[UILabel alloc] init];
+    upcomingTitleLabel.numberOfLines = 2;
+    upcomingTitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    upcomingTitleLabel.textColor = UIColor.whiteColor;
+    [stackView addArrangedSubview:upcomingTitleLabel];
+    self.upcomingTitleLabel = upcomingTitleLabel;
+    
+    UILabel *upcomingSubtitleLabel = [[UILabel alloc] init];
+    upcomingSubtitleLabel.numberOfLines = 2;
+    upcomingSubtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    upcomingSubtitleLabel.textColor = UIColor.lightGrayColor;
+    [stackView addArrangedSubview:upcomingSubtitleLabel];
+    self.upcomingSubtitleLabel = upcomingSubtitleLabel;
+    
+    UILabel *upcomingSummaryLabel = [[UILabel alloc] init];
+    upcomingSummaryLabel.numberOfLines = 3;
+    upcomingSummaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    upcomingSummaryLabel.textColor = UIColor.whiteColor;
+    [stackView addArrangedSubview:upcomingSummaryLabel];
+    self.upcomingSummaryLabel = upcomingSummaryLabel;
+}
+
+- (void)layoutRemainingTimeLabelInStackView:(UIStackView *)stackView
+{
+    UILabel *remainingTimeLabel = [[UILabel alloc] init];
+    remainingTimeLabel.numberOfLines = 3;
+    remainingTimeLabel.font = [UIFont srg_mediumFontWithSize:38.f];
+    remainingTimeLabel.textColor = UIColor.srg_progressRedColor;
+    [stackView addArrangedSubview:remainingTimeLabel];
+    self.remainingTimeLabel = remainingTimeLabel;
+}
+
+- (void)layoutFocusGuidesInView:(UIView *)view
+{
+    // Navigation here requires focus guides. For focus to be able to move from a focused button (slightly larger than
+    // its official frame), we need the focus guides (each associated with the corresponding button) to be anchored with
+    // an offset so that the focus engine can find them.
+    UIFocusGuide *focusGuide1 = [[UIFocusGuide alloc] init];
+    [view addLayoutGuide:focusGuide1];
+    [NSLayoutConstraint activateConstraints:@[
+        [focusGuide1.leadingAnchor constraintEqualToAnchor:self.thumbnailButton.trailingAnchor constant:30.f],
+        [focusGuide1.topAnchor constraintEqualToAnchor:self.thumbnailButton.topAnchor],
+        [focusGuide1.bottomAnchor constraintEqualToAnchor:self.thumbnailButton.bottomAnchor],
+        [focusGuide1.widthAnchor constraintEqualToConstant:10.f]
+    ]];
+    focusGuide1.preferredFocusEnvironments = @[ self.upcomingThumbnailButton ];
+    
+    UIFocusGuide *focusGuide2 = [[UIFocusGuide alloc] init];
+    [view addLayoutGuide:focusGuide2];
+    [NSLayoutConstraint activateConstraints:@[
+        [focusGuide2.trailingAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.leadingAnchor constant:-30.f],
+        [focusGuide2.topAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.topAnchor],
+        [focusGuide2.bottomAnchor constraintEqualToAnchor:self.upcomingThumbnailButton.bottomAnchor],
+        [focusGuide2.widthAnchor constraintEqualToConstant:10.f]
+    ]];
+    focusGuide2.preferredFocusEnvironments = @[ self.thumbnailButton ];
 }
 
 #pragma mark UI
