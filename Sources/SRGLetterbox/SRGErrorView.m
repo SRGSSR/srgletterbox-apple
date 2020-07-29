@@ -43,6 +43,18 @@
     self.retryTapGestureRecognizer = retryTapGestureRecognizer;
 #endif
     
+    [self createMainStackViewInView:self];
+}
+
+- (UIView *)createSpacerViewInStackView:(UIStackView *)stackView
+{
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
+    return spacerView;
+}
+
+- (void)createMainStackViewInView:(UIView *)view
+{
     UIStackView *stackView = [[UIStackView alloc] init];
     stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
@@ -53,7 +65,7 @@
 #else
     stackView.spacing = 8.f;
 #endif
-    [self addSubview:stackView];
+    [view addSubview:stackView];
     
 #if TARGET_OS_TV
     static const CGFloat kVerticalMargin = 60.f;
@@ -64,15 +76,27 @@
 #endif
 
     [NSLayoutConstraint activateConstraints:@[
-        [stackView.topAnchor constraintEqualToAnchor:self.topAnchor constant:kVerticalMargin],
-        [stackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-kVerticalMargin],
-        [stackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:kHorizontalMargin],
-        [stackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-kHorizontalMargin]
+        [stackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:kVerticalMargin],
+        [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-kVerticalMargin],
+        [stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:kHorizontalMargin],
+        [stackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-kHorizontalMargin]
     ]];
     
-    UIView *topSpacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:topSpacerView];
+    UIView *topSpacerView = [self createSpacerViewInStackView:stackView];
+    [self createImageViewInStackView:stackView];
+    [self createMessageLabelInStackView:stackView];
+#if TARGET_OS_IOS
+    [self createInstructionsLabelInStackView:stackView];
+#endif
+    UIView *bottomSpacerView = [self createSpacerViewInStackView:stackView];
     
+    [NSLayoutConstraint activateConstraints:@[
+        [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
+    ]];
+}
+
+- (void)createImageViewInStackView:(UIStackView *)stackView
+{
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.tintColor = UIColor.whiteColor;
@@ -88,15 +112,22 @@
     [NSLayoutConstraint activateConstraints:@[
         [[imageView.heightAnchor constraintEqualToConstant:kImageHeight] srgletterbox_withPriority:999]
     ]];
-    
+}
+
+- (void)createMessageLabelInStackView:(UIStackView *)stackView
+{
     UILabel *messageLabel = [[UILabel alloc] init];
     messageLabel.numberOfLines = 3;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.textAlignment = NSTextAlignmentCenter;
     [stackView addArrangedSubview:messageLabel];
     self.messageLabel = messageLabel;
-    
+}
+
 #if TARGET_OS_IOS
+
+- (void)createInstructionsLabelInStackView:(UIStackView *)stackView
+{
     UILabel *instructionsLabel = [[UILabel alloc] init];
     instructionsLabel.numberOfLines = 1;
     instructionsLabel.textColor = [UIColor srg_colorFromHexadecimalString:@"#aaaaaa"];
@@ -104,15 +135,9 @@
     instructionsLabel.accessibilityTraits = UIAccessibilityTraitButton;
     [stackView addArrangedSubview:instructionsLabel];
     self.instructionsLabel = instructionsLabel;
-#endif
-    
-    UIView *bottomSpacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:bottomSpacerView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
-    ]];
 }
+
+#endif
 
 #pragma mark Overrides
 

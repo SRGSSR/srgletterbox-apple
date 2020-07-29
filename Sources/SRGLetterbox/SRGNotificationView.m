@@ -85,6 +85,8 @@ static const CGFloat kMargin = 8.f;
     ]];
 }
 
+#pragma mark Overrides
+
 - (void)contentSizeCategoryDidChange
 {
     [super contentSizeCategoryDidChange];
