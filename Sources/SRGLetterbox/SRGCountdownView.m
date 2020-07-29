@@ -18,13 +18,17 @@
 
 static const NSInteger SRGCountdownViewDaysLimit = 100;
 
+#if TARGET_OS_TV
+    static const CGFloat kTitleHeight = 40.f;
+#else
+    static const CGFloat kTitleHeight = 30.f;
+#endif
+
 @interface SRGCountdownView ()
 
 @property (nonatomic, readonly) NSTimeInterval currentRemainingTimeInterval;
 
-@property (nonatomic, weak) UIStackView *remainingTimeStackView;
-
-@property (nonatomic) NSArray<UIStackView *> *digitsStackViews;
+@property (nonatomic, weak) UIStackView *mainStackView;
 
 @property (nonatomic, weak) UIStackView *daysStackView;
 
@@ -48,6 +52,13 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 @property (nonatomic, weak) UILabel *seconds0Label;
 @property (nonatomic, weak) UILabel *secondsTitleLabel;
 
+// Spacers surrounding the countdown itself
+@property (nonatomic, weak) UIView *secondsTopSpacerView;
+@property (nonatomic, weak) UIView *secondsBottomSpacerView;
+@property (nonatomic, weak) UIView *mainLeadingSpacerView;
+@property (nonatomic, weak) UIView *mainTrailingSpacerView;
+
+@property (nonatomic) NSArray<UIStackView *> *digitsStackViews;
 @property (nonatomic) NSArray<UILabel *> *colonLabels;
 
 @property (nonatomic) NSArray<NSLayoutConstraint *> *widthConstraints;
@@ -86,69 +97,107 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
 {
     [super createView];
     
-    UIView *accessibilityFrameView = [[UIView alloc] init];
-    accessibilityFrameView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:accessibilityFrameView];
-    self.accessibilityFrameView = accessibilityFrameView;
+    [self createMainStackViewInView:self];
+    [self createMessageLabelInView:self];
+    [self createRemainingTimeLabelInView:self];
+    [self createAccessibilityFrameInView:self];
+}
+
+- (UIView *)createFlexibleSpacerInStackView:(UIStackView *)stackView
+{
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
+    return spacerView;
+}
+
+- (void)createMainStackViewInView:(UIView *)view
+{
+    self.digitsStackViews = [NSArray array];
+    self.colonLabels = [NSArray array];
+    self.widthConstraints = [NSArray array];
+    self.heightConstraints = [NSArray array];
     
-    UIStackView *remainingTimeStackView = [[UIStackView alloc] init];
-    remainingTimeStackView.translatesAutoresizingMaskIntoConstraints = NO;
-    remainingTimeStackView.axis = UILayoutConstraintAxisHorizontal;
-    remainingTimeStackView.alignment = UIStackViewAlignmentFill;
-    remainingTimeStackView.distribution = UIStackViewDistributionFill;
-    remainingTimeStackView.spacing = 3.f;
-    [self addSubview:remainingTimeStackView];
-    self.remainingTimeStackView = remainingTimeStackView;
+    UIStackView *mainStackView = [[UIStackView alloc] init];
+    mainStackView.translatesAutoresizingMaskIntoConstraints = NO;
+    mainStackView.axis = UILayoutConstraintAxisHorizontal;
+    mainStackView.alignment = UIStackViewAlignmentFill;
+    mainStackView.distribution = UIStackViewDistributionFill;
+    mainStackView.spacing = 3.f;
+    [view addSubview:mainStackView];
+    self.mainStackView = mainStackView;
     
     if (@available(iOS 11, *)) {
         [NSLayoutConstraint activateConstraints:@[
-            [remainingTimeStackView.topAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.topAnchor],
-            [remainingTimeStackView.bottomAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.bottomAnchor],
-            [remainingTimeStackView.leadingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.leadingAnchor],
-            [remainingTimeStackView.trailingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.trailingAnchor]
+            [mainStackView.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
+            [mainStackView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor],
+            [mainStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],
+            [mainStackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor]
         ]];
     }
     else {
         [NSLayoutConstraint activateConstraints:@[
-            [remainingTimeStackView.topAnchor constraintEqualToAnchor:self.topAnchor],
-            [remainingTimeStackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-            [remainingTimeStackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-            [remainingTimeStackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+            [mainStackView.topAnchor constraintEqualToAnchor:view.topAnchor],
+            [mainStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+            [mainStackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+            [mainStackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
         ]];
     }
     
-    UIView *remainingTimeLeadingSpacerView = [[UIView alloc] init];
-    [remainingTimeStackView addArrangedSubview:remainingTimeLeadingSpacerView];
+    self.mainLeadingSpacerView = [self createFlexibleSpacerInStackView:mainStackView];
+    [self createDaysStackViewInStackView:mainStackView];
+    [self createHoursStackViewInStackView:mainStackView];
+    [self createMinutesStackViewInStackView:mainStackView];
+    [self createSecondsStackViewInStackView:mainStackView];
+    [self createInvisibleBalancingColonInStackView:mainStackView];
+    self.mainTrailingSpacerView = [self createFlexibleSpacerInStackView:mainStackView];
     
-    NSMutableArray<NSLayoutConstraint *> *widthConstraints = [NSMutableArray array];
-    NSMutableArray<NSLayoutConstraint *> *heightConstraints = [NSMutableArray array];
-    NSMutableArray<UILabel *> *colonLabels = [NSMutableArray array];
-    NSMutableArray<UIStackView *> *digitsStackViews = [NSMutableArray array];
-    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.mainLeadingSpacerView.widthAnchor constraintEqualToAnchor:self.mainTrailingSpacerView.widthAnchor]
+    ]];
+}
+
+- (void)createDaysStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *daysStackView = [[UIStackView alloc] init];
     daysStackView.axis = UILayoutConstraintAxisVertical;
     daysStackView.alignment = UIStackViewAlignmentFill;
     daysStackView.distribution = UIStackViewDistributionFill;
-    [remainingTimeStackView addArrangedSubview:daysStackView];
+    [stackView addArrangedSubview:daysStackView];
     self.daysStackView = daysStackView;
     
     NSLayoutConstraint *daysStackViewWidthConstraint = [[daysStackView.widthAnchor constraintEqualToConstant:0.f] srgletterbox_withPriority:999];
-    [widthConstraints addObject:daysStackViewWidthConstraint];
+    self.widthConstraints = [self.widthConstraints arrayByAddingObject:daysStackViewWidthConstraint];
     
     [NSLayoutConstraint activateConstraints:@[
         daysStackViewWidthConstraint
     ]];
     
-    UIView *daysTopSpacerView = [[UIView alloc] init];
-    [daysStackView addArrangedSubview:daysTopSpacerView];
+    UIView *daysTopSpacerView = [self createFlexibleSpacerInStackView:daysStackView];
+    [self createDaysDigitsStackViewInStackView:daysStackView];
+    [self createDaysTitleViewInStackView:daysStackView];
+    UIView *daysBottomSpacerView = [self createFlexibleSpacerInStackView:daysStackView];;
     
+    [NSLayoutConstraint activateConstraints:@[
+        [daysTopSpacerView.heightAnchor constraintEqualToAnchor:daysBottomSpacerView.heightAnchor]
+    ]];
+}
+
+- (void)createDaysDigitsStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *daysDigitsStackView = [[UIStackView alloc] init];
     daysDigitsStackView.axis = UILayoutConstraintAxisHorizontal;
     daysDigitsStackView.alignment = UIStackViewAlignmentFill;
     daysDigitsStackView.distribution = UIStackViewDistributionFill;
     daysDigitsStackView.spacing = 2.f;
-    [daysStackView addArrangedSubview:daysDigitsStackView];
-    [digitsStackViews addObject:daysDigitsStackView];
+    [stackView addArrangedSubview:daysDigitsStackView];
+    self.digitsStackViews = [self.digitsStackViews arrayByAddingObject:daysDigitsStackView];
+    
+    NSLayoutConstraint *daysHeightConstraint = [[daysDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
+    self.heightConstraints = [self.heightConstraints arrayByAddingObject:daysHeightConstraint];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        daysHeightConstraint
+    ]];
     
     UILabel *invisibleDaysColonLabel = [[UILabel alloc] init];
     invisibleDaysColonLabel.text = @":";
@@ -156,7 +205,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     invisibleDaysColonLabel.alpha = 0.f;
     [invisibleDaysColonLabel setContentHuggingPriority:252 forAxis:UILayoutConstraintAxisHorizontal];
     [daysDigitsStackView addArrangedSubview:invisibleDaysColonLabel];
-    [colonLabels addObject:invisibleDaysColonLabel];
+    self.colonLabels = [self.colonLabels arrayByAddingObject:invisibleDaysColonLabel];
     
     UILabel *days1Label = [[UILabel alloc] init];
     days1Label.textColor = UIColor.whiteColor;
@@ -177,16 +226,13 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [NSLayoutConstraint activateConstraints:@[
         [days1Label.widthAnchor constraintEqualToAnchor:days0Label.widthAnchor]
     ]];
-    
+}
+
+- (void)createDaysTitleViewInStackView:(UIStackView *)stackView
+{
     UIView *daysTitleView = [[UIView alloc] init];
-    [daysStackView addArrangedSubview:daysTitleView];
-    
-#if TARGET_OS_TV
-    static const CGFloat kTitleHeight = 40.f;
-#else
-    static const CGFloat kTitleHeight = 30.f;
-#endif
-    
+    [stackView addArrangedSubview:daysTitleView];
+        
     [NSLayoutConstraint activateConstraints:@[
         [daysTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
     ]];
@@ -202,45 +248,53 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [NSLayoutConstraint activateConstraints:@[
         [daysTitleLabel.topAnchor constraintEqualToAnchor:daysTitleView.topAnchor],
         [daysTitleLabel.bottomAnchor constraintEqualToAnchor:daysTitleView.bottomAnchor],
-        [daysTitleLabel.leadingAnchor constraintEqualToAnchor:days1Label.leadingAnchor],
-        [daysTitleLabel.trailingAnchor constraintEqualToAnchor:days0Label.trailingAnchor]
+        [daysTitleLabel.leadingAnchor constraintEqualToAnchor:self.days1Label.leadingAnchor],
+        [daysTitleLabel.trailingAnchor constraintEqualToAnchor:self.days0Label.trailingAnchor]
     ]];
-    
-    UIView *daysBottomSpacerView = [[UIView alloc] init];
-    [daysStackView addArrangedSubview:daysBottomSpacerView];
-    
-    NSLayoutConstraint *daysHeightConstraint = [[daysDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
-    [heightConstraints addObject:daysHeightConstraint];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        daysHeightConstraint,
-        [daysTopSpacerView.heightAnchor constraintEqualToAnchor:daysBottomSpacerView.heightAnchor]
-    ]];
-    
+}
+
+- (void)createHoursStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *hoursStackView = [[UIStackView alloc] init];
     hoursStackView.axis = UILayoutConstraintAxisVertical;
     hoursStackView.alignment = UIStackViewAlignmentFill;
     hoursStackView.distribution = UIStackViewDistributionFill;
-    [remainingTimeStackView addArrangedSubview:hoursStackView];
+    [stackView addArrangedSubview:hoursStackView];
     self.hoursStackView = hoursStackView;
     
     NSLayoutConstraint *hoursStackViewWidthConstraint = [[hoursStackView.widthAnchor constraintEqualToConstant:0.f] srgletterbox_withPriority:999];
-    [widthConstraints addObject:hoursStackViewWidthConstraint];
+    self.widthConstraints = [self.widthConstraints arrayByAddingObject:hoursStackViewWidthConstraint];
     
     [NSLayoutConstraint activateConstraints:@[
         hoursStackViewWidthConstraint
     ]];
     
-    UIView *hoursTopSpacerView = [[UIView alloc] init];
-    [hoursStackView addArrangedSubview:hoursTopSpacerView];
+    UIView *hoursTopSpacerView = [self createFlexibleSpacerInStackView:hoursStackView];
+    [self createHoursDigitsStackViewInStackView:hoursStackView];
+    [self createHoursTitleViewInStackView:hoursStackView];
+    UIView *hoursBottomSpacerView = [self createFlexibleSpacerInStackView:hoursStackView];
     
+    [NSLayoutConstraint activateConstraints:@[
+        [hoursTopSpacerView.heightAnchor constraintEqualToAnchor:hoursBottomSpacerView.heightAnchor]
+    ]];
+}
+
+- (void)createHoursDigitsStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *hoursDigitsStackView = [[UIStackView alloc] init];
     hoursDigitsStackView.axis = UILayoutConstraintAxisHorizontal;
     hoursDigitsStackView.alignment = UIStackViewAlignmentFill;
     hoursDigitsStackView.distribution = UIStackViewDistributionFill;
     hoursDigitsStackView.spacing = 2.f;
-    [hoursStackView addArrangedSubview:hoursDigitsStackView];
-    [digitsStackViews addObject:hoursDigitsStackView];
+    [stackView addArrangedSubview:hoursDigitsStackView];
+    self.digitsStackViews = [self.digitsStackViews arrayByAddingObject:hoursDigitsStackView];
+    
+    NSLayoutConstraint *hoursHeightConstraint = [[hoursDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
+    self.heightConstraints = [self.heightConstraints arrayByAddingObject:hoursHeightConstraint];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        hoursHeightConstraint
+    ]];
     
     UILabel *hoursColonLabel = [[UILabel alloc] init];
     hoursColonLabel.text = @":";
@@ -248,7 +302,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     hoursColonLabel.textColor = UIColor.whiteColor;
     [hoursColonLabel setContentHuggingPriority:252 forAxis:UILayoutConstraintAxisHorizontal];
     [hoursDigitsStackView addArrangedSubview:hoursColonLabel];
-    [colonLabels addObject:hoursColonLabel];
+    self.colonLabels = [self.colonLabels arrayByAddingObject:hoursColonLabel];
     self.hoursColonLabel = hoursColonLabel;
     
     UILabel *hours1Label = [[UILabel alloc] init];
@@ -270,9 +324,12 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [NSLayoutConstraint activateConstraints:@[
         [hours1Label.widthAnchor constraintEqualToAnchor:hours0Label.widthAnchor]
     ]];
-    
+}
+
+- (void)createHoursTitleViewInStackView:(UIStackView *)stackView
+{
     UIView *hoursTitleView = [[UIView alloc] init];
-    [hoursStackView addArrangedSubview:hoursTitleView];
+    [stackView addArrangedSubview:hoursTitleView];
     
     [NSLayoutConstraint activateConstraints:@[
         [hoursTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
@@ -289,44 +346,52 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [NSLayoutConstraint activateConstraints:@[
         [hoursTitleLabel.topAnchor constraintEqualToAnchor:hoursTitleView.topAnchor],
         [hoursTitleLabel.bottomAnchor constraintEqualToAnchor:hoursTitleView.bottomAnchor],
-        [hoursTitleLabel.leadingAnchor constraintEqualToAnchor:hours1Label.leadingAnchor],
-        [hoursTitleLabel.trailingAnchor constraintEqualToAnchor:hours0Label.trailingAnchor]
+        [hoursTitleLabel.leadingAnchor constraintEqualToAnchor:self.hours1Label.leadingAnchor],
+        [hoursTitleLabel.trailingAnchor constraintEqualToAnchor:self.hours0Label.trailingAnchor]
     ]];
-    
-    UIView *hoursBottomSpacerView = [[UIView alloc] init];
-    [hoursStackView addArrangedSubview:hoursBottomSpacerView];
-    
-    NSLayoutConstraint *hoursHeightConstraint = [[hoursDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
-    [heightConstraints addObject:hoursHeightConstraint];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        hoursHeightConstraint,
-        [hoursTopSpacerView.heightAnchor constraintEqualToAnchor:hoursBottomSpacerView.heightAnchor]
-    ]];
-    
+}
+
+- (void)createMinutesStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *minutesStackView = [[UIStackView alloc] init];
     minutesStackView.axis = UILayoutConstraintAxisVertical;
     minutesStackView.alignment = UIStackViewAlignmentFill;
     minutesStackView.distribution = UIStackViewDistributionFill;
-    [remainingTimeStackView addArrangedSubview:minutesStackView];
+    [stackView addArrangedSubview:minutesStackView];
     
     NSLayoutConstraint *minutesStackViewWidthConstraint = [[minutesStackView.widthAnchor constraintEqualToConstant:0.f] srgletterbox_withPriority:999];
-    [widthConstraints addObject:minutesStackViewWidthConstraint];
+    self.widthConstraints = [self.widthConstraints arrayByAddingObject:minutesStackViewWidthConstraint];
     
     [NSLayoutConstraint activateConstraints:@[
         minutesStackViewWidthConstraint
     ]];
     
-    UIView *minutesTopSpacerView = [[UIView alloc] init];
-    [minutesStackView addArrangedSubview:minutesTopSpacerView];
+    UIView *minutesTopSpacerView = [self createFlexibleSpacerInStackView:minutesStackView];
+    [self createMinutesDigitsStackViewInStackView:minutesStackView];
+    [self createMinutesTitleViewInStackView:minutesStackView];
+    UIView *minutesBottomSpacerView = [self createFlexibleSpacerInStackView:minutesStackView];
     
+    [NSLayoutConstraint activateConstraints:@[
+        [minutesTopSpacerView.heightAnchor constraintEqualToAnchor:minutesBottomSpacerView.heightAnchor]
+    ]];
+}
+
+- (void)createMinutesDigitsStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *minutesDigitsStackView = [[UIStackView alloc] init];
     minutesDigitsStackView.axis = UILayoutConstraintAxisHorizontal;
     minutesDigitsStackView.alignment = UIStackViewAlignmentFill;
     minutesDigitsStackView.distribution = UIStackViewDistributionFill;
     minutesDigitsStackView.spacing = 2.f;
-    [minutesStackView addArrangedSubview:minutesDigitsStackView];
-    [digitsStackViews addObject:minutesDigitsStackView];
+    [stackView addArrangedSubview:minutesDigitsStackView];
+    self.digitsStackViews = [self.digitsStackViews arrayByAddingObject:minutesDigitsStackView];
+    
+    NSLayoutConstraint *minutesHeightConstraint = [[minutesDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
+    self.heightConstraints = [self.heightConstraints arrayByAddingObject:minutesHeightConstraint];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        minutesHeightConstraint
+    ]];
     
     UILabel *minutesColonLabel = [[UILabel alloc] init];
     minutesColonLabel.text = @":";
@@ -334,7 +399,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     minutesColonLabel.textColor = UIColor.whiteColor;
     [minutesColonLabel setContentHuggingPriority:252 forAxis:UILayoutConstraintAxisHorizontal];
     [minutesDigitsStackView addArrangedSubview:minutesColonLabel];
-    [colonLabels addObject:minutesColonLabel];
+    self.colonLabels = [self.colonLabels arrayByAddingObject:minutesColonLabel];
     self.minutesColonLabel = minutesColonLabel;
     
     UILabel *minutes1Label = [[UILabel alloc] init];
@@ -356,9 +421,12 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [NSLayoutConstraint activateConstraints:@[
         [minutes1Label.widthAnchor constraintEqualToAnchor:minutes0Label.widthAnchor]
     ]];
-    
+}
+
+- (void)createMinutesTitleViewInStackView:(UIStackView *)stackView
+{
     UIView *minutesTitleView = [[UIView alloc] init];
-    [minutesStackView addArrangedSubview:minutesTitleView];
+    [stackView addArrangedSubview:minutesTitleView];
     
     [NSLayoutConstraint activateConstraints:@[
         [minutesTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
@@ -369,50 +437,58 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     minutesTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
     minutesTitleLabel.textColor = UIColor.whiteColor;
     minutesTitleLabel.textAlignment = NSTextAlignmentCenter;
-    [minutesStackView addSubview:minutesTitleLabel];
+    [stackView addSubview:minutesTitleLabel];
     self.minutesTitleLabel = minutesTitleLabel;
     
     [NSLayoutConstraint activateConstraints:@[
         [minutesTitleLabel.topAnchor constraintEqualToAnchor:minutesTitleView.topAnchor],
         [minutesTitleLabel.bottomAnchor constraintEqualToAnchor:minutesTitleView.bottomAnchor],
-        [minutesTitleLabel.leadingAnchor constraintEqualToAnchor:minutes1Label.leadingAnchor],
-        [minutesTitleLabel.trailingAnchor constraintEqualToAnchor:minutes0Label.trailingAnchor]
+        [minutesTitleLabel.leadingAnchor constraintEqualToAnchor:self.minutes1Label.leadingAnchor],
+        [minutesTitleLabel.trailingAnchor constraintEqualToAnchor:self.minutes0Label.trailingAnchor]
     ]];
-    
-    UIView *minutesBottomSpacerView = [[UIView alloc] init];
-    [minutesStackView addArrangedSubview:minutesBottomSpacerView];
-    
-    NSLayoutConstraint *minutesHeightConstraint = [[minutesDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
-    [heightConstraints addObject:minutesHeightConstraint];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        minutesHeightConstraint,
-        [minutesTopSpacerView.heightAnchor constraintEqualToAnchor:minutesBottomSpacerView.heightAnchor]
-    ]];
-    
+}
+
+- (void)createSecondsStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *secondsStackView = [[UIStackView alloc] init];
     secondsStackView.axis = UILayoutConstraintAxisVertical;
     secondsStackView.alignment = UIStackViewAlignmentFill;
     secondsStackView.distribution = UIStackViewDistributionFill;
-    [remainingTimeStackView addArrangedSubview:secondsStackView];
+    [stackView addArrangedSubview:secondsStackView];
     
     NSLayoutConstraint *secondsStackViewWidthConstraint = [[secondsStackView.widthAnchor constraintEqualToConstant:0.f] srgletterbox_withPriority:999];
-    [widthConstraints addObject:secondsStackViewWidthConstraint];
+    self.widthConstraints = [self.widthConstraints arrayByAddingObject:secondsStackViewWidthConstraint];
     
     [NSLayoutConstraint activateConstraints:@[
         secondsStackViewWidthConstraint
     ]];
     
-    UIView *secondsTopSpacerView = [[UIView alloc] init];
-    [secondsStackView addArrangedSubview:secondsTopSpacerView];
+    self.secondsTopSpacerView = [self createFlexibleSpacerInStackView:secondsStackView];
+    [self createSecondsDigitsStackViewInStackView:secondsStackView];
+    [self createSecondsTitleViewInStackView:secondsStackView];
+    self.secondsBottomSpacerView = [self createFlexibleSpacerInStackView:secondsStackView];
     
+    [NSLayoutConstraint activateConstraints:@[
+        [self.secondsTopSpacerView.heightAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.heightAnchor]
+    ]];
+}
+
+- (void)createSecondsDigitsStackViewInStackView:(UIStackView *)stackView
+{
     UIStackView *secondsDigitsStackView = [[UIStackView alloc] init];
     secondsDigitsStackView.axis = UILayoutConstraintAxisHorizontal;
     secondsDigitsStackView.alignment = UIStackViewAlignmentFill;
     secondsDigitsStackView.distribution = UIStackViewDistributionFill;
     secondsDigitsStackView.spacing = 2.f;
-    [secondsStackView addArrangedSubview:secondsDigitsStackView];
-    [digitsStackViews addObject:secondsDigitsStackView];
+    [stackView addArrangedSubview:secondsDigitsStackView];
+    self.digitsStackViews = [self.digitsStackViews arrayByAddingObject:secondsDigitsStackView];
+    
+    NSLayoutConstraint *secondsHeightConstraint = [[secondsDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
+    self.heightConstraints = [self.heightConstraints arrayByAddingObject:secondsHeightConstraint];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        secondsHeightConstraint
+    ]];
     
     UILabel *secondsColonLabel = [[UILabel alloc] init];
     secondsColonLabel.text = @":";
@@ -420,7 +496,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     secondsColonLabel.textColor = UIColor.whiteColor;
     [secondsColonLabel setContentHuggingPriority:252 forAxis:UILayoutConstraintAxisHorizontal];
     [secondsDigitsStackView addArrangedSubview:secondsColonLabel];
-    [colonLabels addObject:secondsColonLabel];
+    self.colonLabels = [self.colonLabels arrayByAddingObject:secondsColonLabel];
     
     UILabel *seconds1Label = [[UILabel alloc] init];
     seconds1Label.textColor = UIColor.whiteColor;
@@ -441,9 +517,12 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     [NSLayoutConstraint activateConstraints:@[
         [seconds1Label.widthAnchor constraintEqualToAnchor:seconds0Label.widthAnchor]
     ]];
-    
+}
+
+- (void)createSecondsTitleViewInStackView:(UIStackView *)stackView
+{
     UIView *secondsTitleView = [[UIView alloc] init];
-    [secondsStackView addArrangedSubview:secondsTitleView];
+    [stackView addArrangedSubview:secondsTitleView];
     
     [NSLayoutConstraint activateConstraints:@[
         [secondsTitleView.heightAnchor constraintEqualToConstant:kTitleHeight]
@@ -454,49 +533,30 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
     secondsTitleLabel.textColor = UIColor.whiteColor;
     secondsTitleLabel.textAlignment = NSTextAlignmentCenter;
-    [secondsStackView addSubview:secondsTitleLabel];
+    [stackView addSubview:secondsTitleLabel];
     self.secondsTitleLabel = secondsTitleLabel;
     
     [NSLayoutConstraint activateConstraints:@[
         [secondsTitleLabel.topAnchor constraintEqualToAnchor:secondsTitleView.topAnchor],
         [secondsTitleLabel.bottomAnchor constraintEqualToAnchor:secondsTitleView.bottomAnchor],
-        [secondsTitleLabel.leadingAnchor constraintEqualToAnchor:seconds1Label.leadingAnchor],
-        [secondsTitleLabel.trailingAnchor constraintEqualToAnchor:seconds0Label.trailingAnchor]
+        [secondsTitleLabel.leadingAnchor constraintEqualToAnchor:self.seconds1Label.leadingAnchor],
+        [secondsTitleLabel.trailingAnchor constraintEqualToAnchor:self.seconds0Label.trailingAnchor]
     ]];
-    
-    UIView *secondsBottomSpacerView = [[UIView alloc] init];
-    [secondsStackView addArrangedSubview:secondsBottomSpacerView];
-    
-    NSLayoutConstraint *secondsHeightConstraint = [[secondsDigitsStackView.heightAnchor constraintEqualToConstant:45.f] srgletterbox_withPriority:999];
-    [heightConstraints addObject:secondsHeightConstraint];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        secondsHeightConstraint,
-        [secondsTopSpacerView.heightAnchor constraintEqualToAnchor:secondsBottomSpacerView.heightAnchor]
-    ]];
-    
+}
+
+- (void)createInvisibleBalancingColonInStackView:(UIStackView *)stackView
+{
     UILabel *invisibleBalancingColonLabel = [[UILabel alloc] init];
     invisibleBalancingColonLabel.text = @":";
     invisibleBalancingColonLabel.textAlignment = NSTextAlignmentCenter;
     invisibleBalancingColonLabel.alpha = 0.f;
     [invisibleBalancingColonLabel setContentHuggingPriority:252 forAxis:UILayoutConstraintAxisHorizontal];
-    [remainingTimeStackView addArrangedSubview:invisibleBalancingColonLabel];
-    [colonLabels addObject:invisibleBalancingColonLabel];
-    
-    UIView *remainingTimeTrailingSpacerView = [[UIView alloc] init];
-    [remainingTimeStackView addArrangedSubview:remainingTimeTrailingSpacerView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [remainingTimeLeadingSpacerView.widthAnchor constraintEqualToAnchor:remainingTimeTrailingSpacerView.widthAnchor]
-    ]];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [accessibilityFrameView.topAnchor constraintEqualToAnchor:secondsTopSpacerView.bottomAnchor],
-        [accessibilityFrameView.bottomAnchor constraintEqualToAnchor:secondsBottomSpacerView.topAnchor],
-        [accessibilityFrameView.leadingAnchor constraintEqualToAnchor:remainingTimeLeadingSpacerView.trailingAnchor],
-        [accessibilityFrameView.trailingAnchor constraintEqualToAnchor:remainingTimeTrailingSpacerView.leadingAnchor]
-    ]];
-    
+    [stackView addArrangedSubview:invisibleBalancingColonLabel];
+    self.colonLabels = [self.colonLabels arrayByAddingObject:invisibleBalancingColonLabel];
+}
+
+- (void)createMessageLabelInView:(UIView *)view
+{
     SRGPaddedLabel *messageLabel = [[SRGPaddedLabel alloc] init];
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
@@ -506,14 +566,17 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     messageLabel.horizontalMargin = 8.f;
     messageLabel.verticalMargin = 4.f;
     messageLabel.layer.masksToBounds = YES;
-    [self addSubview:messageLabel];
+    [view addSubview:messageLabel];
     self.messageLabel = messageLabel;
     
     [NSLayoutConstraint activateConstraints:@[
-        [messageLabel.centerXAnchor constraintEqualToAnchor:remainingTimeStackView.centerXAnchor],
-        [messageLabel.topAnchor constraintEqualToAnchor:secondsBottomSpacerView.bottomAnchor constant:10.f]
+        [messageLabel.centerXAnchor constraintEqualToAnchor:self.mainStackView.centerXAnchor],
+        [messageLabel.topAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.bottomAnchor constant:10.f]
     ]];
-    
+}
+
+- (void)createRemainingTimeLabelInView:(UIView *)view
+{
     SRGPaddedLabel *remainingTimeLabel = [[SRGPaddedLabel alloc] init];
     remainingTimeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     remainingTimeLabel.textAlignment = NSTextAlignmentCenter;
@@ -529,18 +592,28 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     remainingTimeLabel.layer.cornerRadius = 3.f;
 #endif
     remainingTimeLabel.layer.masksToBounds = YES;
-    [self addSubview:remainingTimeLabel];
+    [view addSubview:remainingTimeLabel];
     self.remainingTimeLabel = remainingTimeLabel;
+}
+
+- (void)createAccessibilityFrameInView:(UIView *)view
+{
+    UIView *accessibilityFrameView = [[UIView alloc] init];
+    accessibilityFrameView.translatesAutoresizingMaskIntoConstraints = NO;
+    [view insertSubview:accessibilityFrameView atIndex:0];
+    self.accessibilityFrameView = accessibilityFrameView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [remainingTimeLabel.centerXAnchor constraintEqualToAnchor:accessibilityFrameView.centerXAnchor],
-        [remainingTimeLabel.centerYAnchor constraintEqualToAnchor:accessibilityFrameView.centerYAnchor]
+        [accessibilityFrameView.topAnchor constraintEqualToAnchor:self.secondsTopSpacerView.bottomAnchor],
+        [accessibilityFrameView.bottomAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.topAnchor],
+        [accessibilityFrameView.leadingAnchor constraintEqualToAnchor:self.mainLeadingSpacerView.trailingAnchor],
+        [accessibilityFrameView.trailingAnchor constraintEqualToAnchor:self.mainTrailingSpacerView.leadingAnchor]
     ]];
     
-    self.widthConstraints = widthConstraints.copy;
-    self.heightConstraints = heightConstraints.copy;
-    self.colonLabels = colonLabels.copy;
-    self.digitsStackViews = digitsStackViews.copy;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.remainingTimeLabel.centerXAnchor constraintEqualToAnchor:accessibilityFrameView.centerXAnchor],
+        [self.remainingTimeLabel.centerYAnchor constraintEqualToAnchor:accessibilityFrameView.centerYAnchor]
+    ]];
 }
 
 #pragma mark Getters and setters
@@ -739,19 +812,19 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     NSDateComponents *dateComponents = SRGDateComponentsForTimeIntervalSinceNow(currentRemainingTimeInterval);
     if (dateComponents.day >= SRGCountdownViewDaysLimit) {
         self.remainingTimeLabel.hidden = NO;
-        self.remainingTimeStackView.hidden = YES;
+        self.mainStackView.hidden = YES;
         self.messageLabel.hidden = YES;
     }
 #if TARGET_OS_IOS
     else if (CGRectGetWidth(self.frame) < 300.f || CGRectGetHeight(self.frame) < 145.f) {
         self.remainingTimeLabel.hidden = NO;
-        self.remainingTimeStackView.hidden = YES;
+        self.mainStackView.hidden = YES;
         self.messageLabel.hidden = YES;
     }
 #endif
     else {
         self.remainingTimeLabel.hidden = YES;
-        self.remainingTimeStackView.hidden = NO;
+        self.mainStackView.hidden = NO;
         
         self.messageLabel.hidden = (currentRemainingTimeInterval != 0);
         

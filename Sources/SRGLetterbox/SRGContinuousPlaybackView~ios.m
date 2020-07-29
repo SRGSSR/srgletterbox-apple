@@ -46,6 +46,18 @@
     [self createMainLayoutInView:self];
 }
 
+- (UIView *)createFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
+{
+    UIView *fixedSpacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:fixedSpacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [fixedSpacerView.heightAnchor constraintEqualToConstant:height]
+    ]];
+    
+    return fixedSpacerView;
+}
+
 - (void)createImageBackgroundInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -121,16 +133,6 @@
     
     [NSLayoutConstraint activateConstraints:@[
         [topSpacerView.heightAnchor constraintEqualToAnchor:bottomSpacerView.heightAnchor]
-    ]];
-}
-
-- (void)createFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
-{
-    UIView *fixedSpacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:fixedSpacerView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [fixedSpacerView.heightAnchor constraintEqualToConstant:height]
     ]];
 }
 

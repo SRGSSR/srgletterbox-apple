@@ -135,6 +135,25 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 
 #pragma mark Layout helpers
 
+- (UIView *)layoutFlexibleSpacerInStackView:(UIStackView *)stackView
+{
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
+    return spacerView;
+}
+
+- (UIView *)layoutFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
+{
+    UIView *spacerView = [[UIView alloc] init];
+    [stackView addArrangedSubview:spacerView];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [spacerView.heightAnchor constraintEqualToConstant:height]
+    ]];
+    
+    return spacerView;
+}
+
 - (void)layoutBackgroundInView:(UIView *)view
 {
     UIImageView *backgroundImageView = [[UIImageView alloc] init];
@@ -147,22 +166,6 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
         [backgroundImageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
         [backgroundImageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [backgroundImageView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
-    ]];
-}
-
-- (void)layoutFlexibleSpacerInStackView:(UIStackView *)stackView
-{
-    UIView *spacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:spacerView];
-}
-
-- (void)layoutFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
-{
-    UIView *spacerView = [[UIView alloc] init];
-    [stackView addArrangedSubview:spacerView];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [spacerView.heightAnchor constraintEqualToConstant:height]
     ]];
 }
 
