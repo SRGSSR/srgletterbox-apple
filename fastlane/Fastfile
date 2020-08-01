@@ -23,6 +23,9 @@ platform :ios do
       end
     end
 
+    # Only used by Fastlane actions (not with command line script)
+    xcversion(version: '~> 12')
+
     unless lane.to_s.downcase.include? 'dsym'
       ensure_git_status_clean
       Dir.chdir('..') { sh 'make bootstrap' }
