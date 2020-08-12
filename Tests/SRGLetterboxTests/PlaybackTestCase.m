@@ -7,6 +7,7 @@
 #import "LetterboxBaseTestCase.h"
 
 @import libextobjc;
+@import SRGDataProviderNetwork;
 @import SRGLetterbox;
 
 // Imports required to test internals

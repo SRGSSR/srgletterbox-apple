@@ -22,6 +22,7 @@
 @import SRGAnalyticsDataProvider;
 @import SRGAnalyticsMediaPlayer;
 @import SRGContentProtection;
+@import SRGDataProviderNetwork;
 @import SRGDiagnostics;
 @import SRGMediaPlayer;
 @import SRGNetwork;

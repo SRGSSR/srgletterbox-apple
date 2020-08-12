@@ -17,6 +17,7 @@
 @import libextobjc;
 @import SRGAnalytics;
 @import SRGLetterbox;
+@import SRGNetwork;
 
 #if TARGET_OS_IOS
 #import <AppCenterDistribute/AppCenterDistribute.h>

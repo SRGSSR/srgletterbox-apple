@@ -14,6 +14,7 @@
 #import "UIWindow+LetterboxDemo.h"
 
 @import SRGAnalytics;
+@import SRGDataProviderNetwork;
 
 @interface AdvancedPlayerViewController ()
 

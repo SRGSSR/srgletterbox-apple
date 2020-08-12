@@ -5,7 +5,7 @@
 //
 
 @import CoreMedia;
-@import SRGDataProvider;
+@import SRGDataProviderModel;
 @import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN

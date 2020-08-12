@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "6f983e253b46442ca8744513b02e1ea4907abd31",
+          "revision": "9746614355a456d09945a9c81e5771c604915cd6",
           "version": null
         }
       },
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "1de76c7c2349878195725a563dd03c4b3ac5e8ed",
+          "revision": "05325a14b0aa2c8e5e343aa452ec37c2f862511f",
           "version": null
         }
       },
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "16fb4495413e3a05c881caa952176d60ce00b24f",
+          "revision": "8cb5265b5f6f1c000e12d23f5413d7c3bb64d776",
           "version": null
         }
       },
@@ -105,7 +105,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "4eff54e60b128a4899e33570c99b4b03e504775e",
+          "revision": "bc7a7e534e6756d7a1f4e7e98182e818d2e0bdc8",
           "version": null
         }
       },
@@ -132,7 +132,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgnetwork-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "6a643bf3b7b18835798eec4784d15218e79b66d3",
+          "revision": "ffcf1817a2ab3d0ded4a6e86334e3cd4a277d191",
           "version": null
         }
       },

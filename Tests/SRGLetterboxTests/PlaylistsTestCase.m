@@ -8,6 +8,7 @@
 #import "TestPlaylist.h"
 
 @import libextobjc;
+@import SRGDataProviderNetwork;
 @import SRGLetterbox;
 
 static NSString * const MediaURN1 = @"urn:rts:video:9309820";

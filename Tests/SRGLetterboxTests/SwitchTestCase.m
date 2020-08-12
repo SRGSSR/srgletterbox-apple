@@ -6,6 +6,7 @@
 
 #import "LetterboxBaseTestCase.h"
 
+@import SRGDataProviderNetwork;
 @import SRGLetterbox;
 
 @interface SwitchTestCase : LetterboxBaseTestCase

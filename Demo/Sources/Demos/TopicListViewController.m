@@ -12,7 +12,7 @@
 #import "TopicItem.h"
 #import "UIWindow+LetterboxDemo.h"
 
-@import SRGDataProvider;
+@import SRGDataProviderNetwork;
 
 @interface TopicListViewController ()
 
