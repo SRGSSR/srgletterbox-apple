@@ -39,17 +39,6 @@ static void commonInit(SRGLiveLabel *self);
     return self;
 }
 
-#pragma mark Overrides
-
-- (CGSize)intrinsicContentSize
-{
-    static const CGFloat kHorizontalMargin = 5.f;
-    static const CGFloat kHeight = 19.f;
-    
-    CGSize intrinsicContentSize = self.label.intrinsicContentSize;
-    return CGSizeEqualToSize(intrinsicContentSize, CGSizeZero) ? intrinsicContentSize : CGSizeMake(intrinsicContentSize.width + 2 * kHorizontalMargin, kHeight);
-}
-
 #pragma mark Accessibility
 
 - (NSString *)accessibilityLabel
@@ -63,17 +52,28 @@ static void commonInit(SRGLiveLabel *self)
 {
     // Unlike `UIView`, setting a corner radius AND a shadow on a `UILabel` does not work.
     UILabel *label = [[UILabel alloc] initWithFrame:self.bounds];
+    label.translatesAutoresizingMaskIntoConstraints = NO;
     label.textColor = UIColor.whiteColor;
-    label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:label];
     self.label = label;
     
-    label.text = SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString;
 #if TARGET_OS_TV
-    label.font = [UIFont srg_boldFontWithSize:26.f];
+    static CGFloat kfontSize = 26.f;
+    static CGFloat kMargin = 10.f;
 #else
-    label.font = [UIFont srg_boldFontWithSize:14.f];
+    static CGFloat kfontSize = 14.f;
+    static CGFloat kMargin = 5.f;
 #endif
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [label.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [label.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:kMargin],
+        [label.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-kMargin]
+    ]];
+    
+    label.text = SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString;
+    label.font = [UIFont srg_boldFontWithSize:kfontSize];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 1;
     
