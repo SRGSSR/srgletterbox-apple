@@ -68,9 +68,14 @@
             [self becomeFirstResponder];
             
             UIMenuController *copyMenu = [UIMenuController sharedMenuController];
-            [copyMenu setTargetRect:self.bounds inView:self];
-            copyMenu.arrowDirection = UIMenuControllerArrowDefault;
-            [copyMenu setMenuVisible:YES animated:YES];
+            if (@available(iOS 13, *)) {
+                [copyMenu showMenuFromView:self rect:self.bounds];
+            }
+            else {
+                [copyMenu setTargetRect:self.bounds inView:self];
+                copyMenu.arrowDirection = UIMenuControllerArrowDefault;
+                [copyMenu setMenuVisible:YES animated:YES];
+            }
         }
     }
 }
