@@ -431,7 +431,10 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.streamType = SRGStreamTypeLive;
+    
+    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1016,7 +1019,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    NSString *URN = LiveOnlyVideoURN;
+    NSString *URN = LiveVideoURN;
     [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
@@ -1575,7 +1578,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     

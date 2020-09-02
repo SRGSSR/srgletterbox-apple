@@ -92,7 +92,10 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.streamType = SRGStreamTypeLive;
+    
+    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:settings];
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertFalse([self.controller canSkipWithInterval:-15.]);
@@ -353,7 +356,10 @@
         return preparingReceived && playingReceived;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.streamType = SRGStreamTypeLive;
+    
+    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -387,8 +393,6 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    // TODO: Use production URL when available
-    self.controller.serviceURL = SRGIntegrationLayerTestServiceURL();
     [self.controller playURN:LiveAudioURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
@@ -457,7 +461,7 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -545,7 +549,10 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveOnlyVideoURN atPosition:nil withPreferredSettings:nil];
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.streamType = SRGStreamTypeLive;
+    
+    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
     
@@ -571,8 +578,6 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    // TODO: Use production URL when available
-    self.controller.serviceURL = SRGIntegrationLayerTestServiceURL();
     [self.controller playURN:LiveAudioURN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:10. handler:nil];
