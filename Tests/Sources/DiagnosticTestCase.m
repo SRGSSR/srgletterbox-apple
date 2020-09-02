@@ -532,6 +532,64 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
+- (void)testPlaybackReportForSwitchToBlockedChapter
+{
+    // Report submission is disabled in public builds (tested once). Nothing to test here.
+    if (SRGContentProtectionIsPublic()) {
+        return;
+    }
+    
+    // Simulate geoblocking
+    self.controller.globalParameters = @{ @"forceLocation" : @"WW" };
+    
+    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
+    }];
+    
+    SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
+    settings.standalone = YES;
+    
+    NSString *URN1 = @"urn:rts:video:11565846";
+    [self.controller playURN:URN1 atPosition:nil withPreferredSettings:settings];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForSingleNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
+        return YES;
+    }];
+    
+    // Blocked. Cannot be played
+    NSString *URN2 = @"urn:rts:video:11565838";
+    [self.controller switchToURN:URN2 withCompletionHandler:nil];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+    
+    [self expectationForElapsedTimeInterval:15. withHandler:nil];
+    
+    __block BOOL firstReportSent = NO;
+    __block BOOL secondReportSent = NO;
+    [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
+        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
+        
+        NSString *URN = JSONDictionary[@"urn"];
+        if ([URN isEqualToString:URN1]) {
+            XCTAssertNotNil(JSONDictionary[@"ilResult"]);
+            XCTAssertNotNil(JSONDictionary[@"playerResult"]);
+            firstReportSent = YES;
+        }
+        else if ([URN isEqualToString:URN2]) {
+            XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"GEOBLOCK");
+            XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
+            XCTAssertNil(JSONDictionary[@"playerResult"]);
+            secondReportSent = YES;
+        }
+        
+        return firstReportSent && secondReportSent;
+    }];
+    
+    [self waitForExpectationsWithTimeout:30. handler:nil];
+}
+
 - (void)testPlaybackReportAfterRestart
 {
     // Report submission is disabled in public builds (tested once). Nothing to test here.
