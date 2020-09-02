@@ -539,6 +539,9 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         return;
     }
     
+    // Simulate geoblocking
+    self.controller.globalParameters = @{ @"forceLocation" : @"WW" };
+    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -546,7 +549,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.standalone = YES;
     
-    NSString *URN1 = @"urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e";
+    NSString *URN1 = @"urn:rts:video:11565846";
     [self.controller playURN:URN1 atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -556,7 +559,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     }];
     
     // Blocked. Cannot be played
-    NSString *URN2 = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
+    NSString *URN2 = @"urn:rts:video:11565838";
     [self.controller switchToURN:URN2 withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
@@ -575,7 +578,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
             firstReportSent = YES;
         }
         else if ([URN isEqualToString:URN2]) {
-            XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"LEGAL");
+            XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"GEOBLOCK");
             XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
             XCTAssertNil(JSONDictionary[@"playerResult"]);
             secondReportSent = YES;
