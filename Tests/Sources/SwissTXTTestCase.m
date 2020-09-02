@@ -85,9 +85,11 @@
     XCTAssertEqualObjects(self.controller.URN, URN);
 }
 
-// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved
 - (void)testSkipToLiveForSwissTXTFullDVRStream
 {
+#warning "This flaky test has been disabled. See issue #166"
+    return;
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -165,9 +167,11 @@
     }];
 }
 
-// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved
 - (void)testSwissTXTFullDVRNotYetAvailable
 {
+#warning "This flaky test has been disabled. See issue #166"
+    return;
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -448,9 +452,11 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoaded);
 }
 
-// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved.
 - (void)testSwissTXTFullDVRWithHighlightRemoved
 {
+#warning "This flaky test has been disabled. See issue #166"
+    return;
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -522,9 +528,11 @@
     XCTAssertNotEqual(self.controller.mediaComposition.mainChapter.segments.count, 3);
 }
 
-// TODO: #166 Test is flaky and can make further tests fail afterwards. Should be improved
 - (void)testSwissTXTLimitedDVRWithHighlightRemoved
 {
+#warning "This flaky test has been disabled. See issue #166"
+    return;
+    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
