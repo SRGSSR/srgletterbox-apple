@@ -152,6 +152,8 @@ platform :ios do
       app_platform: appstore_platform(platform),
       changelog: changelog,
       distribute_external: true,
+      demo_account_required: false,
+      beta_app_review_info: beta_app_review_info,
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
