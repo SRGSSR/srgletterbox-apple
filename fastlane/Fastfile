@@ -26,10 +26,7 @@ platform :ios do
     # Only used by Fastlane actions (not with command line script)
     xcversion(version: '~> 12')
 
-    unless lane.to_s.downcase.include? 'dsym'
-      ensure_git_status_clean
-      Dir.chdir('..') { sh 'make bootstrap' }
-    end
+    ensure_git_status_clean unless lane.to_s.downcase.include? 'dsym'
   end
 
   desc 'Run library tests'
@@ -226,12 +223,15 @@ platform :ios do
 
     options = update_options_to_appstore(options)
 
-    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
-    options[:team_id] = team_id
+    options[:team_id] = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+
+    srg_carthage
+
     destination = 'generic/platform=' + options[:platform]
     lane_name = lane_context[SharedValues::LANE_NAME]
     output_directory = 'fastlane/export/' + lane_name + '/'
     gym(
+      workspace: 'Demo/SRGLetterbox-demo.xcworkspace',
       configuration: options[:configuration],
       scheme: options[:scheme],
       silent: true,
@@ -391,7 +391,7 @@ end
 # Returns the marketing version, without suffix
 def xcode_marketing_version
   marketing_version = nil
-  Dir.chdir('..') do
+  Dir.chdir('../Demo') do
     command = 'xcodebuild -showBuildSettings | grep "MARKETING_VERSION ="'
     marketing_version = xcodebuid_grep_output sh command
   end
@@ -402,7 +402,7 @@ end
 # Returns the current project version
 def xcode_current_project_version
   version = nil
-  Dir.chdir('..') do
+  Dir.chdir('../Demo') do
     command = 'xcodebuild -showBuildSettings | grep "CURRENT_PROJECT_VERSION ="'
     version = xcodebuid_grep_output sh command
   end
@@ -486,7 +486,7 @@ end
 # Override common current project version
 def override_current_project_version(build_number)
   set_xcconfig_value(
-    path: 'Common.xcconfig',
+    path: 'Demo/Demo.xcconfig',
     name: 'CURRENT_PROJECT_VERSION',
     value: build_number.to_s
   )
@@ -571,6 +571,15 @@ def beta_app_review_info
     contact_last_name: ENV['ITUNES_CONNECT_REVIEW_LAST_NAME'],
     contact_phone: ENV['ITUNES_CONNECT_REVIEW_PHONE']
   }
+end
+
+def srg_carthage
+  carthage(
+    project_directory: 'Demo',
+    new_resolver: true,
+    cache_builds: true,
+    platform: 'iOS,tvOS'
+  )
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md

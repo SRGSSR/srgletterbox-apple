@@ -21,3 +21,4 @@ xcuserdata
 /vendor
 /.bundle
 /Demo/Carthage
+/Demo/Scripts/generate-icons-caches
