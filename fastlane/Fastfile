@@ -429,7 +429,8 @@ end
 # Update only the demo app identifier for App Store Connect submit.
 def update_app_identifier_to_appstore
   update_app_identifier(
-    plist_path: 'Demo/Info.plist'
+    xcodeproj: 'Demo/SRGLetterbox-demo.xcodeproj',
+    plist_path: 'Info.plist'
   )
 end
 
