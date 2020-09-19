@@ -80,6 +80,13 @@
     [self.imageView srg_resetImage];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.contentView.frame = self.bounds;
+}
+
 #pragma mark Getters and setters
 
 - (void)setSubdivision:(SRGSubdivision *)subdivision
