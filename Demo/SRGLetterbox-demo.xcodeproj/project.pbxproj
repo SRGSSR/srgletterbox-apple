@@ -321,7 +321,6 @@
 				084F2EE423664AE900A983FF /* Make custom icons */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				084F2EE523664B8400A983FF /* Restore original icons */,
-				6F43971824CB4F3B00FF3CE1 /* Copy Frameworks (SPM beta workaround) */,
 			);
 			buildRules = (
 			);
@@ -454,27 +453,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Scripts/generate-icons-restore.sh\"\n";
-		};
-		6F43971824CB4F3B00FF3CE1 /* Copy Frameworks (SPM beta workaround) */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/ComScore.framework",
-				"$(BUILT_PRODUCTS_DIR)/TCCore.framework",
-				"$(BUILT_PRODUCTS_DIR)/TCSDK.framework",
-			);
-			name = "Copy Frameworks (SPM beta workaround)";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
