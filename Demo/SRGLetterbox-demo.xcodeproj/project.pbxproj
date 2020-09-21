@@ -321,6 +321,7 @@
 				084F2EE423664AE900A983FF /* Make custom icons */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				084F2EE523664B8400A983FF /* Restore original icons */,
+				6F261DC325190789008EF524 /* Extract Signing Identity */,
 			);
 			buildRules = (
 			);
@@ -453,6 +454,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Scripts/generate-icons-restore.sh\"\n";
+		};
+		6F261DC325190789008EF524 /* Extract Signing Identity */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Extract Signing Identity";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"${EXPANDED_CODE_SIGN_IDENTITY}\" > /tmp/letterbox-signing-identity\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
