@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "export SCRIPT_INPUT_FILE_0=&quot;${BUILT_PRODUCTS_DIR}/ComScore.framework&quot;&#10;export SCRIPT_INPUT_FILE_1=&quot;${BUILT_PRODUCTS_DIR}/TCCore.framework&quot;&#10;export SCRIPT_INPUT_FILE_2=&quot;${BUILT_PRODUCTS_DIR}/TCSDK.framework&quot;&#10;export SCRIPT_INPUT_FILE_COUNT=3&#10;&#10;export EXPANDED_CODE_SIGN_IDENTITY=&quot;C770342E50C1CA7756130F1AC5CDBAAEA84A033E&quot;&#10;&#10;/usr/local/bin/carthage copy-frameworks&#10;"
+               scriptText = "find &quot;${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}&quot; -mindepth 1 -maxdepth 1 -type d -exec /usr/bin/codesign --force --sign &quot;C770342E50C1CA7756130F1AC5CDBAAEA84A033E&quot; --preserve-metadata=identifier,entitlements {} \;&#10;"
                shellToInvoke = "/bin/bash">
                <EnvironmentBuildable>
                   <BuildableReference
