@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1200"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "export SCRIPT_INPUT_FILE_0=&quot;${BUILT_PRODUCTS_DIR}/ComScore.framework&quot;&#10;export SCRIPT_INPUT_FILE_1=&quot;${BUILT_PRODUCTS_DIR}/TCCore.framework&quot;&#10;export SCRIPT_INPUT_FILE_2=&quot;${BUILT_PRODUCTS_DIR}/TCSDK.framework&quot;&#10;export SCRIPT_INPUT_FILE_COUNT=3&#10;&#10;export EXPANDED_CODE_SIGN_IDENTITY=&quot;C770342E50C1CA7756130F1AC5CDBAAEA84A033E&quot;&#10;&#10;/usr/local/bin/carthage copy-frameworks&#10;"
+               shellToInvoke = "/bin/bash">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "6FAB3B391E28FE2000CC2197"
+                     BuildableName = "SRGLetterbox-demo.app"
+                     BlueprintName = "SRGLetterbox-demo"
+                     ReferencedContainer = "container:SRGLetterbox-demo.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
