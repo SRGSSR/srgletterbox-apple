@@ -23,4 +23,9 @@ __attribute__((constructor)) static void SRGLetterboxFontInit(void)
     return [UIFont fontWithName:@"FontAwesome" size:size];
 }
 
++ (UIFont *)srg_awesomeFontWithTextStyle:(NSString *)textStyle
+{
+    return [UIFont srg_fontWithName:@"FontAwesome" textStyle:textStyle];
+}
+
 @end

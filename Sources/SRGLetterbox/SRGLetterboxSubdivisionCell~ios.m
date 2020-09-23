@@ -276,8 +276,7 @@
                 self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
             }
             else {
-                // TODO: Confirm `srg_fontWithName:textStyle:`removal in SRGAppearance.
-                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:11. /* SRGAppearanceFontTextStyleCaption on iOS */] }];
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
                 [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }]];
                 self.durationLabel.attributedText = attributedString.copy;
             }
