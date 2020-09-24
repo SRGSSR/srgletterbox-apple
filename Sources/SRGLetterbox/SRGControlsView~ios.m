@@ -550,7 +550,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
-    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
+    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate && ! self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
