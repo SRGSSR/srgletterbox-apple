@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/SRGSSR/ComScore-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "86bc427330768e5803ae98d39d8a3d756d01bc9d",
-          "version": "6.5.0"
+          "revision": "b5dc5dc60435f363a744e17975957361c844aa38",
+          "version": "6.6.0"
         }
       },
       {
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "e47aedc34ef97f89ee117e64fd1aed74d4bbebc4",
+          "revision": "fd07b72ff581c992558131e3a89e3a439a37fd49",
           "version": null
         }
       },
@@ -123,7 +123,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
           "branch": "feature/spm-support",
-          "revision": "c4ac97bead4d77c49bb1845fc8597347ac312246",
+          "revision": "da8c6565a3638e36faf87815f188535cc5ccf146",
           "version": null
         }
       },
