@@ -27,11 +27,11 @@
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
-    self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
+    self.contentView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
         
     SRGPaddedLabel *messageLabel = [[SRGPaddedLabel alloc] init];
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -48,12 +48,12 @@
     messageLabel.verticalMargin = 9.f;
     messageLabel.layer.cornerRadius = 3.f;
 #endif
-    [self addSubview:messageLabel];
+    [self.contentView addSubview:messageLabel];
     self.messageLabel = messageLabel;
     
     [NSLayoutConstraint activateConstraints:@[
-        [messageLabel.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
-        [messageLabel.centerYAnchor constraintEqualToAnchor:self.centerYAnchor]
+        [messageLabel.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
+        [messageLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor]
     ]];
 }
 
@@ -118,7 +118,7 @@
         if (! self.countdownView.superview) {
             SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.bounds];
             countdownView.translatesAutoresizingMaskIntoConstraints = NO;
-            [self addSubview:countdownView];
+            [self.contentView addSubview:countdownView];
             self.countdownView = countdownView;
             
             [NSLayoutConstraint activateConstraints:@[ [countdownView.topAnchor constraintEqualToAnchor:self.topAnchor],

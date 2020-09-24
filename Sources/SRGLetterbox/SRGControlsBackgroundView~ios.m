@@ -24,9 +24,9 @@
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
     // Disable all user interactions so that the view does not trap gesture recognizers. Its only purpose is
     // to increase control readability and displaying the activity indicator
@@ -35,14 +35,15 @@
     UIView *dimmingView = [[UIView alloc] init];
     dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.35f];
-    [self addSubview:dimmingView];
+    dimmingView.userInteractionEnabled = NO;
+    [self.contentView addSubview:dimmingView];
     self.dimmingView = dimmingView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [dimmingView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [dimmingView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        [dimmingView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [dimmingView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [dimmingView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+        [dimmingView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
+        [dimmingView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+        [dimmingView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
     ]];
 }
 
@@ -72,7 +73,7 @@
         UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
         loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [loadingImageView startAnimating];
-        [self addSubview:loadingImageView];
+        [self.contentView addSubview:loadingImageView];
         self.loadingImageView = loadingImageView;
         
         [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],

@@ -31,31 +31,31 @@ static const CGFloat kMargin = 8.f;
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
-    self.backgroundColor = UIColor.srg_blueColor;
+    self.contentView.backgroundColor = UIColor.srg_blueColor;
     
-    UIView *contentView = [[UIView alloc] init];
-    contentView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:contentView];
+    UIView *notificationView = [[UIView alloc] init];
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:notificationView];
     
     if (@available(iOS 11, *)) {
         [NSLayoutConstraint activateConstraints:@[
-            [contentView.leadingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.leadingAnchor],
-            [contentView.trailingAnchor constraintEqualToAnchor:self.safeAreaLayoutGuide.trailingAnchor]
+            [notificationView.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor],
+            [notificationView.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor]
         ]];
     }
     else {
         [NSLayoutConstraint activateConstraints:@[
-            [contentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-            [contentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+            [notificationView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+            [notificationView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
         ]];
     }
     [NSLayoutConstraint activateConstraints:@[
-        [contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+        [notificationView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+        [notificationView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor]
     ]];
     
     UIImage *iconImage = [UIImage srg_letterboxImageNamed:@"notification"];
@@ -63,7 +63,7 @@ static const CGFloat kMargin = 8.f;
     iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
     iconImageView.tintColor = UIColor.whiteColor;
     iconImageView.hidden = YES;
-    [contentView addSubview:iconImageView];
+    [notificationView addSubview:iconImageView];
     self.iconImageView = iconImageView;
     
     UILabel *messageLabel = [[UILabel alloc] init];
@@ -71,17 +71,17 @@ static const CGFloat kMargin = 8.f;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.numberOfLines = 2;
     [messageLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-    [contentView addSubview:messageLabel];
+    [notificationView addSubview:messageLabel];
     self.messageLabel = messageLabel;
         
     [NSLayoutConstraint activateConstraints:@[
         [[iconImageView.widthAnchor constraintEqualToConstant:kImageLength] srgletterbox_withPriority:999],
         [iconImageView.heightAnchor constraintEqualToAnchor:iconImageView.widthAnchor],
-        [[iconImageView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:kMargin] srgletterbox_withPriority:999],
+        [[iconImageView.leadingAnchor constraintEqualToAnchor:notificationView.leadingAnchor constant:kMargin] srgletterbox_withPriority:999],
         [iconImageView.centerYAnchor constraintEqualToAnchor:messageLabel.centerYAnchor],
-        [messageLabel.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        [messageLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
         [[messageLabel.leadingAnchor constraintEqualToAnchor:iconImageView.trailingAnchor constant:kMargin] srgletterbox_withPriority:999],
-        [[messageLabel.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-kMargin] srgletterbox_withPriority:999]
+        [[messageLabel.trailingAnchor constraintEqualToAnchor:notificationView.trailingAnchor constant:-kMargin] srgletterbox_withPriority:999]
     ]];
 }
 

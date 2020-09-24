@@ -46,26 +46,26 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        [self createView];
+        [self layoutContentView];
     }
     return self;
 }
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                              action:@selector(longPress:)];
     longPressGestureRecognizer.minimumPressDuration = 1.;
-    [self addGestureRecognizer:longPressGestureRecognizer];
+    [self.contentView addGestureRecognizer:longPressGestureRecognizer];
     self.longPressGestureRecognizer = longPressGestureRecognizer;
     
-    [self createWrapperViewInView:self.contentView];
-    [self createDescriptionLayoutInView:self.contentView];
+    [self layoutWrapperViewInView:self.contentView];
+    [self layoutDescriptionLayoutInView:self.contentView];
 }
 
-- (void)createWrapperViewInView:(UIView *)view
+- (void)layoutWrapperViewInView:(UIView *)view
 {
     UIView *wrapperView = [[UIView alloc] init];
     wrapperView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -79,19 +79,19 @@
         [wrapperView.widthAnchor constraintEqualToAnchor:wrapperView.heightAnchor multiplier:16.f / 9.f]
     ]];
     
-    [self createThumbnailLayoutInView:wrapperView];
+    [self layoutThumbnailLayoutView:wrapperView];
 }
 
-- (void)createThumbnailLayoutInView:(UIView *)view
+- (void)layoutThumbnailLayoutView:(UIView *)view
 {
-    [self createImageViewInView:view];
-    [self createBlockingOverlayInView:view];
+    [self layoutImageViewInView:view];
+    [self layoutBlockingOverlayInView:view];
     [self createMedia360IconInView:view];
-    [self createDurationLabelInView:view];
-    [self createProgressViewInView:view];
+    [self layoutDurationLabelInView:view];
+    [self layoutProgressViewInView:view];
 }
 
-- (void)createImageViewInView:(UIView *)view
+- (void)layoutImageViewInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -107,7 +107,7 @@
     ]];
 }
 
-- (void)createBlockingOverlayInView:(UIView *)view
+- (void)layoutBlockingOverlayInView:(UIView *)view
 {
     UIView *blockingOverlayView = [[UIView alloc] init];
     blockingOverlayView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
@@ -153,7 +153,7 @@
     ]];
 }
 
-- (void)createDurationLabelInView:(UIView *)view
+- (void)layoutDurationLabelInView:(UIView *)view
 {
     SRGPaddedLabel *durationLabel = [[SRGPaddedLabel alloc] init];
     durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -173,7 +173,7 @@
     ]];
 }
 
-- (void)createProgressViewInView:(UIView *)view
+- (void)layoutProgressViewInView:(UIView *)view
 {
     UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     progressView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -190,7 +190,7 @@
     ]];
 }
 
-- (void)createDescriptionLayoutInView:(UIView *)view
+- (void)layoutDescriptionLayoutInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
     stackView.translatesAutoresizingMaskIntoConstraints = NO;

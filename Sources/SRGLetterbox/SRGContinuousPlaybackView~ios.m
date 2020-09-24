@@ -37,16 +37,16 @@
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
-    [self createImageBackgroundInView:self];
-    [self creatDimmingViewInView:self];
-    [self createMainLayoutInView:self];
+    [self layoutImageBackgroundInView:self.contentView];
+    [self creatDimmingViewInView:self.contentView];
+    [self layoutMainLayoutInView:self.contentView];
 }
 
-- (UIView *)createFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
+- (UIView *)layoutFixedSpacerWithHeight:(CGFloat)height inStackView:(UIStackView *)stackView
 {
     UIView *fixedSpacerView = [[UIView alloc] init];
     [stackView addArrangedSubview:fixedSpacerView];
@@ -58,7 +58,7 @@
     return fixedSpacerView;
 }
 
-- (void)createImageBackgroundInView:(UIView *)view
+- (void)layoutImageBackgroundInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -89,7 +89,7 @@
     ]];
 }
 
-- (void)createMainLayoutInView:(UIView *)view
+- (void)layoutMainLayoutInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
     stackView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -120,13 +120,13 @@
     UIView *topSpacerView = [[UIView alloc] init];
     [stackView addArrangedSubview:topSpacerView];
     
-    [self createIntroLabelInStackView:stackView];
-    [self createTitleLabelInStackView:stackView];
-    [self createSubtitleLabelInStackView:stackView];
-    [self createFixedSpacerWithHeight:6.f inStackView:stackView];
-    [self createRemainingTimeButtonInStackView:stackView];
-    [self createFixedSpacerWithHeight:6.f inStackView:stackView];
-    [self createCancelButtonInStackView:stackView];
+    [self layoutIntroLabelInStackView:stackView];
+    [self layoutTitleLabelInStackView:stackView];
+    [self layoutSubtitleLabelInStackView:stackView];
+    [self layoutFixedSpacerWithHeight:6.f inStackView:stackView];
+    [self layoutRemainingTimeButtonInStackView:stackView];
+    [self layoutFixedSpacerWithHeight:6.f inStackView:stackView];
+    [self layoutCancelButtonInStackView:stackView];
     
     UIView *bottomSpacerView = [[UIView alloc] init];
     [stackView addArrangedSubview:bottomSpacerView];
@@ -136,7 +136,7 @@
     ]];
 }
 
-- (void)createIntroLabelInStackView:(UIStackView *)stackView
+- (void)layoutIntroLabelInStackView:(UIStackView *)stackView
 {
     UILabel *introLabel = [[UILabel alloc] init];
     introLabel.text = SRGLetterboxLocalizedString(@"Next", @"For continuous playback, introductory label for content which is about to start");
@@ -146,7 +146,7 @@
     self.introLabel = introLabel;
 }
 
-- (void)createTitleLabelInStackView:(UIStackView *)stackView
+- (void)layoutTitleLabelInStackView:(UIStackView *)stackView
 {
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.textColor = UIColor.whiteColor;
@@ -155,7 +155,7 @@
     self.titleLabel = titleLabel;
 }
 
-- (void)createSubtitleLabelInStackView:(UIStackView *)stackView
+- (void)layoutSubtitleLabelInStackView:(UIStackView *)stackView
 {
     UILabel *subtitleLabel = [[UILabel alloc] init];
     subtitleLabel.textColor = UIColor.lightGrayColor;
@@ -164,7 +164,7 @@
     self.subtitleLabel = subtitleLabel;
 }
 
-- (void)createRemainingTimeButtonInStackView:(UIStackView *)stackView
+- (void)layoutRemainingTimeButtonInStackView:(UIStackView *)stackView
 {
     UIStackView *remainingTimeButtonStackView = [[UIStackView alloc] init];
     remainingTimeButtonStackView.axis = UILayoutConstraintAxisHorizontal;
@@ -195,7 +195,7 @@
     ]];
 }
 
-- (void)createCancelButtonInStackView:(UIStackView *)stackView
+- (void)layoutCancelButtonInStackView:(UIStackView *)stackView
 {
     UIStackView *cancelButtonStackView = [[UIStackView alloc] init];
     cancelButtonStackView.axis = UILayoutConstraintAxisHorizontal;

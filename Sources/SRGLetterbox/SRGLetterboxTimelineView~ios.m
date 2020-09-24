@@ -35,32 +35,32 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
-    self.backgroundColor = UIColor.clearColor;
+    self.contentView.backgroundColor = UIColor.clearColor;
     self.selectedIndex = NSNotFound;
     
-    self.clipsToBounds = YES;
+    self.contentView.clipsToBounds = YES;
     
     UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
     
-    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:collectionViewLayout];
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.contentView.bounds collectionViewLayout:collectionViewLayout];
     collectionView.backgroundColor = UIColor.clearColor;
     collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     collectionView.alwaysBounceHorizontal = YES;
     collectionView.delegate = self;
     collectionView.dataSource = self;
-    [self addSubview:collectionView];
+    [self.contentView addSubview:collectionView];
     self.collectionView = collectionView;
     
     collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-    [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-                                               [collectionView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-                                               [collectionView.topAnchor constraintEqualToAnchor:self.topAnchor],
+    [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+                                               [collectionView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
+                                               [collectionView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
                                                [collectionView.heightAnchor constraintEqualToConstant:SRGLetterboxTimelineViewDefaultHeight] ]];
     
     Class cellClass = SRGLetterboxSubdivisionCell.class;

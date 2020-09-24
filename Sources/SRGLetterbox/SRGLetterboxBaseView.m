@@ -10,6 +10,14 @@
 
 static void commonInit(SRGLetterboxBaseView *self);
 
+@interface SRGLetterboxBaseView ()
+
+// Instantiated at initialization time (so that outlets are readily defined), but only installed when displayed
+// to improve performance.
+@property (nonatomic) UIView *contentView;
+
+@end
+
 @implementation SRGLetterboxBaseView
 
 #pragma mark Object lifecycle
@@ -56,6 +64,14 @@ static void commonInit(SRGLetterboxBaseView *self);
     [super willMoveToWindow:newWindow];
     
     if (newWindow) {
+        [self addSubview:self.contentView];
+        
+        self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[ [self.contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                   [self.contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                   [self.contentView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+                                                   [self.contentView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
+        
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];
         
@@ -105,7 +121,7 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 #pragma mark Subclassing hooks
 
-- (void)createView
+- (void)layoutContentView
 {}
 
 - (void)contentSizeCategoryDidChange
@@ -147,5 +163,6 @@ static void commonInit(SRGLetterboxBaseView *self);
 
 static void commonInit(SRGLetterboxBaseView *self)
 {
-    [self createView];
+    self.contentView = [[UIView alloc] init];
+    [self layoutContentView];
 }

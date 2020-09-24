@@ -94,38 +94,38 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
     self.userInterfaceHidden = NO;
     self.userInterfaceTogglable = YES;
     self.preferredTimelineHeight = SRGLetterboxTimelineViewDefaultHeight;
     self.previousAspectRatio = SRGAspectRatioUndefined;
     
-    self.backgroundColor = UIColor.blackColor;
+    self.contentView.backgroundColor = UIColor.blackColor;
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
                                                                                                             action:@selector(resetInactivity:)];
     activityGestureRecognizer.delegate = self;
-    [self addGestureRecognizer:activityGestureRecognizer];
+    [self.contentView addGestureRecognizer:activityGestureRecognizer];
     
     if (@available(iOS 11.0, *)) {
-        self.accessibilityIgnoresInvertColors = YES;
+        self.contentView.accessibilityIgnoresInvertColors = YES;
     }
     
-    [self createTimelineViewInView:self];
-    [self createPlayerViewInView:self];
-    [self createControlsViewInView:self];
-    [self createNotificationViewInView:self];
-    [self createAvailabilityViewInView:self];
-    [self createContinuousPlaybackViewInView:self];
-    [self createErrorViewInView:self];
+    [self layoutTimelineViewInView:self.contentView];
+    [self layoutPlayerViewInView:self.contentView];
+    [self layoutControlsViewInView:self.contentView];
+    [self layoutNotificationViewInView:self.contentView];
+    [self layoutAvailabilityViewInView:self.contentView];
+    [self layoutContinuousPlaybackViewInView:self.contentView];
+    [self layoutErrorViewInView:self.contentView];
 }
 
-- (void)createTimelineViewInView:(UIView *)view
+- (void)layoutTimelineViewInView:(UIView *)view
 {
     SRGLetterboxTimelineView *timelineView = [[SRGLetterboxTimelineView alloc] init];
     timelineView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -152,7 +152,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
 }
 
-- (void)createPlayerViewInView:(UIView *)view
+- (void)layoutPlayerViewInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -192,7 +192,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     self.videoGravityTapChangeGestureRecognizer = videoGravityTapChangeGestureRecognizer;
 }
 
-- (void)createControlsViewInView:(UIView *)view
+- (void)layoutControlsViewInView:(UIView *)view
 {
     SRGControlsBackgroundView *controlsBackgroundView = [[SRGControlsBackgroundView alloc] init];
     controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -231,7 +231,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
 }
 
-- (void)createNotificationViewInView:(UIView *)view
+- (void)layoutNotificationViewInView:(UIView *)view
 {
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -249,7 +249,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
 }
 
-- (void)createAvailabilityViewInView:(UIView *)view
+- (void)layoutAvailabilityViewInView:(UIView *)view
 {
     SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
     availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -264,7 +264,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
 }
 
-- (void)createContinuousPlaybackViewInView:(UIView *)view
+- (void)layoutContinuousPlaybackViewInView:(UIView *)view
 {
     SRGContinuousPlaybackView *continuousPlaybackView = [[SRGContinuousPlaybackView alloc] init];
     continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -280,7 +280,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
 }
 
-- (void)createErrorViewInView:(UIView *)view
+- (void)layoutErrorViewInView:(UIView *)view
 {
     SRGErrorView *errorView = [[SRGErrorView alloc] init];
     errorView.translatesAutoresizingMaskIntoConstraints = NO;

@@ -81,13 +81,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
-    [self createUserInterfaceToggleActiveViewInView:self];
-    [self createBottomControlsInView:self];
-    [self createCenterControlsInView:self];
+    [self layoutUserInterfaceToggleActiveViewInView:self.contentView];
+    [self layoutBottomControlsInView:self.contentView];
+    [self layoutCenterControlsInView:self.contentView];
     
     // Track controller changes to ensure picture in picture availability is correctly displayed.
     @weakify(self)
@@ -97,7 +97,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }];
 }
 
-- (void)createUserInterfaceToggleActiveViewInView:(UIView *)view
+- (void)layoutUserInterfaceToggleActiveViewInView:(UIView *)view
 {
     UIView *userInterfaceToggleActiveView = [[UIView alloc] init];
     userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -114,7 +114,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [userInterfaceToggleActiveView addGestureRecognizer:hideUserInterfaceTapGestureRecognizer];
 }
 
-- (void)createBottomControlsInView:(UIView *)view
+- (void)layoutBottomControlsInView:(UIView *)view
 {
     UIStackView *bottomStackView = [[UIStackView alloc] init];
     bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -142,17 +142,17 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         ]];
     }
     
-    [self createViewModeButtonInStackView:bottomStackView];
-    [self createAirPlayButtonInStackView:bottomStackView];
-    [self createPictureInPictureButtonInStackView:bottomStackView];
-    [self createTimeSliderInStackView:bottomStackView];
-    [self createDurationLabelInStackView:bottomStackView];
-    [self createLiveLabelInStackView:bottomStackView];
-    [self createTracksButtonInStackView:bottomStackView];
-    [self createFullScreenPhantomButtonInStackView:bottomStackView];
+    [self layoutViewModeButtonInStackView:bottomStackView];
+    [self layoutAirPlayButtonInStackView:bottomStackView];
+    [self layoutPictureInPictureButtonInStackView:bottomStackView];
+    [self layoutTimeSliderInStackView:bottomStackView];
+    [self layoutDurationLabelInStackView:bottomStackView];
+    [self layoutLiveLabelInStackView:bottomStackView];
+    [self layoutTracksButtonInStackView:bottomStackView];
+    [self layoutFullScreenPhantomButtonInStackView:bottomStackView];
 }
 
-- (void)createViewModeButtonInStackView:(UIStackView *)stackView
+- (void)layoutViewModeButtonInStackView:(UIStackView *)stackView
 {
     SRGViewModeButton *viewModeButton = [[SRGViewModeButton alloc] init];
     viewModeButton.tintColor = UIColor.whiteColor;
@@ -166,7 +166,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createAirPlayButtonInStackView:(UIStackView *)stackView
+- (void)layoutAirPlayButtonInStackView:(UIStackView *)stackView
 {
     SRGAirPlayButton *airPlayButton = [[SRGAirPlayButton alloc] init];
     airPlayButton.tintColor = UIColor.whiteColor;
@@ -180,7 +180,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createPictureInPictureButtonInStackView:(UIStackView *)stackView
+- (void)layoutPictureInPictureButtonInStackView:(UIStackView *)stackView
 {
     SRGPictureInPictureButton *pictureInPictureButton = [[SRGPictureInPictureButton alloc] init];
     pictureInPictureButton.tintColor = UIColor.whiteColor;
@@ -194,7 +194,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createTimeSliderInStackView:(UIStackView *)stackView
+- (void)layoutTimeSliderInStackView:(UIStackView *)stackView
 {
     SRGControlWrapperView *timeSliderWrapperView = [[SRGControlWrapperView alloc] init];
     [stackView addArrangedSubview:timeSliderWrapperView];
@@ -218,7 +218,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createDurationLabelInStackView:(UIStackView *)stackView
+- (void)layoutDurationLabelInStackView:(UIStackView *)stackView
 {
     SRGControlWrapperView *durationLabelWrapperView = [[SRGControlWrapperView alloc] init];
     durationLabelWrapperView.matchingFirstSubviewHidden = YES;
@@ -240,7 +240,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createLiveLabelInStackView:(UIStackView *)stackView
+- (void)layoutLiveLabelInStackView:(UIStackView *)stackView
 {
     SRGControlWrapperView *liveLabelWrapperView = [[SRGControlWrapperView alloc] init];
     liveLabelWrapperView.matchingFirstSubviewHidden = YES;
@@ -259,7 +259,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createTracksButtonInStackView:(UIStackView *)stackView
+- (void)layoutTracksButtonInStackView:(UIStackView *)stackView
 {
     SRGTracksButton *tracksButton = [[SRGTracksButton alloc] init];
     tracksButton.tintColor = UIColor.whiteColor;
@@ -274,7 +274,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createFullScreenPhantomButtonInStackView:(UIStackView *)stackView
+- (void)layoutFullScreenPhantomButtonInStackView:(UIStackView *)stackView
 {
     // Always hidden from view. Only used to define the frame of the real full screen button, injected at the top of
     // the view hierarchy at runtime.
@@ -288,16 +288,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createCenterControlsInView:(UIView *)view
+- (void)layoutCenterControlsInView:(UIView *)view
 {
-    [self createPlaybackButtonInView:view];
-    [self createBackwardSeekButtonInView:view];
-    [self createForwardSeekButtonInView:view];
-    [self createStartOverButtonInView:view];
-    [self createSkipToLiveButtonInView:view];
+    [self layoutPlaybackButtonInView:view];
+    [self layoutBackwardSeekButtonInView:view];
+    [self layoutForwardSeekButtonInView:view];
+    [self layoutStartOverButtonInView:view];
+    [self layoutSkipToLiveButtonInView:view];
 }
 
-- (void)createPlaybackButtonInView:(UIView *)view
+- (void)layoutPlaybackButtonInView:(UIView *)view
 {
     SRGLetterboxPlaybackButton *playbackButton = [[SRGLetterboxPlaybackButton alloc] init];
     playbackButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -311,7 +311,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createBackwardSeekButtonInView:(UIView *)view
+- (void)layoutBackwardSeekButtonInView:(UIView *)view
 {
     SRGControlButton *backwardSeekButton = [[SRGControlButton alloc] init];
     backwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -330,7 +330,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createForwardSeekButtonInView:(UIView *)view
+- (void)layoutForwardSeekButtonInView:(UIView *)view
 {
     SRGControlButton *forwardSeekButton = [[SRGControlButton alloc] init];
     forwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -349,7 +349,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createStartOverButtonInView:(UIView *)view
+- (void)layoutStartOverButtonInView:(UIView *)view
 {
     SRGControlButton *startOverButton = [[SRGControlButton alloc] init];
     startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -367,7 +367,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)createSkipToLiveButtonInView:(UIView *)view
+- (void)layoutSkipToLiveButtonInView:(UIView *)view
 {
     SRGControlButton *skipToLiveButton = [[SRGControlButton alloc] init];
     skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;

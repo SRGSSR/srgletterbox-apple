@@ -18,12 +18,12 @@
 
 #pragma mark Layout
 
-- (void)createView
+- (void)layoutContentView
 {
-    [super createView];
+    [super layoutContentView];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
-    [self addGestureRecognizer:tapGestureRecognizer];
+    [self.contentView addGestureRecognizer:tapGestureRecognizer];
 }
 
 #pragma mark Accessibility
