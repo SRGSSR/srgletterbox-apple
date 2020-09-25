@@ -1,26 +1,24 @@
 .DS_Store
 
-*.xcscmblueprint
-xcuserdata
-
-/archive
-/build
+/.build
+/Packages
+/*.xcodeproj
+xcuserdata/
 
 /Configuration
 
-/Carthage
-/Cartfile.private
-/Cartfile.resolved
-
 /.env
 /Xcode/Links
+
+*.xcscmblueprint
+xcuserdata
 
 /fastlane/export
 /fastlane/*commit-hash.txt
 /fastlane/*.xcresult
 /fastlane/*.xml
 
-/Scripts/generate-icons-caches
-
 /vendor
 /.bundle
+/Demo/Carthage
+/Demo/Scripts/generate-icons-caches

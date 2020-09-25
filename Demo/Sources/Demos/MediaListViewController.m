@@ -14,6 +14,8 @@
 #import "UIViewController+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
+@import SRGDataProviderNetwork;
+
 @interface MediaListViewController ()
 
 @property (nonatomic) MediaList mediaList;

@@ -11,8 +11,8 @@
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
-#import <libextobjc/libextobjc.h>
-#import <SRGAnalytics/SRGAnalytics.h>
+@import libextobjc;
+@import SRGAnalytics;
 
 @interface PlaylistViewController ()
 

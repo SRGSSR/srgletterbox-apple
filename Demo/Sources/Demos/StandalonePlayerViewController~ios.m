@@ -10,7 +10,7 @@
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
-#import <SRGAnalytics/SRGAnalytics.h>
+@import SRGAnalytics;
 
 @interface StandalonePlayerViewController ()
 

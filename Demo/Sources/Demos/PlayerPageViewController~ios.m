@@ -9,7 +9,7 @@
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 
-#import <SRGLetterbox/SRGLetterbox.h>
+@import SRGLetterbox;
 
 @interface PlayerPageViewController ()
 

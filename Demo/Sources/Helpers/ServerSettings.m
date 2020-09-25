@@ -6,8 +6,8 @@
 
 #import "ServerSettings.h"
 
-#import <libextobjc/libextobjc.h>
-#import <SRGDataProvider/SRGDataProvider.h>
+@import libextobjc;
+@import SRGDataProvider;
 
 NSURL *LetterboxDemoMMFServiceURL(void)
 {

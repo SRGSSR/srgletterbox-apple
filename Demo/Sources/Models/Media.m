@@ -8,7 +8,7 @@
 
 #import "ServerSettings.h"
 
-#import <SRGDataProvider/SRGDataProvider.h>
+@import SRGDataProvider;
 
 @interface Media ()
 

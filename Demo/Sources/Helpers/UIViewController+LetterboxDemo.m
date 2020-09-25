@@ -9,6 +9,8 @@
 #import "AdvancedPlayerViewController.h"
 #import "SettingsViewController.h"
 
+@import SRGDataProviderNetwork;
+
 #import <objc/runtime.h>
 
 static void *s_dataProviderKey = &s_dataProviderKey;

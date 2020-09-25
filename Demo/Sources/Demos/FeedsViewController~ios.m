@@ -10,8 +10,8 @@
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
 
-#import <SRGDataProvider/SRGDataProvider.h>
-#import <SRGLetterbox/SRGLetterbox.h>
+@import SRGDataProviderNetwork;
+@import SRGLetterbox;
 
 @interface FeedsViewController ()
 

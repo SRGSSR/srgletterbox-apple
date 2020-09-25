@@ -14,7 +14,8 @@
 #import "StandalonePlayerViewController.h"
 #import "PlaylistViewController.h"
 
-#import <libextobjc/libextobjc.h>
+@import libextobjc;
+@import SRGDataProviderNetwork;
 
 @interface MiscellaneousViewController ()
 

@@ -8,8 +8,8 @@
 
 #import "SettingsViewController.h"
 
-#import <libextobjc/libextobjc.h>
-#import <SRGLetterbox/SRGLetterbox.h>
+@import libextobjc;
+@import SRGLetterbox;
 
 @interface FeedTableViewCell ()
 

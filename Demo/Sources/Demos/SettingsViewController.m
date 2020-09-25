@@ -8,13 +8,13 @@
 
 #import "NSBundle+LetterboxDemo.h"
 
-#import <SRGAppearance/SRGAppearance.h>
-#import <SRGLetterbox/SRGLetterbox.h>
-#import <YYWebImage/YYWebImage.h>
+@import SRGAppearance;
+@import SRGLetterbox;
+@import YYWebImage;
 
 #if TARGET_OS_IOS
-#import <AppCenterDistribute/AppCenterDistribute.h>
-#import <SafariServices/SafariServices.h>
+@import AppCenterDistribute;
+@import SafariServices;
 #endif
 
 /**
