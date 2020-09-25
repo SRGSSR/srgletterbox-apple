@@ -14,7 +14,7 @@ static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
     // Fix for invalid images, incorrect Kids program images, and incorrect images for sports (RTS)
     // See https://srfmmz.atlassian.net/browse/AIS-15672
     return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"] && ! [URL.absoluteString containsString:@"rts.ch/video/jeunesse"]
-        && ! [URL.absoluteString containsString:@".html"];
+    && ! [URL.absoluteString containsString:@".html"];
 }
 
 NSString *SRGLetterboxFilePathForImagePlaceholder(void)
@@ -256,13 +256,9 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             break;
         }
             
-        case SRGBlockingReasonAgeRating12: {
-            return [UIImage srg_letterboxImageNamed:@"rating_12"];
-            break;
-        }
-            
+        case SRGBlockingReasonAgeRating12:
         case SRGBlockingReasonAgeRating18: {
-            return [UIImage srg_letterboxImageNamed:@"rating_18"];
+            return [UIImage srg_letterboxImageNamed:@"age_rating"];
             break;
         }
             
