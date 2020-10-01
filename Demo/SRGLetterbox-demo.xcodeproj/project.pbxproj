@@ -51,6 +51,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.xcconfig"; path = "Links/SRGLetterbox-demo.xcconfig"; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
 		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
 		0849DA5820FCD82D00026F0D /* TopicListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicListViewController.m; sourceTree = "<group>"; };
@@ -164,6 +165,7 @@
 				6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */,
 				6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */,
 				6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */,
+				0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */,
 			);
 			name = Xcode;
 			path = ../Xcode;
