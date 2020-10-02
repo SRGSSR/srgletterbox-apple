@@ -87,6 +87,10 @@ If you need to make changes to the settings:
 1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
 1. Push all commits when you are ready.
 
+## Migration between major versions
+
+For more information about migrating between major Letterbox versions, please check the corresponding release notes as well as our [migration guides](https://github.com/SRGSSR/srgletterbox-apple/wiki/Migration-guides).
+
 ## Known issues
 
 Control center and lock screen integrations are not working reliably in the iOS simulator. This is a known simulator-only limitation, everything works fine on a device. 
