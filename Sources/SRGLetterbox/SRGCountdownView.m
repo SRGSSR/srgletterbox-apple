@@ -19,9 +19,11 @@
 static const NSInteger SRGCountdownViewDaysLimit = 100;
 
 #if TARGET_OS_TV
-    static const CGFloat kTitleHeight = 40.f;
+static const CGFloat kTitleHeight = 60.f;
+static const CGFloat kMessageLabelTopSpace = 10.f;
 #else
-    static const CGFloat kTitleHeight = 30.f;
+static const CGFloat kTitleHeight = 30.f;
+static const CGFloat kMessageLabelTopSpace = 0.f;
 #endif
 
 @interface SRGCountdownView ()
@@ -508,7 +510,9 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     
     [NSLayoutConstraint activateConstraints:@[
         [messageLabel.centerXAnchor constraintEqualToAnchor:self.mainStackView.centerXAnchor],
-        [messageLabel.topAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.bottomAnchor constant:10.f]
+        [messageLabel.topAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.topAnchor constant:kMessageLabelTopSpace],
+        [messageLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.mainStackView.leadingAnchor constant:8.f],
+        [messageLabel.trailingAnchor constraintLessThanOrEqualToAnchor:self.mainStackView.trailingAnchor constant:8.f]
     ]];
 }
 
@@ -682,7 +686,7 @@ static const NSInteger SRGCountdownViewDaysLimit = 100;
     CGFloat width = 155.f;
     CGFloat height = 100.f;
     
-    CGFloat digitFontSize = 65.f;
+    CGFloat digitFontSize = 80.f;
     CGFloat titleFontSize = 35.f;
     CGFloat digitCornerRadius = 3.f;
     
