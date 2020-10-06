@@ -152,7 +152,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGPosition *startPosition;
 @property (nonatomic) SRGLetterboxPlaybackSettings *preferredSettings;
 @property (nonatomic) NSError *error;
-@property (nonatomic, getter=isStopped) BOOL stopped;
 
 // Save the URN sent to the social count view service, to not send it twice
 @property (nonatomic, copy) NSString *socialCountViewURN;
@@ -1148,8 +1147,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     // Reset the player, including the attached URL. We keep the Letterbox controller context so that playback can
     // be restarted.
     [self.mediaPlayerController reset];
-    
-    self.stopped = YES;
 }
 
 - (void)retry
@@ -1194,7 +1191,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     self.error = nil;
-    self.stopped = NO;
     
     self.lastUpdateDate = nil;
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
@@ -1521,7 +1517,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
-    if (! self.stopped && [FXReachability sharedInstance].reachable) {
+    NSError *underlyingError = self.error.userInfo[NSUnderlyingErrorKey];
+    if ([FXReachability sharedInstance].reachable
+            && [underlyingError.domain isEqualToString:NSURLErrorDomain] && underlyingError.code == NSURLErrorNotConnectedToInternet) {
         [self retry];
     }
 }
