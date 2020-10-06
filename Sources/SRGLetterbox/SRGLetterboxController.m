@@ -1111,6 +1111,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (void)play
 {
     if (self.mediaPlayerController.contentURL) {
+        self.error = nil;
         [self.mediaPlayerController play];
     }
     else if (self.media) {
