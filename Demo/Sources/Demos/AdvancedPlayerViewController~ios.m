@@ -127,7 +127,7 @@
     
     // Always display the full-screen interface in landscape orientation
     UIDeviceOrientation deviceOrientation = UIDevice.currentDevice.orientation;
-    BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+    BOOL isLandscape = UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation) ? UIDeviceOrientationIsLandscape(deviceOrientation) : UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation);
     [self.letterboxView setFullScreen:isLandscape animated:NO];
     
     [NSNotificationCenter.defaultCenter addObserver:self
@@ -234,13 +234,13 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
     return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
     [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];
@@ -324,7 +324,7 @@
 
 - (BOOL)letterboxViewShouldDisplayFullScreenToggleButton:(SRGLetterboxView *)letterboxView
 {
-    return UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
+    return UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation);
 }
 
 #pragma mark UIGestureRecognizerDelegate protocol

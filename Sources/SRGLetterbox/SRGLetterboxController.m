@@ -378,17 +378,21 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return self == SRGLetterboxService.sharedService.controller;
 }
 
+#endif
+
 - (BOOL)isPictureInPictureEnabled
 {
+#if TARGET_OS_IOS
     return self.backgroundServicesEnabled && SRGLetterboxService.sharedService.pictureInPictureDelegate;
+#else
+    return YES;
+#endif
 }
 
 - (BOOL)isPictureInPictureActive
 {
     return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
-
-#endif
 
 - (void)setEndTolerance:(NSTimeInterval)endTolerance
 {
@@ -553,11 +557,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)canPlayPlaylistMedia:(SRGMedia *)media
 {
-#if TARGET_OS_IOS
-    if (self.pictureInPictureActive) {
-        return NO;
+    if (@available(iOS 9, tvOS 14, *)) {
+        if (self.pictureInPictureActive) {
+            return NO;
+        }
     }
-#endif
     
     return media != nil;
 }

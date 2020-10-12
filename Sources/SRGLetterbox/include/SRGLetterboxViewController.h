@@ -28,6 +28,26 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
  */
 - (void)letterboxViewController:(SRGLetterboxViewController *)letterboxViewController didCancelContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
 
+/**
+ *  Called when picture is picture will start.
+ */
+- (void)letterboxViewControllerWillStartPictureInPicture:(SRGLetterboxViewController *)letterboxViewController API_AVAILABLE(tvos(14.0));
+
+/**
+ *  Called when picture is picture did start.
+ */
+- (void)letterboxViewControllerDidStartPictureInPicture:(SRGLetterboxViewController *)letterboxViewController API_AVAILABLE(tvos(14.0));
+
+/**
+ *  Called when picture is picture will stop.
+ */
+- (void)letterboxViewControllerWillStopPictureInPicture:(SRGLetterboxViewController *)letterboxViewController API_AVAILABLE(tvos(14.0));
+
+/**
+ *  Called when picture is picture did stop.
+ */
+- (void)letterboxViewControllerDidStopPictureInPicture:(SRGLetterboxViewController *)letterboxViewController API_AVAILABLE(tvos(14.0));
+
 @end
 
 /**
