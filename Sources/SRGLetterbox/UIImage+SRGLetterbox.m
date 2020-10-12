@@ -6,6 +6,7 @@
 
 #import "UIImage+SRGLetterbox.h"
 
+#import "NSError+SRGLetterbox.h"
 #import "SRGLetterboxError.h"
 
 static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
@@ -234,7 +235,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             return [UIImage srg_letterboxImageNamed:@"generic_error"];
         }
     }
-    else if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
+    else if (error.srg_letterbox_isNotConnectedToInternet) {
         return [UIImage srg_letterboxImageNamed:@"no_network"];
     }
     else {

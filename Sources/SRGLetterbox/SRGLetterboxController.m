@@ -7,6 +7,7 @@
 #import "SRGLetterboxController.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSError+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
@@ -1517,12 +1518,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
-    NSError *underlyingError = self.error.userInfo[NSUnderlyingErrorKey];
-    if ([underlyingError.domain isEqualToString:SRGMediaPlayerErrorDomain]) {
-        underlyingError = underlyingError.userInfo[NSUnderlyingErrorKey];
-    }
-    if ([FXReachability sharedInstance].reachable
-            && [underlyingError.domain isEqualToString:NSURLErrorDomain] && underlyingError.code == NSURLErrorNotConnectedToInternet) {
+    if ([FXReachability sharedInstance].reachable && self.error.srg_letterbox_isNotConnectedToInternet) {
         [self retry];
     }
 }
