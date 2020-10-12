@@ -1518,6 +1518,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
     NSError *underlyingError = self.error.userInfo[NSUnderlyingErrorKey];
+    if ([underlyingError.domain isEqualToString:SRGMediaPlayerErrorDomain]) {
+        underlyingError = underlyingError.userInfo[NSUnderlyingErrorKey];
+    }
     if ([FXReachability sharedInstance].reachable
             && [underlyingError.domain isEqualToString:NSURLErrorDomain] && underlyingError.code == NSURLErrorNotConnectedToInternet) {
         [self retry];
