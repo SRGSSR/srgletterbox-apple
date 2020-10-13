@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSError (SRGLetterbox)
 
 /**
- *  Return the first contained the error or underlying errors related to a network issue.
+ *  Return the first error related to a network issue, from the error to underlying errors.
  */
 @property (nonatomic, readonly, nullable) NSError *srg_letterboxNetworkError;
 
