@@ -12,13 +12,16 @@
 
 - (BOOL)srg_letterbox_isNotConnectedToInternet
 {
-    // Check on SRGLetterbox underlying error or SRGMediaPlayer underlying error
     NSError *error = self;
-    while (self != nil) {
-        if (([error.domain isEqualToString:NSURLErrorDomain] || [error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork]) &&
-            error.code == NSURLErrorNotConnectedToInternet) {
+    while (error) {
+        if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
             return YES;
         }
+        
+        if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] && error.code == kCFURLErrorNotConnectedToInternet) {
+            return YES;
+        }
+        
         error = error.userInfo[NSUnderlyingErrorKey];
     }
     return NO;
