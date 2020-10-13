@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Return the first contained the error or underlying errors related to a network issue.
  */
-@property (nonatomic, readonly, nullable) NSError *srg_letterbox_networkError;
+@property (nonatomic, readonly, nullable) NSError *srg_letterboxNetworkError;
 
 @end
 

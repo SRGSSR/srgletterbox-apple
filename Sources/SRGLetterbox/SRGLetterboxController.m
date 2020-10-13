@@ -904,7 +904,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.). Consider
     // them with highest priority
-    NSError *networkError = error.srg_letterbox_networkError;
+    NSError *networkError = error.srg_letterboxNetworkError;
     if (networkError) {
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                          code:SRGLetterboxErrorCodeNetwork
@@ -1520,7 +1520,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
-    if ([FXReachability sharedInstance].reachable && self.error.srg_letterbox_networkError) {
+    if ([FXReachability sharedInstance].reachable && self.error.srg_letterboxNetworkError) {
         [self retry];
     }
 }
