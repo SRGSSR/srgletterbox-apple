@@ -7,6 +7,7 @@
 #import "SRGLetterboxController.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSError+SRGLetterbox.h"
 #import "NSTimer+SRGLetterbox.h"
 #import "SRGLetterbox.h"
 #import "SRGLetterboxService+Private.h"
@@ -152,7 +153,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGPosition *startPosition;
 @property (nonatomic) SRGLetterboxPlaybackSettings *preferredSettings;
 @property (nonatomic) NSError *error;
-@property (nonatomic, getter=isStopped) BOOL stopped;
 
 // Save the URN sent to the social count view service, to not send it twice
 @property (nonatomic, copy) NSString *socialCountViewURN;
@@ -902,16 +902,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         return;
     }
     
-    // Forward Letterbox friendly errors
-    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
-        self.error = error;
-    }
-    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
-    else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
+    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.). Consider
+    // them with highest priority
+    NSError *networkError = error.srg_letterboxNetworkError;
+    if (networkError) {
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                          code:SRGLetterboxErrorCodeNetwork
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
-                                                 NSUnderlyingErrorKey : error }];
+                                                 NSUnderlyingErrorKey : networkError }];
+    }
+    // Forward Letterbox friendly errors
+    else if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        self.error = error;
     }
     // Use a friendly error message for all other reasons
     else {
@@ -1148,8 +1150,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     // Reset the player, including the attached URL. We keep the Letterbox controller context so that playback can
     // be restarted.
     [self.mediaPlayerController reset];
-    
-    self.stopped = YES;
 }
 
 - (void)retry
@@ -1194,7 +1194,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     self.error = nil;
-    self.stopped = NO;
     
     self.lastUpdateDate = nil;
     self.dataAvailability = SRGLetterboxDataAvailabilityNone;
@@ -1521,7 +1520,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
-    if (! self.stopped && [FXReachability sharedInstance].reachable) {
+    if ([FXReachability sharedInstance].reachable && self.error.srg_letterboxNetworkError) {
         [self retry];
     }
 }

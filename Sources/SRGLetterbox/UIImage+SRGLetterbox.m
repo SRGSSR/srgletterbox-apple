@@ -6,6 +6,7 @@
 
 #import "UIImage+SRGLetterbox.h"
 
+#import "NSError+SRGLetterbox.h"
 #import "SRGLetterboxError.h"
 
 static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
@@ -221,21 +222,18 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         return nil;
     }
     
-    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+    if (error.srg_letterboxNetworkError) {
+        return [UIImage srg_letterboxImageNamed:@"no_network"];
+    }
+    else if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
         NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
         if (error.code == SRGLetterboxErrorCodeBlocked) {
             SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
             return [self srg_letterboxImageForBlockingReason:blockingReason];
         }
-        else if (underlyingError) {
-            return [self srg_letterboxImageForError:underlyingError];
-        }
         else {
             return [UIImage srg_letterboxImageNamed:@"generic_error"];
         }
-    }
-    else if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
-        return [UIImage srg_letterboxImageNamed:@"no_network"];
     }
     else {
         return [UIImage srg_letterboxImageNamed:@"generic_error"];
