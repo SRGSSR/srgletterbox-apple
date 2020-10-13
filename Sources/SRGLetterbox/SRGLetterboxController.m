@@ -902,16 +902,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         return;
     }
     
-    // Forward Letterbox friendly errors
-    if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
-        self.error = error;
-    }
-    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.)
-    else if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] || [error.domain isEqualToString:NSURLErrorDomain]) {
+    // Use a friendly error message for network errors (might be a connection loss, incorrect proxy settings, etc.). Consider
+    // them with highest priority
+    NSError *networkError = error.srg_letterbox_networkError;
+    if (networkError) {
         self.error = [NSError errorWithDomain:SRGLetterboxErrorDomain
                                          code:SRGLetterboxErrorCodeNetwork
                                      userInfo:@{ NSLocalizedDescriptionKey : SRGLetterboxLocalizedString(@"A network issue has been encountered. Please check your Internet connection and network settings", @"Message displayed when a network error has been encountered"),
-                                                 NSUnderlyingErrorKey : error }];
+                                                 NSUnderlyingErrorKey : networkError }];
+    }
+    // Forward Letterbox friendly errors
+    else if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
+        self.error = error;
     }
     // Use a friendly error message for all other reasons
     else {
@@ -1518,7 +1520,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (void)reachabilityDidChange:(NSNotification *)notification
 {
-    if ([FXReachability sharedInstance].reachable && self.error.srg_letterbox_isNotConnectedToInternet) {
+    if ([FXReachability sharedInstance].reachable && self.error.srg_letterbox_networkError) {
         [self retry];
     }
 }

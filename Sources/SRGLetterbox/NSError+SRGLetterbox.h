@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSError (SRGLetterbox)
 
 /**
- *  Return `YES` iff the error or underlying errors are related to a not connected to internet error code.
+ *  Return the first contained the error or underlying errors related to a network issue.
  */
-@property (nonatomic, readonly) BOOL srg_letterbox_isNotConnectedToInternet;
+@property (nonatomic, readonly, nullable) NSError *srg_letterbox_networkError;
 
 @end
 

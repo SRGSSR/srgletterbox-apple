@@ -235,7 +235,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
             return [UIImage srg_letterboxImageNamed:@"generic_error"];
         }
     }
-    else if (error.srg_letterbox_isNotConnectedToInternet) {
+    else if (error.srg_letterbox_networkError) {
         return [UIImage srg_letterboxImageNamed:@"no_network"];
     }
     else {

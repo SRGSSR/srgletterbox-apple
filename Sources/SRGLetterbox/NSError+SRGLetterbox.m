@@ -10,21 +10,17 @@
 
 #pragma mark Class methods
 
-- (BOOL)srg_letterbox_isNotConnectedToInternet
+- (NSError *)srg_letterbox_networkError
 {
     NSError *error = self;
     while (error) {
-        if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
-            return YES;
-        }
-        
-        if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] && error.code == kCFURLErrorNotConnectedToInternet) {
-            return YES;
+        if ([error.domain isEqualToString:NSURLErrorDomain] || [error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork]) {
+            return error;
         }
         
         error = error.userInfo[NSUnderlyingErrorKey];
     }
-    return NO;
+    return nil;
 }
 
 @end
