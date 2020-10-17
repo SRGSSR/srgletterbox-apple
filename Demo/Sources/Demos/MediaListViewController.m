@@ -389,6 +389,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     SRGMedia *media = self.medias[indexPath.row];
     [self openPlayerWithMedia:media serviceURL:self.serviceURL];
 }
