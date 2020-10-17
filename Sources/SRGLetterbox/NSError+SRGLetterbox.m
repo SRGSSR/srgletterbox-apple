@@ -14,7 +14,11 @@
 {
     NSError *error = self;
     while (error) {
-        if ([error.domain isEqualToString:NSURLErrorDomain] || [error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork]) {
+        if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) {
+            return error;
+        }
+        
+        if ([error.domain isEqualToString:(NSString *)kCFErrorDomainCFNetwork] && error.code == kCFURLErrorNotConnectedToInternet) {
             return error;
         }
         
