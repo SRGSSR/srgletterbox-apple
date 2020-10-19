@@ -222,7 +222,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         return nil;
     }
     
-    if (error.srg_letterboxNetworkError) {
+    if (error.srg_letterboxNoNetworkError) {
         return [UIImage srg_letterboxImageNamed:@"no_network"];
     }
     else if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
