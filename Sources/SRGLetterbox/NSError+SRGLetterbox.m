@@ -10,7 +10,7 @@
 
 #pragma mark Class methods
 
-- (NSError *)srg_letterboxNetworkError
+- (NSError *)srg_letterboxNoNetworkError
 {
     NSError *error = self;
     while (error) {
