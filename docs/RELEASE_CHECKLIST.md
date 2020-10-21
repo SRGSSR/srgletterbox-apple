@@ -10,7 +10,6 @@ Release these 3rd party dependencies (forked on SRGSSR github) if needed:
 - [FXReachability](https://github.com/SRGSSR/FXReachability)
 - [libextobjc](https://github.com/SRGSSR/libextobjc)
 - [MAKVONotificationCenter](https://github.com/SRGSSR/MAKVONotificationCenter)
-- [Mantle](https://github.com/SRGSSR/Mantle)
 - [TCCore](https://github.com/SRGSSR/TCCore-xcframework-apple)
 - [TCSDK](https://github.com/SRGSSR/TCSDK-xcframework-apple)
 - [YYWebImage](https://github.com/SRGSSR/YYWebImage)
@@ -19,7 +18,7 @@ Release these 3rd party dependencies (forked on SRGSSR github) if needed:
 
 To release an SRG SSR library, perform the following steps sequentially (some steps might be skipped if they do not make sense):
 
-- On _develop_, edit `Package.swift` to point at tagged versions of dependencies only. If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
+- On _develop_, edit `Package.swift` to point at `.upToNextMinor(from:)` tagged versions of dependencies. If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
 - Wait until package dependencies have been updated, build the project and commit the changes.
 - Perform global diff with last release to verify changes.
 - Verify version numbers in `Package.swift` and in the demo project `xcconfig` (if any). Bump them consistently according to [semantic versioning rules](https://semver.org) if need it. Commit and push on _develop_.
