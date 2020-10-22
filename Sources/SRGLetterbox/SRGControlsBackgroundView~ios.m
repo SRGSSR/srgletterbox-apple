@@ -76,8 +76,8 @@
         [self.contentView addSubview:loadingImageView];
         self.loadingImageView = loadingImageView;
         
-        [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
-                                                   [loadingImageView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor] ]];
+        [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
+                                                   [loadingImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor] ]];
     }
 }
 
