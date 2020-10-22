@@ -20,6 +20,7 @@
 #import "SRGNotificationView.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
+#import "UIWindow+SRGLetterbox.h"
 
 @import libextobjc;
 @import MAKVONotificationCenter;
@@ -59,6 +60,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     return nil;
 }
 
+static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
+
 @interface SRGLetterboxViewController () <SRGContinuousPlaybackViewControllerDelegate, SRGMediaPlayerViewControllerDelegate>
 
 @property (nonatomic) SRGLetterboxController *controller;
@@ -80,10 +83,26 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 @property (nonatomic, weak) id periodicTimeObserver;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
+@property (nonatomic, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
 
 @end
 
 @implementation SRGLetterboxViewController
+
+#pragma mark Class methods
+
++ (void)addLetterboxViewController:(SRGLetterboxViewController *)letterboxViewController
+{
+    if (! s_letterboxViewControllers) {
+        s_letterboxViewControllers = [NSMutableSet set];
+    }
+    [s_letterboxViewControllers addObject:letterboxViewController];
+}
+
++ (void)removeLetterboxViewController:(SRGLetterboxViewController *)letterboxViewController
+{
+    [s_letterboxViewControllers removeObject:letterboxViewController];
+}
 
 #pragma mark Object lifecycle
 
@@ -198,7 +217,10 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     
     if (self.movingFromParentViewController || self.beingDismissed) {
         [self dismissNotificationViewAnimated:NO];
-        [self.controller reset];
+        
+        if (! self.pictureInPictureActive) {
+            [self.controller reset];
+        }
     }
 }
 
@@ -480,6 +502,11 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 
 #pragma mark AVPlayerViewControllerDelegate protocol
 
+- (BOOL)playerViewControllerShouldDismiss:(AVPlayerViewController *)playerViewController
+{
+    [playerViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)playerViewController:(AVPlayerViewController *)playerViewController willTransitionToVisibilityOfTransportBar:(BOOL)visible withAnimationCoordinator:(id<AVPlayerViewControllerAnimationCoordinator>)coordinator API_AVAILABLE(tvos(11.0))
 {
     self.userInterfaceHidden = ! visible;
@@ -487,6 +514,72 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     [coordinator addCoordinatedAnimations:^{
         [self updateMainLayoutWithUserInterfaceHidden:! visible animated:NO];
     } completion:nil];
+}
+
+- (void)playerViewControllerWillStartPictureInPicture:(AVPlayerViewController *)playerViewController
+{
+    if (@available(tvOS 14, *)) {
+        [SRGLetterboxViewController addLetterboxViewController:self];
+        
+        self.pictureInPictureActive = YES;
+        
+        if ([self.delegate respondsToSelector:@selector(letterboxViewControllerWillStartPictureInPicture:)]) {
+            [self.delegate letterboxViewControllerWillStartPictureInPicture:self];
+        }
+    }
+}
+
+- (void)playerViewControllerDidStartPictureInPicture:(AVPlayerViewController *)playerViewController
+{
+    if (@available(tvOS 14, *)) {
+        if ([self.delegate respondsToSelector:@selector(letterboxViewControllerDidStartPictureInPicture:)]) {
+            [self.delegate letterboxViewControllerDidStartPictureInPicture:self];
+        }
+    }
+}
+
+- (void)playerViewControllerWillStopPictureInPicture:(AVPlayerViewController *)playerViewController
+{
+    if (@available(tvOS 14, *)) {
+        if ([self.delegate respondsToSelector:@selector(letterboxViewControllerWillStopPictureInPicture:)]) {
+            [self.delegate letterboxViewControllerWillStopPictureInPicture:self];
+        }
+    }
+}
+
+- (void)playerViewControllerDidStopPictureInPicture:(AVPlayerViewController *)playerViewController
+{
+    if (@available(tvOS 14, *)) {
+        self.pictureInPictureActive = NO;
+        
+        if ([self.delegate respondsToSelector:@selector(letterboxViewControllerDidStopPictureInPicture:)]) {
+            [self.delegate letterboxViewControllerDidStopPictureInPicture:self];
+        }
+        
+        [SRGLetterboxViewController removeLetterboxViewController:self];
+    }
+}
+
+- (void)playerViewController:(AVPlayerViewController *)playerViewController restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    if (@available(tvOS 14, *)) {
+        void (^presentPlayer)(void) = ^{
+            // Do not animate on tvOS to avoid UI glitches when swapping
+            UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.srg_letterboxTopViewController;
+            [topViewController presentViewController:self animated:NO completion:^{
+                completionHandler(YES);
+            }];
+        };
+        
+        // On tvOS dismiss any existing player first, otherwise picture in picture will be stopped when swapping
+        UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.srg_letterboxTopViewController;
+        if ([topViewController isKindOfClass:SRGLetterboxViewController.class] || [topViewController isKindOfClass:AVPlayerViewController.class]) {
+            [topViewController dismissViewControllerAnimated:NO completion:presentPlayer];
+        }
+        else {
+            presentPlayer();
+        }
+    }
 }
 
 #pragma mark SRGContinuousPlaybackViewControllerDelegate protocol

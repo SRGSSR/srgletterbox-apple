@@ -746,7 +746,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @end
 
 /**
- *  Services information. Use `SRGLetterboxService` to start application-wide services for a Letterbox controller.
+ *  Service information. On iOS use `SRGLetterboxService` to start application-wide services for a Letterbox controller.
  */
 @interface SRGLetterboxController (Services)
 
@@ -757,13 +757,15 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 
 /**
  *  Return `YES` iff the receiver is enabled for picture in picture.
+ *
+ *  @discussion As there are no Letterbox service on tvOS, picture is picture is always enabled for this platform.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled API_UNAVAILABLE(tvos);
+@property (nonatomic, readonly, getter=isPictureInPictureEnabled) BOOL pictureInPictureEnabled API_AVAILABLE(ios(9.0), tvos(14.0));
 
 /**
  *  Return `YES` iff picture in picture is currently active for the receiver.
  */
-@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive API_UNAVAILABLE(tvos);
+@property (nonatomic, readonly, getter=isPictureInPictureActive) BOOL pictureInPictureActive API_AVAILABLE(ios(9.0), tvos(14.0));
 
 @end
 

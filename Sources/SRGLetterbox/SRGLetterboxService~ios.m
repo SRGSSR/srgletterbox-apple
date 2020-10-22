@@ -443,7 +443,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
                                                                                                             || controller.backgroundVideoPlaybackEnabled
-                                                                                                            || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground
+                                                                                                            || UIApplication.sharedApplication.applicationState != UIApplicationStateBackground
                                                                                                             || AVAudioSession.srg_isAirPlayActive
                                                                                                             || UIDevice.srg_letterbox_isLocked)) {
         commandCenter.playCommand.enabled = YES;
