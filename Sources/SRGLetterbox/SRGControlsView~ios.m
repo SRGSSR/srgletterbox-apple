@@ -608,11 +608,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
     
     CGFloat width = CGRectGetWidth(self.frame);
+    if (width < 320.f) {
+        self.durationLabelWrapperView.alwaysHidden = YES;
+    }
     if (width < 296.f) {
         self.startOverButton.hidden = YES;
         self.skipToLiveButton.hidden = YES;
         self.timeSlider.hidden = YES;
-        self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (width < 214.f) {
         self.backwardSeekButton.hidden = YES;
