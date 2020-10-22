@@ -60,6 +60,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
     return nil;
 }
 
+static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
+
 @interface SRGLetterboxViewController () <SRGContinuousPlaybackViewControllerDelegate, SRGMediaPlayerViewControllerDelegate>
 
 @property (nonatomic) SRGLetterboxController *controller;
@@ -86,6 +88,21 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 @end
 
 @implementation SRGLetterboxViewController
+
+#pragma mark Class methods
+
++ (void)addLetterboxViewController:(SRGLetterboxViewController *)letterboxViewController
+{
+    if (! s_letterboxViewControllers) {
+        s_letterboxViewControllers = [NSMutableSet set];
+    }
+    [s_letterboxViewControllers addObject:letterboxViewController];
+}
+
++ (void)removeLetterboxViewController:(SRGLetterboxViewController *)letterboxViewController
+{
+    [s_letterboxViewControllers removeObject:letterboxViewController];
+}
 
 #pragma mark Object lifecycle
 
@@ -502,6 +519,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
 - (void)playerViewControllerWillStartPictureInPicture:(AVPlayerViewController *)playerViewController
 {
     if (@available(tvOS 14, *)) {
+        [SRGLetterboxViewController addLetterboxViewController:self];
+        
         self.pictureInPictureActive = YES;
         
         if ([self.delegate respondsToSelector:@selector(letterboxViewControllerWillStartPictureInPicture:)]) {
@@ -536,6 +555,8 @@ static UIView *SRGLetterboxViewControllerLoadingIndicatorSubview(UIView *view)
         if ([self.delegate respondsToSelector:@selector(letterboxViewControllerDidStopPictureInPicture:)]) {
             [self.delegate letterboxViewControllerDidStopPictureInPicture:self];
         }
+        
+        [SRGLetterboxViewController removeLetterboxViewController:self];
     }
 }
 
