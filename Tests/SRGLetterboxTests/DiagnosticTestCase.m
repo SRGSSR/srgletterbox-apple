@@ -68,11 +68,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForNonProtectedMedia
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     NSString *URN = OnDemandVideoURN;
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -120,11 +115,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testSinglePlaybackReportSubmission
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -150,11 +140,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForUnknownMedia
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     NSString *URN = @"urn:swi:video:_UNKNOWN_ID_";
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -198,11 +183,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForBlockedMedia
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     NSString *URN = @"urn:srf:video:84135f7b-c58d-4a2d-b0b0-e8680581eede";
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -250,11 +230,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForUnplayableMedia
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     self.controller.serviceURL = MMFServiceURL();
     
     NSString *URN = @"urn:rts:video:playlist500";
@@ -305,11 +280,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForOverriddenMedia
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     
     self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(NSString * _Nonnull URN) {
@@ -338,11 +308,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForTokenProtectedMedia
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     NSString *URN = OnDemandVideoTokenURN;
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -395,11 +360,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForConsecutiveMedias
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -440,11 +400,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForSegmentSwitch
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -479,11 +434,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForChapterSwitch
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
@@ -533,11 +483,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForSwitchToBlockedChapter
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     // Simulate geoblocking
     self.controller.globalParameters = @{ @"forceLocation" : @"WW" };
     
@@ -591,11 +536,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportAfterRestart
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     NSString *URN = OnDemandVideoURN;
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -710,11 +650,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForTokenProtectedMediaChangedURN
 {
-    // Report submission is disabled in public builds (tested once). Nothing to test here.
-    if (SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
     self.controller.serviceURL = MMFServiceURL();
     
     NSString *URN = MMFProtectedMediaChangedURN;
@@ -765,32 +700,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
-}
-
-- (void)testDisabledPlaybackReportInPublicBuilds
-{
-    if (! SRGContentProtectionIsPublic()) {
-        return;
-    }
-    
-    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    
-    [self.controller playURN:OnDemandVideoURN atPosition:nil withPreferredSettings:nil];
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    // Play for a while. No diagnostic report notifications must be received in public builds
-    id diagnosticSentObserver = [NSNotificationCenter.defaultCenter addObserverForName:DiagnosticTestDidSendReportNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
-        XCTFail(@"Controller must not send diagnostic reports for public builds.");
-    }];
-    
-    [self expectationForElapsedTimeInterval:15. withHandler:nil];
-    
-    [self waitForExpectationsWithTimeout:20. handler:^(NSError * _Nullable error) {
-        [NSNotificationCenter.defaultCenter removeObserver:diagnosticSentObserver];
-    }];
 }
 
 @end
