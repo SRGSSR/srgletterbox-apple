@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "develop",
-          "revision": "390c983a57c404d6e592f1a58e50f27505ad627c",
+          "revision": "9e1d7a50ffa961f68d5ad73ceacc44ed066fb6d5",
           "version": null
         }
       },
@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgcontentprotection-apple.git",
         "state": {
           "branch": "develop",
-          "revision": "7cbb61ac1c2442420d10afceabc6849b7da41e04",
+          "revision": "ea9527dbe2c41de28de6b56b4d41363ebef48fdf",
           "version": null
         }
       },
