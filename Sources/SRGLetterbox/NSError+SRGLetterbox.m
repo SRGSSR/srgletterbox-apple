@@ -27,4 +27,23 @@
     return nil;
 }
 
+- (NSString *)srg_letterboxUnderlyingErrorMessage
+{
+    NSError *error = self;
+    NSString *errorMessage = error.srg_letterboxDescription;
+    while (error.userInfo[NSUnderlyingErrorKey]) {
+        error = error.userInfo[NSUnderlyingErrorKey];
+        errorMessage = [[errorMessage stringByAppendingString:@"; "] stringByAppendingString:error.srg_letterboxDescription];
+    }
+    return errorMessage;
+}
+
+- (NSString *)srg_letterboxDescription
+{
+    return [NSString stringWithFormat:@"%@ (%ld): %@", self.domain, (long)self.code, self.localizedDescription];
+}
+
 @end
+
+
+
