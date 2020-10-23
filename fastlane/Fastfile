@@ -23,10 +23,10 @@ platform :ios do
       end
     end
 
-    unless lane.to_s.downcase.include? 'dsym'
-      ensure_git_status_clean
-      Dir.chdir('..') { sh 'make bootstrap' }
-    end
+    # Only used by Fastlane actions (not with command line script)
+    xcversion(version: '~> 12')
+
+    ensure_git_status_clean unless lane.to_s.downcase.include? 'dsym'
   end
 
   desc 'Run library tests'
@@ -45,18 +45,18 @@ platform :ios do
 
   desc 'Build a new iOS nightly demo on App Center'
   lane :iOSnightly do
-    build_platform = 'iOS'
+    platform = 'iOS'
 
     appcenter_build_number = latest_appcenter_build_number(
       ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
     )
 
     nightly(
-      platform: build_platform,
+      platform: platform,
       current_build_number: appcenter_build_number
     )
 
-    changelog = default_changelog_for_nightlies(build_platform)
+    changelog = default_changelog_for_nightlies(platform)
 
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME'],
@@ -66,30 +66,29 @@ platform :ios do
 
     clean_build_artifacts
 
-    save_last_nightlies_success_git_commit_hash(build_platform)
+    save_last_nightlies_success_git_commit_hash(platform)
   end
 
   desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing.'
   lane :tvOSnightly do
     update_app_identifier_to_appstore
 
-    build_platform = 'tvOS'
-    appstore_platform = 'appletvos'
+    platform = 'tvOS'
 
     appstore_build_number = latest_testflight_build_number(
-      platform: appstore_platform
+      platform: appstore_platform(platform)
     )
 
     nightly(
-      platform: build_platform,
+      platform: platform,
       current_build_number: appstore_build_number,
       export_to_appstore: true
     )
 
-    changelog = default_changelog_for_nightlies(build_platform)
+    changelog = default_changelog_for_nightlies(platform)
 
     pilot(
-      app_platform: appstore_platform,
+      app_platform: appstore_platform(platform),
       changelog: changelog,
       distribute_external: true,
       demo_account_required: false,
@@ -97,29 +96,29 @@ platform :ios do
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    # Wait a bit before asking dSYMs. Not ready yet.
+    UI.message 'Wait 90 seconds before asking dSYMs. Not ready yet.'
     sleep(90)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
-    update_dsyms(appstore_platform, appcenter_appname, nil)
+    update_dsyms(platform, appcenter_appname, nil)
 
     clean_build_artifacts
 
-    save_last_nightlies_success_git_commit_hash(build_platform)
+    save_last_nightlies_success_git_commit_hash(platform)
   end
 
   desc 'Send latest tvOS nightly dSYMs to App Center, with optional \'version\' or \'min_version\' parameters.'
   lane :tvOSnightlyDSYMs do |options|
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
-    update_dsyms('appletvos', appcenter_appname, options)
+    update_dsyms('tvOS', appcenter_appname, options)
   end
 
   desc 'Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).'
   lane :iOSdemo do
-    build_platform = 'iOS'
+    platform = 'iOS'
 
     demo(
-      platform: build_platform
+      platform: platform
     )
 
     changelog = what_s_new_for_demo
@@ -140,28 +139,29 @@ platform :ios do
   lane :tvOSdemo do
     update_app_identifier_to_appstore
 
-    build_platform = 'tvOS'
-    appstore_platform = 'appletvos'
+    platform = 'tvOS'
 
     demo(
-      platform: build_platform,
+      platform: platform,
       export_to_appstore: true
     )
 
     changelog = what_s_new_for_demo
 
     pilot(
-      app_platform: appstore_platform,
+      app_platform: appstore_platform(platform),
       changelog: changelog,
       distribute_external: true,
+      demo_account_required: false,
+      beta_app_review_info: beta_app_review_info,
       groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
     )
 
-    # Wait a bit before asking dSYMs. Not ready yet.
+    UI.message 'Wait 90 seconds before asking dSYMs. Not ready yet.'
     sleep(90)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
-    update_dsyms(appstore_platform, appcenter_appname, nil)
+    update_dsyms(platform, appcenter_appname, nil)
 
     clean_build_artifacts
 
@@ -171,7 +171,7 @@ platform :ios do
   desc 'Send latest tvOS demo dSYMs to App Center, with optional \'version\' or \'min_version\' parameters.'
   lane :tvOSdemoDSYMs do |options|
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
-    update_dsyms('appletvos', appcenter_appname, options)
+    update_dsyms('tvOS', appcenter_appname, options)
   end
 
   desc 'Common stuff to build a new nightly demo.'
@@ -223,12 +223,15 @@ platform :ios do
 
     options = update_options_to_appstore(options)
 
-    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
-    options[:team_id] = team_id
+    options[:team_id] = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+
+    srg_carthage
+
     destination = 'generic/platform=' + options[:platform]
     lane_name = lane_context[SharedValues::LANE_NAME]
     output_directory = 'fastlane/export/' + lane_name + '/'
     gym(
+      workspace: 'Demo/SRGLetterbox-demo.xcworkspace',
       configuration: options[:configuration],
       scheme: options[:scheme],
       silent: true,
@@ -388,7 +391,7 @@ end
 # Returns the marketing version, without suffix
 def xcode_marketing_version
   marketing_version = nil
-  Dir.chdir('..') do
+  Dir.chdir('../Demo') do
     command = 'xcodebuild -showBuildSettings | grep "MARKETING_VERSION ="'
     marketing_version = xcodebuid_grep_output sh command
   end
@@ -399,7 +402,7 @@ end
 # Returns the current project version
 def xcode_current_project_version
   version = nil
-  Dir.chdir('..') do
+  Dir.chdir('../Demo') do
     command = 'xcodebuild -showBuildSettings | grep "CURRENT_PROJECT_VERSION ="'
     version = xcodebuid_grep_output sh command
   end
@@ -426,12 +429,14 @@ end
 # Update only the demo app identifier for App Store Connect submit.
 def update_app_identifier_to_appstore
   update_app_identifier(
-    plist_path: 'Demo/Info.plist'
+    xcodeproj: 'Demo/SRGLetterbox-demo.xcodeproj',
+    plist_path: 'Info.plist'
   )
 end
 
 # Update dSYMs from AppStore to App Center.
 def update_dsyms(platform, appcenter_appname, options)
+  platform ||= 'iOS'
   output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
   Dir.chdir('..') { FileUtils.mkdir_p(output_directory) }
 
@@ -442,9 +447,10 @@ def update_dsyms(platform, appcenter_appname, options)
 end
 
 def download_appstore_dsyms(platform, min_version, version, output_directory)
+  platform ||= 'iOS'
   version ||= 'latest'
   download_dsyms(
-    platform: platform,
+    platform: appstore_platform(platform),
     min_version: min_version,
     version: !min_version ? version : nil,
     output_directory: output_directory
@@ -483,7 +489,7 @@ end
 # Override common current project version
 def override_current_project_version(build_number)
   set_xcconfig_value(
-    path: 'Common.xcconfig',
+    path: 'Demo/Demo.xcconfig',
     name: 'CURRENT_PROJECT_VERSION',
     value: build_number.to_s
   )
@@ -568,6 +574,20 @@ def beta_app_review_info
     contact_last_name: ENV['ITUNES_CONNECT_REVIEW_LAST_NAME'],
     contact_phone: ENV['ITUNES_CONNECT_REVIEW_PHONE']
   }
+end
+
+def srg_carthage
+  carthage(
+    project_directory: 'Demo',
+    new_resolver: true,
+    cache_builds: true,
+    platform: 'iOS,tvOS'
+  )
+end
+
+def appstore_platform(platform)
+  appstore_platforms = { 'iOS' => 'ios', 'tvOS' => 'appletvos' }
+  appstore_platforms[platform]
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md

@@ -1,42 +1,10 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_FOLDER=Configuration
-CONFIGURATION_COMMIT_SHA1=d2af474c3a3785bc6f0e480ee65e8d496a70dd70
+CONFIGURATION_COMMIT_SHA1=7b72d675a0056dad65904457666e4652e77a44d7
 
 CARTHAGE_FOLDER=Carthage
-CARTHAGE_RESOLUTION_FLAGS=--new-resolver --no-build
-CARTHAGE_BUILD_FLAGS=--platform iOS,tvOS --cache-builds
-
-CARTFILE_PRIVATE=Cartfile.private
-CARTFILE_RESOLVED=Cartfile.resolved
-
-# Restore Cartfile.private for the specified type
-#   Syntax: $(call restore_cartfile_private,type)
-define restore_cartfile_private
-	@rm -f $(CARTFILE_PRIVATE); \
-	if [ -f $(CARTFILE_PRIVATE).common ]; then \
-		(cat $(CARTFILE_PRIVATE).common; echo) >> $(CARTFILE_PRIVATE); \
-	fi; \
-	if [ -f $(CARTFILE_PRIVATE).$(1) ]; then \
-		cat $(CARTFILE_PRIVATE).$(1) >> $(CARTFILE_PRIVATE); \
-	fi;
-endef
-
-# Save Cartfile.resolved for the specified type
-#   Syntax: $(call save_cartfile,type)
-define save_cartfile_resolved
-	@if [ -f $(CARTFILE_RESOLVED) ]; then \
-		cp $(CARTFILE_RESOLVED) $(CARTFILE_RESOLVED).$(1); \
-	fi;
-endef
-
-# Restore Cartfile.resolved for the specified type
-#   Syntax: $(call restore_cartfile_resolved,type)
-define restore_cartfile_resolved
-	@if [ -f $(CARTFILE_RESOLVED).$(1) ]; then \
-		cp $(CARTFILE_RESOLVED).$(1) $(CARTFILE_RESOLVED); \
-	fi;
-endef
+CARTHAGE_FLAGS=--platform iOS,tvOS --new-resolver --cache-builds
 
 # Checkout a commit for a repository in the specified directory. Fails if the repository is dirty of if the
 # commit does not exist.  
@@ -55,86 +23,23 @@ define checkout_repository
 endef
 
 .PHONY: all
-all: bootstrap
-	@echo "Building the project..."
-	@xcodebuild build
+all: test-ios test-tvos
+
+.PHONY: test-ios
+test-ios:
+	@echo "Running iOS unit tests..."
+	@xcodebuild test -scheme SRGLetterbox -destination 'platform=iOS Simulator,name=iPhone 11' 2> /dev/null
 	@echo "... done.\n"
 
-# Resolving dependencies without building the project
-
-.PHONY: dependencies
-dependencies: public.dependencies
-	@echo "Updating proprietary dependencies..."
-	$(call restore_cartfile_private,proprietary)
-	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(call save_cartfile_resolved,proprietary)
+.PHONY: test-tvos
+test-tvos:
+	@echo "Running tvOS unit tests..."
+	@xcodebuild test -scheme SRGLetterbox -destination 'platform=tvOS Simulator,name=Apple TV' 2> /dev/null
 	@echo "... done.\n"
-
-.PHONY: public.dependencies
-public.dependencies:
-	@echo "Updating public dependencies..."
-	$(call restore_cartfile_private,public)
-	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(call save_cartfile_resolved,public)
-	@echo "... done.\n"
-
-# Dependency compilation with proprietary dependencies (keep public dependencies in sync)
-
-.PHONY: bootstrap
-bootstrap:
-	@echo "Building proprietary dependencies..."
-	$(call restore_cartfile_private,proprietary)
-	$(call restore_cartfile_resolved,proprietary)
-	@carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
-	$(call save_cartfile_resolved,proprietary)
-	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo "... done.\n"
-
-.PHONY: update
-update: setup public.dependencies
-	@echo "Updating and building proprietary dependencies..."
-	$(call restore_cartfile_private,proprietary)
-	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(call save_cartfile_resolved,proprietary)
-	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo "... done.\n"
-
-# Public dependency compilation
-
-.PHONY: public.bootstrap
-public.bootstrap: public.setup
-	@echo "Building public dependencies..."
-	$(call restore_cartfile_private,public)
-	$(call restore_cartfile_resolved,public)
-	@carthage bootstrap $(CARTHAGE_RESOLUTION_FLAGS)
-	$(call save_cartfile_resolved,public)
-	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo "... done.\n"
-
-.PHONY: public.update
-public.update: public.setup
-	@echo "Updating and building public dependencies..."
-	$(call restore_cartfile_private,public)
-	@carthage update $(CARTHAGE_RESOLUTION_FLAGS)
-	$(call save_cartfile_resolved,public)
-	@carthage build $(CARTHAGE_BUILD_FLAGS)
-	@echo "... done.\n"
-
-# Framework package to attach to github releases
-
-.PHONY: package
-package: bootstrap
-	@echo "Packaging binaries..."
-	@mkdir -p archive
-	@carthage build --no-skip-current
-	@carthage archive --output archive
-	@echo "... done.\n"
-
-# Setup
 
 .PHONY: setup
 setup:
-	@echo "Setting up proprietary project..."
+	@echo "Setting up project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-apple-configuration.git $(CONFIGURATION_FOLDER); \
@@ -147,46 +52,14 @@ setup:
 	@mkdir -p Xcode/Links
 	@pushd Xcode/Links > /dev/null; ln -fs ../../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
 
-	@echo "... done.\n"
-
-# Public setup
-
-.PHONY: public.setup
-public.setup:
-	@echo "Setting up public project..."
-
-	@rm -rf $(CONFIGURATION_FOLDER)
-	@rm -rf .env
-	@mkdir -p Xcode/Links
-	@pushd Xcode/Links > /dev/null; ln -fs ../Public/*.xcconfig .
-	
-	@echo "... done.\n"
-
-# Cleanup
-
-.PHONY: clean
-clean:
-	@echo "Cleaning up build products..."
-	@xcodebuild clean
-	@rm -rf $(CARTHAGE_FOLDER)
+	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_FLAGS)
 	@echo "... done.\n"
 
 .PHONY: help
 help:
-	@echo "The following targets must be used for proprietary builds:"
-	@echo "   all                         Build project dependencies and the project"
-	@echo "   dependencies                Update dependencies without building them"
-	@echo "   bootstrap                   Build previously resolved dependencies"
-	@echo "   update                      Update and build dependencies"
-	@echo "   package                     Build and package the framework for attaching to github releases"
-	@echo "   setup                       Setup project"
-	@echo ""
-	@echo "The following targets must be used when building the public source code:"
-	@echo "   public.dependencies         Update dependencies without building them"
-	@echo "   public.bootstrap            Build previously resolved dependencies"
-	@echo "   public.update               Update and build dependencies"
-	@echo "   public.setup                Setup project"
-	@echo ""
-	@echo "The following targets are widely available:"
-	@echo "   help                        Display this message"
-	@echo "   clean                       Clean the project and its dependencies"
+	@echo "The following targets are available:"
+	@echo "   setup               Setup project (configuration and demo dependencies)"
+	@echo "   all                 Build and run unit tests for all platforms"
+	@echo "   test-ios            Build and run unit tests for iOS"
+	@echo "   test-tvos           Build and run unit tests for tvOS"
+	@echo "   help                Display this help message"

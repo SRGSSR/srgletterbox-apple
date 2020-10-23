@@ -30,7 +30,7 @@ NSString *LetterboxDemoAccessibilityRelativeDateAndTimeFromDate(NSDate *date)
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
         s_dateFormatter = [[NSDateFormatter alloc] init];
-        s_dateFormatter.dateStyle = kCFDateFormatterLongStyle;
+        s_dateFormatter.dateStyle = NSDateFormatterLongStyle;
         s_dateFormatter.timeStyle = NSDateFormatterNoStyle;
         s_dateFormatter.doesRelativeDateFormatting = YES;
     });

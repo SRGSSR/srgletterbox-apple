@@ -116,10 +116,6 @@ Your application can use as many controllers as needed. Each controller can at m
 
 When several controllers are playing at the same time, you might want to mute some of them, which can be achieved by setting the `muted` property to `NO`.
 
-## Letterbox view controller (tvOS)
-
-On tvOS, to display what is currently played by a controller, instantiate an `SRGLetterboxViewController` instance and simply present it. You can optionally provide a Letterbox controller at creation time, or let the view controller instantiate one for you.
-
 ## Application-wide services (iOS)
 
 The `SRGLetterboxService` singleton makes it possible to enable AirPlay and picture in picture for at most one Letterbox controller at a time. This automatically adds the following features for this controller:
@@ -164,6 +160,16 @@ Picture in picture only makes sense when a controller has been bound to a Letter
 Usually, a Letterbox view is part of a view controller view hiearchy. In such cases, providing the view controller itself as picture in picture delegate is a good idea. The picture in picture delegate is namely retained while picture in picture is in use, providing you with an easy way to restore the user interface as it was before picture in picture started.
 
 Refer to the modal view controller demo for a concrete example.
+
+#### Remark
+
+Picture in picture requires your application to declare the corresponding background mode capability, as well as an audio session category set to `AVAudioSessionCategoryPlayback`.
+
+## Letterbox view controller (tvOS)
+
+On tvOS, to display what is currently played by a controller, instantiate an `SRGLetterboxViewController` instance and simply present it modally. You can optionally provide a Letterbox controller at creation time, or let the view controller instantiate one for you.
+
+`SRGLetterboxViewController` provides the usual tvOS playback experience and displays segments in the top info panel. It also supports picture in picture natively.
 
 #### Remark
 

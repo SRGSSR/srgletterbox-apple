@@ -1,6 +1,6 @@
 [![SRG Letterbox logo](README-images/logo.png)](https://github.com/SRGSSR/srgletterbox-apple)
 
-[![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/srgletterbox-apple) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![GitHub license](https://img.shields.io/github/license/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/blob/master/LICENSE) 
+[![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/srgletterbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/blob/master/LICENSE) 
 
 ## About
 
@@ -24,130 +24,34 @@ To ensure a coherent visual player identity throughout SRG SSR applications, **t
 
 ## Compatibility
 
-The library is suitable for applications running on iOS 9, tvOS 12 and above. The project is meant to be opened with the latest Xcode version.
+The library is suitable for applications running on iOS 9, tvOS 12 and above. The project is meant to be compiled with the latest Xcode version.
 
 ## Contributing
 
 If you want to contribute to the project, have a look at our [contributing guide](CONTRIBUTING.md).
 
-## Required tools
+## Recommended tools
 
 Building the `SRGLetterbox-demo` target requires command-line tools for icon generation, easily installed with [Homebrew](https://brew.sh/):
 	
 	brew install imagemagick ghostscript
 	brew install jq
 	
-Project dependencies are retrieved using [Carthage](https://github.com/Carthage/Carthage). Be sure that these tools are available on your system.
+The demo project also retrieves additional dependencies with [Carthage](https://github.com/Carthage/Carthage).
 
-## Installation
+## Integration
 
-The library can be added to a project using Carthage. For more information about Carthage and its use, refer to its [official documentation](https://github.com/Carthage/Carthage).
-
-### Installation with content protection
-
-The ability to play protected content (e.g. livestreams, foreign TV series) is provided by an internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-apple) framework. If you have access to it, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
-
-```
-github "SRGSSR/srgletterbox-apple"
-github "SRGSSR/srgcontentprotection-apple"
-```
-
-Check the [wiki](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
-
-### Installation without content protection
-
-If you have no access to the internal [SRG Content Protection](https://github.com/SRGSSR/srgcontentprotection-apple) framework, integrate Letterbox by adding the following dependencies to your `Cartfile`: 
-
-```
-github "SRGSSR/srgletterbox-apple"
-github "SRGSSR/srgcontentprotection-fake-apple"
-```
-
-Check the [wiki](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) for the recommended version of SRG Content Protection to use.
-
-With this setup, non-protected content only (e.g. in-house productions or audio content) will be playable.
-
-### Dependencies
-
-The library requires the following frameworks to be added to any target requiring it:
-
-* `ComScore`: The comScore framework.
-* `FXReachability`: A reachability framework.
-* `libextobjc`: A utility framework.
-* `MAKVONotificationCenter`: A safe KVO framework.
-* `Mantle`:  The framework used to parse the data.
-* `SRGAnalytics`: The main analytics framework.
-* `SRGAnalytics_MediaPlayer`: The media player analytics companion framework.
-* `SRGAnalytics_DataProvider`: The data provider analytics companion framework.
-* `SRGAppearance`: The appearance framework.
-* `SRGContentProtection`: The framework to enable playback of protected medias.
-* `SRGDiagnostics`: Framework for collecting diagnostic information.
-* `SRGLetterbox`: The Letterbox library framework.
-* `SRGLogger`: The framework used for internal logging.
-* `SRGMediaPlayer`: The media player framework.
-* `SRGNetwork`: A networking framework.
-* `TCCore`: The core TagCommander framework.
-* `TCSDK`: The main TagCommander SDK framework.
-* `YYWebImage`: A framework for image retrieval.
-
-### Dynamic framework integration
-
-1. Run `carthage update` to update the dependencies (which is equivalent to `carthage update --configuration Release`). 
-2. Add the frameworks listed above and generated in the `Carthage/Build/(iOS|tvOS)` folder to your target _Embedded binaries_.
-
-If your target is building an application, a few more steps are required:
-
-1. Add a _Run script_ build phase to your target, with `/usr/local/bin/carthage copy-frameworks` as command.
-2. Add each of the required frameworks above as input file `$(SRCROOT)/Carthage/Build/(iOS|tvOS)/FrameworkName.framework`.
-
-### Static framework integration
-
-1. Run `carthage update --configuration Release-static` to update the dependencies. 
-2. Add the frameworks listed above and generated in the `Carthage/Build/(iOS|tvOS)/Static` folder to the _Linked frameworks and libraries_ list of your target.
-3. Also add any resource bundle `.bundle` found within the `.framework` folders to your target directly.
-4. Some non-statically built framework dependencies are built in the `Carthage/Build/(iOS|tvOS)` folder. Add them by following the _Dynamic framework integration_ instructions above.
-5. Add the `-all_load` flag to your target _Other linker flags_.
-
-## Building the project
-
-A [Makefile](../Makefile) provides several targets to build and package the library. The available targets can be listed by running the following command from the project root folder:
-
-```
-make help
-```
-
-Alternatively, you can of course open the project with Xcode and use the available schemes.
-
-Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-apple-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
-
-If you need to make changes to the settings:
-
-1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
-1. Switch to the `Configuration` directory and commit changes there.
-1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
-1. Push all commits when you are ready.
+The library must be integrated using [Swift Package Manager](https://swift.org/package-manager) directly [within Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). You can also declare the library as a dependency of another one directly in the associated `Package.swift` manifest.
 
 ## Usage
 
-When you want to use classes or functions provided by the library in your code, you must import it from your source files first.
-
-### Usage from Objective-C source files
-
-Import the global header file using:
-
-```objective-c
-#import <SRGLetterbox/SRGLetterbox.h>
-```
-
-or directly import the module itself:
+When you want to use classes or functions provided by the library in your code, you must import it from your source files first. In Objective-C:
 
 ```objective-c
 @import SRGLetterbox;
 ```
 
-### Usage from Swift source files
-
-Import the module where needed:
+or in Swift:
 
 ```swift
 import SRGLetterbox
@@ -161,20 +65,9 @@ To learn about how the library can be used, have a look at the [getting started 
 
 The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-apple) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
 
-### Control preview in Interface Builder
-
-Interface Builder can render custom controls dropped onto a storyboard or a xib. If you want to enable this feature for Letterbox controls, and after Carthage has been run, open the `Carthage/Checkouts/srgletterbox-apple/Designables` directory, **copy** the `SRGLetterboxDesignables.m` file it contains to your project and add it to your target.
-
-When dropping a view (e.g. `SRGLetterboxView`) onto a storyboard or xib, Xcode will now build your project in the background and render the view when it is done.
-
-If rendering does not work properly:
-
-* Be sure that your project correctly compiles
-* If you still get `dlopen` errors, this means some frameworks are not available to Xcode when it runs your project for rendering. This usually means that the `copy-frameworks` build phase described in the [Carthage readme](https://github.com/Carthage/Carthage#getting-started) has not been setup properly. Be sure that all SRG Media Player dependencies are properly copied (see above framework list).
-
 ## Demo project
 
-To test what the library is capable of, run the associated demo.
+To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` from the main repository directory.
 
 #### URL schemes (iOS)
 
@@ -182,6 +75,21 @@ The iOS demo application can be opened with a custom URL scheme having the follo
 
 * Open a media within the player: `[scheme]://open?media=[media_urn]`.
 * A `&server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
+
+## Settings
+
+Private project settings (keys, tokens, etc.) are stored [in a private repository](https://github.com/SRGSSR/srgletterbox-apple-configuration), pulled under the `Configuration` directory when running `make setup` (or any other target depending on it). The SHA-1 of the configuration commit which is used is explicitly provided in the `Makefile`. Settings are therefore versioned alongside the project, providing for reproducible builds.
+
+If you need to make changes to the settings:
+
+1. Perform the required changes in the `Configuration` directory (and in the project as well if needed).
+1. Switch to the `Configuration` directory and commit changes there.
+1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
+1. Push all commits when you are ready.
+
+## Migration between major versions
+
+For more information about migrating between major Letterbox versions, please check the corresponding release notes as well as our [migration guides](https://github.com/SRGSSR/srgletterbox-apple/wiki/Migration-guides).
 
 ## Known issues
 

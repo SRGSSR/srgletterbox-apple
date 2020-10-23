@@ -1,3 +1,0 @@
-#include "../Common.xcconfig"
-
- OTHER_LDFLAGS = -framework ComScore -framework FXReachability -framework libextobjc -framework MAKVONotificationCenter -framework Mantle -framework SRGAnalytics_DataProvider -framework SRGAnalytics_MediaPlayer -framework SRGAnalytics -framework SRGAppearance -framework SRGContentProtection -framework SRGDataProvider -framework SRGDiagnostics -framework SRGLogger -framework SRGMediaPlayer -framework SRGNetwork -framework TCCore -framework TCSDK -framework YYWebImage

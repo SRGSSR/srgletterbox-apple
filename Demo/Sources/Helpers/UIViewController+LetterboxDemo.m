@@ -9,6 +9,8 @@
 #import "AdvancedPlayerViewController.h"
 #import "SettingsViewController.h"
 
+@import SRGDataProviderNetwork;
+
 #import <objc/runtime.h>
 
 static void *s_dataProviderKey = &s_dataProviderKey;
@@ -122,7 +124,7 @@ static void *s_playlistKey = &s_playlistKey;
 #else
     void (^openModalPlayer)(void) = ^{
         AdvancedPlayerViewController *playerViewController = [[AdvancedPlayerViewController alloc] initWithURN:URN media:media serviceURL:serviceURL];
-        playerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+        playerViewController.modalPresentationStyle = UIModalPresentationCustom;
         
         // Since might be reused, ensure we are not trying to present the same view controller while still dismissed
         // (might happen if presenting and dismissing fast)

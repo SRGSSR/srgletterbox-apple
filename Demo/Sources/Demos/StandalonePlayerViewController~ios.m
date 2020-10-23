@@ -10,7 +10,7 @@
 #import "SettingsViewController.h"
 #import "UIWindow+LetterboxDemo.h"
 
-#import <SRGAnalytics/SRGAnalytics.h>
+@import SRGAnalytics;
 
 @interface StandalonePlayerViewController ()
 
@@ -115,13 +115,13 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
     return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
     [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];
