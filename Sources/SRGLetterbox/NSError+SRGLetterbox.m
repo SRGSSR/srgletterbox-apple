@@ -27,4 +27,13 @@
     return nil;
 }
 
+- (NSError *)srg_letterboxUnderlyingError
+{
+    NSError *error = self;
+    while (error.userInfo[NSUnderlyingErrorKey]) {
+        error = error.userInfo[NSUnderlyingErrorKey];
+    }
+    return error;
+}
+
 @end
