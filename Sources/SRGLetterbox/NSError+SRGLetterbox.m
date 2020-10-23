@@ -27,4 +27,15 @@
     return nil;
 }
 
+- (NSString *)srg_letterboxUnderlyingErrorMessage
+{
+    NSError *error = self;
+    NSString *errorMessage = error.localizedDescription;
+    while (error.userInfo[NSUnderlyingErrorKey]) {
+        error = error.userInfo[NSUnderlyingErrorKey];
+        errorMessage = [[errorMessage stringByAppendingString:@"; "] stringByAppendingString:error.localizedDescription];
+    }
+    return errorMessage;
+}
+
 @end

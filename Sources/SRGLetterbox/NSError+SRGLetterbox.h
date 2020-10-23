@@ -15,6 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly, nullable) NSError *srg_letterboxNoNetworkError;
 
+/**
+ *  Return a recursive description message from underlying errors.
+ */
+@property (nonatomic, readonly) NSString *srg_letterboxUnderlyingErrorMessage;
+
 @end
 
 NS_ASSUME_NONNULL_END
