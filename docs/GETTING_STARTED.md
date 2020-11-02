@@ -195,6 +195,37 @@ You can be notified about the user engaging or cancelling continuous playback by
 }
 ```
 
+## Subtitles and audio tracks
+
+Letterbox provides native support for alternative subtitles and audio tracks. Subtitle choice made by the user (either through the dedicated iOS button or the tvOS info panel) is persisted at the system level, and will be reapplied in subsequent playback contexts, e.g. when playing another media with `SRGMediaPlayerController` or `AVPlayerViewController` (or Safari on iOS). Conversely, choices made in other playback contexts will also determine the initial default audio and subtitle selection for playback with Letterbox. Please refer to the [official MediaAccessibility framework documentation](https://developer.apple.com/documentation/mediaaccessibility) for more information.
+
+You can programmatically control subtitles and audio tracks by setting `audioConfigurationBlock` and `subtitleConfigurationBlock` blocks on the controller. These blocks are automatically called when playback starts to set the initial audio track and subtitle selection. Here is for example how you would apply German audio and French subtitles if available:
+
+```objective-c
+self.controller.audioConfigurationBlock = ^AVMediaSelectionOption * _Nonnull(NSArray<AVMediaSelectionOption *> * _Nonnull audioOptions, AVMediaSelectionOption * _Nonnull defaultAudioOption) {
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(AVMediaSelectionOption * _Nullable option, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [[option.locale objectForKey:NSLocaleLanguageCode] isEqualToString:@"de"];
+    }];
+    return [audioOptions filteredArrayUsingPredicate:predicate].firstObject ?: defaultAudioOption;
+};
+self.controller.subtitleConfigurationBlock = ^AVMediaSelectionOption * _Nullable(NSArray<AVMediaSelectionOption *> * _Nonnull subtitleOptions, AVMediaSelectionOption * _Nullable audioOption, AVMediaSelectionOption * _Nullable defaultSubtitleOption) {
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(AVMediaSelectionOption * _Nullable option, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [[option.locale objectForKey:NSLocaleLanguageCode] isEqualToString:@"fr"];
+    }];
+    return [subtitleOptions filteredArrayUsingPredicate:predicate].firstObject ?: defaultSubtitleOption;
+};
+``` 
+
+If for some reason the audio and / or subtitle choice must be updated during playback, call `-[SRGLetterboxController reloadMediaConfiguration]` so that these blocks get called again.
+
+You can also customize subtitle styling as well if needed:
+
+```objective-c
+AVTextStyleRule *rule = [[AVTextStyleRule alloc] initWithTextMarkupAttributes:@{ (id)kCMTextMarkupAttribute_ForegroundColorARGB : @[ @1, @1, @0, @0 ],
+                                                                                 (id)kCMTextMarkupAttribute_ItalicStyle : @(YES)}];
+self.controller.textStyleRules = @[rule];
+``` 
+
 ## URL overrides and local file playback
 
 You can play any stream URL in place of the one associated with a media composition information. This mechanism is most notably useful if you have downloaded a media and want to play the local file instead of the original stream.
