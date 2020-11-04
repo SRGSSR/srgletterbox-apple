@@ -445,6 +445,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
                                                                                                             || controller.backgroundVideoPlaybackEnabled
                                                                                                             || UIApplication.sharedApplication.applicationState != UIApplicationStateBackground
                                                                                                             || AVAudioSession.srg_isAirPlayActive
+                                                                                                            || controller.pictureInPictureActive
                                                                                                             || UIDevice.srg_letterbox_isLocked)) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
