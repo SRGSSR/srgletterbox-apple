@@ -280,7 +280,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForOverriddenMedia
 {
-    NSURL *overridingURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+    NSURL *overridingURL = [NSURL URLWithString:@"https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
     
     self.controller.contentURLOverridingBlock = ^NSURL * _Nullable(NSString * _Nonnull URN) {
         return overridingURL;

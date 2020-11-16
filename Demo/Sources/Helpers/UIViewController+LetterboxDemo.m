@@ -88,10 +88,10 @@ static void *s_playlistKey = &s_playlistKey;
     letterboxViewController.controller.contentURLOverridingBlock = ^(NSString * _Nonnull URN) {
         NSURL *overriddenURL = nil;
         if ([URN isEqualToString:@"urn:rts:video:8806790"]) {
-            overriddenURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
+            overriddenURL = [NSURL URLWithString:@"https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"];
         }
         else if ([URN isEqualToString:@"urn:rts:audio:8798735"]) {
-            overriddenURL = [NSURL URLWithString:@"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"];
+            overriddenURL = [NSURL URLWithString:@"https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"];
         }
         return overriddenURL;
     };
