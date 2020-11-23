@@ -122,7 +122,7 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
 {
     [super metadataDidChange];
     
-    [self reloadSegments];
+    [self reloadSubdivisions];
 }
 
 - (void)willDetachFromController
@@ -139,12 +139,12 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
     
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.timeRange) options:0 block:^(MAKVONotification * _Nonnull notification) {
-        [self reloadSegments];
+        [self reloadSubdivisions];
     }];
-    [self reloadSegments];
+    [self reloadSubdivisions];
 }
 
-- (void)reloadSegments
+- (void)reloadSubdivisions
 {
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
     
