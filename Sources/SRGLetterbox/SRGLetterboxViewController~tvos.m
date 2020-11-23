@@ -655,6 +655,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     NSMutableArray<AVTimedMetadataGroup *> *navigationMarkers = [NSMutableArray array];
     
     for (SRGSegment *segment in segments) {
+        SRGMediaPlayerController *mediaPlayerController = playerViewController.controller;
+        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:mediaPlayerController];
+        if (! CMTimeRangeContainsTime(mediaPlayerController.timeRange, segmentTimeRange.start)) {
+            continue;
+        }
+        
         AVMutableMetadataItem *titleItem = [[AVMutableMetadataItem alloc] init];
         titleItem.identifier = AVMetadataCommonIdentifierTitle;
         titleItem.value = segment.title;
@@ -671,7 +677,6 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         artworkItem.value = UIImagePNGRepresentation(image);
         artworkItem.extendedLanguageTag = @"und";       // Apparently not required, but added for safety / consistency
         
-        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.playerViewController.controller];
         AVTimedMetadataGroup *navigationMarker = [[AVTimedMetadataGroup alloc] initWithItems:@[ titleItem.copy, artworkItem.copy ] timeRange:segmentTimeRange];
         [navigationMarkers addObject:navigationMarker];
     }
