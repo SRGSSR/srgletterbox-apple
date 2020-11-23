@@ -7,7 +7,6 @@
 #import "UIImageView+SRGLetterbox.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "SRGProgram+SRGLetterbox.h"
 #import "UIColor+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 

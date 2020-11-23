@@ -13,7 +13,6 @@
 #import "MPRemoteCommand+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxLogger.h"
-#import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
