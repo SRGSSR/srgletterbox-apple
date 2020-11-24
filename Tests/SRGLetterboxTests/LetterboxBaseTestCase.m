@@ -23,12 +23,12 @@ NSString *MMFCachedScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
 
 NSString *MMFURLChangeVideoURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFBlockingReasonChangeVideoURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_mediaplayer_dvr_geoblocked_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_geoblocked_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFSwissTXTFullDVRURN(NSDate *startDate, NSDate *endDate)

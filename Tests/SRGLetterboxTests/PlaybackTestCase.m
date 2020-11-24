@@ -344,7 +344,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:rts:video:playlist500" atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:@"urn:rts:video:_playlist500" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
@@ -380,7 +380,7 @@
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     
-    [self.controller playURN:@"urn:rts:video:onlyHDS" atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:@"urn:rts:video:_onlyHDS" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     
