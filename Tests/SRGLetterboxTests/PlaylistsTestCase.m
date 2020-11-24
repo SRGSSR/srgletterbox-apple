@@ -11,7 +11,9 @@
 @import SRGDataProviderNetwork;
 @import SRGLetterbox;
 
-static NSString * const MediaURN1 = @"urn:rts:video:9309820";
+static NSString * const MediaURN1 = @"urn:rts:video:9306717";
+static NSString * const SegmentURN1 = @"urn:rts:video:9306725";
+
 static NSString * const MediaURN2 = @"urn:rts:video:9314051";
 
 @interface PlaylistsTestCase : LetterboxBaseTestCase
@@ -512,7 +514,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller switchToURN:@"urn:rts:video:9309816" withCompletionHandler:nil];
+    [self.controller switchToURN:SegmentURN1 withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
@@ -567,7 +569,7 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller switchToURN:@"urn:rts:video:9309816" withCompletionHandler:nil];
+    [self.controller switchToURN:SegmentURN1 withCompletionHandler:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:^(NSError * _Nullable error) {
         [NSNotificationCenter.defaultCenter removeObserver:eventObserver1];
