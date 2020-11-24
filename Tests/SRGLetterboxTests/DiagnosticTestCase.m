@@ -232,7 +232,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 {
     self.controller.serviceURL = MMFServiceURL();
     
-    NSString *URN = @"urn:rts:video:playlist500";
+    NSString *URN = @"urn:rts:video:_playlist500";
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
