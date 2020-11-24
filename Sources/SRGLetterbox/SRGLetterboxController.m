@@ -14,7 +14,6 @@
 #import "SRGLetterboxError.h"
 #import "SRGLetterboxLogger.h"
 #import "SRGMediaComposition+SRGLetterbox.h"
-#import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 
 @import FXReachability;
@@ -1737,7 +1736,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self setURL:error.userInfo[NSURLErrorFailingURLErrorKey] forKey:@"url"];
     }
     
-    [self setString:error.localizedDescription forKey:@"errorMessage"];
+    [self setString:error.srg_letterboxUnderlyingError.localizedDescription forKey:@"errorMessage"];
     [self setString:SRGLetterboxCodeForBlockingReason([error.userInfo[SRGLetterboxBlockingReasonKey] integerValue]) forKey:@"blockReason"];
     if (mediaComposition) {
         SRGSubdivision *subdivision = mediaComposition.mainSegment ?: mediaComposition.mainChapter;
@@ -1748,7 +1747,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (void)srgletterbox_setPlayerInformationWithContentURL:(NSURL *)contentURL error:(NSError *)error
 {
     [self setURL:contentURL forKey:@"url"];
-    [self setString:error.localizedDescription forKey:@"errorMessage"];
+    [self setString:error.srg_letterboxUnderlyingError.localizedDescription forKey:@"errorMessage"];
 }
 
 @end

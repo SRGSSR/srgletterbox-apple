@@ -13,7 +13,6 @@
 #import "MPRemoteCommand+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxLogger.h"
-#import "SRGProgram+SRGLetterbox.h"
 #import "UIDevice+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
@@ -445,6 +444,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
                                                                                                             || controller.backgroundVideoPlaybackEnabled
                                                                                                             || UIApplication.sharedApplication.applicationState != UIApplicationStateBackground
                                                                                                             || AVAudioSession.srg_isAirPlayActive
+                                                                                                            || controller.pictureInPictureActive
                                                                                                             || UIDevice.srg_letterbox_isLocked)) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;

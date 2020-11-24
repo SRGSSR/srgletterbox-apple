@@ -149,7 +149,7 @@
     
     [NSLayoutConstraint activateConstraints:@[
         [media360ImageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:5.f],
-        [media360ImageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:5.f],
+        [media360ImageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-5.f],
     ]];
 }
 
