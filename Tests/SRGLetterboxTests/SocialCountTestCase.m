@@ -64,7 +64,7 @@
     NSString *URN = OnDemandVideoURN;
     [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePaused;
@@ -72,7 +72,7 @@
     
     [self.controller pause];
     
-    [self waitForExpectationsWithTimeout:10. handler:nil];
+    [self waitForExpectationsWithTimeout:20. handler:nil];
     
     [self expectationForSingleNotification:SRGLetterboxSocialCountViewWillIncreaseNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         SRGSubdivision *subdivision = notification.userInfo[SRGLetterboxSubdivisionKey];

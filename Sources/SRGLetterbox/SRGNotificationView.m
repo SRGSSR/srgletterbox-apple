@@ -107,7 +107,7 @@ static const CGFloat kMargin = 8.f;
         return CGSizeZero;
     }
     
-    // Calculate the needed height. Remove the width corresponding to non-text items to calcualte the required text
+    // Calculate the needed height. Remove the width corresponding to non-text items to calculate the required text
     // height
     CGFloat layoutFixedWidth = kImageLength + 3 * kMargin;
     CGFloat availableWidth = fmaxf(width - layoutFixedWidth, 0.f);
@@ -119,7 +119,7 @@ static const CGFloat kMargin = 8.f;
     CGFloat lineHeight = font.lineHeight;
     NSInteger numberOfLines = MIN(CGRectGetHeight(boundingRect) / lineHeight, self.messageLabel.numberOfLines);
     if (numberOfLines < 2) {
-        return CGSizeMake(CGRectGetWidth(boundingRect) + layoutFixedWidth, CGRectGetHeight(boundingRect) + 2 * kMargin);
+        return CGSizeMake(ceil(CGRectGetWidth(boundingRect)) + layoutFixedWidth, CGRectGetHeight(boundingRect) + 2 * kMargin);
     }
     else {
         return CGSizeMake(width, ceil(numberOfLines * lineHeight + 2 * kMargin));

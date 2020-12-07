@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "0778abbb37b5d5410fdebce8317e937db53cdbc6",
-          "version": "6.0.0"
+          "revision": "e6b9b4aee2a36c4f0586b7f481f52dc4f9a7646a",
+          "version": "6.1.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "39d8331ffee2b484e907f4e5f8746706cc71763c",
-          "version": "9.0.0"
+          "revision": "02673482b77adacbcdeac82db60116f893d2d817",
+          "version": "9.1.0"
         }
       },
       {

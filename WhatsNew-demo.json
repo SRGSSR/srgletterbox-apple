@@ -43,5 +43,6 @@
   "5.0.2-75": "- This release fixes an iOS 14 regression leading to the player still continuing playback of a video in the background, even after having been properly released.",
   "5.0.3-76": "\n- Update comScore analytics for iOS 14.\n- Update age rating icons and remove all FSK references.",
   "6.0.0-77": "- Improve compatibility with iOS and tvOS 14.\n- Add picture in picture support for tvOS 14.",
-  "6.1.0-78": "- Updated analytics (Mediapulse and duration fix for Webtrekk).\n- Enable control center controls when using picture in picture."
+  "6.1.0-78": "- Updated analytics (Mediapulse and duration fix for Webtrekk).\n- Enable control center controls when using picture in picture.",
+  "6.1.1-79": "- Fix issue with segments appearing unreliably on on-demand content (tvOS).\n- Fix possible notification message truncation (tvOS). "
 }

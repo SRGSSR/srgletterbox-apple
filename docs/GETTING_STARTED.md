@@ -171,6 +171,12 @@ On tvOS, to display what is currently played by a controller, instantiate an `SR
 
 `SRGLetterboxViewController` provides the usual tvOS playback experience and displays segments in the top info panel. It also supports picture in picture natively.
 
+### Analytics
+
+Applications presenting `SRGLetterboxViewController` are responsible of calling one of the tracking methods available from `SRGAnalyticsTracker (PageViewTracking)` to ensure a corresponding page view is recorded.
+
+Streaming analytics are automatically handled by the underlying `SRGLetterboxController` and do not require additional setup.
+
 #### Remark
 
 Picture in picture requires your application to declare the corresponding background mode capability, as well as an audio session category set to `AVAudioSessionCategoryPlayback`.

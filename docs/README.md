@@ -65,6 +65,10 @@ To learn about how the library can be used, have a look at the [getting started 
 
 The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-apple) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
 
+## App Privacy details on the App Store
+
+You are required to provide additional information about the data collected by your app and how it is used. Please refer to our [associated documentation](https://github.com/SRGSSR/srgletterbox-apple/wiki/App-Privacy-details-on-the-App-Store) for more information.
+
 ## Demo project
 
 To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` from the main repository directory.
