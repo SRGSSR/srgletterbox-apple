@@ -45,5 +45,6 @@
   "6.0.0-77": "- Improve compatibility with iOS and tvOS 14.\n- Add picture in picture support for tvOS 14.",
   "6.1.0-78": "- Updated analytics (Mediapulse and duration fix for Webtrekk).\n- Enable control center controls when using picture in picture.",
   "6.1.1-79": "- Fix issue with segments appearing unreliably on on-demand content (tvOS).\n- Fix possible notification message truncation (tvOS). ",
-  "6.1.2-80": "- Improve stability."
+  "6.1.2-80": "- Improve stability.",
+  "6.1.2-81": "- Includes SRG Content Protection patch with AirPlay compatibility fix.\n- includes SRG Media Player patch with iOS 14 compatibility improvement. "
 }
