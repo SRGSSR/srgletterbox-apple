@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "ComScore",
-        "repositoryURL": "https://github.com/SRGSSR/ComScore-xcframework-apple.git",
+        "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "b5dc5dc60435f363a744e17975957361c844aa38",
-          "version": "6.6.0"
+          "revision": "805ef197755a66e634fccb5d23d9068ca5c1f395",
+          "version": "6.7.0"
         }
       },
       {
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "develop",
-          "revision": "5b4d80439a52bc55009528012565113fd6105640",
+          "revision": "a7e691d44622e23142e1263ec48463d0a191af5e",
           "version": null
         }
       },
@@ -86,9 +86,9 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": null,
-          "revision": "520956426ce8fdbeaab5cd506748ec09cb6a054f",
-          "version": "9.1.1"
+          "branch": "develop",
+          "revision": "5fc1e5da7bc35b51068fbd8fa9b9aab89f04dbae",
+          "version": null
         }
       },
       {
@@ -104,9 +104,9 @@
         "package": "SRGIdentity",
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
-          "branch": null,
-          "revision": "d5e50ad123a17b297ad817244facb536ae8b7c34",
-          "version": "3.0.2"
+          "branch": "develop",
+          "revision": "20fd3c6e0975c97e8df51e817791e210a15784c1",
+          "version": null
         }
       },
       {
