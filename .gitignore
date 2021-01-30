@@ -15,7 +15,7 @@ xcuserdata
 
 /fastlane/export
 /fastlane/*commit-hash.txt
-/fastlane/*.xcresult
+/fastlane/xcresult
 /fastlane/*.xml
 
 /vendor
