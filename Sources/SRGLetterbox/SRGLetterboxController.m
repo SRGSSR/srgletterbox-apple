@@ -1434,7 +1434,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 #else
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
 #endif
-    [report setString:NSBundle.srg_letterbox_isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
+    SRGAnalyticsConfiguration *analyticsConfiguration = SRGAnalyticsTracker.sharedTracker.configuration;
+    BOOL isProductionVersion = analyticsConfiguration ? analyticsConfiguration.environment == SRGAnalyticsEnvironmentProduction : NSBundle.srg_letterbox_isProductionVersion;
+    [report setString:isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:SRGDeviceInformation() forKey:@"device"];
     [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
     [report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
