@@ -534,6 +534,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return AVAudioSession.srg_isAirPlayActive && (self.media.mediaType == SRGMediaTypeAudio || self.mediaPlayerController.player.externalPlaybackActive);
 }
 
+- (BOOL)isProductionVersion
+{
+    SRGAnalyticsConfiguration *analyticsConfiguration = SRGAnalyticsTracker.sharedTracker.configuration;
+    return analyticsConfiguration ? analyticsConfiguration.environment == SRGAnalyticsEnvironmentProduction : NSBundle.srg_letterbox_isProductionVersion;
+}
+
 - (void)setReport:(SRGDiagnosticReport *)report
 {
     [_report discard];
@@ -1434,9 +1440,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 #else
     [report setString:[NSString stringWithFormat:@"Letterbox/iOS/%@", SRGLetterboxMarketingVersion()] forKey:@"player"];
 #endif
-    SRGAnalyticsConfiguration *analyticsConfiguration = SRGAnalyticsTracker.sharedTracker.configuration;
-    BOOL isProductionVersion = analyticsConfiguration ? analyticsConfiguration.environment == SRGAnalyticsEnvironmentProduction : NSBundle.srg_letterbox_isProductionVersion;
-    [report setString:isProductionVersion ? @"prod" : @"preprod" forKey:@"environment"];
+    [report setString:[self isProductionVersion] ? @"prod" : @"preprod" forKey:@"environment"];
     [report setString:SRGDeviceInformation() forKey:@"device"];
     [report setString:NSBundle.mainBundle.bundleIdentifier forKey:@"browser"];
     [report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];

@@ -714,9 +714,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     }];
     [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
         NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
-        
         XCTAssertEqualObjects(JSONDictionary[@"environment"], @"prod");
-        
         return YES;
     }];
     
