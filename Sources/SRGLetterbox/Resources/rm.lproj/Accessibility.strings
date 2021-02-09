@@ -1,8 +1,8 @@
 /* Seek backward button label with a custom time range */
-"%@ backward" = "%@enavos";
+"%@ backward" = "%@ enavos";
 
 /* Seek forward button label with a custom time range */
-"%@ forward" = "%@enavant";
+"%@ forward" = "%@ enavant";
 
 /* The main area on the letterbox view, where the audio or its thumbnail is displayed */
 "Audio" = "Audio";
@@ -47,4 +47,4 @@
 "Video" = "Video";
 
 /* Continuous playback Play button label (time parameter) */
-"Will play in %@" = "Va en%@";
+"Will play in %@" = "Va en %@";
