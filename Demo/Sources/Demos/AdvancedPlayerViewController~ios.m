@@ -205,6 +205,52 @@
     return self.letterboxView.fullScreen && self.letterboxView.userInterfaceHidden;
 }
 
+#pragma mark Keyboard shortcuts
+
+- (NSArray<UIKeyCommand *> *)keyCommands
+{
+    NSMutableArray<UIKeyCommand *> *keyCommands = [NSMutableArray array];
+    
+    UIKeyCommand *togglePlayPauseCommand = [UIKeyCommand keyCommandWithInput:@" "
+                                                               modifierFlags:0
+                                                                      action:@selector(togglePlayPause:)
+                                                        discoverabilityTitle:NSLocalizedString(@"Play / Pause", @"Play / Pause keyboard shortcut label")];
+    [keyCommands addObject:togglePlayPauseCommand];
+    
+    if ([self.letterboxController canSkipWithInterval:SRGLetterboxForwardSkipInterval]) {
+        UIKeyCommand *skipForwardCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
+                                                               modifierFlags:0
+                                                                      action:@selector(skipForward:)
+                                                        discoverabilityTitle:NSLocalizedString(@"Skip Ahead", @"Skip ahead shortcut label")];
+        [keyCommands addObject:skipForwardCommand];
+    }
+    
+    if ([self.letterboxController canSkipWithInterval:-SRGLetterboxBackwardSkipInterval]) {
+        UIKeyCommand *skipBackwardCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
+                                                                modifierFlags:0
+                                                                       action:@selector(skipBackward:)
+                                                         discoverabilityTitle:NSLocalizedString(@"Skip Back", @"Skip back shortcut label")];
+        [keyCommands addObject:skipBackwardCommand];
+    }
+    
+    return keyCommands.copy;
+}
+
+- (void)togglePlayPause:(UIKeyCommand *)command
+{
+    [self.letterboxController togglePlayPause];
+}
+
+- (void)skipForward:(UIKeyCommand *)command
+{
+    [self.letterboxController skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+}
+
+- (void)skipBackward:(UIKeyCommand *)command
+{
+    [self.letterboxController skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+}
+
 #pragma mark Data
 
 - (void)reloadData

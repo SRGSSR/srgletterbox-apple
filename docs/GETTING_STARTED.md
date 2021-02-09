@@ -254,6 +254,14 @@ AirPlay suggestions are entirely the responsibility of the application. To enabl
 
 For more information about long-form playback, have a look at the [dedicated WWDC session](https://developer.apple.com/videos/play/wwdc2019/501).
 
+## Keyboard shorcuts (iOS)
+
+On iOS first responders (views and view controllers) can provide a list of keyboard shorcuts, which can be used when an external keyboard is connected to the device. Media players usually provide shortcuts to toggle between playing and paused states, move forward or backward, and so on.
+
+Each responder in the chain defines how it participates to the shortcut list and which action is performed for each shortcut. As a Letterbox view is not meant to become a first responder and shortcuts it might defined could conflict with other responders (as a Letterbox view can be embedded in any kind of complex layout), no default shortcuts are provided by default.
+
+Your application is therefore responsible of implementing shorcuts if needed. Fortunately this is very easy. Please refer to [the official documentation](https://developer.apple.com/documentation/uikit/uikeycommand) for more information.
+
 ## Image copyrights
 
 Media sometimes provide image copyright information via the `imageCopyright` property. If your application displays a Letterbox view, you should ensure that this information is somehow displayed in its vicinity.

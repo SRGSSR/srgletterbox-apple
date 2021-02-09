@@ -102,6 +102,12 @@ static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
 static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
+ *  Standard skip intervals.
+ */
+static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
+static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+
+/**
  *  Special interval used to disable continuous playback.
  */
 static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
