@@ -33,7 +33,7 @@ The SRG Letterbox library provides an advanced player with several features:
 * A full-fledged player view controller for easy media playback (tvOS).
 * Translations in English, French, German, Italian and Romansh.
 
-## g
+## Data
 
 * Automatic metadata and error management.
 * Periodic updates.
