@@ -7,13 +7,14 @@ The SRG Letterbox library provides an advanced player with several features:
 * Playback of audio and video content.
 * Support for on-demand, live and DVR streams.
 * Playback of 360° videos (monoscopic / stereoscopic modes, touch and gyroscope navigation) (iOS).
+* Playback of unprotected, token-protected and DRM protected content.
 * Support for sequences and related medias, displayed in an optional timeline.
 * Support for blocked media time ranges.
 * Countdown, automatic playback start and interruption for content whose availability is limited in time.
 * Simultaneous playback of several streams.
-* Subtitles and audio tracks.
+* Programmatic control of subtitles and audio tracks.
 * Playlist support with optional continuous playback.
-* AirPlay (iOS).
+* AirPlay (iOS). Google Cast is not natively supported by Letterbox and must be implemented by applications directly.
 * Native picture in picture on compatible devices (iOS).
 * Control center and lock screen integration (iOS).
 * Stream URL override for local content playback.
@@ -24,21 +25,22 @@ The SRG Letterbox library provides an advanced player with several features:
 * Controls togglable by the user, or always hidden / displayed (iOS).
 * A responsive user interface (iOS).
 * Skip buttons for on-demand and DVR streams.
+* Subtitle and audio track selection.
 * Safe area automatic support for display on notch-decorated screens (iOS).
 * Full screen mode.
 * Complete VoiceOver support.
 * True mirroring mode for presentation purposes via AirPlay mirroring (iOS).
 * A full-fledged player view controller for easy media playback (tvOS).
+* Translations in English, French, German, Italian and Romansh.
 
-## Metadata
+## Data
 
-* Automatic metadata and error management:
+* Automatic metadata and error management.
 * Periodic updates.
 * Retrieval of current broadcast information for livestreams.
 * Thumbnail retrieval and display.
 * Error display.
-* Auto-resume after network loss.
+* Recovery after network loss.
+* Anonymous stream tracking conforming to internal (TagCommander / Webtrekk) and legal (Mediapulse) specifications.
 
-## Miscellaneous
 
-* Translations in English, French, German, Italian and Romansh.

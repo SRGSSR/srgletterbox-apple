@@ -1,26 +1,26 @@
-[![SRG Letterbox logo](README-images/logo.png)](https://github.com/SRGSSR/srgletterbox-apple)
+[![SRG Letterbox logo](README-images/logo.png)](https://github.com/SRGSSR/srgletterbox-apple)
 
 [![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/srgletterbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/blob/master/LICENSE) 
 
 ## About
 
-The SRG Letterbox library defines the official SRG SSR media player experience, packed into a single library providing:
+The SRG Letterbox library defines the official SRG SSR media player experience, packed into a single library providing:
 
 * A controller to play audios and videos, which supports on-demand, live and DVR streams.
 * A service to manage application-wide playback (iOS).
-* A responsive player view with the official SRG SSR look and feel (iOS).
+* A responsive player view with the official SRG SSR look and feel (iOS).
 * A standard `AVPlayerViewController`-based player for straightforward integration (tvOS).
 * Support for 360° videos (iOS).
 * Support for chapter and segment browsing and selection. 
 * Playlist support.
-* Access to all SRG SSR business unit medias.
+* Access to all SRG SSR business unit medias.
 * Native AirPlay and picture in picture support (iOS)
-* Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-apple) when used.
+* Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-apple) when used.
 * ... and [a lot more](FEATURES.md).
 
 <p align="center"><img src="README-images/letterbox.jpg"/></p>
 
-To ensure a coherent visual player identity throughout SRG SSR applications, **the design is intentionally not intended for customization**, and will follow future design evolutions. If you need a completely custom player, you should rather use the [SRG Media Player library](https://github.com/SRGSSR/srgmediaplayer-apple) instead, on top of which Letterbox itself is implemented.
+To ensure a coherent visual player identity throughout SRG SSR applications, **the design is intentionally not intended for customization**, and will follow future design evolutions. If you need a completely custom player, you should rather use the [SRG Media Player library](https://github.com/SRGSSR/srgmediaplayer-apple) instead, on top of which Letterbox itself is implemented.
 
 ## Compatibility
 
@@ -63,7 +63,7 @@ To learn about how the library can be used, have a look at the [getting started 
 
 ### Logging
 
-The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-apple) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
+The library internally uses the [SRG Logger](https://github.com/SRGSSR/srglogger-apple) library for logging, within the `ch.srgssr.letterbox` subsystem. This logger either automatically integrates with your own logger, or can be easily integrated with it. Refer to the SRG Logger documentation for more information.
 
 ## App Privacy details on the App Store
 

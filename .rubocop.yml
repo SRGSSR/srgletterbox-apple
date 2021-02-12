@@ -5,6 +5,7 @@ inherit_mode:
 AllCops:
   Exclude:
     - 'Carthage/**/*'
+    - 'Demo/Carthage/**/*'
     - 'vendor/**/*'
   Include:
     - 'fastlane/Pluginfile'

@@ -51,8 +51,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
     // This prevents tvOS builds delivered with TestFlight from sending production data.
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
                                                                                                        container:10
-                                                                                                        siteName:@"rts-app-test-v"
-                                                                                             netMetrixIdentifier:@"test"];
+                                                                                                        siteName:@"rts-app-test-v"];
     configuration.centralized = YES;
     configuration.environmentMode = SRGAnalyticsEnvironmentModePreProduction;
     
