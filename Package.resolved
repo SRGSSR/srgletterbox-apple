@@ -59,9 +59,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": null,
-          "revision": "8d2ccb6b835bb21504dcb7ee67358b8a4ed6ab63",
-          "version": "7.0.0"
+          "branch": "develop",
+          "revision": "0b4438839e67e57b9dc91b8448cef58d3f9664d1",
+          "version": null
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/SRGSSR/TCCore-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "be5774e8e68bbf29a9da93506e6bfa6de1177268",
-          "version": "4.5.4-srg3"
+          "revision": "491957a21cee60a40d3e5e4912b5f4cf6542ff50",
+          "version": "4.5.4-srg4"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/SRGSSR/TCSDK-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "391dbdc47db04f4049fdabca6b5d1f5446589d3f",
-          "version": "4.4.1-srg3"
+          "revision": "bd6344e97db30e7f5a1cc233716e8dabb8ee6a16",
+          "version": "4.4.1-srg4"
         }
       },
       {
