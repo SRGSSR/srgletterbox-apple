@@ -279,7 +279,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 #if TARGET_OS_IOS
-    return MSDistribute.isEnabled ? SettingSectionCount : SettingSectionCount - 1;
+    return MSACDistribute.isEnabled ? SettingSectionCount : SettingSectionCount - 1;
 #else
     return SettingSectionCount;
 #endif
@@ -816,7 +816,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionApplicationVersion: {
             // Clear internal App Center timestamp to force a new update request
             [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSAppCenterPostponedTimestamp"];
-            [MSDistribute checkForUpdate];
+            [MSACDistribute checkForUpdate];
             
             // Display version history
             NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
