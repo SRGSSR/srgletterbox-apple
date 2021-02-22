@@ -75,6 +75,8 @@
     }
 }
 
+#pragma mark SRGLetterboxControllerPlaybackTransitionDelegate protocol
+
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
 {
     return self.continuousPlaybackTransitionDuration;

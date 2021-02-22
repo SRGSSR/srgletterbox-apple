@@ -178,6 +178,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, copy) SRGLetterboxURLOverridingBlock contentURLOverridingBlock;
 
 @property (nonatomic, weak) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+@property (nonatomic, weak) id<SRGLetterboxControllerPlaybackTransitionDelegate> playbackTransitionDelegate;
 
 // Remark: Not wrapped into a parent context class so that all properties are KVO-observable.
 @property (nonatomic) NSDate *continuousPlaybackTransitionStartDate;
@@ -592,8 +593,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     [self prepareToPlayMedia:media atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler];
     
-    if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
-        [self.playlistDataSource controller:self didTransitionToMedia:media automatically:NO];
+    if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
+        [self.playbackTransitionDelegate controller:self didTransitionToMedia:media automatically:NO];
     }
     return YES;
 }
@@ -1591,8 +1592,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         SRGMedia *nextMedia = self.nextMedia;
         
         NSTimeInterval continuousPlaybackTransitionDuration = SRGLetterboxContinuousPlaybackDisabled;
-        if ([self.playlistDataSource respondsToSelector:@selector(continuousPlaybackTransitionDurationForController:)]) {
-            continuousPlaybackTransitionDuration = [self.playlistDataSource continuousPlaybackTransitionDurationForController:self];
+        if ([self.playbackTransitionDelegate respondsToSelector:@selector(continuousPlaybackTransitionDurationForController:)]) {
+            continuousPlaybackTransitionDuration = [self.playbackTransitionDelegate continuousPlaybackTransitionDurationForController:self];
             if (continuousPlaybackTransitionDuration < 0.) {
                 continuousPlaybackTransitionDuration = 0.;
             }
@@ -1604,8 +1605,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 #endif
         ) {
             void (^notify)(void) = ^{
-                if ([self.playlistDataSource respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
-                    [self.playlistDataSource controller:self didTransitionToMedia:nextMedia automatically:YES];
+                if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
+                    [self.playbackTransitionDelegate controller:self didTransitionToMedia:nextMedia automatically:YES];
                 }
                 [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                   object:self
@@ -1640,8 +1641,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             }
         }
         else {
-            if ([self.playlistDataSource respondsToSelector:@selector(controllerDidEndPlayback:)]) {
-                [self.playlistDataSource controllerDidEndPlayback:self];
+            if ([self.playbackTransitionDelegate respondsToSelector:@selector(controllerPlaybackDidEndWithoutTransition:)]) {
+                [self.playbackTransitionDelegate controllerPlaybackDidEndWithoutTransition:self];
             }
         }
     }

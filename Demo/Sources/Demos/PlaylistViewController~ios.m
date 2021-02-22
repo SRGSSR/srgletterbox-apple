@@ -77,6 +77,7 @@
     [super viewDidLoad];
     
     self.letterboxController.playlistDataSource = self.playlist;
+    self.letterboxController.playbackTransitionDelegate = self.playlist;
     
     self.letterboxView.controller = self.letterboxController;
     [self.letterboxView setUserInterfaceHidden:YES animated:NO togglable:YES];

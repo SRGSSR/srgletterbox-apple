@@ -145,26 +145,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @optional
 
 /**
- *  To enable continuous playback, implement this method and return a valid non-negative transition duration. Values
- *  lower than 0 will be fixed to 0. A duration of 0 enables immediate continuation.
- *
- *  You can return `SRGLetterboxContinuousPlaybackDisabled` to disable continuous playback, which is equivalent to not
- *  having this method implemented.
- */
-- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
-
-/**
- *  Called when the current media in the playlist changes, either automatically or as a result of explicitly moving
- *  to a next or previous item.
- */
-- (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
-
-/**
- *  Playback did end, i.e. did not continue automatically with another media.
- */
-- (void)controllerDidEndPlayback:(SRGLetterboxController *)controller;
-
-/**
  *  An optional position at which playback must start for the specified media. If not implemented or if the method returns
  *  `nil`, playback starts at the default location. If a position near or past the end of the media to be played is
  *  provided (see `SRGLetterboxController` `endTolerance` and `endToleranceRatio` properties), the player will start at
@@ -177,6 +157,37 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  `nil`, default settings are applied.
  */
 - (nullable SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media;
+
+@end
+
+/**
+ *  Protocol to manage and be informed about transitions between medias played by a controller.
+ */
+@protocol SRGLetterboxControllerPlaybackTransitionDelegate <NSObject>
+
+@optional
+
+/**
+ *  To enable continuous playback, implement this method and return a valid non-negative transition duration. Values
+ *  lower than 0 will be fixed to 0. A duration of 0 enables immediate continuation.
+ *
+ *  You can return `SRGLetterboxContinuousPlaybackDisabled` to disable continuous playback, which is equivalent to not
+ *  having this method implemented. Note that continuous playback requires medias to be supplied by a playlist data
+ *  source.
+ */
+- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
+
+/**
+ *  Called when the controller automatically transitions to another media, either automatically or as a result of explicitly
+ *  moving to a next or previous item in a playlist.
+ */
+- (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
+
+/**
+ *  Called when playback did end without transition, either because a playlist has been exhausted or is not available,
+ *  or because continuous playback is disabled.
+ */
+- (void)controllerPlaybackDidEndWithoutTransition:(SRGLetterboxController *)controller;
 
 @end
 
@@ -483,6 +494,11 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  The playlist data source.
  */
 @property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaylistDataSource> playlistDataSource;
+
+/**
+ *  The playback transition delegate.
+ */
+@property (nonatomic, weak, nullable) id<SRGLetterboxControllerPlaybackTransitionDelegate> playbackTransitionDelegate;
 
 /**
  *  Prepare to play the next media in the playlist. If you want playback to start right after preparation, call `-play`
