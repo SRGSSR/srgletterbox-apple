@@ -1639,6 +1639,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                 });
             }
         }
+        else {
+            if ([self.playlistDataSource respondsToSelector:@selector(controllerDidEndPlayback:)]) {
+                [self.playlistDataSource controllerDidEndPlayback:self];
+            }
+        }
     }
 }
 

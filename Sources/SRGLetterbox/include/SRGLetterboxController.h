@@ -160,6 +160,11 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
 
 /**
+ *  Playback did end, i.e. did not continue automatically with another media.
+ */
+- (void)controllerDidEndPlayback:(SRGLetterboxController *)controller;
+
+/**
  *  An optional position at which playback must start for the specified media. If not implemented or if the method returns
  *  `nil`, playback starts at the default location. If a position near or past the end of the media to be played is
  *  provided (see `SRGLetterboxController` `endTolerance` and `endToleranceRatio` properties), the player will start at
