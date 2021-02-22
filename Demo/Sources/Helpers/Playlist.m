@@ -7,6 +7,7 @@
 #import "Playlist.h"
 
 #import "SettingsViewController.h"
+#import "UIWindow+LetterboxDemo.h"
 
 @interface Playlist ()
 
@@ -75,13 +76,6 @@
     }
 }
 
-#pragma mark SRGLetterboxControllerPlaybackTransitionDelegate protocol
-
-- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
-{
-    return self.continuousPlaybackTransitionDuration;
-}
-
 - (SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media
 {
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
@@ -91,6 +85,24 @@
 #endif
     settings.sourceUid = self.sourceUid;
     return settings;
+}
+
+#pragma mark SRGLetterboxControllerPlaybackTransitionDelegate protocol
+
+- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
+{
+    return self.continuousPlaybackTransitionDuration;
+}
+
+- (void)controllerPlaybackDidEndWithoutTransition:(SRGLetterboxController *)controller
+{
+#if TARGET_OS_TV
+    // For example, on tvOS, we might want to automatically close the player if nothing follows.
+    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
+    if ([topViewController isKindOfClass:SRGLetterboxViewController.class]) {
+        [topViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+#endif
 }
 
 @end
