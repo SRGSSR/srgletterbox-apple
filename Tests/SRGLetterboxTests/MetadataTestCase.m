@@ -36,6 +36,11 @@
 
 #pragma mark Tests
 
+- (void)testNoHiddenAdSupportFramework
+{
+    XCTAssertNil(NSClassFromString(@"ASIdentifierManager"));
+}
+
 - (void)testPlaybackMetadataInOnDemandStreamWithSegments
 {
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
