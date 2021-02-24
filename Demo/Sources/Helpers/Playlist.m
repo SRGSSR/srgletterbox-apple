@@ -76,6 +76,9 @@
     }
 }
 
+- (void)controller:(SRGLetterboxController *)controller didChangeToMedia:(SRGMedia *)media
+{}
+
 - (SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media
 {
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
@@ -94,7 +97,7 @@
     return self.continuousPlaybackTransitionDuration;
 }
 
-- (void)controllerPlaybackDidEndWithoutTransition:(SRGLetterboxController *)controller
+- (void)controllerDidEnPlaybackdWithoutTransition:(SRGLetterboxController *)controller
 {
 #if TARGET_OS_TV
     // For example, on tvOS, we might want to automatically close the player if nothing follows.

@@ -593,8 +593,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     [self prepareToPlayMedia:media atPosition:position withPreferredSettings:preferredSettings completionHandler:completionHandler];
     
-    if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
-        [self.playbackTransitionDelegate controller:self didTransitionToMedia:media automatically:NO];
+    if (self.playlistDataSource) {
+        [self.playlistDataSource controller:self didChangeToMedia:media];
+    }
+    if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:playlistDidTransitionToMedia:automatically:)]) {
+        [self.playbackTransitionDelegate controller:self playlistDidTransitionToMedia:media automatically:NO];
     }
     return YES;
 }
@@ -1605,8 +1608,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 #endif
         ) {
             void (^notify)(void) = ^{
-                if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:didTransitionToMedia:automatically:)]) {
-                    [self.playbackTransitionDelegate controller:self didTransitionToMedia:nextMedia automatically:YES];
+                if (self.playlistDataSource) {
+                    [self.playlistDataSource controller:self didChangeToMedia:nextMedia];
+                }
+                if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:playlistDidTransitionToMedia:automatically:)]) {
+                    [self.playbackTransitionDelegate controller:self playlistDidTransitionToMedia:nextMedia automatically:YES];
                 }
                 [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                   object:self
@@ -1641,8 +1647,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             }
         }
         else {
-            if ([self.playbackTransitionDelegate respondsToSelector:@selector(controllerPlaybackDidEndWithoutTransition:)]) {
-                [self.playbackTransitionDelegate controllerPlaybackDidEndWithoutTransition:self];
+            if ([self.playbackTransitionDelegate respondsToSelector:@selector(controllerDidEnPlaybackdWithoutTransition:)]) {
+                [self.playbackTransitionDelegate controllerDidEnPlaybackdWithoutTransition:self];
             }
         }
     }
