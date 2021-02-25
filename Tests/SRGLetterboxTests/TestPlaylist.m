@@ -55,12 +55,7 @@
     }
 }
 
-- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
-{
-    return self.continuousPlaybackTransitionDuration;
-}
-
-- (void)controller:(SRGLetterboxController *)controller didTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically
+- (void)controller:(SRGLetterboxController *)controller didChangeToMedia:(SRGMedia *)media
 {
     self.index = [self.medias indexOfObject:media];
 }
@@ -75,6 +70,13 @@
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.standalone = self.standalone;
     return settings;
+}
+
+#pragma SRGLetterboxControllerPlaybackTransitionDelegate protocol
+
+- (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller
+{
+    return self.continuousPlaybackTransitionDuration;
 }
 
 @end
