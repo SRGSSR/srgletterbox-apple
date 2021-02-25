@@ -13,6 +13,7 @@
 
 @property (nonatomic) NSOrderedSet<SRGMedia *> *mediasSet;
 @property (nonatomic, copy) NSString *sourceUid;
+@property (nonatomic) NSInteger currentIndex;
 
 @end
 
@@ -37,28 +38,12 @@
     return self.mediasSet.array;
 }
 
-#pragma mark Helpers
-
-- (NSUInteger)currentIndexForMediaPlayedByController:(SRGLetterboxController *)controller
-{
-    NSString *URN = controller.URN;
-    if (URN) {
-        return [self.mediasSet indexOfObjectPassingTest:^BOOL(SRGMedia * _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-            return [media.URN isEqual:URN];
-        }];
-    }
-    else {
-        return NSNotFound;
-    }
-}
-
 #pragma SRGLetterboxControllerPlaylistDataSource protocol
 
 - (SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller
 {
-    NSUInteger index = [self currentIndexForMediaPlayedByController:controller];
-    if (index != NSNotFound) {
-        return (index > 0) ? self.mediasSet[index - 1] : nil;
+    if (self.currentIndex != NSNotFound) {
+        return (self.currentIndex > 0) ? self.mediasSet[self.currentIndex - 1] : nil;
     }
     else {
         return nil;
@@ -67,9 +52,8 @@
 
 - (SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller
 {
-    NSUInteger index = [self currentIndexForMediaPlayedByController:controller];
-    if (index != NSNotFound) {
-        return (index < self.mediasSet.count - 1) ? self.mediasSet[index + 1] : nil;
+    if (self.currentIndex != NSNotFound) {
+        return (self.currentIndex < self.mediasSet.count - 1) ? self.mediasSet[self.currentIndex + 1] : nil;
     }
     else {
         return self.mediasSet.firstObject;
@@ -77,7 +61,9 @@
 }
 
 - (void)controller:(SRGLetterboxController *)controller didChangeToMedia:(SRGMedia *)media
-{}
+{
+    self.currentIndex = [self.mediasSet indexOfObject:media];
+}
 
 - (SRGLetterboxPlaybackSettings *)controller:(SRGLetterboxController *)controller preferredSettingsForMedia:(SRGMedia *)media
 {
