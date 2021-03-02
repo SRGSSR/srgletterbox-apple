@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This method is called when the users chooses to restart playback of the current media.
  */
-- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didRestartPlaybackWithMedia:(SRGMedia *)media;
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didRestartPlaybackWithMedia:(SRGMedia *)media cancelledUpcomingMedia:(SRGMedia *)upcomingMedia;
 
 @end
 

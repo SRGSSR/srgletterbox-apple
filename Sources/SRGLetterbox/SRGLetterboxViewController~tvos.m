@@ -609,9 +609,13 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     }];
 }
 
-- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didRestartPlaybackWithMedia:(SRGMedia *)media
+- (void)continuousPlaybackViewController:(SRGContinuousPlaybackViewController *)continuousPlaybackViewController didRestartPlaybackWithMedia:(SRGMedia *)media cancelledUpcomingMedia:(SRGMedia *)upcomingMedia
 {
     [self.controller restart];
+    
+    if ([self.delegate respondsToSelector:@selector(letterboxViewController:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxViewController:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
