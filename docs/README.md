@@ -18,7 +18,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience
 * Seamless integration with the [SRG SSR analytics SDK](https://github.com/SRGSSR/srganalytics-apple) when used.
 * ... and [a lot more](FEATURES.md).
 
-<p align="center"><img src="README-images/letterbox.jpg"/></p>
+<p align="center"><img src="README-images/letterbox.png"/></p>
 
 To ensure a coherent visual player identity throughout SRG SSR applications, **the design is intentionally not intended for customization**, and will follow future design evolutions. If you need a completely custom player, you should rather use the [SRG Media Player library](https://github.com/SRGSSR/srgmediaplayer-apple) instead, on top of which Letterbox itself is implemented.
 
