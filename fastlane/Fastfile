@@ -25,8 +25,6 @@ platform :ios do
 
     ensure_git_status_clean unless lane.to_s.downcase.include? 'dsym'
 
-    appstore_skip_2fa_upgrade
-
     xcversion(version: '~> 12')
   end
 
@@ -82,13 +80,11 @@ platform :ios do
 
   desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing.'
   lane :tvOSnightly do
-    update_app_identifier_to_appstore
-
     platform = 'tvOS'
 
-    appstore_build_number = latest_testflight_build_number(
-      platform: appstore_platform(platform)
-    )
+    update_app_identifier_to_appstore
+
+    appstore_build_number = srg_latest_testflight_build_number(platform)
 
     nightly(
       platform: platform,
@@ -98,17 +94,7 @@ platform :ios do
 
     changelog = default_changelog_for_nightlies(platform)
 
-    pilot(
-      app_platform: appstore_platform(platform),
-      changelog: changelog,
-      distribute_external: true,
-      demo_account_required: false,
-      beta_app_review_info: beta_app_review_info,
-      groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
-    )
-
-    UI.message 'Wait 90 seconds before asking dSYMs. Not ready yet.'
-    sleep(90)
+    srg_pilot(platform, changelog)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
     update_dsyms(platform, appcenter_appname, nil)
@@ -148,9 +134,9 @@ platform :ios do
 
   desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.'
   lane :tvOSdemo do
-    update_app_identifier_to_appstore
-
     platform = 'tvOS'
+
+    update_app_identifier_to_appstore
 
     demo(
       platform: platform,
@@ -159,17 +145,7 @@ platform :ios do
 
     changelog = what_s_new_for_demo
 
-    pilot(
-      app_platform: appstore_platform(platform),
-      changelog: changelog,
-      distribute_external: true,
-      demo_account_required: false,
-      beta_app_review_info: beta_app_review_info,
-      groups: ENV['SRGSSR_ITUNES_CONNECT_GROUPS']
-    )
-
-    UI.message 'Wait 90 seconds before asking dSYMs. Not ready yet.'
-    sleep(90)
+    srg_pilot(platform, changelog)
 
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
     update_dsyms(platform, appcenter_appname, nil)
@@ -377,6 +353,12 @@ def latest_appcenter_build_number(app_name)
   Integer(appcenter_hash['build_number'])
 end
 
+# Returns current build number on AppStore Connect
+def srg_latest_testflight_build_number(platform)
+  login_with_app_store_connect_api_key
+  latest_testflight_build_number(platform: appstore_platform(platform))
+end
+
 # Save the git commit hash in a local text file for nightlies
 def save_last_nightlies_success_git_commit_hash(platform)
   last = last_git_commit
@@ -442,26 +424,54 @@ def update_app_identifier_to_appstore
   )
 end
 
+def srg_pilot(platform, changelog)
+  login_with_app_store_connect_api_key
+  pilot(
+    app_platform: appstore_platform(platform),
+    changelog: changelog,
+    distribute_external: true,
+    demo_account_required: false,
+    beta_app_review_info: beta_app_review_info,
+    groups: ENV['ITUNES_CONNECT_TESTFLIGHT_GROUPS']
+  )
+end
+
 # Update dSYMs from AppStore to App Center.
 def update_dsyms(platform, appcenter_appname, options)
   platform ||= 'iOS'
   output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
   Dir.chdir('..') { FileUtils.mkdir_p(output_directory) }
 
+  try_update_dsyms(platform, appcenter_appname, options, output_directory)
+end
+
+def try_update_dsyms(platform, appcenter_appname, options, output_directory)
   min_version = options ? options[:min_version] : nil
   version = options ? options[:version] : nil
-  download_appstore_dsyms(platform, min_version, version, output_directory)
-  upload_appcenter_dsyms(appcenter_appname)
+  begin
+    download_appstore_dsyms(platform, min_version, version, output_directory)
+    upload_appcenter_dsyms(appcenter_appname)
+    lane_context.delete(SharedValues::DSYM_PATHS)
+  rescue StandardError => e
+    UI.important('Update dSYMs failed (' + platform + ' / ' + appcenter_appname + '). ⚠️')
+    UI.error(e.message)
+  end
 end
 
 def download_appstore_dsyms(platform, min_version, version, output_directory)
   platform ||= 'iOS'
   version ||= 'latest'
+
+  # download_dsyms does not support api key token yet.
+  # See https://github.com/fastlane/fastlane/discussions/17485
+  # login_with_app_store_connect_api_key
   download_dsyms(
     platform: appstore_platform(platform),
     min_version: min_version,
     version: !min_version ? version : nil,
-    output_directory: output_directory
+    output_directory: output_directory,
+    wait_for_dsym_processing: true,
+    wait_timeout: 90
   )
 end
 
@@ -540,9 +550,12 @@ def appstore_platform(platform)
   appstore_platforms[platform]
 end
 
-# New AppStore Connect rule introduced in 02.2021: https://github.com/fastlane/fastlane/issues/18098#issuecomment-772970322
-def appstore_skip_2fa_upgrade
-  ENV['SPACESHIP_SKIP_2FA_UPGRADE'] = '1'
+def login_with_app_store_connect_api_key
+  app_store_connect_api_key(
+    key_id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ID'],
+    issuer_id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ISSUER_ID'],
+    key_content: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_CONTENT']
+  )
 end
 
 def swift_package_name
