@@ -39,7 +39,7 @@ test-tvos:
 
 .PHONY: setup
 setup:
-	@echo "Setting up project..."
+	@echo "Setting up the project..."
 
 	@if [ ! -d $(CONFIGURATION_FOLDER) ]; then \
 		git clone https://github.com/SRGSSR/srgletterbox-apple-configuration.git $(CONFIGURATION_FOLDER); \
@@ -55,10 +55,21 @@ setup:
 	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_FLAGS)
 	@echo "... done.\n"
 
+.PHONY: public.setup
+public.setup:
+	@echo "Setting up the project..."
+
+	@mkdir -p Xcode/Links
+	@pushd Xcode/Links > /dev/null; ln -fs ../Public/*.xcconfig .
+
+	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_FLAGS)
+	@echo "... done.\n"
+
 .PHONY: help
 help:
 	@echo "The following targets are available:"
-	@echo "   setup               Setup project (configuration and demo dependencies)"
+	@echo "   setup               Setup project (internal SRG SSR use)"
+	@echo "   public.setup        Setup project (public)"
 	@echo "   all                 Build and run unit tests for all platforms"
 	@echo "   test-ios            Build and run unit tests for iOS"
 	@echo "   test-tvos           Build and run unit tests for tvOS"

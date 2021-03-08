@@ -71,7 +71,7 @@ You are required to provide additional information about the data collected by y
 
 ## Demo project
 
-To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` from the main repository directory.
+To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` (or `make public.setup` if you are not part of the SRG SSR organization) from the main repository directory.
 
 #### URL schemes (iOS)
 
