@@ -1647,8 +1647,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             }
         }
         else {
-            if ([self.playbackTransitionDelegate respondsToSelector:@selector(controllerDidEnPlaybackdWithoutTransition:)]) {
-                [self.playbackTransitionDelegate controllerDidEnPlaybackdWithoutTransition:self];
+            if ([self.playbackTransitionDelegate respondsToSelector:@selector(controllerDidEndPlaybackdWithoutTransition:)]) {
+                [self.playbackTransitionDelegate controllerDidEndPlaybackdWithoutTransition:self];
             }
         }
     }

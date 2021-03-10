@@ -192,7 +192,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  Called when playback did end without transition, either because a playlist has been exhausted or is not available,
  *  or because continuous playback is disabled.
  */
-- (void)controllerDidEnPlaybackdWithoutTransition:(SRGLetterboxController *)controller;
+- (void)controllerDidEndPlaybackdWithoutTransition:(SRGLetterboxController *)controller;
 
 @end
 

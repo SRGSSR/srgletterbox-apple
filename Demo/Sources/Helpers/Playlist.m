@@ -83,7 +83,7 @@
     return self.continuousPlaybackTransitionDuration;
 }
 
-- (void)controllerDidEnPlaybackdWithoutTransition:(SRGLetterboxController *)controller
+- (void)controllerDidEndPlaybackdWithoutTransition:(SRGLetterboxController *)controller
 {
 #if TARGET_OS_TV
     // For example, on tvOS, we might want to automatically close the player if nothing follows.
