@@ -183,12 +183,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (NSTimeInterval)continuousPlaybackTransitionDurationForController:(SRGLetterboxController *)controller;
 
 /**
- *  Called when the related controller did transition to another playlist media (`automatically` is set to `YES` if
- *  this transition is the result of an automatically continuous playback transition).
- */
-- (void)controller:(SRGLetterboxController *)controller playlistDidTransitionToMedia:(SRGMedia *)media automatically:(BOOL)automatically;
-
-/**
  *  Called when playback did end without transition, either because a playlist has been exhausted or is not available,
  *  or because continuous playback is disabled.
  */

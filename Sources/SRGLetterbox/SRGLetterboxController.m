@@ -596,9 +596,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     if (self.playlistDataSource) {
         [self.playlistDataSource controller:self didChangeToMedia:media];
     }
-    if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:playlistDidTransitionToMedia:automatically:)]) {
-        [self.playbackTransitionDelegate controller:self playlistDidTransitionToMedia:media automatically:NO];
-    }
     return YES;
 }
 
@@ -1610,9 +1607,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             void (^notify)(void) = ^{
                 if (self.playlistDataSource) {
                     [self.playlistDataSource controller:self didChangeToMedia:nextMedia];
-                }
-                if ([self.playbackTransitionDelegate respondsToSelector:@selector(controller:playlistDidTransitionToMedia:automatically:)]) {
-                    [self.playbackTransitionDelegate controller:self playlistDidTransitionToMedia:nextMedia automatically:YES];
                 }
                 [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidContinueAutomaticallyNotification
                                                                   object:self
