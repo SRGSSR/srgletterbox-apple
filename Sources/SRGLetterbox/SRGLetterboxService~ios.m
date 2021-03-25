@@ -520,33 +520,22 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     CGFloat artworkDimension = 256.f * UIScreen.mainScreen.scale;
     CGSize maximumSize = CGSizeMake(artworkDimension, artworkDimension);
     
-    // TODO: Remove when iOS 10 is the minimum supported version
-    if (@available(iOS 10, *)) {
-        // A subtle issue might arise if the controller is strongly captured by the block (successive now playing information
-        // center updates might deadlock).
-        @weakify(self) @weakify(controller)
-        UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize completion:^{
-            @strongify(self) @strongify(controller)
-            [self updateNowPlayingInformationWithController:controller];
+    // A subtle issue might arise if the controller is strongly captured by the block (successive now playing information
+    // center updates might deadlock).
+    @weakify(self) @weakify(controller)
+    UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize completion:^{
+        @strongify(self) @strongify(controller)
+        [self updateNowPlayingInformationWithController:controller];
+    }];
+    if (artworkImage) {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
+            // Return the closest image we have, see https://developer.apple.com/videos/play/wwdc2017/251. Here just
+            // the image we retrieved for this specific purpose.
+            return artworkImage;
         }];
-        if (artworkImage) {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
-                // Return the closest image we have, see https://developer.apple.com/videos/play/wwdc2017/251. Here just
-                // the image we retrieved for this specific purpose.
-                return artworkImage;
-            }];
-        }
-        else {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
-        }
     }
     else {
-        @weakify(self) @weakify(controller)
-        UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize completion:^{
-            @strongify(self) @strongify(controller)
-            [self updateNowPlayingInformationWithController:controller];
-        }];
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithImage:artworkImage];
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = nil;
     }
     
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
@@ -584,7 +573,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         if (audioOptions.count > 1) {
             [languageOptionGroups addObject:SRGLetterboxServiceLanguageOptionGroup(audioOptions, NO)];
             
-            AVMediaSelectionOption *selectedAudibleOption = [playerItem selectedMediaOptionInMediaSelectionGroup:audioGroup];
+            AVMediaSelectionOption *selectedAudibleOption = [playerItem.currentMediaSelection selectedMediaOptionInMediaSelectionGroup:audioGroup];
             if (selectedAudibleOption) {
                 [currentLanguageOptions addObject:[selectedAudibleOption makeNowPlayingInfoLanguageOption]];
             }
@@ -596,7 +585,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
             [languageOptionGroups addObject:SRGLetterboxServiceLanguageOptionGroup(subtitleOptions, YES)];
         }
         
-        AVMediaSelectionOption *selectedLegibleOption = [playerItem selectedMediaOptionInMediaSelectionGroup:subtitleGroup];
+        AVMediaSelectionOption *selectedLegibleOption = [playerItem.currentMediaSelection selectedMediaOptionInMediaSelectionGroup:subtitleGroup];
         if (selectedLegibleOption) {
             [currentLanguageOptions addObject:[selectedLegibleOption makeNowPlayingInfoLanguageOption]];
         }

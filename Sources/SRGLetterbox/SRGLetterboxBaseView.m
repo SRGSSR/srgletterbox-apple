@@ -92,7 +92,7 @@ static void commonInit(SRGLetterboxBaseView *self);
         else {
             [NSNotificationCenter.defaultCenter addObserver:self
                                                    selector:@selector(accessibilityVoiceOverStatusDidChange:)
-                                                       name:UIAccessibilityVoiceOverStatusChanged
+                                                       name:UIAccessibilityVoiceOverStatusDidChangeNotification
                                                      object:nil];
         }
 #endif
@@ -112,7 +112,7 @@ static void commonInit(SRGLetterboxBaseView *self);
         }
         else {
             [NSNotificationCenter.defaultCenter removeObserver:self
-                                                          name:UIAccessibilityVoiceOverStatusChanged
+                                                          name:UIAccessibilityVoiceOverStatusDidChangeNotification
                                                         object:nil];
         }
 #endif
