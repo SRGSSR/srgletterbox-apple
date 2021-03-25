@@ -79,43 +79,18 @@ static void commonInit(SRGLetterboxBaseView *self);
                                                selector:@selector(contentSizeCategoryDidChange:)
                                                    name:UIContentSizeCategoryDidChangeNotification
                                                  object:nil];
-        
-#if TARGET_OS_IOS
-        if (@available(iOS 11, *)) {
-#endif
-            [NSNotificationCenter.defaultCenter addObserver:self
-                                                   selector:@selector(accessibilityVoiceOverStatusDidChange:)
-                                                       name:UIAccessibilityVoiceOverStatusDidChangeNotification
-                                                     object:nil];
-#if TARGET_OS_IOS
-        }
-        else {
-            [NSNotificationCenter.defaultCenter addObserver:self
-                                                   selector:@selector(accessibilityVoiceOverStatusDidChange:)
-                                                       name:UIAccessibilityVoiceOverStatusDidChangeNotification
-                                                     object:nil];
-        }
-#endif
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(accessibilityVoiceOverStatusDidChange:)
+                                                   name:UIAccessibilityVoiceOverStatusDidChangeNotification
+                                                 object:nil];
     }
     else {
         [NSNotificationCenter.defaultCenter removeObserver:self
                                                       name:UIContentSizeCategoryDidChangeNotification
                                                     object:nil];
-        
-#if TARGET_OS_IOS
-        if (@available(iOS 11, *)) {
-#endif
-            [NSNotificationCenter.defaultCenter removeObserver:self
-                                                          name:UIAccessibilityVoiceOverStatusDidChangeNotification
-                                                        object:nil];
-#if TARGET_OS_IOS
-        }
-        else {
-            [NSNotificationCenter.defaultCenter removeObserver:self
-                                                          name:UIAccessibilityVoiceOverStatusDidChangeNotification
-                                                        object:nil];
-        }
-#endif
+        [NSNotificationCenter.defaultCenter removeObserver:self
+                                                      name:UIAccessibilityVoiceOverStatusDidChangeNotification
+                                                    object:nil];
     }
 }
 

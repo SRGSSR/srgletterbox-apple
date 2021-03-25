@@ -104,6 +104,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     self.previousAspectRatio = SRGAspectRatioUndefined;
     
     self.contentView.backgroundColor = UIColor.blackColor;
+    self.contentView.accessibilityIgnoresInvertColors = YES;
     
     // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
     // to detect other interactions earlier
@@ -111,10 +112,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
                                                                                                             action:@selector(resetInactivity:)];
     activityGestureRecognizer.delegate = self;
     [self.contentView addGestureRecognizer:activityGestureRecognizer];
-    
-    if (@available(iOS 11.0, *)) {
-        self.contentView.accessibilityIgnoresInvertColors = YES;
-    }
     
     [self layoutTimelineViewInView:self.contentView];
     [self layoutPlayerViewInView:self.contentView];
@@ -133,21 +130,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [view addSubview:timelineView];
     self.timelineView = timelineView;
     
-    if (@available(iOS 11, *)) {
-        [NSLayoutConstraint activateConstraints:@[
-            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
-        ]];
-    }
-    else {
-        [NSLayoutConstraint activateConstraints:@[
-            self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority]
-        ]];
-    }
-    
     [NSLayoutConstraint activateConstraints:@[
         [timelineView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [timelineView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
         self.timelineHeightConstraint = [timelineView.heightAnchor constraintEqualToConstant:0.f],
+        self.timelineToSafeAreaBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor] srgletterbox_withPriority:kBottomConstraintGreaterPriority],
         self.timelineToSelfBottomConstraint = [[timelineView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:kBottomConstraintLesserPriority]
     ]];
 }
@@ -780,10 +767,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     // playback on the external device)
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && mediaPlayerController.view.readyForDisplay && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
-    if (@available(iOS 11, *)) {
-        if (NSBundle.srg_letterbox_isProductionVersion && UIScreen.mainScreen.captured && ! AVAudioSession.srg_isAirPlayActive) {
-            playerViewVisible = NO;
-        }
+    
+    // Prevent capture in production builds
+    if (NSBundle.srg_letterbox_isProductionVersion && UIScreen.mainScreen.captured && ! AVAudioSession.srg_isAirPlayActive) {
+        playerViewVisible = NO;
     }
     
     // Force aspect fit ratio when not full screen

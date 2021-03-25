@@ -563,7 +563,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)canPlayPlaylistMedia:(SRGMedia *)media
 {
-    if (@available(iOS 9, tvOS 14, *)) {
+    if (@available(iOS 12, tvOS 14, *)) {
         if (self.pictureInPictureActive) {
             return NO;
         }

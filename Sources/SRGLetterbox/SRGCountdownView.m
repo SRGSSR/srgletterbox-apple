@@ -181,22 +181,12 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     [view addSubview:mainStackView];
     self.mainStackView = mainStackView;
     
-    if (@available(iOS 11, *)) {
-        [NSLayoutConstraint activateConstraints:@[
-            [mainStackView.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
-            [mainStackView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor],
-            [mainStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],
-            [mainStackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor]
-        ]];
-    }
-    else {
-        [NSLayoutConstraint activateConstraints:@[
-            [mainStackView.topAnchor constraintEqualToAnchor:view.topAnchor],
-            [mainStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
-            [mainStackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-            [mainStackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
-        ]];
-    }
+    [NSLayoutConstraint activateConstraints:@[
+        [mainStackView.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
+        [mainStackView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor],
+        [mainStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],
+        [mainStackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor]
+    ]];
     
     self.mainLeadingSpacerView = [self layoutFlexibleSpacerInStackView:mainStackView];
     [self layoutDaysStackViewInStackView:mainStackView];

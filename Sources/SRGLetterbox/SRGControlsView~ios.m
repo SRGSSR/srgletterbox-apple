@@ -124,23 +124,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [NSLayoutConstraint activateConstraints:@[
         [bottomStackView.topAnchor constraintEqualToAnchor:self.userInterfaceToggleActiveView.bottomAnchor],
         [[bottomStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:750],
+        [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor],
+        [bottomStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],
+        [bottomStackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor],
         [bottomStackView.heightAnchor constraintEqualToConstant:48.f]
     ]];
-    
-    if (@available(iOS 11, *)) {
-        [NSLayoutConstraint activateConstraints:@[
-            [bottomStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],
-            [bottomStackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor],
-            [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor]
-        ]];
-    }
-    else {
-        [NSLayoutConstraint activateConstraints:@[
-            [bottomStackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-            [bottomStackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
-            [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor]
-        ]];
-    }
     
     [self layoutViewModeButtonInStackView:bottomStackView];
     [self layoutAirPlayButtonInStackView:bottomStackView];
