@@ -702,24 +702,24 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
         constraint.constant = height;
     }];
     
-    self.days1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.days0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.daysTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
+    self.days1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.days0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.daysTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
     
-    self.hours1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.hours0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.hoursTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
+    self.hours1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.hours0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.hoursTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
     
-    self.minutes1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.minutes0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.minutesTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
+    self.minutes1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.minutes0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.minutesTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
     
-    self.seconds1Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.seconds0Label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
-    self.secondsTitleLabel.font = [UIFont srg_mediumFontWithSize:titleFontSize];
+    self.seconds1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.seconds0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.secondsTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
     
     [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
-        label.font = [UIFont srg_mediumFontWithSize:digitFontSize];
+        label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
     }];
     
     self.days1Label.layer.cornerRadius = digitCornerRadius;
@@ -741,11 +741,11 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     }];
     
 #if TARGET_OS_TV
-    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
+    self.remainingTimeLabel.font = [SRGFont fontWithStyle:SRGFontStyleH4];
+    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleH4];
 #else
-    self.remainingTimeLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.remainingTimeLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
 #endif
     
     // Visibility

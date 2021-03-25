@@ -208,14 +208,14 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.numberOfLines = 2;
-    titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleH2];
     titleLabel.textColor = UIColor.whiteColor;
     [stackView addArrangedSubview:titleLabel];
     self.titleLabel = titleLabel;
     
     UILabel *subtitleLabel = [[UILabel alloc] init];
     subtitleLabel.numberOfLines = 2;
-    subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
     subtitleLabel.textColor = UIColor.lightGrayColor;
     [stackView addArrangedSubview:subtitleLabel];
     self.subtitleLabel = subtitleLabel;
@@ -262,21 +262,21 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     UILabel *upcomingTitleLabel = [[UILabel alloc] init];
     upcomingTitleLabel.numberOfLines = 2;
-    upcomingTitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
+    upcomingTitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleH2];
     upcomingTitleLabel.textColor = UIColor.whiteColor;
     [stackView addArrangedSubview:upcomingTitleLabel];
     self.upcomingTitleLabel = upcomingTitleLabel;
     
     UILabel *upcomingSubtitleLabel = [[UILabel alloc] init];
     upcomingSubtitleLabel.numberOfLines = 2;
-    upcomingSubtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    upcomingSubtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
     upcomingSubtitleLabel.textColor = UIColor.lightGrayColor;
     [stackView addArrangedSubview:upcomingSubtitleLabel];
     self.upcomingSubtitleLabel = upcomingSubtitleLabel;
     
     UILabel *upcomingSummaryLabel = [[UILabel alloc] init];
     upcomingSummaryLabel.numberOfLines = 3;
-    upcomingSummaryLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    upcomingSummaryLabel.font = [SRGFont fontWithStyle:SRGFontStyleBody];
     upcomingSummaryLabel.textColor = UIColor.whiteColor;
     [stackView addArrangedSubview:upcomingSummaryLabel];
     self.upcomingSummaryLabel = upcomingSummaryLabel;
@@ -286,7 +286,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     UILabel *remainingTimeLabel = [[UILabel alloc] init];
     remainingTimeLabel.numberOfLines = 3;
-    remainingTimeLabel.font = [UIFont srg_mediumFontWithSize:38.f];
+    remainingTimeLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:38.f];
     remainingTimeLabel.textColor = UIColor.srg_progressRedColor;
     [stackView addArrangedSubview:remainingTimeLabel];
     self.remainingTimeLabel = remainingTimeLabel;

@@ -228,10 +228,10 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.introLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.titleLabel.font = [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
-    self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.introLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    self.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleH2];
+    self.subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    self.cancelButton.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
 }
 
 - (void)willDetachFromController

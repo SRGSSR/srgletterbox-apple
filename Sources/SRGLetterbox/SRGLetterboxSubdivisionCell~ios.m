@@ -241,11 +241,11 @@
     _subdivision = subdivision;
     
     self.titleLabel.text = subdivision.title;
-    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleCaption];
     
     [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
-    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.durationLabel.font = [SRGFont fontWithStyle:SRGFontStyleCaption];
     self.durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
     
     NSString * (^formattedDuration)(NSTimeInterval) = ^(NSTimeInterval durationInSeconds) {
@@ -276,8 +276,8 @@
                 self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
             }
             else {
-                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
-                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }]];
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithStyle:SRGFontStyleCaption] }];
+                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [SRGFont fontWithStyle:SRGFontStyleCaption] }]];
                 self.durationLabel.attributedText = attributedString.copy;
             }
             self.durationLabel.hidden = NO;

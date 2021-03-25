@@ -91,7 +91,7 @@ static const CGFloat kMargin = 8.f;
 {
     [super contentSizeCategoryDidChange];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleBody];
 }
 
 #pragma mark Refresh
