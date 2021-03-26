@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "22e188345550b0870dfa0e98b4fb606f92916cf7",
+          "revision": "d57938089a95f54468c32c9d8034a277a602d060",
           "version": "6.7.1"
         }
       },
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "ce0d07662fc91d826353db71167eee191d4b4af4",
-          "version": "7.0.1"
+          "revision": "5a1549c460ca7ec1254ece8a276fdd8fdef45838",
+          "version": "7.0.2"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "6556ac22f611b1f4913264ebb20f513165b0f748",
-          "version": "10.0.0"
+          "revision": "1925363627bd1eabce8c63cc8541d5901e9d9266",
+          "version": "10.0.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": null,
-          "revision": "4b5db1151c7f15364665cbfbc28dfce5b60cfceb",
-          "version": "3.0.3"
+          "revision": "a5ab9cca5cb7dbbcc8615634c2f605d283d42963",
+          "version": "3.0.4"
         }
       },
       {
