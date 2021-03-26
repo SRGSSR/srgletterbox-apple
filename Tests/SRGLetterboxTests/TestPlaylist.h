@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestPlaylist : NSObject <SRGLetterboxControllerPlaylistDataSource>
+@interface TestPlaylist : NSObject <SRGLetterboxControllerPlaybackTransitionDelegate, SRGLetterboxControllerPlaylistDataSource>
 
 - (instancetype)initWithMedias:(nullable NSArray<SRGMedia *> *)medias standalone:(BOOL)standalone;
 

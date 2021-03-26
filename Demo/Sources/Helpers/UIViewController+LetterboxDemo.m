@@ -104,12 +104,13 @@ static void *s_playlistKey = &s_playlistKey;
     settings.standalone = ApplicationSettingStandalone();
     settings.quality = ApplicationSettingPreferredQuality();
     
-    if (ApplicationSettingAutoplayEnabled() && URN) {
+    if (URN) {
         self.letterbox_demo_dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
         [[self.letterbox_demo_dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
             self.letterbox_demo_playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
-            self.letterbox_demo_playlist.continuousPlaybackTransitionDuration = 15.;
+            self.letterbox_demo_playlist.continuousPlaybackTransitionDuration = ApplicationSettingAutoplayEnabled() ? 15. : SRGLetterboxContinuousPlaybackDisabled;
             letterboxViewController.controller.playlistDataSource = self.letterbox_demo_playlist;
+            letterboxViewController.controller.playbackTransitionDelegate = self.letterbox_demo_playlist;
         }] resume];
     }
     

@@ -4,7 +4,6 @@ inherit_mode:
 
 AllCops:
   Exclude:
-    - 'Carthage/**/*'
     - 'Demo/Carthage/**/*'
     - 'vendor/**/*'
   Include:
@@ -13,7 +12,13 @@ AllCops:
 # this would cause errors with long lanes
 Metrics/BlockLength:
   Enabled: true
+  Max: 30
   ExcludedMethods: ['platform', 'for_platform']
+  
+# Default is too restrictive, when optional properties have to be checked
+Metrics/MethodLength:
+  Enabled: true
+  Max: 15
 
 # Lane description and gem lines can be long
 Layout/LineLength:

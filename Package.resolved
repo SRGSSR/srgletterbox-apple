@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "805ef197755a66e634fccb5d23d9068ca5c1f395",
-          "version": "6.7.0"
+          "revision": "d57938089a95f54468c32c9d8034a277a602d060",
+          "version": "6.7.1"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "8d2ccb6b835bb21504dcb7ee67358b8a4ed6ab63",
-          "version": "7.0.0"
+          "revision": "5a1549c460ca7ec1254ece8a276fdd8fdef45838",
+          "version": "7.0.2"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "6556ac22f611b1f4913264ebb20f513165b0f748",
-          "version": "10.0.0"
+          "revision": "1925363627bd1eabce8c63cc8541d5901e9d9266",
+          "version": "10.0.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": null,
-          "revision": "4b5db1151c7f15364665cbfbc28dfce5b60cfceb",
-          "version": "3.0.3"
+          "revision": "a5ab9cca5cb7dbbcc8615634c2f605d283d42963",
+          "version": "3.0.4"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgnetwork-apple.git",
         "state": {
           "branch": null,
-          "revision": "76a83f3b6219f501b589317f8cc0a11556e0565a",
-          "version": "3.0.1"
+          "revision": "46c78b8cb5738e0286e18f35c586547b1458bdcf",
+          "version": "3.0.2"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/SRGSSR/TCCore-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "be5774e8e68bbf29a9da93506e6bfa6de1177268",
-          "version": "4.5.4-srg3"
+          "revision": "eb686883e63af28174472a09eda97acf07179c88",
+          "version": "4.5.4-srg5"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/SRGSSR/TCSDK-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "391dbdc47db04f4049fdabca6b5d1f5446589d3f",
-          "version": "4.4.1-srg3"
+          "revision": "c4becb0b250258b78cb46225af5e269da834db5a",
+          "version": "4.4.1-srg5"
         }
       },
       {

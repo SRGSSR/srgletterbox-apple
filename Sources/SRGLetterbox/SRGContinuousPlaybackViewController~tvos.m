@@ -401,7 +401,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 
 - (void)restart:(id)sender
 {
-    [self.delegate continuousPlaybackViewController:self didRestartPlaybackWithMedia:self.media];
+    [self.delegate continuousPlaybackViewController:self didRestartPlaybackWithMedia:self.media cancelledUpcomingMedia:self.upcomingMedia];
 }
 
 - (void)cancel:(id)sender
