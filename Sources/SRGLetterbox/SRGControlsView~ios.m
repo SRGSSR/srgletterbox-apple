@@ -216,7 +216,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     UILabel *durationLabel = [[UILabel alloc] init];
     durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     durationLabel.textColor = UIColor.whiteColor;
-    durationLabel.font = [SRGFont fontWithWeight:SRGFontWeightRegular fixedSize:14.f];
+    durationLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightRegular fixedSize:14.f];
     durationLabel.textAlignment = NSTextAlignmentCenter;
     [durationLabelWrapperView addSubview:durationLabel];
     self.durationLabel = durationLabel;
@@ -654,16 +654,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
     if (slider.live) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [SRGFont fontWithWeight:SRGFontWeightBold fixedSize:14.f] }];
+        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightBold fixedSize:14.f] }];
     }
     else if (streamType == SRGMediaPlayerStreamTypeDVR) {
         if (date) {
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:14.f] }]];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:14.f] }]];
             return attributedString.copy;
         }
         else {
-            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:@{ NSFontAttributeName : [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:14.f] }];
+            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:14.f] }];
         }
     }
     else if (streamType == SRGMediaPlayerStreamTypeLive) {
@@ -672,7 +672,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     else {
         NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? NSDateComponentsFormatter.srg_shortDateComponentsFormatter : NSDateComponentsFormatter.srg_mediumDateComponentsFormatter;
         NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
-        return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:14.f] }];
+        return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:14.f] }];
     }
 }
 

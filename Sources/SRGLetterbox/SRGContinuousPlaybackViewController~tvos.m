@@ -286,7 +286,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     UILabel *remainingTimeLabel = [[UILabel alloc] init];
     remainingTimeLabel.numberOfLines = 3;
-    remainingTimeLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:38.f];
+    remainingTimeLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:38.f];
     remainingTimeLabel.textColor = UIColor.srg_progressRedColor;
     [stackView addArrangedSubview:remainingTimeLabel];
     self.remainingTimeLabel = remainingTimeLabel;

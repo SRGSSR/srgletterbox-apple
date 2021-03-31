@@ -25,10 +25,10 @@ __attribute__((constructor)) static void SRGLetterboxFontInit(void)
 
 + (UIFont *)srg_awesomeFontWithStyle:(SRGFontStyle)style
 {
-    CGFloat size = [SRGFont sizeFontWithStyle:style];
+    CGFloat size = [SRGFont sizeForFontStyle:style];
     UIFont *font = [UIFont fontWithName:@"FontAwesome" size:size];
     
-    UIFontTextStyle textStyle = [SRGFont textStyleForScalingFontWithStyle:style];
+    UIFontTextStyle textStyle = [SRGFont textStyleForFontStyle:style];
     UIFontMetrics *metrics = [UIFontMetrics metricsForTextStyle:textStyle];
     return [metrics scaledFontForFont:font];
 }

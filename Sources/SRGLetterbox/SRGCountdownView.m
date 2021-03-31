@@ -692,24 +692,24 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
         constraint.constant = height;
     }];
     
-    self.days1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.days0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.daysTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
+    self.days1Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.days0Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.daysTitleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:titleFontSize];
     
-    self.hours1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.hours0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.hoursTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
+    self.hours1Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.hours0Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.hoursTitleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:titleFontSize];
     
-    self.minutes1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.minutes0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.minutesTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
+    self.minutes1Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.minutes0Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.minutesTitleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:titleFontSize];
     
-    self.seconds1Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.seconds0Label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
-    self.secondsTitleLabel.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:titleFontSize];
+    self.seconds1Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.seconds0Label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
+    self.secondsTitleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:titleFontSize];
     
     [self.colonLabels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
-        label.font = [SRGFont fontWithWeight:SRGFontWeightMedium fixedSize:digitFontSize];
+        label.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:digitFontSize];
     }];
     
     self.days1Label.layer.cornerRadius = digitCornerRadius;
