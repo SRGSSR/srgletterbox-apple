@@ -59,9 +59,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": null,
-          "revision": "5a1549c460ca7ec1254ece8a276fdd8fdef45838",
-          "version": "7.0.2"
+          "branch": "feature/font-overhaul",
+          "revision": "19b3e498b0e97bd2b70ea9dc0c856d5c2a64face",
+          "version": null
         }
       },
       {
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": "feature/font-overhaul",
-          "revision": "7ff17657dc244258f408a26af53c76d1716d0ecf",
+          "revision": "975a51fb7c43354289c24a814abdd1abd097f6f0",
           "version": null
         }
       },
@@ -104,9 +104,9 @@
         "package": "SRGIdentity",
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
-          "branch": null,
-          "revision": "a5ab9cca5cb7dbbcc8615634c2f605d283d42963",
-          "version": "3.0.4"
+          "branch": "feature/font-overhaul",
+          "revision": "e612e611411fcc9fb88dec8d56acf803ae51696a",
+          "version": null
         }
       },
       {
