@@ -730,13 +730,8 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
         stackView.spacing = spacing;
     }];
     
-#if TARGET_OS_TV
     self.remainingTimeLabel.font = [SRGFont fontWithStyle:SRGFontStyleH4];
     self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleH4];
-#else
-    self.remainingTimeLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
-    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
-#endif
     
     // Visibility
     NSTimeInterval currentRemainingTimeInterval = self.currentRemainingTimeInterval;

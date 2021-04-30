@@ -217,10 +217,10 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.introLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    self.introLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle2];
     self.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleH2];
-    self.subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
-    self.cancelButton.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    self.subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle1];
+    self.cancelButton.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle2];
 }
 
 - (void)willDetachFromController

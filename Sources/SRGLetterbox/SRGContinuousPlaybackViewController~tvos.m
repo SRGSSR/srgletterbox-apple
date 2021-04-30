@@ -215,7 +215,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     
     UILabel *subtitleLabel = [[UILabel alloc] init];
     subtitleLabel.numberOfLines = 2;
-    subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle1];
     subtitleLabel.textColor = UIColor.lightGrayColor;
     [stackView addArrangedSubview:subtitleLabel];
     self.subtitleLabel = subtitleLabel;
@@ -269,7 +269,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     
     UILabel *upcomingSubtitleLabel = [[UILabel alloc] init];
     upcomingSubtitleLabel.numberOfLines = 2;
-    upcomingSubtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
+    upcomingSubtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle1];
     upcomingSubtitleLabel.textColor = UIColor.lightGrayColor;
     [stackView addArrangedSubview:upcomingSubtitleLabel];
     self.upcomingSubtitleLabel = upcomingSubtitleLabel;
@@ -286,7 +286,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 {
     UILabel *remainingTimeLabel = [[UILabel alloc] init];
     remainingTimeLabel.numberOfLines = 3;
-    remainingTimeLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:38.f];
+    remainingTimeLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle2];
     remainingTimeLabel.textColor = UIColor.srg_progressRedColor;
     [stackView addArrangedSubview:remainingTimeLabel];
     self.remainingTimeLabel = remainingTimeLabel;

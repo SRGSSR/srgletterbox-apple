@@ -63,11 +63,7 @@
 {
     [super contentSizeCategoryDidChange];
     
-#if TARGET_OS_TV
     self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleH4];
-#else
-    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle];
-#endif
 }
 
 - (void)metadataDidChange
