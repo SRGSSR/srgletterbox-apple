@@ -13,6 +13,7 @@
 #import "UILabel+Copyable.h"
 #import "UIWindow+LetterboxDemo.h"
 
+@import libextobjc;
 @import SRGAnalytics;
 @import SRGDataProviderNetwork;
 
@@ -161,7 +162,10 @@
     
     if (self.URN) {
         self.dataProvider = [[SRGDataProvider alloc] initWithServiceURL:self.letterboxController.serviceURL];
+        
+        @weakify(self)
         [[self.dataProvider recommendedMediasForURN:self.URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            @strongify(self)
             self.playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
             self.playlist.continuousPlaybackTransitionDuration = ApplicationSettingAutoplayEnabled() ? 15. : SRGLetterboxContinuousPlaybackDisabled ;
             self.letterboxController.playlistDataSource = self.playlist;
