@@ -273,7 +273,7 @@
         if (segment.markInDate && segment.markOutDate) {
             if ([segment.markInDate compare:currentDate] != NSOrderedDescending && [currentDate compare:segment.markOutDate] != NSOrderedDescending) {
                 self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
-                self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
+                self.durationLabel.backgroundColor = UIColor.srg_lightRedColor;
             }
             else {
                 NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithStyle:SRGFontStyleCaption] }];
@@ -294,7 +294,7 @@
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
         self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
         self.durationLabel.hidden = NO;
-        self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
+        self.durationLabel.backgroundColor = UIColor.srg_lightRedColor;
     }
     else if (subdivision.duration != 0.) {
         self.durationLabel.text = formattedDuration(subdivision.duration / 1000.);

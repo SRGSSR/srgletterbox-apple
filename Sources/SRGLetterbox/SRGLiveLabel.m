@@ -77,6 +77,6 @@ static void commonInit(SRGLiveLabel *self)
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 1;
     
-    self.backgroundColor = UIColor.srg_liveRedColor;
+    self.backgroundColor = UIColor.srg_lightRedColor;
     self.layer.cornerRadius = 3.f;
 }
