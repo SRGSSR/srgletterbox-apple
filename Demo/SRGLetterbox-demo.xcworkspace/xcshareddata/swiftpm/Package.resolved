@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "d57938089a95f54468c32c9d8034a277a602d060",
-          "version": "6.7.1"
+          "revision": "51d689bd4f6a38d952773e055525a39203cc94ec",
+          "version": "6.8.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/Mantle/Mantle.git",
         "state": {
           "branch": null,
-          "revision": "eb4ad298d81c023bcba20810ceffba695378ded4",
-          "version": "2.1.6"
+          "revision": "bbe0cbe68582a18a6df7516778196ba3cf420ad3",
+          "version": "2.1.7"
         }
       },
       {
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/font-overhaul",
-          "revision": "563e423e74e23d11e1fecf314cf1a09e9860f849",
+          "revision": "23407da654fac49ade7eddfed6d83bf8f1136aed",
           "version": null
         }
       },
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": "feature/font-overhaul",
-          "revision": "cabd1e45126f3655114d2a13d381e67e96c21a11",
+          "revision": "31362a6f0f88ce22505f6413902f00d2d3d32351",
           "version": null
         }
       },
