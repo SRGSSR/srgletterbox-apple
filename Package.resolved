@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "51d689bd4f6a38d952773e055525a39203cc94ec",
-          "version": "6.8.0"
+          "revision": "1bdfebcc54cef4ae96e3627f9014446218e806ca",
+          "version": "6.8.1"
         }
       },
       {
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": "feature/font-overhaul",
-          "revision": "31362a6f0f88ce22505f6413902f00d2d3d32351",
+          "revision": "1d6588f82bc1490bbd9bd9ff0c323022e4d2e409",
           "version": null
         }
       },
@@ -105,7 +105,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": "feature/font-overhaul",
-          "revision": "53496de9cd83cbebd4264110558afedfc1fcdeaf",
+          "revision": "456661270d662cfd68ed7aac57247d561a44397b",
           "version": null
         }
       },
