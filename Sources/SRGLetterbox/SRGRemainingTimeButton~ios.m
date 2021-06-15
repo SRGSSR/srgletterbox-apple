@@ -14,6 +14,8 @@
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "UIColor+SRGLetterbox.h"
 
+@import SRGAppearance;
+
 @interface SRGRemainingTimeButton ()
 
 @property (nonatomic) NSDate *targetDate;
@@ -36,7 +38,7 @@
     UIBezierPath *trackCirclePath = [UIBezierPath bezierPathWithArcCenter:center radius:side / 2.f startAngle:-M_PI_2 endAngle:3 * M_PI_2 clockwise:YES];
     CAShapeLayer *trackCircleLayer = [[CAShapeLayer alloc] init];
     trackCircleLayer.path = trackCirclePath.CGPath;
-    trackCircleLayer.strokeColor = UIColor.srg_progressRedColor.CGColor;
+    trackCircleLayer.strokeColor = UIColor.srg_lightRedColor.CGColor;
     trackCircleLayer.lineWidth = 2.f;
     trackCircleLayer.fillColor = UIColor.clearColor.CGColor;
     trackCircleLayer.strokeEnd = 1.f;

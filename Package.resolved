@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "d57938089a95f54468c32c9d8034a277a602d060",
-          "version": "6.7.1"
+          "revision": "1bdfebcc54cef4ae96e3627f9014446218e806ca",
+          "version": "6.8.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/Mantle/Mantle.git",
         "state": {
           "branch": null,
-          "revision": "eb4ad298d81c023bcba20810ceffba695378ded4",
-          "version": "2.1.6"
+          "revision": "bbe0cbe68582a18a6df7516778196ba3cf420ad3",
+          "version": "2.1.7"
         }
       },
       {
@@ -59,18 +59,18 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": null,
-          "revision": "5a1549c460ca7ec1254ece8a276fdd8fdef45838",
-          "version": "7.0.2"
+          "branch": "develop",
+          "revision": "f3854faf59ec6edcdd6d4db2f41204b84c68b16b",
+          "version": null
         }
       },
       {
         "package": "SRGAppearance",
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
-          "branch": null,
-          "revision": "1e635509b57626073cfff3d74037214e2e42e6e5",
-          "version": "3.0.2"
+          "branch": "develop",
+          "revision": "960ce81ff9c6c180d9d6af765eb0ce8da2637572",
+          "version": null
         }
       },
       {
@@ -104,9 +104,9 @@
         "package": "SRGIdentity",
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
-          "branch": null,
-          "revision": "a5ab9cca5cb7dbbcc8615634c2f605d283d42963",
-          "version": "3.0.4"
+          "branch": "develop",
+          "revision": "a64d28fcfbc550f4991b0d85762d8e7ad7da389f",
+          "version": null
         }
       },
       {

@@ -149,13 +149,8 @@
     [self.view layoutIfNeeded];
     [letterboxView animateAlongsideUserInterfaceWithAnimations:^(BOOL hidden, BOOL minimal, CGFloat aspectRatio, CGFloat heightOffset) {
         self.closeButton.alpha = (minimal || ! hidden) ? 1.f : 0.f;
-        if (@available(iOS 10, *)) {
-            self.letterboxAspectRatioConstraint = [self.letterboxAspectRatioConstraint srg_replacementConstraintWithMultiplier:fminf(1.f / aspectRatio, 1.f)
-                                                                                                                      constant:heightOffset];
-        }
-        else {
-            self.letterboxAspectRatioConstraint.constant = heightOffset;
-        }
+        self.letterboxAspectRatioConstraint = [self.letterboxAspectRatioConstraint srg_replacementConstraintWithMultiplier:fminf(1.f / aspectRatio, 1.f)
+                                                                                                                  constant:heightOffset];
         [self.view layoutIfNeeded];
     } completion:nil];
 }

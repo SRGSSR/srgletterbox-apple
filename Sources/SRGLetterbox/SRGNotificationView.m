@@ -41,19 +41,9 @@ static const CGFloat kMargin = 8.f;
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:notificationView];
     
-    if (@available(iOS 11, *)) {
-        [NSLayoutConstraint activateConstraints:@[
-            [notificationView.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor],
-            [notificationView.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor]
-        ]];
-    }
-    else {
-        [NSLayoutConstraint activateConstraints:@[
-            [notificationView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
-            [notificationView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
-        ]];
-    }
     [NSLayoutConstraint activateConstraints:@[
+        [notificationView.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor],
+        [notificationView.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor],
         [notificationView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
         [notificationView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor]
     ]];
@@ -91,7 +81,7 @@ static const CGFloat kMargin = 8.f;
 {
     [super contentSizeCategoryDidChange];
     
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleBody];
+    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleBody];
 }
 
 #pragma mark Refresh

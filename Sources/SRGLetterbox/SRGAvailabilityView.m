@@ -63,11 +63,7 @@
 {
     [super contentSizeCategoryDidChange];
     
-#if TARGET_OS_TV
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleHeadline];
-#else
-    self.messageLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-#endif
+    self.messageLabel.font = [SRGFont fontWithStyle:SRGFontStyleH4];
 }
 
 - (void)metadataDidChange

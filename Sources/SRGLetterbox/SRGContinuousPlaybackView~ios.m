@@ -101,21 +101,10 @@
     
     [NSLayoutConstraint activateConstraints:@[
         [stackView.topAnchor constraintEqualToAnchor:view.topAnchor],
-        [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor]
+        [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [stackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor constant:16.f],
+        [stackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor constant:-16.f]
     ]];
-    
-    if (@available(iOS 11, *)) {
-        [NSLayoutConstraint activateConstraints:@[
-            [stackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor constant:16.f],
-            [stackView.trailingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.trailingAnchor constant:-16.f]
-        ]];
-    }
-    else {
-        [NSLayoutConstraint activateConstraints:@[
-            [stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:16.f],
-            [stackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-16.f]
-        ]];
-    }
     
     UIView *topSpacerView = [[UIView alloc] init];
     [stackView addArrangedSubview:topSpacerView];
@@ -228,10 +217,10 @@
 {
     [super contentSizeCategoryDidChange];
     
-    self.introLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.titleLabel.font = [UIFont srg_boldFontWithTextStyle:SRGAppearanceFontTextStyleTitle];
-    self.subtitleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
-    self.cancelButton.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleSubtitle];
+    self.introLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle2];
+    self.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleH2];
+    self.subtitleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle1];
+    self.cancelButton.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleSubtitle2];
 }
 
 - (void)willDetachFromController

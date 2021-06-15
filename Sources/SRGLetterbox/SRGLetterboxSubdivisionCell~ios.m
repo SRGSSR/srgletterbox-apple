@@ -241,11 +241,11 @@
     _subdivision = subdivision;
     
     self.titleLabel.text = subdivision.title;
-    self.titleLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleCaption];
     
     [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
     
-    self.durationLabel.font = [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption];
+    self.durationLabel.font = [SRGFont fontWithStyle:SRGFontStyleCaption];
     self.durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
     
     NSString * (^formattedDuration)(NSTimeInterval) = ^(NSTimeInterval durationInSeconds) {
@@ -273,11 +273,11 @@
         if (segment.markInDate && segment.markOutDate) {
             if ([segment.markInDate compare:currentDate] != NSOrderedDescending && [currentDate compare:segment.markOutDate] != NSOrderedDescending) {
                 self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
-                self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
+                self.durationLabel.backgroundColor = UIColor.srg_lightRedColor;
             }
             else {
-                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }];
-                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [UIFont srg_mediumFontWithTextStyle:SRGAppearanceFontTextStyleCaption] }]];
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithStyle:SRGFontStyleCaption] }];
+                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:segment.markInDate] attributes:@{ NSFontAttributeName : [SRGFont fontWithStyle:SRGFontStyleCaption] }]];
                 self.durationLabel.attributedText = attributedString.copy;
             }
             self.durationLabel.hidden = NO;
@@ -294,7 +294,7 @@
     else if (subdivision.contentType == SRGContentTypeLivestream || subdivision.contentType == SRGContentTypeScheduledLivestream) {
         self.durationLabel.text = SRGLetterboxLocalizedString(@"Live", @"Short label identifying a livestream. Display in uppercase.").uppercaseString;
         self.durationLabel.hidden = NO;
-        self.durationLabel.backgroundColor = UIColor.srg_liveRedColor;
+        self.durationLabel.backgroundColor = UIColor.srg_lightRedColor;
     }
     else if (subdivision.duration != 0.) {
         self.durationLabel.text = formattedDuration(subdivision.duration / 1000.);
