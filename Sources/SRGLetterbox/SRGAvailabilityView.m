@@ -37,6 +37,8 @@
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.textAlignment = NSTextAlignmentCenter;
+    messageLabel.adjustsFontSizeToFitWidth = YES;
+    messageLabel.minimumScaleFactor = 0.6f;
     messageLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.75f];
     messageLabel.layer.masksToBounds = YES;
 #if TARGET_OS_TV
@@ -53,6 +55,8 @@
     
     [NSLayoutConstraint activateConstraints:@[
         [messageLabel.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
+        [messageLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.contentView.leadingAnchor constant:8.f],
+        [messageLabel.trailingAnchor constraintLessThanOrEqualToAnchor:self.contentView.trailingAnchor constant:8.f],
         [messageLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor]
     ]];
 }

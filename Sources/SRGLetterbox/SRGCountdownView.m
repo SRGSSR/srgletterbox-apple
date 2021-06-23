@@ -490,6 +490,8 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
     messageLabel.textAlignment = NSTextAlignmentCenter;
+    messageLabel.adjustsFontSizeToFitWidth = YES;
+    messageLabel.minimumScaleFactor = 0.6f;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.75f];
     messageLabel.horizontalMargin = 8.f;
@@ -500,9 +502,9 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     
     [NSLayoutConstraint activateConstraints:@[
         [messageLabel.centerXAnchor constraintEqualToAnchor:self.mainStackView.centerXAnchor],
-        [messageLabel.topAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.topAnchor constant:kMessageLabelTopSpace],
         [messageLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.mainStackView.leadingAnchor constant:8.f],
-        [messageLabel.trailingAnchor constraintLessThanOrEqualToAnchor:self.mainStackView.trailingAnchor constant:8.f]
+        [messageLabel.trailingAnchor constraintLessThanOrEqualToAnchor:self.mainStackView.trailingAnchor constant:8.f],
+        [messageLabel.topAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.topAnchor constant:kMessageLabelTopSpace]
     ]];
 }
 
@@ -511,6 +513,8 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     SRGPaddedLabel *remainingTimeLabel = [[SRGPaddedLabel alloc] init];
     remainingTimeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     remainingTimeLabel.textAlignment = NSTextAlignmentCenter;
+    remainingTimeLabel.adjustsFontSizeToFitWidth = YES;
+    remainingTimeLabel.minimumScaleFactor = 0.6f;
     remainingTimeLabel.textColor = UIColor.whiteColor;
     remainingTimeLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.75f];
 #if TARGET_OS_TV
@@ -525,6 +529,13 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     remainingTimeLabel.layer.masksToBounds = YES;
     [view addSubview:remainingTimeLabel];
     self.remainingTimeLabel = remainingTimeLabel;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [remainingTimeLabel.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [remainingTimeLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:view.leadingAnchor constant:8.f],
+        [remainingTimeLabel.trailingAnchor constraintLessThanOrEqualToAnchor:view.trailingAnchor constant:8.f],
+        [remainingTimeLabel.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
+    ]];
 }
 
 - (void)layoutAccessibilityFrameInView:(UIView *)view
