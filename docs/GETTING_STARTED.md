@@ -6,7 +6,7 @@ The SRG Letterbox library provides three families of components:
 * Visual components reflecting what an associated controller is currently playing, and providing controls to manage playback:
    * On iOS, `SRGLetterboxView` is a `UIView` subclass which must be inserted into your application view hierarchy and bound to a controller, which can be changed at any time.
    * On tvOS, `SRGLetterboxViewController` is a `UIViewController` subclass you simply present to display content played by a controller. This controller can be provided at creation time or can be entirely managed by the view controller itself.
-* On iOS, a service singletion, `SRGLetterboxService`, to enable application-wide features like AirPlay, picture in picture or control center integration.
+* On iOS, a service singleton, `SRGLetterboxService`, to enable application-wide features like AirPlay, picture in picture or control center integration.
 
 The following guide describes how these components can be easily combined to add advanced media playback capabilities to your iOS or tvOS application.
 
