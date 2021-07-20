@@ -25,7 +25,7 @@ platform :ios do
 
     ensure_git_status_clean unless lane.to_s.downcase.include? 'dsym'
 
-    xcversion(version: '~> 12')
+    xcversion(version: '~> 12.5')
   end
 
   desc 'Run library tests'

@@ -9,6 +9,7 @@
 #import "AdvancedPlayerViewController.h"
 #import "SettingsViewController.h"
 
+@import libextobjc;
 @import SRGDataProviderNetwork;
 
 #import <objc/runtime.h>
@@ -106,7 +107,10 @@ static void *s_playlistKey = &s_playlistKey;
     
     if (URN) {
         self.letterbox_demo_dataProvider = [[SRGDataProvider alloc] initWithServiceURL:serviceURL];
+        
+        @weakify(self)
         [[self.letterbox_demo_dataProvider recommendedMediasForURN:URN userId:nil withCompletionBlock:^(NSArray<SRGMedia *> * _Nullable medias, SRGPage * _Nonnull page, SRGPage * _Nullable nextPage, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error) {
+            @strongify(self)
             self.letterbox_demo_playlist = [[Playlist alloc] initWithMedias:medias sourceUid:nil];
             self.letterbox_demo_playlist.continuousPlaybackTransitionDuration = ApplicationSettingAutoplayEnabled() ? 15. : SRGLetterboxContinuousPlaybackDisabled;
             letterboxViewController.controller.playlistDataSource = self.letterbox_demo_playlist;

@@ -88,9 +88,7 @@
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView
 {
     [letterboxView animateAlongsideUserInterfaceWithAnimations:nil completion:^(BOOL finished) {
-        if (@available(iOS 11, *)) {
-            [self setNeedsUpdateOfHomeIndicatorAutoHidden];
-        }
+        [self setNeedsUpdateOfHomeIndicatorAutoHidden];
     }];
 }
 

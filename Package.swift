@@ -3,14 +3,14 @@
 import PackageDescription
 
 struct ProjectSettings {
-    static let marketingVersion: String = "7.0.0"
+    static let marketingVersion: String = "7.1.0"
 }
 
 let package = Package(
     name: "SRGLetterbox",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v9),
+        .iOS(.v12),
         .tvOS(.v12)
     ],
     products: [
@@ -22,8 +22,8 @@ let package = Package(
     dependencies: [
         .package(name: "FXReachability", url: "https://github.com/SRGSSR/FXReachability.git", .exact("1.3.2-srg5")),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", .upToNextMajor(from: "9.0.0")),
-        .package(name: "SRGAnalytics", url: "https://github.com/SRGSSR/srganalytics-apple.git", .upToNextMinor(from: "7.0.2")),
-        .package(name: "SRGAppearance", url: "https://github.com/SRGSSR/srgappearance-apple.git", .upToNextMinor(from: "3.0.0")),
+        .package(name: "SRGAnalytics", url: "https://github.com/SRGSSR/srganalytics-apple.git", .upToNextMinor(from: "7.1.0")),
+        .package(name: "SRGAppearance", url: "https://github.com/SRGSSR/srgappearance-apple.git", .upToNextMinor(from: "4.0.0")),
         .package(name: "YYWebImage", url: "https://github.com/SRGSSR/YYWebImage.git", .exact("1.0.5-srg3"))
     ],
     targets: [

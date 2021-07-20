@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "d57938089a95f54468c32c9d8034a277a602d060",
-          "version": "6.7.1"
+          "revision": "1bdfebcc54cef4ae96e3627f9014446218e806ca",
+          "version": "6.8.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/Mantle/Mantle.git",
         "state": {
           "branch": null,
-          "revision": "eb4ad298d81c023bcba20810ceffba695378ded4",
-          "version": "2.1.6"
+          "revision": "bbe0cbe68582a18a6df7516778196ba3cf420ad3",
+          "version": "2.1.7"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "5a1549c460ca7ec1254ece8a276fdd8fdef45838",
-          "version": "7.0.2"
+          "revision": "cfd625cdd3b9d07fc934086b9cb90717a66bf1f4",
+          "version": "7.1.0"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": null,
-          "revision": "1e635509b57626073cfff3d74037214e2e42e6e5",
-          "version": "3.0.2"
+          "revision": "fe65fea10fc080bc58305fe9a5a406e3730e4d91",
+          "version": "4.0.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "1925363627bd1eabce8c63cc8541d5901e9d9266",
-          "version": "10.0.1"
+          "revision": "e936161d9375d01c73adf595b3e770bafaecd2ad",
+          "version": "11.0.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": null,
-          "revision": "a5ab9cca5cb7dbbcc8615634c2f605d283d42963",
-          "version": "3.0.4"
+          "revision": "b56873f352546a9496113e629f033da0df44d863",
+          "version": "3.1.0"
         }
       },
       {
