@@ -16,6 +16,7 @@
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
+#import "SRGLetterboxMetadata.h"
 #import "SRGLiveLabel.h"
 #import "SRGNotificationView.h"
 #import "UIApplication+SRGLetterbox.h"
@@ -381,22 +382,6 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 #pragma mark Data
 
-- (NSString *)fullSummaryForMedia:(SRGMedia *)media
-{
-    NSParameterAssert(media);
-    
-    if (media.summary && media.imageCopyright) {
-        NSString *imageCopyright = [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Image credit: %@", @"Image copyright introductory label"), media.imageCopyright];
-        return [NSString stringWithFormat:@"%@\n\n%@", media.summary, imageCopyright];
-    }
-    else if (media.imageCopyright) {
-        return [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Image credit: %@", @"Image copyright introductory label"), media.imageCopyright];
-    }
-    else {
-        return media.summary;
-    }
-}
-
 - (void)reloadImage
 {
     [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
@@ -629,12 +614,17 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     if (media) {
         AVMutableMetadataItem *titleItem = [[AVMutableMetadataItem alloc] init];
         titleItem.identifier = AVMetadataCommonIdentifierTitle;
-        titleItem.value = media.title;
+        titleItem.value = SRGLetterboxMetadataTitle(media);
         titleItem.extendedLanguageTag = @"und";
+        
+        AVMutableMetadataItem *subtitleItem = [[AVMutableMetadataItem alloc] init];
+        subtitleItem.identifier = AVMetadataIdentifieriTunesMetadataTrackSubTitle;
+        subtitleItem.value = SRGLetterboxMetadataSubtitle(media);
+        subtitleItem.extendedLanguageTag = @"und";
         
         AVMutableMetadataItem *descriptionItem = [[AVMutableMetadataItem alloc] init];
         descriptionItem.identifier = AVMetadataCommonIdentifierDescription;
-        descriptionItem.value = [self fullSummaryForMedia:media];
+        descriptionItem.value = SRGLetterboxMetadataDescription(media);
         descriptionItem.extendedLanguageTag = @"und";
         
         UIImage *image = [self imageForMetadata:media withCompletion:^{
@@ -646,7 +636,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         artworkItem.value = UIImagePNGRepresentation(image);
         artworkItem.extendedLanguageTag = @"und";       // Also required for images in external metadata
         
-        return @[ titleItem.copy, descriptionItem.copy, artworkItem.copy ];
+        return @[ titleItem.copy, subtitleItem.copy, descriptionItem.copy, artworkItem.copy ];
     }
     else {
         return nil;
