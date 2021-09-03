@@ -82,7 +82,8 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 
-@property (nonatomic, weak) id periodicTimeObserver;
+@property (nonatomic) NSArray<UIAction *> *defaultInfoViewActions API_AVAILABLE(tvos(15.0));
+@property (nonatomic, weak) id periodicTimeObserver API_AVAILABLE(tvos(15.0));
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
@@ -171,6 +172,14 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             [self updateMainLayoutAnimated:YES];
         }];
         
+        if (@available(tvOS 15, *)) {
+            self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+                @strongify(self)
+                [self updateInfoViewActions];
+            }];
+            [self updateInfoViewActions];
+        }
+        
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(willSkipBlockedSegment:)
                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
@@ -189,7 +198,9 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     [self.imageOperations enumerateKeysAndObjectsUsingBlock:^(NSURL * _Nonnull URL, YYWebImageOperation * _Nonnull operation, BOOL * _Nonnull stop) {
         [operation cancel];
     }];
-    [self.controller removePeriodicTimeObserver:self.periodicTimeObserver];
+    if (@available(tvOS 15, *)) {
+        [self.controller removePeriodicTimeObserver:self.periodicTimeObserver];
+    }
     [self.playerViewController removeFromParentViewController];
 }
 
@@ -443,6 +454,51 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     }
     else {
         animations();
+    }
+}
+
+#pragma mark Actions
+
+- (void)updateInfoViewActions API_AVAILABLE(tvos(15.0))
+{
+    if (! self.defaultInfoViewActions) {
+        self.defaultInfoViewActions = self.playerViewController.infoViewActions;
+    }
+    
+    switch (self.controller.mediaPlayerController.streamType) {
+        case SRGStreamTypeOnDemand: {
+            self.playerViewController.infoViewActions = self.defaultInfoViewActions;
+            break;
+        }
+            
+        case SRGStreamTypeDVR: {
+            NSMutableArray<UIAction *> *infoViewActions = [NSMutableArray array];
+            if ([self.controller canStartOver]) {
+                UIAction *action = [UIAction actionWithTitle:NSLocalizedString(@"Start over", @"Start over button label")
+                                                       image:[UIImage srg_letterboxStartOverImageInSet:SRGImageSetNormal]
+                                                  identifier:nil
+                                                     handler:^(__kindof UIAction * _Nonnull action) {
+                    [self.controller startOverWithCompletionHandler:nil];
+                }];
+                [infoViewActions addObject:action];
+            }
+            if ([self.controller canSkipToLive]) {
+                UIAction *action = [UIAction actionWithTitle:NSLocalizedString(@"Back to live", @"Back to live button label")
+                                                       image:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal]
+                                                  identifier:nil
+                                                     handler:^(__kindof UIAction * _Nonnull action) {
+                    [self.controller skipToLiveWithCompletionHandler:nil];
+                }];
+                [infoViewActions addObject:action];
+            }
+            self.playerViewController.infoViewActions = infoViewActions.copy;
+            break;
+        }
+            
+        default: {
+            self.playerViewController.infoViewActions = @[];
+            break;
+        }
     }
 }
 

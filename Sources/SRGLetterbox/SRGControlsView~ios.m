@@ -341,7 +341,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     SRGControlButton *startOverButton = [[SRGControlButton alloc] init];
     startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [startOverButton setImage:[UIImage srg_letterboxImageNamed:@"start_over"] forState:UIControlStateNormal];
+    [startOverButton setImage:[UIImage srg_letterboxStartOverImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     startOverButton.tintColor = UIColor.whiteColor;
     startOverButton.alpha = 0.f;
     [startOverButton addTarget:self action:@selector(startOver:) forControlEvents:UIControlEventTouchUpInside];
@@ -359,7 +359,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     SRGControlButton *skipToLiveButton = [[SRGControlButton alloc] init];
     skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [skipToLiveButton setImage:[UIImage srg_letterboxImageNamed:@"back_live"] forState:UIControlStateNormal];
+    [skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     skipToLiveButton.tintColor = UIColor.whiteColor;
     skipToLiveButton.alpha = 0.f;
     [skipToLiveButton addTarget:self action:@selector(skipToLive:) forControlEvents:UIControlEventTouchUpInside];
