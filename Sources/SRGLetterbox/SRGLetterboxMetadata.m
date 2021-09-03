@@ -16,7 +16,7 @@ static BOOL SRGLetterboxMetadataAreRedundant(SRGMedia *media, SRGShow *show)
 
 NSString *SRGLetterboxMetadataTitle(SRGMedia *media)
 {
-    if (SRGLetterboxMetadataAreRedundant(media, media.show)) {
+    if (media.contentType != SRGContentTypeLivestream && SRGLetterboxMetadataAreRedundant(media, media.show)) {
         return [NSDateFormatter.srgletterbox_relativeDateAndTimeFormatter stringFromDate:media.date];
     }
     else {
@@ -26,7 +26,7 @@ NSString *SRGLetterboxMetadataTitle(SRGMedia *media)
 
 NSString *SRGLetterboxMetadataSubtitle(SRGMedia *media)
 {
-    return media.show.title;
+    return (media.contentType != SRGContentTypeLivestream) ? media.show.title : nil;
 }
 
 NSString *SRGLetterboxMetadataDescription(SRGMedia *media)

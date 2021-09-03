@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/ios15-tvos15-xcode13",
-          "revision": "6d8600f09c75e8e4c13a81677a08d3f4895061c6",
+          "revision": "51fcca173466bb8fb9211625ddbbf232a60098fb",
           "version": null
         }
       },
