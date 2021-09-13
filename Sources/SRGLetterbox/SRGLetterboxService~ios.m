@@ -494,7 +494,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @0.;
     }
     
-    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.live);
+    BOOL isLivestream = (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
+    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(isLivestream);
     
     // Audio tracks and subtitles
     NSMutableArray<MPNowPlayingInfoLanguageOptionGroup *> *languageOptionGroups = [NSMutableArray array];
