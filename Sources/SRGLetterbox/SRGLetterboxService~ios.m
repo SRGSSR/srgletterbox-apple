@@ -307,6 +307,10 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     pauseCommand.enabled = NO;
     [pauseCommand srg_addUniqueTarget:self action:@selector(pause:)];
     
+    MPRemoteCommand *stopCommand = commandCenter.stopCommand;
+    stopCommand.enabled = NO;
+    [stopCommand srg_addUniqueTarget:self action:@selector(stop:)];
+    
     MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
     togglePlayPauseCommand.enabled = NO;
     [togglePlayPauseCommand srg_addUniqueTarget:self action:@selector(togglePlayPause:)];
@@ -354,6 +358,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
     [pauseCommand removeTarget:self action:@selector(pause:)];
     
+    MPRemoteCommand *stopCommand = commandCenter.stopCommand;
+    [stopCommand removeTarget:self action:@selector(stop:)];
+    
     MPRemoteCommand *togglePlayPauseCommand = commandCenter.togglePlayPauseCommand;
     [togglePlayPauseCommand removeTarget:self action:@selector(togglePlayPause:)];
     
@@ -396,6 +403,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
                                                                                                             || UIDevice.srg_letterbox_isLocked)) {
         commandCenter.playCommand.enabled = YES;
         commandCenter.pauseCommand.enabled = YES;
+        commandCenter.stopCommand.enabled = YES;
         commandCenter.togglePlayPauseCommand.enabled = YES;
         commandCenter.skipForwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipForward) && [controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         commandCenter.skipBackwardCommand.enabled = (self.allowedCommands & SRGLetterboxCommandSkipBackward) && [controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
@@ -408,6 +416,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     else {
         commandCenter.playCommand.enabled = NO;
         commandCenter.pauseCommand.enabled = NO;
+        commandCenter.stopCommand.enabled = NO;
         commandCenter.togglePlayPauseCommand.enabled = NO;
         commandCenter.skipForwardCommand.enabled = NO;
         commandCenter.skipBackwardCommand.enabled = NO;
@@ -494,7 +503,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @0.;
     }
     
-    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(mediaPlayerController.live);
+    BOOL isLivestream = (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
+    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(isLivestream);
     
     // Audio tracks and subtitles
     NSMutableArray<MPNowPlayingInfoLanguageOptionGroup *> *languageOptionGroups = [NSMutableArray array];
@@ -625,6 +635,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (MPRemoteCommandHandlerStatus)pause:(MPRemoteCommandEvent *)event
 {
     [self.controller pause];
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus)stop:(MPRemoteCommandEvent *)event
+{
+    [self.controller stop];
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
