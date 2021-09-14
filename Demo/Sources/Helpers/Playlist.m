@@ -7,6 +7,7 @@
 #import "Playlist.h"
 
 #import "SettingsViewController.h"
+#import "UIApplication+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
 @interface Playlist ()
@@ -87,7 +88,7 @@
 {
 #if TARGET_OS_TV
     // For example, on tvOS, we might want to automatically close the player if nothing follows.
-    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.letterbox_demo_mainWindow.letterbox_demo_topViewController;
     if ([topViewController isKindOfClass:SRGLetterboxViewController.class]) {
         [topViewController dismissViewControllerAnimated:YES completion:nil];
     }

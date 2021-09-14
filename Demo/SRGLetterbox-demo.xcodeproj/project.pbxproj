@@ -27,6 +27,9 @@
 		6F353A6922BB51F00035F656 /* PageViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6822BB51F00035F656 /* PageViewController~ios.m */; };
 		6F353A6F22BB64AE0035F656 /* PlayerPageViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */; };
 		6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */; };
+		6F6C753526E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6C753326E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.m */; };
+		6F6C753A26E0C62A00B6BB74 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6C753626E0C62A00B6BB74 /* Application.m */; };
+		6F6C753B26E0C62A00B6BB74 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6C753726E0C62A00B6BB74 /* SceneDelegate.m */; };
 		6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */; };
 		6F83304B236B4D40005D08A4 /* MiscellaneousViewController~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */; };
 		6F93AFBA236B3EDD007F97CA /* ListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F93AFB9236B3EDD007F97CA /* ListsViewController.m */; };
@@ -92,6 +95,12 @@
 		6F353A6C22BB64AE0035F656 /* PlayerPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPageViewController.h; sourceTree = "<group>"; };
 		6F353A6D22BB64AE0035F656 /* PlayerPageViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlayerPageViewController~ios.m"; sourceTree = "<group>"; };
 		6F353A7122BB64C10035F656 /* PlayerPageViewController~ios.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "PlayerPageViewController~ios.storyboard"; sourceTree = "<group>"; };
+		6F6C753326E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+LetterboxDemo.m"; sourceTree = "<group>"; };
+		6F6C753426E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+LetterboxDemo.h"; sourceTree = "<group>"; };
+		6F6C753626E0C62A00B6BB74 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Application.m; sourceTree = "<group>"; };
+		6F6C753726E0C62A00B6BB74 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		6F6C753826E0C62A00B6BB74 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
+		6F6C753926E0C62A00B6BB74 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		6F73FB0B1E4C6F26000986C2 /* UIWindow+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+LetterboxDemo.h"; sourceTree = "<group>"; };
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6F833048236B4D40005D08A4 /* MiscellaneousViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiscellaneousViewController.h; sourceTree = "<group>"; };
@@ -188,6 +197,8 @@
 				6FCB995C1F56948D00790EAA /* ServerSettings.m */,
 				0849DA5B20FD553100026F0D /* TopicItem.h */,
 				0849DA5C20FD553100026F0D /* TopicItem.m */,
+				6F6C753426E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.h */,
+				6F6C753326E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.m */,
 				086AFBF122BE968E0047FD44 /* UILabel+Copyable.h */,
 				086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */,
 				6FC95071236B63EC0022B9A9 /* UIViewController+LetterboxDemo.h */,
@@ -237,7 +248,11 @@
 			children = (
 				6FAB3B571E28FFEA00CC2197 /* AppDelegate.h */,
 				6FAB3B581E28FFEA00CC2197 /* AppDelegate.m */,
+				6F6C753826E0C62A00B6BB74 /* Application.h */,
+				6F6C753626E0C62A00B6BB74 /* Application.m */,
 				6FAB3B591E28FFEA00CC2197 /* main.m */,
+				6F6C753926E0C62A00B6BB74 /* SceneDelegate.h */,
+				6F6C753726E0C62A00B6BB74 /* SceneDelegate.m */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -497,8 +512,11 @@
 				08F163F8236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.m in Sources */,
 				0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */,
 				086B944C234CEDA3003D6BAA /* Media.m in Sources */,
+				6F6C753A26E0C62A00B6BB74 /* Application.m in Sources */,
+				6F6C753526E0AE4F00B6BB74 /* UIApplication+LetterboxDemo.m in Sources */,
 				6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */,
 				6F73FB0D1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m in Sources */,
+				6F6C753B26E0C62A00B6BB74 /* SceneDelegate.m in Sources */,
 				086B9451234DE14A003D6BAA /* DemoSection.m in Sources */,
 				086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */,
 				6FAB3B5F1E28FFEA00CC2197 /* AppDelegate.m in Sources */,

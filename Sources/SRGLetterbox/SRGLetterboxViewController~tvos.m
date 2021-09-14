@@ -18,6 +18,7 @@
 #import "SRGLetterboxError.h"
 #import "SRGLiveLabel.h"
 #import "SRGNotificationView.h"
+#import "UIApplication+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 #import "UIImageView+SRGLetterbox.h"
 #import "UIWindow+SRGLetterbox.h"
@@ -565,14 +566,14 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     if (@available(tvOS 14, *)) {
         void (^presentPlayer)(void) = ^{
             // Do not animate on tvOS to avoid UI glitches when swapping
-            UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.srg_letterboxTopViewController;
+            UIViewController *topViewController = UIApplication.sharedApplication.srg_letterboxMainWindow.srg_letterboxTopViewController;
             [topViewController presentViewController:self animated:NO completion:^{
                 completionHandler(YES);
             }];
         };
         
         // On tvOS dismiss any existing player first, otherwise picture in picture will be stopped when swapping
-        UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.srg_letterboxTopViewController;
+        UIViewController *topViewController = UIApplication.sharedApplication.srg_letterboxMainWindow.srg_letterboxTopViewController;
         if ([topViewController isKindOfClass:SRGLetterboxViewController.class] || [topViewController isKindOfClass:AVPlayerViewController.class]) {
             [topViewController dismissViewControllerAnimated:NO completion:presentPlayer];
         }
