@@ -59,8 +59,8 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "feature/ios15-tvos15-xcode13",
-          "revision": "42743932f1a2ff6f1c4e92d47002f0d276393f89",
+          "branch": "develop",
+          "revision": "d1a09f317e1d7f650634eeb5b0ef4c603e884002",
           "version": null
         }
       },
@@ -122,8 +122,8 @@
         "package": "SRGMediaPlayer",
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
-          "branch": "feature/ios15-tvos15-xcode13",
-          "revision": "6d40fa5b3458f6841b0abba5d54b9e53627c5bca",
+          "branch": "develop",
+          "revision": "c3db516aef99ba58924f63cc8c8e24ca2392afaf",
           "version": null
         }
       },
