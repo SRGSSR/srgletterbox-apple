@@ -478,7 +478,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         case SRGStreamTypeDVR: {
             NSMutableArray<UIAction *> *infoViewActions = [NSMutableArray array];
             if ([self.controller canStartOver]) {
-                UIAction *action = [UIAction actionWithTitle:NSLocalizedString(@"Start over", @"Start over button label")
+                UIAction *action = [UIAction actionWithTitle:SRGLetterboxLocalizedString(@"Start over", @"Start over button label")
                                                        image:[UIImage srg_letterboxStartOverImageInSet:SRGImageSetNormal]
                                                   identifier:nil
                                                      handler:^(__kindof UIAction * _Nonnull action) {
@@ -487,7 +487,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
                 [infoViewActions addObject:action];
             }
             if ([self.controller canSkipToLive]) {
-                UIAction *action = [UIAction actionWithTitle:NSLocalizedString(@"Back to live", @"Back to live button label")
+                UIAction *action = [UIAction actionWithTitle:SRGLetterboxLocalizedString(@"Back to live", @"Back to live button label")
                                                        image:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal]
                                                   identifier:nil
                                                      handler:^(__kindof UIAction * _Nonnull action) {
