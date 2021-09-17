@@ -16,6 +16,7 @@
 #import "SRGErrorView.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
+#import "SRGLetterboxMetadata.h"
 #import "SRGLiveLabel.h"
 #import "SRGNotificationView.h"
 #import "UIApplication+SRGLetterbox.h"
@@ -81,7 +82,8 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 
-@property (nonatomic, weak) id periodicTimeObserver;
+@property (nonatomic) NSArray<UIAction *> *defaultInfoViewActions API_AVAILABLE(tvos(15.0));
+@property (nonatomic, weak) id periodicTimeObserver API_AVAILABLE(tvos(15.0));
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isPictureInPictureActive) BOOL pictureInPictureActive;
@@ -170,6 +172,16 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             [self updateMainLayoutAnimated:YES];
         }];
         
+#ifdef __TVOS_15_0
+        if (@available(tvOS 15, *)) {
+            self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+                @strongify(self)
+                [self updateInfoViewActions];
+            }];
+            [self updateInfoViewActions];
+        }
+#endif
+        
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(willSkipBlockedSegment:)
                                                    name:SRGMediaPlayerWillSkipBlockedSegmentNotification
@@ -188,7 +200,9 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     [self.imageOperations enumerateKeysAndObjectsUsingBlock:^(NSURL * _Nonnull URL, YYWebImageOperation * _Nonnull operation, BOOL * _Nonnull stop) {
         [operation cancel];
     }];
-    [self.controller removePeriodicTimeObserver:self.periodicTimeObserver];
+    if (@available(tvOS 15, *)) {
+        [self.controller removePeriodicTimeObserver:self.periodicTimeObserver];
+    }
     [self.playerViewController removeFromParentViewController];
 }
 
@@ -381,22 +395,6 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 #pragma mark Data
 
-- (NSString *)fullSummaryForMedia:(SRGMedia *)media
-{
-    NSParameterAssert(media);
-    
-    if (media.summary && media.imageCopyright) {
-        NSString *imageCopyright = [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Image credit: %@", @"Image copyright introductory label"), media.imageCopyright];
-        return [NSString stringWithFormat:@"%@\n\n%@", media.summary, imageCopyright];
-    }
-    else if (media.imageCopyright) {
-        return [NSString stringWithFormat:SRGLetterboxLocalizedString(@"Image credit: %@", @"Image copyright introductory label"), media.imageCopyright];
-    }
-    else {
-        return media.summary;
-    }
-}
-
 - (void)reloadImage
 {
     [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
@@ -460,6 +458,55 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         animations();
     }
 }
+
+#pragma mark Actions
+
+#ifdef __TVOS_15_0
+
+- (void)updateInfoViewActions API_AVAILABLE(tvos(15.0))
+{
+    if (! self.defaultInfoViewActions) {
+        self.defaultInfoViewActions = self.playerViewController.infoViewActions;
+    }
+    
+    switch (self.controller.mediaPlayerController.streamType) {
+        case SRGStreamTypeOnDemand: {
+            self.playerViewController.infoViewActions = self.defaultInfoViewActions;
+            break;
+        }
+            
+        case SRGStreamTypeDVR: {
+            NSMutableArray<UIAction *> *infoViewActions = [NSMutableArray array];
+            if ([self.controller canStartOver]) {
+                UIAction *action = [UIAction actionWithTitle:SRGLetterboxLocalizedString(@"Start over", @"Start over button label")
+                                                       image:[UIImage srg_letterboxStartOverImageInSet:SRGImageSetNormal]
+                                                  identifier:nil
+                                                     handler:^(__kindof UIAction * _Nonnull action) {
+                    [self.controller startOverWithCompletionHandler:nil];
+                }];
+                [infoViewActions addObject:action];
+            }
+            if ([self.controller canSkipToLive]) {
+                UIAction *action = [UIAction actionWithTitle:SRGLetterboxLocalizedString(@"Back to live", @"Back to live button label")
+                                                       image:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal]
+                                                  identifier:nil
+                                                     handler:^(__kindof UIAction * _Nonnull action) {
+                    [self.controller skipToLiveWithCompletionHandler:nil];
+                }];
+                [infoViewActions addObject:action];
+            }
+            self.playerViewController.infoViewActions = infoViewActions.copy;
+            break;
+        }
+            
+        default: {
+            self.playerViewController.infoViewActions = @[];
+            break;
+        }
+    }
+}
+
+#endif
 
 #pragma mark Notification banners
 
@@ -629,12 +676,17 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     if (media) {
         AVMutableMetadataItem *titleItem = [[AVMutableMetadataItem alloc] init];
         titleItem.identifier = AVMetadataCommonIdentifierTitle;
-        titleItem.value = media.title;
+        titleItem.value = SRGLetterboxMetadataTitle(media);
         titleItem.extendedLanguageTag = @"und";
+        
+        AVMutableMetadataItem *subtitleItem = [[AVMutableMetadataItem alloc] init];
+        subtitleItem.identifier = AVMetadataIdentifieriTunesMetadataTrackSubTitle;
+        subtitleItem.value = SRGLetterboxMetadataSubtitle(media);
+        subtitleItem.extendedLanguageTag = @"und";
         
         AVMutableMetadataItem *descriptionItem = [[AVMutableMetadataItem alloc] init];
         descriptionItem.identifier = AVMetadataCommonIdentifierDescription;
-        descriptionItem.value = [self fullSummaryForMedia:media];
+        descriptionItem.value = SRGLetterboxMetadataDescription(media);
         descriptionItem.extendedLanguageTag = @"und";
         
         UIImage *image = [self imageForMetadata:media withCompletion:^{
@@ -646,7 +698,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         artworkItem.value = UIImagePNGRepresentation(image);
         artworkItem.extendedLanguageTag = @"und";       // Also required for images in external metadata
         
-        return @[ titleItem.copy, descriptionItem.copy, artworkItem.copy ];
+        return @[ titleItem.copy, subtitleItem.copy, descriptionItem.copy, artworkItem.copy ];
     }
     else {
         return nil;

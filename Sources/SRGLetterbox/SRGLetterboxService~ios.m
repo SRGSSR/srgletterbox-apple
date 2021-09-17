@@ -13,6 +13,7 @@
 #import "MPRemoteCommand+SRGLetterbox.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxLogger.h"
+#import "SRGLetterboxMetadata.h"
 #import "UIDevice+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
@@ -462,8 +463,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         }
     }
     
-    nowPlayingInfo[MPMediaItemPropertyTitle] = media.title;
-    nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = media.show.title;
+    nowPlayingInfo[MPMediaItemPropertyTitle] = SRGLetterboxMetadataTitle(media);
+    nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = SRGLetterboxMetadataSubtitle(media);
     nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
     
     CGFloat artworkDimension = 256.f * UIScreen.mainScreen.scale;

@@ -1,6 +1,9 @@
 /* Message displayed when a network error has been encountered */
 "A network issue has been encountered. Please check your Internet connection and network settings" = "Un souci de réseau est apparu. Merci de vérifier votre connexion Internet";
 
+/* Back to live button label */
+"Back to live" = "Retourner au direct";
+
 /* Title of a cancel button */
 "Cancel" = "Annuler";
 
@@ -44,6 +47,9 @@
 
 /* Short label identifying content which will be available soon. */
 "Soon" = "Prochainement";
+
+/* Start over button label */
+"Start over" = "Reprendre au début";
 
 /* Message displayed to inform that next content should start soon. */
 "Starting…" = "Démarre…";
