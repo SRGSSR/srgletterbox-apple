@@ -172,6 +172,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             [self updateMainLayoutAnimated:YES];
         }];
         
+#ifdef __TVOS_15_0
         if (@available(tvOS 15, *)) {
             self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
                 @strongify(self)
@@ -179,6 +180,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             }];
             [self updateInfoViewActions];
         }
+#endif
         
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(willSkipBlockedSegment:)
@@ -459,6 +461,8 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 #pragma mark Actions
 
+#ifdef __TVOS_15_0
+
 - (void)updateInfoViewActions API_AVAILABLE(tvos(15.0))
 {
     if (! self.defaultInfoViewActions) {
@@ -501,6 +505,8 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         }
     }
 }
+
+#endif
 
 #pragma mark Notification banners
 
