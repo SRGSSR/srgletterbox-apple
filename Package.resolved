@@ -59,9 +59,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "d1a09f317e1d7f650634eeb5b0ef4c603e884002",
-          "version": null
+          "branch": null,
+          "revision": "27d02f20bccd777ad107dc10778797c6866cf300",
+          "version": "7.1.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": null,
-          "revision": "fe65fea10fc080bc58305fe9a5a406e3730e4d91",
-          "version": "4.0.0"
+          "revision": "4754703c12cb69f5265a37c252451672563c592a",
+          "version": "4.0.1"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgcontentprotection-apple.git",
         "state": {
           "branch": null,
-          "revision": "a839c5343c8789f33c34d07d2a24a7de6eb4c054",
-          "version": "3.0.3"
+          "revision": "6bbd897663e516edbfa42c90bc35c5fd28a86ce6",
+          "version": "3.0.4"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "e936161d9375d01c73adf595b3e770bafaecd2ad",
-          "version": "11.0.0"
+          "revision": "bba4ff76662a5b2987b7783152c56d1341430a81",
+          "version": "12.0.0"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdiagnostics-apple.git",
         "state": {
           "branch": null,
-          "revision": "ca2fe9329aa174281ac97bd4630096ff7cf41d58",
-          "version": "3.0.1"
+          "revision": "9921cec150a83df60fe4cde41ffb9e3209b21e92",
+          "version": "3.0.2"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": null,
-          "revision": "b56873f352546a9496113e629f033da0df44d863",
-          "version": "3.1.0"
+          "revision": "0fb2c4015d1d711dfb3508fead4178ba26a91283",
+          "version": "3.1.1"
         }
       },
       {
@@ -114,17 +114,17 @@
         "repositoryURL": "https://github.com/SRGSSR/srglogger-apple.git",
         "state": {
           "branch": null,
-          "revision": "9e5bf082222f5499996b931a8651aac6ea17ba4a",
-          "version": "3.0.1"
+          "revision": "5840af9ccbbc23a1269ff53feb3832f56ffde1eb",
+          "version": "3.0.2"
         }
       },
       {
         "package": "SRGMediaPlayer",
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "c3db516aef99ba58924f63cc8c8e24ca2392afaf",
-          "version": null
+          "branch": null,
+          "revision": "c2330ee4819aa7f987ec18320022f66f68f53ad6",
+          "version": "6.1.4"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgnetwork-apple.git",
         "state": {
           "branch": null,
-          "revision": "46c78b8cb5738e0286e18f35c586547b1458bdcf",
-          "version": "3.0.2"
+          "revision": "9d79d6649de885876577c28e7b19f24f7ce16399",
+          "version": "3.0.3"
         }
       },
       {
