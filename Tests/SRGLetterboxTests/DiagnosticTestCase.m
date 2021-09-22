@@ -194,7 +194,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         
         XCTAssertEqualObjects(JSONDictionary[@"urn"], URN);
         XCTAssertEqualObjects(JSONDictionary[@"screenType"], @"local");
-        XCTAssertEqualObjects(JSONDictionary[@"networkType"], @"wifi");
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
@@ -207,7 +206,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         
         XCTAssertNotNil(JSONDictionary[@"ilResult"]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"duration"]);
-        XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"httpStatusCode"], @200);
+        XCTAssertNotNil(JSONDictionary[@"ilResult"][@"httpStatusCode"]);
         XCTAssertNotNil([NSURL URLWithString:JSONDictionary[@"ilResult"][@"url"]]);
         XCTAssertNotNil(JSONDictionary[@"ilResult"][@"errorMessage"]);
         XCTAssertEqualObjects(JSONDictionary[@"ilResult"][@"blockReason"], @"LEGAL");

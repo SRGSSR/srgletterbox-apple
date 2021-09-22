@@ -8,6 +8,7 @@
 
 #import "NSBundle+LetterboxDemo.h"
 #import "SettingsViewController.h"
+#import "UIApplication+LetterboxDemo.h"
 #import "UIWindow+LetterboxDemo.h"
 
 @import SRGAnalytics;
@@ -156,13 +157,13 @@
 
 - (BOOL)letterboxShouldRestoreUserInterfaceForPictureInPicture
 {
-    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.letterbox_demo_mainWindow.letterbox_demo_topViewController;
     return topViewController != self;
 }
 
 - (void)letterboxRestoreUserInterfaceForPictureInPictureWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    UIViewController *topViewController = UIApplication.sharedApplication.keyWindow.letterbox_demo_topViewController;
+    UIViewController *topViewController = UIApplication.sharedApplication.letterbox_demo_mainWindow.letterbox_demo_topViewController;
     [topViewController presentViewController:self animated:YES completion:^{
         completionHandler(YES);
     }];

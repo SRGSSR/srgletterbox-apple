@@ -6,9 +6,8 @@
 
 #import "AppDelegate.h"
 
-#import "ListsViewController.h"
-#import "MediasViewController.h"
-#import "MiscellaneousViewController.h"
+#import "Application.h"
+#import "ServerSettings.h"
 #import "SettingsViewController.h"
 #import "UIViewController+LetterboxDemo.h"
 
@@ -35,15 +34,18 @@ static __attribute__((constructor)) void ApplicationInit(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    [self.window makeKeyAndVisible];
-    
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     application.accessibilityLanguage = @"en";
         
 #ifndef DEBUG
     [self setupAppCenter];
+#endif
+    
+#if TARGET_OS_IOS
+    [SRGNetworkActivityManagement enable];
+    
+    SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
 #endif
     
     // Use test setup and pre-production mode since there will never be any public App Store version of this demo application.
@@ -56,42 +58,12 @@ static __attribute__((constructor)) void ApplicationInit(void)
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     
-    MediasViewController *mediasViewController = [[MediasViewController alloc] init];
-    ListsViewController *listsViewController = [[ListsViewController alloc] init];
-    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
-    
-#if TARGET_OS_IOS
-    [SRGNetworkActivityManagement enable];
-        
-    SRGLetterboxService.sharedService.mirroredOnExternalScreen = ApplicationSettingIsMirroredOnExternalScreen();
-    
-    UINavigationController *mediasNavigationViewController = [[UINavigationController alloc] initWithRootViewController:mediasViewController];
-    mediasNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:[UIImage imageNamed:@"medias"] tag:0];
-    
-    UINavigationController *listsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:listsViewController];
-    listsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:[UIImage imageNamed:@"lists"] tag:1];
-    
-    MiscellaneousViewController *miscellaneousViewController = [[MiscellaneousViewController alloc] init];
-    UINavigationController *miscellaneousNavigationViewController = [[UINavigationController alloc] initWithRootViewController:miscellaneousViewController];
-    miscellaneousNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Miscellaneous", nil) image:[UIImage imageNamed:@"miscellaneous"] tag:2];
-    
-    UINavigationController *settingsNavigationViewController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
-    settingsNavigationViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:[UIImage imageNamed:@"settings"] tag:3];
-    
-    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = @[ mediasNavigationViewController, listsNavigationViewController, miscellaneousNavigationViewController, settingsNavigationViewController ];
-    self.window.rootViewController = tabBarController;
-#else
-    mediasViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Medias", nil) image:nil tag:0];
-    listsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Lists", nil) image:nil tag:1];
-    settingsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Settings", nil) image:nil tag:2];
-    
-    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = @[ mediasViewController, listsViewController, settingsViewController ];
-    
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:tabBarController];
-#endif
-    
+    if (@available(iOS 13, tvOS 13, *)) {}
+    else {
+        self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+        [self.window makeKeyAndVisible];
+        self.window.rootViewController = ApplicationRootViewController();
+    }
     return YES;
 }
 

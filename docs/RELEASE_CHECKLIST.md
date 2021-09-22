@@ -18,10 +18,14 @@ Release these 3rd party dependencies (forked on SRGSSR github) if needed:
 
 To release an SRG SSR library, perform the following steps sequentially (some steps might be skipped if they do not make sense):
 
-- On _develop_, edit `Package.swift` to point at `.upToNextMinor(from:)` tagged versions of dependencies. If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
+- On _develop_, edit `Package.swift` to point at `.upToNextMinor(from:)` tagged versions of dependencies.
+- If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
 - Update packages for all projects (main framework of course, but also demo and test projects if they exist). Wait until package dependencies have been updated and build each project to ensure this works. The commit the changes.
 - Perform global diff with last release to verify changes.
-- Verify version numbers in `Package.swift` and in the demo project `xcconfig` (if any). Bump them consistently according to [semantic versioning rules](https://semver.org) if needed. Commit and push on _develop_.
+- Bump the library (and demo project, if any) versions in `Package.swift` (respectively `Demo.xcconfig`). Please observe  [semantic versioning](https://semver.org) rules, as well as our [additionl conventions](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=25624796):
+    - If the deployment target of a library is changed, at least its minor version number must be updated.
+    - If a direct dependency of some library was updated to a new major version, the library itself must at least have its minor version number updated.
+- Commit the version update and push to _develop_.
 - Run the demo, if any, on iOS (and tvOS if supported).
 - Run unit tests successfully, on iOS and tvOS.
 - Update demo release note JSON, if any. Commit and push on _develop_.
