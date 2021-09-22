@@ -11,6 +11,7 @@ The SRG Letterbox library defines the official SRG SSR media player experience
 * A responsive player view with the official SRG SSR look and feel (iOS).
 * A standard `AVPlayerViewController`-based player for straightforward integration (tvOS).
 * Support for 360° videos (iOS).
+* CarPlay support (iOS).
 * Support for chapter and segment browsing and selection. 
 * Playlist support.
 * Access to all SRG SSR business unit medias.
