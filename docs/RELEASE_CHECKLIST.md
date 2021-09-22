@@ -18,7 +18,10 @@ Release these 3rd party dependencies (forked on SRGSSR github) if needed:
 
 To release an SRG SSR library, perform the following steps sequentially (some steps might be skipped if they do not make sense):
 
-- On _develop_, edit `Package.swift` to point at `.upToNextMinor(from:)` tagged versions of dependencies. If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
+- On _develop_, edit `Package.swift` to point at `.upToNextMinor(from:)` tagged versions of dependencies. The following rules must be applied:
+    - If the deployment target of a library is changed, at least its minor version number must be updated.
+    - If a direct dependency of some library was updated to a new major version, the library itself must at least have its minor version number updated.
+- If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
 - Update packages for all projects (main framework of course, but also demo and test projects if they exist). Wait until package dependencies have been updated and build each project to ensure this works. The commit the changes.
 - Perform global diff with last release to verify changes.
 - Verify version numbers in `Package.swift` and in the demo project `xcconfig` (if any). Bump them consistently according to [semantic versioning rules](https://semver.org) if needed. Commit and push on _develop_.
