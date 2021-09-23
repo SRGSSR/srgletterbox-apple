@@ -6,13 +6,15 @@
 
 #import "UIFont+SRGLetterbox.h"
 
+@import CoreText;
 @import SRGAppearance;
 
 __attribute__((constructor)) static void SRGLetterboxFontInit(void)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *fontFilePath = [SWIFTPM_MODULE_BUNDLE pathForResource:@"FontAwesome" ofType:@"otf"];
-        SRGAppearanceRegisterFont(fontFilePath);
+        NSURL *fontFileURL = [SWIFTPM_MODULE_BUNDLE URLForResource:@"FontAwesome" withExtension:@"otf"];
+        __unused BOOL success = CTFontManagerRegisterFontsForURL((CFURLRef)fontFileURL, kCTFontManagerScopeProcess, NULL);
+        NSCAssert(success, @"The font %@ could not be registered", fontFileURL);
     });
 }
 
