@@ -228,6 +228,9 @@
                                                                modifierFlags:0
                                                                       action:@selector(skipForward:)
                                                         discoverabilityTitle:NSLocalizedString(@"Skip Ahead", @"Skip ahead shortcut label")];
+        if (@available(iOS 15, *)) {
+            skipForwardCommand.wantsPriorityOverSystemBehavior = YES;
+        }
         [keyCommands addObject:skipForwardCommand];
     }
     
@@ -236,6 +239,9 @@
                                                                 modifierFlags:0
                                                                        action:@selector(skipBackward:)
                                                          discoverabilityTitle:NSLocalizedString(@"Skip Back", @"Skip back shortcut label")];
+        if (@available(iOS 15, *)) {
+            skipBackwardCommand.wantsPriorityOverSystemBehavior = YES;
+        }
         [keyCommands addObject:skipBackwardCommand];
     }
     
