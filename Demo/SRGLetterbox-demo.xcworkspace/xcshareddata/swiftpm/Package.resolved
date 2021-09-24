@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "27d02f20bccd777ad107dc10778797c6866cf300",
-          "version": "7.1.1"
+          "revision": "77088eb09c546a4d98c40e990403dd1c222f9ad7",
+          "version": "7.2.0"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": null,
-          "revision": "4754703c12cb69f5265a37c252451672563c592a",
-          "version": "4.0.1"
+          "revision": "cfd2b130277502b1355863ac4a105fd9922be752",
+          "version": "5.0.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": null,
-          "revision": "0fb2c4015d1d711dfb3508fead4178ba26a91283",
-          "version": "3.1.1"
+          "revision": "c4eb6fbb3e84f8cdc340a55b50475eeddd1db011",
+          "version": "3.2.0"
         }
       },
       {
