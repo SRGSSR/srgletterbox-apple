@@ -50,5 +50,6 @@
   "6.2.0-82": "- Remove NetMetrix analytics.\n- Control playback using an external keyboard.",
   "7.0.0-83": "- This releases improves Letterbox playlist support but does not contain visible changes.",
   "7.1.0-84": "- Fonts used by the player have been updated.\n- A device running iOS 12 is required.",
-  "7.2.0-85": "- New player user interface for tvOS 15, with start over and back to live buttons when playing a livestream with a DVR window.\u0003\n- Control center integration has been improved for livestreams."
+  "7.2.0-85": "- New player user interface for tvOS 15, with start over and back to live buttons when playing a livestream with a DVR window.\u0003\n- Control center integration has been improved for livestreams.",
+  "7.3.0-86": "- This Letterbox release updates dependencies to avoid rare crashes on tvOS 15."
 }
