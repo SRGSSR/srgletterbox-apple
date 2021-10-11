@@ -27,7 +27,7 @@ typedef API_UNAVAILABLE(tvos) NS_ENUM(NSInteger, Feed) {
 };
 
 API_UNAVAILABLE(tvos)
-@interface FeedsViewController : UITableViewController
+@interface FeedsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic) Feed feed;
 

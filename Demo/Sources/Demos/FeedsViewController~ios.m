@@ -17,6 +17,8 @@
 
 @property (nonatomic) NSArray<SRGMedia *> *medias;
 
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
+
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic, weak) SRGRequest *request;
 
@@ -37,6 +39,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(applicationDidBecomeActive:)
