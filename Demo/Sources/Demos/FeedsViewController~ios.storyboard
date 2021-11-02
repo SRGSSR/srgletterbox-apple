@@ -1,71 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jxl-Jc-tdC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9Rd-Yf-pKC">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Feeds View Controller-->
-        <scene sceneID="sak-kS-eIB">
+        <scene sceneID="F1h-t0-9QO">
             <objects>
-                <tableViewController id="jxl-Jc-tdC" customClass="FeedsViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="185" sectionHeaderHeight="28" sectionFooterHeight="28" id="a3B-hA-p0L">
+                <viewController id="9Rd-Yf-pKC" customClass="FeedsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HD5-Pr-Cvu">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedTableViewCell" rowHeight="212" id="838-HX-Muy" customClass="FeedTableViewCell">
-                                <rect key="frame" x="0.0" y="28" width="414" height="212"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="838-HX-Muy" id="biV-rX-1zW">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="212"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2F0-qR-bO6" customClass="SRGLetterboxView">
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hJo-Iz-YmR">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedTableViewCell" rowHeight="212" id="Jl2-Dw-Lcf" customClass="FeedTableViewCell">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="212"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Jl2-Dw-Lcf" id="TSG-Ub-sdZ">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="212"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Lc6-DR-gyf">
-                                            <rect key="frame" x="0.0" y="210" width="414" height="2"/>
-                                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </progressView>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sound_off" translatesAutoresizingMaskIntoConstraints="NO" id="SSB-Kb-X95" userLabel="Sound Image View">
-                                            <rect key="frame" x="376" y="172" width="28" height="28"/>
-                                        </imageView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="Lc6-DR-gyf" secondAttribute="trailing" id="4pe-zD-IrL"/>
-                                        <constraint firstItem="Lc6-DR-gyf" firstAttribute="top" secondItem="SSB-Kb-X95" secondAttribute="bottom" constant="10" id="H06-wb-LKv"/>
-                                        <constraint firstItem="Lc6-DR-gyf" firstAttribute="leading" secondItem="biV-rX-1zW" secondAttribute="leading" id="Ndu-wI-nBV"/>
-                                        <constraint firstAttribute="bottom" secondItem="Lc6-DR-gyf" secondAttribute="bottom" id="VGf-Er-hQl"/>
-                                        <constraint firstAttribute="bottom" secondItem="2F0-qR-bO6" secondAttribute="bottom" id="Zcm-tH-8tD"/>
-                                        <constraint firstItem="2F0-qR-bO6" firstAttribute="top" secondItem="biV-rX-1zW" secondAttribute="top" id="ciP-ym-8u5"/>
-                                        <constraint firstAttribute="trailing" secondItem="2F0-qR-bO6" secondAttribute="trailing" id="j0t-h0-gTQ"/>
-                                        <constraint firstItem="2F0-qR-bO6" firstAttribute="leading" secondItem="biV-rX-1zW" secondAttribute="leading" id="kib-3G-gdZ"/>
-                                        <constraint firstAttribute="trailing" secondItem="SSB-Kb-X95" secondAttribute="trailing" constant="10" id="w2p-rD-rSG"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="letterboxView" destination="2F0-qR-bO6" id="Zrg-9O-Zir"/>
-                                    <outlet property="progressView" destination="Lc6-DR-gyf" id="Wo9-v9-54n"/>
-                                    <outlet property="soundIndicatorImageView" destination="SSB-Kb-X95" id="Hpg-au-rtD"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="jxl-Jc-tdC" id="jg2-Ts-TrE"/>
-                            <outlet property="delegate" destination="jxl-Jc-tdC" id="VCd-ET-mKq"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3ki-tE-rZ3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvi-AS-1mJ" customClass="SRGLetterboxView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="212"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PCH-Kn-EVI">
+                                                    <rect key="frame" x="0.0" y="208" width="414" height="4"/>
+                                                    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                </progressView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sound_off" translatesAutoresizingMaskIntoConstraints="NO" id="CPd-mE-fA8" userLabel="Sound Image View">
+                                                    <rect key="frame" x="376" y="170" width="28" height="28"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="CPd-mE-fA8" secondAttribute="trailing" constant="10" id="Cj7-J1-dO8"/>
+                                                <constraint firstItem="PCH-Kn-EVI" firstAttribute="top" secondItem="CPd-mE-fA8" secondAttribute="bottom" constant="10" id="EdX-9R-XVU"/>
+                                                <constraint firstAttribute="trailing" secondItem="PCH-Kn-EVI" secondAttribute="trailing" id="O7U-Su-7eS"/>
+                                                <constraint firstItem="hvi-AS-1mJ" firstAttribute="leading" secondItem="TSG-Ub-sdZ" secondAttribute="leading" id="Ssy-UF-5oj"/>
+                                                <constraint firstAttribute="bottom" secondItem="hvi-AS-1mJ" secondAttribute="bottom" id="Sv0-S5-tjn"/>
+                                                <constraint firstAttribute="trailing" secondItem="hvi-AS-1mJ" secondAttribute="trailing" id="c6f-fd-rqF"/>
+                                                <constraint firstItem="hvi-AS-1mJ" firstAttribute="top" secondItem="TSG-Ub-sdZ" secondAttribute="top" id="ocw-vl-OMG"/>
+                                                <constraint firstAttribute="bottom" secondItem="PCH-Kn-EVI" secondAttribute="bottom" id="uxl-QG-hzI"/>
+                                                <constraint firstItem="PCH-Kn-EVI" firstAttribute="leading" secondItem="TSG-Ub-sdZ" secondAttribute="leading" id="wuV-kW-cRD"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="letterboxView" destination="hvi-AS-1mJ" id="Iq2-Jr-XCm"/>
+                                            <outlet property="progressView" destination="PCH-Kn-EVI" id="226-ud-PQy"/>
+                                            <outlet property="soundIndicatorImageView" destination="CPd-mE-fA8" id="kVO-Ma-s0m"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2Rl-hI-RVY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="hJo-Iz-YmR" secondAttribute="trailing" id="Vnx-a9-BFR"/>
+                            <constraint firstItem="hJo-Iz-YmR" firstAttribute="top" secondItem="HD5-Pr-Cvu" secondAttribute="top" id="bcz-Sf-hpC"/>
+                            <constraint firstAttribute="bottom" secondItem="hJo-Iz-YmR" secondAttribute="bottom" id="j0Y-jM-Ckn"/>
+                            <constraint firstItem="hJo-Iz-YmR" firstAttribute="leading" secondItem="HD5-Pr-Cvu" secondAttribute="leading" id="wua-90-BQm"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="hJo-Iz-YmR" id="UYb-m0-fa4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KYn-WP-AQv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-332" y="39.130434782608695"/>
+            <point key="canvasLocation" x="-809" y="-634"/>
         </scene>
     </scenes>
     <resources>
         <image name="sound_off" width="28" height="28"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
