@@ -20,6 +20,7 @@ let package = Package(
         ) 
     ],
     dependencies: [
+        .package(name: "SRGMediaPlayer", url: "https://github.com/SRGSSR/srgmediaplayer-apple.git", .branch("feature/pip-opt-in")),
         .package(name: "FXReachability", url: "https://github.com/SRGSSR/FXReachability.git", .exact("1.3.2-srg5")),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", .upToNextMajor(from: "9.0.0")),
         .package(name: "SRGAnalytics", url: "https://github.com/SRGSSR/srganalytics-apple.git", .upToNextMinor(from: "7.3.0")),
