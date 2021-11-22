@@ -6,7 +6,7 @@
 PYTHON_NIGHTLIES_TAG="---->"
 PYTHON_NIGHTLIES_CLOSING_TAG="***********************"
 
-if [ "${CONFIGURATION}" == "Release" ]; then
+if [ "${CONFIGURATION}" == "Release" ] || [ "${CONFIGURATION}" == "Debug" ]; then
     exit 0
 fi
 
