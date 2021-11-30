@@ -244,10 +244,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         }
     });
     
-    self.controller = controller;
-    
     self.pictureInPictureDelegate = [AVPictureInPictureController isPictureInPictureSupported] ? pictureInPictureDelegate : nil;
     self.activePictureInPictureDelegate = nil;
+    
+    self.controller.mediaPlayerController.pictureInPictureEnabled = NO;
+    self.controller = controller;
+    self.controller.mediaPlayerController.pictureInPictureEnabled = (self.pictureInPictureDelegate != nil);
     
     [self updateMetadataWithController:controller];
     
