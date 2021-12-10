@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/Mantle/Mantle.git",
         "state": {
           "branch": null,
-          "revision": "bbe0cbe68582a18a6df7516778196ba3cf420ad3",
-          "version": "2.1.7"
+          "revision": "16f72bfe72a2ab29654ba894da1c32b17524e1a6",
+          "version": "2.2.0"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "d20dc0fb85e572c44e902c6c29dc810c611ca6ad",
-          "version": "7.3.0"
+          "revision": "26c38b56c51a1a4b84b01fec6ec0f067a6eab5d7",
+          "version": "7.3.1"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "8b3f5e742a0ab28097e84520deec49320c1e9d9a",
-          "version": "12.1.0"
+          "revision": "71aa1b756792f90e7cb8d979c48d48d73d21ca3b",
+          "version": "12.2.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
           "branch": null,
-          "revision": "c4eb6fbb3e84f8cdc340a55b50475eeddd1db011",
-          "version": "3.2.0"
+          "revision": "a64f00d6dc5929b3d9b79d45f5a9479cf406937a",
+          "version": "3.2.1"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
           "branch": null,
-          "revision": "fbd7ad3121c7112cf1ce55bb96638ef09a6cf5ec",
-          "version": "6.1.5"
+          "revision": "c41bf436de066e97757b495f0c908d2f8c043cd3",
+          "version": "6.2.0"
         }
       },
       {
