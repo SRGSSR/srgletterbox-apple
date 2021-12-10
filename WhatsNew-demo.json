@@ -52,5 +52,6 @@
   "7.1.0-84": "- Fonts used by the player have been updated.\n- A device running iOS 12 is required.",
   "7.2.0-85": "- New player user interface for tvOS 15, with start over and back to live buttons when playing a livestream with a DVR window.\u0003\n- Control center integration has been improved for livestreams.",
   "7.3.0-86": "- This Letterbox release updates dependencies to avoid rare crashes on tvOS 15.",
-  "7.3.1-87": "- Fix an issue with Picture in Picture and video playback when the screen has been locked, affecting devices runing iOS 15."
+  "7.3.1-87": "- Fix an issue with Picture in Picture and video playback when the screen has been locked, affecting devices runing iOS 15.",
+  "7.3.2-88": "- Fix an issue appeared with iOS 14, and which could lead to Picture in Picture enabled unnecessarily when moving the app to the background."
 }
