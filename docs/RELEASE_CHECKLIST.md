@@ -22,7 +22,7 @@ To release an SRG SSR library, perform the following steps sequentially (some st
 - If there is a demo, also ensure its dependencies (SPM, Carthage or CocoaPods depending on the kind of integration required) are also official tags.
 - Update packages for all projects (main framework of course, but also demo and test projects if they exist). Wait until package dependencies have been updated and build each project to ensure this works. The commit the changes.
 - Perform global diff with last release to verify changes.
-- Bump the library (and demo project, if any) versions in `Package.swift` (respectively `Demo.xcconfig`). Please observe  [semantic versioning](https://semver.org) rules, as well as our [additionl conventions](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=25624796):
+- Bump the library (and demo project, if any) versions in `Package.swift` (respectively `Demo.xcconfig`). Please observe  [semantic versioning](https://semver.org) rules, as well as our [additional conventions](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=25624796):
     - If the deployment target of the library is changed, at least its minor version number must be updated.
     - If a **direct or transitive** dependency of the library was updated to a new major version, the library itself must at least have its minor version number updated.
 - Commit the version update and push to _develop_.
