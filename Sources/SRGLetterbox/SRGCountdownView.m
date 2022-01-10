@@ -532,9 +532,9 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     
     [NSLayoutConstraint activateConstraints:@[
         [remainingTimeLabel.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
-        [remainingTimeLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:view.leadingAnchor constant:8.f],
-        [remainingTimeLabel.trailingAnchor constraintLessThanOrEqualToAnchor:view.trailingAnchor constant:8.f],
         [remainingTimeLabel.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
+        [remainingTimeLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:view.leadingAnchor constant:8.f],
+        [remainingTimeLabel.trailingAnchor constraintLessThanOrEqualToAnchor:view.trailingAnchor constant:8.f]
     ]];
 }
 
@@ -550,11 +550,6 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
         [accessibilityFrameView.bottomAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.topAnchor],
         [accessibilityFrameView.leadingAnchor constraintEqualToAnchor:self.mainLeadingSpacerView.trailingAnchor],
         [accessibilityFrameView.trailingAnchor constraintEqualToAnchor:self.mainTrailingSpacerView.leadingAnchor]
-    ]];
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [self.remainingTimeLabel.centerXAnchor constraintEqualToAnchor:accessibilityFrameView.centerXAnchor],
-        [self.remainingTimeLabel.centerYAnchor constraintEqualToAnchor:accessibilityFrameView.centerYAnchor]
     ]];
 }
 
