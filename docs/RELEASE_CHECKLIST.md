@@ -35,7 +35,7 @@ To release an SRG SSR library, perform the following steps sequentially (some st
 - Push _master_, _develop_ and tag.
 - Close milestone and issues on github.
 - Create github release. Use global diff to write release notes.
-- Deliver demo on AppCenter.
+- Deliver demos on AppCenter / TestFlight from _master_, if any.
 
 The libraries must be released in the order given by the table below, which you can use to keep track of version numbers as you release libraries:
 
@@ -47,3 +47,21 @@ The libraries must be released in the order given by the table below, which you 
 ### Letterbox dependency matrix
 
 Update the [Letterbox dependency matrix](https://github.com/SRGSSR/srgletterbox-apple/wiki/Version-matrix) as well.
+
+### SRG Letterbox Demo
+
+With each release of Letterbox library, an iOS and tvOS demo application is released as well. the _application build number_ is used to have an unique application build. During the step to patch the library version, also:
+
+- Bump demo build number on _develop_ to prepare for the next demo release.
+
+A new Letterbox demo application can also be delivered if a **direct or transitive** dependency of the library was updated to a **new patch version**. The Letterbox library version does not change. Perform the following steps sequentially:
+
+- Start `git-flow hotfix` for the new demo version (branch `demo` is fine).
+- Update SPM dependencies in the Demo project and in the `Package.swift` file.
+- Bump demo build number on _hotfix/demo_ to prepare for the next demo release (`Demo.xcconfig`).
+- Update demo release note JSON.
+- Finish `git-flow hotfix`.
+- Bump demo build number on _develop_ to prepare for the next demo release (`Demo.xcconfig`).
+- **DON'T push** the new `demo` tag. Remove it locally.
+- Push _master_ and _develop_.
+- Deliver demos on AppCenter / TestFlight from _master_.
