@@ -136,6 +136,10 @@ platform :ios do
   lane :tvOSdemo do
     platform = 'tvOS'
 
+    can_upload = can_upload_testflight_build(platform, nil)
+    UI.message('SRGLetterbox-demo (Build ' + xcode_current_project_version + ') already uploaded 🔁 ✅') unless can_upload
+    next unless can_upload
+
     update_app_identifier_to_appstore
 
     demo(
@@ -214,7 +218,7 @@ platform :ios do
 
     options = update_options_to_appstore(options)
 
-    options[:team_id] = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+    options[:team_id] = app_config.try_fetch_value(:team_id)
 
     srg_carthage
 
@@ -276,6 +280,24 @@ platform :ios do
       reset_git_repo(skip_clean: true, force: true)
     end
   end
+end
+
+def app_config
+  CredentialsManager::AppfileConfig
+end
+
+def can_upload_testflight_build(platform, app_identifier)
+  platform ||= 'iOS'
+  app_identifier ||= app_config.try_fetch_value(:app_identifier)
+
+  login_with_app_store_connect_api_key
+  appstore_build_number = latest_testflight_build_number(
+    platform: appstore_platform(platform),
+    app_identifier: app_identifier
+  )
+  local_build_number = xcode_current_project_version
+
+  (appstore_build_number < local_build_number.to_i)
 end
 
 # Characters "-" or "+" in version are not allowed on AppStore Connect.
