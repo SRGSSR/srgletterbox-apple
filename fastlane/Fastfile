@@ -19,7 +19,7 @@ platform :ios do
     if lane.to_s.downcase.end_with? 'demo'
       what_s_new = what_s_new_for_demo
       if what_s_new.empty?
-        UI.user_error!('Whoops, WhatsNew-demo.json has no release note for ' + tag_version + '.')
+        UI.user_error!("Whoops, WhatsNew-demo.json has no release note for #{tag_version}.")
       end
     end
 
@@ -32,9 +32,6 @@ platform :ios do
   lane :tests do
     clean_result_files
     clean_derived_data
-
-    Device = Struct.new(:platform, :name)
-    TestBuild = Struct.new(:scheme, :scheme_suffix, :in_workspace)
 
     iphone11 = Device.new('iOS', 'iPhone 11')
     appletv = Device.new('tvOS', 'Apple TV')
@@ -137,7 +134,7 @@ platform :ios do
     platform = 'tvOS'
 
     can_upload = can_upload_testflight_build(platform, nil)
-    UI.message('SRGLetterbox-demo (Build ' + xcode_current_project_version + ') already uploaded 🔁 ✅') unless can_upload
+    UI.message("SRGLetterbox-demo (Build #{xcode_current_project_version}) already uploaded 🔁 ✅") unless can_upload
     next unless can_upload
 
     update_app_identifier_to_appstore
@@ -222,9 +219,9 @@ platform :ios do
 
     srg_carthage
 
-    destination = 'generic/platform=' + options[:platform]
+    destination = "generic/platform=#{options[:platform]}"
     lane_name = lane_context[SharedValues::LANE_NAME]
-    output_directory = 'fastlane/export/' + lane_name + '/'
+    output_directory = "fastlane/export/#{lane_name}/"
     gym(
       workspace: 'Demo/SRGLetterbox-demo.xcworkspace',
       configuration: options[:configuration],
@@ -323,7 +320,7 @@ def srg_xcargs(options)
   xcargs += " MARKETING_VERSION_SUFFIX='#{options[:version_suffix]}'"
   xcargs += " BUILD_NAME_SUFFIX='#{options[:build_name_suffix]}'"
   xcargs += " DEVELOPMENT_TEAM='#{options[:team_id]}'"
-  xcargs + ' -allowProvisioningUpdates'
+  "#{xcargs} -allowProvisioningUpdates"
 end
 
 def nighlty_display_name_suffix(branch_name)
@@ -335,7 +332,7 @@ end
 def nightly_version_suffix(branch_name)
   nightly_version_suffix = '-nightly'
   if branch_name.include? 'feature/'
-    nightly_version_suffix += '+' + branch_name.sub('feature/', '').strip
+    nightly_version_suffix += "+#{branch_name.sub('feature/', '').strip}"
   end
   nightly_version_suffix
 end
@@ -343,7 +340,7 @@ end
 def nightly_build_name_suffix(branch_name)
   nightly_build_name_suffix = ''
   if branch_name.include? 'feature/'
-    nightly_build_name_suffix = '+' + branch_name.sub('feature/', '').strip
+    nightly_build_name_suffix = "+#{branch_name.sub('feature/', '').strip}"
   end
   nightly_build_name_suffix
 end
@@ -384,16 +381,16 @@ end
 # Save the git commit hash in a local text file for nightlies
 def save_last_nightlies_success_git_commit_hash(platform)
   last = last_git_commit
-  unique_file = platform ? platform.downcase + '-' : ''
-  file_name = 'last-' + unique_file + 'nightlies-success-git-commit-hash.txt'
-  File.open(file_name, 'w') { |f| f.write(last[:commit_hash]) }
+  unique_file = platform ? "#{platform.downcase}-" : ''
+  file_name = "last-#{unique_file}nightlies-success-git-commit-hash.txt"
+  File.write(file_name, last[:commit_hash])
   last[:commit_hash]
 end
 
 # Read the git commit hash in a local text file for nightlies
 def last_nightlies_success_git_commit_hash(platform)
-  unique_file = platform ? platform.downcase + '-' : ''
-  file_name = 'last-' + unique_file + 'nightlies-success-git-commit-hash.txt'
+  unique_file = platform ? "#{platform.downcase}-" : ''
+  file_name = "last-#{unique_file}nightlies-success-git-commit-hash.txt"
   file = File.open(file_name, 'a+')
   nightlies_success_git_commit_hash = file.read
   file.close
@@ -407,7 +404,7 @@ def xcode_marketing_version
     command = 'xcodebuild -showBuildSettings | grep "MARKETING_VERSION ="'
     marketing_version = xcodebuid_grep_output sh command
   end
-  marketing_version ['MARKETING_VERSION ='] = ''
+  marketing_version['MARKETING_VERSION ='] = ''
   marketing_version.gsub(/\s+/, '').chomp
 end
 
@@ -418,7 +415,7 @@ def xcode_current_project_version
     command = 'xcodebuild -showBuildSettings | grep "CURRENT_PROJECT_VERSION ="'
     version = xcodebuid_grep_output sh command
   end
-  version ['CURRENT_PROJECT_VERSION ='] = ''
+  version['CURRENT_PROJECT_VERSION ='] = ''
   version.gsub(/\s+/, '').chomp
 end
 
@@ -426,7 +423,7 @@ end
 def tag_version
   build_number = xcode_current_project_version
   marketing_version = xcode_marketing_version
-  marketing_version + '-' + build_number
+  "#{marketing_version}-#{build_number}"
 end
 
 # Return the what's new text from WhatsNew-demo.json file in the repository
@@ -463,7 +460,7 @@ def update_dsyms(platform, appcenter_appname, options)
   platform ||= 'iOS'
   min_version = options ? options[:min_version] : nil
   version = options ? options[:version] : nil
-  output_directory = 'fastlane/export/' + lane_context[SharedValues::LANE_NAME]
+  output_directory = "fastlane/export/#{lane_context[SharedValues::LANE_NAME]}"
   Dir.chdir('..') { FileUtils.mkdir_p(output_directory) }
 
   download_appstore_dsyms(platform, min_version, version, output_directory)
@@ -480,7 +477,7 @@ def download_appstore_dsyms(platform, min_version, version, output_directory)
   download_dsyms(
     platform: appstore_platform(platform),
     min_version: min_version,
-    version: !min_version ? version : nil,
+    version: min_version ? nil : version,
     output_directory: output_directory,
     wait_for_dsym_processing: true,
     wait_timeout: 90
@@ -529,9 +526,9 @@ def notify_build_number_to_ci(suffix)
   suffix ||= ''
 
   displayed_build_number = xcode_marketing_version
-  displayed_build_number += '-' + xcode_current_project_version
+  displayed_build_number += "-#{xcode_current_project_version}"
   displayed_build_number += suffix
-  puts '##teamcity[buildNumber \'' + displayed_build_number + '\']'
+  puts "##teamcity[buildNumber '#{displayed_build_number}']"
 end
 
 def git_branch_name
@@ -570,6 +567,9 @@ def login_with_app_store_connect_api_key
   )
 end
 
+Device = Struct.new :platform, :name
+TestBuild = Struct.new :scheme, :scheme_suffix, :in_workspace
+
 def swift_package_name
   JSON.parse((sh 'swift package dump-package'))['name']
 end
@@ -586,13 +586,11 @@ end
 def srg_run_tests(devices, test_builds)
   devices.each do |device|
     test_builds.each do |test_build|
-      begin
-        srg_xcodebuild(device, test_build)
-      rescue StandardError => e
-        raise e unless e.message.include? '** TEST FAILED **'
+      srg_xcodebuild(device, test_build)
+    rescue StandardError => e
+      raise e unless e.message.include? '** TEST FAILED **'
 
-        UI.important('One or more tests failed on ' + device.platform + ' (' + srg_xcodebuild_scheme(test_build) + '). ⚠️')
-      end
+      UI.important("One or more tests failed on #{device.platform} (#{srg_xcodebuild_scheme(test_build)}). ⚠️")
     end
   end
 end
@@ -609,7 +607,7 @@ def srg_xcodebuild(device, test_build)
 end
 
 def srg_xcodebuild_workspace(test_build)
-  test_build.in_workspace ? 'Tests/' + srg_xcodebuild_scheme(test_build) + '.xcworkspace' : nil
+  test_build.in_workspace ? "Tests/#{srg_xcodebuild_scheme(test_build)}.xcworkspace" : nil
 end
 
 def srg_xcodebuild_scheme(test_build)
@@ -617,11 +615,11 @@ def srg_xcodebuild_scheme(test_build)
 end
 
 def srg_xcodebuild_destination(device)
-  'platform=' + device.platform + ' Simulator,name=' + device.name
+  "platform=#{device.platform} Simulator,name=#{device.name}"
 end
 
 def srg_xcodebuild_result_bundle_path(device, test_build)
-  result_bundle_folder_path + test_build.scheme + '-' + device.platform
+  "#{result_bundle_folder_path}#{test_build.scheme}-#{device.platform}"
 end
 
 def srg_xcodebuild_derived_data_path
@@ -644,7 +642,7 @@ end
 # Override JUnit test suite names to split iOS and tvOS test results
 def override_junit_test_suite_names(test_builds)
   test_builds.each do |test_build|
-    Dir[test_build.scheme + '-*.xml'].each do |file_name|
+    Dir["#{test_build.scheme}-*.xml"].each do |file_name|
       override_junit_test_suite_name(file_name)
     end
   end
@@ -653,9 +651,9 @@ end
 def override_junit_test_suite_name(file_name)
   platform = file_name.split('.').first.split('-').last
   file = File.open(file_name, 'r')
-  xml = file.read.gsub('Tests" tests="', '-' + platform + '" tests="')
-  xml = xml.gsub('-tests" tests="', '-' + platform + '" tests="')
-  File.open(file_name, 'w') { |f| f.write(xml) }
+  xml = file.read.gsub('Tests" tests="', "-#{platform}\" tests=\"")
+  xml = xml.gsub('-tests" tests="', "-#{platform}\" tests=\"")
+  File.write(file_name, xml)
 end
 
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md

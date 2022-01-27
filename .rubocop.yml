@@ -8,12 +8,13 @@ AllCops:
     - 'vendor/**/*'
   Include:
     - 'fastlane/Pluginfile'
+  NewCops: enable
 
 # this would cause errors with long lanes
 Metrics/BlockLength:
   Enabled: true
   Max: 30
-  ExcludedMethods: ['platform', 'for_platform']
+  IgnoredMethods: ['platform', 'for_platform']
   
 # Default is too restrictive, when optional properties have to be checked
 Metrics/MethodLength:
