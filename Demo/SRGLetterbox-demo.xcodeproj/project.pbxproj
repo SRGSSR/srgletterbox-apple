@@ -7,13 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		041F928927B1C3920059521C /* AppCenter.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.xcframework */; };
+		041F928A27B1C3920059521C /* AppCenter.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		041F928B27B1C3920059521C /* AppCenterAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */; };
+		041F928C27B1C3920059521C /* AppCenterAnalytics.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		041F928D27B1C3920059521C /* AppCenterCrashes.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */; };
+		041F928E27B1C3920059521C /* AppCenterCrashes.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		041F928F27B1C3920059521C /* AppCenterDistribute.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */; platformFilter = ios; };
+		041F929027B1C3920059521C /* AppCenterDistribute.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
 		086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */; };
 		086B944C234CEDA3003D6BAA /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B944B234CEDA3003D6BAA /* Media.m */; };
 		086B9451234DE14A003D6BAA /* DemoSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 086B9450234DE14A003D6BAA /* DemoSection.m */; };
-		087874A02364F6C100F4F40C /* AppCenterDistributeResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */; };
 		08E03CCA1F47283C008AD461 /* MediaListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CC91F47283C008AD461 /* MediaListViewController.m */; };
 		08E03CCE1F475083008AD461 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E03CCC1F475083008AD461 /* SettingsViewController.m */; };
 		08F163F8236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F163F6236F5A8500072E69 /* NSDateFormatter+LetterboxDemo.m */; };
@@ -53,6 +60,23 @@
 		6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD13D202C89C900FDAA6C /* Playlist.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		041F929127B1C3920059521C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				041F928E27B1C3920059521C /* AppCenterCrashes.xcframework in Embed Frameworks */,
+				041F928A27B1C3920059521C /* AppCenter.xcframework in Embed Frameworks */,
+				041F928C27B1C3920059521C /* AppCenterAnalytics.xcframework in Embed Frameworks */,
+				041F929027B1C3920059521C /* AppCenterDistribute.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.xcconfig"; path = "Links/SRGLetterbox-demo.xcconfig"; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
@@ -67,11 +91,10 @@
 		086B944B234CEDA3003D6BAA /* Media.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Media.m; sourceTree = "<group>"; };
 		086B944F234DE14A003D6BAA /* DemoSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoSection.h; sourceTree = "<group>"; };
 		086B9450234DE14A003D6BAA /* DemoSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoSection.m; sourceTree = "<group>"; };
-		0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = Carthage/Build/iOS/AppCenterAnalytics.framework; sourceTree = "<group>"; };
-		0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = Carthage/Build/iOS/AppCenterCrashes.framework; sourceTree = "<group>"; };
-		0878748E2364EE6700F4F40C /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = Carthage/Build/iOS/AppCenter.framework; sourceTree = "<group>"; };
-		0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterDistribute.framework; path = Carthage/Build/iOS/AppCenterDistribute.framework; sourceTree = "<group>"; };
-		0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AppCenterDistributeResources.bundle; path = Carthage/Build/iOS/AppCenterDistribute.framework/AppCenterDistributeResources.bundle; sourceTree = "<group>"; };
+		0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenterAnalytics.xcframework; path = Carthage/Build/AppCenterAnalytics.xcframework; sourceTree = "<group>"; };
+		0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenterCrashes.xcframework; path = Carthage/Build/AppCenterCrashes.xcframework; sourceTree = "<group>"; };
+		0878748E2364EE6700F4F40C /* AppCenter.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenter.xcframework; path = Carthage/Build/AppCenter.xcframework; sourceTree = "<group>"; };
+		0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenterDistribute.xcframework; path = Carthage/Build/AppCenterDistribute.xcframework; sourceTree = "<group>"; };
 		08E03CC81F47283C008AD461 /* MediaListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaListViewController.h; sourceTree = "<group>"; };
 		08E03CC91F47283C008AD461 /* MediaListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaListViewController.m; sourceTree = "<group>"; };
 		08E03CCB1F475083008AD461 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -150,7 +173,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				041F928927B1C3920059521C /* AppCenter.xcframework in Frameworks */,
+				041F928F27B1C3920059521C /* AppCenterDistribute.xcframework in Frameworks */,
 				6FCCE1FF24CA229500EBD269 /* SRGLetterbox in Frameworks */,
+				041F928D27B1C3920059521C /* AppCenterCrashes.xcframework in Frameworks */,
+				041F928B27B1C3920059521C /* AppCenterAnalytics.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,11 +239,10 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0878748E2364EE6700F4F40C /* AppCenter.framework */,
-				0878748C2364EE6700F4F40C /* AppCenterAnalytics.framework */,
-				0878748D2364EE6700F4F40C /* AppCenterCrashes.framework */,
-				0878749B2364F0A200F4F40C /* AppCenterDistribute.framework */,
-				0878749F2364F6C100F4F40C /* AppCenterDistributeResources.bundle */,
+				0878748E2364EE6700F4F40C /* AppCenter.xcframework */,
+				0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */,
+				0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */,
+				0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */,
 				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 			);
 			name = Frameworks;
@@ -339,6 +365,7 @@
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				084F2EE523664B8400A983FF /* Restore original icons */,
 				6F261DC325190789008EF524 /* Extract Signing Identity */,
+				041F929127B1C3920059521C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -401,7 +428,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				087874A02364F6C100F4F40C /* AppCenterDistributeResources.bundle in Resources */,
 				6F1F5FC61E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard in Resources */,
 				6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */,
 				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */,

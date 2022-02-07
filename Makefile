@@ -4,7 +4,7 @@ CONFIGURATION_FOLDER=Configuration
 CONFIGURATION_COMMIT_SHA1=8b914063814a47e81918acbda7326e80d72fb687
 
 CARTHAGE_FOLDER=Carthage
-CARTHAGE_FLAGS=--platform iOS,tvOS --new-resolver --cache-builds
+CARTHAGE_FLAGS=--platform iOS,tvOS --new-resolver --cache-builds --no-use-binaries --use-xcframeworks
 
 # Checkout a commit for a repository in the specified directory. Fails if the repository is dirty of if the
 # commit does not exist.  
