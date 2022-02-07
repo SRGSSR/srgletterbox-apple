@@ -172,15 +172,23 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             [self updateMainLayoutAnimated:YES];
         }];
         
-#ifdef __TVOS_15_0
         if (@available(tvOS 15, *)) {
             self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
                 @strongify(self)
                 [self updateInfoViewActions];
             }];
             [self updateInfoViewActions];
+            
+            [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.playbackRate) options:0 block:^(MAKVONotification *notification) {
+                @strongify(self)
+                [self updateTransportBarMenu];
+            }];
+            [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.alternativePlaybackRates) options:0 block:^(MAKVONotification *notification) {
+                @strongify(self)
+                [self updateTransportBarMenu];
+            }];
+            [self updateTransportBarMenu];
         }
-#endif
         
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(willSkipBlockedSegment:)
@@ -461,8 +469,6 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 #pragma mark Actions
 
-#ifdef __TVOS_15_0
-
 - (void)updateInfoViewActions API_AVAILABLE(tvos(15.0))
 {
     if (! self.defaultInfoViewActions) {
@@ -506,7 +512,32 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     }
 }
 
-#endif
+- (NSArray<UIAction *> *)playbackRateMenuActions API_AVAILABLE(tvos(15.0))
+{
+    NSMutableArray<UIAction *> *actions = [NSMutableArray array];
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    for (NSNumber *rate in mediaPlayerController.supportedPlaybackRates) {
+        @weakify(mediaPlayerController)
+        UIAction *action = [UIAction actionWithTitle:[NSString stringWithFormat:@"%@×", rate] image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            @strongify(mediaPlayerController)
+            mediaPlayerController.playbackRate = rate.floatValue;
+            action.state = UIMenuElementStateOn;
+        }];
+        action.state = [rate isEqualToNumber:@(mediaPlayerController.playbackRate)] ? UIMenuElementStateOn : UIMenuElementStateOff;
+        [actions addObject:action];
+    }
+    return actions.copy;
+}
+
+- (void)updateTransportBarMenu API_AVAILABLE(tvos(15.0))
+{
+    UIMenu *playbackRateMenu = [UIMenu menuWithTitle:SRGLetterboxLocalizedString(@"Playback speed", @"Playback speed menu title")
+                                               image:[UIImage systemImageNamed:@"speedometer"]
+                                          identifier:nil
+                                             options:UIMenuOptionsSingleSelection
+                                            children:[self playbackRateMenuActions]];
+    self.playerViewController.transportBarCustomMenuItems = @[playbackRateMenu];
+}
 
 #pragma mark Notification banners
 
