@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		045D77D627B2E1C700951D07 /* AppCenterDummy in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D527B2E1C700951D07 /* AppCenterDummy */; };
+		045D77D627B2E1C700951D07 /* AppCenterDistributeOptional in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D527B2E1C700951D07 /* AppCenterDistributeOptional */; };
+		045D77D927B2EFB000951D07 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D827B2EFB000951D07 /* AppCenterCrashes */; };
 		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
@@ -54,7 +55,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		045D77D427B2E19800951D07 /* AppCenterDummy */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppCenterDummy; sourceTree = "<group>"; };
+		045D77D427B2E19800951D07 /* AppCenterDistributeOptional */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppCenterDistributeOptional; sourceTree = "<group>"; };
 		0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.xcconfig"; path = "Links/SRGLetterbox-demo.xcconfig"; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
 		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
@@ -145,7 +146,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				045D77D627B2E1C700951D07 /* AppCenterDummy in Frameworks */,
+				045D77D627B2E1C700951D07 /* AppCenterDistributeOptional in Frameworks */,
+				045D77D927B2EFB000951D07 /* AppCenterCrashes in Frameworks */,
 				6FCCE1FF24CA229500EBD269 /* SRGLetterbox in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -156,7 +158,7 @@
 		045D77D327B2E19800951D07 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				045D77D427B2E19800951D07 /* AppCenterDummy */,
+				045D77D427B2E19800951D07 /* AppCenterDistributeOptional */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -346,7 +348,8 @@
 			name = "SRGLetterbox-demo";
 			packageProductDependencies = (
 				6FCCE1FE24CA229500EBD269 /* SRGLetterbox */,
-				045D77D527B2E1C700951D07 /* AppCenterDummy */,
+				045D77D527B2E1C700951D07 /* AppCenterDistributeOptional */,
+				045D77D827B2EFB000951D07 /* AppCenterCrashes */,
 			);
 			productName = "SRGLetterbox-demo";
 			productReference = 6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */;
@@ -387,6 +390,9 @@
 				rm,
 			);
 			mainGroup = 6FE321371E28E24E00FD8E42;
+			packageReferences = (
+				045D77D727B2EFB000951D07 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
+			);
 			productRefGroup = 6FE321421E28E24E00FD8E42 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -803,10 +809,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		045D77D727B2EFB000951D07 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		045D77D527B2E1C700951D07 /* AppCenterDummy */ = {
+		045D77D527B2E1C700951D07 /* AppCenterDistributeOptional */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AppCenterDummy;
+			productName = AppCenterDistributeOptional;
+		};
+		045D77D827B2EFB000951D07 /* AppCenterCrashes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 045D77D727B2EFB000951D07 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			productName = AppCenterCrashes;
 		};
 		6FCCE1FE24CA229500EBD269 /* SRGLetterbox */ = {
 			isa = XCSwiftPackageProductDependency;

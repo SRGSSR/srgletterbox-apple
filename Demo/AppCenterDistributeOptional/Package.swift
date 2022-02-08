@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AppCenterDummy",
+    name: "AppCenterDistributeOptional",
         platforms: [
         .iOS(.v9),
         .macOS(.v10_10),
@@ -11,17 +11,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AppCenterDummy",
-            targets: ["AppCenterDummy"]),
+            name: "AppCenterDistributeOptional",
+            targets: ["AppCenterDistributeOptional"]),
     ],
     dependencies: [
         .package(name: "AppCenter", url: "https://github.com/microsoft/appcenter-sdk-apple.git", .upToNextMajor(from: "4.4.1")),
     ],
     targets: [
         .target(
-            name: "AppCenterDummy",
+            name: "AppCenterDistributeOptional",
             dependencies: [
-                .product(name: "AppCenterCrashes", package: "AppCenter"),
                 .product(name: "AppCenterDistribute", package: "AppCenter", condition: .when(platforms: [.iOS])),
             ]
         )
