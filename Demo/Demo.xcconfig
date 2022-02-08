@@ -11,9 +11,6 @@ TVOS_DEPLOYMENT_TARGET = 12.0
 SUPPORTED_PLATFORMS = iphoneos iphonesimulator appletvos appletvsimulator
 TARGETED_DEVICE_FAMILY = 1,2,3
 
-CARTHAGE_PLATFORM[sdk=iphone*] = iOS
-CARTHAGE_PLATFORM[sdk=appletv*] = tvOS
-
 // Setup to enable plaform suffixes to enable sources or resources for a specific platform only
 // See https://davedelong.com/blog/2018/07/25/conditional-compilation-in-swift-part-2/
 IOS_FILES = *~ios.*

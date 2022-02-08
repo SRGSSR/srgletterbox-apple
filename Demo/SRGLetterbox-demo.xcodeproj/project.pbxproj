@@ -7,14 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		041F928927B1C3920059521C /* AppCenter.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.xcframework */; };
-		041F928A27B1C3920059521C /* AppCenter.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748E2364EE6700F4F40C /* AppCenter.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		041F928B27B1C3920059521C /* AppCenterAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */; };
-		041F928C27B1C3920059521C /* AppCenterAnalytics.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		041F928D27B1C3920059521C /* AppCenterCrashes.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */; };
-		041F928E27B1C3920059521C /* AppCenterCrashes.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		041F928F27B1C3920059521C /* AppCenterDistribute.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */; platformFilter = ios; };
-		041F929027B1C3920059521C /* AppCenterDistribute.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		045D77D627B2E1C700951D07 /* AppCenterDummy in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D527B2E1C700951D07 /* AppCenterDummy */; };
 		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
@@ -60,24 +53,8 @@
 		6FFAD13F202C89CA00FDAA6C /* Playlist.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FFAD13D202C89C900FDAA6C /* Playlist.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		041F929127B1C3920059521C /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				041F928E27B1C3920059521C /* AppCenterCrashes.xcframework in Embed Frameworks */,
-				041F928A27B1C3920059521C /* AppCenter.xcframework in Embed Frameworks */,
-				041F928C27B1C3920059521C /* AppCenterAnalytics.xcframework in Embed Frameworks */,
-				041F929027B1C3920059521C /* AppCenterDistribute.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
+		045D77D427B2E19800951D07 /* AppCenterDummy */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppCenterDummy; sourceTree = "<group>"; };
 		0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.xcconfig"; path = "Links/SRGLetterbox-demo.xcconfig"; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
 		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
@@ -91,10 +68,6 @@
 		086B944B234CEDA3003D6BAA /* Media.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Media.m; sourceTree = "<group>"; };
 		086B944F234DE14A003D6BAA /* DemoSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoSection.h; sourceTree = "<group>"; };
 		086B9450234DE14A003D6BAA /* DemoSection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoSection.m; sourceTree = "<group>"; };
-		0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenterAnalytics.xcframework; path = Carthage/Build/AppCenterAnalytics.xcframework; sourceTree = "<group>"; };
-		0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenterCrashes.xcframework; path = Carthage/Build/AppCenterCrashes.xcframework; sourceTree = "<group>"; };
-		0878748E2364EE6700F4F40C /* AppCenter.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenter.xcframework; path = Carthage/Build/AppCenter.xcframework; sourceTree = "<group>"; };
-		0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AppCenterDistribute.xcframework; path = Carthage/Build/AppCenterDistribute.xcframework; sourceTree = "<group>"; };
 		08E03CC81F47283C008AD461 /* MediaListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaListViewController.h; sourceTree = "<group>"; };
 		08E03CC91F47283C008AD461 /* MediaListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaListViewController.m; sourceTree = "<group>"; };
 		08E03CCB1F475083008AD461 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -103,7 +76,6 @@
 		08F163F7236F5A8600072E69 /* NSDateFormatter+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+LetterboxDemo.h"; sourceTree = "<group>"; };
 		08F163F9236F5B6C00072E69 /* DemoAccessibilityFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAccessibilityFormatter.m; sourceTree = "<group>"; };
 		08F163FA236F5B6C00072E69 /* DemoAccessibilityFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAccessibilityFormatter.h; sourceTree = "<group>"; };
-		08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		6F0AD0751E5EAB0D000A61A5 /* FeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedsViewController.h; sourceTree = "<group>"; };
 		6F0AD0761E5EAB0D000A61A5 /* FeedsViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FeedsViewController~ios.m"; sourceTree = "<group>"; };
 		6F0AD07A1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "FeedsViewController~ios.storyboard"; sourceTree = "<group>"; };
@@ -173,17 +145,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				041F928927B1C3920059521C /* AppCenter.xcframework in Frameworks */,
-				041F928F27B1C3920059521C /* AppCenterDistribute.xcframework in Frameworks */,
+				045D77D627B2E1C700951D07 /* AppCenterDummy in Frameworks */,
 				6FCCE1FF24CA229500EBD269 /* SRGLetterbox in Frameworks */,
-				041F928D27B1C3920059521C /* AppCenterCrashes.xcframework in Frameworks */,
-				041F928B27B1C3920059521C /* AppCenterAnalytics.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		045D77D327B2E19800951D07 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				045D77D427B2E19800951D07 /* AppCenterDummy */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 		086B9449234CEDA3003D6BAA /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,11 +216,6 @@
 		6FAB3B061E28FB1400CC2197 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0878748E2364EE6700F4F40C /* AppCenter.xcframework */,
-				0878748C2364EE6700F4F40C /* AppCenterAnalytics.xcframework */,
-				0878748D2364EE6700F4F40C /* AppCenterCrashes.xcframework */,
-				0878749B2364F0A200F4F40C /* AppCenterDistribute.xcframework */,
-				08FA0CDB1E2E8CCC000C94EF /* CoreText.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -330,6 +302,7 @@
 		6FE321371E28E24E00FD8E42 = {
 			isa = PBXGroup;
 			children = (
+				045D77D327B2E19800951D07 /* Packages */,
 				6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */,
 				6FD594412334D3A70058DAE7 /* Demo.nightly.xcconfig */,
 				6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */,
@@ -365,7 +338,6 @@
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				084F2EE523664B8400A983FF /* Restore original icons */,
 				6F261DC325190789008EF524 /* Extract Signing Identity */,
-				041F929127B1C3920059521C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -374,6 +346,7 @@
 			name = "SRGLetterbox-demo";
 			packageProductDependencies = (
 				6FCCE1FE24CA229500EBD269 /* SRGLetterbox */,
+				045D77D527B2E1C700951D07 /* AppCenterDummy */,
 			);
 			productName = "SRGLetterbox-demo";
 			productReference = 6FAB3B3A1E28FE2000CC2197 /* SRGLetterbox-demo.app */;
@@ -628,10 +601,6 @@
 				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
 				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
-				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -656,10 +625,6 @@
 				BUNDLE_IDENTIFIER_SUFFIX = .debug;
 				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
-				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -685,10 +650,6 @@
 				BUNDLE_IDENTIFIER_SUFFIX = "";
 				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
 				DEVELOPMENT_TEAM = VMGRRW6SG7;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/$(CARTHAGE_PLATFORM)",
-				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -843,6 +804,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		045D77D527B2E1C700951D07 /* AppCenterDummy */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppCenterDummy;
+		};
 		6FCCE1FE24CA229500EBD269 /* SRGLetterbox */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SRGLetterbox;
