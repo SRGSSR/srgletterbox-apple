@@ -808,14 +808,6 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @property (nonatomic) float playbackRate;
 
 /**
- *  Standard alternative playback rates provided by the controller. Defaults to [0.5, 0.75, 1.5, 2].
- *
- *  @discussion Negative values are discarded as well as 1 (normal speed, always available) and values larger than
- *              2 (not supported).
- */
-@property (nonatomic, null_resettable) NSSet<NSNumber *> *alternativePlaybackRates;
-
-/**
  *  Supported playback rates in increasing order. Includes the normal speed 1.
  */
 @property (nonatomic, readonly) NSArray<NSNumber *> *supportedPlaybackRates;
