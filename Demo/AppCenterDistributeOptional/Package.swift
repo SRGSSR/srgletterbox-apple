@@ -12,10 +12,11 @@ let package = Package(
     products: [
         .library(
             name: "AppCenterDistributeOptional",
-            targets: ["AppCenterDistributeOptional"]),
+            targets: ["AppCenterDistributeOptional"]
+        )
     ],
     dependencies: [
-        .package(name: "AppCenter", url: "https://github.com/microsoft/appcenter-sdk-apple.git", .upToNextMajor(from: "4.4.1")),
+        .package(name: "AppCenter", url: "https://github.com/microsoft/appcenter-sdk-apple.git", .upToNextMajor(from: "4.4.1"))
     ],
     targets: [
         .target(
