@@ -404,16 +404,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.mediaPlayerController.playbackRate = playbackRate;
 }
 
-- (NSSet<NSNumber *> *)alternativePlaybackRates
-{
-    return self.alternativePlaybackRates;
-}
-
-- (void)setAlternativePlaybackRates:(NSSet<NSNumber *> *)alternativePlaybackRates
-{
-    self.mediaPlayerController.alternativePlaybackRates = alternativePlaybackRates;
-}
-
 - (NSArray<NSNumber *> *)supportedPlaybackRates
 {
     return self.mediaPlayerController.supportedPlaybackRates;

@@ -179,15 +179,10 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             }];
             [self updateInfoViewActions];
             
-            [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.playbackRate) options:0 block:^(MAKVONotification *notification) {
+            [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.playbackRate) options:NSKeyValueObservingOptionInitial block:^(MAKVONotification *notification) {
                 @strongify(self)
                 [self updateTransportBarMenu];
             }];
-            [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.alternativePlaybackRates) options:0 block:^(MAKVONotification *notification) {
-                @strongify(self)
-                [self updateTransportBarMenu];
-            }];
-            [self updateTransportBarMenu];
         }
         
         [NSNotificationCenter.defaultCenter addObserver:self
