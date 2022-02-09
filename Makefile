@@ -3,9 +3,6 @@
 CONFIGURATION_FOLDER=Configuration
 CONFIGURATION_COMMIT_SHA1=8b914063814a47e81918acbda7326e80d72fb687
 
-CARTHAGE_FOLDER=Carthage
-CARTHAGE_FLAGS=--platform iOS,tvOS --new-resolver --cache-builds
-
 # Checkout a commit for a repository in the specified directory. Fails if the repository is dirty of if the
 # commit does not exist.  
 #   Syntax: $(call checkout_repository,directory,commit)
@@ -51,8 +48,6 @@ setup:
 	@ln -fs $(CONFIGURATION_FOLDER)/.env
 	@mkdir -p Xcode/Links
 	@pushd Xcode/Links > /dev/null; ln -fs ../../$(CONFIGURATION_FOLDER)/Xcode/*.xcconfig .
-
-	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_FLAGS)
 	@echo "... done.\n"
 
 .PHONY: public.setup
@@ -61,8 +56,6 @@ public.setup:
 
 	@mkdir -p Xcode/Links
 	@pushd Xcode/Links > /dev/null; ln -fs ../Public/*.xcconfig .
-
-	@pushd Demo > /dev/null; carthage bootstrap $(CARTHAGE_FLAGS)
 	@echo "... done.\n"
 
 .PHONY: help

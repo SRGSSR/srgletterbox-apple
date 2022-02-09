@@ -34,11 +34,9 @@ If you want to contribute to the project, have a look at our [contributing guide
 ## Recommended tools
 
 Building the `SRGLetterbox-demo` target requires command-line tools for icon generation, easily installed with [Homebrew](https://brew.sh/):
-	
+
 	brew install imagemagick ghostscript
 	brew install jq
-	
-The demo project also retrieves additional dependencies with [Carthage](https://github.com/Carthage/Carthage).
 
 ## Integration
 

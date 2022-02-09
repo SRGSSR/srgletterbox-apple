@@ -217,8 +217,6 @@ platform :ios do
 
     options[:team_id] = app_config.try_fetch_value(:team_id)
 
-    srg_carthage
-
     destination = "generic/platform=#{options[:platform]}"
     lane_name = lane_context[SharedValues::LANE_NAME]
     output_directory = "fastlane/export/#{lane_name}/"
@@ -542,16 +540,6 @@ def beta_app_review_info
     contact_last_name: ENV['ITUNES_CONNECT_REVIEW_LAST_NAME'],
     contact_phone: ENV['ITUNES_CONNECT_REVIEW_PHONE']
   }
-end
-
-def srg_carthage
-  carthage(
-    project_directory: 'Demo',
-    new_resolver: true,
-    cache_builds: true,
-    platform: 'iOS,tvOS',
-    derived_data: srg_xcodebuild_derived_data_path
-  )
 end
 
 def appstore_platform(platform)

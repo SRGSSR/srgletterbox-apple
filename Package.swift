@@ -17,7 +17,7 @@ let package = Package(
         .library(
             name: "SRGLetterbox",
             targets: ["SRGLetterbox"]
-        ) 
+        )
     ],
     dependencies: [
         .package(name: "FXReachability", url: "https://github.com/SRGSSR/FXReachability.git", .exact("1.3.2-srg5")),
