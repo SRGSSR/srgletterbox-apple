@@ -514,9 +514,14 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 - (NSArray<UIAction *> *)playbackRateMenuActions API_AVAILABLE(tvos(15.0))
 {
-    NSMutableArray<UIAction *> *actions = [NSMutableArray array];
     SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
-    for (NSNumber *rate in mediaPlayerController.supportedPlaybackRates) {
+    NSArray<NSNumber *> *playbackRates = mediaPlayerController.supportedPlaybackRates;
+    if (playbackRates.count < 2) {
+        return nil;
+    }
+    
+    NSMutableArray<UIAction *> *actions = [NSMutableArray array];
+    for (NSNumber *rate in playbackRates) {
         @weakify(mediaPlayerController)
         UIAction *action = [UIAction actionWithTitle:[NSString stringWithFormat:@"%@×", rate] image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
             @strongify(mediaPlayerController)
@@ -535,12 +540,19 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 - (void)updateTransportBarMenu API_AVAILABLE(tvos(15.0))
 {
-    UIMenu *playbackRateMenu = [UIMenu menuWithTitle:SRGLetterboxLocalizedString(@"Playback speed", @"Playback speed menu title")
-                                               image:[UIImage systemImageNamed:@"speedometer"]
-                                          identifier:nil
-                                             options:UIMenuOptionsSingleSelection
-                                            children:[self playbackRateMenuActions]];
-    self.playerViewController.transportBarCustomMenuItems = @[playbackRateMenu];
+    NSMutableArray<UIMenuElement *> *menuItems = [NSMutableArray array];
+    
+    NSArray<UIAction *> *playbackRateMenuActions = [self playbackRateMenuActions];
+    if (playbackRateMenuActions) {
+        UIMenu *playbackRateMenu = [UIMenu menuWithTitle:SRGLetterboxLocalizedString(@"Playback speed", @"Playback speed menu title")
+                                                   image:[UIImage systemImageNamed:@"speedometer"]
+                                              identifier:nil
+                                                 options:UIMenuOptionsSingleSelection
+                                                children:playbackRateMenuActions];
+        [menuItems addObject:playbackRateMenu];
+    }
+    
+    self.playerViewController.transportBarCustomMenuItems = menuItems.copy;
 }
 
 #pragma mark Notification banners
