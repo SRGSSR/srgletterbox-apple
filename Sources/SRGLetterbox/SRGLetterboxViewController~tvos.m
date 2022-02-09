@@ -520,8 +520,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         @weakify(mediaPlayerController)
         UIAction *action = [UIAction actionWithTitle:[NSString stringWithFormat:@"%@×", rate] image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
             @strongify(mediaPlayerController)
-            mediaPlayerController.playbackRate = rate.floatValue;
             action.state = UIMenuElementStateOn;
+            
+            // Introduce a slight delay to avoid immediate menu reloads due to the playback rate being changed
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                mediaPlayerController.playbackRate = rate.floatValue;
+            });
         }];
         action.state = [rate isEqualToNumber:@(mediaPlayerController.playbackRate)] ? UIMenuElementStateOn : UIMenuElementStateOff;
         [actions addObject:action];
