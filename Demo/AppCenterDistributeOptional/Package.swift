@@ -22,7 +22,7 @@ let package = Package(
         .target(
             name: "AppCenterDistributeOptional",
             dependencies: [
-                .product(name: "AppCenterDistribute", package: "AppCenter", condition: .when(platforms: [.iOS])),
+                .product(name: "AppCenterDistribute", package: "AppCenter", condition: .when(platforms: [.iOS]))
             ]
         )
     ]

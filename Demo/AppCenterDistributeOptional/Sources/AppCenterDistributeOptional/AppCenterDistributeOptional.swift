@@ -1,3 +1,3 @@
 public struct AppCenterDistributeOptional {
-    public static func AppCenterDistributeOptional() -> Void {}
+    public static func AppCenterDistributeOptional() {}
 }
