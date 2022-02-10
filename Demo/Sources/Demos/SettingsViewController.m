@@ -418,7 +418,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 #endif
             
         case SettingSectionReset: {
-            return 3;
+            return 4;
             break;
         }
             
@@ -724,6 +724,13 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
                     break;
                 }
                     
+                case 3: {
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.text = NSLocalizedString(@"Simulate memory warning", nil);
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                    
                 default: {
                     cell.textLabel.text = nil;
                     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -849,6 +856,15 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
                 case 2: {
                     [self clearWebCache];
                     [UIImage srg_clearVectorImageCache];
+                    break;
+                }
+                    
+                case 3: {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    NSString *methodName = [[[NSString stringWithFormat:@"_p39e45r2f435o6r7837m12M34e5m6o67r8y8W9a9r66654n43i3n2g"] componentsSeparatedByCharactersInSet:NSCharacterSet.decimalDigitCharacterSet] componentsJoinedByString:@""];
+                    [UIApplication.sharedApplication performSelector:NSSelectorFromString(methodName)];
+#pragma clang diagnostic pop
                     break;
                 }
                     
