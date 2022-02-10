@@ -260,6 +260,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     }
 #endif
     
+    self.tableView.remembersLastFocusedIndexPath = YES;
     [self.tableView reloadData];
 }
 
@@ -749,7 +750,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{    
+{
     switch (indexPath.section) {
         case SettingSectionServer: {
             ServerSettings *serverSettings = self.serverSettings[indexPath.row];
