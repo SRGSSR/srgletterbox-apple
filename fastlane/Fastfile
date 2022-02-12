@@ -132,9 +132,10 @@ platform :ios do
   desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.'
   lane :tvOSdemo do
     platform = 'tvOS'
+    build_number = xcode_current_project_version
 
-    can_upload = can_upload_testflight_build(platform, nil)
-    UI.message("SRGLetterbox-demo (Build #{xcode_current_project_version}) already uploaded 🔁 ✅") unless can_upload
+    can_upload = can_upload_testflight_build(nil, platform, build_number)
+    UI.message("SRGLetterbox-demo (Build #{build_number}) already uploaded 🔁 ✅") unless can_upload
     next unless can_upload
 
     update_app_identifier_to_appstore
@@ -281,18 +282,18 @@ def app_config
   CredentialsManager::AppfileConfig
 end
 
-def can_upload_testflight_build(platform, app_identifier)
-  platform ||= 'iOS'
+def can_upload_testflight_build(app_identifier, platform, build_number)
   app_identifier ||= app_config.try_fetch_value(:app_identifier)
+  platform ||= 'iOS'
+  build_number ||= xcode_current_project_version
 
   login_with_app_store_connect_api_key
   appstore_build_number = latest_testflight_build_number(
     platform: appstore_platform(platform),
     app_identifier: app_identifier
   )
-  local_build_number = xcode_current_project_version
 
-  (appstore_build_number < local_build_number.to_i)
+  (appstore_build_number < build_number.to_i)
 end
 
 # Characters "-" or "+" in version are not allowed on AppStore Connect.
