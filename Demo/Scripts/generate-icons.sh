@@ -10,7 +10,7 @@ if [ "${CONFIGURATION}" == "Release" ] || [ "${CONFIGURATION}" == "Debug" ]; the
     exit 0
 fi
 
-export PATH="${PATH}:/usr/local/bin:/opt/local/bin"
+export PATH="${PATH}:/usr/local/bin:/opt/local/bin:/opt/homebrew/bin"
 
 SOURCE_RESOURCES_PATH="${SRCROOT}/Resources"
 SOURCE_IOS_APPICON_PATH="${SOURCE_RESOURCES_PATH}/Images.xcassets/AppIcon.appiconset"
