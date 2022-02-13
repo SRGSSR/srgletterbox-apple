@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		045D77D627B2E1C700951D07 /* AppCenterDistributeOptional in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D527B2E1C700951D07 /* AppCenterDistributeOptional */; };
 		045D77D927B2EFB000951D07 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D827B2EFB000951D07 /* AppCenterCrashes */; };
+		04ACEE1427B85FD0001F4C9E /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE0027B85FD0001F4C9E /* Application.xcconfig */; };
+		04ACEE2027B85FD0001F4C9E /* Demo.nightly.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE0F27B85FD0001F4C9E /* Demo.nightly.xcconfig */; };
+		04ACEE2127B85FD0001F4C9E /* Demo.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1027B85FD0001F4C9E /* Demo.debug.xcconfig */; };
+		04ACEE2227B85FD0001F4C9E /* Demo.release_appcenter.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1127B85FD0001F4C9E /* Demo.release_appcenter.xcconfig */; };
+		04ACEE2327B85FD0001F4C9E /* Demo.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1227B85FD0001F4C9E /* Demo.release.xcconfig */; };
+		04ACEE2427B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1327B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig */; };
+		04ACEE2627B945CB001F4C9E /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE2527B945CB001F4C9E /* Common.xcconfig */; };
 		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
@@ -56,7 +63,13 @@
 
 /* Begin PBXFileReference section */
 		045D77D427B2E19800951D07 /* AppCenterDistributeOptional */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppCenterDistributeOptional; sourceTree = "<group>"; };
-		0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.xcconfig"; path = "Links/SRGLetterbox-demo.xcconfig"; sourceTree = "<group>"; };
+		04ACEE0027B85FD0001F4C9E /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
+		04ACEE0F27B85FD0001F4C9E /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
+		04ACEE1027B85FD0001F4C9E /* Demo.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Demo.debug.xcconfig; sourceTree = "<group>"; };
+		04ACEE1127B85FD0001F4C9E /* Demo.release_appcenter.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Demo.release_appcenter.xcconfig; sourceTree = "<group>"; };
+		04ACEE1227B85FD0001F4C9E /* Demo.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Demo.release.xcconfig; sourceTree = "<group>"; };
+		04ACEE1327B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Demo.nightly_appcenter.xcconfig; sourceTree = "<group>"; };
+		04ACEE2527B945CB001F4C9E /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		084837E01EE094B8008DABE4 /* NSBundle+LetterboxDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LetterboxDemo.h"; sourceTree = "<group>"; };
 		0849DA5720FCD82D00026F0D /* TopicListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicListViewController.h; sourceTree = "<group>"; };
 		0849DA5820FCD82D00026F0D /* TopicListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicListViewController.m; sourceTree = "<group>"; };
@@ -101,9 +114,6 @@
 		6F73FB0C1E4C6F26000986C2 /* UIWindow+LetterboxDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LetterboxDemo.m"; sourceTree = "<group>"; };
 		6F833048236B4D40005D08A4 /* MiscellaneousViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiscellaneousViewController.h; sourceTree = "<group>"; };
 		6F833049236B4D40005D08A4 /* MiscellaneousViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MiscellaneousViewController~ios.m"; sourceTree = "<group>"; };
-		6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.debug.xcconfig"; path = "Links/SRGLetterbox-demo.debug.xcconfig"; sourceTree = "<group>"; };
-		6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.nightly.xcconfig"; path = "Links/SRGLetterbox-demo.nightly.xcconfig"; sourceTree = "<group>"; };
-		6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "SRGLetterbox-demo.release.xcconfig"; path = "Links/SRGLetterbox-demo.release.xcconfig"; sourceTree = "<group>"; };
 		6F93AFB8236B3EDD007F97CA /* ListsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListsViewController.h; sourceTree = "<group>"; };
 		6F93AFB9236B3EDD007F97CA /* ListsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ListsViewController.m; sourceTree = "<group>"; };
 		6F9C18D71F57DC6D0099D4EC /* NSBundle+LetterboxDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LetterboxDemo.m"; sourceTree = "<group>"; };
@@ -129,10 +139,6 @@
 		6FCE89881E4B6D8D005C48F1 /* MultiPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPlayerViewController.h; sourceTree = "<group>"; };
 		6FCE89891E4B6D8D005C48F1 /* MultiPlayerViewController~ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MultiPlayerViewController~ios.m"; sourceTree = "<group>"; };
 		6FCE898B1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "MultiPlayerViewController~ios.storyboard"; sourceTree = "<group>"; };
-		6FD5943F2334BE6B0058DAE7 /* Demo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.xcconfig; sourceTree = "<group>"; };
-		6FD594412334D3A70058DAE7 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
-		6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.release.xcconfig; sourceTree = "<group>"; };
-		6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.debug.xcconfig; sourceTree = "<group>"; };
 		6FD9BA2F1E3095F00013CC97 /* MediasViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediasViewController.h; sourceTree = "<group>"; };
 		6FFAD138202C889200FDAA6C /* PlaylistViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistViewController.h; sourceTree = "<group>"; };
 		6FFAD139202C889200FDAA6C /* PlaylistViewController~ios.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaylistViewController~ios.m"; sourceTree = "<group>"; };
@@ -163,6 +169,44 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		04ACEDFD27B85FD0001F4C9E /* Xcode */ = {
+			isa = PBXGroup;
+			children = (
+				04ACEE0E27B85FD0001F4C9E /* Application */,
+				04ACEDFE27B85FD0001F4C9E /* Shared */,
+			);
+			name = Xcode;
+			sourceTree = "<group>";
+		};
+		04ACEDFE27B85FD0001F4C9E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				04ACEE2527B945CB001F4C9E /* Common.xcconfig */,
+				04ACEDFF27B85FD0001F4C9E /* Targets */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		04ACEDFF27B85FD0001F4C9E /* Targets */ = {
+			isa = PBXGroup;
+			children = (
+				04ACEE0027B85FD0001F4C9E /* Application.xcconfig */,
+			);
+			path = Targets;
+			sourceTree = "<group>";
+		};
+		04ACEE0E27B85FD0001F4C9E /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				04ACEE0F27B85FD0001F4C9E /* Demo.nightly.xcconfig */,
+				04ACEE1027B85FD0001F4C9E /* Demo.debug.xcconfig */,
+				04ACEE1127B85FD0001F4C9E /* Demo.release_appcenter.xcconfig */,
+				04ACEE1227B85FD0001F4C9E /* Demo.release.xcconfig */,
+				04ACEE1327B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
 		086B9449234CEDA3003D6BAA /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,10 +221,7 @@
 		6F0136F4213FA39000B95405 /* Xcode */ = {
 			isa = PBXGroup;
 			children = (
-				6F889773222EB31000A85545 /* SRGLetterbox-demo.debug.xcconfig */,
-				6F889774222EB31000A85545 /* SRGLetterbox-demo.nightly.xcconfig */,
-				6F889775222EB31000A85545 /* SRGLetterbox-demo.release.xcconfig */,
-				0825DCC125263A20007E5BEB /* SRGLetterbox-demo.xcconfig */,
+				04ACEDFD27B85FD0001F4C9E /* Xcode */,
 			);
 			name = Xcode;
 			path = ../Xcode;
@@ -305,10 +346,6 @@
 			isa = PBXGroup;
 			children = (
 				045D77D327B2E19800951D07 /* Packages */,
-				6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */,
-				6FD594412334D3A70058DAE7 /* Demo.nightly.xcconfig */,
-				6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */,
-				6FD5943F2334BE6B0058DAE7 /* Demo.xcconfig */,
 				6FAB3B521E28FFEA00CC2197 /* Info.plist */,
 				6FAB3B551E28FFEA00CC2197 /* Sources */,
 				6FAB3B531E28FFEA00CC2197 /* Resources */,
@@ -367,7 +404,6 @@
 				TargetAttributes = {
 					6FAB3B391E28FE2000CC2197 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = VMGRRW6SG7;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -408,14 +444,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F1F5FC61E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard in Resources */,
+				04ACEE2627B945CB001F4C9E /* Common.xcconfig in Resources */,
 				6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */,
+				04ACEE2327B85FD0001F4C9E /* Demo.release.xcconfig in Resources */,
+				04ACEE2427B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig in Resources */,
 				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */,
+				04ACEE1427B85FD0001F4C9E /* Application.xcconfig in Resources */,
 				6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard in Resources */,
+				04ACEE2127B85FD0001F4C9E /* Demo.debug.xcconfig in Resources */,
 				6F0AD07B1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard in Resources */,
+				04ACEE2227B85FD0001F4C9E /* Demo.release_appcenter.xcconfig in Resources */,
 				6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */,
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard in Resources */,
 				086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */,
+				04ACEE2027B85FD0001F4C9E /* Demo.nightly.xcconfig in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen~ios.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -540,6 +583,162 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		04ACEDF927B85F49001F4C9E /* Release_AppCenter */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "RELEASE=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				VALIDATE_PRODUCT = YES;
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release_AppCenter;
+		};
+		04ACEDFA27B85F49001F4C9E /* Release_AppCenter */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04ACEE1127B85FD0001F4C9E /* Demo.release_appcenter.xcconfig */;
+			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Release$(BUILD_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
+				BUNDLE_IDENTIFIER_SUFFIX = "";
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
+				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION_SUFFIX = "";
+				SDKROOT = iphoneos;
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)";
+			};
+			name = Release_AppCenter;
+		};
+		04ACEDFB27B85F54001F4C9E /* Nightly_AppCenter */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "NIGHTLY=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				VALIDATE_PRODUCT = YES;
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Nightly_AppCenter;
+		};
+		04ACEDFC27B85F54001F4C9E /* Nightly_AppCenter */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04ACEE1327B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig */;
+			buildSettings = {
+				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
+				BUILD_NAME = "Nighlty$(BUILD_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
+				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
+				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
+				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION_SUFFIX = "-nightly";
+				SDKROOT = iphoneos;
+				URL_BASE_SCHEME = letterbox;
+				URL_SCHEME = "$(URL_BASE_SCHEME)-nightly";
+			};
+			name = Nightly_AppCenter;
+		};
 		0835627A1E5B332800EE6DB5 /* Nightly */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -588,7 +787,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				VALIDATE_PRODUCT = YES;
 				VERSION_INFO_PREFIX = "";
@@ -597,23 +795,21 @@
 		};
 		0835627C1E5B332800EE6DB5 /* Nightly */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD594412334D3A70058DAE7 /* Demo.nightly.xcconfig */;
+			baseConfigurationReference = 04ACEE0F27B85FD0001F4C9E /* Demo.nightly.xcconfig */;
 			buildSettings = {
-				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUILD_NAME = "Nighlty$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = " 🌙";
 				BUNDLE_IDENTIFIER_SUFFIX = .nightly;
 				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
-				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION_SUFFIX = "-nightly";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)$(BUNDLE_IDENTIFIER_SUFFIX)";
 				SDKROOT = iphoneos;
 				URL_BASE_SCHEME = letterbox;
 				URL_SCHEME = "$(URL_BASE_SCHEME)-nightly";
@@ -622,7 +818,7 @@
 		};
 		6FAB3B4F1E28FE2000CC2197 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD594432334D3A70058DAE7 /* Demo.debug.xcconfig */;
+			baseConfigurationReference = 04ACEE1027B85FD0001F4C9E /* Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUILD_NAME = "Debug$(BUILD_NAME_SUFFIX)";
@@ -637,7 +833,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION_SUFFIX = "-debug";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)$(BUNDLE_IDENTIFIER_SUFFIX)";
 				SDKROOT = iphoneos;
 				URL_BASE_SCHEME = letterbox;
 				URL_SCHEME = "$(URL_BASE_SCHEME)-debug";
@@ -646,23 +841,21 @@
 		};
 		6FAB3B501E28FE2000CC2197 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD594422334D3A70058DAE7 /* Demo.release.xcconfig */;
+			baseConfigurationReference = 04ACEE1227B85FD0001F4C9E /* Demo.release.xcconfig */;
 			buildSettings = {
-				APPCENTER_URL = "https://install.appcenter.ms/orgs/$(APPCENTER_OWNER)/apps/$(APPCENTER_APPNAME)?skip_registration=true";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "$(APP_ICONS_SOURCE)";
 				BUILD_NAME = "Release$(BUILD_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME = "Letterbox$(BUNDLE_DISPLAY_NAME_SUFFIX)";
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_IDENTIFIER_SUFFIX = "";
 				BUNDLE_SHORT_VERSION = "$(MARKETING_VERSION)$(MARKETING_VERSION_SUFFIX)";
-				DEVELOPMENT_TEAM = VMGRRW6SG7;
+				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION_SUFFIX = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)$(BUNDLE_IDENTIFIER_SUFFIX)";
 				SDKROOT = iphoneos;
 				URL_BASE_SCHEME = letterbox;
 				URL_SCHEME = "$(URL_BASE_SCHEME)";
@@ -723,7 +916,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -777,7 +969,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "ch.srgssr.$(TARGET_NAME)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				VALIDATE_PRODUCT = YES;
 				VERSION_INFO_PREFIX = "";
@@ -792,7 +983,9 @@
 			buildConfigurations = (
 				6FAB3B4F1E28FE2000CC2197 /* Debug */,
 				6FAB3B501E28FE2000CC2197 /* Release */,
+				04ACEDFA27B85F49001F4C9E /* Release_AppCenter */,
 				0835627C1E5B332800EE6DB5 /* Nightly */,
+				04ACEDFC27B85F54001F4C9E /* Nightly_AppCenter */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Nightly;
@@ -802,7 +995,9 @@
 			buildConfigurations = (
 				6FE321471E28E24E00FD8E42 /* Debug */,
 				6FE321481E28E24E00FD8E42 /* Release */,
+				04ACEDF927B85F49001F4C9E /* Release_AppCenter */,
 				0835627A1E5B332800EE6DB5 /* Nightly */,
+				04ACEDFB27B85F54001F4C9E /* Nightly_AppCenter */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Nightly;

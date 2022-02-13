@@ -53,7 +53,7 @@ platform :ios do
     platform = 'iOS'
 
     appcenter_build_number = latest_appcenter_build_number(
-      ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
+      ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME']
     )
 
     nightly(
@@ -64,8 +64,8 @@ platform :ios do
     changelog = default_changelog_for_nightlies(platform)
 
     appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_DESTINATIONS'],
+      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
       notes: changelog
     )
 
