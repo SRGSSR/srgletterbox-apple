@@ -23,10 +23,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Run library tests
 
-### ios iOSnightly
+### ios nightly
 
 ```sh
-[bundle exec] fastlane ios iOSnightly
+[bundle exec] fastlane ios nightly
 ```
 
 Build a new iOS nightly demo on App Center
@@ -47,10 +47,26 @@ Build a new tvOS nightly demo on AppStore Connect and wait build processing.
 
 Send latest tvOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters.
 
-### ios iOSdemo
+### ios iOSnightly
 
 ```sh
-[bundle exec] fastlane ios iOSdemo
+[bundle exec] fastlane ios iOSnightly
+```
+
+Build a new iOS nightly demo on AppStore Connect and wait build processing.
+
+### ios iOSnightlyDSYMs
+
+```sh
+[bundle exec] fastlane ios iOSnightlyDSYMs
+```
+
+Send latest iOS nightly dSYMs to App Center, with optional 'version' or 'min_version' parameters.
+
+### ios demo
+
+```sh
+[bundle exec] fastlane ios demo
 ```
 
 Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).
@@ -70,6 +86,22 @@ Build a new tvOS demo on AppStore Connect and wait build processing. You are res
 ```
 
 Send latest tvOS demo dSYMs to App Center, with optional 'version' or 'min_version' parameters.
+
+### ios iOSdemo
+
+```sh
+[bundle exec] fastlane ios iOSdemo
+```
+
+Build a new iOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.
+
+### ios iOSdemoDSYMs
+
+```sh
+[bundle exec] fastlane ios iOSdemoDSYMs
+```
+
+Send latest iOS demo dSYMs to App Center, with optional 'version' or 'min_version' parameters.
 
 ----
 
