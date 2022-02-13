@@ -6,7 +6,7 @@
 PYTHON_NIGHTLIES_TAG="---->"
 PYTHON_NIGHTLIES_CLOSING_TAG="***********************"
 
-if [ "${CONFIGURATION}" == "Release" ] || [ "${CONFIGURATION}" == "Debug" ]; then
+if [ "${CONFIGURATION}" == "Release" ] || [ "${CONFIGURATION}" == "Release_AppCenter" ] || [ "${CONFIGURATION}" == "Debug" ]; then
     exit 0
 fi
 
@@ -84,12 +84,10 @@ do
             mkdir ${CACHE_APPICON_PATH}
         fi
 
-        if [ "${CONFIGURATION}" == "Nightly" ]; then
+        if [ "${CONFIGURATION}" == "Nightly" ] || [ "${CONFIGURATION}" == "Nightly_AppCenter" ]; then
     	    TITLE="Nightly"
-        elif [ "${CONFIGURATION}" == "Debug" ]; then
-            TITLE="Debug"
         else
-            TITLE="Dev"
+            TITLE="Und"
         fi
 
         SCRIPT_ICON_PATH="${CACHE_APPICON_PATH}/${TITLE}-${filename}"

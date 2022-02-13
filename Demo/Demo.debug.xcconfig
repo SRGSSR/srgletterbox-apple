@@ -1,2 +1,0 @@
-#include "Demo.xcconfig"
-#include "../Xcode/Links/SRGLetterbox-demo.debug.xcconfig"

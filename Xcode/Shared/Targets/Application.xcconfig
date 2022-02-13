@@ -1,3 +1,5 @@
+#include "../Xcode/Shared/Common.xcconfig"
+
 // Version information
 MARKETING_VERSION = 7.3.3
 CURRENT_PROJECT_VERSION = 91
