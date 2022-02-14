@@ -409,6 +409,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return self.mediaPlayerController.supportedPlaybackRates;
 }
 
+- (float)effectivePlaybackRate
+{
+    return self.mediaPlayerController.effectivePlaybackRate;
+}
+
 - (void)setEndTolerance:(NSTimeInterval)endTolerance
 {
     self.mediaPlayerController.endTolerance = endTolerance;

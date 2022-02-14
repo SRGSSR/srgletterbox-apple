@@ -801,9 +801,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @interface SRGLetterboxController (PlaybackRate)
 
 /**
- *  The playback rate.
- *
- *  @discussion This value stays the same when the player is paused.
+ *  The playback rate. Only values provided in `supportedPlaybackRates` are allowed.
  */
 @property (nonatomic) float playbackRate;
 
@@ -811,6 +809,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  Supported playback rates in increasing order. Includes the normal speed 1.
  */
 @property (nonatomic, readonly) NSArray<NSNumber *> *supportedPlaybackRates;
+
+/**
+ *  The current effective playback rate. Some streams might namely not support the desired `playbackRate` in all
+ *  conditions (e.g. livestreams). The effective playback rate provides the currently applicable value.
+ */
+@property (nonatomic, readonly) float effectivePlaybackRate;
 
 @end
 

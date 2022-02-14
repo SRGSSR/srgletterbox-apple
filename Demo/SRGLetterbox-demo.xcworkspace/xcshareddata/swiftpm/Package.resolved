@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/playback-speed",
-          "revision": "bac31c49006095cc2ddc2b79cb11b181f131bbf4",
+          "revision": "210fcf87b8d5bb56103ed6b80210f1109e2f3aee",
           "version": null
         }
       },
@@ -141,7 +141,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
           "branch": "feature/playback-speed",
-          "revision": "acd1e59fd2b3ad2935a54b5003b5f753a6ce9f20",
+          "revision": "3ad9fd5623ceafeed4187751b0c06e65783430e0",
           "version": null
         }
       },
