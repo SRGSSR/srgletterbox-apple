@@ -361,9 +361,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == [self numberOfSectionsInTableView:tableView] - 1) {
-        NSString *versionString = [NSString stringWithFormat:NSLocalizedString(@"Letterbox %@%@", nil), SRGLetterboxMarketingVersion(), [NSBundle.mainBundle.infoDictionary objectForKey:@"BundleNameSuffix"]];
-        NSString *buildString = [NSString stringWithFormat:@"%@ %@", [NSBundle.mainBundle.infoDictionary objectForKey:@"BuildName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"]];
-        return [NSString stringWithFormat:@"%@ (%@)", versionString, buildString];
+        return NSBundle.mainBundle.letterbox_demo_friendlyVersionNumber;
     }
     else {
         return nil;
