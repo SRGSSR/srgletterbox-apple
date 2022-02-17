@@ -6,7 +6,7 @@
 PYTHON_NIGHTLIES_TAG="---->"
 PYTHON_NIGHTLIES_CLOSING_TAG="***********************"
 
-if [ "${CONFIGURATION}" == "Release" ] || [ "${CONFIGURATION}" == "Release_AppCenter" ] || [ "${CONFIGURATION}" == "Debug" ]; then
+if [ "${CONFIGURATION}" == "Debug" ] || [ $ENABLE_PREVIEWS == "YES" ]; then
     exit 0
 fi
 
@@ -84,7 +84,9 @@ do
             mkdir ${CACHE_APPICON_PATH}
         fi
 
-        if [ "${CONFIGURATION}" == "Nightly" ] || [ "${CONFIGURATION}" == "Nightly_AppCenter" ]; then
+        if [ "${CONFIGURATION}" == "Release" ] || [ "${CONFIGURATION}" == "Release_AppCenter" ]; then
+    	    TITLE="Demo"
+        elif [ "${CONFIGURATION}" == "Nightly" ] || [ "${CONFIGURATION}" == "Nightly_AppCenter" ]; then
     	    TITLE="Nightly"
         else
             TITLE="Und"
