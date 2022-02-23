@@ -303,6 +303,10 @@ def app_config
   CredentialsManager::AppfileConfig
 end
 
+def srg_pwd
+  Dir.chdir('..') { Dir.pwd }
+end
+
 def can_upload_testflight_build(app_identifier, platform, build_number)
   app_identifier ||= app_config.try_fetch_value(:app_identifier)
   platform ||= 'iOS'
@@ -338,6 +342,19 @@ def srg_xcargs(options)
   xcargs += " MARKETING_VERSION_SUFFIX='#{options[:version_suffix]}'"
   xcargs += " BUILD_NAME='#{options[:build_name]}'"
   xcargs += " DEVELOPMENT_TEAM='#{options[:team_id]}'"
+  xcargs + srg_xcargs_code_signing(export_to_appstore)
+end
+
+# Use cloud signing if available
+def srg_xcargs_code_signing(export_to_appstore)
+  asc_api_key = srg_app_store_connect_api_key if export_to_appstore
+
+  xcargs = ''
+  if asc_api_key
+    xcargs += " -authenticationKeyIssuerID '#{asc_api_key[:issuerId]}'"
+    xcargs += " -authenticationKeyID '#{asc_api_key[:id]}'"
+    xcargs += " -authenticationKeyPath '#{asc_api_key[:filePath]}'"
+  end
   "#{xcargs} -allowProvisioningUpdates"
 end
 
@@ -577,11 +594,20 @@ def appstore_platform(platform)
   appstore_platforms[platform]
 end
 
+def srg_app_store_connect_api_key
+  { id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ID'],
+    issuerId: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ISSUER_ID'],
+    filePath: "#{srg_pwd}/Configuration/#{ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_PATH']}" }
+end
+
 def login_with_app_store_connect_api_key
+  asc_api_key = srg_app_store_connect_api_key
+  return unless asc_api_key
+
   app_store_connect_api_key(
-    key_id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ID'],
-    issuer_id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ISSUER_ID'],
-    key_content: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_CONTENT']
+    key_id: asc_api_key[:id],
+    issuer_id: asc_api_key[:issuerId],
+    key_filepath: asc_api_key[:filePath]
   )
 end
 
