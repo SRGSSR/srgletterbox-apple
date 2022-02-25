@@ -457,7 +457,7 @@ def xcode_override_build_number(build_number)
 end
 
 def srg_xcconfig_path
-  'Xcode/Shared/Targets/Application.xcconfig'
+  'Demo/Xcode/Shared/Targets/Application.xcconfig'
 end
 
 def demo_scheme
