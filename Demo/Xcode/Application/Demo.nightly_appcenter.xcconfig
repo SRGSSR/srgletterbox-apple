@@ -1,0 +1,3 @@
+#include? "../Configuration/Xcode/Demo.nightly_appcenter.xcconfig"
+
+#include "Xcode/Shared/Targets/Application.xcconfig"
