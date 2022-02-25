@@ -175,7 +175,7 @@
 				04ACEE0E27B85FD0001F4C9E /* Application */,
 				04ACEDFE27B85FD0001F4C9E /* Shared */,
 			);
-			name = Xcode;
+			path = Xcode;
 			sourceTree = "<group>";
 		};
 		04ACEDFE27B85FD0001F4C9E /* Shared */ = {
@@ -216,15 +216,6 @@
 				086B944B234CEDA3003D6BAA /* Media.m */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		6F0136F4213FA39000B95405 /* Xcode */ = {
-			isa = PBXGroup;
-			children = (
-				04ACEDFD27B85FD0001F4C9E /* Xcode */,
-			);
-			name = Xcode;
-			path = ../Xcode;
 			sourceTree = "<group>";
 		};
 		6F73FB0A1E4C6F01000986C2 /* Helpers */ = {
@@ -349,7 +340,7 @@
 				6FAB3B521E28FFEA00CC2197 /* Info.plist */,
 				6FAB3B551E28FFEA00CC2197 /* Sources */,
 				6FAB3B531E28FFEA00CC2197 /* Resources */,
-				6F0136F4213FA39000B95405 /* Xcode */,
+				04ACEDFD27B85FD0001F4C9E /* Xcode */,
 				6FAB3B061E28FB1400CC2197 /* Frameworks */,
 				6FE321421E28E24E00FD8E42 /* Products */,
 			);
